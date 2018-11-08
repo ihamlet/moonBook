@@ -1,0 +1,45 @@
+<template>
+    <div class="fresh-list scroll-x">
+        <div class="scroll-item" v-for='item in list'>
+            <div class="avatar">
+                <img v-lazy="item.avatar" :alt="item.name">
+            </div>
+            <div class="name">
+                {{item.name}}
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+export default {
+    name:'fresh-list',
+    props: ['list']
+}
+</script>
+<style scoped>
+.fresh-list{
+    padding-left: .625rem /* 10/16 */;
+}
+
+.avatar{
+    padding: .1875rem /* 3/16 */;
+    border: .0625rem /* 1/16 */ solid #DCDFE6;
+    border-radius: 50%;
+}
+
+.avatar img{
+    width: 3.125rem /* 50/16 */;
+    height: 3.125rem /* 50/16 */;
+    border-radius: 50%;
+}
+
+.scroll-item{
+    margin-right: .625rem /* 10/16 */;
+}
+
+.name{
+    font-size: .875rem /* 14/16 */;
+    text-align: center;
+    margin-top: .3125rem /* 5/16 */;
+}
+</style>
