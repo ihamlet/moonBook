@@ -99,6 +99,10 @@ export default {
     justify-content: center;
 }
 
+.text-center{
+  text-align: center;
+}
+
 body{
     color: #606266;
     background: #F2F6FC;
@@ -171,8 +175,10 @@ body{
 
 .theme-btn.van-button--plain.van-button--primary,
 .theme-radio.van-radio .van-icon-checked,
-body .van-nav-bar__text,
-.head-bar-text,
+body.theme .van-nav-bar__text,
+body.theme .van-dialog__confirm,
+body.theme .van-dialog__confirm:active,
+body.theme .head-bar-text,
 .theme-color{
   color: #409eff;
 }

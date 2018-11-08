@@ -93,8 +93,10 @@ export default {
             this.$emit('close')
         },
         onClickRight(){
-            if( this.grapicData.text.length < 140 && this.grapicData.images.length > 0){
-                axios.put('/api/addDrying',{
+            if( this.grapicData.text.length == 0 && this.grapicData.images.length == 0){
+                this.$emit('close')
+            }else if( this.grapicData.text.length < 140 ){
+               axios.put('/api/addDrying',{
                     graphic: this.grapicData
                 }).then(res=>{
                     this.$emit('close')

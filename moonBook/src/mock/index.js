@@ -326,7 +326,8 @@ let userData = {
     },
     isVip: 0,
     vipInfo:'',
-    childInfo:[]
+    childInfo:[],
+    dryingList:[]
 }
 
 let pay = function ( options ) {
@@ -466,6 +467,7 @@ let addDrying = function (options){
         getPraise:false
     }
     dryingData.dryingList.unshift(array)
+    userData.dryingList.unshift(data)
 
     return {
         dryingData

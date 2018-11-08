@@ -2,7 +2,7 @@
     <div class="zone">
         <div class="module-card">
             <van-cell-group class="cell-group">
-            <van-cell class="cell"  value='个人空间' center is-link>
+            <van-cell class="cell"  value='个人主页' center is-link>
                 <div slot="title">
                     <span class="icon">
                         <i class="iconfont">&#xe606;</i>
