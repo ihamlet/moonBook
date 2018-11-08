@@ -23,11 +23,11 @@ export default {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_hqwmzohy4lu.eot');
-  src: url('//at.alicdn.com/t/font_893274_hqwmzohy4lu.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_hqwmzohy4lu.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_hqwmzohy4lu.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_hqwmzohy4lu.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_a7cm7j5fvbf.eot');
+  src: url('//at.alicdn.com/t/font_893274_a7cm7j5fvbf.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_a7cm7j5fvbf.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_a7cm7j5fvbf.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_a7cm7j5fvbf.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -172,6 +172,7 @@ body{
 .theme-btn.van-button--plain.van-button--primary,
 .theme-radio.van-radio .van-icon-checked,
 body .van-nav-bar__text,
+.head-bar-text,
 .theme-color{
   color: #409eff;
 }
@@ -514,18 +515,19 @@ img.lazy[lazy=error],
 }
 
 /* 点赞 */
-.add-praise-popup{
+.add-praise-popup.van-popup{
     background: transparent;
+    overflow: initial;
 }
 
-.add-praise-popup .iconfont{
+.add-praise-popup.van-popup .iconfont{
   background: linear-gradient(135deg, #FF2A00,#FF00AF);
   -webkit-background-clip: text;
   color: transparent;
   display: block;
 }
 
-.add-praise-popup .iconfont{
+.add-praise-popup.van-popup .iconfont{
     font-size: 3.25rem /* 52/16 */;
 }
 
@@ -653,5 +655,34 @@ i.iconfont.rotate{
 
 .van-field__error-message{
   text-align: right;
+}
+
+/* 借还 */
+.borrow-popup{
+  height: 11.25rem /* 180/16 */;
+}
+
+.box{
+  flex: 1
+}
+
+.box .btn{
+  width: 5rem /* 80/16 */;
+  height: 5rem /* 80/16 */;
+  margin: 3.125rem /* 50/16 */ auto;
+  text-align: center;
+  line-height: 5rem /* 80/16 */;
+  font-size: 2.25rem /* 36/16 */;
+  border-radius: 50%;
+  color: #fff;
+  box-shadow: 0 .625rem /* 10/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, .2)
+}
+
+.box .btn.borrow{
+    background-image: linear-gradient( 135deg, #8BC34A 10%, #4CAF50 100%);
+}
+
+.box .btn.also{
+      background-image: linear-gradient( 135deg, #FFC107 10%, #FF9800 100%);
 }
 </style>

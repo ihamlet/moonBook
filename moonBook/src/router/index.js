@@ -10,6 +10,9 @@ import My from '@/components/pages/my'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
+  base: __dirname,
+  scrollBehavior,
   routes: [
     {
       path: '',
@@ -19,26 +22,30 @@ export default new Router({
         path: '/',
         name: 'home',
         component: Home,
+        meta: { scrollToTop: true }
       },{
         path: '/notice',
         name: 'notice',
         component: Notice,
         meta: {
-          title: '消息中心'
+          title: '消息中心',
+          scrollToTop: true
         }
       },{
         path: '/find',
         name: 'find',
         component: Find,
         meta: {
-          title: '发现'
+          title: '发现',
+          scrollToTop: true
         }
       },{
         path: '/my',
         name: 'my',
         component: My,
         meta: {
-          title: '个人中心'
+          title: '个人中心',
+          scrollToTop: true
         }
       }]
     },{
@@ -48,3 +55,20 @@ export default new Router({
     }
   ]
 })
+
+//滚动行为
+const scrollBehavior = (to, from, savedPosition) => {
+  if (savedPosition) {
+    return savedPosition
+  } else {
+    const position = {}
+    if (to.hash) {
+      position.selector = to.hash
+    }
+    if (to.matched.some(m => m.meta.scrollToTop)) {
+      position.x = 0
+      position.y = 0
+    }
+    return position
+  }
+}

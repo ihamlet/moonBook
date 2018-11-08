@@ -1,7 +1,10 @@
 <template>
     <div class="graphic">
         <van-nav-bar title="发布图文" left-text="取消" @click-left="onClickLeft" @click-right="onClickRight">
-            <div class="release" slot="right">
+            <div class="head-bar-btn theme-color" slot="right">
+                <i class="iconfont">
+                    &#xe72c;
+                </i>
                 发布
             </div>
         </van-nav-bar>
@@ -64,6 +67,16 @@ export default {
             }
         }
     },
+    watch: {
+        grapicData:{
+            handler(val){
+                if(val.text.match('#')){
+                    this.show = true
+                }
+            },  
+            deep: true
+        }
+    },
     methods: {
         onRead(file) {
             if(file.length){
@@ -80,14 +93,14 @@ export default {
             this.$emit('close')
         },
         onClickRight(){
-            if( this.grapicData.text.length < 140 ){
+            if( this.grapicData.text.length < 140 && this.grapicData.images.length > 0){
                 axios.put('/api/addDrying',{
                     graphic: this.grapicData
                 }).then(res=>{
-                    console.log(res)
+                    this.$emit('close')
+                    this.$router.push({name:'find'})
                 })
             }
-
         },
         deletePhoto(index){
             this.grapicData.images.splice(index,1)

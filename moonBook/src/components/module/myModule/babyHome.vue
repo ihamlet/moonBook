@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <van-button class="theme-btn" plain round size="small" type="primary" @click="toAddChild">添加宝贝</van-button>
+                <van-button class="theme-btn" plain round type="primary" @click="toAddChild">添加宝贝</van-button>
             </div>
         </div>
 
@@ -103,12 +103,6 @@ export default {
 }
 </script>
 <style scoped>
-.baby-home {
-    margin-top: 3.75rem /* 60/16 */;
-    height: 12.5rem /* 200/16 */;
-    padding: 0.625rem /* 10/16 */;
-}
-
 .card-top-bar {
     width: 100%;
 }
@@ -119,6 +113,11 @@ export default {
     display: inline-grid;
     text-align: center;
     font-size: 0.875rem /* 14/16 */;
+}
+
+.add-baby .theme-color{
+    margin-top: .5rem /* 8/16 */;
+    font-size: 1rem /* 16/16 */;
 }
 
 .volume {

@@ -1,8 +1,12 @@
 <template>
-    <div class="head">
-        <van-nav-bar class="theme-nav" :title="$route.meta.title" @click-right="onClickRight">
-            <div class="card-package" slot='right'>
+    <div class="head" ref='head'>
+        <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userData.userInfo.name" @click-left="onClickLeft" @click-right="onClickRight">
+            <div class="head-bar-icon" slot='left'>
                 <i class="iconfont">&#xe66a;</i>
+            </div>
+            <div class="head-bar-text" slot='right' v-if='$store.state.isPay'>
+                 <i class="iconfont">&#xe619;</i>
+                借阅
             </div>
         </van-nav-bar>
         <div class="user-info flex flex-justify" v-if='userData.userInfo'>
@@ -10,7 +14,7 @@
                 <div class="avatar">
                     <img :src="userData.userInfo.avatar" :alt="userData.userInfo.name">
                 </div>
-                
+
                 <div class="name">{{userData.userInfo.name}}</div>
                 <div class="school" v-if='userData.vipInfo'>{{userData.vipInfo.school.schoolName.name}}</div>
             </div>
@@ -61,6 +65,21 @@
         <van-popup v-model="applyShow" class="page-popup" position="bottom" :overlay="false">
             <accept @close='onAccpetPage' v-model='active'/>
         </van-popup>
+
+        <van-popup v-model="show" class="borrow-popup" position="bottom">
+            <div class="flex">
+            <div class="box">
+                <div class="btn borrow an-0 animated" :class="[show?'bounceInUp':'bounceOutDown']">
+                    借
+                </div>
+            </div>
+            <div class="box">
+                <div class="btn also an-1 animated" :class="[show?'bounceInUp':'bounceOutDown']">
+                    还
+                </div>
+            </div>
+            </div>
+        </van-popup>
     </div>
 </template>
 <script>
@@ -83,18 +102,43 @@ export default {
     },
     data () {
         return {
+            domHeight:0,
+            scrollTop:0,
+            fixedHeaderBar:true,
             active:0,
+            show:false,
             applyShow:false
         }
-    }, 
+    },
+    mounted () {
+        window.addEventListener('scroll', this.handleScroll)
+    },
     methods: {
         fetchData(){
             axios.get('/api/userData').then(res=>{
                 this.userData = res.data.userData
             })
         },
+        handleScroll(){
+            this.getDomHeight()  
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+            this.scrollTop = scrollTop
+            if( this.domHeight < this.scrollTop){
+               this.fixedHeaderBar = false
+            }else{
+               this.fixedHeaderBar = true
+            }
+        },
+        getDomHeight(){
+            if(this.$refs.head){
+                this.domHeight = this.$refs.head.offsetHeight
+            }
+        },
+        onClickLeft(){
+            
+        },
         onClickRight(){
-            console.log(111)
+            this.show = true
         },
         toAccept(){
             this.applyShow = true
@@ -112,7 +156,7 @@ export default {
 <style scoped>
 .head{
    width: 100%;
-   background-image: linear-gradient( 135deg, #2AFADF 10%, #4C83FF 100%);
+   background-image: linear-gradient( 30deg, #2AFADF 10%, #4C83FF 100%);
    position: relative;
 }
 
@@ -163,7 +207,7 @@ export default {
 }
 
 .user-info{
-    padding-top: .9375rem /* 15/16 */;
+    padding-top: 3.75rem /* 60/16 */;
     padding-bottom: 1.875rem /* 30/16 */;
 }
 
@@ -216,8 +260,12 @@ export default {
     font-size: x-small;
 }
 
-.card-package i.iconfont{
+.head-bar-icon i.iconfont{
     font-size: 1.25rem /* 20/16 */;
+}
+
+.theme-nav .head-bar-text{
+    color: #fff;
 }
 
 .theme-color{

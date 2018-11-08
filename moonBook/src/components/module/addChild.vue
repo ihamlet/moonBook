@@ -125,7 +125,6 @@ export default {
         },
         childInfo:{
             handler(val){
-                console.log(val)
                 localStorage.setItem('childInfo',JSON.stringify(val))
             },
             deep:true

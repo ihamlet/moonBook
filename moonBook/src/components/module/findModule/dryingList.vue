@@ -67,7 +67,7 @@
         </van-list>
 
         <van-popup v-model="praiseShow" class="add-praise-popup" :overlay="false">
-            <i class="iconfont" :class="[praiseShow?'tada animated':'']">&#xe6e3;</i>
+            <i class="iconfont" :class="[praiseShow?'rotateInDownLeft animated':'']">&#xe6e3;</i>
         </van-popup>
 
         <van-popup v-model="pictureShow" class="picture-box-popup" :overlay='false'>
