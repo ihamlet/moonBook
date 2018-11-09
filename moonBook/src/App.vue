@@ -106,6 +106,7 @@ export default {
 body{
     color: #606266;
     background: #F2F6FC;
+    user-select: none;
 }
 
 .scroll-x,

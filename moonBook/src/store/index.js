@@ -18,6 +18,11 @@ const getters = {
    },
    MsgLengthState: state => {
        return state.msgLength.length
+   },
+   dryingListLengthState: state =>{
+       if(state.userData.dryingList){
+            return state.userData.dryingList.length
+       }
    }
 }
 

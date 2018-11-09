@@ -2,7 +2,7 @@
     <div class="my page-padding">
         <card-head />
         <lazy-component class="gutter gap-top">
-           <zone/> 
+           <zone v-if='dataLength > 0'/> 
         </lazy-component>
         <lazy-component class="gutter gap">
             <baby-home/>
@@ -26,6 +26,14 @@ export default {
         zone,
         cardHead,
         babyHome
+    },
+    computed: {
+        userData(){
+            return this.$store.getters.userDataState
+        },
+        dataLength(){
+            return this.$store.getters.dryingListLengthState
+        }
     },
     data () {
         return {
