@@ -1,10 +1,8 @@
 <template>
-    <div class="zoom-home page-padding">
-        <van-nav-bar :title="title" fixed left-text="个人中心"  left-arrow @click-left="onClickLeft" @click-right="onClickRight">
+    <div class="zoom page-padding">
+        <van-nav-bar :title="fixedHeaderBar?$route.meta.title:userData.userInfo.name" fixed left-text="个人中心"  left-arrow @click-left="onClickLeft" @click-right="onClickRight">
             <div slot="right" class="theme-color">
                 <i class="iconfont" :class="[isReleaseShow?'rotate-45':'rotate']">&#xe612;</i>
-                <span>发布</span>
-
                 <div class="release-popup" v-if='isReleaseShow'>
                     <release :isReleaseShow="isReleaseShow" @close='closeRelease' @open='releasePage' @param='releaseParam'/>
                 </div>
@@ -55,11 +53,12 @@
                                 <graphic-crad :item='item' v-if='item'/>
                             </van-cell>
                         </div> 
-                    </div>
+                    </div> 
                 </van-list>
             </lazy-component>
         </div>
-        
+    
+        <slogan v-if='finished'/>
         <!-- 发布 -->
         <van-popup v-model="releasePageShow" class="page-popup" position="bottom" :overlay="false">
             <graphic v-if="Param=='graphic'" @close='closeReleasePage'/>
@@ -73,13 +72,15 @@ import { sum } from './../lib/js/util.js'
 import release from './../module/mold/release'
 import graphic from './../module/release/graphic'
 import graphicCrad from './../module/list/graphicCrad'
+import slogan from './../module/slogan'
 
 export default {
     name:'zoom',
     components: {
         release,
         graphic,
-        graphicCrad
+        graphicCrad,
+        slogan
     },
     computed: {
         userData(){
@@ -99,7 +100,6 @@ export default {
             isReleaseShow:false,
             releasePageShow:false,
             // ----
-            title:'个人空间',
             list: [],
             domHeight:0,
             scrollTop:0,
@@ -123,7 +123,6 @@ export default {
             this.getDomHeight()  
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
             this.scrollTop = scrollTop
-            
             if( this.domHeight < this.scrollTop){
                this.fixedHeaderBar = false
             }else{
@@ -168,10 +167,6 @@ export default {
 <style scoped>
 .container{
     margin-top: 2.875rem /* 46/16 */;
-}
-
-.zoom-home{
-    position: relative;
 }
 
 .info{
