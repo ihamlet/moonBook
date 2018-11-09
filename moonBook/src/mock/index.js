@@ -327,7 +327,8 @@ let userData = {
     isVip: 0,
     vipInfo:'',
     childInfo:[],
-    dryingList:[]
+    dryingList:[],
+    fans: Mock.mock('@natural(20, 100)')
 }
 
 let pay = function ( options ) {
