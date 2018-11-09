@@ -1,5 +1,5 @@
 <template>
-    <div class="head" ref='head'>
+    <div class="head head-background" ref='head'>
         <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userData.userInfo.name" @click-left="onClickLeft" @click-right="onClickRight">
             <div class="head-bar-icon" slot='left'>
                 <i class="iconfont">&#xe66a;</i>
@@ -131,7 +131,7 @@ export default {
         },
         getDomHeight(){
             if(this.$refs.head){
-                this.domHeight = this.$refs.head.offsetHeight
+                this.domHeight = this.$refs.head.offsetHeight/2
             }
         },
         onClickLeft(){
@@ -156,7 +156,6 @@ export default {
 <style scoped>
 .head{
    width: 100%;
-   background-image: linear-gradient( 30deg, #2AFADF 10%, #4C83FF 100%);
    position: relative;
 }
 
@@ -192,11 +191,6 @@ export default {
 
 .borrow-card i.iconfont{
     font-size: 1.875rem /* 30/16 */;
-}
-
-.avatar{
-    width: 4.5rem /* 72/16 */;
-    margin: 0 auto;
 }
 
 .avatar img{

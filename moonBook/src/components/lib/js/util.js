@@ -58,8 +58,15 @@ function createComparison(propertyName) {
   };
 }
 
+//数组求和
+
+function sum (arr){
+  return eval(arr.join("+"));
+}
+
 export {
   GetDistance,
   format,
   createComparison,
+  sum
 }

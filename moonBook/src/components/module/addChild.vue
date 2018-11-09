@@ -199,8 +199,8 @@ export default {
         },
         edit(){
             axios.put('/api/editChild',{
-                id:this.dataId,
-                childInfo:this.childInfo
+                id: this.dataId,
+                childInfo: this.childInfo
             }).then(res=>{
                 this.$store.dispatch('getUserData')
                 this.submitLoading = true

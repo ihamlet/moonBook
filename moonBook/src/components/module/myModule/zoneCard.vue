@@ -2,13 +2,13 @@
     <div class="zone">
         <div class="module-card">
             <van-cell-group class="cell-group">
-            <van-cell class="cell" center is-link>
+            <van-cell class="cell" center is-link to='./zoom'>
                 <div class="content flex flex-align" slot="title">
                     <span class="icon">
                         <i class="iconfont">&#xe606;</i>
                     </span>
                     <div class="img-preview flex flex-justify" v-if='imageslength > 0'>
-                        <div class="img-grid" v-if='index < 4' v-for='(item,index) in userData.dryingList[0].images' v-lazy:background-image='item.img'></div>
+                        <div class="img-grid" v-if='index < 4' v-for='(item,index) in userData.dryingList[0].media.imgList' v-lazy:background-image='item.img'></div>
                         <div class="robe"  v-if='imageslength > 4'>
                             <photo-stack/>
                         </div>
@@ -31,22 +31,17 @@ import photoStack from './../animate/photoStack'
 export default {
     name:'zone',
     components: {
-      photoStack  
+      photoStack
     },
     computed: {
         userData(){
             return this.$store.getters.userDataState
         },
         imageslength(){
-            return this.userData.dryingList[0].images.length
+            return this.userData.dryingList[0].media.imgList.length
         }
     },
-    data () {
-        return {
-           
-        }
-    },
-    created () {
+    methods: {
 
     }
 }
@@ -109,5 +104,9 @@ export default {
 .img-preview .img-grid{
     margin-right: .3125rem /* 5/16 */;
     z-index: 2;
+}
+
+.img-preview .img-grid:last-child{
+    box-shadow: 0 .125rem /* 2/16 */ .625rem /* 10/16 */ rgba(0, 0, 0, .3)
 }
 </style>

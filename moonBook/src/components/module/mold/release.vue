@@ -46,7 +46,7 @@ export default {
     border-style:solid;
     border-color:transparent transparent rgba(0, 0, 0, .72);
     position: absolute;
-    top: -.375rem /* 6/16 */;
+    top: -.3125rem /* 5/16 */;
     right: .125rem /* 2/16 */;
 }
 
@@ -56,7 +56,7 @@ export default {
     width: 20rem /* 320/16 */;
     right: .625rem /* 10/16 */;
     top: 3.75rem /* 60/16 */;
-    border-radius:.625rem /* 10/16 */ 0 .625rem /* 10/16 */ .625rem /* 10/16 */;
+    border-radius:.625rem /* 10/16 */ .3125rem /* 5/16 */ .625rem /* 10/16 */ .625rem /* 10/16 */;
     padding: .3125rem /* 5/16 */;
     color: #fff;
 }

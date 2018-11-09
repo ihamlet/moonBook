@@ -7,6 +7,8 @@ import Find from '@/components/pages/find'
 import Notice from '@/components/pages/notice'
 import My from '@/components/pages/my'
 
+import Zoom from '@/components/pages/zoom'
+
 Vue.use(Router)
 
 export default new Router({
@@ -45,6 +47,14 @@ export default new Router({
         component: My,
         meta: {
           title: '个人中心',
+          scrollToTop: true
+        }
+      },{
+        path: '/zoom',
+        name: 'zoom',
+        component: Zoom,
+        meta: {
+          title: '个人空间',
           scrollToTop: true
         }
       }]

@@ -2,7 +2,7 @@
     <div class="my page-padding">
         <card-head />
         <lazy-component class="gutter gap-top">
-           <zone v-if='dataLength > 0'/> 
+           <zone-card v-if='dataLength > 0'/> 
         </lazy-component>
         <lazy-component class="gutter gap">
             <baby-home/>
@@ -14,7 +14,7 @@
 <script>
 import footerBar from './../module/footerBar'
 import cardHead from './../module/myModule/head'
-import zone from './../module/myModule/zone'
+import zoneCard from './../module/myModule/zoneCard'
 import babyHome from './../module/myModule/babyHome'
 import slogan from './../module/slogan'
 
@@ -23,8 +23,8 @@ export default {
     components: {
         slogan,
         footerBar,
-        zone,
         cardHead,
+        zoneCard,
         babyHome
     },
     computed: {

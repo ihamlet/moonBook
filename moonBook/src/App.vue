@@ -23,11 +23,11 @@ export default {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_a7cm7j5fvbf.eot');
-  src: url('//at.alicdn.com/t/font_893274_a7cm7j5fvbf.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_a7cm7j5fvbf.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_a7cm7j5fvbf.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_a7cm7j5fvbf.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_lhw243uwku.eot');
+  src: url('//at.alicdn.com/t/font_893274_lhw243uwku.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_lhw243uwku.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_lhw243uwku.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_lhw243uwku.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -124,6 +124,10 @@ body{
 
 .scroll-item{
     display: inline-block;
+}
+
+.head-background{
+  background-image: linear-gradient( 30deg, #2AFADF 10%, #4C83FF 100%);
 }
 
 /* 动画 */
@@ -519,23 +523,6 @@ img.lazy[lazy=error],
 
 .icon-right i.iconfont{
   font-size: 1.5rem /* 24/16 */;
-}
-
-/* 点赞 */
-.add-praise-popup.van-popup{
-    background: transparent;
-    overflow: initial;
-}
-
-.add-praise-popup.van-popup .iconfont{
-  background: linear-gradient(135deg, #FF2A00,#FF00AF);
-  -webkit-background-clip: text;
-  color: transparent;
-  display: block;
-}
-
-.add-praise-popup.van-popup .iconfont{
-    font-size: 3.25rem /* 52/16 */;
 }
 
 /* 徽章 */

@@ -23,6 +23,16 @@ const getters = {
        if(state.userData.dryingList){
             return state.userData.dryingList.length
        }
+   },
+   userPraiseState: state =>{
+       let praise = []
+       if(state.userData.dryingList){
+            state.userData.dryingList.forEach(element => {
+                praise.push(element.social.praise.number)
+           })
+       }
+
+       return praise 
    }
 }
 

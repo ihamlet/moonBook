@@ -39,16 +39,12 @@
                     </div>
                     <div class="praise flex flex-align flex-justify" @click="addPraise(item)">
                         <i class="iconfont" v-if='!item.getPraise'>&#xe644;</i>
-                        <i class="iconfont highlight tada animated" v-else>&#xe6e3;</i>
+                        <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
                         {{item.social.praise.number>1000?'999+':item.social.praise.number}}
                     </div>
                 </div>
             </div>
         </div>
-
-        <van-popup v-model="praiseShow" class="add-praise-popup" :overlay="false">
-            <i class="iconfont" :class="[praiseShow?'tada animated':'']">&#xe6e3;</i>
-        </van-popup>
     </div>
 </template>
 <script>
@@ -63,7 +59,6 @@ export default {
     },
     data () {
         return {
-            praiseShow:false,
             isFold:false,
             fullWidth: document.documentElement.clientWidth
         }
@@ -86,13 +81,6 @@ export default {
         },
         addPraise(item){
             item.getPraise = !item.getPraise
-
-            if(item.getPraise){
-                this.praiseShow = true
-                setTimeout(()=>{
-                    this.praiseShow = false
-                },1000)
-            }
 
             axios.post('/api/addPraise',{
                 id:item.id,

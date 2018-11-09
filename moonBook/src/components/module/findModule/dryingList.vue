@@ -25,75 +25,31 @@
                                     <span>{{item.time}}</span>
                                 </div>
                             </div>
-                            <div class="text" v-line-clamp:20="2">
-                                {{item.text}}
-                            </div>
-                            <div class="media" :class="item.media.imgList?'img':''" v-if='item.media.imgList'>
-                                <van-row gutter="5">
-                                    <van-col :span="8" v-for='(photo,photoIndex) in item.media.imgList' :key="photoIndex">
-                                        <div class="img-grid" @click="mediaLamp(item,photoIndex)" v-lazy:background-image='photo.img'>
-                                        </div>
-                                    </van-col>
-                                </van-row>
-                            </div>
-                            <div class="media" :class="item.media.videoCover?'video-cover':''" v-if='item.media.videoCover'>
-                                <div class="video-cover">
-                                    <div class="play">
-                                        <i class="iconfont">&#xe602;</i>
-                                    </div>
-                                    <img :src="item.media.videoCover" alt="视频封面">
-                                </div>
-                            </div>
-                            <div class="social flex flex-align">
-                                <div class="share">
-                                    <i class="iconfont">&#xe6eb;</i>
-                                    {{item.social.share.number>1000?'999+':item.social.share.number}}
-                                </div>
-                                <div class="message">
-                                    <i class="iconfont">&#xe731;</i>
-                                    {{item.social.message.number>1000?'999+':item.social.message.number}}
-                                </div>
-                                <div class="praise flex flex-align flex-justify" @click="addPraise(item)">
-                                    <i class="iconfont" v-if='!item.getPraise'>&#xe644;</i>
-                                    <i class="iconfont highlight tada animated" v-else>&#xe6e3;</i>
-                                    {{item.social.praise.number>1000?'999+':item.social.praise.number}}
-                                </div>
-                            </div>
+                            <graphic-crad :item='item'/>
                         </div>
                     </van-cell>
                 </div>
                 <slogan v-if='!loading'/>
             </div>
         </van-list>
-
-        <van-popup v-model="praiseShow" class="add-praise-popup" :overlay="false">
-            <i class="iconfont" :class="[praiseShow?'rotateInDownLeft animated':'']">&#xe6e3;</i>
-        </van-popup>
-
-        <van-popup v-model="pictureShow" class="picture-box-popup" :overlay='false'>
-            <picture-box @listenPictureBox='listenPictureBoxClose' v-model='imgIndex' :item='item'/>
-        </van-popup>
     </div>
 </template>
 <script>
 import axios from 'axios'
 import slogan from './../slogan'
-import pictureBox from './../mold/pictureBox'
+import graphicCrad from './../list/graphicCrad'
 
 export default {
     name:'drying-list',
     components: {
         slogan,
-        pictureBox
+        graphicCrad
     },
     data () {
         return {
             DetailsId:0,
-            imgIndex:0,
             pictureShow:false,
             praiseShow:false,
-            page:1,
-            size:20,
             list: [],
             item:'',
             loading: false,
@@ -103,39 +59,17 @@ export default {
     methods: {
         onLoad() {
             axios.get('/api/drying').then(res=>{
-                this.page++
-                let array = res.data.dryingData.dryingList
-                this.list = this.list.concat(array)
-                this.loading = false
-                if ( this.page > 4 ) {
-                    this.finished = true
-                }
+                setTimeout(() => {
+                    let array = res.data.dryingData.dryingList
+                    for (let i = 0; i < 5; i++) {
+                        this.list.push( array[this.list.length] )
+                    }
+                    this.loading = false
+                    if (this.list.length >= 25) {
+                        this.finished = true;
+                    }
+                },500)
             })
-        },
-        addPraise(item){
-            item.getPraise = !item.getPraise
-
-            if(item.getPraise){
-                this.praiseShow = true
-                setTimeout(()=>{
-                    this.praiseShow = false
-                },1000)
-            }
-
-            axios.post('/api/addPraise',{
-                id:item.id,
-                getPraise:item.getPraise
-            }).then(res=>{
-                item.social.praise.number = res.data.praise
-            })
-        },
-        mediaLamp(item,photoIndex){
-            this.pictureShow = true
-            this.imgIndex = photoIndex
-            this.item = item
-        },
-        listenPictureBoxClose(){
-            this.pictureShow = false
         }
     }
 }
@@ -172,48 +106,4 @@ export default {
     color: #C0C4CC;
 }
 
-.text{
-    margin: .9375rem /* 15/16 */ .3125rem /* 5/16 */;
-    text-align: justify;
-}
-
-.content{
-    padding: .625rem /* 10/16 */ 0;
-}
-
-.video-cover{
-    width: 12.5rem /* 200/16 */;
-    height: 18.75rem /* 300/16 */;
-    position: relative;
-}
-
-.video-cover .play{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate3d(-50%, -50%, 0);
-    width: 3.5rem /* 56/16 */;
-    height: 3.5rem /* 56/16 */;
-    text-align: center;
-    line-height: 3.5rem /* 56/16 */;
-}
-
-.video-cover .play i.iconfont{
-    color: #fff;
-    font-size: 3.5rem /* 56/16 */;
-}
-
-.social{
-    margin-top: .625rem /* 10/16 */;
-    height: 2.25rem /* 36/16 */;
-    border-top: .0625rem /* 1/16 */ solid #E4E7ED;
-}
-
-.media{
-    margin-bottom: .625rem /* 10/16 */;
-}
-
-.info i.iconfont{
-    font-size: 1.25rem /* 20/16 */;
-}
 </style>

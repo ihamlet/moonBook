@@ -56,8 +56,6 @@ export default {
     },
     data () {
         return {
-            page:1,
-            size:20,
             list: [],
             loading: false,
             finished: false
@@ -66,13 +64,16 @@ export default {
     methods: {
         onLoad() {
             axios.get('/api/courseList').then(res=>{
-                this.page++
-                let array = res.data.courseData.courseList
-                this.list = this.list.concat(array)
-                this.loading = false
-                if ( this.page > 3 ) {
-                    this.finished = true
-                }
+                setTimeout(() => {
+                    let array = res.data.courseData.courseList
+                    for (let i = 0; i < 5; i++) {
+                        this.list.push( array[this.list.length] )
+                    }
+                    this.loading = false
+                    if (this.list.length >= 20) {
+                        this.finished = true;
+                    }
+                },500)
             })
         }
     }

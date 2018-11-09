@@ -253,6 +253,7 @@ export default {
         },
         closeAddChildPage(){
             this.$emit('close')
+            this.addChildShow = false
         }
     }
 }

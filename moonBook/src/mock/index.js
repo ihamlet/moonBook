@@ -89,7 +89,7 @@ Mock.mock('/api/home', (req, res) => {
 //课程列表
 
 let courseData = Mock.mock({
-  'courseList|5-10': [{
+  'courseList|20': [{
     title: function () {
       return Mock.mock('@ctitle(8, 30)')
     },
@@ -314,6 +314,7 @@ Mock.mock('/api/cardInfo', (req, res) => {
 })
 
 let userData = {
+    id: Mock.mock('@increment'),
     userInfo:{
         avatar: Mock.mock("@image('120x120')"),
         name: Mock.mock('@cname()'),
@@ -328,7 +329,11 @@ let userData = {
     vipInfo:'',
     childInfo:[],
     dryingList:[],
-    fans: Mock.mock('@natural(20, 100)')
+    social:{
+        fans: Mock.mock('@natural(20, 100)'),
+        follow: Mock.mock('@natural(10, 50)'),
+    }
+
 }
 
 let pay = function ( options ) {
@@ -362,6 +367,7 @@ let pay = function ( options ) {
     }
 }
 
+//用户信息
 Mock.mock('/api/userData', (req, res) => {
     return {
         userData
@@ -384,7 +390,7 @@ let freshData = Mock.mock({
 })
 
 let dryingData = Mock.mock({
-    'dryingList|5-10':[{
+    'dryingList|25':[{
         avatar: Mock.mock("@image('120x120')"),
         id:function(){
             return Mock.mock('@increment')
@@ -467,9 +473,25 @@ let addDrying = function (options){
         },
         getPraise:false
     }
-    dryingData.dryingList.unshift(array)
-    userData.dryingList.unshift(data)
 
+    let userDataDrying = {
+        media:{
+            imgList:data.images
+        },
+        text: data.text,
+        date: Mock.mock("@now('MM-dd')"),
+        time: Mock.mock('@now("HH:mm:ss")'),
+        social:{
+            praise: Mock.mock({"number|1-1200": 50}),
+            share:  Mock.mock({"number|1-1200": 50}),
+            message: Mock.mock({"number|1-1200": 50})
+        }
+    }
+
+    dryingData.dryingList.unshift(array)
+    userData.dryingList.unshift(userDataDrying)
+    
+    
     return {
         dryingData
     }
