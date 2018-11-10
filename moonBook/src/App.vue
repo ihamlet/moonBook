@@ -14,7 +14,7 @@ export default {
 
 <style>
 /* 公共样式 */
-::-webkit-scrollbar {
+*::-webkit-scrollbar {
     width: 0;
     height: 0;
     color: transparent;
@@ -23,11 +23,11 @@ export default {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_lhw243uwku.eot');
-  src: url('//at.alicdn.com/t/font_893274_lhw243uwku.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_lhw243uwku.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_lhw243uwku.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_lhw243uwku.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_e0jp0nteul.eot');
+  src: url('//at.alicdn.com/t/font_893274_e0jp0nteul.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_e0jp0nteul.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_e0jp0nteul.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_e0jp0nteul.svg#iconfont') format('svg');
 }
 
 .iconfont {

@@ -19,7 +19,6 @@
                             {{userData.userInfo.name}}
                         </div>
                     </div>
-
                     <div class="social flex flex-align">
                         <div class="data-box">
                             <div class="number">{{ release }}</div>
@@ -50,7 +49,7 @@
                     <div class="list">
                         <div class="item" v-for="(item,index) in list" :key="index">
                             <van-cell>
-                                <graphic-crad :item='item' v-if='item'/>
+                                <graphic-crad :item='item'/>
                             </van-cell>
                         </div> 
                     </div> 
@@ -211,5 +210,6 @@ export default {
 
 .item{
     margin-bottom: .3125rem /* 5/16 */;
+    position: relative;
 }
 </style>

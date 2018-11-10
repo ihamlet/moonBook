@@ -409,17 +409,7 @@ let dryingData = Mock.mock({
         text:function(){
             return Mock.mock('@cparagraph(0,5)')
         },
-        'school|1':[{
-            name:function(){
-                return Mock.mock('@ctitle(5, 12)') + '幼儿园'
-            }
-        },{
-            name:function(){
-                return Mock.mock('@ctitle(5, 12)') + '培训班'
-            }
-        },{
-            
-        }],
+        'school|1': schoolData.schoolList,
         "media|1":[{
             videoCover: Mock.mock("@image('750x1134','#000','#fff','jpeg','封面750x1134')")
         },{
@@ -453,6 +443,7 @@ Mock.mock('/api/fresh', (req, res) => {
 let addDrying = function (options){
     let data = JSON.parse(options.body).graphic
     let array = {
+        id: Mock.mock('@increment'),
         avatar: userData.userInfo.avatar,
         name: userData.userInfo.name,
         date: Mock.mock("@now('MM-dd')"),
@@ -474,22 +465,8 @@ let addDrying = function (options){
         getPraise:false
     }
 
-    let userDataDrying = {
-        media:{
-            imgList:data.images
-        },
-        text: data.text,
-        date: Mock.mock("@now('MM-dd')"),
-        time: Mock.mock('@now("HH:mm:ss")'),
-        social:{
-            praise: Mock.mock({"number|1-1200": 50}),
-            share:  Mock.mock({"number|1-1200": 50}),
-            message: Mock.mock({"number|1-1200": 50})
-        }
-    }
-
     dryingData.dryingList.unshift(array)
-    userData.dryingList.unshift(userDataDrying)
+    userData.dryingList.unshift(array)
     
     
     return {

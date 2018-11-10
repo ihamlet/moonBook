@@ -1,5 +1,25 @@
 <template>
     <div class="graphic-card">
+        <div class="user-card flex flex-align">
+            <div class="avatar">
+                <img :src="item.avatar" :alt="item.name">
+            </div>
+            <div class="info">
+                <div class="name">
+                    {{item.name}} 
+                    <i class="iconfont vip-masonry" v-if="item.isVip==1&&item.vipType.borrow==7">&#xe611;</i>
+                    <i class="iconfont vip-gold" v-if="item.isVip==1&&item.vipType.borrow==5">&#xe611;</i>
+                    <i class="iconfont vip-ordinary" v-if="item.isVip==1&&item.vipType.borrow==3">&#xe611;</i>     
+                </div>
+                <div class="school" v-if='item.school.schoolName'>
+                    {{item.school.schoolName.name}}
+                </div>
+            </div>
+            <div class="date">
+                <span>{{item.date}}</span>
+                <span>{{item.time}}</span>
+            </div>
+        </div>
          <div class="text" v-line-clamp:20="2">
             {{item.text}}
         </div>
@@ -118,6 +138,29 @@ export default {
 
 .info i.iconfont{
     font-size: 1.25rem /* 20/16 */;
+}
+
+.avatar{
+    margin-right: .625rem /* 10/16 */;
+}
+
+.name{
+    font-size: 1rem /* 16/16 */;
+    color: #303133
+}
+
+.avatar img{
+    width: 3.5rem /* 56/16 */;
+    height: 3.5rem /* 56/16 */;
+    border-radius: 50%;
+}
+
+.date{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: .75rem /* 12/16 */;
+    color: #C0C4CC;
 }
 </style>
 

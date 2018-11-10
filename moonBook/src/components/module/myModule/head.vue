@@ -198,6 +198,11 @@ export default {
     height: 4.5rem /* 72/16 */;
     border-radius: 50%;
     border: .1875rem /* 3/16 */ solid #fff;
+
+}
+
+.avatar{
+    margin: 0 auto;
 }
 
 .user-info{
@@ -207,6 +212,7 @@ export default {
 
 .info{
     color: #fff;
+    display: inline-grid;
 }
 
 .info .name{

@@ -26,8 +26,8 @@
                     <apps-list :appsList='appsList'/>
                 </div>
             </lazy-component>
-            <lazy-component class="card" :class="[btnPulse?'pulse animated first':'']">
-                <investment-ad :investmentAd='investmentAd'/>
+            <lazy-component class="card">
+                <investment-ad :investmentAd='investmentAd' :isAdshow='isAdshow'/>
             </lazy-component>
             <lazy-component class="module">
                 <news-list :newsList='newsList'/>
@@ -38,6 +38,13 @@
             <lazy-component class="module">
                 <course-list/> 
             </lazy-component>
+        </div>
+
+        <div class="apply">
+            <van-button class="theme-btn" :class="[btnPulse?'rubberBand animated second':'']" round size="normal" type="primary"> 
+                <i class="iconfont">&#xe619;</i>  
+                办理借阅卡
+            </van-button>
         </div>
 
         <!-- 发布 -->
@@ -90,6 +97,7 @@ export default {
             pageIndex:0,
             btnPulse:false,
             themeBarSearch:false,
+            isAdshow: true,
             scrollTop:'',
             domHeight:'',
             searchText:'搜索图书/幼儿园/文章',
