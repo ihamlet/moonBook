@@ -58,22 +58,38 @@ export default {
         return {
             list: [],
             loading: false,
-            finished: false
+            finished: false,
+            p:1,
+            limit:20
         }
     },
     methods: {
         onLoad() {
-            axios.get('/api/courseList').then(res=>{
-                setTimeout(() => {
-                    let array = res.data.courseData.courseList
-                    for (let i = 0; i < 5; i++) {
-                        this.list.push( array[this.list.length] )
-                    }
-                    this.loading = false
-                    if (this.list.length >= 20) {
-                        this.finished = true;
-                    }
-                },500)
+            let $this = this;
+            axios.get('/book/PeixunCourse/getList', {params:{
+                p: $this.p,
+                limit: $this.limit
+            }}).then(res=>{
+                // setTimeout(() => {
+                //     let array = res.data.courseData.courseList
+                //     for (let i = 0; i < 5; i++) {
+                //         this.list.push( array[this.list.length] )
+                //     }
+                //     this.loading = false
+                //     if (this.list.length >= 20) {
+                //         this.finished = true;
+                //     }
+                // },500)
+                if(res.data && res.data.length) {
+                    this.list = this.list.concat(res.data);
+                    this.p ++;
+                    this.finished = true;
+                }
+               this.loading = true;
+               if(!res.data || res.data.length < 20){
+                   this.finished = true;
+               }
+                
             })
         }
     }
