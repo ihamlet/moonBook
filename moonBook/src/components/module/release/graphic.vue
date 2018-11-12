@@ -47,6 +47,7 @@
 <script>
 import axios from 'axios'
 import topicList from './topicList'
+import { compress } from './../../lib/js/util.js'
 
 export default {
     name:'graphic',
@@ -82,11 +83,19 @@ export default {
             if(file.length){
                 file.forEach( element => {
                     if(this.imagesLength < 9){
-                        this.grapicData.images.push({img:element.content})
+                        compress(element.content,800,0.5).then( val => {
+                            this.grapicData.images.push({
+                                img:val
+                            })
+                        })
                     }
                 })
             }else{
-                this.grapicData.images.push({img:file.content})
+                compress(file.content,800,0.5).then( val => {
+                    this.grapicData.images.push({ 
+                        img:val
+                    })
+                })
             }
         },
         onClickLeft(){

@@ -41,7 +41,7 @@
         </div>
 
         <div class="apply">
-            <van-button class="theme-btn" :class="[btnPulse?'rubberBand animated second':'']" round size="normal" type="primary"> 
+            <van-button class="theme-btn" :class="[btnPulse?'rubberBand animated second':'']" round size="normal" type="primary" @click="toAccept"> 
                 <i class="iconfont">&#xe619;</i>  
                 办理借阅卡
             </van-button>
@@ -50,6 +50,11 @@
         <!-- 发布 -->
         <van-popup v-model="releasePageShow" class="page-popup" position="bottom" :overlay="false">
             <graphic v-if="Param=='graphic'" @close='closeReleasePage'/>
+        </van-popup>
+
+        <!-- 借阅卡办理页面 -->
+        <van-popup v-model="applyShow" class="page-popup" position="bottom" :overlay="false">
+            <accept @close='onAccpetPage' v-model='active'/>
         </van-popup>
 
 
@@ -94,6 +99,7 @@ export default {
             releasePageShow:false,
             /* --------------  */
             active:0,
+            applyShow:false,
             pageIndex:0,
             btnPulse:false,
             themeBarSearch:false,
@@ -167,6 +173,13 @@ export default {
         },
         closeReleasePage(){
             this.releasePageShow = false
+        },
+        toAccept(){
+            this.applyShow = true
+            this.active = 0
+        },
+        onAccpetPage(){
+            this.applyShow = false
         }
     }
 }

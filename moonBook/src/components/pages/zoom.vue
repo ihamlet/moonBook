@@ -1,6 +1,6 @@
 <template>
     <div class="zoom page-padding">
-        <van-nav-bar :title="fixedHeaderBar?$route.meta.title:userData.userInfo.name" fixed left-text="个人中心"  left-arrow @click-left="onClickLeft" @click-right="onClickRight">
+        <van-nav-bar :title="fixedHeaderBar?$route.meta.title:userData.userInfo.name" fixed left-text="个人中心" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
             <div slot="right" class="theme-color">
                 <i class="iconfont" :class="[isReleaseShow?'rotate-45':'rotate']">&#xe612;</i>
                 <div class="release-popup" v-if='isReleaseShow'>

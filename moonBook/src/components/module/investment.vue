@@ -10,21 +10,20 @@
         </div>
 
         <div class="box">
-                <van-row class="flex flex-align">
-                    <van-col span="8">       
-                        <a class="box-link" :href="investmentAd.link">成为书架馆长</a>
-                    </van-col>
-                    <van-col span="10">
-                        <div class="content">
-                            <span>万册图书触手可及</span>
-                            <span>幼儿园的新名片</span>
-                        </div>
-                    </van-col>
-                    <van-col span="6" class="flex flex-justify">
-                        <van-button class="theme-btn" size="small" type="primary" plain>注册</van-button>
-                    </van-col>
-                </van-row>
-            </a>
+            <van-row class="flex flex-align">
+                <van-col span="8">       
+                    <a class="box-link" :href="investmentAd.link">成为书架馆长</a>
+                </van-col>
+                <van-col span="10">
+                    <div class="content">
+                        <span>万册图书触手可及</span>
+                        <span>幼儿园的新名片</span>
+                    </div>
+                </van-col>
+                <van-col span="6" class="flex flex-justify">
+                    <van-button class="theme-btn" size="small" type="primary" plain>注册</van-button>
+                </van-col>
+            </van-row>
         </div>
     </div>
 </template>
@@ -35,6 +34,16 @@ export default {
     data () {
         return {
             isAdshow: true
+        }
+    },
+    created () {
+        if(localStorage.getItem("ad")){
+            this.isAdshow = JSON.parse(localStorage.getItem("ad"))
+        }
+    },
+    watch: {
+        isAdshow(val){
+            localStorage.setItem('ad',val)
         }
     },
     methods: {
