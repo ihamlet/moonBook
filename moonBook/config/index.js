@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
       '/book': {
         // 测试环境
-        target:'http://book.vmc.com/', // 本机测试
+        target:'http://book.wmdev.com/', // 本机测试
         // target:'http://hu.wmlife.net/', // 线上测试
         // target:'https://www.wmlife.net/, // 生产环境
         changeOrigin:true, // 是否跨域
