@@ -52,7 +52,7 @@ export default {
                     this.show = false
                 },1000)
             }
-            axios.post('/api/addLike',{
+            axios.post('/book/SchoolArticle/zan',{
                 id:item.id,
                 getLike:item.getLike
             }).then(res=>{
