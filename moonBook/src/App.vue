@@ -14,7 +14,7 @@ export default {
 
 <style>
 /* 公共样式 */
-::-webkit-scrollbar {
+*::-webkit-scrollbar {
     width: 0;
     height: 0;
     color: transparent;
@@ -23,11 +23,11 @@ export default {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_lhw243uwku.eot');
-  src: url('//at.alicdn.com/t/font_893274_lhw243uwku.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_lhw243uwku.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_lhw243uwku.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_lhw243uwku.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_w4euc8xovng.eot');
+  src: url('//at.alicdn.com/t/font_893274_w4euc8xovng.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_w4euc8xovng.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_w4euc8xovng.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_w4euc8xovng.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -678,5 +678,9 @@ i.iconfont.rotate{
 
 .box .btn.also{
       background-image: linear-gradient( 135deg, #FFC107 10%, #FF9800 100%);
+}
+
+.silde{
+  height: 0;
 }
 </style>

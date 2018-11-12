@@ -4,9 +4,8 @@
             <div class="head-bar-icon" slot='left'>
                 <i class="iconfont">&#xe66a;</i>
             </div>
-            <div class="head-bar-text" slot='right' v-if='$store.state.isPay'>
-                 <i class="iconfont">&#xe619;</i>
-                借阅
+            <div class="head-bar-icon" slot='right'>
+                <i class="iconfont">&#xe609;</i>
             </div>
         </van-nav-bar>
         <div class="user-info flex flex-justify" v-if='userData.userInfo'>
@@ -66,7 +65,11 @@
             <accept @close='onAccpetPage' v-model='active'/>
         </van-popup>
 
-        <van-popup v-model="show" class="borrow-popup" position="bottom">
+        <van-popup v-model="punchShow" class="page-popup punch" position="right">
+            <punch @close='closePunch'/>
+        </van-popup>
+
+        <!-- <van-popup v-model="show" class="borrow-popup" position="bottom">
             <div class="flex">
             <div class="box">
                 <div class="btn borrow an-0 animated" :class="[show?'bounceInUp':'bounceOutDown']">
@@ -79,12 +82,13 @@
                 </div>
             </div>
             </div>
-        </van-popup>
+        </van-popup> -->
     </div>
 </template>
 <script>
 import axios from 'axios'
 import numberGrow from './../../module/animate/numberGrow'
+import punch from './../../module/punch'
 import accept from './../accept'
 
 import { mapMutations } from 'vuex'
@@ -93,7 +97,8 @@ export default {
     name:'cardHead',
     components: {
         numberGrow,
-        accept
+        accept,
+        punch
     },
     computed: {
         userData(){
@@ -106,7 +111,7 @@ export default {
             scrollTop:0,
             fixedHeaderBar:true,
             active:0,
-            show:false,
+            punchShow:false,
             applyShow:false
         }
     },
@@ -138,7 +143,7 @@ export default {
             
         },
         onClickRight(){
-            this.show = true
+            this.punchShow = true
         },
         toAccept(){
             this.applyShow = true
@@ -149,6 +154,9 @@ export default {
         },
         onStepActiveChange(val){
             this.active = val
+        },
+        closePunch(){
+            this.punchShow = false
         }
     }
 }
@@ -198,6 +206,11 @@ export default {
     height: 4.5rem /* 72/16 */;
     border-radius: 50%;
     border: .1875rem /* 3/16 */ solid #fff;
+
+}
+
+.avatar{
+    margin: 0 auto;
 }
 
 .user-info{
@@ -207,6 +220,7 @@ export default {
 
 .info{
     color: #fff;
+    display: inline-grid;
 }
 
 .info .name{
@@ -264,5 +278,9 @@ export default {
 
 .theme-color{
     margin: 0 .3125rem /* 5/16 */;
+}
+
+.punch{
+    background: #DE4313;
 }
 </style>

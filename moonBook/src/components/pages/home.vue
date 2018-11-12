@@ -26,8 +26,8 @@
                     <apps-list :appsList='appsList'/>
                 </div>
             </lazy-component>
-            <lazy-component class="card" :class="[btnPulse?'pulse animated first':'']">
-                <investment-ad :investmentAd='investmentAd'/>
+            <lazy-component class="card">
+                <investment-ad :investmentAd='investmentAd' :isAdshow='isAdshow'/>
             </lazy-component>
             <lazy-component class="module">
                 <news-list :newsList='newsList'/>
@@ -40,9 +40,21 @@
             </lazy-component>
         </div>
 
+        <div class="apply" v-if='!$store.state.userData.vipInfo'>
+            <van-button class="theme-btn" :class="[btnPulse?'rubberBand animated second':'']" round size="normal" type="primary" @click="toAccept"> 
+                <i class="iconfont">&#xe619;</i>  
+                办理借阅卡
+            </van-button>
+        </div>
+
         <!-- 发布 -->
         <van-popup v-model="releasePageShow" class="page-popup" position="bottom" :overlay="false">
             <graphic v-if="Param=='graphic'" @close='closeReleasePage'/>
+        </van-popup>
+
+        <!-- 借阅卡办理页面 -->
+        <van-popup v-model="applyShow" class="page-popup" position="bottom" :overlay="false">
+            <accept @close='onAccpetPage' v-model='active'/>
         </van-popup>
 
 
@@ -87,9 +99,11 @@ export default {
             releasePageShow:false,
             /* --------------  */
             active:0,
+            applyShow:false,
             pageIndex:0,
             btnPulse:false,
             themeBarSearch:false,
+            isAdshow: true,
             scrollTop:'',
             domHeight:'',
             searchText:'搜索图书/幼儿园/文章',
@@ -108,7 +122,7 @@ export default {
         window.addEventListener('scroll', this.handleScroll)
     },
     watch: {
-      '$router':'fetchData'  
+      '$router':'fetchData'
     },
     methods: {
         fetchData(){
@@ -159,6 +173,13 @@ export default {
         },
         closeReleasePage(){
             this.releasePageShow = false
+        },
+        toAccept(){
+            this.applyShow = true
+            this.active = 0
+        },
+        onAccpetPage(){
+            this.applyShow = false
         }
     }
 }

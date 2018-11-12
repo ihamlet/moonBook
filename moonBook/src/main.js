@@ -7,6 +7,7 @@ import Vuex from 'vuex'
 import App from './App'
 import router from './router'
 import store from './store/index'
+import axios from './plugins/http'
 
 import Vant from 'vant'
 import 'vant/lib/vant-css/index.css'
@@ -15,6 +16,8 @@ import { Lazyload } from 'vant'
 import lineClamp from 'vue-line-clamp'
 
 import './mock' //模拟数据
+
+Vue.prototype.$http = axios;
 
 Vue.use(Vuex)
 Vue.use(Vant)
