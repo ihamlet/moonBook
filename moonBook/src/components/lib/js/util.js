@@ -43,6 +43,23 @@ function format(time, format) {
   })
 }
 
+var now = new Date()
+var nowDay = now.getDate()
+var nowMonth = now.getMonth()
+var nowYear = now.getYear()
+var nowDayOfWeek = now.getDay()
+
+//获得本周的开始日期
+function getWeekStartDate() {
+  var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek)
+  return weekStartDate
+}
+//获得本周的结束日期
+function getWeekEndDate() {
+  var weekEndDate = new Date(nowYear, nowMonth, nowDay + (6 - nowDayOfWeek))
+  return weekEndDate
+}
+
 //字段排序
 function createComparison(propertyName) {
   return function (object1, object2) {
@@ -55,7 +72,7 @@ function createComparison(propertyName) {
     } else {
       return 0
     }
-  };
+  }
 }
 
 //数组求和
@@ -104,5 +121,7 @@ export {
   format,
   createComparison,
   sum,
-  compress
+  compress,
+  getWeekStartDate,
+  getWeekEndDate
 }

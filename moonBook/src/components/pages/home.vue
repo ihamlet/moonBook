@@ -40,7 +40,7 @@
             </lazy-component>
         </div>
 
-        <div class="apply">
+        <div class="apply" v-if='!$store.state.userData.vipInfo'>
             <van-button class="theme-btn" :class="[btnPulse?'rubberBand animated second':'']" round size="normal" type="primary" @click="toAccept"> 
                 <i class="iconfont">&#xe619;</i>  
                 办理借阅卡
@@ -122,7 +122,7 @@ export default {
         window.addEventListener('scroll', this.handleScroll)
     },
     watch: {
-      '$router':'fetchData'  
+      '$router':'fetchData'
     },
     methods: {
         fetchData(){

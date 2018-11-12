@@ -1,37 +1,48 @@
 <template>
-    <div id="calendar">
-        <div class="month">
-            <ul class="flex flex-align">
-                <li class="arrow left" @click="pickPre(currentYear,currentMonth)">❮</li>
-                <li class="year-month" @click="pickYear(currentYear,currentMonth)">
-                    <span class="choose-year">{{ currentYear }}年</span>
-                    <span class="choose-month">{{ currentMonth }}月</span>
+    <div class="calendar">
+        <div class="container" :class="[pack?'pack':'open']">
+            <div class="month">
+                <ul class="flex flex-align">
+                    <li class="arrow" @click="pickPre(currentYear,currentMonth)">❮</li>
+                    <li class="year-month" @click="pickYear(currentYear,currentMonth)">
+                        <span class="choose-year">{{ currentYear }}年</span>
+                        <span class="choose-month">{{ currentMonth }}月</span>
+                    </li>
+                    <li class="arrow" @click="pickNext(currentYear,currentMonth)">❯</li>
+                </ul>
+            </div>
+            <ul class="weekdays flex flex-align">
+                <li>一</li>
+                <li>二</li>
+                <li>三</li>
+                <li>四</li>
+                <li>五</li>
+                <li>六</li>
+                <li>日</li>
+            </ul>
+            <ul class="days" v-if='pack'>
+                <li v-for="dayobject in days">
+                    <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
+                    <span v-else>
+                        <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
+                        <span v-else>{{ dayobject.day.getDate() }}</span>
+                    </span>
                 </li>
-                <li class="arrow right" @click="pickNext(currentYear,currentMonth)">❯</li>
+            </ul>
+            <ul class="days" v-else>
+                <li v-for="dayobject in days" v-if='WeekStartDate.getDate()+1 <= dayobject.day.getDate() && WeekEndDate.getDate()+1 >= dayobject.day.getDate() '>
+                    <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
+                    <span v-else>{{dayobject.day.getDate()}}</span>
+                </li>
             </ul>
         </div>
-        <ul class="weekdays flex flex-align">
-            <li>周一</li>
-            <li>周二</li>
-            <li>周三</li>
-            <li>周四</li>
-            <li>周五</li>
-            <li>周六</li>
-            <li>周日</li>
-        </ul>
-        <ul class="days flex flex-wrap">
-            <li v-for="(dayobject,index) in dataWorks" :class="[dayobject.work ? 'works':'',workDaysIndex==index?'past-work':'',dayobject.day.getMonth()+1 != currentMonth?'other':'']" @click="getWorks(dayobject,index)">
-                <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
-                <span v-else>
-                    <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
-                    <span v-else>{{ dayobject.day.getDate() }}</span>
-                </span>
-            </li>
-        </ul>
+        <div class="drop-down" @click="slide">
+            <i class="iconfont" :class="[pack?'rotate':'']">&#xe608;</i>
+        </div>
     </div>
 </template>
 <script>
-import { format } from './../../lib/util.js'
+import {format, getWeekStartDate, getWeekEndDate} from './../../lib/js/util.js'
 
 export default {
     name:'calendar',
@@ -42,22 +53,23 @@ export default {
             currentYear: 1970,
             currentWeek: 1,
             days: [],
-            workDaysIndex:-1,
-            getDaysWork:'',
+            pack: false,
+            WeekStartDate: getWeekStartDate(),
+            WeekEndDate: getWeekEndDate()
         }
     },
-    created () {
+    created(){ 
         this.initData(null)
     },
     methods: {
         initData(cur){
-            let leftcount=0
-            let date
+            var leftcount = 0
+            var date
             if (cur) {
                 date = new Date(cur)
             } else {
-                let now=new Date()
-                let d = new Date(this.formatDate(now.getFullYear() , now.getMonth() , 1))
+                var now=new Date()
+                var d = new Date(this.formatDate(now.getFullYear() , now.getMonth() , 1))
                 d.setDate(35)
                 date = new Date(this.formatDate(d.getFullYear(),d.getMonth() + 1,1))
             }
@@ -65,220 +77,142 @@ export default {
             this.currentYear = date.getFullYear()
             this.currentMonth = date.getMonth() + 1
 
-            this.currentWeek = date.getDay() 
+            this.currentWeek = date.getDay()
             if (this.currentWeek == 0) {
                 this.currentWeek = 7
             }
-            let str = this.formatDate(this.currentYear , this.currentMonth, this.currentDay)
+            var str = this.formatDate(this.currentYear , this.currentMonth, this.currentDay)
             this.days.length = 0
-
-            for (let i = this.currentWeek - 1;i >= 0; i--) {
-                let d = new Date(str)
+            for (var i = this.currentWeek - 1; i >= 0; i--) {
+                var d = new Date(str)
                 d.setDate(d.getDate() - i)
-                let dayobject={} 
+                var dayobject={}
                 dayobject.day=d
                 this.days.push(dayobject)
             }
-
-            for (let i = 1; i <= 35 - this.currentWeek; i++) {
-                let d = new Date(str)
+            for (var i = 1; i <= 35 - this.currentWeek; i++) {
+                var d = new Date(str)
                 d.setDate(d.getDate() + i)
-                let dayobject={}
+                var dayobject={}
                 dayobject.day=d
                 this.days.push(dayobject)
             }
-
         },
         pickPre(year, month) {
-            let d = new Date(this.formatDate(year , month , 1))
+            var d = new Date(this.formatDate(year , month , 1))
             d.setDate(0)
             this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1))
+            this.pack = true
         },
         pickNext(year, month) {
-            let d = new Date(this.formatDate(year , month , 1))
+            var d = new Date(this.formatDate(year , month , 1))
             d.setDate(35)
             this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1))
+            this.pack = true
         },
         pickYear(year, month) {
             // alert(year + "," + month)
         },
         formatDate(year,month,day){
-            let y = year
-            let m = month
+            var y = year
+            var m = month
             if(m<10) m = "0" + m
-            let d = day
+            var d = day
             if(d<10) d = "0" + d
             return y+"-"+m+"-"+d
         },
-        getWorks(dayobject,index){
-            this.getDaysWork = this.dataWorks[index]
-            this.workDaysIndex = index
+        slide(){
+            this.pack = !this.pack
+            this.initData()
         }
     }
 }
 </script>
 <style scoped>
-#calendar .weekdays li {
+.calendar{
+    background: transparent;
+    color: #fff;
+    position: relative;
+    box-shadow: 0 1.875rem /* 30/16 */ 2.5rem /* 40/16 */ -.625rem /* 10/16 */ rgba(0, 0, 0, .1)
+}
+
+.calendar .drop-down{
+    position: absolute;
+    width: 5rem /* 80/16 */;
+    height: 2rem /* 32/16 */;
+    background: #FF5722;
+    text-align: center;
+    line-height: 2rem /* 32/16 */;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    z-index: 10;
+}
+
+.scroll-x{
+    background: transparent;
+}
+
+.calendar .month ul li.arrow{
+    flex: 1;
+}
+
+.calendar .month ul li.arrow,
+.year-month{
+    text-align: center;
+}
+
+.year-month{
+    flex: 2;
+}
+
+ul.days li,
+.year-month,
+.weekdays{
+    height: 3rem /* 48/16 */;
+    line-height: 3rem /* 48/16 */;
+}
+
+.weekdays li{
     flex: 1;
     text-align: center;
 }
 
-#calendar .days li {
+ul.days li{
+    display: inline-block;
     width: 14.2857143%;
     text-align: center;
-    height: 3rem /* 48/16 */;
-    line-height: 3rem /* 48/16 */;
-}
-#calendar .days li span.other-month{
-    color: #c0c4cc;
 }
 
-.month {
+.other-month{
+    opacity: .3;
+}
+
+.active{
     position: relative;
-    height: 3rem /* 48/16 */;
-    line-height: 3rem /* 48/16 */;
+    font-weight: 700;
+    color: #DE4313;
+    z-index: 1;
 }
 
-.month .arrow {
-    position: absolute;
-    width: 3rem /* 48/16 */;
-    height: 3rem /* 48/16 */;
-    text-align: center;
-    line-height: 3rem /* 48/16 */;
-    color: #c0c4cc;
-}
-
-.month .arrow.left {
-    left: 0;
-}
-
-.month .arrow.right {
-    right: 0;
-}
-
-.month .year-month {
-    width: 100%;
-    text-align: center;
-}
-
-.weekdays {
-    height: 3rem /* 48/16 */;
-}
-
-.days .works.past-work,
-.active {
-    position: relative;
-    color: #fff;
-}
-
-.days .works.past-work::before,
-.active::before {
-    position: absolute;
-    width: 2.125rem /* 34/16 */;
-    height: 2.125rem /* 34/16 */;
-    border-radius: 50%;
-    content: '';
+.active::before{
     left: 50%;
     top: 50%;
+    content: '';
+    width: 2rem /* 32/16 */;
+    height: 2rem /* 32/16 */;
+    line-height: 2rem /* 32/16 */;
+    position: absolute;
     transform: translate3d(-50%, -50%, 0);
+    background: #fff;
+    border-radius: 50%;
     z-index: -1;
 }
 
-.days .works.past-work::before {
-    box-shadow: 0 .125rem /* 2/16 */ .375rem /* 6/16 */ red;
+/* 过渡 */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
 }
-
-.days .works {
-    position: relative;
-}
-
-.days .works.other::before{
-    display: none;
-}
-
-.days .works::before {
-    position: absolute;
-    width: 0.5rem /* 8/16 */;
-    height: 0.5rem /* 8/16 */;
-    border-radius: 50%;
-    content: '';
-    left: 50%;
-    top: 50%;
-    transform: translate3d(-50%, 1rem /* 16/16 */, 0);
-    background: red;
-}
-
-.days-work {
-    padding: 1.25rem /* 20/16 */ 0.625rem /* 10/16 */;
-}
-
-.days-work .avater {
-    width: 3.5rem /* 56/16 */;
-    height: 3.5rem /* 56/16 */;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 0 auto;
-}
-
-.days-work .theme-btn-plain {
-    margin: 0.75rem /* 12/16 */ 0;
-}
-
-.work-name {
-    color: #303133;
-}
-
-.work-execution {
-    color: #909399;
-    font-size: 0.9375rem /* 15/16 */;
-    position: absolute;
-    bottom: 1.25rem /* 20/16 */;
-}
-
-.work-explanation {
-    height: 2.25rem /* 36/16 */;
-    padding: 0 0.625rem /* 10/16 */;
-    font-size: 0.875rem /* 14/16 */;
-    color: #303133;
-}
-
-.work-explanation .point {
-    position: relative;
-    padding-left: 1.875rem /* 30/16 */;
-}
-
-.work-explanation .point::before {
-    position: absolute;
-    content: '';
-    width: 0.5rem /* 8/16 */;
-    height: 0.5rem /* 8/16 */;
-    border-radius: 50%;
-    left: 0.9375rem /* 15/16 */;
-    top: 50%;
-    transform: translate3d(0, -50%, 0);
-}
-
-.work-explanation .point.past::before {
-    background: red;
-}
-
-.card-days-work {
-    padding-top: 1.25rem /* 20/16 */;
-    position: relative;
-}
-
-.card-days-work::before {
-    position: absolute;
-    content: '';
-    width: 18.75rem /* 300/16 */;
-    height: 0.0625rem /* 1/16 */;
-    background: #dcdfe6;
-    top: 10%;
-    left: 50%;
-    transform: translate3d(-50%, 0, 0);
-}
-
-.days-btn{
-    padding: 0 1.875rem /* 30/16 */;
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

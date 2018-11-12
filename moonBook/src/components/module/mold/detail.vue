@@ -1,16 +1,11 @@
 <template>
-    <div class="punch">
-        <calendar/>
+    <div class="detail">
+        
     </div>
 </template>
 <script>
-import calendar from './../../module/myModule/punch'
-
 export default {
-    name:'punch',
-    components: {
-      calendar  
-    },
+    name:'detail',
     data () {
         return {
             

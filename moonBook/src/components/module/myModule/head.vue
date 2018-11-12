@@ -65,6 +65,10 @@
             <accept @close='onAccpetPage' v-model='active'/>
         </van-popup>
 
+        <van-popup v-model="punchShow" class="page-popup punch" position="right">
+            <punch @close='closePunch'/>
+        </van-popup>
+
         <!-- <van-popup v-model="show" class="borrow-popup" position="bottom">
             <div class="flex">
             <div class="box">
@@ -84,6 +88,7 @@
 <script>
 import axios from 'axios'
 import numberGrow from './../../module/animate/numberGrow'
+import punch from './../../module/punch'
 import accept from './../accept'
 
 import { mapMutations } from 'vuex'
@@ -92,7 +97,8 @@ export default {
     name:'cardHead',
     components: {
         numberGrow,
-        accept
+        accept,
+        punch
     },
     computed: {
         userData(){
@@ -105,7 +111,7 @@ export default {
             scrollTop:0,
             fixedHeaderBar:true,
             active:0,
-            show:false,
+            punchShow:false,
             applyShow:false
         }
     },
@@ -137,7 +143,7 @@ export default {
             
         },
         onClickRight(){
-            // this.show = true
+            this.punchShow = true
         },
         toAccept(){
             this.applyShow = true
@@ -148,6 +154,9 @@ export default {
         },
         onStepActiveChange(val){
             this.active = val
+        },
+        closePunch(){
+            this.punchShow = false
         }
     }
 }
@@ -269,5 +278,9 @@ export default {
 
 .theme-color{
     margin: 0 .3125rem /* 5/16 */;
+}
+
+.punch{
+    background: #DE4313;
 }
 </style>

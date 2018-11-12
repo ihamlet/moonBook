@@ -23,11 +23,11 @@ export default {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_z6jsz27wlq9.eot');
-  src: url('//at.alicdn.com/t/font_893274_z6jsz27wlq9.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_z6jsz27wlq9.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_z6jsz27wlq9.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_z6jsz27wlq9.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_w4euc8xovng.eot');
+  src: url('//at.alicdn.com/t/font_893274_w4euc8xovng.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_w4euc8xovng.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_w4euc8xovng.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_w4euc8xovng.svg#iconfont') format('svg');
 }
 
 .iconfont {
