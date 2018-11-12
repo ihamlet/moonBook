@@ -1,6 +1,6 @@
 <template>
     <div class="zoom page-padding">
-        <van-nav-bar :title="fixedHeaderBar?$route.meta.title:userData.userInfo.name" fixed left-text="个人中心"  left-arrow @click-left="onClickLeft" @click-right="onClickRight">
+        <van-nav-bar :title="fixedHeaderBar?$route.meta.title:userData.userInfo.name" fixed left-text="个人中心" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
             <div slot="right" class="theme-color">
                 <i class="iconfont" :class="[isReleaseShow?'rotate-45':'rotate']">&#xe612;</i>
                 <div class="release-popup" v-if='isReleaseShow'>
@@ -19,7 +19,6 @@
                             {{userData.userInfo.name}}
                         </div>
                     </div>
-
                     <div class="social flex flex-align">
                         <div class="data-box">
                             <div class="number">{{ release }}</div>
@@ -50,7 +49,7 @@
                     <div class="list">
                         <div class="item" v-for="(item,index) in list" :key="index">
                             <van-cell>
-                                <graphic-crad :item='item' v-if='item'/>
+                                <graphic-crad :item='item'/>
                             </van-cell>
                         </div> 
                     </div> 
@@ -211,5 +210,6 @@ export default {
 
 .item{
     margin-bottom: .3125rem /* 5/16 */;
+    position: relative;
 }
 </style>

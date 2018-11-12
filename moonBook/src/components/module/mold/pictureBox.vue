@@ -11,7 +11,7 @@
                 <i class="iconfont vip-ordinary" v-if="item.isVip==1&&item.vipType.borrow==3">&#xe611;</i>     
             </div>
         </div>
-        <van-swipe :initial-swipe='imgIndex' :width="fullWidth" :loop='false' @change='onChange'>
+        <van-swipe :initial-swipe='imgIndex' :loop='false' @change='onChange'>
             <van-swipe-item v-for='(list,index) in item.media.imgList' :key='index' class="flex flex-align">
                 <div class="scroll-view" @click="closePopup">
                     <img class="img lazy" v-lazy="list.img"/>
@@ -59,14 +59,7 @@ export default {
     },
     data () {
         return {
-            isFold:false,
-            fullWidth: document.documentElement.clientWidth
-        }
-    },
-    mounted(){
-        let that = this
-        window.onresize = function temp() {
-            that.fullWidth = document.documentElement.clientWidth
+            isFold:false
         }
     },
     methods: {
@@ -81,7 +74,6 @@ export default {
         },
         addPraise(item){
             item.getPraise = !item.getPraise
-
             axios.post('/api/addPraise',{
                 id:item.id,
                 getPraise:item.getPraise
