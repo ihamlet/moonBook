@@ -20,21 +20,24 @@
                 <li>六</li>
                 <li>日</li>
             </ul>
-            <ul class="days" v-if='pack'>
-                <li v-for="dayobject in days">
-                    <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
-                    <span v-else>
+
+            <transition name="slide-fade" mode="out-in">
+                <ul class="days" v-if='pack' key="month">
+                    <li v-for="dayobject in days">
+                        <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
+                        <span v-else>
+                            <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
+                            <span v-else>{{ dayobject.day.getDate() }}</span>
+                        </span>
+                    </li>
+                </ul>
+                <ul class="days" v-else key="week">
+                    <li v-for="dayobject in days" v-if='WeekStartDate.getDate()+1 <= dayobject.day.getDate() && WeekEndDate.getDate()+1 >= dayobject.day.getDate() '>
                         <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
-                        <span v-else>{{ dayobject.day.getDate() }}</span>
-                    </span>
-                </li>
-            </ul>
-            <ul class="days" v-else>
-                <li v-for="dayobject in days" v-if='WeekStartDate.getDate()+1 <= dayobject.day.getDate() && WeekEndDate.getDate()+1 >= dayobject.day.getDate() '>
-                    <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
-                    <span v-else>{{dayobject.day.getDate()}}</span>
-                </li>
-            </ul>
+                        <span v-else>{{dayobject.day.getDate()}}</span>
+                    </li>
+                </ul>
+            </transition>
         </div>
         <div class="drop-down" @click="slide">
             <i class="iconfont" :class="[pack?'rotate':'']">&#xe608;</i>
@@ -133,7 +136,7 @@ export default {
     background: transparent;
     color: #fff;
     position: relative;
-    box-shadow: 0 1.875rem /* 30/16 */ 2.5rem /* 40/16 */ -.625rem /* 10/16 */ rgba(0, 0, 0, .1)
+    box-shadow: 0 1.875rem /* 30/16 */ 2.5rem /* 40/16 */ -.625rem /* 10/16 */ rgba(0, 0, 0, .3)
 }
 
 .calendar .drop-down{
@@ -208,10 +211,15 @@ ul.days li{
 }
 
 /* 过渡 */
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.slide-fade-enter-active {
+  transition: all .2s ease;
 }
-.fade-enter, .fade-leave-to {
+.slide-fade-leave-active {
+  transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateY(-10px);
   opacity: 0;
 }
 </style>

@@ -9,30 +9,32 @@
         <lazy-component class="gap-top">
             <calendar />
         </lazy-component>
-        <div class="calendar-module">
-            <div class="punch">
-                <van-row class="flex flex-align" gutter='10'>
-                    <van-col span="8">
-                        <div class="push-illustrated">
-                            <img src="http://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/punch.png" alt="打卡">
-                        </div>
-                    </van-col>
-                    <van-col span="8">
-                        <div class="text">
-                            今天还未签到
-                        </div>
-                        <div class="link">
-                            查看今日日签
-                        </div>
-                    </van-col>
-                    <van-col span="8" class="flex flex-justify">
-                        <van-button round class="theme-btn" type='primary' size='normal'>
-                            今日签到
-                        </van-button>
-                    </van-col>
-                </van-row>
+        <lazy-component>
+            <div class="calendar-module">
+                <div class="punch">
+                    <van-row class="flex flex-align" gutter='10'>
+                        <van-col span="8">
+                            <div class="push-illustrated">
+                                <img src="http://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/punch.png" alt="打卡">
+                            </div>
+                        </van-col>
+                        <van-col span="8">
+                            <div class="text">
+                                今天还未签到
+                            </div>
+                            <div class="link">
+                                查看今日日签
+                            </div>
+                        </van-col>
+                        <van-col span="8" class="flex flex-justify">
+                            <van-button round class="theme-btn" type='primary' size='normal'>
+                                今日签到
+                            </van-button>
+                        </van-col>
+                    </van-row>
+                </div>
             </div>
-        </div>
+        </lazy-component>
     </div>
 </template>
 <script>
