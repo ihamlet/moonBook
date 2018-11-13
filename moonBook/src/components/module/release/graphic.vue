@@ -96,22 +96,24 @@ export default {
     },
     methods: {
         onRead(file) {
-            if(file.length){
-                file.forEach( element => {
-                    if(this.imagesLength < 9){
+             
+                if(file.length){
+                    file.forEach( element => {
                         compress(element.content,800,0.5).then( val => {
-                            this.grapicData.images.push({
-                                img:val
-                            })
+                            if(this.imagesLength < 9){
+                                this.grapicData.images.push({
+                                    img:val
+                                })
+                            }
                         })
-                    }
-                })
-            }else{
-                compress(file.content,800,0.5).then( val => {
-                    this.grapicData.images.push({ 
-                        img:val
                     })
-                })
+                }else{
+                    compress(file.content,800,0.5).then( val => {
+                        this.grapicData.images.push({ 
+                            img:val
+                        })
+                    })
+            
             }
         },
         onClickLeft(){
