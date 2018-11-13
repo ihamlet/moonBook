@@ -8,8 +8,6 @@
     </div>
 </template>
 <script>
-import axios from 'axios'
-
 export default {
     name:'footer-bar',
     props: ['pageIndex'],
@@ -38,7 +36,7 @@ export default {
                 path:'my'
             }]
         }
-    }, 
+    },
     methods: {
         toPage(item){
             this.$router.push({name:item.path})

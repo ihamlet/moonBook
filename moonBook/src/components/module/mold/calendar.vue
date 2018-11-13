@@ -138,11 +138,11 @@ export default {
 
 .calendar .drop-down{
     position: absolute;
-    width: 5rem /* 80/16 */;
-    height: 2rem /* 32/16 */;
+    width: 3.75rem /* 60/16 */;
+    height: 1.5rem /* 24/16 */;
     background: #FF5722;
     text-align: center;
-    line-height: 2rem /* 32/16 */;
+    line-height: 1.5rem /* 24/16 */;
     left: 50%;
     transform: translate3d(-50%, 0, 0);
     z-index: 10;
@@ -168,8 +168,8 @@ export default {
 ul.days li,
 .year-month,
 .weekdays{
-    height: 3rem /* 48/16 */;
-    line-height: 3rem /* 48/16 */;
+    height: 2.25rem /* 36/16 */;
+    line-height: 2.25rem /* 36/16 */;
 }
 
 .weekdays li{
@@ -198,9 +198,8 @@ ul.days li{
     left: 50%;
     top: 50%;
     content: '';
-    width: 2rem /* 32/16 */;
-    height: 2rem /* 32/16 */;
-    line-height: 2rem /* 32/16 */;
+    width: 1.75rem /* 28/16 */;
+    height: 1.75rem /* 28/16 */;
     position: absolute;
     transform: translate3d(-50%, -50%, 0);
     background: #fff;

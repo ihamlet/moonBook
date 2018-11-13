@@ -10,6 +10,7 @@ const state = {
     userData:{},
     isPay:false,
     msgLength:1,
+    tabBtn:[]
 }
 
 const getters = {
@@ -37,7 +38,7 @@ const getters = {
 }
 
 const mutations = {
-    setUserData(state, params) {
+    setUserData(state, params){
         state.userData = params.data
     },
     setPay(state,params){
@@ -45,6 +46,9 @@ const mutations = {
     },
     setMsgLength(state,params){
         state.msgLength = params.data
+    },
+    setTabBtn(state,params){
+        state.tabBtn = params.data
     }
 }
 
@@ -66,6 +70,13 @@ const actions = {
     pay(context){
         context.commit('setPay', {
             data: true
+        })
+    },
+    getTabBtn(context){
+        axios.get('/api/barBtn').then(res=>{
+            context.commit('setTabBtn',{
+                data:res.data.barBtn
+            })
         })
     }
 }

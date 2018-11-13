@@ -37,6 +37,7 @@ export default {
     fetchData(){
       this.$store.dispatch('getUserData')
       this.$store.dispatch('getMsgLength')
+      this.$store.dispatch('getTabBtn')
     },
     onStartPage(){
       this.startPageShow = false

@@ -20,14 +20,14 @@
                     </div>
                 </van-cell>
             </van-cell-group>
-            <!-- <van-checkbox-group v-model="result">
+            <van-checkbox-group v-model="result">
                 <div class="form-title">同步到</div>
                 <van-cell-group>
                     <van-cell v-for="(item,index) in list" clickable :key="index" :title="item.title" @click="toggle(index)">
                         <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" />
                     </van-cell>
                 </van-cell-group>
-            </van-checkbox-group> -->
+            </van-checkbox-group>
         </div>
         <div class="upload-module flex wrap">
             <van-cell>
@@ -69,23 +69,20 @@ export default {
     },
     data () {
         return {
-            list = [{
+            list:[{
                 title:'发现',
-                name:'zone'
+                name:'find'
             },{
                 title:'班级主页',
                 name:'class'
             }],
-            result:['zone','class'],
+            result:['find','class'],
             show:false,
             grapicData:{
                 text:'',
                 images:[]
             }
         }
-    },
-    created () {
-        this.fetchData()
     },
     watch: {
         grapicData:{
@@ -95,15 +92,9 @@ export default {
                 }
             },  
             deep: true
-        },
-        '$router':'fetchData'
+        }
     },
     methods: {
-        fetchData(){
-            axios.get('/api/plateList').then(res=>{
-                console.log(res)
-            })
-        },
         onRead(file) {
             if(file.length){
                 file.forEach( element => {
@@ -131,10 +122,16 @@ export default {
                 this.$emit('close')
             }else if( this.grapicData.text.length < 140 ){
                axios.put('/api/addDrying',{
-                    graphic: this.grapicData
+                    graphic: this.grapicData,
+                    result: this.result
                 }).then(res=>{
                     this.$emit('close')
-                    this.$router.push({name:'find'})
+
+                    if(this.result.indexOf('find') == 0){
+                        this.$router.push({name:'find'})
+                    }else{
+                        this.$router.push({name:'zoom'})
+                    }
                 })
             }
         },
@@ -144,9 +141,9 @@ export default {
         toTopicPage(){
             this.show = true
         },
-        // toggle(index) {
-        //     this.$refs.checkboxes[index].toggle()
-        // }
+        toggle(index) {
+            this.$refs.checkboxes[index].toggle()
+        }
     }
 }
 </script>

@@ -8,6 +8,32 @@ Mock.setup({
   timeout: '300-600'
 })
 
+//底栏icon 数据
+let barBtn = [{
+    iconClass:'icon-home',
+    name:'首页',
+    path:'home',
+},{
+    iconClass:'icon-faxian',
+    name:'发现',
+    path:'find'
+},{
+    iconClass:'icon-community',
+    name:'消息',
+    path:'notice'
+},{
+    iconClass:'icon-people',
+    name:'个人中心',
+    path:'my'
+}]
+
+Mock.mock('/api/barBtn', (req, res) => {
+    return {
+        barBtn
+    }
+  })
+  
+
 //首页数据 
 
 let homeData = Mock.mock({
@@ -442,6 +468,7 @@ Mock.mock('/api/fresh', (req, res) => {
 
 let addDrying = function (options){
     let data = JSON.parse(options.body).graphic
+    let result = JSON.parse(options.body).result
     let array = {
         id: Mock.mock('@increment'),
         avatar: userData.userInfo.avatar,
@@ -464,11 +491,15 @@ let addDrying = function (options){
         },
         getPraise:false
     }
+    
+    result.forEach(e=>{
+        if(e=='find'){
+            dryingData.dryingList.unshift(array)
+        }
+    })
 
-    dryingData.dryingList.unshift(array)
     userData.dryingList.unshift(array)
-    
-    
+        
     return {
         dryingData
     }
