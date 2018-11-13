@@ -9,7 +9,7 @@ import router from './router'
 import store from './store/index'
 
 import Vant from 'vant'
-import 'vant/lib/vant-css/index.css'
+import 'vant/lib/index.css'
 import { Lazyload } from 'vant'
 
 import lineClamp from 'vue-line-clamp'
