@@ -2,7 +2,7 @@
     <div class="head head-background" ref='head'>
         <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userData.userInfo.name" @click-left="onClickLeft" @click-right="onClickRight">
             <div class="head-bar-icon" slot='left'>
-                <i class="iconfont">&#xe66a;</i>
+                <i class="iconfont">&#xe60e;</i>
             </div>
             <div class="head-bar-icon" slot='right'>
                 <i class="iconfont">&#xe609;</i>

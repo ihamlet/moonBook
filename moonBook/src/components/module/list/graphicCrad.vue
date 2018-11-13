@@ -11,7 +11,7 @@
                     <i class="iconfont vip-gold" v-if="item.isVip==1&&item.vipType.borrow==5">&#xe611;</i>
                     <i class="iconfont vip-ordinary" v-if="item.isVip==1&&item.vipType.borrow==3">&#xe611;</i>     
                 </div>
-                <div class="school" v-if='item.school'>
+                <div class="school" v-if='item.school.name'>
                     {{item.school.name}}
                 </div>
             </div>

@@ -54,7 +54,7 @@ export default {
     position: absolute;
     background: rgba(0, 0, 0, .72);
     width: 20rem /* 320/16 */;
-    right: .625rem /* 10/16 */;
+    right: .9375rem /* 15/16 */;
     top: 3.75rem /* 60/16 */;
     border-radius:.625rem /* 10/16 */ .3125rem /* 5/16 */ .625rem /* 10/16 */ .625rem /* 10/16 */;
     padding: .3125rem /* 5/16 */;
