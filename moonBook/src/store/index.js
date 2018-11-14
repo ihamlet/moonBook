@@ -13,10 +13,11 @@ const state = {
     tabBtn:[],
     city:'',
     baiduApiKey:'ExaEOeurluH5itO8HlEBYFsCclwWDEA6',
+    shcoolList:''
 }
 
 const getters = {
-   userDataState: state=>{
+   userDataState: state=> {
        return state.userData
    },
    MsgLengthState: state => {
@@ -27,7 +28,7 @@ const getters = {
             return state.userData.dryingList.length
        }
    },
-   userPraiseState: state =>{
+   userPraiseState: state => {
        let praise = []
        if(state.userData.dryingList){
             state.userData.dryingList.forEach(element => {
@@ -37,9 +38,14 @@ const getters = {
 
        return praise 
    },
-   userCity: state =>{
+   userCity: state => {
         if(state.city){
             return state.city
+        }
+   },
+   shcoolListState: state => {
+        if(state.shcoolList){
+            return state.shcoolList
         }
    }
 }
@@ -56,6 +62,9 @@ const mutations = {
     },
     setCity(state,params){
         state.city = params.data
+    },
+    setShcoolList(state,params){
+        state.shcoolList = params.data
     }
 }
 
@@ -87,6 +96,7 @@ const actions = {
             ip:'',
         }
         let baiduApiLink = `https://api.map.baidu.com/location/ip?ip=${data.ip}&ak=${data.Key}&coor=gcj02`
+
         fetchJsonp(baiduApiLink).then(response => {
             return response.json()
         }).then(res => {
@@ -106,20 +116,14 @@ const actions = {
             filter:'sort_name:distance|sort_rule:1', //距离排序
             ret_coordtype: 'gcj02ll'
         }
-        let baiduApiLink = `http://api.map.baidu.com/place/v2/search?
-                            query=${data.query}
-                            &tag=${data.tag}
-                            &region=${data.region}
-                            &page_size=${data.page_size}
-                            &page_num=${data.page_num}
-                            &filter=${data.filter}
-                            &ret_coordtype=${data.ret_coordtype}
-                            &output=json&ak=${data.Key}`
+        let baiduApiLink = `http://api.map.baidu.com/place/v2/search?query=${data.query}&tag=${data.tag}&region=${data.region}&page_size=${data.page_size}&page_num=${data.page_num}&filter=${data.filter}&ret_coordtype=${data.ret_coordtype}&output=json&ak=${data.Key}`
 
-        fetchJsonp(baiduApiLink).then(response => {
+       return fetchJsonp(baiduApiLink).then(response => {
             return response.json()
         }).then(res => {
-            console.log(res)
+            context.commit('setShcoolList',{
+                data:res
+            })
         })
     }
 }

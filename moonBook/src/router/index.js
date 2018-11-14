@@ -9,6 +9,8 @@ import My from '@/components/pages/my'
 
 import Zoom from '@/components/pages/zoom'
 
+import Register from '@/components/pages/register'
+
 Vue.use(Router)
 
 export default new Router({
@@ -53,6 +55,14 @@ export default new Router({
         component: Zoom,
         meta: {
           title: '个人空间',
+          scrollToTop: true
+        }
+      },{
+        path: '/register',
+        name: 'register',
+        component: Register,
+        meta: {
+          title: '注册',
           scrollToTop: true
         }
       }]
