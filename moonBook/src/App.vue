@@ -301,10 +301,18 @@ img.lazy[lazy=error],
   z-index: 99;
 }
 
+.left-btn{
+  position: absolute;
+  font-size: .75rem /* 12/16 */;
+  color: #fff;
+  width: 2.875rem /* 46/16 */;
+  text-align: center;
+}
+
 .right-btn{
   position: absolute;
   right: .375rem /* 6/16 */;
-  width: 2.125rem /* 34/16 */;
+  width: 2.875rem /* 46/16 */;
   text-align: center;
   transform: scale(0.9);
   display: inline-grid
@@ -330,7 +338,7 @@ img.lazy[lazy=error],
 }
 
 .search-bar{
-  width: 68%;
+  width: 65%;
   background: rgba(255,255,255,.8);
   border-radius: 2.125rem /* 34/16 */;
   margin: 0 auto;

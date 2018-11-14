@@ -11,6 +11,7 @@
 import axios from 'axios'
 import 'animate.css'
 import startPage from './module/startPage'
+import { mapGetters,mapActions } from 'vuex'
 
 export default {
   name: 'Hello',
@@ -34,10 +35,11 @@ export default {
       '$route': 'fetchData'
   },       
   methods: {
+    ...mapActions(['getUserData','getMsgLength','getTabBtn']),
     fetchData(){
-      this.$store.dispatch('getUserData')
-      this.$store.dispatch('getMsgLength')
-      this.$store.dispatch('getTabBtn')
+      this.getUserData()
+      this.getMsgLength()
+      this.getTabBtn()
     },
     onStartPage(){
       this.startPageShow = false

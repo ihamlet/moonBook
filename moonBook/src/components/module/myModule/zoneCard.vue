@@ -8,7 +8,7 @@
                         <i class="iconfont">&#xe606;</i>
                     </span>
                     <div class="img-preview flex flex-justify" v-if='imageslength > 0'>
-                        <div class="img-grid" v-if='index < 4' v-for='(item,index) in userData.dryingList[0].media.imgList' v-lazy:background-image='item.img'></div>
+                        <div class="img-grid" v-if='index < 4' v-for='(item,index) in userDataState.dryingList[0].media.imgList' v-lazy:background-image='item.img'></div>
                         <div class="robe"  v-if='imageslength > 4'>
                             <photo-stack/>
                         </div>
@@ -17,7 +17,7 @@
                         </div>
                     </div>
                     <div class="text-preview" v-line-clamp:20="2" v-else>
-                        {{userData.dryingList[0].text}}
+                        {{userDataState.dryingList[0].text}}
                     </div>
                 </div>
              </van-cell>
@@ -27,6 +27,7 @@
 </template>
 <script>
 import photoStack from './../animate/photoStack'
+import { mapGetters } from 'vuex'
 
 export default {
     name:'zone',
@@ -34,11 +35,9 @@ export default {
       photoStack
     },
     computed: {
-        userData(){
-            return this.$store.getters.userDataState
-        },
+        ...mapGetters(['userDataState']),
         imageslength(){
-            return this.userData.dryingList[0].media.imgList.length
+            return this.userDataState.dryingList[0].media.imgList.length
         }
     },
     methods: {

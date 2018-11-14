@@ -21,7 +21,7 @@
                 <li>日</li>
             </ul>
 
-            <transition name="slide-fade" mode="out-in">
+            <transition name="fade" mode="out-in">
                 <ul class="days" v-if='pack' key="month">
                     <li v-for="dayobject in days">
                         <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
@@ -211,15 +211,10 @@ ul.days li{
 }
 
 /* 过渡 */
-.slide-fade-enter-active {
-  transition: all .2s ease;
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
 }
-.slide-fade-leave-active {
-  transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active for below version 2.1.8 */ {
-  transform: translateY(-10px);
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 </style>

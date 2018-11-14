@@ -1,6 +1,9 @@
 <template>
     <div class="home page-padding">
         <div class="head-bar flex flex-align" :class="[themeBarSearch?'theme-background':'default-head-bar-background']">
+            <div class="left-btn">
+                {{userCity}}
+            </div>
             <div class="search-bar"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
             <div class="right-btn" @click="release">
                 <i class="iconfont" :class="[isReleaseShow?'rotate-45':'rotate']">&#xe612;</i>
@@ -63,6 +66,8 @@
 </template>
 <script>
 
+import { mapGetters, mapActions } from 'vuex'
+
 import axios from 'axios'
 
 import appsList from './../module/apps'
@@ -90,6 +95,9 @@ export default {
         release,
         graphic,
         footerBar
+    },
+    computed: {
+        ...mapGetters(['userCity'])
     },
     data () {
         return {
@@ -125,7 +133,9 @@ export default {
       '$router':'fetchData'
     },
     methods: {
+        ...mapActions(['getUserLocation']),
         fetchData(){
+            this.getUserLocation()
             setInterval(()=>{
                 this.btnPulse = true
             },3000)

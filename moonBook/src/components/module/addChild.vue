@@ -1,9 +1,9 @@
 <template>
     <div class="add-child">
-        <van-nav-bar v-if='!userData.vipInfo' :title="pageTitle" left-arrow left-text="返回" @click-left="onClickLeft" />
+        <van-nav-bar v-if='!userDataState.vipInfo' :title="pageTitle" left-arrow left-text="返回" @click-left="onClickLeft" />
         <van-nav-bar v-else title="添加孩子" right-text="跳过" @click-right="onClickRight" />
         <div class="avatar-uploader">
-            <i class="iconfont" v-if='userData.vipInfo' :class="`vip-${userData.vipInfo.card.level.name}`">&#xe776;</i>
+            <i class="iconfont" v-if='userDataState.vipInfo' :class="`vip-${userDataState.vipInfo.card.level.name}`">&#xe776;</i>
             <van-uploader :after-read="onRead">
                 <div class="prompt" v-if='!childInfo.avatar'>
                     <img v-if="childInfo.gender=='boy'" src="https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/boy-avatar.png" alt="男孩默认头像">
@@ -56,6 +56,7 @@
 </template>
 <script>
 import axios from 'axios'
+import { mapGetters } from 'vuex'
 import { VueCropper }  from 'vue-cropper'
 import { format } from './../lib/js/util.js'
 
@@ -66,9 +67,7 @@ export default {
        VueCropper
     },
     computed: {
-        userData(){
-            return this.$store.getters.userDataState
-        }
+        ...mapGetters(['userDataState'])
     },
     data () {
         return {
