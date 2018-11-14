@@ -111,7 +111,7 @@ const actions = {
             tag:'教育',
             query:'幼儿园',
             region: products.city,
-            page_size:10,
+            page_size: 5,
             page_num: products.num,
             filter:'sort_name:distance|sort_rule:1', //距离排序
             ret_coordtype: 'gcj02ll'
