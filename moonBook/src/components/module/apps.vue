@@ -1,10 +1,10 @@
 <template>
     <div class="apps">
         <div class="app-list flex">
-            <div class="app-item" v-for='item in appsList'>
+            <a class="app-item" v-for='item in appsList' :href="item.link">
                 <img class="lazy app-icon" v-lazy="item.icon" :alt="item.name">
                 <div class="app-name">{{item.name}}</div>
-            </div>
+            </a>
         </div>
     </div>
 </template>
