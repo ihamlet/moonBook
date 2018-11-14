@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import api from '../fetch/api'
+import axios from '../fetch/api'
 
 
 Vue.use(Vuex)
@@ -50,14 +50,12 @@ const mutations = {
 
 const actions = {
     getUserData(context){
-        api.getUser.then(res=>{
-            context.commit('setUserData', {
-                data:res.data.userData
-            })
+        axios.get('/book/member/getUser').then(res=>{
+            context.commit('setUserData', res.data)
         })
     },
     getMsgLength(context){
-        fetch('/api/messageList').then(res=>{
+        axios.get('/api/messageList').then(res=>{
             context.commit('setMsgLength',{
                 data:res.data.messageData.messageList
             })

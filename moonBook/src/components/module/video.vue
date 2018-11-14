@@ -31,8 +31,6 @@
     </div>    
 </template>
 <script>
-import axios from 'axios'
-
 export default {
     name:'Video',
     props: ['videoList'],
@@ -52,7 +50,7 @@ export default {
                     this.show = false
                 },1000)
             }
-            axios.post('/book/SchoolArticle/zan',{
+            this.$axios.post('/book/SchoolArticle/zan',{
                 id:item.id,
                 getLike:item.getLike
             }).then(res=>{

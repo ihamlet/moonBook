@@ -8,15 +8,17 @@ import App from './App'
 import router from './router'
 import store from './store/index'
 import fetch from './fetch/api'
-import api from './fetch/api'
+import axios from './fetch/api'
 
 import Vant from 'vant'
-import 'vant/lib/vant-css/index.css'
+import 'vant-css/lib/index.css'
 import { Lazyload } from 'vant'
 
 import lineClamp from 'vue-line-clamp'
 
 import './mock' //模拟数据
+
+Vue.prototype.$axios = axios
 
 Vue.use(Vuex)
 Vue.use(Vant)
