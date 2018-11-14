@@ -303,7 +303,7 @@ img.lazy[lazy=error],
 
 .left-btn{
   position: absolute;
-  font-size: .75rem /* 12/16 */;
+  font-size: .8125rem /* 13/16 */;
   color: #fff;
   width: 2.875rem /* 46/16 */;
   text-align: center;
