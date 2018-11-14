@@ -301,19 +301,18 @@ img.lazy[lazy=error],
   z-index: 99;
 }
 
-.left-btn{
-  position: absolute;
-  font-size: .8125rem /* 13/16 */;
-  color: #fff;
-  width: 2.875rem /* 46/16 */;
+.left-btn,
+.right-btn{
+  flex: 1;
   text-align: center;
+  color: #fff;
+}
+
+.left-btn{
+  font-size: .8125rem /* 13/16 */;
 }
 
 .right-btn{
-  position: absolute;
-  right: .375rem /* 6/16 */;
-  width: 2.875rem /* 46/16 */;
-  text-align: center;
   transform: scale(0.9);
   display: inline-grid
 }
@@ -338,7 +337,7 @@ img.lazy[lazy=error],
 }
 
 .search-bar{
-  width: 65%;
+  flex: 5;
   background: rgba(255,255,255,.8);
   border-radius: 2.125rem /* 34/16 */;
   margin: 0 auto;
