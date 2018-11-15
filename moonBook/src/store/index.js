@@ -119,7 +119,7 @@ const actions = {
             ret_coordtype: 'gcj02ll'
         }
         
-        let baiduApiLink = `http://api.map.baidu.com/place/v2/search?query=${data.query}&location=${data.location}&tag=${data.tag}&region=${data.region}&page_size=${data.page_size}&radius=10000&page_num=${data.page_num}&filter=${data.filter}&ret_coordtype=${data.ret_coordtype}&radius=100000&output=json&ak=${data.Key}`
+        let baiduApiLink = `https://api.map.baidu.com/place/v2/search?query=${data.query}&location=${data.location}&tag=${data.tag}&region=${data.region}&page_size=${data.page_size}&radius=10000&page_num=${data.page_num}&filter=${data.filter}&ret_coordtype=${data.ret_coordtype}&radius=100000&output=json&ak=${data.Key}`
         
         return new Promise((resolve, reject) => {
             fetchJsonp(baiduApiLink).then(response => {
