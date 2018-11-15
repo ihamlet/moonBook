@@ -1,6 +1,6 @@
 <template>
     <div class="register" @touchstart='listTouchstart' @touchmove='listTouchmove'>
-        <div :class="takeUp?'fixed':''">
+        <div v-if='takeUp' :class="takeUp?'fixed':''">
             <search-school @show='listShow'/>
         </div>
         <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" />        
@@ -104,6 +104,10 @@ export default {
 }
 </script>
 <style scoped>
+.container{
+    padding-top: 2.875rem /* 46/16 */;
+}
+
 .register{
     padding-bottom: 5.5rem /* 88/16 */;
 }
@@ -127,7 +131,7 @@ export default {
 
 .search-module{
     width: 100%;
-    height: 2.75rem /* 44/16 */;
+    height: 2.875rem /* 46/16 */;
 }
 
 </style>
