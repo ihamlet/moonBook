@@ -11,8 +11,8 @@ const state = {
     userData:{},
     msgLength:1,
     tabBtn:[],
-    city:'',
-    baiduApiKey:'ExaEOeurluH5itO8HlEBYFsCclwWDEA6'
+    baiduApiKey:'ExaEOeurluH5itO8HlEBYFsCclwWDEA6',
+    userPoint:''
 }
 
 const getters = {
@@ -37,9 +37,14 @@ const getters = {
 
        return praise 
    },
-   userCity: state => {
-        if(state.city){
-            return state.city
+   userPointState: state => {
+        if(state.userPoint){
+            return state.userPoint
+        }
+   },
+   userCityState: state => {
+        if(state.userPoint){
+            return state.userPoint.city
         }
    }
 }
@@ -54,8 +59,8 @@ const mutations = {
     setTabBtn(state,params){
         state.tabBtn = params.data
     },
-    setCity(state,params){
-        state.city = params.data
+    setUserPoint(state,params){
+        state.userPoint = params.data
     }
 }
 
@@ -91,8 +96,13 @@ const actions = {
         fetchJsonp(baiduApiLink).then(response => {
             return response.json()
         }).then(res => {
-            context.commit('setCity',{
-                data:res.content.address_detail.city
+            let LocationData ={
+                city: res.content.address_detail.city,
+                x: res.content.point.x,
+                y: res.content.point.y
+            }
+            context.commit('setUserPoint',{
+                data: LocationData
             })
         })
     },
@@ -100,24 +110,25 @@ const actions = {
         let data = {
             Key: context.state.baiduApiKey,
             tag:'教育',
-            query:'幼儿园',
+            query: '幼儿园',
             region: products.city,
+            location:`${products.y},${products.x}`,
             page_size: 20,
             page_num: products.num,
             filter:'sort_name:distance|sort_rule:1', //距离排序
             ret_coordtype: 'gcj02ll'
         }
         
-        let baiduApiLink = `http://api.map.baidu.com/place/v2/search?query=${data.query}&tag=${data.tag}&region=${data.region}&page_size=${data.page_size}&page_num=${data.page_num}&filter=${data.filter}&ret_coordtype=${data.ret_coordtype}&output=json&ak=${data.Key}`
+        let baiduApiLink = `http://api.map.baidu.com/place/v2/search?query=${data.query}&location=${data.location}&tag=${data.tag}&region=${data.region}&page_size=${data.page_size}&radius=10000&page_num=${data.page_num}&filter=${data.filter}&ret_coordtype=${data.ret_coordtype}&radius=100000&output=json&ak=${data.Key}`
         
         return new Promise((resolve, reject) => {
             fetchJsonp(baiduApiLink).then(response => {
                 return response.json()
             }).then(res => {
+                console.log(res)
                 resolve(res)
             })
         }) 
-
     }
 }
 

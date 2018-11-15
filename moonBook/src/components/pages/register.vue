@@ -1,13 +1,13 @@
 <template>
     <div class="register" @touchstart='listTouchstart' @touchmove='listTouchmove'>
         <div :class="takeUp?'fixed':''">
-            <search v-if='takeUp'/>
+            <search-school v-if='takeUp'/>
         </div>
         <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" />
         <div class="container" ref='listContainer'>
             <div class="school" v-if='active==0'>
                 <div class="search-module">
-                    <search v-if='!takeUp'/>
+                    <search-school v-if='!takeUp'/>
                 </div>
                 <van-list v-model="loading" :finished="finished" @load="onLoad">
                     <van-cell v-for="(item,index) in list" :key="index" is-link center>
@@ -29,12 +29,12 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
-import search from './../module/search/search'
+import searchSchool from './../module/search/searchSchool'
 
 export default {
     name:'register',
     components: {
-        search
+        searchSchool
     },
     data () {
         return {
@@ -48,15 +48,20 @@ export default {
             startY:''
         }
     },
+    created () {
+      console.log(this.$route.query)  
+    },
     methods: {
         ...mapActions(['getSchoolList']),
         onLoad() {
             this.num++
             let products = {
                 city: this.$route.query.city,
-                num: this.num
+                num: this.num,
+                x:this.$route.query.x,
+                y:this.$route.query.y
             }
-            this.getSchoolList(products).then( res =>{
+            this.getSchoolList(products).then(res=>{
                 this.list = this.list.concat(res.results) 
                 this.loading = false
                 if (this.list.length >= res.total) {

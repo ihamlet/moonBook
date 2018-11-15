@@ -2,7 +2,7 @@
     <div class="home page-padding">
         <div class="head-bar flex flex-align" :class="[themeBarSearch?'theme-background':'default-head-bar-background']">
             <div class="left-btn">
-                {{userCity}}
+                {{userCityState}}
             </div>
             <div class="search-bar"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
             <div class="right-btn" @click="release">
@@ -97,7 +97,7 @@ export default {
         footerBar
     },
     computed: {
-        ...mapGetters(['userCity'])
+        ...mapGetters(['userCityState'])
     },
     data () {
         return {

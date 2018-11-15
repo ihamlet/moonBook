@@ -28,13 +28,13 @@
     </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
     name:'investment',
     props: ['investmentAd'],
     computed: {
-        ...mapGetters(['userCity'])
+        ...mapGetters(['userPointState'])
     },
     data () {
         return {
@@ -56,9 +56,7 @@ export default {
             this.isAdshow = false
         },
         toRegister(){
-            this.$router.push({name:'register',query:{
-                city: this.userCity
-            }})
+            this.$router.push({name:'register',query:this.userPointState})
         }
     }
 }
