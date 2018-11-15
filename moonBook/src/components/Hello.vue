@@ -63,6 +63,7 @@ export default {
       this.getUserData()
       this.getMsgLength()
       this.getTabBtn()
+      sessionStorage.setItem('location', this.center.join())
     },
     onStartPage(){
       this.startPageShow = false
