@@ -1,11 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-<<<<<<< HEAD
 import axios from '../fetch/api'
-=======
-import axios from 'axios'
 import fetchJsonp from 'fetch-jsonp'
->>>>>>> master
 
 
 Vue.use(Vuex)
