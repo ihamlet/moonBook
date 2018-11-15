@@ -138,6 +138,7 @@
 </template>
 <script>
 import axios from 'axios'
+import { mapGetters } from 'vuex'
 import iconSuccess from './animate/iconSuccess'
 import addChild from './addChild'
 
@@ -153,9 +154,7 @@ export default {
         addChild
     },
     computed: {
-        userData(){
-            return this.$store.getters.userDataState
-        }
+        ...mapGetters(['userDataState'])
     },
     data () {
         return {
@@ -232,8 +231,6 @@ export default {
             axios.put('/api/pay',{
                 data:this.pushUserInfo,
             }).then(res=>{
-                this.$store.dispatch('pay')
-
                 setTimeout(()=>{
                     this.payLoading = false
                     this.iconSuccessShow = true
@@ -243,7 +240,7 @@ export default {
                     this.show = false
                     this.$store.dispatch('getUserData') //写入用户数据
                     this.$store.dispatch('getMsgLength')
-                    if(this.pushUserInfo.school.addChild.boolean && this.userData.childInfo.length == 0){
+                    if(this.pushUserInfo.school.addChild.boolean && this.userDataState.childInfo.length == 0){
                         this.addChildShow = true
                     }else{
                         this.$emit('close')

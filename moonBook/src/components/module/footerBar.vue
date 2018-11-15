@@ -4,19 +4,16 @@
             <i class="iconfont" :class="[pageIndex==index?`${item.iconClass}fill bounceIn animated`: item.iconClass]"></i>
             <span class="name">{{item.name}}</span>
         </div>
-        <div class="msg badge">{{msgLenght>100?'99':msgLenght}}</div>
+        <div class="msg badge">{{MsgLengthState>100?'99+':MsgLengthState}}</div>
     </div>
 </template>
 <script>
-import axios from 'axios'
-
+import { mapGetters } from 'vuex'
 export default {
     name:'footer-bar',
     props: ['pageIndex'],
     computed: {
-        msgLenght(){
-            return this.$store.getters.MsgLengthState
-        }
+        ...mapGetters(['MsgLengthState'])
     },
     data () {
         return {
@@ -38,7 +35,7 @@ export default {
                 path:'my'
             }]
         }
-    }, 
+    },
     methods: {
         toPage(item){
             this.$router.push({name:item.path})

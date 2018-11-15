@@ -1,6 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+<<<<<<< HEAD
 import axios from '../fetch/api'
+=======
+import axios from 'axios'
+import fetchJsonp from 'fetch-jsonp'
+>>>>>>> master
 
 
 Vue.use(Vuex)
@@ -8,12 +13,14 @@ Vue.use(Vuex)
 const state = {
     slogan:'阅读点亮人生',
     userData:{},
-    isPay:false,
     msgLength:1,
+    tabBtn:[],
+    baiduApiKey:'ExaEOeurluH5itO8HlEBYFsCclwWDEA6',
+    userPoint:''
 }
 
 const getters = {
-   userDataState: state=>{
+   userDataState: state=> {
        return state.userData
    },
    MsgLengthState: state => {
@@ -24,7 +31,7 @@ const getters = {
             return state.userData.dryingList.length
        }
    },
-   userPraiseState: state =>{
+   userPraiseState: state => {
        let praise = []
        if(state.userData.dryingList){
             state.userData.dryingList.forEach(element => {
@@ -33,18 +40,31 @@ const getters = {
        }
 
        return praise 
+   },
+   userPointState: state => {
+        if(state.userPoint){
+            return state.userPoint
+        }
+   },
+   userCityState: state => {
+        if(state.userPoint){
+            return state.userPoint.city
+        }
    }
 }
 
 const mutations = {
-    setUserData(state, params) {
+    setUserData(state, params){
         state.userData = params.data
-    },
-    setPay(state,params){
-        state.isPay = params.data
     },
     setMsgLength(state,params){
         state.msgLength = params.data
+    },
+    setTabBtn(state,params){
+        state.tabBtn = params.data
+    },
+    setUserPoint(state,params){
+        state.userPoint = params.data
     }
 }
 
@@ -61,10 +81,55 @@ const actions = {
             })
         })
     },
-    pay(context){
-        context.commit('setPay', {
-            data: true
+    getTabBtn(context){
+        axios.get('/api/barBtn').then(res=>{
+            context.commit('setTabBtn',{
+                data:res.data.barBtn
+            })
         })
+    },
+    getUserLocation(context){
+        let data = {
+            Key: context.state.baiduApiKey,
+            ip:'',
+        }
+        let baiduApiLink = `https://api.map.baidu.com/location/ip?ip=${data.ip}&ak=${data.Key}&coor=gcj02`
+
+        fetchJsonp(baiduApiLink).then(response => {
+            return response.json()
+        }).then(res => {
+            let LocationData ={
+                city: res.content.address_detail.city,
+                x: res.content.point.x,
+                y: res.content.point.y
+            }
+            context.commit('setUserPoint',{
+                data: LocationData
+            })
+        })
+    },
+    getSchoolList(context,products){
+        let data = {
+            Key: context.state.baiduApiKey,
+            tag:'教育',
+            query: '幼儿园',
+            region: products.city,
+            location:`${products.y},${products.x}`,
+            page_size: 20,
+            page_num: products.num,
+            filter:'sort_name:distance|sort_rule:1', //距离排序
+            ret_coordtype: 'gcj02ll'
+        }
+        
+        let baiduApiLink = `https://api.map.baidu.com/place/v2/search?query=${data.query}&location=${data.location}&tag=${data.tag}&region=${data.region}&page_size=${data.page_size}&radius=10000&page_num=${data.page_num}&filter=${data.filter}&ret_coordtype=${data.ret_coordtype}&radius=100000&output=json&ak=${data.Key}`
+        
+        return new Promise((resolve, reject) => {
+            fetchJsonp(baiduApiLink).then(response => {
+                return response.json()
+            }).then(res => {
+                resolve(res)
+            })
+        }) 
     }
 }
 

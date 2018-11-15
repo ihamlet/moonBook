@@ -20,21 +20,24 @@
                 <li>六</li>
                 <li>日</li>
             </ul>
-            <ul class="days" v-if='pack'>
-                <li v-for="dayobject in days">
-                    <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
-                    <span v-else>
+
+            <transition name="fade" mode="out-in">
+                <ul class="days" v-if='pack' key="month">
+                    <li v-for="dayobject in days">
+                        <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
+                        <span v-else>
+                            <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
+                            <span v-else>{{ dayobject.day.getDate() }}</span>
+                        </span>
+                    </li>
+                </ul>
+                <ul class="days" v-else key="week">
+                    <li v-for="dayobject in days" v-if='WeekStartDate.getDate()+1 <= dayobject.day.getDate() && WeekEndDate.getDate()+1 >= dayobject.day.getDate() '>
                         <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
-                        <span v-else>{{ dayobject.day.getDate() }}</span>
-                    </span>
-                </li>
-            </ul>
-            <ul class="days" v-else>
-                <li v-for="dayobject in days" v-if='WeekStartDate.getDate()+1 <= dayobject.day.getDate() && WeekEndDate.getDate()+1 >= dayobject.day.getDate() '>
-                    <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
-                    <span v-else>{{dayobject.day.getDate()}}</span>
-                </li>
-            </ul>
+                        <span v-else>{{dayobject.day.getDate()}}</span>
+                    </li>
+                </ul>
+            </transition>
         </div>
         <div class="drop-down" @click="slide">
             <i class="iconfont" :class="[pack?'rotate':'']">&#xe608;</i>
@@ -133,16 +136,16 @@ export default {
     background: transparent;
     color: #fff;
     position: relative;
-    box-shadow: 0 1.875rem /* 30/16 */ 2.5rem /* 40/16 */ -.625rem /* 10/16 */ rgba(0, 0, 0, .1)
+    box-shadow: 0 1.875rem /* 30/16 */ 2.5rem /* 40/16 */ -.625rem /* 10/16 */ rgba(0, 0, 0, .3)
 }
 
 .calendar .drop-down{
     position: absolute;
-    width: 5rem /* 80/16 */;
-    height: 2rem /* 32/16 */;
+    width: 3.75rem /* 60/16 */;
+    height: 1.5rem /* 24/16 */;
     background: #FF5722;
     text-align: center;
-    line-height: 2rem /* 32/16 */;
+    line-height: 1.5rem /* 24/16 */;
     left: 50%;
     transform: translate3d(-50%, 0, 0);
     z-index: 10;
@@ -168,8 +171,8 @@ export default {
 ul.days li,
 .year-month,
 .weekdays{
-    height: 3rem /* 48/16 */;
-    line-height: 3rem /* 48/16 */;
+    height: 2.25rem /* 36/16 */;
+    line-height: 2.25rem /* 36/16 */;
 }
 
 .weekdays li{
@@ -198,9 +201,8 @@ ul.days li{
     left: 50%;
     top: 50%;
     content: '';
-    width: 2rem /* 32/16 */;
-    height: 2rem /* 32/16 */;
-    line-height: 2rem /* 32/16 */;
+    width: 1.75rem /* 28/16 */;
+    height: 1.75rem /* 28/16 */;
     position: absolute;
     transform: translate3d(-50%, -50%, 0);
     background: #fff;
@@ -212,7 +214,7 @@ ul.days li{
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 </style>

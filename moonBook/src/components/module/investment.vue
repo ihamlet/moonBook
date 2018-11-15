@@ -21,16 +21,21 @@
                     </div>
                 </van-col>
                 <van-col span="6" class="flex flex-justify">
-                    <van-button class="theme-btn" size="small" type="primary" plain>注册</van-button>
+                    <van-button class="theme-btn" size="small" type="primary" plain @click="toRegister">注册</van-button>
                 </van-col>
             </van-row>
         </div>
     </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name:'investment',
     props: ['investmentAd'],
+    computed: {
+        ...mapGetters(['userPointState'])
+    },
     data () {
         return {
             isAdshow: true
@@ -49,6 +54,9 @@ export default {
     methods: {
         hideAd(){
             this.isAdshow = false
+        },
+        toRegister(){
+            this.$router.push({name:'register',query:this.userPointState})
         }
     }
 }

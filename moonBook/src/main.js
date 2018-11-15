@@ -11,10 +11,15 @@ import fetch from './fetch/api'
 import axios from './fetch/api'
 
 import Vant from 'vant'
+<<<<<<< HEAD
 import 'vant-css/lib/index.css'
+=======
+import 'vant/lib/index.css'
+>>>>>>> master
 import { Lazyload } from 'vant'
 
 import lineClamp from 'vue-line-clamp'
+
 
 import './mock' //模拟数据
 

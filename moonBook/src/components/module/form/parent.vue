@@ -1,16 +1,15 @@
 <template>
-    <div class="detail">
-        
-    </div>
+    <div class="form-parent">
+    </div>    
 </template>
 <script>
 export default {
-    name:'detail',
+    name:'parent',
     data () {
         return {
             
         }
-    }    
+    }
 }
 </script>
 <style scoped>

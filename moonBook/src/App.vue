@@ -23,11 +23,11 @@ export default {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_w4euc8xovng.eot');
-  src: url('//at.alicdn.com/t/font_893274_w4euc8xovng.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_w4euc8xovng.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_w4euc8xovng.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_w4euc8xovng.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_a7tqdp7512.eot');
+  src: url('//at.alicdn.com/t/font_893274_a7tqdp7512.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_a7tqdp7512.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_a7tqdp7512.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_a7tqdp7512.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -188,6 +188,11 @@ body.theme .head-bar-text,
   color: #409eff;
 }
 
+.theme-checkbox .van-checkbox__icon--checked .van-icon{
+  background-color: #409eff;
+  border-color: #409eff;
+}
+
 .theme-btn.van-button--plain.van-button--primary{
   background: transparent;
   border: .0625rem /* 1/16 */ solid #409eff;
@@ -296,11 +301,18 @@ img.lazy[lazy=error],
   z-index: 99;
 }
 
+.left-btn,
 .right-btn{
-  position: absolute;
-  right: .375rem /* 6/16 */;
-  width: 2.125rem /* 34/16 */;
+  flex: 1;
   text-align: center;
+  color: #fff;
+}
+
+.left-btn{
+  font-size: .8125rem /* 13/16 */;
+}
+
+.right-btn{
   transform: scale(0.9);
   display: inline-grid
 }
@@ -325,7 +337,7 @@ img.lazy[lazy=error],
 }
 
 .search-bar{
-  width: 68%;
+  flex: 5;
   background: rgba(255,255,255,.8);
   border-radius: 2.125rem /* 34/16 */;
   margin: 0 auto;
@@ -649,35 +661,6 @@ i.iconfont.rotate{
 
 .van-field__error-message{
   text-align: right;
-}
-
-/* 借还 */
-.borrow-popup{
-  height: 11.25rem /* 180/16 */;
-}
-
-.box{
-  flex: 1
-}
-
-.box .btn{
-  width: 5rem /* 80/16 */;
-  height: 5rem /* 80/16 */;
-  margin: 3.125rem /* 50/16 */ auto;
-  text-align: center;
-  line-height: 5rem /* 80/16 */;
-  font-size: 2.25rem /* 36/16 */;
-  border-radius: 50%;
-  color: #fff;
-  box-shadow: 0 .625rem /* 10/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, .2)
-}
-
-.box .btn.borrow{
-    background-image: linear-gradient( 135deg, #8BC34A 10%, #4CAF50 100%);
-}
-
-.box .btn.also{
-      background-image: linear-gradient( 135deg, #FFC107 10%, #FF9800 100%);
 }
 
 .silde{

@@ -1,54 +1,54 @@
 <template>
     <div class="head head-background" ref='head'>
-        <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userData.userInfo.name" @click-left="onClickLeft" @click-right="onClickRight">
+        <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userDataState.userInfo.name" @click-left="onClickLeft" @click-right="onClickRight">
             <div class="head-bar-icon" slot='left'>
-                <i class="iconfont">&#xe66a;</i>
+                <i class="iconfont">&#xe60e;</i>
             </div>
             <div class="head-bar-icon" slot='right'>
                 <i class="iconfont">&#xe609;</i>
             </div>
         </van-nav-bar>
-        <div class="user-info flex flex-justify" v-if='userData.userInfo'>
+        <div class="user-info flex flex-justify" v-if='userDataState.userInfo'>
             <div class="info">
                 <div class="avatar">
-                    <img :src="userData.userInfo.avatar" :alt="userData.userInfo.name">
+                    <img :src="userDataState.userInfo.avatar" :alt="userDataState.userInfo.name">
                 </div>
 
-                <div class="name">{{userData.userInfo.name}}</div>
-                <div class="school" v-if='userData.vipInfo'>{{userData.vipInfo.school.schoolName.name}}</div>
+                <div class="name">{{userDataState.userInfo.name}}</div>
+                <div class="school" v-if='userDataState.vipInfo'>{{userDataState.vipInfo.school.schoolName.name}}</div>
             </div>
         </div>
         <div class="card">
             <div class="borrow-card flex flex-align">
-                <div class="service flex flex-align" v-if='userData.vipInfo'>
+                <div class="service flex flex-align" v-if='userDataState.vipInfo'>
                     <div class="data-flow">
-                        <i class="iconfont" :class="`vip-${userData.vipInfo.card.level.name}`">&#xe604;</i>
+                        <i class="iconfont" :class="`vip-${userDataState.vipInfo.card.level.name}`">&#xe604;</i>
                         <b class="card-name">
-                            {{userData.vipInfo.card.type}}
+                            {{userDataState.vipInfo.card.type}}
                         </b>
                     </div>
                     <div class="data-flow read">
                         <span class="data-name">读过</span>
                         <span class="number">
-                            <number-grow :value='userData.readInfo.read.number' :time='.2'/>
+                            <number-grow :value='userDataState.readInfo.read.number' :time='.2'/>
                         </span>
                     </div>
                     <div class="data-flow reading">
                         <span class="data-name">在读</span>
                         <span class="number">
-                             <number-grow :value='userData.readInfo.reading.number' :time='.2'/>
+                             <number-grow :value='userDataState.readInfo.reading.number' :time='.2'/>
                         </span>
                     </div>
                     <div class="data-flow collection">
                         <span class="data-name">收藏</span>
                         <span class="number">
-                             <number-grow :value='userData.readInfo.collection.number' :time='.2'/>
+                             <number-grow :value='userDataState.readInfo.collection.number' :time='.2'/>
                         </span>
                     </div>
                     <div class="data-flow abrasion">
                         <span class="data-name">磨损</span>
                         <span class="number">
-                             <number-grow :value='userData.readInfo.abrasion.number' :time='.2'/>
+                             <number-grow :value='userDataState.readInfo.abrasion.number' :time='.2'/>
                         </span>
                     </div>
                 </div>
@@ -68,30 +68,14 @@
         <van-popup v-model="punchShow" class="page-popup punch" position="right">
             <punch @close='closePunch'/>
         </van-popup>
-
-        <!-- <van-popup v-model="show" class="borrow-popup" position="bottom">
-            <div class="flex">
-            <div class="box">
-                <div class="btn borrow an-0 animated" :class="[show?'bounceInUp':'bounceOutDown']">
-                    借
-                </div>
-            </div>
-            <div class="box">
-                <div class="btn also an-1 animated" :class="[show?'bounceInUp':'bounceOutDown']">
-                    还
-                </div>
-            </div>
-            </div>
-        </van-popup> -->
     </div>
 </template>
 <script>
 import axios from 'axios'
+import { mapGetters } from 'vuex'
 import numberGrow from './../../module/animate/numberGrow'
 import punch from './../../module/punch'
 import accept from './../accept'
-
-import { mapMutations } from 'vuex'
 
 export default {
     name:'cardHead',
@@ -101,9 +85,7 @@ export default {
         punch
     },
     computed: {
-        userData(){
-            return this.$store.getters.userDataState
-        }
+        ...mapGetters(['userDataState'])
     },
     data () {
         return {
@@ -121,7 +103,7 @@ export default {
     methods: {
         fetchData(){
             axios.get('/api/userData').then(res=>{
-                this.userData = res.data.userData
+                this.userDataState = res.data.userData
             })
         },
         handleScroll(){

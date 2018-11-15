@@ -1,7 +1,7 @@
 <template>
     <div class="baby-home">
         <div class="module-card">
-            <div class="add-baby flipInX animated" v-if='userData.childInfo == false' @click="toAddChild">
+            <div class="add-baby flipInX animated" v-if='userDataState.childInfo == false' @click="toAddChild">
                 <i class="iconfont hot">&#xe750;</i>
                 <div class="container">
                     <i class="iconfont baby-hd">&#xe603;</i>
@@ -11,7 +11,7 @@
             </div>
             <div class="list" v-else>
                 <div class="module-title">宝贝成长档案</div>
-                <div class="item module" v-for='(list,index) in userData.childInfo'>
+                <div class="item module" v-for='(list,index) in userDataState.childInfo'>
                     <div class="card-top-bar">
                         <van-nav-bar :title="`${list.data.name}`" right-text="编辑" @click-right="onClickRight(list)" />
                     </div>
@@ -48,10 +48,11 @@
     </div>
 </template>
 <script>
-import addChild from './../addChild'
-import { format } from './../../lib/js/util.js'
-import numberGrow from './../../module/animate/numberGrow'
 import axios from 'axios'
+import { mapGetters } from 'vuex'
+import { format } from './../../lib/js/util.js'
+import addChild from './../addChild'
+import numberGrow from './../../module/animate/numberGrow'
 
 export default {
     name:'baby-home',
@@ -60,12 +61,10 @@ export default {
         addChild,
     },
     computed: {
-        userData(){
-            return this.$store.getters.userDataState
-        },
+        ...mapGetters(['userDataState']),
         age(){
             let data = []
-            this.userData.childInfo.forEach(e=>{
+            this.userDataState.childInfo.forEach(e=>{
                 let year = format(new Date(),'yyyy') - e.data.birthday.split('-')[0]
                 data.push(year)
             })

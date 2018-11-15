@@ -20,12 +20,20 @@
                     </div>
                 </van-cell>
             </van-cell-group>
+            <van-checkbox-group v-model="result">
+                <div class="form-title">同步到</div>
+                <van-cell-group>
+                    <van-cell v-for="(item,index) in list" clickable :key="index" :title="item.title" @click="toggle(index)">
+                        <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" />
+                    </van-cell>
+                </van-cell-group>
+            </van-checkbox-group>
         </div>
         <div class="upload-module flex wrap">
             <van-cell>
                 <van-row gutter="5">
                     <van-col :span="8" v-for='(item,index) in grapicData.images' :key="index">
-                        <div class="preview img-grid"  v-lazy:background-image='item.img'>
+                        <div class="preview img-grid" v-lazy:background-image='item.img'>
                             <i class="iconfont" @click="deletePhoto(index)">&#xe683;</i>
                         </div>
                     </van-col>
@@ -40,7 +48,7 @@
             </van-cell>
         </div>
         <van-popup class="page-popup-layer" position="bottom" v-model="show">
-            <topic-list/>
+            <topic-list />
         </van-popup>
     </div>
 </template>
@@ -61,6 +69,14 @@ export default {
     },
     data () {
         return {
+            list:[{
+                title:'发现',
+                name:'find'
+            },{
+                title:'班级主页',
+                name:'class'
+            }],
+            result:['find','class'],
             show:false,
             grapicData:{
                 text:'',
@@ -82,15 +98,15 @@ export default {
         onRead(file) {
             if(file.length){
                 file.forEach( element => {
-                    if(this.imagesLength < 9){
                         compress(element.content,800,0.5).then( val => {
-                            this.grapicData.images.push({
-                                img:val
-                            })
+                            if(this.imagesLength < 9){
+                                this.grapicData.images.push({
+                                    img:val
+                                })
+                            }
                         })
-                    }
-                })
-            }else{
+                    })
+                }else{
                 compress(file.content,800,0.5).then( val => {
                     this.grapicData.images.push({ 
                         img:val
@@ -106,10 +122,16 @@ export default {
                 this.$emit('close')
             }else if( this.grapicData.text.length < 140 ){
                axios.put('/api/addDrying',{
-                    graphic: this.grapicData
+                    graphic: this.grapicData,
+                    result: this.result
                 }).then(res=>{
                     this.$emit('close')
-                    this.$router.push({name:'find'})
+
+                    if(this.result.indexOf('find') == 0){
+                        this.$router.push({name:'find'})
+                    }else{
+                        this.$router.push({name:'zoom'})
+                    }
                 })
             }
         },
@@ -118,39 +140,42 @@ export default {
         },
         toTopicPage(){
             this.show = true
+        },
+        toggle(index) {
+            this.$refs.checkboxes[index].toggle()
         }
     }
 }
 </script>
 <style scoped>
-.bar{
+.bar {
     height: 2rem /* 32/16 */;
     line-height: 2rem /* 32/16 */;
 }
 
-.text-length.danger{
-    color: #F56C6C;
+.text-length.danger {
+    color: #f56c6c;
 }
 
-.photo-upload{
+.photo-upload {
     line-height: 6.875rem /* 110/16 */;
     text-align: center;
 }
 
-.photo-upload i.iconfont{
+.photo-upload i.iconfont {
     font-size: 1.5rem /* 24/16 */;
-    color: #C0C4CC;
+    color: #c0c4cc;
 }
 
-.preview{
+.preview {
     position: relative;
 }
 
-.preview i.iconfont{
+.preview i.iconfont {
     position: absolute;
-    right: .3125rem /* 5/16 */;
-    top: .3125rem /* 5/16 */;
+    right: 0.3125rem /* 5/16 */;
+    top: 0.3125rem /* 5/16 */;
     font-size: 1.5rem /* 24/16 */;
-    color:#fff;
+    color: #fff;
 }
 </style>
