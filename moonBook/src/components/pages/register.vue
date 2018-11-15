@@ -114,7 +114,7 @@ export default {
 
 .search-module{
     width: 100%;
-    overflow: hidden;
+    height: 2.75rem /* 44/16 */;
 }
 
 </style>
