@@ -1,9 +1,12 @@
 <template>
     <div class="register" @touchstart='listTouchstart' @touchmove='listTouchmove'>
+        <div :class="takeUp?'fixed':''">
+            <search-school @show='listShow'/>
+        </div>
         <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" />        
         <div class="container" ref='listContainer'>
             <div class="school" v-if='active==0'>
-                <div class="search-module" :class="takeUp?'fixed':''">
+                <div class="search-module">
                     <search-school @show='listShow'/>
                 </div>
                 <van-list v-model="loading" :finished="finished" @load="onLoad">
@@ -101,10 +104,6 @@ export default {
 }
 </script>
 <style scoped>
-.container{
-    padding-top: 2.875rem /* 46/16 */;
-}
-
 .register{
     padding-bottom: 5.5rem /* 88/16 */;
 }
