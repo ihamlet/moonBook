@@ -46,6 +46,11 @@ const getters = {
         if(state.userPoint){
             return state.userPoint.city
         }
+   },
+   userLocation: state =>{
+        if(state.location){
+            return state.location
+        }
    }
 }
 
@@ -62,7 +67,7 @@ const mutations = {
     setUserPoint(state,params){
         state.userPoint = params.data
     },
-    setLocation(state, params){
+    setLocation(state,params){
         state.location = params.data
     }
 }
@@ -89,14 +94,10 @@ const actions = {
             })
         })
     },
-    getLocation(context){
-        if(sessionStorage.getItem('location')){
-            context.commit('setLocation',{
-                data:sessionStorage.getItem('location')
-            })
-        }
-    },
-    getUserLocation(context){
+    getUserLocation(context,products){
+        context.commit('setLocation',{
+            data: products.location
+        })
         let data = {
             Key: context.state.amapApiKey,
             location: context.state.location,

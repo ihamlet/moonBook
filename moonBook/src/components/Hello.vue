@@ -34,6 +34,10 @@ export default {
                   map.getCurrentPosition( (status, result) => {
                   if (result && result.position) {
                         self.center = [result.position.lng, result.position.lat]
+                        let products = {
+                          location:this.center.join()
+                        }      
+                        this.getUserLocation(products)
                         self.$nextTick()
                       }
                   })
@@ -50,20 +54,14 @@ export default {
     localStorage.setItem('access',true)
   },
   watch: {
-      center(val){
-        sessionStorage.setItem('location', val)
-        this.$store.state.location = val
-      },
       '$route': 'fetchData'
   },       
   methods: {
-    ...mapActions(['getUserData','getMsgLength','getTabBtn','getLocation']),
+    ...mapActions(['getUserData','getMsgLength','getTabBtn','getUserLocation']),
     fetchData(){
-      this.getLocation()
       this.getUserData()
       this.getMsgLength()
       this.getTabBtn()
-      sessionStorage.setItem('location', this.center.join())
     },
     onStartPage(){
       this.startPageShow = false
