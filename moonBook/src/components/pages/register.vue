@@ -5,11 +5,6 @@
         </div>
         <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" />
         <div class="container" ref='listContainer'>
-            <van-steps active-color='#409eff' :active="active">
-                <van-step>选择幼儿园</van-step>
-                <van-step>选择身份</van-step>
-            </van-steps>
-
             <div class="school" v-if='active==0'>
                 <div class="search-module">
                     <search v-if='!takeUp'/>
