@@ -663,35 +663,6 @@ i.iconfont.rotate{
   text-align: right;
 }
 
-/* 借还 */
-.borrow-popup{
-  height: 11.25rem /* 180/16 */;
-}
-
-.box{
-  flex: 1
-}
-
-.box .btn{
-  width: 5rem /* 80/16 */;
-  height: 5rem /* 80/16 */;
-  margin: 3.125rem /* 50/16 */ auto;
-  text-align: center;
-  line-height: 5rem /* 80/16 */;
-  font-size: 2.25rem /* 36/16 */;
-  border-radius: 50%;
-  color: #fff;
-  box-shadow: 0 .625rem /* 10/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, .2)
-}
-
-.box .btn.borrow{
-    background-image: linear-gradient( 135deg, #8BC34A 10%, #4CAF50 100%);
-}
-
-.box .btn.also{
-      background-image: linear-gradient( 135deg, #FFC107 10%, #FF9800 100%);
-}
-
 .silde{
   height: 0;
 }

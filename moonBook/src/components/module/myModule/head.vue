@@ -68,21 +68,6 @@
         <van-popup v-model="punchShow" class="page-popup punch" position="right">
             <punch @close='closePunch'/>
         </van-popup>
-
-        <!-- <van-popup v-model="show" class="borrow-popup" position="bottom">
-            <div class="flex">
-            <div class="box">
-                <div class="btn borrow an-0 animated" :class="[show?'bounceInUp':'bounceOutDown']">
-                    借
-                </div>
-            </div>
-            <div class="box">
-                <div class="btn also an-1 animated" :class="[show?'bounceInUp':'bounceOutDown']">
-                    还
-                </div>
-            </div>
-            </div>
-        </van-popup> -->
     </div>
 </template>
 <script>

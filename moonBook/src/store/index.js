@@ -12,8 +12,7 @@ const state = {
     msgLength:1,
     tabBtn:[],
     city:'',
-    baiduApiKey:'ExaEOeurluH5itO8HlEBYFsCclwWDEA6',
-    shcoolList:''
+    baiduApiKey:'ExaEOeurluH5itO8HlEBYFsCclwWDEA6'
 }
 
 const getters = {
@@ -42,11 +41,6 @@ const getters = {
         if(state.city){
             return state.city
         }
-   },
-   shcoolListState: state => {
-        if(state.shcoolList){
-            return state.shcoolList
-        }
    }
 }
 
@@ -62,9 +56,6 @@ const mutations = {
     },
     setCity(state,params){
         state.city = params.data
-    },
-    setShcoolList(state,params){
-        state.shcoolList = params.data
     }
 }
 
@@ -116,15 +107,17 @@ const actions = {
             filter:'sort_name:distance|sort_rule:1', //距离排序
             ret_coordtype: 'gcj02ll'
         }
+        
         let baiduApiLink = `http://api.map.baidu.com/place/v2/search?query=${data.query}&tag=${data.tag}&region=${data.region}&page_size=${data.page_size}&page_num=${data.page_num}&filter=${data.filter}&ret_coordtype=${data.ret_coordtype}&output=json&ak=${data.Key}`
-
-       return fetchJsonp(baiduApiLink).then(response => {
-            return response.json()
-        }).then(res => {
-            context.commit('setShcoolList',{
-                data:res
+        
+        return new Promise((resolve, reject) => {
+            fetchJsonp(baiduApiLink).then(response => {
+                return response.json()
+            }).then(res => {
+                resolve(res)
             })
-        })
+        }) 
+
     }
 }
 
