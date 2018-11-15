@@ -13,6 +13,7 @@ import Zoom from '@/components/pages/zoom'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   scrollBehavior,
   routes: [
     {
