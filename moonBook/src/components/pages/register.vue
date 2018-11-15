@@ -1,5 +1,8 @@
 <template>
-    <div class="register">
+    <div class="register" @touchstart='listTouchstart' @touchmove='listTouchmove'>
+        <div :class="takeUp?'fixed':''">
+            <search v-if='takeUp'/>
+        </div>
         <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" />
         <div class="container" ref='listContainer'>
             <van-steps active-color='#409eff' :active="active">
@@ -8,7 +11,9 @@
             </van-steps>
 
             <div class="school" v-if='active==0'>
-                <search/>
+                <div class="search-module">
+                    <search v-if='!takeUp'/>
+                </div>
                 <van-list v-model="loading" :finished="finished" @load="onLoad">
                     <van-cell v-for="(item,index) in list" :key="index" is-link center>
                         <div class="school-name">{{item.name}}</div>
@@ -28,7 +33,7 @@
     </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import search from './../module/search/search'
 
 export default {
@@ -36,40 +41,20 @@ export default {
     components: {
         search
     },
-    computed: {
-       ...mapGetters(['shcoolListState'])
-    },
     data () {
         return {
-            domHeight:'',
             active:0,
             num:0,
             list: [],
             loading: false,
-            fixedSearchBar: true,
-            finished: false
+            takeUp: true,
+            finished: false,
+            startX:'',
+            startY:''
         }
-    },
-    mounted () {
-        window.addEventListener('scroll', this.handleScroll)
     },
     methods: {
         ...mapActions(['getSchoolList']),
-        handleScroll(){
-            this.getDomHeight()  
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-            this.scrollTop = scrollTop
-            if( this.domHeight < this.scrollTop){
-               this.fixedSearchBar = false
-            }else{
-               this.fixedSearchBar = true
-            }
-        },
-        getDomHeight(){
-            if(this.$refs.listContainer){
-                this.domHeight = this.$refs.listContainer.offsetTop
-            }
-        },
         onLoad() {
             this.num++
             let products = {
@@ -86,6 +71,22 @@ export default {
         },
         onClickLeft(){
             this.$router.go(-1)
+        },
+        listTouchstart(e){
+            this.startX = e.touches[0].pageX
+            this.startY = e.touches[0].pageY
+        },
+        listTouchmove(e){
+            let moveEndX = e.changedTouches[0].pageX
+            let moveEndY = e.changedTouches[0].pageY
+            let X = moveEndX - this.startX
+            let Y = moveEndY - this.startY
+            if ( Math.abs(Y) > Math.abs(X) && Y > 0) {
+                this.takeUp = false //向下
+            }
+            else if ( Math.abs(Y) > Math.abs(X) && Y < 0 ) {
+                this.takeUp = true //向上
+            }
         }
     }
 }
@@ -108,4 +109,17 @@ export default {
     width: 18.75rem /* 300/16 */;
     color: #909399;
 }
+
+.fixed{
+    position: fixed;
+    top: 2.875rem /* 46/16 */;
+    z-index: 10;
+    width: 100%;
+}
+
+.search-module{
+    width: 100%;
+    overflow: hidden;
+}
+
 </style>
