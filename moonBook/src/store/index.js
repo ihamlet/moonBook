@@ -125,7 +125,6 @@ const actions = {
             fetchJsonp(baiduApiLink).then(response => {
                 return response.json()
             }).then(res => {
-                console.log(res)
                 resolve(res)
             })
         }) 

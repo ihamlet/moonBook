@@ -64,7 +64,7 @@ export default {
         ...mapGetters(['userDataState']),
         age(){
             let data = []
-            this.userData.childInfo.forEach(e=>{
+            this.userDataState.childInfo.forEach(e=>{
                 let year = format(new Date(),'yyyy') - e.data.birthday.split('-')[0]
                 data.push(year)
             })
