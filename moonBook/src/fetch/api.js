@@ -1,21 +1,23 @@
 import axios from 'axios'
-import Router from 'vue-router'
+import router from '@/router/index'
 
 axios.defaults.timeout = 5000;
-axios.interceptors.response.use(response=>{
-    console.log('status', response.status);
-    switch(response.status) {
-        case 401:
-        case 402:
-            console.log('need login');
-            location.href = '/login';
-            return Promise.reject('need login');
-        default:
-            return response;
-    }
-}, (error, header, status)=>{
-    console.log('x', error, header, status);
-    return Promise.reject(error.response);
-})
+axios.interceptors.response.use(
+    response => {
+        return response;
+    },
+    error => {
+        switch (error.response.status) {
+            case 401:
+            case 402:
+                console.log('current route path', router.currentRoute.path);
+                router.currentRoute.path !== '/login' && router.replace({
+                    path: '/login',
+                    query: {redirect: router.currentRoute.fullPath}
+                });
+                return Promise.reject('need login');
+        }
+        return Promise.reject(error.response);
+    });
 
 export default axios
