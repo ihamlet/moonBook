@@ -24,8 +24,12 @@
                 user:{
                     mobile:'',
                     password:''
-                }
+                },
+                redirect: this.$route.query.redirect.length ? this.$route.query.redirect: '/home'
             }
+        },
+        created(){
+            console.log(this.$route,query);
         },
         methods:{
             onSubmit(e){
@@ -41,6 +45,7 @@
                     toast.clear();
                     if(res.data.status === 1) {
                         console.log('登陆成功');
+                        this.$route.change({path:this.redirect});
                     } else {
                         this.$toast.fail(res.data.info);
                     }
