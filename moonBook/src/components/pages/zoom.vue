@@ -38,11 +38,10 @@
                         </div>
                     </div>
                 </div>
+                <van-cell-group v-if='userData.vipInfo'>
+                    <van-cell title="幼儿园" :value='userData.vipInfo.school.schoolName.name' is-link/>
+                </van-cell-group>
             </lazy-component>
-
-            <van-cell-group v-if='userData.vipInfo'>
-                <van-cell title="幼儿园" :value='userData.vipInfo.school.schoolName.name' is-link/>
-            </van-cell-group>
 
             <lazy-component>
                 <van-list v-model="loading" :finished="finished" @load="onLoad">
