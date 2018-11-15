@@ -47,7 +47,7 @@ export default {
             num:0,
             list: [],
             loading: false,
-            takeUp: true,
+            takeUp: false,
             finished: false,
             startX:'',
             startY:''
