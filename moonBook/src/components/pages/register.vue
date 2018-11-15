@@ -11,8 +11,11 @@
                 </div>
                 <van-list v-model="loading" :finished="finished" @load="onLoad">
                     <van-cell v-for="(item,index) in list" :key="index" is-link center>
-                        <div class="school-name">{{item.name}}</div>
-                        <div class="school-address" v-line-clamp:20="1">{{item.address.replace(/^(.+?)市/,'')}}</div>
+                        <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
+                        <div class="school-address" v-line-clamp:20="1">
+                            <span>{{item.adname}}</span>
+                            <span v-if='item.address.length!=0'>{{item.address}}</span>
+                        </div>
                     </van-cell>
                 </van-list>
             </div>
@@ -39,7 +42,7 @@ export default {
     data () {
         return {
             active:0,
-            num:0,
+            page:0,
             list: [],
             loading: false,
             takeUp: false,
@@ -54,17 +57,14 @@ export default {
     methods: {
         ...mapActions(['getSchoolList']),
         onLoad() {
-            this.num++
+            this.page++
             let products = {
-                city: this.$route.query.city,
-                num: this.num,
-                x:this.$route.query.x,
-                y:this.$route.query.y
+                page:this.page
             }
             this.getSchoolList(products).then(res=>{
-                this.list = this.list.concat(res.results) 
+                this.list = this.list.concat(res.pois)
                 this.loading = false
-                if (this.list.length >= res.total) {
+                if (this.list.length >= res.count) {
                     this.finished = true
                 }
             })

@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import fetchJsonp from 'fetch-jsonp'
 
-
 Vue.use(Vuex)
 
 const state = {
@@ -11,8 +10,9 @@ const state = {
     userData:{},
     msgLength:1,
     tabBtn:[],
-    baiduApiKey:'ExaEOeurluH5itO8HlEBYFsCclwWDEA6',
-    userPoint:''
+    amapApiKey:'0522f462288e296eac959dbde42718ab',
+    userPoint:'',
+    location:''
 }
 
 const getters = {
@@ -61,6 +61,9 @@ const mutations = {
     },
     setUserPoint(state,params){
         state.userPoint = params.data
+    },
+    setLocation(state, params){
+        state.location = params.data
     }
 }
 
@@ -86,20 +89,26 @@ const actions = {
             })
         })
     },
+    getLocation(context){
+        if(sessionStorage.getItem('location')){
+            context.commit('setLocation',{
+                data:sessionStorage.getItem('location')
+            })
+        }
+    },
     getUserLocation(context){
         let data = {
-            Key: context.state.baiduApiKey,
-            ip:'',
+            Key: context.state.amapApiKey,
+            location: context.state.location,
         }
-        let baiduApiLink = `https://api.map.baidu.com/location/ip?ip=${data.ip}&ak=${data.Key}&coor=gcj02`
+        let amapApiLink = `https://restapi.amap.com/v3/geocode/regeo?output=json&location=${data.location}&key=${data.Key}`
 
-        fetchJsonp(baiduApiLink).then(response => {
+        fetchJsonp(amapApiLink).then(response => {
             return response.json()
         }).then(res => {
             let LocationData ={
-                city: res.content.address_detail.city,
-                x: res.content.point.x,
-                y: res.content.point.y
+                city: res.regeocode.addressComponent.city,
+                location: context.state.location,
             }
             context.commit('setUserPoint',{
                 data: LocationData
@@ -108,21 +117,19 @@ const actions = {
     },
     getSchoolList(context,products){
         let data = {
-            Key: context.state.baiduApiKey,
-            tag:'教育',
-            query: '幼儿园',
-            region: products.city,
-            location:`${products.y},${products.x}`,
-            page_size: 20,
-            page_num: products.num,
-            filter:'sort_name:distance|sort_rule:1', //距离排序
-            ret_coordtype: 'gcj02ll'
+            Key: context.state.amapApiKey,
+            keywords:'教育',
+            types: '幼儿园',
+            location: context.state.location,
+            offset: 20,
+            page: products.page,
+            radius: 24000
         }
         
-        let baiduApiLink = `https://api.map.baidu.com/place/v2/search?query=${data.query}&location=${data.location}&tag=${data.tag}&region=${data.region}&page_size=${data.page_size}&radius=10000&page_num=${data.page_num}&filter=${data.filter}&ret_coordtype=${data.ret_coordtype}&radius=100000&output=json&ak=${data.Key}`
+        let amapApiLink = `https://restapi.amap.com/v3/place/around?key=${data.Key}&location=${data.location}&radius=${data.radius}&keywords=${data.keywords}&types=${data.types}&offset=${data.offset}&page=${data.page}`
         
         return new Promise((resolve, reject) => {
-            fetchJsonp(baiduApiLink).then(response => {
+            fetchJsonp(amapApiLink).then(response => {
                 return response.json()
             }).then(res => {
                 resolve(res)
