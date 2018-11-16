@@ -21,6 +21,12 @@ export default {
     display: none;
 }
 
+input,
+textarea {
+    border: 0;
+    -webkit-appearance: none;
+}
+
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
   src: url('//at.alicdn.com/t/font_893274_a7tqdp7512.eot');
