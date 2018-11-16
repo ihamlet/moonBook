@@ -10,12 +10,13 @@ import store from './store/index'
 import fetch from './fetch/api'
 import axios from './fetch/api'
 
+import VueAMap from 'vue-amap'
+
 import Vant from 'vant'
 import 'vant-css/lib/index.css'
 import { Lazyload } from 'vant'
 
 import lineClamp from 'vue-line-clamp'
-
 
 import './mock' //模拟数据
 
@@ -37,6 +38,13 @@ Vue.use(Lazyload, {
 })
 
 Vue.use(lineClamp)
+Vue.use(VueAMap)
+VueAMap.initAMapApiLoader({
+  // 高德key
+  key: 'fa9f5ec66e1591d348fd0d4b8edd809a',
+  // 插件集合 （插件按需引入）
+  plugin: ['AMap.Geolocation']
+})
 
 // Vue.config.productionTip = false
 

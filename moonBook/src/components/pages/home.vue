@@ -133,9 +133,7 @@ export default {
       '$router':'fetchData'
     },
     methods: {
-        ...mapActions(['getUserLocation']),
         fetchData(){
-            this.getUserLocation()
             setInterval(()=>{
                 this.btnPulse = true
             },3000)

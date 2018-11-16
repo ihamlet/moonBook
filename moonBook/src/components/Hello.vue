@@ -4,6 +4,8 @@
           <start-page @listenStartPage='onStartPage' v-if='startPageShow'/>
       </transition>
       <router-view v-if='!startPageShow' />
+
+      <el-amap vid="amap" class="amap-demo" :center="center" :plugin="plugin" v-show='false'/>
   </div>
 </template>
 
@@ -19,15 +21,35 @@ export default {
     startPage
   },
   data () {
+    const self = this
     return {
       show:false,
-      startPageShow:true 
+      startPageShow:true,
+      center: [116.397477,39.908692],
+      plugin:[{
+          timeout:1000,
+          pName: 'Geolocation',
+          events: {
+              init:(map)=>{
+                  map.getCurrentPosition( (status, result) => {
+                  if (result && result.position) {
+                        self.center = [result.position.lng, result.position.lat]
+                        let products = {
+                          location:this.center.join()
+                        }      
+                        this.getUserLocation(products)
+                        self.$nextTick()
+                      }
+                  })
+              }
+          }
+      }]
     }
   },
   created () {
     this.fetchData()
-    if(localStorage.getItem("access")){
-      this.startPageShow = !localStorage.getItem("access")
+    if(localStorage.getItem('access')){
+      this.startPageShow = !localStorage.getItem('access')
     }
     localStorage.setItem('access',true)
   },
@@ -35,7 +57,7 @@ export default {
       '$route': 'fetchData'
   },       
   methods: {
-    ...mapActions(['getUserData','getMsgLength','getTabBtn']),
+    ...mapActions(['getUserData','getMsgLength','getTabBtn','getUserLocation']),
     fetchData(){
       this.getUserData()
       this.getMsgLength()

@@ -1,18 +1,18 @@
 <template>
     <div class="register" @touchstart='listTouchstart' @touchmove='listTouchmove'>
-        <div :class="takeUp?'fixed':''">
-            <search-school v-if='takeUp'/>
-        </div>
-        <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" />
+        <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" />        
         <div class="container" ref='listContainer'>
             <div class="school" v-if='active==0'>
-                <div class="search-module">
-                    <search-school v-if='!takeUp'/>
+                <div class="search-module" :class="takeUp?'fixed':''">
+                    <search-school @show='listShow'/>
                 </div>
                 <van-list v-model="loading" :finished="finished" @load="onLoad">
                     <van-cell v-for="(item,index) in list" :key="index" is-link center>
-                        <div class="school-name">{{item.name}}</div>
-                        <div class="school-address" v-line-clamp:20="1">{{item.address.replace(/^(.+?)市/,'')}}</div>
+                        <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
+                        <div class="school-address" v-line-clamp:20="1">
+                            <span>{{item.adname}}</span>
+                            <span v-if='item.address.length!=0'>{{item.address}}</span>
+                        </div>
                     </van-cell>
                 </van-list>
             </div>
@@ -25,21 +25,27 @@
                 </van-cell-group>
             </div>
         </div>
+        <van-popup v-model="show" class="page-popup" :overlay="false">
+            <school-list @close='listHide'/>
+        </van-popup>
     </div>
 </template>
 <script>
 import { mapActions } from 'vuex'
 import searchSchool from './../module/search/searchSchool'
+import schoolList from './../module/search/schoolList'
 
 export default {
     name:'register',
     components: {
-        searchSchool
+        searchSchool,
+        schoolList
     },
     data () {
         return {
+            show:false,
             active:0,
-            num:0,
+            page:0,
             list: [],
             loading: false,
             takeUp: false,
@@ -54,17 +60,14 @@ export default {
     methods: {
         ...mapActions(['getSchoolList']),
         onLoad() {
-            this.num++
+            this.page++
             let products = {
-                city: this.$route.query.city,
-                num: this.num,
-                x:this.$route.query.x,
-                y:this.$route.query.y
+                page:this.page
             }
             this.getSchoolList(products).then(res=>{
-                this.list = this.list.concat(res.results) 
+                this.list = this.list.concat(res.pois)
                 this.loading = false
-                if (this.list.length >= res.total) {
+                if (this.list.length >= res.count) {
                     this.finished = true
                 }
             })
@@ -87,6 +90,12 @@ export default {
             else if ( Math.abs(Y) > Math.abs(X) && Y < 0 ) {
                 this.takeUp = true //向上
             }
+        },
+        listShow(){
+            this.show = true
+        },
+        listHide(){
+            this.show = false
         }
     }
 }
@@ -112,8 +121,8 @@ export default {
 
 .fixed{
     position: fixed;
-    top: 2.875rem /* 46/16 */;
-    z-index: 10;
+    top: 2.8125rem /* 45/16 */;
+    z-index: 1001;
     width: 100%;
 }
 
