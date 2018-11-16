@@ -55,7 +55,7 @@ export default {
     methods: {
         ...mapActions(['getSearch']),
         closeList(){
-            this.$emit('close', false)
+            this.$emit('close')
         },
         clear(){
             this.searchContent=''

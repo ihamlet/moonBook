@@ -12,8 +12,7 @@ const state = {
     msgLength:1,
     tabBtn:[],
     amapApiKey:'0522f462288e296eac959dbde42718ab',
-    userPoint:'',
-    location:''
+    userPoint:''
 }
 
 const getters = {
@@ -40,18 +39,9 @@ const getters = {
    userPointState: state => {
         if(state.userPoint){
             return state.userPoint
-        }
-   },
-   userCityState: state => {
-        if(state.userPoint){
-            return state.userPoint.city
-        }
-   },
-   userLocation: state =>{
-        if(state.location){
-            return state.location
         }else{
-            return Cookies.get('location')
+            let data = JSON.parse(Cookies.get('userPoint'))
+            return state.userPoint = data
         }
    }
 }
@@ -67,10 +57,10 @@ const mutations = {
         state.tabBtn = params.data
     },
     setUserPoint(state,params){
+        Cookies.set('userPoint', params.data, { expires: 1 })
         state.userPoint = params.data
     },
     setLocation(state,params){
-        Cookies.set('location', params.data, { expires: 1 })
         state.location = params.data
     }
 }
@@ -98,9 +88,9 @@ const actions = {
         })
     },
     getUserLocation(context,products){
-        context.commit('setLocation',{
-            data: products.location
-        })
+        let cityInfo = {
+            location: products.location
+        }
 
         let data = {
             Key: context.state.amapApiKey,
@@ -112,12 +102,10 @@ const actions = {
         fetchJsonp(amapApiLink).then(response => {
             return response.json()
         }).then(res => {
-            let LocationData ={
-                city: res.regeocode.addressComponent.city,
-                location: context.state.location,
-            }
+            cityInfo.city = res.regeocode.addressComponent.city
+
             context.commit('setUserPoint',{
-                data: LocationData
+                data: cityInfo
             })
         })
     },

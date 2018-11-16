@@ -28,14 +28,9 @@
     </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
     name:'investment',
     props: ['investmentAd'],
-    computed: {
-        ...mapGetters(['userPointState'])
-    },
     data () {
         return {
             isAdshow: true
