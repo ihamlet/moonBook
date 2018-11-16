@@ -8,21 +8,21 @@
                 <i class="iconfont">&#xe609;</i>
             </div>
         </van-nav-bar>
-        <div class="user-info flex flex-justify" v-if='userDataState.userInfo'>
+        <div class="user-info flex flex-justify" v-if='userDataState.id'>
             <div class="info">
                 <div class="avatar">
-                    <img :src="userDataState.userInfo.avatar" :alt="userDataState.userInfo.name">
+                    <img :src="userDataState.avatar" :alt="userDataState.name">
                 </div>
 
-                <div class="name">{{userDataState.userInfo.name}}</div>
-                <div class="school" v-if='userDataState.vipInfo'>{{userDataState.vipInfo.school.schoolName.name}}</div>
+                <div class="name">{{userDataState.name}}</div>
+                <div class="school" v-if='userDataState.school'>{{userDataState.school.title}}</div>
             </div>
         </div>
         <div class="card">
             <div class="borrow-card flex flex-align">
-                <div class="service flex flex-align" v-if='userDataState.vipInfo'>
+                <div class="service flex flex-align" v-if='userDataState.card'>
                     <div class="data-flow">
-                        <i class="iconfont" :class="`vip-${userDataState.vipInfo.card.level.name}`">&#xe604;</i>
+                        <i class="iconfont" :class="`vip-${userDataState.card.name}`">&#xe604;</i>
                         <b class="card-name">
                             {{userDataState.vipInfo.card.type}}
                         </b>
@@ -30,25 +30,25 @@
                     <div class="data-flow read">
                         <span class="data-name">读过</span>
                         <span class="number">
-                            <number-grow :value='userDataState.readInfo.read.number' :time='.2'/>
+                            <number-grow :value='userDataState.member.read_count' :time='.2'/>
                         </span>
                     </div>
                     <div class="data-flow reading">
                         <span class="data-name">在读</span>
                         <span class="number">
-                             <number-grow :value='userDataState.readInfo.reading.number' :time='.2'/>
+                             <number-grow :value='userDataState.member.reading_count' :time='.2'/>
                         </span>
                     </div>
                     <div class="data-flow collection">
                         <span class="data-name">收藏</span>
                         <span class="number">
-                             <number-grow :value='userDataState.readInfo.collection.number' :time='.2'/>
+                             <number-grow :value='userDataState.member.favorite_count' :time='.2'/>
                         </span>
                     </div>
                     <div class="data-flow abrasion">
                         <span class="data-name">磨损</span>
                         <span class="number">
-                             <number-grow :value='userDataState.readInfo.abrasion.number' :time='.2'/>
+                             <number-grow :value='userDataState.member.broken_count' :time='.2'/>
                         </span>
                     </div>
                 </div>

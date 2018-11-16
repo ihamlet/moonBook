@@ -77,7 +77,7 @@ const mutations = {
 
 const actions = {
     getUserData(context){
-        axios.get('/book/member/getUser').then(res=>{
+        axios.get('/book/memberUser/getInfo').then(res=>{
             context.commit('setUserData', res.data)
         })
     },
