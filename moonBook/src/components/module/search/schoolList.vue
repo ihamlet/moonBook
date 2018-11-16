@@ -7,7 +7,7 @@
                 </div>
                 <input type="text" class="search-input" v-model="searchContent" @input="getList" :placeholder="placeholder">
 
-                <div class="search-btn theme-color">
+                <div class="search-btn">
                     搜索
                 </div>
             </form>
@@ -29,14 +29,17 @@ export default {
     methods: {
         closeList(){
             this.$emit('close', false)
+        },
+        getList(){
+
         }
     }
 }
 </script>
 <style scoped>
 .search-nav-bar{
-    padding: .3125rem /* 5/16 */ 0;
-    background: #ddd;
+    padding: .3125rem /* 5/16 */;
+    border-bottom: 1px solid #F2F6FC;
 }
 
 .close,
@@ -45,13 +48,31 @@ export default {
     text-align: center;
 }
 
+.close{
+    color: #909399;
+}
+
+.search-btn{
+    background: #409EFF;
+    color: #fff;
+    border: .0625rem /* 1/16 */ solid #409EFF;
+    border-radius:.375rem /* 6/16 */;
+}
+
+.search-btn,
+input.search-input{
+    height: 2.25rem /* 36/16 */;
+    line-height: 2.25rem /* 36/16 */;
+}
+
 input.search-input{
     flex: 5;
-    height: 2.25rem /* 36/16 */;
     background: #fff;
     border: none;
     border-radius: .375rem /* 6/16 */;
-    padding: 0 1.25rem /* 20/16 */;
-    line-height: 2.25rem /* 36/16 */;
+    padding-left: 1.25rem /* 20/16 */;
+    padding-right: .3125rem /* 5/16 */;
+    border: 1px solid #E4E7ED;
+    margin-right: .3125rem /* 5/16 */;
 }
 </style>

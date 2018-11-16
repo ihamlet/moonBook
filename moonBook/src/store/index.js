@@ -35,7 +35,6 @@ const getters = {
                 praise.push(element.social.praise.number)
            })
        }
-
        return praise 
    },
    userPointState: state => {
@@ -102,10 +101,12 @@ const actions = {
         context.commit('setLocation',{
             data: products.location
         })
+
         let data = {
             Key: context.state.amapApiKey,
             location: products.location,
         }
+
         let amapApiLink = `https://restapi.amap.com/v3/geocode/regeo?output=json&location=${data.location}&key=${data.Key}`
 
         fetchJsonp(amapApiLink).then(response => {
@@ -142,7 +143,7 @@ const actions = {
         }) 
     },
     getSearch(context,products){
-
+        
     }
 }
 
