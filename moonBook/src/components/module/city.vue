@@ -143,9 +143,10 @@ export default {
     top: 0;
     z-index: 1009;
     width: 1.5rem /* 24/16 */;
-    height: 100vh;
+    height: 100%;
     justify-content: center;
     -webkit-box-pack: center;
+    overflow: hidden;
 }
 
 .index-letter{
