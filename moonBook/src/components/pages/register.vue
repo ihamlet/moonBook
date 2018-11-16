@@ -96,16 +96,6 @@ export default {
     padding-bottom: 5.5rem /* 88/16 */;
 }
 
-.school-name{
-    font-size: 1rem /* 16/16 */;
-    color: #303133;
-}
-
-.school-address{
-    width: 18.75rem /* 300/16 */;
-    color: #909399;
-}
-
 .fixed{
     position: fixed;
     top: 2.8125rem /* 45/16 */;

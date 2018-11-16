@@ -1,37 +1,64 @@
 <template>
     <div class="list-page">
-        <div class="search-nav-bar">
-            <form class="form-search flex flex-align" action="#">
-                <div class="close" @click="closeList">
-                    <i class="iconfont">&#xe657;</i>
-                </div>
-                <input type="text" class="search-input" v-model="searchContent" @input="getList" :placeholder="placeholder">
-
-                <div class="search-btn">
-                    搜索
-                </div>
-            </form>
+        <div class="fixed">
+            <div class="search-nav-bar">
+                <form class="form-search flex flex-align" action="#">
+                    <div class="close" @click="closeList">
+                        <i class="iconfont">&#xe657;</i>
+                    </div>
+                    <input type="text" class="search-input" v-model="searchContent" :placeholder="placeholder">
+                    <i class="iconfont clear" v-if='searchContent.length > 0' @click="clear">&#xe683;</i>
+                </form>
+            </div>
         </div>
+
         <div class="list">
-            <div class="item"></div>
+            <div class="item" v-for='item in list'>
+                <van-cell v-for="(item,index) in list" :key="index" is-link center>
+                    <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
+                    <div class="school-address" v-line-clamp:20="1">
+                        <span v-if='item.address.length!=0'>{{item.address}}</span>
+                    </div>
+                </van-cell>
+            </div>
         </div>
     </div>
 </template>
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
     name:'school-list',
+    computed: {
+      ...mapGetters(['userPointState'])
+    },
     data () {
         return {
             searchContent:'',
-            placeholder:'请输入幼儿园名称/拼音'
+            placeholder:'请输入幼儿园名称',
+            list:[]
+        }
+    },
+    watch: {
+        searchContent(val){
+            let products = {
+                keywords: val,
+                location: this.userPointState.location,
+                city: this.userPointState.city,
+                datatype:'poi'
+            }
+            this.getSearch(products).then(res=>{
+                this.list = res.tips
+            })
         }
     },
     methods: {
+        ...mapActions(['getSearch']),
         closeList(){
             this.$emit('close', false)
         },
-        getList(){
-
+        clear(){
+            this.searchContent=''
         }
     }
 }
@@ -40,6 +67,7 @@ export default {
 .search-nav-bar{
     padding: .3125rem /* 5/16 */;
     border-bottom: 1px solid #F2F6FC;
+    background: #fff;
 }
 
 .close,
@@ -50,13 +78,6 @@ export default {
 
 .close{
     color: #909399;
-}
-
-.search-btn{
-    background: #409EFF;
-    color: #fff;
-    border: .0625rem /* 1/16 */ solid #409EFF;
-    border-radius:.375rem /* 6/16 */;
 }
 
 .search-btn,
@@ -74,5 +95,12 @@ input.search-input{
     padding-right: .3125rem /* 5/16 */;
     border: 1px solid #E4E7ED;
     margin-right: .3125rem /* 5/16 */;
+}
+
+.fixed{
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+    width: 100%;
 }
 </style>

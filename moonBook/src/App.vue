@@ -666,4 +666,27 @@ i.iconfont.rotate{
 .silde{
   height: 0;
 }
+
+.school-name{
+    font-size: 1rem /* 16/16 */;
+    color: #303133;
+}
+
+.school-address{
+    width: 18.75rem /* 300/16 */;
+    color: #909399;
+}
+
+
+/* 搜索 */
+.form-search{
+    position: relative;
+}
+
+.form-search i.clear{
+    position: absolute;
+    right: .625rem /* 10/16 */;
+    font-size: 1.25rem /* 20/16 */;
+    color: #C0C4CC;
+}
 </style>

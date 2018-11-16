@@ -125,7 +125,7 @@ const actions = {
         let data = {
             Key: context.state.amapApiKey,
             keywords:'教育',
-            types: '幼儿园',
+            types: 141204,
             location: products.location,
             offset: 20,
             page: products.page,
@@ -143,7 +143,25 @@ const actions = {
         }) 
     },
     getSearch(context,products){
-        
+        let data = {
+            Key: context.state.amapApiKey,
+            keywords: products.keywords,
+            type: 141204,
+            location: products.location,
+            city: products.city,
+            citylimit: true,
+            datatype:'all'
+        }
+
+        let amamApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
+    
+        return new Promise((resolve, reject) => {
+            fetchJsonp(amamApiLink).then(response => {
+                return response.json()
+            }).then(res => {
+                resolve(res)
+            })
+        }) 
     }
 }
 

@@ -13,7 +13,7 @@ export default {
     name:'search',
     data () {
         return {
-            placeholder:'请输入幼儿园名称/拼音'
+            placeholder:'请输入幼儿园名称'
         }
     },
     methods: {
