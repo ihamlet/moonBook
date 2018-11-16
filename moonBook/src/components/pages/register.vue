@@ -89,7 +89,7 @@ export default {
 <style scoped>
 .container,
 .school{
-    padding-top: 2.875rem /* 46/16 */;
+    padding-top: 2.8125rem /* 45/16 */;
 }
 
 .register{
