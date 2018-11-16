@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import fetchJsonp from 'fetch-jsonp'
+import Cookies from 'js-cookie'
 
 Vue.use(Vuex)
 
@@ -50,6 +51,8 @@ const getters = {
    userLocation: state =>{
         if(state.location){
             return state.location
+        }else{
+            return Cookies.get('location')
         }
    }
 }
@@ -68,6 +71,7 @@ const mutations = {
         state.userPoint = params.data
     },
     setLocation(state,params){
+        Cookies.set('location', params.data, { expires: 1 })
         state.location = params.data
     }
 }
@@ -100,7 +104,7 @@ const actions = {
         })
         let data = {
             Key: context.state.amapApiKey,
-            location: context.state.location,
+            location: products.location,
         }
         let amapApiLink = `https://restapi.amap.com/v3/geocode/regeo?output=json&location=${data.location}&key=${data.Key}`
 
@@ -121,7 +125,7 @@ const actions = {
             Key: context.state.amapApiKey,
             keywords:'教育',
             types: '幼儿园',
-            location: context.state.location,
+            location: products.location,
             offset: 20,
             page: products.page,
             radius: 24000

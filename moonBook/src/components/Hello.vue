@@ -25,7 +25,7 @@ export default {
     return {
       show:false,
       startPageShow:true,
-      center: [116.397477,39.908692],
+      center: '116.397477,39.908692',
       plugin:[{
           timeout:1000,
           pName: 'Geolocation',
@@ -33,11 +33,7 @@ export default {
               init:(map)=>{
                   map.getCurrentPosition( (status, result) => {
                   if (result && result.position) {
-                        self.center = [result.position.lng, result.position.lat]
-                        let products = {
-                          location:this.center.join()
-                        }      
-                        this.getUserLocation(products)
+                        self.center = `${result.position.lng},${result.position.lat}`
                         self.$nextTick()
                       }
                   })
@@ -54,6 +50,12 @@ export default {
     localStorage.setItem('access',true)
   },
   watch: {
+      center(val){
+        let products = {
+          location:val
+        }      
+        this.getUserLocation(products)
+      },
       '$route': 'fetchData'
   },       
   methods: {

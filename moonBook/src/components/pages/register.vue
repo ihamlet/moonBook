@@ -1,14 +1,11 @@
 <template>
     <div class="register" @touchstart='listTouchstart' @touchmove='listTouchmove'>
-        <div v-if='takeUp' :class="takeUp?'fixed':''">
+        <div class="fixed" v-if='!takeUp'>
             <search-school @show='listShow'/>
         </div>
         <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" />        
         <div class="container" ref='listContainer'>
             <div class="school" v-if='active==0'>
-                <div class="search-module">
-                    <search-school @show='listShow'/>
-                </div>
                 <van-list v-model="loading" :finished="finished" @load="onLoad">
                     <van-cell v-for="(item,index) in list" :key="index" is-link center>
                         <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
@@ -34,7 +31,7 @@
     </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import searchSchool from './../module/search/searchSchool'
 import schoolList from './../module/search/schoolList'
 
@@ -43,6 +40,9 @@ export default {
     components: {
         searchSchool,
         schoolList
+    },
+    computed: {
+      ...mapGetters(['userLocation'])  
     },
     data () {
         return {
@@ -54,18 +54,17 @@ export default {
             takeUp: false,
             finished: false,
             startX:'',
-            startY:''
+            startY:'',
+            location:''
         }
-    },
-    created () {
-      console.log(this.$route.query)  
     },
     methods: {
         ...mapActions(['getSchoolList']),
         onLoad() {
             this.page++
             let products = {
-                page:this.page
+                page:this.page,
+                location:this.userLocation
             }
             this.getSchoolList(products).then(res=>{
                 this.list = this.list.concat(res.pois)
@@ -104,7 +103,8 @@ export default {
 }
 </script>
 <style scoped>
-.container{
+.container,
+.school{
     padding-top: 2.875rem /* 46/16 */;
 }
 
