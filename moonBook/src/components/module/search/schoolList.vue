@@ -54,8 +54,4 @@ input.search-input{
     padding: 0 1.25rem /* 20/16 */;
     line-height: 2.25rem /* 36/16 */;
 }
-
-input.search-input::-webkit-input-placeholder{
-    font-size: .75rem /* 12/16 */;
-}
 </style>
