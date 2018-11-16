@@ -137,9 +137,6 @@ export default {
 }
 
 .letter-list{
-    position: fixed;
-    right: 0;
-    top: 0;
     width: 1.5rem /* 24/16 */;
     height: 100%;
     justify-content: center;
