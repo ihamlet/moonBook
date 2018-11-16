@@ -52,6 +52,7 @@ input.search-input{
     border: none;
     border-radius: .375rem /* 6/16 */;
     padding: 0 1.25rem /* 20/16 */;
+    line-height: 2.25rem /* 36/16 */;
 }
 
 input.search-input::-webkit-input-placeholder{
