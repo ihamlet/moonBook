@@ -56,7 +56,7 @@ export default {
             this.isAdshow = false
         },
         toRegister(){
-            this.$router.push({name:'register',query:this.userPointState})
+            this.$router.push({name:'register'})
         }
     }
 }

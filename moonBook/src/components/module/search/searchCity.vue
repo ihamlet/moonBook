@@ -1,6 +1,6 @@
 <template>
     <div class="search">
-        <div class="search-bar" @click="isListShow">
+        <div class="search-bar">
             <i class="iconfont">&#xe65c;</i>
             {{placeholder}}
         </div>
@@ -13,13 +13,11 @@ export default {
     name:'search',
     data () {
         return {
-            placeholder:'请输入幼儿园名称'
+            placeholder:'请搜索城市'
         }
     },
     methods: {
-        isListShow(){
-            this.$emit('show', true)
-        }
+
     }
 }
 </script>

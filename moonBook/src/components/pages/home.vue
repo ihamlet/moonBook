@@ -1,7 +1,7 @@
 <template>
     <div class="home page-padding">
         <div class="head-bar flex flex-align" :class="[themeBarSearch?'theme-background':'default-head-bar-background']">
-            <div class="left-btn">
+            <div class="left-btn" @click="toCityList">
                 {{userCityState}}
             </div>
             <div class="search-bar"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
@@ -60,6 +60,10 @@
             <accept @close='onAccpetPage' v-model='active'/>
         </van-popup>
 
+        <!-- 城市列表 -->
+        <van-popup v-model="cityListShow" class="page-popup" position="right" :overlay="false">
+            <city-list @close='onCityListPage'/>
+        </van-popup>
 
         <footer-bar :pageIndex='pageIndex'/>
     </div>
@@ -81,6 +85,8 @@ import accept from './../module/accept'
 import release from './../module/mold/release'
 import graphic from './../module/release/graphic'
 
+import cityList from './../module/cityList'
+
 import footerBar from './../module/footerBar'
 
 export default {
@@ -91,6 +97,7 @@ export default {
         newsList,
         videoList,
         courseList,
+        cityList,
         accept,
         release,
         graphic,
@@ -105,7 +112,7 @@ export default {
             Param:'',
             isReleaseShow:false,
             releasePageShow:false,
-            /* --------------  */
+            cityListShow:false,
             active:0,
             applyShow:false,
             pageIndex:0,
@@ -188,6 +195,12 @@ export default {
         },
         onAccpetPage(){
             this.applyShow = false
+        },
+        toCityList(){
+            this.cityListShow = true
+        },
+        onCityListPage(){
+            this.cityListShow = false
         }
     }
 }
