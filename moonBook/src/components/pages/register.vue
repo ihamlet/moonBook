@@ -1,6 +1,6 @@
 <template>
-    <div class="register" @touchstart='listTouchstart' @touchmove='listTouchmove'>
-        <div class="fixed" v-if='!takeUp'>
+    <div class="register">
+        <div class="fixed">
             <search-school @show='listShow'/>
         </div>
         <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" />        
@@ -76,22 +76,6 @@ export default {
         },
         onClickLeft(){
             this.$router.go(-1)
-        },
-        listTouchstart(e){
-            this.startX = e.touches[0].pageX
-            this.startY = e.touches[0].pageY
-        },
-        listTouchmove(e){
-            let moveEndX = e.changedTouches[0].pageX
-            let moveEndY = e.changedTouches[0].pageY
-            let X = moveEndX - this.startX
-            let Y = moveEndY - this.startY
-            if ( Math.abs(Y) > Math.abs(X) && Y > 0) {
-                this.takeUp = false //向下
-            }
-            else if ( Math.abs(Y) > Math.abs(X) && Y < 0 ) {
-                this.takeUp = true //向上
-            }
         },
         listShow(){
             this.show = true
