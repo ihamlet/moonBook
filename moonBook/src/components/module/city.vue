@@ -93,8 +93,9 @@ export default {
 .city-list{
     position: static;
     top: 0;
-    height: 100%;
+    height: 100vh;
     overflow-y: scroll;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -138,7 +139,7 @@ export default {
 
 .letter-list{
     width: 1.5rem /* 24/16 */;
-    height: 100%;
+    height: 100vh;
     justify-content: center;
     -webkit-box-pack: center;
 }
