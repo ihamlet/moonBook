@@ -21,10 +21,11 @@
                     </div>
                 </div>
                 <div class="form-title">定位/最近访问</div>
-                <div class="city-name" v-line-clamp:20="1">
-                    <i class="iconfont theme-color">&#xe648;</i>
-                    {{userPointState.city}}
-                </div>
+                <ul class="flex wrap">
+                    <li class="city-name" v-line-clamp:20="1" v-for='city in cityHistory'>
+                        {{city}}
+                    </li>
+                </ul>
             </div>
 
             <div class="hot-city">
@@ -85,7 +86,9 @@ export default {
         }
     },
     created () {
-      this.fetchData()
+        this.cityHistory.push(this.userPointState.city)
+        // this.cityHistory = localStorage.getItem('cityHistory').split(',')
+        this.fetchData()
     },
     watch: {
       '$router':'fetchData'
