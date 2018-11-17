@@ -1,10 +1,14 @@
 <template>
-    <div class="city-list" @scroll.passive="isScrool&&onScroll($event)">
+    <div class="city-list" @scroll.passive="onScroll($event)">
         <div class="bar flex felx-align fixed">
             <i class="iconfont" @click="close">&#xe657;</i>
             <div class="search" @click="show">
                 <search-bar :prompt='prompt'/>
             </div>
+        </div>
+
+        <div class="hot-city">
+
         </div>
 
         <div class="list">
@@ -39,7 +43,6 @@ export default {
         return {
             prompt:'请输入城市',
             scrollTop:'',
-            isScrool:true,
             cityData:cityArray,
             bubbleIsShow:null,
             nodeLetter:'A',
@@ -68,7 +71,6 @@ export default {
         touchStart(event){
             event.preventDefault()
             this.addClass = true
-            this.isScrool = false
         },
         touchMove(event){
             event.preventDefault()
@@ -80,7 +82,6 @@ export default {
         touchEnd(){
             this.addClass = false
             this.bubbleIsShow = null
-            this.isScrool = true
         }
     }
 }
@@ -145,9 +146,7 @@ export default {
     top: 0;
     z-index: 1009;
     width: 1.5rem /* 24/16 */;
-    height: 100%;
-    justify-content: center;
-    -webkit-box-pack: center;
+    height: 100vh;
     overflow: hidden;
 }
 
