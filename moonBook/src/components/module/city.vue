@@ -6,13 +6,31 @@
                 <search-bar :prompt='prompt'/>
             </div>
         </div>
+        <div class="new-city" ref='domHeight'>
+            <div class="current-city">
+                <div class="district">
+                    <van-cell-group>
+                        <van-cell :title="`当前城市:${userPointState.city}`" is-link arrow-direction="down" value="切换区县" />
+                    </van-cell-group>
+                </div>
+                <div class="form-title">定位/最近访问</div>
+                <div class="city-name" v-line-clamp:20="1">
+                    <i class="iconfont theme-color">&#xe648;</i>
+                    {{userPointState.city}}
+                </div>
+            </div>
 
-        <div class="hot-city">
-
+            <div class="hot-city">
+                <div class="form-title">热门城市</div>
+                <ul class="flex wrap">
+                    <li class="city-name" v-for='item in hotCity'>
+                        {{item}}
+                    </li>
+                </ul>
+            </div>
         </div>
-
         <div class="list">
-            <div class="node-letter" v-if='scrollTop!=0'>{{nodeLetter}}</div>
+            <div class="node-letter" v-if='domHeight < scrollTop'>{{nodeLetter}}</div>
             <div class="item" ref='domItem' v-for='(item,index) in cityData' :key='index'>
                 <div class="letter">{{item.code}}</div>
                 <div class="city" v-for='(city,itemIndex) in item.cityList' :key='itemIndex'>
@@ -31,6 +49,8 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
+import { mapGetters } from 'vuex'
 import searchBar from './search/searchBar'
 import cityArray from './../lib/js/city.js'
 
@@ -38,6 +58,9 @@ export default {
     name:'city',
     components: {
         searchBar,
+    },
+    computed: {
+        ...mapGetters(['userPointState'])
     },
     data () {
         return {
@@ -47,9 +70,22 @@ export default {
             bubbleIsShow:null,
             nodeLetter:'A',
             addClass:false,
+            hotCity:[],
+            domHeight:''
         }
     },
+    created () {
+      this.fetchData()  
+    },
+    watch: {
+      '$router':'fetchData'
+    },
     methods: {
+        fetchData(){
+            axios.get('/api/hotCity').then(res=>{
+                this.hotCity = res.data.hotCity
+            })
+        },
         close(){
             this.$emit('close')
         },
@@ -58,6 +94,7 @@ export default {
         },
         onScroll(e){
             this.scrollTop = e.target.scrollTop
+            this.domHeight = this.$refs.domHeight.offsetHeight
             this.$refs.domItem.forEach((event,i)=>{
                 if(e.target.scrollTop >= event.offsetTop){
                     this.nodeLetter = this.cityData[i].code
@@ -141,21 +178,18 @@ export default {
 }
 
 .letter-list{
-    position: absolute;
+    position: fixed;
     right: 0;
     top: 0;
     z-index: 1009;
     width: 1.5rem /* 24/16 */;
     height: 100vh;
-    overflow: hidden;
 }
 
 .index-letter{
     font-size: .75rem /* 12/16 */;
     -webkit-touch-callout: none;
     user-select: none;
-    -webkit-touch-callout: none;
-    font-weight: 700;
     top: 50%;
     right: 0;
     position: absolute;
@@ -207,6 +241,7 @@ i.bubble{
     font-style: normal;
     font-weight: 200;
 }
+
 i.bubble::before{
     content: '';
     width: 0;
@@ -219,7 +254,32 @@ i.bubble::before{
     top: 50%;
     margin-top: -1.25rem /* 20/16 */;
 }
+
 i.bubble.show{
     display: block;
+}
+
+.hot-city{
+    padding-bottom: .625rem /* 10/16 */;
+}
+
+.city-name{
+    width: 20%;
+    text-align: center;
+    background: #fff;
+    height: 2rem /* 32/16 */;
+    line-height: 2rem /* 32/16 */;
+    margin-left: .625rem /* 10/16 */;
+    margin-bottom: .625rem /* 10/16 */;
+    font-size: .8125rem /* 13/16 */;
+}
+
+.current-city .city-name,
+.hot-city ul li.city-name{
+    border-radius: .125rem /* 2/16 */;
+}
+
+.new-city{
+    background: #f2f2f2;   
 }
 </style>

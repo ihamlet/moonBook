@@ -150,6 +150,25 @@ const actions = {
                 resolve(res)
             })
         }) 
+    },
+    getCityDistrict(context,products){
+        let data = {
+            Key: context.state.amapApiKey,
+            keywords: products.city,
+            subdistrict:2,
+            extensions:'base'
+        }
+
+        let amamApiLink = `https://restapi.amap.com/v3/config/district?key=${data.Key}&keywords=${data.keywords}&subdistrict=${data.subdistrict}&extensions=${data.extensions}`
+
+        return new Promise((resolve, reject) => {
+            fetchJsonp(amamApiLink).then(response => {
+                return response.json()
+            }).then(res => {
+                console.log(res)
+                resolve(res)
+            })
+        })     
     }
 }
 

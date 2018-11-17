@@ -595,10 +595,10 @@ Mock.mock('/api/topicList', (req, res) => {
     }
 })
 
-let HotCity = ['黄石市','武汉市','北京市','广州市','上海市','重庆市','杭州市','南京市']
+let hotCity = ['黄石市','武汉市','北京市','广州市','上海市','重庆市','杭州市','南京市']
 
 Mock.mock('/api/hotCity', (req, res) => {
     return {
-        HotCity
+        hotCity
     }
 })
