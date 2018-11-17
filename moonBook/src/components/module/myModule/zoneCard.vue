@@ -8,7 +8,7 @@
                         <i class="iconfont">&#xe606;</i>
                     </span>
                     <div class="img-preview flex flex-justify" v-if='imageslength > 0'>
-                        <div class="img-grid" v-if='index < 4' v-for='(item,index) in userDataState.dryingList[0].media.imgList' v-lazy:background-image='item.img'></div>
+                        <div class="img-grid" v-if='index < 4' v-for='(item,index) in userDataState.dryingList[0].imgs' v-lazy:background-image='item.img'></div>
                         <div class="robe"  v-if='imageslength > 4'>
                             <photo-stack/>
                         </div>
@@ -37,7 +37,7 @@ export default {
     computed: {
         ...mapGetters(['userDataState']),
         imageslength(){
-            return this.userDataState.dryingList[0].media.imgList.length
+            return this.userDataState.dryingList[0].imgs ? this.userDataState.dryingList[0].imgs.length : 0
         }
     },
     methods: {

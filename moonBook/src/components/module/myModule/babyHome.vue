@@ -11,28 +11,28 @@
             </div>
             <div class="list" v-else>
                 <div class="module-title">宝贝成长档案</div>
-                <div class="item module" v-for='(list,index) in userDataState.childInfo'>
+                <div class="item module" v-for='(list,index) in userDataState.children'>
                     <div class="card-top-bar">
-                        <van-nav-bar :title="`${list.data.name}`" right-text="编辑" @click-right="onClickRight(list)" />
+                        <van-nav-bar :title="`${list.info.name}`" right-text="编辑" @click-right="onClickRight(list)" />
                     </div>
                     <div class="baby-info flex flex-align">
                         <div class="volume">
                             周阅读量
-                            <span class="number">{{list.readings.number}}</span>
+                            <span class="number">{{list.info.week_read_count}}</span>
                         </div>
                         <div class="content">
-                            <div class="avatar" v-if='list.data.avatar'>
-                                <img :src="list.data.avatar" alt="宝贝头像" />
+                            <div class="avatar" v-if='list.info.avatar'>
+                                <img :src="list.info.avatar" alt="宝贝头像" />
                             </div>
                             <div class="avatar" v-else>
                                 <img v-if="list.data.gender=='boy'" src="https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/boy-avatar.png" alt="默认男孩头像" />
                                 <img v-else src="https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/girl-avatar.png" alt="默认男孩头像" />
                             </div>
-                            <div class="age">{{age[index]}}岁</div>
+                            <div class="age">{{list.info.age}}岁</div>
                         </div>
                         <div class="volume">
                             总获赞量
-                            <span class="number">{{list.praise.number}}</span>
+                            <span class="number">{{list.info.zan_count}}</span>
                         </div>
                     </div>
                 </div>

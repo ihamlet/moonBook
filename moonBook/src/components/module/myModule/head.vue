@@ -1,6 +1,6 @@
 <template>
     <div class="head head-background" ref='head'>
-        <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userDataState.userInfo.name" @click-left="onClickLeft" @click-right="onClickRight">
+        <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userDataState.name" @click-left="onClickLeft" @click-right="onClickRight">
             <div class="head-bar-icon" slot='left'>
                 <i class="iconfont">&#xe60e;</i>
             </div>
@@ -24,7 +24,7 @@
                     <div class="data-flow">
                         <i class="iconfont" :class="`vip-${userDataState.card.name}`">&#xe604;</i>
                         <b class="card-name">
-                            {{userDataState.vipInfo.card.type}}
+                            {{userDataState.card.type}}
                         </b>
                     </div>
                     <div class="data-flow read">

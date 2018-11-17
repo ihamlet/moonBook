@@ -19,10 +19,10 @@
     </div>
 </template>
 <script>
-import axios from 'axios'
 import footerBar from './../module/footerBar'
 import freshList from './../module/findModule/freshList'
 import dryingList from './../module/findModule/dryingList'
+import axios from '@/fetch/api'
 
 export default {
     name:'find',
@@ -52,7 +52,7 @@ export default {
     },
     methods: {
         fetchData(){
-            axios.get('/api/fresh').then(res=>{
+            axios.get('/book/SchoolArticle/index').then(res=>{
                 this.freshList = res.data.freshData.freshList
             })
         }
