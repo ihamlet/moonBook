@@ -10,8 +10,15 @@
             <div class="current-city">
                 <div class="district">
                     <van-cell-group>
-                        <van-cell :title="`当前城市:${userPointState.city}`" is-link arrow-direction="down" value="切换区县" />
+                        <van-cell :title="`当前城市:${userPointState.city}`" is-link :arrow-direction="isSilde?'up':'down'" value="切换区县" @click="silde"/>
                     </van-cell-group>
+                    <div class="list" v-show='isSilde'>
+                        <div class="item scroll-x">
+                            <div class="district-name scroll-item" @click="selectCity(item.name)" v-for='item in cityCurrent'>
+                                {{item.name}}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-title">定位/最近访问</div>
                 <div class="city-name" v-line-clamp:20="1">
@@ -23,8 +30,8 @@
             <div class="hot-city">
                 <div class="form-title">热门城市</div>
                 <ul class="flex wrap">
-                    <li class="city-name" v-for='item in hotCity'>
-                        {{item}}
+                    <li class="city-name" @click="selectCity(city)" v-for='city in hotCity'>
+                        {{city}}
                     </li>
                 </ul>
             </div>
@@ -33,16 +40,16 @@
             <div class="node-letter" v-if='domHeight < scrollTop'>{{nodeLetter}}</div>
             <div class="item" ref='domItem' v-for='(item,index) in cityData' :key='index'>
                 <div class="letter">{{item.code}}</div>
-                <div class="city" v-for='(city,itemIndex) in item.cityList' :key='itemIndex'>
+                <div class="city" @click="selectCity(city)" v-for='(city,itemIndex) in item.cityList' :key='itemIndex'>
                     {{city}}
                 </div>
             </div>
             <div class="letter-list" :class="{shade:addClass}">
                 <div class="index-letter" @touchstart='touchStart($event)' @touchmove="touchMove($event)" @touchend='touchEnd'>
-                    <a class="item theme-color" @click="gotoIndex(i)" v-for='(item,i) in cityData' :key="i">
+                    <div class="item theme-color" @click="gotoIndex(i)" v-for='(item,i) in cityData' :key="i">
                         <b class="index-txt">{{item.code}}</b>
                         <i class="bubble" :class="{show:i == bubbleIsShow}">{{item.code}}</i>
-                    </a>
+                    </div>
                 </div>  
             </div>
         </div> 
@@ -50,7 +57,7 @@
 </template>
 <script>
 import axios from 'axios'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import searchBar from './search/searchBar'
 import cityArray from './../lib/js/city.js'
 
@@ -64,26 +71,39 @@ export default {
     },
     data () {
         return {
-            prompt:'请输入城市',
+            prompt:'请输入城市/拼音',
+            isSilde:false,
             scrollTop:'',
             cityData:cityArray,
             bubbleIsShow:null,
             nodeLetter:'A',
             addClass:false,
             hotCity:[],
-            domHeight:''
+            domHeight:'',
+            cityHistory:[],
+            cityCurrent:[]
         }
     },
     created () {
-      this.fetchData()  
+      this.fetchData()
     },
     watch: {
       '$router':'fetchData'
     },
     methods: {
+        ...mapActions(['getCityDistrict']),
         fetchData(){
             axios.get('/api/hotCity').then(res=>{
                 this.hotCity = res.data.hotCity
+            })
+
+            let products = {
+                city:this.userPointState.city
+            }
+            this.getCityDistrict(products).then(res=>{
+                if(res.districts){
+                    this.cityCurrent = res.districts[0].districts
+                }
             })
         },
         close(){
@@ -119,6 +139,23 @@ export default {
         touchEnd(){
             this.addClass = false
             this.bubbleIsShow = null
+        },
+        selectCity(city){
+            this.cityHistory.push(city)
+            let products = {
+                city:city
+            }
+            this.getCityDistrict(products).then(res=>{
+                if(res.districts){
+                    this.cityCurrent = res.districts[0].districts
+                }
+            })
+            this.cityHistory = [...new Set(this.cityHistory)]
+            localStorage.setItem('cityHistory', this.cityHistory)
+            this.$emit('close')
+        },
+        silde(){
+            this.isSilde = !this.isSilde
         }
     }
 }
@@ -263,6 +300,31 @@ i.bubble.show{
     padding-bottom: .625rem /* 10/16 */;
 }
 
+.district{
+    background: #fff;
+}
+
+.district .list{
+    padding-right: 1.5rem /* 24/16 */;
+}
+
+.district .item{
+    padding-top: .625rem /* 10/16 */;
+}
+
+.district-name,
+.city-name{
+    font-size: .8125rem /* 13/16 */;
+}
+
+
+.district-name{
+    padding: .3125rem /* 5/16 */ .625rem /* 10/16 */;
+    margin-left: .625rem /* 10/16 */;
+    margin-bottom: .625rem /* 10/16 */;
+    border: .0625rem /* 1/16 */ solid #ededed;
+}
+
 .city-name{
     width: 20%;
     text-align: center;
@@ -271,7 +333,6 @@ i.bubble.show{
     line-height: 2rem /* 32/16 */;
     margin-left: .625rem /* 10/16 */;
     margin-bottom: .625rem /* 10/16 */;
-    font-size: .8125rem /* 13/16 */;
 }
 
 .current-city .city-name,

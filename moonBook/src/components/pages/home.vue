@@ -60,7 +60,7 @@
         </van-popup>
 
         <!-- 城市列表 -->
-        <van-popup v-model="cityListShow" class="page-popup" :overlay="false">
+        <van-popup v-model="cityListShow" class="page-popup" position="right" :overlay="false">
             <city @close='onCityListPage' @show='searchList'/>
         </van-popup>
 
@@ -119,7 +119,7 @@ export default {
             releasePageShow:false,
             cityListShow:false,
             searchShow:false,
-            prompt:'搜索城市名',
+            prompt:'搜索城市名/拼音',
             active:0,
             applyShow:false,
             pageIndex:0,

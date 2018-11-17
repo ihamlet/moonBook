@@ -59,9 +59,6 @@ const mutations = {
     setUserPoint(state,params){
         Cookies.set('userPoint', params.data, { expires: 1 })
         state.userPoint = params.data
-    },
-    setLocation(state,params){
-        state.location = params.data
     }
 }
 
@@ -130,11 +127,11 @@ const actions = {
             })
         }) 
     },
-    getSearch(context,products){
+    getSearch(context, products){
         let data = {
             Key: context.state.amapApiKey,
             keywords: products.keywords,
-            type: 141204,
+            type: products.type,
             location: products.location,
             city: products.city,
             citylimit: true,
@@ -165,7 +162,13 @@ const actions = {
             fetchJsonp(amamApiLink).then(response => {
                 return response.json()
             }).then(res => {
-                console.log(res)
+                let cityInfo = {
+                    city: res.districts[0].name,
+                    location: res.districts[0].center
+                }
+                context.commit('setUserPoint',{
+                    data: cityInfo
+                })
                 resolve(res)
             })
         })     
