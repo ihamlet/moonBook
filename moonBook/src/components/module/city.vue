@@ -1,5 +1,5 @@
 <template>
-    <div class="city-list" @scroll.passive="onScroll($event)">
+    <div class="city-list" @scroll.passive="isScrool&&onScroll($event)">
         <div class="bar flex felx-align fixed">
             <i class="iconfont" @click="close">&#xe657;</i>
             <div class="search" @click="show">
@@ -9,19 +9,19 @@
 
         <div class="list">
             <div class="node-letter" v-if='scrollTop!=0'>{{nodeLetter}}</div>
-            <div class="item" ref='domItem' v-for='item in cityData'>
+            <div class="item" ref='domItem' v-for='(item,index) in cityData' :key='index'>
                 <div class="letter">{{item.code}}</div>
-                <div class="city" v-for='city in item.cityList'>
+                <div class="city" v-for='(city,itemIndex) in item.cityList' :key='itemIndex'>
                     {{city}}
                 </div>
             </div>
             <div class="letter-list" :class="{shade:addClass}">
                 <div class="index-letter" @touchstart='touchStart($event)' @touchmove="touchMove($event)" @touchend='touchEnd'>
-                    <a class="item theme-color" @click="gotoIndex(i)" v-for='(item,i) in cityData'>
+                    <a class="item theme-color" @click="gotoIndex(i)" v-for='(item,i) in cityData' :key="i">
                         <b class="index-txt">{{item.code}}</b>
                         <i class="bubble" :class="{show:i == bubbleIsShow}">{{item.code}}</i>
                     </a>
-                </div>
+                </div>  
             </div>
         </div> 
     </div>
@@ -39,6 +39,7 @@ export default {
         return {
             prompt:'请输入城市',
             scrollTop:'',
+            isScrool:true,
             cityData:cityArray,
             bubbleIsShow:null,
             nodeLetter:'A',
@@ -67,6 +68,7 @@ export default {
         touchStart(event){
             event.preventDefault()
             this.addClass = true
+            this.isScrool = false
         },
         touchMove(event){
             event.preventDefault()
@@ -78,6 +80,7 @@ export default {
         touchEnd(){
             this.addClass = false
             this.bubbleIsShow = null
+            this.isScrool = true
         }
     }
 }
@@ -95,7 +98,6 @@ export default {
     top: 0;
     height: 100%;
     overflow-y: scroll;
-    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
