@@ -35,12 +35,15 @@ export default {
 
 .scroll-item{
     margin-right: .625rem /* 10/16 */;
+    width: 3.5rem /* 56/16 */;
+    display: inline-grid;
 }
 
 .name{
-    width: 3.125rem /* 50/16 */;
+    width: 3.5rem /* 56/16 */;
     font-size: .875rem /* 14/16 */;
     text-align: center;
-    margin: .3125rem /* 5/16 */ auto;
+    margin-top: .3125rem /* 5/16 */;
+    white-space: normal;
 }
 </style>
