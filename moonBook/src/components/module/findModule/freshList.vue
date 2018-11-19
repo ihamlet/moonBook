@@ -38,8 +38,9 @@ export default {
 }
 
 .name{
+    width: 3.125rem /* 50/16 */;
     font-size: .875rem /* 14/16 */;
     text-align: center;
-    margin-top: .3125rem /* 5/16 */;
+    margin: .3125rem /* 5/16 */ auto;
 }
 </style>

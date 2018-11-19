@@ -30,11 +30,12 @@
             <div class="identity" v-if='active==1'>
                 <van-cell-group>
                     <div class="form-title">您的角色？</div>
-                    <van-cell class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role' :key='index' @click="selectRole(item.name)"/>
+                    <van-cell class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role' :key='index' @click="selectRole(item)"/>
                 </van-cell-group>
             </div>
             <div class="form"  v-if='active==2'>
-                <form-parent :regInfo='regInfo' @close="$router.push({name:'my'})"/>
+                <form-parent v-if="formType=='parent'" :regInfo='regInfo' @close="$router.push({name:'my'})"/>
+                <form-teacher v-if="formType=='teacher'" :regInfo='regInfo' @close="$router.push({name:'my'})"/>
             </div>
         </div>
 
@@ -51,13 +52,15 @@ import schoolList from './../module/search/schoolList'
 
 // 表单
 import formParent from './../module/form/parent'
+import formTeacher from './../module/form/teacher'
 
 export default {
     name:'register',
     components: {
         searchBar,
         schoolList,
-        formParent
+        formParent,
+        formTeacher
     },
     computed: {
       ...mapGetters(['userPointState'])
@@ -77,18 +80,22 @@ export default {
             prompt:'输入幼儿园名称/拼音',
             role:[{
                 name:'家长',
-                subtitle:'亲子阅读 在线交流 分享阅读'
+                subtitle:'亲子阅读 在线交流 分享阅读',
+                type:'parent'
             },{
                 name:'老师',
-                subtitle:'阅读课教学 阅读方法 育儿交流'
+                subtitle:'阅读课教学 阅读方法 育儿交流',
+                type:'teacher'
             },{
                 name:'园长/校长',
-                subtitle:'学校风采 掌握教育动态'
+                subtitle:'学校风采 掌握教育动态',
+                type:'headmaster'
             }],
             regInfo:{
                 school:'',
                 role:'',
-            }
+            },
+            formType:'',
         }
     },
     methods: {
@@ -133,7 +140,8 @@ export default {
             this.active = 1
         },
         selectRole(role){
-            this.regInfo.role = role
+            this.regInfo.role = role.name
+            this.formType = role.type
             this.active = 2
         }
     }

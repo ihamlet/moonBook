@@ -475,7 +475,7 @@ let addDrying = function (options){
     if(userData.regInfo){
         schoolName = userData.regInfo.school
     }else if(userData.vipInfo){
-        schoolName = userData.vipInfo.school.schoolName
+        schoolName = userData.vipInfo.school.schoolName.name
     }else{
         schoolName = ''
     }
