@@ -46,7 +46,7 @@
 </template>
 <script>
 import slogan from './../module/slogan'
-import axios from 'axios'
+import axios from '@/fetch/api'
 
 export default {
     name:'message',
@@ -59,15 +59,25 @@ export default {
             tabDisabled:true,
             tab:[{
                 title:'未读消息',
+                params:{
+                    p:1,
+                    limit:20,
+                    is_read:0
+                },
                 content: []
             },{
                 title:'已读消息',
+                params:{
+                    p: 1,
+                    limit: 20,
+                    is_read: 1
+                },
                 content: []
             }]
         }
     },
     created () {
-        this.fetchData()
+        this.fetchData(this.tab[0]);
     },
     watch: {
         tab:{
@@ -81,13 +91,12 @@ export default {
         '$router':'fetchData'
     },
     methods: {
-        fetchData(){
-            axios.get('/api/messageList').then(res=>{
-                this.tab[0].content = res.data.messageData.messageList
-            })
-            axios.get('/api/readList').then(res=>{
-                this.tab[1].content = res.data
-            })
+        fetchData(tab){
+            const url = '/book/memberMsg/getList';
+            const params = {params:tab.params};
+            axios.get(url, params).then((res) => {
+                tab.content = tab.content.concat(res.data.data);
+            });
         },
         addRead(item){
             axios.put('/api/addRead',{
