@@ -1,16 +1,13 @@
 <template>
     <div class="home page-padding">
         <div class="head-bar flex flex-align" :class="[themeBarSearch?'theme-background':'default-head-bar-background']">
-            <div class="left-btn" v-line-clamp:20="1" @click="toCityList">
+            <div class="left-btn" v-line-clamp:20="1" @click="cityListShow=true">
                 {{userPointState.city}}
             </div>
             <div class="search-bar"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
-            <div class="right-btn" @click="release">
-                <i class="iconfont" :class="[isReleaseShow?'rotate-45':'rotate']">&#xe612;</i>
+            <div class="right-btn" @click="releasePageShow = true">
+                <i class="iconfont">&#xe612;</i>
                 <span>发布</span>
-            </div>
-            <div class="release-popup" v-if='isReleaseShow'>
-                <release :isReleaseShow="isReleaseShow" @close='closeRelease' @open='releasePage' @param='releaseParam'/>
             </div>
         </div>
         <div class="container">
@@ -51,22 +48,22 @@
 
         <!-- 发布 -->
         <van-popup v-model="releasePageShow" class="page-popup" position="bottom" :overlay="false">
-            <graphic v-if="Param=='graphic'" @close='closeReleasePage'/>
+            <graphic @close='releasePageShow = false'/>
         </van-popup>
 
         <!-- 借阅卡办理页面 -->
         <van-popup v-model="applyShow" class="page-popup" position="bottom" :overlay="false">
-            <accept @close='onAccpetPage' v-model='active'/>
+            <accept @close='applyShow = false' v-model='active'/>
         </van-popup>
 
         <!-- 城市列表 -->
         <van-popup v-model="cityListShow" class="page-popup" position="right" :overlay="false">
-            <city @close='onCityListPage' @show='searchList'/>
+            <city :cityCurrent='cityCurrent' @setCityCurrent='setCityCurrent' @close='cityListShow = false' @show='searchShow=true'/>
         </van-popup>
 
         <!-- 城市列表搜索 -->
         <van-popup v-model="searchShow" class="page-popup" :overlay="false">
-            <city-list :prompt='prompt' @close="closeSearch"/>
+            <city-list :cityCurrent='cityCurrent' @setCityCurrent='setCityCurrent' :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
         </van-popup>
 
         <footer-bar :pageIndex='pageIndex'/>
@@ -85,7 +82,6 @@ import courseList from './../module/course'
 
 import accept from './../module/accept'
 
-import release from './../module/mold/release'
 import graphic from './../module/release/graphic'
 
 import city from './../module/city'
@@ -104,7 +100,6 @@ export default {
         city,
         cityList,
         accept,
-        release,
         graphic,
         footerBar
     },
@@ -115,9 +110,8 @@ export default {
         return {
             // 发布
             Param:'',
-            isReleaseShow:false,
-            releasePageShow:false,
             cityListShow:false,
+            releasePageShow:false,
             searchShow:false,
             prompt:'搜索城市名/拼音',
             active:0,
@@ -133,12 +127,13 @@ export default {
             appsList:'',
             investmentAd:'',
             newsList:'',
-            videoList:''
+            videoList:'',
+            cityCurrent:[],
         }
     },
     created () {
-       this.getDomHeight()
-       this.fetchData()
+        this.getDomHeight()
+        this.fetchData()
     }, 
     mounted () {
         window.addEventListener('scroll', this.handleScroll)
@@ -147,6 +142,7 @@ export default {
       '$router':'fetchData'
     },
     methods: {
+        ...mapActions(['getCityDistrict']),
         fetchData(){
             setInterval(()=>{
                 this.btnPulse = true
@@ -158,6 +154,15 @@ export default {
                 this.investmentAd = res.data.homeData.investmentAd
                 this.newsList = res.data.homeData.newsList
                 this.videoList = res.data.homeData.videoList
+            })
+
+            let products = {
+                city:this.userPointState.city
+            }
+            this.getCityDistrict(products).then(res=>{
+                if(res.districts){
+                    this.cityCurrent = res.districts[0].districts
+                }
             })
         },
         handleScroll(){
@@ -181,39 +186,12 @@ export default {
         weChatShare(){
             console.log('调用微信分享接口')
         },
-        release(){
-            this.isReleaseShow = !this.isReleaseShow
-        },
-        closeRelease(){
-            this.isReleaseShow = false
-        },
-        releasePage(){
-            this.releasePageShow = true
-        },
-        releaseParam(val){
-            this.Param = val
-        },
-        closeReleasePage(){
-            this.releasePageShow = false
-        },
         toAccept(){
             this.applyShow = true
             this.active = 0
         },
-        onAccpetPage(){
-            this.applyShow = false
-        },
-        toCityList(){
-            this.cityListShow = true
-        },
-        onCityListPage(){
-            this.cityListShow = false
-        },
-        searchList(){
-            this.searchShow = true
-        },
-        closeSearch(){
-            this.searchShow = false
+        setCityCurrent(val){
+            this.cityCurrent = val
         }
     }
 }

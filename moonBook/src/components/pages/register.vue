@@ -1,13 +1,20 @@
 <template>
     <div class="register">
-        <div class="fixed">
-            <search-bar :prompt='prompt' @show='listShow'/>
-        </div>
         <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" />        
         <div class="container" ref='listContainer'>
+            <div class="steps">
+                <van-steps active-color='#409eff' :active="active">
+                    <van-step>选择学校</van-step>
+                    <van-step>选择身份</van-step>
+                    <van-step>创建主页</van-step>
+                </van-steps>
+            </div>
             <div class="school" v-if='active==0'>
+                <div class="fixed">
+                    <search-bar :prompt='prompt' @show='listShow'/>
+                </div>
                 <van-list v-model="loading" :finished="finished" @load="onLoad">
-                    <van-cell v-for="(item,index) in list" :key="index" is-link center>
+                    <van-cell v-for="(item,index) in list" :key="index" is-link center @click="selectSchool(item)">
                         <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
                         <div class="school-address" v-line-clamp:20="1">
                             <span>{{item.adname}}</span>
@@ -31,6 +38,7 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
 import { mapGetters, mapActions } from 'vuex'
 import searchBar from './../module/search/searchBar'
 import schoolList from './../module/search/schoolList'
@@ -56,7 +64,10 @@ export default {
             startX:'',
             startY:'',
             location:'',
-            prompt:'输入幼儿园名称'
+            prompt:'输入幼儿园名称/拼音',
+            regInfo:{
+                school:'',
+            }
         }
     },
     methods: {
@@ -83,13 +94,23 @@ export default {
         },
         listHide(){
             this.show = false
+        },
+        selectSchool(school){
+            console.log(school)
+            this.regInfo.school = school.name
+            this.active = 1
+            // axios.put('/api/reg',{
+            //     data:school,
+            // }).then(res=>{
+
+            // })
         }
     }
 }
 </script>
 <style scoped>
 .container,
-.school{
+.steps{
     padding-top: 2.8125rem /* 45/16 */;
 }
 

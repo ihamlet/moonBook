@@ -341,6 +341,7 @@ Mock.mock('/api/cardInfo', (req, res) => {
 
 let userData = {
     id: Mock.mock('@increment'),
+    regInfo:'',
     userInfo:{
         avatar: Mock.mock("@image('120x120')"),
         name: Mock.mock('@cname()'),
@@ -602,3 +603,12 @@ Mock.mock('/api/hotCity', (req, res) => {
         hotCity
     }
 })
+
+//注册
+let reg = function(options){
+    let data = JSON.parse(options)
+    console.log(data)
+}
+
+Mock.mock('/api/reg', reg)
+
