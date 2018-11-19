@@ -1,8 +1,12 @@
 <template>
     <div class="register">
-        <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" />        
+        <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' :left-text="active==0?'返回':'上一步'" left-arrow @click-left="onClickLeft">
+            <div class="icon-right" slot="right">
+                <i class="iconfont">&#xe618;</i>
+            </div>
+        </van-nav-bar>        
         <div class="container" ref='listContainer'>
-            <div class="steps">
+            <div :class="[active==0?'steps':'']">
                 <van-steps active-color='#409eff' :active="active">
                     <van-step>选择学校</van-step>
                     <van-step>选择身份</van-step>
@@ -87,7 +91,19 @@ export default {
             })
         },
         onClickLeft(){
-            this.$router.go(-1)
+            switch(this.active)
+            {
+                case 0:
+                    this.$router.go(-1)
+                break
+                case 1:
+                    this.active = 0
+                break
+                case 2:
+                    this.active = 1
+                break
+            }
+ 
         },
         listShow(){
             this.show = true

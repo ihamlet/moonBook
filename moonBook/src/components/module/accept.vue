@@ -1,13 +1,13 @@
 <template>
     <div class="accept" :class="stepActive==2?'background-grey':''">
-        <van-nav-bar :title="title" :left-text="active<=0?'返回':'上一步'" left-arrow @click-left="onClickLeft">
+        <van-nav-bar :title="title" :left-text="active==0?'返回':'上一步'" left-arrow @click-left="onClickLeft">
             <div class="icon-right" slot="right">
                 <i class="iconfont">&#xe618;</i>
             </div>
         </van-nav-bar>
         <lazy-component>
             <van-steps :active="stepActive" active-color='#409eff'>
-                <van-step>选择幼儿园</van-step>
+                <van-step>选择学校</van-step>
                 <van-step>每天借书需求</van-step>
                 <van-step>选择会员时间</van-step>
             </van-steps>

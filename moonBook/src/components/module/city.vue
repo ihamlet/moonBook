@@ -329,13 +329,14 @@ i.bubble.show{
 }
 
 .city-name{
-    width: 20%;
+    width: 3.75rem /* 60/16 */;
     text-align: center;
     background: #fff;
     height: 2rem /* 32/16 */;
     line-height: 2rem /* 32/16 */;
     margin-left: .625rem /* 10/16 */;
     margin-bottom: .625rem /* 10/16 */;
+    padding: 0 1.5625rem /* 25/16 */;
 }
 
 .current-city .city-name,
@@ -360,7 +361,7 @@ ul.recent li:first-child::before{
     font-style:normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    left: .125rem /* 2/16 */;
+    left: .625rem /* 10/16 */;
     color: #409eff;
 }
 </style>
