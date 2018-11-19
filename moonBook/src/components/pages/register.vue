@@ -9,8 +9,8 @@
             <div :class="[active==0?'steps':'']">
                 <van-steps active-color='#409eff' :active="active">
                     <van-step>选择学校</van-step>
-                    <van-step>选择身份</van-step>
-                    <van-step>创建主页</van-step>
+                    <van-step>选择角色</van-step>
+                    <van-step>提交表单</van-step>
                 </van-steps>
             </div>
             <div class="school" v-if='active==0'>
@@ -27,15 +27,17 @@
                     </van-cell>
                 </van-list>
             </div>
-            <div class="identity" v-else>
+            <div class="identity" v-if='active==1'>
                 <van-cell-group>
-                    <div class="form-title">您的身份？</div>
-                    <van-cell title="我是家长" is-link />
-                    <van-cell title="我是老师" is-link />
-                    <van-cell title="我是园长" is-link />
+                    <div class="form-title">您的角色？</div>
+                    <van-cell class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role' :key='index' @click="selectRole(item.name)"/>
                 </van-cell-group>
             </div>
+            <div class="form"  v-if='active==2'>
+                <form-parent :regInfo='regInfo' @close="$router.push({name:'my'})"/>
+            </div>
         </div>
+
         <van-popup v-model="show" class="page-popup" :overlay="false">
             <school-list :prompt='prompt' @close='listHide'/>
         </van-popup>
@@ -47,11 +49,15 @@ import { mapGetters, mapActions } from 'vuex'
 import searchBar from './../module/search/searchBar'
 import schoolList from './../module/search/schoolList'
 
+// 表单
+import formParent from './../module/form/parent'
+
 export default {
     name:'register',
     components: {
         searchBar,
-        schoolList
+        schoolList,
+        formParent
     },
     computed: {
       ...mapGetters(['userPointState'])
@@ -69,8 +75,19 @@ export default {
             startY:'',
             location:'',
             prompt:'输入幼儿园名称/拼音',
+            role:[{
+                name:'家长',
+                subtitle:'亲子阅读 在线交流 分享阅读'
+            },{
+                name:'老师',
+                subtitle:'阅读课教学 阅读方法 育儿交流'
+            },{
+                name:'园长/校长',
+                subtitle:'学校风采 掌握教育动态'
+            }],
             regInfo:{
                 school:'',
+                role:'',
             }
         }
     },
@@ -112,14 +129,12 @@ export default {
             this.show = false
         },
         selectSchool(school){
-            console.log(school)
             this.regInfo.school = school.name
             this.active = 1
-            // axios.put('/api/reg',{
-            //     data:school,
-            // }).then(res=>{
-
-            // })
+        },
+        selectRole(role){
+            this.regInfo.role = role
+            this.active = 2
         }
     }
 }
@@ -145,5 +160,4 @@ export default {
     width: 100%;
     height: 2.875rem /* 46/16 */;
 }
-
 </style>

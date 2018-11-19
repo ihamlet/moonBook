@@ -470,6 +470,16 @@ Mock.mock('/api/fresh', (req, res) => {
 let addDrying = function (options){
     let data = JSON.parse(options.body).graphic
     let result = JSON.parse(options.body).result
+    let schoolName = ''
+
+    if(userData.regInfo){
+        schoolName = userData.regInfo.school
+    }else if(userData.vipInfo){
+        schoolName = userData.vipInfo.school.schoolName
+    }else{
+        schoolName = ''
+    }
+
     let array = {
         id: Mock.mock('@increment'),
         avatar: userData.userInfo.avatar,
@@ -481,8 +491,8 @@ let addDrying = function (options){
         },
         isVip: userData.isVip,
         vipType: userData.vipInfo.card,
-        school: {
-            name: userData.vipInfo.school ? userData.vipInfo.school.schoolName.name : ''
+        school:{
+            name: schoolName
         },
         text: data.text,
         social:{
@@ -582,7 +592,24 @@ let ChildInfo = function(options){
     }
 }
 
+let deleteChild = function(options){
+    let id = JSON.parse(options.body).id
+    let index
+    userData.childInfo.forEach((element,i)=>{
+        if(id == element.id){
+            index = i
+        }
+    })
+    userData.childInfo.splice(index,1)
+
+    return {
+        userData
+    }
+}
+
+
 Mock.mock('/api/addChild', addChild) //增
+Mock.mock('/api/deleteChild', deleteChild) //删
 Mock.mock('/api/editChild', editChild) //改
 Mock.mock('/api/ChildInfo', ChildInfo)  //查
 
@@ -606,8 +633,11 @@ Mock.mock('/api/hotCity', (req, res) => {
 
 //注册
 let reg = function(options){
-    let data = JSON.parse(options)
-    console.log(data)
+    let data = JSON.parse(options.body).data
+    userData.regInfo = data
+    return {
+        userData
+    }
 }
 
 Mock.mock('/api/reg', reg)

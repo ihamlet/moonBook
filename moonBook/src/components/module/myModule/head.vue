@@ -15,7 +15,8 @@
                 </div>
 
                 <div class="name">{{userDataState.userInfo.name}}</div>
-                <div class="school" v-if='userDataState.vipInfo'>{{userDataState.vipInfo.school.schoolName.name}}</div>
+                <div class="school" v-if='userDataState.regInfo'>{{userDataState.regInfo.school}}</div>
+                <div class="school" v-if='userDataState.vipInfo&&!userDataState.regInfo'>{{userDataState.vipInfo.school.schoolName.name}}</div>
             </div>
         </div>
         <div class="card">

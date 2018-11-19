@@ -4,7 +4,7 @@
             <div class="avatar">
                 <img v-lazy="item.avatar" :alt="item.name">
             </div>
-            <div class="name">
+            <div class="name" v-line-clamp:20="1">
                 {{item.name}}
             </div>
         </div>

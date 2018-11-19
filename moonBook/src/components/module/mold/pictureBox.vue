@@ -67,7 +67,7 @@ export default {
             this.$emit('changeIndex',index)
         },
         closePopup(){
-            this.$emit('listenPictureBox')
+            this.$emit('close')
         },
         fold(){
             this.isFold = !this.isFold

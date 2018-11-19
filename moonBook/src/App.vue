@@ -636,7 +636,8 @@ i.iconfont.rotate{
 .avatar-uploader{
   width: 6.25rem /* 100/16 */;
   height: 6.25rem /* 100/16 */;
-  margin: 1.25rem /* 20/16 */ auto;
+  margin: 0 auto;
+  padding: 1.25rem /* 20/16 */ 0;
   position: relative;
 }
 
@@ -657,6 +658,27 @@ i.iconfont.rotate{
 .avatar-uploader .van-uploader{
   width: 100%;
   height: 100%;
+}
+
+.prompt {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.prompt .text {
+    position: absolute;
+    z-index: 10;
+    bottom: -0.125rem /* 2/16 */;
+    height: 1.5625rem /* 25/16 */;
+    width: 6.25rem /* 100/16 */;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    font-size: 0.75rem /* 12/16 */;
+    color: #fff;
+    transform: scale(0.9);
 }
 
 .form-submit{
