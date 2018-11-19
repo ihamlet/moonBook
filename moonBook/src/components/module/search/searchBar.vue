@@ -1,23 +1,19 @@
 <template>
     <div class="search">
-        <div class="search-bar">
+        <div class="search-bar" @click="isListShow">
             <i class="iconfont">&#xe65c;</i>
-            {{placeholder}}
+            {{prompt}}
         </div>
     </div>    
 </template>
 <script>
-import { mapActions } from 'vuex'
-
 export default {
     name:'search',
-    data () {
-        return {
-            placeholder:'请搜索城市'
-        }
-    },
+    props: ['prompt'],
     methods: {
-
+        isListShow(){
+            this.$emit('show', true)
+        }
     }
 }
 </script>

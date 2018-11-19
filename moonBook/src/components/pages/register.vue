@@ -1,7 +1,7 @@
 <template>
     <div class="register">
         <div class="fixed">
-            <search-school @show='listShow'/>
+            <search-bar :prompt='prompt' @show='listShow'/>
         </div>
         <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" />        
         <div class="container" ref='listContainer'>
@@ -26,23 +26,23 @@
             </div>
         </div>
         <van-popup v-model="show" class="page-popup" :overlay="false">
-            <school-list @close='listHide'/>
+            <school-list :prompt='prompt' @close='listHide'/>
         </van-popup>
     </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import searchSchool from './../module/search/searchSchool'
+import searchBar from './../module/search/searchBar'
 import schoolList from './../module/search/schoolList'
 
 export default {
     name:'register',
     components: {
-        searchSchool,
+        searchBar,
         schoolList
     },
     computed: {
-      ...mapGetters(['userLocation'])  
+      ...mapGetters(['userPointState'])
     },
     data () {
         return {
@@ -55,7 +55,8 @@ export default {
             finished: false,
             startX:'',
             startY:'',
-            location:''
+            location:'',
+            prompt:'输入幼儿园名称'
         }
     },
     methods: {
@@ -64,7 +65,7 @@ export default {
             this.page++
             let products = {
                 page:this.page,
-                location:this.userLocation
+                location:this.userPointState.location
             }
             this.getSchoolList(products).then(res=>{
                 this.list = this.list.concat(res.pois)

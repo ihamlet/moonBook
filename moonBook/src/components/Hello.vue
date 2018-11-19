@@ -1,11 +1,10 @@
 <template>
   <div class="page">
+      <el-amap vid="amap" class="amap-demo" :center="center" :plugin="plugin" v-show='false'/>
       <transition name="fade">
           <start-page @listenStartPage='onStartPage' v-if='startPageShow'/>
       </transition>
       <router-view v-if='!startPageShow' />
-
-      <el-amap vid="amap" class="amap-demo" :center="center" :plugin="plugin" v-show='false'/>
   </div>
 </template>
 
@@ -43,6 +42,7 @@ export default {
     }
   },
   created () {
+    console.log('我们招新啦')
     this.fetchData()
     if(localStorage.getItem('access')){
       this.startPageShow = !localStorage.getItem('access')

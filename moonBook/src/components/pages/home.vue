@@ -1,15 +1,14 @@
 <template>
     <div class="home page-padding">
         <div class="head-bar flex flex-align" :class="[themeBarSearch?'theme-background':'default-head-bar-background']">
-            <div class="left-btn" @click="toCityList">
-                {{userCityState}}
+            <div class="left-btn" v-line-clamp:20="1" @click="toCityList">
+                {{userPointState.city}}
             </div>
             <div class="search-bar"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
             <div class="right-btn" @click="release">
                 <i class="iconfont" :class="[isReleaseShow?'rotate-45':'rotate']">&#xe612;</i>
                 <span>发布</span>
             </div>
-
             <div class="release-popup" v-if='isReleaseShow'>
                 <release :isReleaseShow="isReleaseShow" @close='closeRelease' @open='releasePage' @param='releaseParam'/>
             </div>
@@ -62,7 +61,12 @@
 
         <!-- 城市列表 -->
         <van-popup v-model="cityListShow" class="page-popup" position="right" :overlay="false">
-            <city-list @close='onCityListPage'/>
+            <city @close='onCityListPage' @show='searchList'/>
+        </van-popup>
+
+        <!-- 城市列表搜索 -->
+        <van-popup v-model="searchShow" class="page-popup" :overlay="false">
+            <city-list :prompt='prompt' @close="closeSearch"/>
         </van-popup>
 
         <footer-bar :pageIndex='pageIndex'/>
@@ -71,7 +75,6 @@
 <script>
 
 import { mapGetters, mapActions } from 'vuex'
-
 import axios from 'axios'
 
 import appsList from './../module/apps'
@@ -85,7 +88,8 @@ import accept from './../module/accept'
 import release from './../module/mold/release'
 import graphic from './../module/release/graphic'
 
-import cityList from './../module/cityList'
+import city from './../module/city'
+import cityList from './../module/search/cityList'
 
 import footerBar from './../module/footerBar'
 
@@ -97,6 +101,7 @@ export default {
         newsList,
         videoList,
         courseList,
+        city,
         cityList,
         accept,
         release,
@@ -104,7 +109,7 @@ export default {
         footerBar
     },
     computed: {
-        ...mapGetters(['userCityState'])
+        ...mapGetters(['userPointState'])
     },
     data () {
         return {
@@ -113,6 +118,8 @@ export default {
             isReleaseShow:false,
             releasePageShow:false,
             cityListShow:false,
+            searchShow:false,
+            prompt:'搜索城市名/拼音',
             active:0,
             applyShow:false,
             pageIndex:0,
@@ -201,6 +208,12 @@ export default {
         },
         onCityListPage(){
             this.cityListShow = false
+        },
+        searchList(){
+            this.searchShow = true
+        },
+        closeSearch(){
+            this.searchShow = false
         }
     }
 }

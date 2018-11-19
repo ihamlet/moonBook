@@ -12,8 +12,7 @@ const state = {
     msgLength:1,
     tabBtn:[],
     amapApiKey:'0522f462288e296eac959dbde42718ab',
-    userPoint:'',
-    location:''
+    userPoint:''
 }
 
 const getters = {
@@ -40,18 +39,9 @@ const getters = {
    userPointState: state => {
         if(state.userPoint){
             return state.userPoint
-        }
-   },
-   userCityState: state => {
-        if(state.userPoint){
-            return state.userPoint.city
-        }
-   },
-   userLocation: state =>{
-        if(state.location){
-            return state.location
         }else{
-            return Cookies.get('location')
+            let data = JSON.parse(Cookies.get('userPoint'))
+            return state.userPoint = data
         }
    }
 }
@@ -67,11 +57,8 @@ const mutations = {
         state.tabBtn = params.data
     },
     setUserPoint(state,params){
+        Cookies.set('userPoint', params.data, { expires: 1 })
         state.userPoint = params.data
-    },
-    setLocation(state,params){
-        Cookies.set('location', params.data, { expires: 1 })
-        state.location = params.data
     }
 }
 
@@ -96,9 +83,9 @@ const actions = {
         })
     },
     getUserLocation(context,products){
-        context.commit('setLocation',{
-            data: products.location
-        })
+        let cityInfo = {
+            location: products.location
+        }
 
         let data = {
             Key: context.state.amapApiKey,
@@ -110,12 +97,10 @@ const actions = {
         fetchJsonp(amapApiLink).then(response => {
             return response.json()
         }).then(res => {
-            let LocationData ={
-                city: res.regeocode.addressComponent.city,
-                location: context.state.location,
-            }
+            cityInfo.city = res.regeocode.addressComponent.city
+
             context.commit('setUserPoint',{
-                data: LocationData
+                data: cityInfo
             })
         })
     },
@@ -140,11 +125,11 @@ const actions = {
             })
         }) 
     },
-    getSearch(context,products){
+    getSearch(context, products){
         let data = {
             Key: context.state.amapApiKey,
             keywords: products.keywords,
-            type: 141204,
+            type: products.type,
             location: products.location,
             city: products.city,
             citylimit: true,
@@ -160,6 +145,31 @@ const actions = {
                 resolve(res)
             })
         }) 
+    },
+    getCityDistrict(context,products){
+        let data = {
+            Key: context.state.amapApiKey,
+            keywords: products.city,
+            subdistrict:2,
+            extensions:'base'
+        }
+
+        let amamApiLink = `https://restapi.amap.com/v3/config/district?key=${data.Key}&keywords=${data.keywords}&subdistrict=${data.subdistrict}&extensions=${data.extensions}`
+
+        return new Promise((resolve, reject) => {
+            fetchJsonp(amamApiLink).then(response => {
+                return response.json()
+            }).then(res => {
+                let cityInfo = {
+                    city: res.districts[0].name,
+                    location: res.districts[0].center
+                }
+                context.commit('setUserPoint',{
+                    data: cityInfo
+                })
+                resolve(res)
+            })
+        })     
     }
 }
 

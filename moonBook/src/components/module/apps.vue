@@ -11,12 +11,7 @@
 <script>
 export default {
     name:'apps',
-    props: ['appsList'],
-    data () {
-        return {
-            
-        }
-    }    
+    props: ['appsList']
 }
 </script>
 <style scoped>

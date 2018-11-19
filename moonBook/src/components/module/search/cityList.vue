@@ -14,11 +14,8 @@
 
         <div class="list">
             <div class="item" v-for='item in list'>
-                <van-cell v-for="(item,index) in list" :key="index" is-link center>
-                    <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
-                    <div class="school-address" v-line-clamp:20="1">
-                        <span v-if='item.address.length!=0'>{{item.address}}</span>
-                    </div>
+                <van-cell v-for="(item,index) in list" :key="index" center>
+                    <div class="city-name">{{item.name}}</div>
                 </van-cell>
             </div>
         </div>
@@ -28,7 +25,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-    name:'school-list',
+    name:'city-list',
     computed: {
       ...mapGetters(['userPointState'])
     },
@@ -43,11 +40,12 @@ export default {
         searchContent(val){
             let products = {
                 keywords: val,
-                type: 141204,
+                type: '190102|190103|190104|190105',
                 location: this.userPointState.location,
-                city: this.userPointState.city,
+                city: '',
                 datatype:'poi'
             }
+
             this.getSearch(products).then(res=>{
                 this.list = res.tips
             })
@@ -56,7 +54,7 @@ export default {
     methods: {
         ...mapActions(['getSearch']),
         closeList(){
-            this.$emit('close', false)
+            this.$emit('close')
         },
         clear(){
             this.searchContent=''
