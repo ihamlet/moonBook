@@ -2,7 +2,7 @@
     <div class="drying-list">
         <van-list v-model="loading" :finished="finished" @load="onLoad">
             <div class="list">
-                <div class="item" v-for="(item,index) in list" :key="index">
+                <div class="item" v-for="(item,index) in list" :key="index" @click="onItemClick(item.post_id)">
                     <van-cell>
                         <div class="content">
                             <graphic-crad :item='item'/>
@@ -15,7 +15,7 @@
     </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from '@/fetch/api'
 import slogan from './../slogan'
 import graphicCrad from './../list/graphicCrad'
 
@@ -33,23 +33,31 @@ export default {
             list: [],
             item:'',
             loading: false,
-            finished: false
+            finished: false,
+            p: 1,
+            limit: 20
         }
     },
     methods: {
         onLoad() {
-            axios.get('/api/drying').then(res=>{
-                setTimeout(() => {
-                    let array = res.data.dryingData.dryingList
-                    for (let i = 0; i < 5; i++) {
-                        this.list.push( array[this.list.length] )
-                    }
-                    this.loading = false
-                    if (this.list.length >= 25) {
-                        this.finished = true;
-                    }
-                },500)
-            })
+            const url = '/book/SchoolArticle/getList';
+            const params = {
+                p: this.p,
+                limit: this.limit
+            }
+            axios.get(url, params).then((res) => {
+                console.log('res', res);
+                if(res.data && res.data.length) {
+                    this.list = this.list.concat(res.data);
+                }
+
+                if(!res.data || res.data.length < this.limit) {
+                    this.finished = true;
+                }
+            });
+        },
+        onItemClick(id) {
+            location.href = '/book/SchoolArticle/detail/id/' + id + '.html';
         }
     }
 }

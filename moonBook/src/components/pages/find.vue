@@ -52,8 +52,14 @@ export default {
     },
     methods: {
         fetchData(){
-            axios.get('/book/SchoolArticle/index').then(res=>{
-                this.freshList = res.data.freshData.freshList
+            const url = '/book/MemberFollow/index';
+            const params = {
+                params:{
+                    order:'article'
+                }                
+            };
+            axios.get(url, params).then(res=>{
+                this.freshList = res.data
             })
         }
     }

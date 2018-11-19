@@ -2,10 +2,10 @@
     <div class="fresh-list scroll-x">
         <div class="scroll-item" v-for='item in list'>
             <div class="avatar">
-                <img v-lazy="item.avatar" :alt="item.name">
+                <img v-lazy="item.user.avatar" :alt="item.user.name">
             </div>
             <div class="name">
-                {{item.name}}
+                {{item.user.name}}
             </div>
         </div>
     </div>

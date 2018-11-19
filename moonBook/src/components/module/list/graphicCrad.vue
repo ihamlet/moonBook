@@ -2,14 +2,14 @@
     <div class="graphic-card">
         <div class="user-card flex flex-align">
             <div class="avatar">
-                <img :src="item.avatar" :alt="item.name">
+                <img :src="item.user.avatar" :alt="item.user.name">
             </div>
             <div class="info">
                 <div class="name">
-                    {{item.name}} 
-                    <i class="iconfont vip-masonry" v-if="item.isVip==1&&item.vipType.borrow==7">&#xe611;</i>
-                    <i class="iconfont vip-gold" v-if="item.isVip==1&&item.vipType.borrow==5">&#xe611;</i>
-                    <i class="iconfont vip-ordinary" v-if="item.isVip==1&&item.vipType.borrow==3">&#xe611;</i>     
+                    {{item.user.name}} 
+                    <i class="iconfont vip-masonry" v-if="item.card_level&&item.level.level==3">&#xe611;</i>
+                    <i class="iconfont vip-gold" v-if="item.card_level&&item.level.level==2">&#xe611;</i>
+                    <i class="iconfont vip-ordinary" v-if="item.card_level&&item.level.level==1">&#xe611;</i>     
                 </div>
                 <div class="school" v-if='item.school.name'>
                     {{item.school.name}}
@@ -21,37 +21,37 @@
             </div>
         </div>
          <div class="text" v-line-clamp:20="2">
-            {{item.text}}
+            {{item.details}}
         </div>
-        <div class="media" :class="item.media.imgList?'img':''" v-if='item.media.imgList'>
+        <div class="media" :class="item.photos?'img':''" v-if='item.photos'>
             <van-row gutter="5">
-                <van-col :span="8" v-for='(photo,photoIndex) in item.media.imgList' :key="photoIndex">
-                    <div class="img-grid" @click="mediaLamp(item,photoIndex)" v-lazy:background-image='photo.img'>
+                <van-col :span="8" v-for='(photo,photoIndex) in item.photos' :key="photoIndex">
+                    <div class="img-grid" @click="mediaLamp(item,photoIndex)" v-lazy:background-image='photo.photo'>
                     </div>
                 </van-col>
             </van-row>
         </div>
-        <div class="media" :class="item.media.videoCover?'video-cover':''" v-if='item.media.videoCover'>
+        <div class="media" :class="item.cover?'video-cover':''" v-if='item.hasvideo == 1'>
             <div class="video-cover">
                 <div class="play">
                     <i class="iconfont">&#xe602;</i>
                 </div>
-                <img :src="item.media.videoCover" alt="视频封面">
+                <img :src="item.cover" alt="视频封面">
             </div>
         </div>
         <div class="social flex flex-align">
             <div class="share">
                 <i class="iconfont">&#xe6eb;</i>
-                {{item.social.share.number>1000?'999+':item.social.share.number}}
+                {{item.share_num>1000?'999+':item.share_num}}
             </div>
             <div class="message">
                 <i class="iconfont">&#xe731;</i>
-                {{item.social.message.number>1000?'999+':item.social.message.number}}
+                {{item.reply_num>1000?'999+':item.replay_num}}
             </div>
             <div class="praise flex flex-align flex-justify" @click="addPraise(item)">
                 <i class="iconfont" v-if='!item.getPraise'>&#xe644;</i>
                 <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
-                {{item.social.praise.number>1000?'999+':item.social.praise.number}}
+                {{item.zan>1000?'999+':item.zan}}
             </div>
         </div>
 
