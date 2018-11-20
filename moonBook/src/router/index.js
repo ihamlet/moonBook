@@ -26,14 +26,18 @@ export default new Router({
         path: '/',
         name: 'home',
         component: Home,
-        meta: { scrollToTop: true }
+        meta: { 
+          scrollToTop: true, 
+          tabActive:0
+        }
       },{
-        path: '/notice',
-        name: 'notice',
-        component: Notice,
+        path: '/register',
+        name: 'register',
+        component: Register,
         meta: {
-          title: '消息中心',
-          scrollToTop: true
+          title: '注册',
+          scrollToTop: true,
+          tabActive:0
         }
       },{
         path: '/find',
@@ -41,7 +45,17 @@ export default new Router({
         component: Find,
         meta: {
           title: '发现',
-          scrollToTop: true
+          scrollToTop: true,
+          tabActive:1
+        }
+      },{
+        path: '/notice',
+        name: 'notice',
+        component: Notice,
+        meta: {
+          title: '消息中心',
+          scrollToTop: true,
+          tabActive:2
         }
       },{
         path: '/my',
@@ -49,7 +63,8 @@ export default new Router({
         component: My,
         meta: {
           title: '个人中心',
-          scrollToTop: true
+          scrollToTop: true,
+          tabActive:3
         }
       },{
         path: '/zoom',
@@ -74,7 +89,8 @@ export default new Router({
         component: Register,
         meta: {
           title: '注册',
-          scrollToTop: true
+          scrollToTop: true,
+          tabActive:3
         }
       }]
     },

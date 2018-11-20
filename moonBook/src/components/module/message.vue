@@ -47,6 +47,7 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
 import slogan from './../module/slogan'
 import axios from '@/fetch/api'
 

@@ -642,3 +642,43 @@ let reg = function(options){
 
 Mock.mock('/api/reg', reg)
 
+//班级数据
+let classData = Mock.mock({
+    'classList':[{
+        title:'小班',
+        'class|10':[{
+            name:function(){
+                return `向日葵${Mock.mock('@cword(一二三四五六七八九十)')}班`
+            },
+            people:function(){
+                return Mock.mock({"number|15-50": 20})
+            }   
+        }],
+    },{
+        title:'中班',
+        'class|10':[{
+            name:function(){
+                return `彩虹岛${Mock.mock('@cword(一二三四五六七八九十)')}班`
+            },
+            people:function(){
+                return Mock.mock({"number|15-50": 20})
+            }   
+        }],
+    },{
+        title:'大班',
+        'class|10':[{
+            name:function(){
+                return `四叶草${Mock.mock('@cword(一二三四五六七八九十)')}班`
+            },
+            people:function(){
+                return Mock.mock({"number|15-50": 20})
+            }   
+        }]
+    }]
+})
+
+Mock.mock('/api/classData', (req, res) => {
+    return {
+        classData
+    }
+})

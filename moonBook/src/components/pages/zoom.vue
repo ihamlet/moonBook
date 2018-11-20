@@ -1,6 +1,6 @@
 <template>
     <div class="zoom page-padding">
-        <van-nav-bar :title="fixedHeaderBar?$route.meta.title:userData.userInfo.name" fixed left-text="个人中心" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
+        <van-nav-bar :title="fixedHeaderBar?$route.meta.title:userDataState.userInfo.name" fixed left-text="个人中心" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
             <div slot="right" class="theme-color">
                 <i class="iconfont">&#xe612;</i>
             </div>
@@ -10,10 +10,10 @@
                 <div class="user-card flex flex-align" ref='userCrad'>
                     <div class="info">
                         <div class="avatar">
-                            <img :src="userData.userInfo.avatar" :alt="userData.userInfo.name" />
+                            <img :src="userDataState.userInfo.avatar" :alt="userDataState.userInfo.name" />
                         </div>
                         <div class="name">
-                            {{userData.userInfo.name}}
+                            {{userDataState.userInfo.name}}
                         </div>
                     </div>
                     <div class="social flex flex-align">
@@ -22,11 +22,11 @@
                             <div class="text">发布</div>
                         </div>
                         <div class="data-box">
-                            <div class="number">{{ userData.social.fans }}</div>
+                            <div class="number">{{ userDataState.social.fans }}</div>
                             <div class="text">粉丝</div>
                         </div>
                         <div class="data-box">
-                            <div class="number">{{ userData.social.follow }}</div>
+                            <div class="number">{{ userDataState.social.follow }}</div>
                             <div class="text">关注</div>
                         </div>
                         <div class="data-box">
@@ -35,8 +35,11 @@
                         </div>
                     </div>
                 </div>
-                <van-cell-group v-if='userData.vipInfo'>
-                    <van-cell title="幼儿园" :value='userData.vipInfo.school.schoolName.name' is-link/>
+                <van-cell-group v-if='userDataState.regInfo'>
+                    <van-cell title="孩子所在学校" :value='userDataState.regInfo.school' is-link/>
+                </van-cell-group>
+                <van-cell-group v-if='userDataState.vipInfo&&!userDataState.regInfo'>
+                    <van-cell title="孩子所在学校" :value='userDataState.vipInfo.school.schoolName.name' is-link/>
                 </van-cell-group>
             </lazy-component>
 
@@ -63,7 +66,7 @@
 <script>
 import axios from 'axios'
 import { sum } from './../lib/js/util.js'
-
+import { mapGetters } from 'vuex'
 import graphic from './../module/release/graphic'
 import graphicCrad from './../module/list/graphicCrad'
 import slogan from './../module/slogan'
@@ -76,9 +79,7 @@ export default {
         slogan
     },
     computed: {
-        userData(){
-            return this.$store.getters.userDataState
-        },
+        ...mapGetters(['userDataState']),
         praise(){
             return sum(this.$store.getters.userPraiseState)
         },

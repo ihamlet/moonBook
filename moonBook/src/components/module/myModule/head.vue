@@ -204,9 +204,9 @@ export default {
   padding-bottom: 1.875rem /* 30/16 */;
 }
 
-.info {
-  color: #fff;
-  display: inline-grid;
+.info{
+    color: #fff;
+    display: grid;
 }
 
 .info .name {
@@ -215,8 +215,11 @@ export default {
   margin-top: 0.625rem; /* 10/16 */
 }
 
-.info .school {
-  font-size: 0.875rem /* 14/16 */;
+.info .school{
+    width: 12.5rem /* 200/16 */;
+    text-align: center;
+    margin: 0 auto;
+    font-size: .875rem /* 14/16 */;
 }
 
 .card-box {

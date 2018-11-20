@@ -1,7 +1,7 @@
 <template>
     <div class="add-child">
-        <van-nav-bar v-if='!userDataState.vipInfo' :title="pageTitle" left-arrow left-text="返回" :right-text="userDataState.childInfo.length==0?'':'删除'" @click-left="onClickLeft" @click-right="onClickRight" />
-        <van-nav-bar v-else title="添加孩子" right-text="跳过" @click-right="onClickRight" />
+        <van-nav-bar v-if='!userDataState.vipInfo' :title="pageTitle" left-arrow left-text="返回" :right-text="userDataState.childInfo.length==0?'':'删除'" @click-left="onClickLeft" @click-right="onClickRight('delete')" />
+        <van-nav-bar v-else title="添加孩子" right-text="跳过" @click-right="onClickRight('jump')" />
         <div class="avatar-uploader">
             <i class="iconfont" v-if='userDataState.vipInfo' :class="`vip-${userDataState.vipInfo.card.level.name}`">&#xe776;</i>
             <van-uploader :after-read="onRead">
@@ -158,9 +158,6 @@ export default {
         onClickLeft(){
            this.$emit('close')
         },
-        onClickRight(){
-            this.$emit('close')
-        },
         isPickerShow(){
             this.pickerShow = true
         },
@@ -210,17 +207,22 @@ export default {
                 },1000)
             })
         },
-        onClickRight(){
-            axios.put('/api/deleteChild',{
-                id: this.dataId
-            }).then(res=>{
-                this.$store.dispatch('getUserData')
-                setTimeout(()=>{
-                    this.$toast.success('删除成功')
-                    this.submitLoading = false
-                    this.$emit('close')
-                },1000)
-            })
+        onClickRight(type){
+            if(type == 'jump'){
+                this.$emit('close')
+            }
+            if(type == 'delete'){
+                axios.put('/api/deleteChild',{
+                    id: this.dataId
+                }).then(res=>{
+                    this.$store.dispatch('getUserData')
+                    setTimeout(()=>{
+                        this.$toast.success('删除成功')
+                        this.submitLoading = false
+                        this.$emit('close')
+                    },1000)
+                })
+            }
         }
     }
 }

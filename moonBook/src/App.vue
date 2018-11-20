@@ -29,11 +29,11 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_17lvp416wrq.eot');
-  src: url('//at.alicdn.com/t/font_893274_17lvp416wrq.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_17lvp416wrq.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_17lvp416wrq.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_17lvp416wrq.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_azlk5wc3x0r.eot');
+  src: url('//at.alicdn.com/t/font_893274_azlk5wc3x0r.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_azlk5wc3x0r.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_azlk5wc3x0r.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_azlk5wc3x0r.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -650,8 +650,8 @@ i.iconfont.rotate{
 .avatar-uploader i.iconfont{
   position: absolute;
   font-size: 1.875rem /* 30/16 */;
-  top: -.625rem /* 10/16 */;
-  left: -.3125rem /* 5/16 */;
+  top: 0;
+  left: 0;
   transform:rotate(-40deg);
 }
 
@@ -685,6 +685,10 @@ i.iconfont.rotate{
   position: fixed;
   bottom: 0;
   width: 100%;
+}
+
+.btn-submit{
+  padding:1.25rem /* 20/16 */ .625rem /* 10/16 */;
 }
 
 .van-field__error-message{
