@@ -12,13 +12,23 @@
             <van-cell-group>
                 <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="想说点什么？" rows="4" autosize />
                 <van-cell>
-                    <div class="bar flex flex-align">
+                    <div class="flex flex-align">
+                        <div class="upload-media flex flex-align">
+                            <div class="btn-video" @click="uploadVideo">
+                                <i class="iconfont">&#xe625;</i>
+                            </div>
+                            <div class="btn-audio" @click="uploadAudio">
+                                <i class="iconfont">&#xe627;</i>
+                            </div>
+                        </div>
                         <div class="topic theme-color" @click="toTopicPage">
                             #选择话题
                         </div>
-                        <div class="text-length foot-bar-right" :class="[grapicData.text.length>140?'danger':'']" v-if='grapicData.text.length>0'>{{grapicData.text.length}}</div>
+                        <div class="text-length" :class="[grapicData.text.length>140?'danger':'']" v-if='grapicData.text.length>0'>{{grapicData.text.length}}</div>
                     </div>
                 </van-cell>
+                <input type="file" accept="video/" capture="camcorder" ref='fileVideo' hidden>
+                <input type="file" accept="audio/*" capture="microphone" ref='fileAudio' hidden>
             </van-cell-group>
             <van-checkbox-group v-model="result">
                 <div class="form-title">同步到</div>
@@ -143,6 +153,14 @@ export default {
         },
         toggle(index) {
             this.$refs.checkboxes[index].toggle()
+        },
+        uploadVideo(){
+            console.log(this.$refs.fileVideo) 
+            this.$refs.fileVideo.click()
+        },
+        uploadAudio(){  
+            console.log(this.$refs.fileAudio)
+            this.$refs.fileAudio.click()
         }
     }
 }
@@ -177,5 +195,44 @@ export default {
     top: 0.3125rem /* 5/16 */;
     font-size: 1.5rem /* 24/16 */;
     color: #fff;
+}
+
+.btn-video,
+.btn-audio{
+    width: 3rem /* 48/16 */;
+    height: 3rem /* 48/16 */;
+    text-align: center;
+    line-height: 3rem /* 48/16 */;
+}
+
+.btn-video i.iconfont,
+.btn-audio i.iconfont{
+    font-size: 1.25rem /* 20/16 */;
+}
+
+.btn-video i.iconfont{
+    background: linear-gradient(90deg, #FF765C,#FF23B3);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.btn-audio i.iconfont{
+    background: linear-gradient(90deg, #00C2AB,#3E94FF);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.upload-media{
+    flex: 5;
+}
+
+.topic{
+    flex: 2;
+    text-align: center;
+}
+
+.text-length{
+    flex: 1;
+    text-align: center;
 }
 </style>
