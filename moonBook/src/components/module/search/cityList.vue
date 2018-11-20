@@ -14,7 +14,7 @@
 
         <div class="list">
             <div class="item" v-for='item in list'>
-                <van-cell v-for="(item,index) in list" :key="index" center>
+                <van-cell v-for="(item,index) in list" :key="index" center @click="selectCity(item)">
                     <div class="city-name">{{item.name}}</div>
                 </van-cell>
             </div>
@@ -29,12 +29,17 @@ export default {
     computed: {
       ...mapGetters(['userPointState'])
     },
-    props: ['prompt'],
+    props: ['prompt','cityCurrent'],
     data () {
         return {
             searchContent:'',
-            list:[]
+            list:[],
+            cityHistory:[]
         }
+    },
+    mold:{
+        prop:'cityCurrent',
+        event:'setCityCurrent'
     },
     watch: {
         searchContent(val){
@@ -51,13 +56,31 @@ export default {
             })
         }
     },
+    created () {
+        if(localStorage.getItem('cityHistory')){
+            let array = localStorage.getItem('cityHistory').split(',')
+            this.cityHistory = array
+        }  
+    },
     methods: {
-        ...mapActions(['getSearch']),
+        ...mapActions(['getSearch','getCityDistrict']),
         closeList(){
             this.$emit('close')
         },
         clear(){
             this.searchContent=''
+        },
+        selectCity(city){
+            this.cityHistory.unshift(city.name)
+            let products = {
+                city:city.name
+            }
+            this.getCityDistrict(products).then(res=>{
+                this.$emit('setCityCurrent',res.districts[0].districts)
+            })
+            this.cityHistory = [...new Set(this.cityHistory)]
+            localStorage.setItem('cityHistory',this.cityHistory)
+            this.$emit('close')
         }
     }
 }

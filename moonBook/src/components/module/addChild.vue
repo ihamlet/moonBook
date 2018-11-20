@@ -1,6 +1,6 @@
 <template>
     <div class="add-child">
-        <van-nav-bar v-if='!userDataState.vipInfo' :title="pageTitle" left-arrow left-text="返回" @click-left="onClickLeft" />
+        <van-nav-bar v-if='!userDataState.vipInfo' :title="pageTitle" left-arrow left-text="返回" :right-text="userDataState.childInfo.length==0?'':'删除'" @click-left="onClickLeft" @click-right="onClickRight" />
         <van-nav-bar v-else title="添加孩子" right-text="跳过" @click-right="onClickRight" />
         <div class="avatar-uploader">
             <i class="iconfont" v-if='userDataState.vipInfo' :class="`vip-${userDataState.vipInfo.card.level.name}`">&#xe776;</i>
@@ -49,7 +49,7 @@
         </div>
 
         <!-- 添加宝贝 -->
-        <div class="form-submit" v-else>
+        <div class="form-submit">
             <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="submit">提  交</van-button>
         </div>
     </div>
@@ -209,30 +209,22 @@ export default {
                     this.$emit('close')
                 },1000)
             })
+        },
+        onClickRight(){
+            axios.put('/api/deleteChild',{
+                id: this.dataId
+            }).then(res=>{
+                this.$store.dispatch('getUserData')
+                setTimeout(()=>{
+                    this.$toast.success('删除成功')
+                    this.submitLoading = false
+                    this.$emit('close')
+                },1000)
+            })
         }
     }
 }
 </script>
 <style scoped>
-.prompt {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-}
-
-.prompt .text {
-    position: absolute;
-    z-index: 10;
-    bottom: -0.125rem /* 2/16 */;
-    height: 1.5625rem /* 25/16 */;
-    width: 6.25rem /* 100/16 */;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.5);
-    font-size: 0.75rem /* 12/16 */;
-    color: #fff;
-    transform: scale(0.9);
-}
 </style>
 

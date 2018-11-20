@@ -2,10 +2,7 @@
     <div class="zoom page-padding">
         <van-nav-bar :title="fixedHeaderBar?$route.meta.title:userData.userInfo.name" fixed left-text="个人中心" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
             <div slot="right" class="theme-color">
-                <i class="iconfont" :class="[isReleaseShow?'rotate-45':'rotate']">&#xe612;</i>
-                <div class="release-popup" v-if='isReleaseShow'>
-                    <release :isReleaseShow="isReleaseShow" @close='closeRelease' @open='releasePage' @param='releaseParam'/>
-                </div>
+                <i class="iconfont">&#xe612;</i>
             </div>
         </van-nav-bar>
         <div class="container">
@@ -59,7 +56,7 @@
         <slogan v-if='finished'/>
         <!-- 发布 -->
         <van-popup v-model="releasePageShow" class="page-popup" position="bottom" :overlay="false">
-            <graphic v-if="Param=='graphic'" @close='closeReleasePage'/>
+            <graphic @close='releasePageShow = false'/>
         </van-popup>
     </div>
 </template>
@@ -67,7 +64,6 @@
 import axios from 'axios'
 import { sum } from './../lib/js/util.js'
 
-import release from './../module/mold/release'
 import graphic from './../module/release/graphic'
 import graphicCrad from './../module/list/graphicCrad'
 import slogan from './../module/slogan'
@@ -75,7 +71,6 @@ import slogan from './../module/slogan'
 export default {
     name:'zoom',
     components: {
-        release,
         graphic,
         graphicCrad,
         slogan
@@ -95,7 +90,6 @@ export default {
         return {
             // 发布
             Param:'',
-            isReleaseShow:false,
             releasePageShow:false,
             // ----
             list: [],
@@ -115,7 +109,7 @@ export default {
             this.$router.go(-1)
         },
         onClickRight(){
-            this.isReleaseShow = !this.isReleaseShow
+            this.releasePageShow = true
         },
         handleScroll(){
             this.getDomHeight()  
@@ -146,9 +140,6 @@ export default {
                     }
                 },500)
             })
-        },
-        closeRelease(){
-            this.isReleaseShow = false
         },
         releasePage(){
             this.releasePageShow = true

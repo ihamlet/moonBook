@@ -56,7 +56,7 @@
         </div>
 
         <van-popup v-model="pictureShow" class="picture-box-popup" :overlay='false'>
-            <picture-box @listenPictureBox='listenPictureBoxClose' v-model='imgIndex' :item='item'/>
+            <picture-box @close='pictureShow = false' v-model='imgIndex' :item='item'/>
         </van-popup>
     </div>
 </template>
@@ -91,9 +91,6 @@ export default {
             this.pictureShow = true
             this.imgIndex = photoIndex
             this.item = item
-        },
-        listenPictureBoxClose(){
-            this.pictureShow = false
         }
     }
 }

@@ -1,10 +1,10 @@
 <template>
     <div class="fresh-list scroll-x">
-        <div class="scroll-item" v-for='item in list'>
+        <div class="scroll-item" v-for='(item,idx) in list' :key="idx">
             <div class="avatar">
                 <img v-lazy="item.user.avatar" :alt="item.user.name">
             </div>
-            <div class="name">
+            <div class="name" v-line-clamp:20="1">
                 {{item.user.name}}
             </div>
         </div>
@@ -35,11 +35,15 @@ export default {
 
 .scroll-item{
     margin-right: .625rem /* 10/16 */;
+    width: 3.5rem /* 56/16 */;
+    display: inline-grid;
 }
 
 .name{
+    width: 3.5rem /* 56/16 */;
     font-size: .875rem /* 14/16 */;
     text-align: center;
     margin-top: .3125rem /* 5/16 */;
+    white-space: normal;
 }
 </style>

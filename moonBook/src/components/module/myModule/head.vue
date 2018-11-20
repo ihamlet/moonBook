@@ -1,6 +1,9 @@
 <template>
     <div class="head head-background" ref='head'>
-        <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userDataState.name" @click-left="onClickLeft" @click-right="onClickRight">
+        <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' 
+        fixed :title="fixedHeaderBar?$route.meta.title:userDataState.name" 
+        @click-left="onClickLeft" 
+        @click-right="onClickRight">
             <div class="head-bar-icon" slot='left'>
                 <i class="iconfont">&#xe60e;</i>
             </div>
@@ -16,6 +19,7 @@
 
                 <div class="name">{{userDataState.name}}</div>
                 <div class="school" v-if='userDataState.school'>{{userDataState.school.title}}</div>
+                <div class="school" v-if='userDataState.level_info&&!userDataState.school'>{{userDataState.school.title}}</div>
             </div>
         </div>
         <div class="card">
@@ -71,198 +75,198 @@
     </div>
 </template>
 <script>
-import axios from 'axios'
-import { mapGetters } from 'vuex'
-import numberGrow from './../../module/animate/numberGrow'
-import punch from './../../module/punch'
-import accept from './../accept'
+import axios from "axios";
+import { mapGetters } from "vuex";
+import numberGrow from "./../../module/animate/numberGrow";
+import punch from "./../../module/punch";
+import accept from "./../accept";
 
 export default {
-    name:'cardHead',
-    components: {
-        numberGrow,
-        accept,
-        punch
+  name: "cardHead",
+  components: {
+    numberGrow,
+    accept,
+    punch
+  },
+  computed: {
+    ...mapGetters(["userDataState"])
+  },
+  data() {
+    return {
+      domHeight: 0,
+      scrollTop: 0,
+      fixedHeaderBar: true,
+      active: 0,
+      punchShow: false,
+      applyShow: false
+    };
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  methods: {
+    fetchData() {
+      axios.get("/api/userData").then(res => {
+        this.userDataState = res.data.userData;
+      });
     },
-    computed: {
-        ...mapGetters(['userDataState'])
+    handleScroll() {
+      this.getDomHeight();
+      let scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      this.scrollTop = scrollTop;
+      if (this.domHeight < this.scrollTop) {
+        this.fixedHeaderBar = false;
+      } else {
+        this.fixedHeaderBar = true;
+      }
     },
-    data () {
-        return {
-            domHeight:0,
-            scrollTop:0,
-            fixedHeaderBar:true,
-            active:0,
-            punchShow:false,
-            applyShow:false
-        }
+    getDomHeight() {
+      if (this.$refs.head) {
+        this.domHeight = this.$refs.head.offsetHeight / 2;
+      }
     },
-    mounted () {
-        window.addEventListener('scroll', this.handleScroll)
+    onClickLeft() {},
+    onClickRight() {
+      this.punchShow = true;
     },
-    methods: {
-        fetchData(){
-            axios.get('/api/userData').then(res=>{
-                this.userDataState = res.data.userData
-            })
-        },
-        handleScroll(){
-            this.getDomHeight()  
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-            this.scrollTop = scrollTop
-            if( this.domHeight < this.scrollTop){
-               this.fixedHeaderBar = false
-            }else{
-               this.fixedHeaderBar = true
-            }
-        },
-        getDomHeight(){
-            if(this.$refs.head){
-                this.domHeight = this.$refs.head.offsetHeight/2
-            }
-        },
-        onClickLeft(){
-            
-        },
-        onClickRight(){
-            this.punchShow = true
-        },
-        toAccept(){
-            this.applyShow = true
-            this.active = 0
-        },
-        onAccpetPage(){
-            this.applyShow = false
-        },
-        onStepActiveChange(val){
-            this.active = val
-        },
-        closePunch(){
-            this.punchShow = false
-        }
+    toAccept() {
+      this.applyShow = true;
+      this.active = 0;
+    },
+    onAccpetPage() {
+      this.applyShow = false;
+    },
+    onStepActiveChange(val) {
+      this.active = val;
+    },
+    closePunch() {
+      this.punchShow = false;
     }
-}
+  }
+};
 </script>
 <style scoped>
-.head{
-   width: 100%;
-   position: relative;
+.head {
+  width: 100%;
+  position: relative;
 }
 
-.theme-nav.van-nav-bar{
-    background: transparent;
-    color: #fff;
+.theme-nav.van-nav-bar {
+  background: transparent;
+  color: #fff;
 }
 
-.theme-nav.van-nav-bar::after{
-    display: none;
+.theme-nav.van-nav-bar::after {
+  display: none;
 }
 
-.card{
-    position: absolute;
-    bottom: -3.125rem /* 50/16 */;
-    padding: 0;
-    width: 95%;
-    left: 50%;
-    transform: translate3d(-50%, 0, 0);
+.card {
+  position: absolute;
+  bottom: -3.125rem /* 50/16 */;
+  padding: 0;
+  width: 95%;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
 }
 
 .borrow-card,
-.avatar img{
-    box-shadow: 0 .3125rem /* 5/16 */ 2.5rem /* 40/16 */ -.625rem /* 10/16 */ rgba(0, 0, 0, 0.2);
+.avatar img {
+  box-shadow: 0 0.3125rem /* 5/16 */ 2.5rem /* 40/16 */ -0.625rem /* 10/16 */ rgba(0, 0, 0, 0.2);
 }
 
-.borrow-card{
-    width: 100%;
-    background: #fff;
-    padding: .3125rem /* 5/16 */ 0;
-    border-radius: .625rem /* 10/16 */;
+.borrow-card {
+  width: 100%;
+  background: #fff;
+  padding: 0.3125rem /* 5/16 */ 0;
+  border-radius: 0.625rem /* 10/16 */;
 }
 
-.borrow-card i.iconfont{
-    font-size: 1.875rem /* 30/16 */;
+.borrow-card i.iconfont {
+  font-size: 1.875rem /* 30/16 */;
 }
 
-.avatar img{
-    width: 4.5rem /* 72/16 */;
-    height: 4.5rem /* 72/16 */;
-    border-radius: 50%;
-    border: .1875rem /* 3/16 */ solid #fff;
-
+.avatar img {
+  width: 4.5rem /* 72/16 */;
+  height: 4.5rem /* 72/16 */;
+  border-radius: 50%;
+  border: 0.1875rem /* 3/16 */ solid #fff;
 }
 
-.avatar{
-    margin: 0 auto;
+.avatar {
+  margin: 0 auto;
 }
 
-.user-info{
-    padding-top: 3.75rem /* 60/16 */;
-    padding-bottom: 1.875rem /* 30/16 */;
+.user-info {
+  padding-top: 3.75rem /* 60/16 */;
+  padding-bottom: 1.875rem /* 30/16 */;
 }
 
-.info{
-    color: #fff;
-    display: inline-grid;
+.info {
+  color: #fff;
+  display: inline-grid;
 }
 
-.info .name{
-    font-size: 1.25rem /* 20/16 */;
-    text-align: center;
-    margin-top: .625rem /* 10/16 */
+.info .name {
+  font-size: 1.25rem /* 20/16 */;
+  text-align: center;
+  margin-top: 0.625rem; /* 10/16 */
 }
 
-.info .school{
-    font-size: .875rem /* 14/16 */;
+.info .school {
+  font-size: 0.875rem /* 14/16 */;
 }
 
-.card-box{
-    width: 6.25rem /* 100/16 */;
-    height: 3.75rem /* 60/16 */;
-    border-radius: .625rem /* 10/16 */;
-    color: #fff;
-    text-align: center;
-    line-height: 3.75rem /* 60/16 */;
+.card-box {
+  width: 6.25rem /* 100/16 */;
+  height: 3.75rem /* 60/16 */;
+  border-radius: 0.625rem /* 10/16 */;
+  color: #fff;
+  text-align: center;
+  line-height: 3.75rem /* 60/16 */;
 }
 
 .service,
-.no-service{
-    font-size: .875rem /* 14/16 */;
-    width: 100%;
-    height: 3.125rem /* 50/16 */;
+.no-service {
+  font-size: 0.875rem /* 14/16 */;
+  width: 100%;
+  height: 3.125rem /* 50/16 */;
 }
 
-.no-service i.iconfont{
-    font-size: 1.5625rem /* 25/16 */;
-    margin-left: .3125rem /* 5/16 */;
+.no-service i.iconfont {
+  font-size: 1.5625rem /* 25/16 */;
+  margin-left: 0.3125rem /* 5/16 */;
 }
 
-.data-flow{
-    flex: 1;
-    text-align: center;
-    display: inline-grid;
+.data-flow {
+  flex: 1;
+  text-align: center;
+  display: inline-grid;
 }
 
-.data-flow .number{
-    font-size: 1.875rem /* 30/16 */;
+.data-flow .number {
+  font-size: 1.875rem /* 30/16 */;
 }
 
-.data-flow .card-name{
-    font-size: x-small;
+.data-flow .card-name {
+  font-size: x-small;
 }
 
-.head-bar-icon i.iconfont{
-    font-size: 1.25rem /* 20/16 */;
+.head-bar-icon i.iconfont {
+  font-size: 1.25rem /* 20/16 */;
 }
 
-.theme-nav .head-bar-text{
-    color: #fff;
+.theme-nav .head-bar-text {
+  color: #fff;
 }
 
-.theme-color{
-    margin: 0 .3125rem /* 5/16 */;
+.theme-color {
+  margin: 0 0.3125rem /* 5/16 */;
 }
 
-.punch{
-    background: #DE4313;
+.punch {
+  background: #de4313;
 }
 </style>

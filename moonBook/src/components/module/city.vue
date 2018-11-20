@@ -21,8 +21,8 @@
                     </div>
                 </div>
                 <div class="form-title">定位/最近访问</div>
-                <ul class="flex wrap">
-                    <li class="city-name" v-line-clamp:20="1" v-for='city in cityHistory'>
+                <ul class="recent flex wrap">
+                    <li class="city-name" @click="selectCity(city)" v-line-clamp:20="1" v-for='city in cityHistory'>
                         {{city}}
                     </li>
                 </ul>
@@ -64,6 +64,7 @@ import cityArray from './../lib/js/city.js'
 
 export default {
     name:'city',
+    props: ['cityCurrent'],
     components: {
         searchBar,
     },
@@ -81,13 +82,21 @@ export default {
             addClass:false,
             hotCity:[],
             domHeight:'',
-            cityHistory:[],
-            cityCurrent:[]
+            cityHistory:[]
         }
     },
-    created () {
-        this.cityHistory.push(this.userPointState.city)
-        // this.cityHistory = localStorage.getItem('cityHistory').split(',')
+    mold:{
+        prop:'cityCurrent',
+        event:'setCityCurrent'
+    },
+    created () {   
+        this.cityHistory.unshift(this.userPointState.city)
+
+        if(localStorage.getItem('cityHistory')){
+            let array = this.cityHistory.concat(localStorage.getItem('cityHistory').split(','))
+            this.cityHistory = [...new Set(array)]
+        }    
+
         this.fetchData()
     },
     watch: {
@@ -98,15 +107,6 @@ export default {
         fetchData(){
             axios.get('/api/hotCity').then(res=>{
                 this.hotCity = res.data.hotCity
-            })
-
-            let products = {
-                city:this.userPointState.city
-            }
-            this.getCityDistrict(products).then(res=>{
-                if(res.districts){
-                    this.cityCurrent = res.districts[0].districts
-                }
             })
         },
         close(){
@@ -150,7 +150,7 @@ export default {
             }
             this.getCityDistrict(products).then(res=>{
                 if(res.districts){
-                    this.cityCurrent = res.districts[0].districts
+                    this.$emit('setCityCurrent',res.districts[0].districts)
                 }
             })
             this.cityHistory = [...new Set(this.cityHistory)]
@@ -329,13 +329,14 @@ i.bubble.show{
 }
 
 .city-name{
-    width: 20%;
+    width: 3.75rem /* 60/16 */;
     text-align: center;
     background: #fff;
     height: 2rem /* 32/16 */;
     line-height: 2rem /* 32/16 */;
     margin-left: .625rem /* 10/16 */;
     margin-bottom: .625rem /* 10/16 */;
+    padding: 0 1.5625rem /* 25/16 */;
 }
 
 .current-city .city-name,
@@ -345,5 +346,22 @@ i.bubble.show{
 
 .new-city{
     background: #f2f2f2;   
+}
+
+ul.recent li:first-child{
+    position: relative;
+}
+
+ul.recent li:first-child::before{
+    content: '\e648';
+    position: absolute;
+    /* iconfont */
+    font-family:"iconfont" !important;
+    font-size:16px;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    left: .625rem /* 10/16 */;
+    color: #409eff;
 }
 </style>
