@@ -2,7 +2,8 @@
     <div class="home page-padding">
         <div class="head-bar flex flex-align" :class="[themeBarSearch?'theme-background':'default-head-bar-background']">
             <div class="left-btn" v-line-clamp:20="1" @click="cityListShow=true">
-                {{userPointState.city}}
+                <span v-if='userPointState'>{{userPointState.city}}</span>
+                <span v-else>定位中</span>
             </div>
             <div class="search-bar"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
             <div class="right-btn" @click="releasePageShow = true">
@@ -65,8 +66,6 @@
         <van-popup v-model="searchShow" class="page-popup" :overlay="false">
             <city-list :cityCurrent='cityCurrent' @setCityCurrent='setCityCurrent' :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
         </van-popup>
-
-        <footer-bar :pageIndex='pageIndex'/>
     </div>
 </template>
 <script>
@@ -87,8 +86,6 @@ import graphic from './../module/release/graphic'
 import city from './../module/city'
 import cityList from './../module/search/cityList'
 
-import footerBar from './../module/footerBar'
-
 export default {
     name:'home',
     components: {
@@ -100,8 +97,7 @@ export default {
         city,
         cityList,
         accept,
-        graphic,
-        footerBar
+        graphic
     },
     computed: {
         ...mapGetters(['userPointState'])
@@ -116,7 +112,6 @@ export default {
             prompt:'搜索城市名/拼音',
             active:0,
             applyShow:false,
-            pageIndex:0,
             btnPulse:false,
             themeBarSearch:false,
             isAdshow: true,
@@ -156,14 +151,17 @@ export default {
                 this.videoList = res.data.homeData.videoList
             })
 
-            let products = {
-                city:this.userPointState.city
-            }
-            this.getCityDistrict(products).then(res=>{
-                if(res.districts){
-                    this.cityCurrent = res.districts[0].districts
+            if(this.userPointState){
+                let products = {
+                    city:this.userPointState.city
                 }
-            })
+
+                this.getCityDistrict(products).then(res=>{
+                    if(res.districts){
+                        this.cityCurrent = res.districts[0].districts
+                    }
+                })
+            }
         },
         handleScroll(){
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop

@@ -15,26 +15,22 @@
                 </van-tabs>
             </div>
         </lazy-component>
-        <footer-bar :pageIndex='pageIndex'/>
     </div>
 </template>
 <script>
 import axios from 'axios'
-import footerBar from './../module/footerBar'
 import freshList from './../module/findModule/freshList'
 import dryingList from './../module/findModule/dryingList'
 
 export default {
     name:'find',
     components: {
-        footerBar,
         freshList,
         dryingList
     },  
     data () {
         return {
             freshList:[],
-            pageIndex:1,
             tab:[{
                 title:'关注'
             },{

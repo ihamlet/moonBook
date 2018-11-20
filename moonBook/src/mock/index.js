@@ -8,11 +8,11 @@ Mock.setup({
   timeout: '300-600'
 })
 
-//底栏icon 数据
+//底栏icon数据
 let barBtn = [{
     iconClass:'icon-home',
     name:'首页',
-    path:'home',
+    path:'/',
 },{
     iconClass:'icon-faxian',
     name:'发现',

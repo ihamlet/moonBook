@@ -4,7 +4,10 @@
       <transition name="fade">
           <start-page @listenStartPage='onStartPage' v-if='startPageShow'/>
       </transition>
-      <router-view v-if='!startPageShow' />
+      <div class="root-dom" v-if='!startPageShow'>
+        <router-view/>
+        <footer-bar/>
+      </div>
   </div>
 </template>
 
@@ -13,11 +16,13 @@ import axios from 'axios'
 import 'animate.css'
 import startPage from './module/startPage'
 import { mapGetters,mapActions } from 'vuex'
+import footerBar from './../components/module/footerBar'
 
 export default {
   name: 'Hello',
   components: {
-    startPage
+    startPage,
+    footerBar
   },
   data () {
     const self = this

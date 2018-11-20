@@ -8,13 +8,11 @@
             <baby-home/>
         </lazy-component>
         <slogan/>
-        <footer-bar :pageIndex='pageIndex'/>
     </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 
-import footerBar from './../module/footerBar'
 import cardHead from './../module/myModule/head'
 import zoneCard from './../module/myModule/zoneCard'
 import babyHome from './../module/myModule/babyHome'
@@ -24,18 +22,12 @@ export default {
     name:'my',
     components: {
         slogan,
-        footerBar,
         cardHead,
         zoneCard,
         babyHome
     },
     computed: {
         ...mapGetters(['dryingListLengthState'])
-    },
-    data () {
-        return {
-            pageIndex:3
-        }
     }
 }
 </script>

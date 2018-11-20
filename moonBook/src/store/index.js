@@ -40,9 +40,15 @@ const getters = {
         if(state.userPoint){
             return state.userPoint
         }else{
-            let data = JSON.parse(Cookies.get('userPoint')||'定位中')
+            let data
+            if(Cookies.get('userPoint')){
+                data = JSON.parse(Cookies.get('userPoint'))
+            }
             return state.userPoint = data
         }
+   },
+   userTabBtn: state =>{
+       return state.tabBtn
    }
 }
 
