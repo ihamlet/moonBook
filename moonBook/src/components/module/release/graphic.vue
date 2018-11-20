@@ -214,12 +214,14 @@ export default {
     background: linear-gradient(90deg, #FF765C,#FF23B3);
     -webkit-background-clip: text;
     color: transparent;
+    text-shadow: 0 .0625rem /* 1/16 */ .3125rem /* 5/16 */ #ff2383;
 }
 
 .btn-audio i.iconfont{
     background: linear-gradient(90deg, #00C2AB,#3E94FF);
     -webkit-background-clip: text;
     color: transparent;
+    text-shadow: 0 .0625rem /* 1/16 */ .3125rem /* 5/16 */ #3E94FF;
 }
 
 .upload-media{

@@ -48,8 +48,8 @@
             <van-datetime-picker title='日期选择' v-model="currentDate" :type="pickerType" :min-date="minDate" :max-date="maxDate" @confirm="confirmPicker" @cancel='cancelPicker'/>
         </van-popup>
 
-        <div class="form-submit">
-            <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="submit">提  交</van-button>
+        <div class="btn-submit">
+            <van-button class="theme-btn" :loading='submitLoading' type="primary" size="large" @click="submit">提  交</van-button>
         </div>
     </div>    
 </template>
@@ -182,19 +182,22 @@ export default {
                 },2000)
             }else{
                 this.submitLoading = true
-                axios.put('/api/reg',{
-                    data:this.regInfo
-                })
-
+                
                 axios.put('/api/addChild',{
                     childInfo: this.childInfo
                 }).then(res=>{
                     this.$store.dispatch('getUserData')
                     setTimeout(()=>{
-                        this.$toast.success('添加成功')
+                        this.$toast.success('提交成功')
                         this.submitLoading = false
                         this.$emit('close')
                     },1000)
+                })
+
+                axios.put('/api/reg',{
+                    data:this.regInfo
+                }).then(res=>{
+                    this.$store.dispatch('getUserData')
                 })
             }
         }

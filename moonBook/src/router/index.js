@@ -24,38 +24,9 @@ export default new Router({
         path: '/',
         name: 'home',
         component: Home,
-        meta: { scrollToTop: true }
-      },{
-        path: '/notice',
-        name: 'notice',
-        component: Notice,
-        meta: {
-          title: '消息中心',
-          scrollToTop: true
-        }
-      },{
-        path: '/find',
-        name: 'find',
-        component: Find,
-        meta: {
-          title: '发现',
-          scrollToTop: true
-        }
-      },{
-        path: '/my',
-        name: 'my',
-        component: My,
-        meta: {
-          title: '个人中心',
-          scrollToTop: true
-        }
-      },{
-        path: '/zoom',
-        name: 'zoom',
-        component: Zoom,
-        meta: {
-          title: '个人空间',
-          scrollToTop: true
+        meta: { 
+          scrollToTop: true, 
+          tabActive:0
         }
       },{
         path: '/register',
@@ -63,7 +34,44 @@ export default new Router({
         component: Register,
         meta: {
           title: '注册',
-          scrollToTop: true
+          scrollToTop: true,
+          tabActive:0
+        }
+      },{
+        path: '/find',
+        name: 'find',
+        component: Find,
+        meta: {
+          title: '发现',
+          scrollToTop: true,
+          tabActive:1
+        }
+      },{
+        path: '/notice',
+        name: 'notice',
+        component: Notice,
+        meta: {
+          title: '消息中心',
+          scrollToTop: true,
+          tabActive:2
+        }
+      },{
+        path: '/my',
+        name: 'my',
+        component: My,
+        meta: {
+          title: '个人中心',
+          scrollToTop: true,
+          tabActive:3
+        }
+      },{
+        path: '/zoom',
+        name: 'zoom',
+        component: Zoom,
+        meta: {
+          title: '个人空间',
+          scrollToTop: true,
+          tabActive:3
         }
       }]
     },{

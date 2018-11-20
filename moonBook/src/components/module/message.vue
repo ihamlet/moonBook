@@ -10,7 +10,7 @@
                 </div>
 
                 <div class="list">
-                    <div class="item" v-for='item in list.content'>
+                    <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
                         <van-swipe-cell :right-width="index==0?150:0">
                             <van-cell-group>
                                 <van-cell>
@@ -45,6 +45,7 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
 import slogan from './../module/slogan'
 import axios from 'axios'
 
@@ -81,6 +82,7 @@ export default {
         '$router':'fetchData'
     },
     methods: {
+        ...mapActions(['getMsgLength']),
         fetchData(){
             axios.get('/api/messageList').then(res=>{
                 this.tab[0].content = res.data.messageData.messageList
@@ -93,6 +95,7 @@ export default {
             axios.put('/api/addRead',{
                 id:item.id
             }).then(res=>{
+                this.getMsgLength()
                 this.tab[0].content = res.data.messageData.messageList
                 this.tab[1].content = res.data.readList
             })
@@ -101,7 +104,6 @@ export default {
             axios.put('/api/topping',{
                 id:item.id
             }).then(res=>{
-                console.log(res)
                 this.tab[0].content = res.data.messageData.messageList
             })
         }

@@ -13,10 +13,9 @@
                 <div class="avatar">
                     <img :src="userDataState.userInfo.avatar" :alt="userDataState.userInfo.name">
                 </div>
-
                 <div class="name">{{userDataState.userInfo.name}}</div>
-                <div class="school" v-if='userDataState.regInfo'>{{userDataState.regInfo.school}}</div>
-                <div class="school" v-if='userDataState.vipInfo&&!userDataState.regInfo'>{{userDataState.vipInfo.school.schoolName.name}}</div>
+                <div class="school" v-line-clamp:20="1" v-if='userDataState.regInfo'>{{userDataState.regInfo.school}}</div>
+                <div class="school" v-line-clamp:20="1" v-if='userDataState.vipInfo&&!userDataState.regInfo'>{{userDataState.vipInfo.school.schoolName.name}}</div>
             </div>
         </div>
         <div class="card">
@@ -203,7 +202,7 @@ export default {
 
 .info{
     color: #fff;
-    display: inline-grid;
+    display: grid;
 }
 
 .info .name{
@@ -213,6 +212,9 @@ export default {
 }
 
 .info .school{
+    width: 12.5rem /* 200/16 */;
+    text-align: center;
+    margin: 0 auto;
     font-size: .875rem /* 14/16 */;
 }
 

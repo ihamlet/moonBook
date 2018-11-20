@@ -34,8 +34,8 @@
                 </van-cell-group>
             </div>
             <div class="form"  v-if='active==2'>
-                <form-parent v-if="formType=='parent'" :regInfo='regInfo' @close="$router.push({name:'my'})"/>
-                <form-teacher v-if="formType=='teacher'" :regInfo='regInfo' @close="$router.push({name:'my'})"/>
+                <form-parent v-if="formType=='parent'" :regInfo='regInfo' @close="toPageMy"/>
+                <form-teacher v-if="formType=='teacher'" :regInfo='regInfo' @close="toPageMy"/>
             </div>
         </div>
 
@@ -143,6 +143,9 @@ export default {
             this.regInfo.role = role.name
             this.formType = role.type
             this.active = 2
+        },
+        toPageMy(){
+            this.$router.push({name:'my'})
         }
     }
 }

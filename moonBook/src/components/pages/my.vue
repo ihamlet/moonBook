@@ -2,7 +2,10 @@
     <div class="my page-padding">
         <card-head />
         <lazy-component class="gutter gap-top">
-           <zone-card v-if='dryingListLengthState > 0'/> 
+           <class-home v-if='userDataState.regInfo'/>
+        </lazy-component>
+        <lazy-component class="gutter gap" v-if='dryingListLengthState > 0'>
+            <zone-card/> 
         </lazy-component>
         <lazy-component class="gutter gap">
             <baby-home/>
@@ -14,6 +17,7 @@
 import { mapGetters } from 'vuex'
 
 import cardHead from './../module/myModule/head'
+import classHome from './../module/myModule/classHome'
 import zoneCard from './../module/myModule/zoneCard'
 import babyHome from './../module/myModule/babyHome'
 import slogan from './../module/slogan'
@@ -24,10 +28,11 @@ export default {
         slogan,
         cardHead,
         zoneCard,
-        babyHome
+        babyHome,
+        classHome
     },
     computed: {
-        ...mapGetters(['dryingListLengthState'])
+        ...mapGetters(['dryingListLengthState','userDataState'])
     }
 }
 </script>

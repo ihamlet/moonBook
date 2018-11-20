@@ -1,13 +1,13 @@
 <template>
   <div class="page">
-      <el-amap vid="amap" class="amap-demo" :center="center" :plugin="plugin" v-show='false'/>
-      <transition name="fade">
-          <start-page @listenStartPage='onStartPage' v-if='startPageShow'/>
-      </transition>
-      <div class="root-dom" v-if='!startPageShow'>
-        <router-view/>
-        <footer-bar/>
-      </div>
+    <el-amap vid="amap" class="amap-demo" :center="center" :plugin="plugin" v-show='false' />
+    <transition name="fade">
+      <start-page @listenStartPage='onStartPage' v-if='startPageShow' />
+    </transition>
+    <div class="root-dom" v-if='!startPageShow'>
+      <router-view />
+      <footer-bar />
+    </div>
   </div>
 </template>
 
@@ -15,7 +15,7 @@
 import axios from 'axios'
 import 'animate.css'
 import startPage from './module/startPage'
-import { mapGetters,mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import footerBar from './../components/module/footerBar'
 
 export default {
@@ -47,7 +47,7 @@ export default {
     }
   },
   created () {
-    console.log('我们招新啦')
+    console.log('%c我们招新啦！369774533@qq.com','font-size:25px;color:#409eff;')
     this.fetchData()
     if(localStorage.getItem('access')){
       this.startPageShow = !localStorage.getItem('access')
@@ -81,18 +81,19 @@ export default {
 </script>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
 }
 
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
+    opacity: 0;
 }
 
-.mainline{
-  position: fixed;
-  bottom: 4.375rem /* 70/16 */;
-  width: 6.25rem /* 100/16 */;
-  margin: 0 auto;
+.mainline {
+    position: fixed;
+    bottom: 4.375rem /* 70/16 */;
+    width: 6.25rem /* 100/16 */;
+    margin: 0 auto;
 }
 </style>

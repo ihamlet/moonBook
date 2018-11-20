@@ -3,10 +3,10 @@
         <div class="module-card">
             <van-cell-group class="cell-group">
             <van-cell class="cell" center is-link to='./zoom'>
-                <div class="content flex flex-align" slot="title">
-                    <span class="icon">
-                        <i class="iconfont">&#xe606;</i>
-                    </span>
+                <span class="icon" slot="icon">
+                    <i class="iconfont">&#xe606;</i>
+                </span>
+                <div class="content flex flex-align flex-justify" slot="title">
                     <div class="img-preview flex flex-justify" v-if='imageslength > 0'>
                         <div class="img-grid" v-if='index < 4' v-for='(item,index) in userDataState.dryingList[0].media.imgList' v-lazy:background-image='item.img'></div>
                         <div class="robe"  v-if='imageslength > 4'>
@@ -66,13 +66,6 @@ export default {
     overflow: hidden;
 }
 
-.icon{
-    width: 3.125rem /* 50/16 */;
-    height: 5rem /* 80/16 */;
-    text-align: center;
-    line-height: 5rem /* 80/16 */;
-}
-
 .icon i.iconfont{
     font-size: 1.625rem /* 26/16 */;
     background-image: linear-gradient( 135deg, #FDEB71 10%, #F8D800 100%);
@@ -80,9 +73,12 @@ export default {
     color: transparent;
 }
 
+.icon{
+    margin-right: .625rem /* 10/16 */;
+}
+
 .text-preview,
 .img-preview{
-    margin-left: .625rem /* 10/16 */;
     position: relative;
 }
 
