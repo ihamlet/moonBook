@@ -1,5 +1,5 @@
 <template>
-    <div class="add-class">
+    <div class="add-class page-padding">
         <van-nav-bar class="theme-nav" fixed :zIndex='99' :title="userDataState.regInfo.school" left-text="返回" left-arrow @click-left="onClickLeft" />
         <div class="container">
             <div class="baby-info flex flex-justify">
@@ -12,8 +12,8 @@
             <div class="list" v-for='list in classList'>
                 <div class="class-title">{{list.title}}</div>
                 <van-row>
-                    <van-col span="8" v-for='item in list.class'>
-                        <div class="">{{item.name}}</div>
+                    <van-col span="8" v-for='(item,itemIndex) in list.class' :key='itemIndex'>
+                        <div class="select">{{item.name}}</div>
                     </van-col>
                 </van-row>
             </div>
@@ -74,6 +74,7 @@ export default {
     height: 2rem /* 32/16 */;
     line-height: 2rem /* 32/16 */;
     text-align: center;
+    margin-bottom: .625rem /* 10/16 */;
 }
 
 .baby-info{
@@ -102,5 +103,16 @@ export default {
 
 .theme-nav{
     position: sticky;
+}
+
+.select{
+    width:6.25rem /* 100/16 */;
+    margin: 0 auto;
+    text-align: center;
+    height: 2.875rem /* 46/16 */;
+    line-height: 2.875rem /* 46/16 */;
+    border: .0625rem /* 1/16 */ solid #DCDFE6;
+    border-radius: .5rem /* 8/16 */;
+    margin-bottom: .625rem /* 10/16 */;
 }
 </style>
