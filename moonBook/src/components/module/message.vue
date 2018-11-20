@@ -1,33 +1,35 @@
 <template>
     <div class="message">
-        <van-tabs color='#409eff' :line-width='20' sticky>
+        <van-tabs color='#409eff' :line-width='20' sticky @click="onTabClick">
             <van-tab v-for="(list,index) in tab" :key="index" :disabled="index==1&&tabDisabled">
                 <div class="tab-title" slot="title">
                     {{list.title}}
                     <div class="unread badge" v-if="index==0">
-                        {{list.content.length}}
+                        {{list.count}}
                     </div>
                 </div>
 
-                <div class="list">
-                    <div class="item" v-for='item in list.content'>
+                <van-list v-model='loading' :finished='finished' @load="fetchData(tab[currentTabIdx])" class="list">
+                    <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
                         <van-swipe-cell :right-width="index==0?150:0">
                             <van-cell-group>
                                 <van-cell>
-                                    <div class="flex flex-align">
-                                        <div class="icon" :class="[item.content.type=='moonBook'?'moon-book':'system']">
-                                            <i class="iconfont moon-book" v-if="item.content.type=='moonBook'">&#xe605;</i>
+                                    <div class="flex flex-align" @click="onItemClick(item)">
+                                        <div class="icon" :class="[item.type=='bookshelf'?'moon-book':'system']">
+                                            <i class="iconfont moon-book" v-if="item.type=='bookshelf'">&#xe605;</i>
                                             <i class="iconfont system" v-else>&#xe600;</i>
                                         </div>
                                         <div class="msg-content">
                                             <div class="type">
-                                                <div class="name">{{item.content.type=='moonBook'?'阅亮书架':'系统消息'}}</div>
+                                                <div class="name">{{item.type=='bookshelf'?'阅亮书架':'系统消息'}}</div>
                                                 <div class="date">
-                                                    <span>{{item.date}}</span>
-                                                    <span>{{item.time}}</span>
+                                                    <span>{{item.create_date}}</span>
                                                 </div>
                                             </div>
-                                            <div class="text" v-line-clamp:20="1">{{item.content.text}}</div>
+                                            <div class="text" v-line-clamp:20="1">
+                                                <div>{{item.title}}</div>
+                                                {{item.details}}
+                                            </div>
                                         </div>
                                     </div>
                                 </van-cell>
@@ -38,7 +40,7 @@
                             </div>
                         </van-swipe-cell>
                     </div>
-                </div>
+                </van-list>
             </van-tab>
         </van-tabs>
         <slogan/>
@@ -56,20 +58,24 @@ export default {
     },
     data () {
         return {
+            loading: false,
+            finished: false,
             tabDisabled:true,
+            currentTabIdx: 0,
             tab:[{
                 title:'未读消息',
                 params:{
-                    p:1,
-                    limit:20,
-                    is_read:0
+                    page:1,
+                    limit:10,
+                    is_read:0,
+                    sort: 'top'
                 },
                 content: []
             },{
                 title:'已读消息',
                 params:{
-                    p: 1,
-                    limit: 20,
+                    page: 1,
+                    limit: 10,
                     is_read: 1
                 },
                 content: []
@@ -77,7 +83,7 @@ export default {
         }
     },
     created () {
-        this.fetchData(this.tab[0]);
+        this.fetchData(this.tab[0]).then(this.fetchData(this.tab[1]));
     },
     watch: {
         tab:{
@@ -94,25 +100,77 @@ export default {
         fetchData(tab){
             const url = '/book/memberMsg/getList';
             const params = {params:tab.params};
-            axios.get(url, params).then((res) => {
-                tab.content = tab.content.concat(res.data.data);
+            let $this = this;
+            return axios.get(url, params).then((res) => {
+                if(res.data.status === 1) {
+                    if(tab.params.page === 1) {
+                        tab.content = res.data.data;
+                        tab.count = res.data.count;
+                    } else {
+                        tab.content = tab.content.concat(res.data.data);
+                    }       
+                    $this.loading = false;           
+                    if(res.data.data.length == tab.params.limit)  {
+                        $this.finished = false;
+                        tab.params.page ++;
+                    } else {
+                        $this.finished = true;
+                    }                    
+                }                             
             });
         },
         addRead(item){
-            axios.put('/api/addRead',{
-                id:item.id
-            }).then(res=>{
-                this.tab[0].content = res.data.messageData.messageList
-                this.tab[1].content = res.data.readList
+            const url = '/book/MemberMsg/addRead';
+            const params = {
+                params: {
+                    id:item.msg_id
+                }
+            };
+            let toast = this.$toast.loading({
+                forbidClick: true,
+                loadingType: 'spinner'
+            });
+            let $this = this;
+            axios.get(url, params).then(res=>{
+                toast.clear();
+                if(res.data.status === 1) {
+                    let content = $this.tab[0].content;
+                    let idx = content.indexOf(item);                
+                    if(idx !== -1) content.splice(idx, 1);
+                    $this.tab[0].count > 1 && $this.tab[0].count--;
+                } else {
+                    $this.$toast(res.data.msg);
+                }                
             })
         },
         topping(item){
-            axios.put('/api/topping',{
-                id:item.id
-            }).then(res=>{
-                console.log(res)
-                this.tab[0].content = res.data.messageData.messageList
+            const url = '/book/MemberMsg/topping';
+            const params = {
+                params: {
+                    id: item.msg_id
+                }                
+            };
+            console.log('params', params);
+            let toast = this.$toast.loading({
+                forbidClick: true,
+                loadingType: 'spinner'
+            });
+            let $this = this;
+            axios.get(url, params).then(res=>{                
+                toast.clear();
+                if(res.data.status === 1) {
+                    $this.tab[0].params.page = 1;
+                    $this.fetchData($this.tab[0]);
+                } else {
+                    $this.$toast(res.data.msg);
+                }
             })
+        },
+        onItemClick(item){
+            location.href = '/book/MemberMsg/detail?id=' + item.msg_id;
+        },
+        onTabClick(idx){
+            this.currentTabIdx = idx;
         }
     }
 }
