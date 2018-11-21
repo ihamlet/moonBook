@@ -52,7 +52,6 @@ export default {
     methods: {
         fetchData(){
             axios.get('/api/classData').then(res=>{
-                console.log(res)
                 this.classList = res.data.classData.classList
             })
         },

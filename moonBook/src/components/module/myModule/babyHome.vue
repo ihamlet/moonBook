@@ -99,7 +99,9 @@ export default {
             })
         },
         toPageBabyHome(list){
-            this.$router.push({name:'baby-home'})
+            this.$router.push({name:'baby-home',query:{
+                id: list.id
+            }})
         }
     }
 }
