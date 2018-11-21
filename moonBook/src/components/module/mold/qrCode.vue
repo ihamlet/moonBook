@@ -7,7 +7,7 @@
                 <div class="card flex-justify" >
                     <div class="baby-info">
                         <div class="avatar">
-                            <img :src="childInfo.avatar" :alt="childInfo.name"/>
+                            <img class="avatar-img" :src="childInfo.avatar" :alt="childInfo.name"/>
                         </div>
                         <div class="name">{{childInfo.name}}</div>
                     </div>
@@ -16,6 +16,7 @@
                     </div>
                     <div class="explain">
                         <span> - 长按识别二维码进入 - </span>
+                        <span> © 阅亮书架 </span>
                     </div>
                 </div>
             </div>
@@ -89,6 +90,10 @@ export default {
     padding: 2.5rem /* 40/16 */ 0;
 }
 
+.code-img img{
+    border: .1875rem /* 3/16 */ solid #000;
+}
+
 .bg,
 .bg .welt{
     width: 100%;
@@ -101,7 +106,16 @@ export default {
 }
 
 .explain{
+    display: grid;
     text-align: center;
     color: #303133;
+}
+
+.explain span{
+    margin-bottom: .3125rem /* 5/16 */;
+}
+
+.avatar-img{
+    background: transparent;
 }
 </style>
