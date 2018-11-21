@@ -5,7 +5,9 @@
                 <i class="iconfont">&#xe657;</i>
                 <span class="text">返回</span>
             </div>
-            <van-icon name="qr" class="icon-qr" slot='right'/>
+            <div class="btn-right" slot='right'>
+                <van-icon name="qr"/>
+            </div>
         </van-nav-bar>
         <div class="header" :class="[childInfo.gender=='boy'?'theme-background':'background']">
             <div class="baby-info flex flex-align">
@@ -159,11 +161,6 @@ export default {
     text-align: left;
     margin-top: .3125rem /* 5/16 */;
     color: #fff;
-}
-
-.icon-qr{
-    color: #fff;
-    font-size: 1.25rem /* 20/16 */;
 }
 
 .follow{

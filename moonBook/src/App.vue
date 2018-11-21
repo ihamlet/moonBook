@@ -232,6 +232,11 @@ body.theme .head-bar-text,
     display: none;
 }
 
+.theme-nav.van-nav-bar .btn-right .van-icon{
+    color: #fff;
+    font-size: 1.25rem /* 20/16 */;
+}
+
 .default-head-bar-background{
   background: linear-gradient(180deg,rgba(0,0,0,.3),rgba(0,0,0,0));
 }
