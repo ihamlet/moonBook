@@ -1,6 +1,6 @@
 <template>
     <div class="add-class page-padding">
-        <van-nav-bar class="theme-nav" fixed :zIndex='99' :title="userDataState.regInfo.school" left-text="返回" left-arrow @click-left="onClickLeft" />
+        <van-nav-bar fixed :zIndex='99' :title="userDataState.regInfo.school" left-text="返回" left-arrow @click-left="onClickLeft" />
         <div class="container">
             <div class="baby-info flex flex-justify">
                 <div class="avatar">
