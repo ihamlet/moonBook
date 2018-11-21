@@ -11,32 +11,28 @@ export default {
 <style scoped>
 .container {
     position: absolute;
-    width: 200px;
-    height: 200px;
-    padding: 5px;
-    border: 5px solid rgb(118, 218, 255);
-    top: 50%;
+    width: 100%;
+    height:3.125rem /* 50/16 */;
+    bottom: 0;
     left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
+    transform: translate(-50%, 0);
     overflow: hidden;
 }
 
 .wave {
     position: relative;
-    width: 200px;
-    height: 200px;
-    background-color: rgb(118, 218, 255);
-    border-radius: 50%;
+    width: 100%;
+    height: 3.125rem /* 50/16 */;
+    background-color: transparent;
 } 
 
 .wave::before,
 .wave::after{
     content: "";
     position: absolute;
-    width: 400px;
-    height: 400px;
-    top: 0;
+    width: 100rem /* 1600/16 */;
+    height: 100rem /* 1600/16 */;
+    top: 2415%;
     left: 50%;
     background-color: rgba(255, 255, 255, .4);
     border-radius: 45%;
@@ -47,7 +43,7 @@ export default {
 
 .wave::after{
     border-radius: 47%;
-    background-color: rgba(255, 255, 255, .9);
+    background-color: #F2F6FC;
     transform: translate(-50%, -70%) rotate(0);
     animation: rotate 10s linear -5s infinite;
     z-index: 20;

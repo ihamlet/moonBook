@@ -149,15 +149,6 @@ export default {
    position: relative;
 }
 
-.theme-nav.van-nav-bar{
-    background: transparent;
-    color: #fff;
-}
-
-.theme-nav.van-nav-bar::after{
-    display: none;
-}
-
 .card{
     position: absolute;
     bottom: -3.125rem /* 50/16 */;

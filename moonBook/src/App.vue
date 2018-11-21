@@ -223,6 +223,15 @@ body.theme .head-bar-text,
   margin-right: .3125rem /* 5/16 */;
 }
 
+.theme-nav.van-nav-bar{
+    background: transparent;
+    color: #fff;
+}
+
+.theme-nav.van-nav-bar::after{
+    display: none;
+}
+
 .default-head-bar-background{
   background: linear-gradient(180deg,rgba(0,0,0,.3),rgba(0,0,0,0));
 }
