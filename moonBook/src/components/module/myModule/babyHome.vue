@@ -11,7 +11,7 @@
             </div>
             <div class="list" v-else>
                 <div class="module-title">宝贝成长档案</div>
-                <div class="item module" v-for='(list,index) in userDataState.childInfo'>
+                <div class="item module" v-for='(list,index) in userDataState.childInfo' :key="index">
                     <div class="card-top-bar">
                         <van-nav-bar :title="`${list.data.name}`" right-text="编辑" :left-text="userDataState.regInfo?'班级':''"  @click-right="onClickRight(list)" />
                     </div>

@@ -2,7 +2,7 @@
     <div class="topic-list">
         <van-nav-bar title="选择话题"/>
         <div class="list">
-            <div class="item" v-for='(item,index) in topicList'>
+            <div class="item" v-for='(item,index) in topicList' :key="index">
                 <van-cell-group>
                     <van-cell is-link>
                         <div class="theme-color">#{{item}}</div>

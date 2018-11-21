@@ -3,7 +3,7 @@
         <div class="module-title">精选课程</div> 
         <van-list v-model="loading" :finished="finished" @load="onLoad">
             <div class="list">
-                <div class="item" v-for="(item,index) in list">
+                <div class="item" v-for="(item,index) in list" :key="index">
                     <van-cell-group>
                         <van-cell>
                             <div class="course-item">

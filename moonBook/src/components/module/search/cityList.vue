@@ -13,8 +13,8 @@
         </div>
 
         <div class="list">
-            <div class="item" v-for='item in list'>
-                <van-cell v-for="(item,index) in list" :key="index" center @click="selectCity(item)">
+            <div class="item" v-for='(item,index) in list' :key="index">
+                <van-cell center @click="selectCity(item)">
                     <div class="city-name">{{item.name}}</div>
                 </van-cell>
             </div>

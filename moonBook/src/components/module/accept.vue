@@ -15,7 +15,7 @@
         <lazy-component>
             <div class="container" v-if='stepActive==0'>
                 <div class="list scroll-y" ref="scrollContainer">
-                    <div class="item" v-for='item in schoolList' @click="select(item)">
+                    <div class="item" v-for='(item,index) in schoolList' :key="index" @click="select(item)">
                         <van-cell-group>
                             <van-cell is-link class="flex flex-align">
                                 <div class="school-info">
@@ -66,7 +66,7 @@
             <div class="container"  v-if='stepActive==2'>
                 <div class="select-list">
                     <div class="card-list">
-                        <div class="item" :class="[intervalIndex==index?'select':'']" v-for='(item,index) in cardInfo.vipInterval' @click="selectInterval(item,index)">
+                        <div class="item" :class="[intervalIndex==index?'select':'']" v-for='(item,index) in cardInfo.vipInterval' :key="index" @click="selectInterval(item,index)">
                             <van-row class="flex flex-align">
                                 <van-col span="6">
                                     <div class="focus col-box theme-background">

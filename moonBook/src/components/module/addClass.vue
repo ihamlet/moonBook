@@ -9,7 +9,7 @@
                 <div class="name">{{userDataState.childInfo[0].data.name}}（{{age[0]}}岁）</div>
             </div>
             <div class="title">请选择所在班级</div>
-            <div class="list" v-for='list in classList'>
+            <div class="list" v-for='(list,index) in classList' :key="index">
                 <div class="class-title">{{list.title}}</div>
                 <van-row>
                     <van-col span="8" v-for='(item,itemIndex) in list.class' :key='itemIndex'>

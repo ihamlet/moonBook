@@ -12,7 +12,7 @@
         <div class="header" :class="[childInfo.gender=='boy'?'theme-background':'background']">
             <div class="baby-info flex flex-align">
                 <div class="avatar">
-                    <img :src="childInfo.avatar" :alt="childInfo.name" />
+                    <img class="lazy" v-lazy="childInfo.avatar" :alt="childInfo.name" />
                 </div>
                 <div class="baby-data">
                     <div class="list flex flex-align">
