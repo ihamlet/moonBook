@@ -8,6 +8,7 @@ import Notice from '@/components/pages/notice'
 import My from '@/components/pages/my'
 
 import Zoom from '@/components/pages/zoom'
+import BabyHome from '@/components/pages/babyHome'
 
 import Register from '@/components/pages/register'
 
@@ -70,6 +71,15 @@ export default new Router({
         component: Zoom,
         meta: {
           title: '个人空间',
+          scrollToTop: true,
+          tabActive:3
+        }
+      },{
+        path: '/baby-home',
+        name: 'baby-home',
+        component: BabyHome,
+        meta: {
+          title: '宝贝主页',
           scrollToTop: true,
           tabActive:3
         }

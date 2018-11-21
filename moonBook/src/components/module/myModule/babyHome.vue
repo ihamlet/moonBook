@@ -13,9 +13,9 @@
                 <div class="module-title">宝贝成长档案</div>
                 <div class="item module" v-for='(list,index) in userDataState.childInfo'>
                     <div class="card-top-bar">
-                        <van-nav-bar :title="`${list.data.name}`" right-text="编辑" @click-right="onClickRight(list)" />
+                        <van-nav-bar :title="`${list.data.name}`" right-text="编辑" :left-text="userDataState.regInfo?'班级':''"  @click-right="onClickRight(list)" />
                     </div>
-                    <div class="baby-info flex flex-align">
+                    <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
                         <div class="volume">
                             周阅读量
                             <span class="number">{{list.readings.number}}</span>
@@ -97,6 +97,9 @@ export default {
             }).then(res=>{
                 this.listenData = res.data.child.data
             })
+        },
+        toPageBabyHome(list){
+            this.$router.push({name:'baby-home'})
         }
     }
 }
@@ -165,8 +168,8 @@ i.iconfont.hot {
 }
 
 .avatar {
-    width: 3.75rem /* 60/16 */;
-    height: 3.75rem /* 60/16 */;
+    width: 4.375rem /* 70/16 */;
+    height: 4.375rem /* 70/16 */;
     margin-right: 0.625rem /* 10/16 */;
     border-radius: 50%;
     border: 0.25rem /* 4/16 */ solid #f8d800;
