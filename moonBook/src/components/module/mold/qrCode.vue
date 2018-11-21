@@ -7,12 +7,12 @@
                 <div class="card flex-justify" >
                     <div class="baby-info">
                         <div class="avatar">
-                            <img class="lazy" v-lazy="childInfo.avatar" :alt="childInfo.name"/>
+                            <img :src="childInfo.avatar" :alt="childInfo.name"/>
                         </div>
                         <div class="name">{{childInfo.name}}</div>
                     </div>
                     <div class="code-img">
-                        <img class="lazy" v-lazy="qrImage" alt="二维码">
+                        <img :src="qrImage" alt="二维码">
                     </div>
                     <div class="explain">
                         <span> - 长按识别二维码进入 - </span>
@@ -48,6 +48,7 @@ export default {
         toImage(){
             this.isLoading = true
             html2canvas(this.$refs.imageWrapper,{
+                allowTaint:true,
                 backgroundColor: '#fff'
             }).then((canvas) => {
                 let dataURL = canvas.toDataURL("image/png")
