@@ -37,7 +37,9 @@
             <wave/>
         </div>
         <div class="container">
-
+            <div class="">
+                
+            </div>
         </div>
 
         <van-popup v-model="showQrcode" class="card-popup">
