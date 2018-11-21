@@ -32,7 +32,7 @@ export default {
     position: absolute;
     width: 100rem /* 1600/16 */;
     height: 100rem /* 1600/16 */;
-    top: 2375%;
+    top: 2380%;
     left: 50%;
     background-color: rgba(255, 255, 255, .4);
     border-radius: 45%;
