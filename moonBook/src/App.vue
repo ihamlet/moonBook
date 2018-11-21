@@ -494,6 +494,11 @@ img.lazy[lazy=error],
   height: 100vh;
 }
 
+.card-popup{
+  width: 18.75rem /* 300/16 */;
+  height: 34.25rem /* 548/16 */;
+}
+
 .page-popup-layer{
   width: 100%;
   height: calc(100% - 2.8125rem);

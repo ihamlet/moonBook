@@ -1,12 +1,12 @@
 <template>
     <div class="baby-home">
-        <van-nav-bar fixed class="theme-nav" :title="$route.meta.title" @click-left="onClickLeft">
+        <van-nav-bar fixed class="theme-nav" :title="$route.meta.title" @click-left="onClickLeft" @click-right="onClickRight">
             <div class="btn-left" slot='left'>
                 <i class="iconfont">&#xe657;</i>
                 <span class="text">返回</span>
             </div>
             <div class="btn-right" slot='right'>
-                <van-icon name="qr"/>
+                <van-icon name="setting"/>
             </div>
         </van-nav-bar>
         <div class="header" :class="[childInfo.gender=='boy'?'theme-background':'background']">
@@ -30,8 +30,8 @@
                     <div class="school" v-line-clamp:20="1" v-if='userDataState.regInfo'>{{userDataState.regInfo.school}}</div>
                     <div class="school" v-line-clamp:20="1" v-if='userDataState.vipInfo&&!userDataState.regInfo'>{{userDataState.vipInfo.school.schoolName.name}}</div>
                 </div>
-                <div class="follow">
-                    <van-button class="theme-btn" size="small" type="primary" plain @click="toRegister">加关注</van-button>
+                <div class="qr-code" @click="showQrcode=true">
+                    <van-icon name="qr"/>
                 </div>
             </div>
             <wave/>
@@ -39,6 +39,10 @@
         <div class="container">
 
         </div>
+
+        <van-popup v-model="showQrcode" class="card-popup">
+            <qr-code :qrImage='qrImage' :childInfo='childInfo'/>
+        </van-popup>
     </div>
 </template>
 <script>
@@ -47,11 +51,13 @@ import { mapGetters } from 'vuex'
 import QRCode from 'qrcode'
 import { format } from './../lib/js/util.js'
 import wave from './../module/animate/anWave'
+import qrCode from './../module/mold/qrCode'
 
 export default {
     name:'baby-home',
     components: {
-        wave  
+        wave,
+        qrCode
     },
     computed: {
         ...mapGetters(['userDataState']),
@@ -66,48 +72,50 @@ export default {
     },
     data () {
         return {
-            childInfo:''
+            childInfo:'',
+            qrImage:'',
+            showQrcode:false
         }
     },
-    created () {
-        this.fetchData()
-    },
-    watch: {
-        '$router':'fetchData'  
+    beforeRouteEnter (to, from, next) {
+        axios.put('/api/ChildInfo',{
+            id: to.query.id
+        }).then(res => {
+            next(vm => {
+                vm.qrcode()
+                if(res.data.child){
+                    vm.childInfo = res.data.child.data
+                }else{
+                    vm.$dialog.alert({
+                        message:`<div class='text-center'>请添加宝贝，帮助孩子更好的养成阅读习惯</div>`,
+                        showConfirmButton:true,
+                        showCancelButton:true,
+                        confirmButtonText:'添加宝贝',
+                        cancelButtonText:'稍后添加'
+                    }).then(() => {
+                        vm.$router.push({name:'register'})
+                    }).catch(() => {
+                        vm.$router.go(-1)
+                    })
+                }
+            })
+        })
     },
     methods: {
-        fetchData(){
-            this.qrcode()
-            axios.put('/api/ChildInfo',{
-                id:this.$route.query.id
-            }).then(res=>{
-                this.childInfo = res.data.child.data
-            }).catch(err=>{
-                console.log(err)
-                this.$dialog.alert({
-                    message:`<div class='text-center'>请添加宝贝，帮助孩子更好的养成阅读习惯</div>`,
-                    showConfirmButton:true,
-                    showCancelButton:true,
-                    confirmButtonText:'添加宝贝',
-                    cancelButtonText:'稍后添加'
-                }).then(() => {
-                    this.$router.push({name:'register'})
-                }).catch(() => {
-                    this.$router.go(-1)
-                })
-            })
-        },
         onClickLeft(){
             this.$router.go(-1)
         },
-        qrcode () {
+        qrcode(){
             QRCode.toDataURL(window.location.href)
             .then(url => {
-                console.log(url)
+                this.qrImage = url
             })
             .catch(err => {
                 console.error(err)
             })
+        },
+        onClickRight(){
+            
         }
     }
 }
@@ -163,9 +171,14 @@ export default {
     color: #fff;
 }
 
-.follow{
+.qr-code{
     position: absolute;
     right: 1.25rem /* 20/16 */;
+}
+
+.qr-code i.van-icon{
+    font-size: 1.5rem /* 24/16 */;
+    color: #fff;
 }
 
 .follow .theme-btn{
