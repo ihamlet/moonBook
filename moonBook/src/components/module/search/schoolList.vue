@@ -13,7 +13,7 @@
         </div>
 
         <div class="list">
-            <div class="item" v-for='item in list' :key="index">
+            <div class="item" v-for='(item,index) in list' :key="index">
                 <van-cell is-link center>
                     <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
                     <div class="school-address" v-line-clamp:20="1">

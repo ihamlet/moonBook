@@ -1,6 +1,6 @@
 <template>
     <div class="fresh-list scroll-x">
-        <div class="scroll-item" v-for='item in list'>
+        <div class="scroll-item" v-for='(item,index) in list' :key="index">
             <div class="avatar">
                 <img v-lazy="item.avatar" :alt="item.name">
             </div>

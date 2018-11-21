@@ -32,7 +32,7 @@
                     </li>
                 </ul>
                 <ul class="days" v-else key="week">
-                    <li v-for="dayobject in days" v-if='WeekStartDate.getDate()+1 <= dayobject.day.getDate() && WeekEndDate.getDate()+1 >= dayobject.day.getDate() '>
+                    <li v-for="(dayobject,index) in days" :key="index" v-if='WeekStartDate.getDate()+1 <= dayobject.day.getDate() && WeekEndDate.getDate()+1 >= dayobject.day.getDate() '>
                         <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
                         <span v-else>{{dayobject.day.getDate()}}</span>
                     </li>
