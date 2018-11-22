@@ -76,12 +76,12 @@ export default {
             listenData:'',
             dataId:'',
             show:false,
-            pageTitle:'添加孩子'
+            pageType:'addBaby'
         }
     },
     methods: {
         toAddChild(){
-            this.pageTitle = '添加宝贝'
+            this.pageTitle = 'addBaby'
             this.show = true
         },
         closeAddChildPage(){
@@ -89,7 +89,7 @@ export default {
         },
         onClickRight(list){
             this.show = true
-            this.pageTitle = '编辑'
+            this.pageTitle = 'editBaby'
             this.dataId = list.id
 
             axios.put('/api/ChildInfo',{

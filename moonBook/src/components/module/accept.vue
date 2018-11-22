@@ -132,7 +132,7 @@
 
         <!-- 添加孩子页面 -->
         <van-popup v-model="addChildShow" class="page-popup" position="right">
-            <add-child @close='closeAddChildPage' :addChildPageTitle='addChildPageTitle'/>
+            <add-child @close='closeAddChildPage' :pageTitle='pageTitle'/>
         </van-popup>
     </div>
 </template>
@@ -158,7 +158,7 @@ export default {
     },
     data () {
         return {
-            addChildPageTitle:'添加孩子',
+            pageTitle:'addBaby',
             addChildShow:false,
             disabled:false,
             payLoading:false,
