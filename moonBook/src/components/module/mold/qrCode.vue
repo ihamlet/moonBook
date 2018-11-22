@@ -13,12 +13,14 @@
                             <img class="avatar-img" :src="childInfo.avatar" :alt="childInfo.name"/>
                         </div>
                         <div class="name">{{childInfo.name}}</div>
+                        <div class="label">{{label}}</div>
                     </div>
+                    <div class="text">{{childInfo.name}}宝贝在阅亮书架一共阅读了{{totalReading}}本书</div>
                     <div class="code-img">
                         <img :src="qrImage" alt="二维码">
                     </div>
                     <div class="explain">
-                        <span> - 长按识别二维码进入 - </span>
+                        <span> — 长按识别二维码进入 — </span>
                         <span> © 阅亮书架 </span>
                     </div>
                 </div>
@@ -37,7 +39,7 @@ import html2canvas from 'html2canvas'
 
 export default {
     name:'qr-code',
-    props: ['childInfo','qrImage'],
+    props: ['childInfo','qrImage','totalReading','label'],
     components: {
         round
     },
@@ -70,11 +72,16 @@ export default {
 <style scoped>
 .baby-info{
     display: grid;
-    padding:3.125rem /* 50/16 */ 0;
+    padding:2.5rem /* 40/16 */ 0;
 }
 
 .avatar{
     margin: 0 auto;
+}
+
+.label{
+    text-align: center;
+    font-size: .8125rem /* 13/16 */;
 }
 
 .avatar img{
@@ -91,12 +98,13 @@ export default {
 }
 
 .code-img{
-    width: 7.5rem /* 120/16 */;
+    width: 6.625rem /* 106/16 */;
+    padding: 3.125rem /* 50/16 */ 0;
     margin: 0 auto;
-    padding: 2.5rem /* 40/16 */ 0;
 }
 
 .code-img img{
+    width: 6.25rem /* 100/16 */;
     border: .1875rem /* 3/16 */ solid #000;
 }
 
@@ -139,5 +147,10 @@ export default {
 .close i.iconfont{
     font-size: 1.5rem /* 24/16 */;
     color: #F56C6C;
+}
+
+.text{
+    font-size: .875rem /* 14/16 */;
+    text-align: center;
 }
 </style>

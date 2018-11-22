@@ -27,7 +27,7 @@
                             <span class="age">{{age}}岁</span>
                         </div>
                     </div>
-                    <div class="label">{{totalReading>50?'阅读小明星':'阅读新秀'}}</div>
+                    <div class="label">{{label}}</div>
                     <div class="school" v-line-clamp:20="1" v-if='userDataState.regInfo'>{{userDataState.regInfo.school}}</div>
                     <div class="school" v-line-clamp:20="1" v-if='userDataState.vipInfo&&!userDataState.regInfo'>{{userDataState.vipInfo.school.schoolName.name}}</div>
                 </div>
@@ -45,7 +45,7 @@
         </div>
 
         <van-popup v-model="showQrcode" class="card-popup">
-            <qr-code :qrImage='qrImage' @close="showQrcode = false" :childInfo='childInfo'/>
+            <qr-code :qrImage='qrImage' :totalReading='totalReading' :label='label' @close="showQrcode = false" :childInfo='childInfo'/>
         </van-popup>
     </div>
 </template>
@@ -72,6 +72,9 @@ export default {
             }else{
                 return 0
             }
+        },
+        label(){
+            return this.totalReading > 50 ? '阅读小明星':'阅读新秀'
         }
     },
     data () {
