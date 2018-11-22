@@ -44,7 +44,7 @@ export default {
     animation: rotate 6s linear infinite;
     z-index: 10;
     user-select: none;
-    animation-delay: 0.5s;
+    animation-delay: 1s;
 }
 
 .raised-2{
