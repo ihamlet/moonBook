@@ -497,7 +497,6 @@ img.lazy[lazy=error],
 .card-popup{
   width: 18.75rem /* 300/16 */;
   height: 34.25rem /* 548/16 */;
-  border-radius: 1.25rem /* 20/16 */;
 }
 
 .page-popup-layer{

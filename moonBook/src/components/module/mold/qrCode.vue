@@ -15,7 +15,10 @@
                         <div class="name">{{childInfo.name}}</div>
                         <div class="label">{{label}}</div>
                     </div>
-                    <div class="text">{{childInfo.name}}宝贝在阅亮书架一共阅读了{{totalReading}}本书</div>
+                    <div class="text">
+                        <span>{{childInfo.name}}宝贝在阅亮书架一共阅读了</span>
+                        <span class="book-number">{{totalReading}}本书</span>
+                    </div>
                     <div class="code-img">
                         <img :src="qrImage" alt="二维码">
                     </div>
@@ -99,7 +102,7 @@ export default {
 
 .code-img{
     width: 6.625rem /* 106/16 */;
-    padding: 3.125rem /* 50/16 */ 0;
+    padding:1.875rem /* 30/16 */ 0;
     margin: 0 auto;
 }
 
@@ -152,5 +155,11 @@ export default {
 .text{
     font-size: .875rem /* 14/16 */;
     text-align: center;
+    display: grid;
+}
+
+.book-number{
+    font-size: 1.75rem /* 28/16 */;
+    color: #000;
 }
 </style>
