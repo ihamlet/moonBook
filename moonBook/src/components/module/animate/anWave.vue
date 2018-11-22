@@ -28,6 +28,7 @@ export default {
     height: 3.125rem /* 50/16 */;
     background: transparent;
     user-select: none;
+    overflow: hidden;
 } 
 
 .raised-1,
