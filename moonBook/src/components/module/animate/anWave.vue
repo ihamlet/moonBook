@@ -19,7 +19,6 @@ export default {
     bottom: 0;
     left: 50%;
     transform: translate(-50%, 0);
-    overflow: hidden;
     user-select: none;
 }
 
@@ -43,8 +42,6 @@ export default {
     transform: translate(-50%, -70%) rotate(0);
     animation: rotate 6s linear infinite;
     z-index: 10;
-    user-select: none;
-    animation-delay: 1s;
 }
 
 .raised-2{
