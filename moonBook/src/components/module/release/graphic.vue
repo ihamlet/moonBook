@@ -27,7 +27,7 @@
                         <div class="text-length" :class="[grapicData.text.length>140?'danger':'']" v-if='grapicData.text.length>0'>{{grapicData.text.length}}</div>
                     </div>
                 </van-cell>
-                <input type="file" accept="video/" capture="camcorder" ref='fileVideo' hidden>
+                <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' hidden>
                 <input type="file" accept="audio/*" capture="microphone" ref='fileAudio' hidden>
             </van-cell-group>
             <van-checkbox-group v-model="result">
