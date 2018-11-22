@@ -34,31 +34,32 @@ export default {
 .raised-1,
 .raised-2{
     position: absolute;
-    width: 1rem;
-    height: 1rem;
-    top: 1720%;
+    width: 100rem /* 1600/16 */;
+    height: 100rem /* 1600/16 */;
+    top: 2380%;
     left: 50%;
     background: rgba(255, 255, 255, .4);
     border-radius: 45%;
-    transform: translate(-50%, -70%) rotate(0) scale(100);
+    transform: translate(-50%, -70%) rotate(0);
     animation: rotate 6s linear infinite;
     z-index: 10;
     user-select: none;
+    animation-delay: 0.5s;
 }
 
 .raised-2{
     border-radius: 47%;
     background: #fff;
-    transform: translate(-50%, -70%) rotate(0) scale(100);
+    transform: translate(-50%, -70%) rotate(0);
     animation: rotate 10s linear -5s infinite;
     z-index: 20;
 }
 
 @keyframes rotate {
     50% {
-        transform: translate(-50%, -73%) rotate(180deg) scale(100);
+        transform: translate(-50%, -73%) rotate(180deg);
     } 100% {
-        transform: translate(-50%, -70%) rotate(360deg) scale(100);
+        transform: translate(-50%, -70%) rotate(360deg);
     }
 }
 </style>
