@@ -24,6 +24,7 @@ export default {
     width: 100%;
     height: 3.125rem /* 50/16 */;
     background-color: transparent;
+    user-select: none;
 } 
 
 .wave::before,
@@ -39,6 +40,7 @@ export default {
     transform: translate(-50%, -70%) rotate(0);
     animation: rotate 6s linear infinite;
     z-index: 10;
+    user-select: none;
 }
 
 .wave::after{
