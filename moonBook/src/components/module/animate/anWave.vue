@@ -43,7 +43,7 @@ export default {
 
 .wave::after{
     border-radius: 47%;
-    background-color: #F2F6FC;
+    background-color: #fff;
     transform: translate(-50%, -70%) rotate(0);
     animation: rotate 10s linear -5s infinite;
     z-index: 20;

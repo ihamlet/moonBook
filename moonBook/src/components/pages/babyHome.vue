@@ -27,6 +27,7 @@
                             <span class="age">{{age}}岁</span>
                         </div>
                     </div>
+                    <div class="label">{{totalReading>50?'阅读小明星':'阅读新秀'}}</div>
                     <div class="school" v-line-clamp:20="1" v-if='userDataState.regInfo'>{{userDataState.regInfo.school}}</div>
                     <div class="school" v-line-clamp:20="1" v-if='userDataState.vipInfo&&!userDataState.regInfo'>{{userDataState.vipInfo.school.schoolName.name}}</div>
                 </div>
@@ -37,13 +38,14 @@
             <wave/>
         </div>
         <div class="container">
-            <div class="">
-                
+            <div class="bar flex flex-align">
+                <div class="bar-item totalReading">总阅读量 {{totalReading}}</div>
+                <div class="bar-item praise">赞 {{praise}}</div>
             </div>
         </div>
 
         <van-popup v-model="showQrcode" class="card-popup">
-            <qr-code :qrImage='qrImage' :childInfo='childInfo'/>
+            <qr-code :qrImage='qrImage' @close="showQrcode = false" :childInfo='childInfo'/>
         </van-popup>
     </div>
 </template>
@@ -76,7 +78,9 @@ export default {
         return {
             childInfo:'',
             qrImage:'',
-            showQrcode:false
+            showQrcode:false,
+            praise: 0,
+            totalReading: 0,
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -86,6 +90,8 @@ export default {
             next(vm => {
                 vm.qrcode()
                 if(res.data.child){
+                    vm.totalReading = res.data.child.totalReading.number
+                    vm.praise = res.data.child.praise.number
                     vm.childInfo = res.data.child.data
                 }else{
                     vm.$dialog.alert({
@@ -185,6 +191,34 @@ export default {
 
 .follow .theme-btn{
     border-color: #fff;
+    color: #fff;
+}
+
+.bar{
+    height: 2.875rem /* 46/16 */;
+    line-height: 2.875rem /* 46/16 */;
+    background: #fff;
+    position: relative;
+}
+
+.bar::before{
+    content: '';
+    position: absolute;
+    width: .0625rem /* 1/16 */;
+    height: 1.25rem /* 20/16 */;
+    background: #DCDFE6;
+    left: 50%;
+    top: 50%;
+    transform: translate3d(0, -50%, 0);
+}
+
+.bar-item{
+    flex: 1;
+    text-align: center;
+}
+
+.label{
+    font-size: .8125rem /* 13/16 */;
     color: #fff;
 }
 </style>

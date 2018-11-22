@@ -1,5 +1,8 @@
 <template>
     <div class="qrcode-image">
+        <div class="close" @click="closeQrcode">
+            <i class="iconfont">&#xe683;</i>
+        </div>
         <img :src="dataURL" v-if='dataURL'>
         <slot v-else>
             <div class="bg" ref="imageWrapper">
@@ -57,6 +60,9 @@ export default {
                 this.isLoading = false
                 this.isDisabled = true
             })
+        },
+        closeQrcode(){
+            this.$emit('close')
         }
     }
 }
@@ -72,8 +78,8 @@ export default {
 }
 
 .avatar img{
-    width: 6.25rem /* 100/16 */;
-    height: 6.25rem /* 100/16 */;
+    width: 5rem /* 80/16 */;
+    height: 5rem /* 80/16 */;
     border-radius: 50%;
     box-shadow: 0 .125rem /* 2/16 */ 1.25rem /* 20/16 */ rgba(0, 0, 0, .2)
 }
@@ -100,6 +106,10 @@ export default {
     height: 31.25rem /* 500/16 */;
 }
 
+.welt{
+    overflow: hidden;
+}
+
 .bg .welt{
     position: absolute;
     z-index: -10;
@@ -117,5 +127,21 @@ export default {
 
 .avatar-img{
     background: transparent;
+}
+
+.qrcode-image{
+    position: relative;
+}
+
+.close{
+    position: absolute;
+    right:.625rem /* 10/16 */;
+    top: .625rem /* 10/16 */;
+    z-index: 10;
+}
+
+.close i.iconfont{
+    font-size: 1.5rem /* 24/16 */;
+    color: #F56C6C;
 }
 </style>
