@@ -17,7 +17,6 @@ export default {
     left: 50%;
     transform: translate(-50%, 0);
     overflow: hidden;
-    user-select: none;
 }
 
 .wave {

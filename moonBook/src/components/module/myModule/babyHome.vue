@@ -76,7 +76,7 @@ export default {
             listenData:'',
             dataId:'',
             show:false,
-            pageType:'addBaby'
+            pageTitle:'addBaby'
         }
     },
     methods: {

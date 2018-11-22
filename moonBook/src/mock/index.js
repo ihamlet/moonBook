@@ -556,6 +556,7 @@ let addChild = function (options) {
         totalReading: Mock.mock({ "number|20-100": 50 }), //总阅读量
         readings: Mock.mock({ "number|10-30": 20 }), //周阅读量
         praise: Mock.mock({ "number|10-30": 20 }), //总获赞数
+        //最近在读
         data
     })
 
