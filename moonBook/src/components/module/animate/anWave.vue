@@ -33,7 +33,6 @@ export default {
 
 .raised-1,
 .raised-2{
-    content: "";
     position: absolute;
     width: 100rem /* 1600/16 */;
     height: 100rem /* 1600/16 */;
