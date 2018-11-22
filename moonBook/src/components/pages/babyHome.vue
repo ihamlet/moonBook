@@ -1,5 +1,5 @@
 <template>
-    <div class="baby-home">
+    <div class="baby-home page-padding">
         <van-nav-bar fixed class="theme-nav" :title="$route.meta.title" @click-left="onClickLeft" @click-right="onClickRight">
             <div class="btn-left" slot='left'>
                 <i class="iconfont">&#xe657;</i>
@@ -42,32 +42,15 @@
                 <div class="bar-item totalReading">总阅读量 {{totalReading}}</div>
                 <div class="bar-item praise">赞 {{praise}}</div>
             </div>
-            <div class="reading">
-                <van-cell title="正在读的书"/>
-                <div class="book-list scroll-x">
-                    <div class="book-item scroll-item" v-for='(item,index) in readingList' :key="index">
-                        <div class="book-cover">
-                            <img :src="item.cover" :alt="item.name" />
-                        </div>
-                        <div class="book-name" v-line-clamp:20="2">
-                            {{item.name}}
-                        </div>
-                        <div class="book-detail">
-                            <div class="book-author" v-line-clamp:20="1">作者:{{item.author}}</div>
-                            <div class="book-borrow">
-                               <span>{{item.borrow}}</span>人借过
-                            </div>
-                            <div class="book-label">
-                                <div class="label-item" v-for='(sortItem,sortIndex) in item.sort' :key="sortIndex">
-                                    {{sortItem}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <lazy-component>
+                <reading :readingList='readingList'/>
+            </lazy-component>
+            <lazy-component>
+            </lazy-component>
         </div>
 
+        <slogan/>
+        
         <van-popup v-model="showQrcode" class="card-popup">
             <qr-code :qrImage='qrImage' :totalReading='totalReading' :label='label' @close="showQrcode = false" :childInfo='childInfo'/>
         </van-popup>
@@ -80,12 +63,16 @@ import QRCode from 'qrcode'
 import { format } from './../lib/js/util.js'
 import wave from './../module/animate/anWave'
 import qrCode from './../module/mold/qrCode'
+import reading from './../module/reading'
+import slogan from './../module/slogan'
 
 export default {
     name:'baby-home',
     components: {
         wave,
-        qrCode
+        qrCode,
+        reading,
+        slogan
     },
     computed: {
         ...mapGetters(['userDataState']),
@@ -190,52 +177,6 @@ export default {
 
 .list .item{
     margin-right: .625rem /* 10/16 */;
-}
-
-.scroll-item{
-    display: inline-grid
-}
-
-.book-list{
-    padding-left: .625rem /* 10/16 */;
-}
-
-.book-cover{
-    width: 9.375rem /* 150/16 */;
-    height: 9.375rem /* 150/16 */;
-}
-
-.book-item{
-    padding-right: .625rem /* 10/16 */;
-}
-
-.book-name{
-    color: #303133;
-    height: 2.5rem /* 40/16 */;
-    margin: .3125rem /* 5/16 */ 0
-}
-
-.book-label{
-    height: 4.0625rem /* 65/16 */;
-}
-
-.book-label .label-item{
-    font-size: .75rem /* 12/16 */;
-    border: .0625rem /* 1/16 */ solid #DCDFE6;
-    padding: .125rem /* 2/16 */ .3125rem /* 5/16 */;
-    margin-right: .3125rem /* 5/16 */;
-    margin-top: .3125rem /* 5/16 */;
-    float: left;
-    border-radius: .25rem /* 4/16 */;
-}
-
-.book-borrow span{
-    color: #F56C6C;
-}
-
-.book-detail{
-    display: grid;
-    font-size: .8125rem /* 13/16 */;
 }
 
 .detail,
