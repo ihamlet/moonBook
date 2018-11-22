@@ -210,7 +210,7 @@ export default {
 }
 
 .book-name{
-    font-size: .875rem /* 14/16 */;
+    font-size: .9375rem /* 15/16 */;
     color: #303133;
     width: 8.125rem /* 130/16 */;
     height: 2.5rem /* 40/16 */;
