@@ -54,13 +54,13 @@
                         </div>
                         <div class="book-detail">
                             <div class="book-author" v-line-clamp:20="1">作者:{{item.author}}</div>
+                            <div class="book-borrow">
+                               <span>{{item.borrow}}</span>人借过
+                            </div>
                             <div class="book-label">
                                 <div class="label-item" v-for='(sortItem,sortIndex) in item.sort' :key="sortIndex">
                                     {{sortItem}}
                                 </div>
-                            </div>
-                            <div class="book-borrow">
-                               <span>{{item.borrow}}</span>人借过
                             </div>
                         </div>
                     </div>
@@ -201,8 +201,8 @@ export default {
 }
 
 .book-cover{
-    width: 8.125rem /* 130/16 */;
-    height: 8.125rem /* 130/16 */;
+    width: 9.375rem /* 150/16 */;
+    height: 9.375rem /* 150/16 */;
 }
 
 .book-item{
@@ -218,7 +218,7 @@ export default {
 }
 
 .book-label{
-    height: 3.625rem /* 58/16 */;
+    height: 4.0625rem /* 65/16 */;
 }
 
 .book-label .label-item{
