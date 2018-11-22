@@ -2,7 +2,7 @@
     <div class="video">
         <van-cell :value="title" is-link />
         <div class="scroll-x">
-            <div class="video-list">
+            <div class="video-list flex">
                 <div class="video-item scroll-item" v-for='(item,index) in videoList' :key="index">
                     <div class="video">
                         <div class="video-cover">

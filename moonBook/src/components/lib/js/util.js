@@ -116,6 +116,18 @@ function compress(base64String, w, quality) {
   })
 }
 
+// 数组随机抽取
+function getRandomArrayElements(arr, count) {
+  let shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+  while (i-- > min) {
+  index = Math.floor((i + 1) * Math.random());
+  temp = shuffled[index];
+  shuffled[index] = shuffled[i];
+  shuffled[i] = temp;
+  }
+  return shuffled.slice(min);
+}
+
 export {
   GetDistance,
   format,
@@ -123,5 +135,6 @@ export {
   sum,
   compress,
   getWeekStartDate,
-  getWeekEndDate
+  getWeekEndDate,
+  getRandomArrayElements
 }

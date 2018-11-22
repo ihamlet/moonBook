@@ -123,9 +123,11 @@ body{
 .scroll-x{
     overflow-x: auto;
     overflow-y: hidden;
-    white-space: nowrap;
+    /* white-space: nowrap; */
     padding: .625rem /* 10/16 */ 0;
     background: #fff;
+    display: flex;
+    flex-wrap: nowrap;
 }
 
 .scroll-item{

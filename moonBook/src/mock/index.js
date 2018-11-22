@@ -2,6 +2,7 @@
 // 2018年10月30日08:46:13
 
 import Mock from 'mockjs'
+import { getRandomArrayElements } from './../components/lib/js/util'
 
 // 设置全局延时 用来检测数据变化
 Mock.setup({
@@ -547,6 +548,10 @@ Mock.mock('/api/drying', (req, res) => {
 
 Mock.mock('/api/addPraise', addPraise)
 
+let bookSort = [
+    '感情认知','兴趣爱好','英文启蒙','科普百科','启蒙认知','人文历史','品格塑造','习惯养成','必读'
+]
+ 
 // 图书数据
 let bookData = Mock.mock({
     'bookList|5-20':[{
@@ -566,9 +571,7 @@ let bookData = Mock.mock({
             return Mock.mock('@name(true)')
         },
         sort: function(){
-            return Mock.mock({'label|1-3':[
-                '感情认知','兴趣爱好','英文启蒙','科普百科','启蒙认知','人文历史','品格塑造','习惯养成','必读'
-            ]})
+            return getRandomArrayElements(bookSort, Math.ceil(Math.random()*4))
         }
     }]
 })
