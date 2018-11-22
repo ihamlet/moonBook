@@ -211,7 +211,6 @@ export default {
 
 .book-name{
     color: #303133;
-    width: 8.125rem /* 130/16 */;
     height: 2.5rem /* 40/16 */;
     margin: .3125rem /* 5/16 */ 0
 }
