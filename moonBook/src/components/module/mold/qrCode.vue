@@ -91,7 +91,7 @@ export default {
 }
 
 .code-img{
-    width: 120px;
+    width: 7.5rem /* 120/16 */;
     margin: 0 auto;
     padding: 2.5rem /* 40/16 */ 0;
 }
@@ -104,10 +104,6 @@ export default {
 .bg .welt{
     width: 100%;
     height: 31.25rem /* 500/16 */;
-}
-
-.welt{
-    overflow: hidden;
 }
 
 .bg .welt{
