@@ -42,6 +42,22 @@
                 <div class="bar-item totalReading">总阅读量 {{totalReading}}</div>
                 <div class="bar-item praise">赞 {{praise}}</div>
             </div>
+            <div class="reading">
+                <div class="book-list scroll-x">
+                    <div class="book-item scroll-item" v-for='(item,index) in readingList' :key="index">
+                        <div class="book-cover">
+                            <img :src="item.cover" :alt="item.name" />
+                        </div>
+                        <div class="book-name">
+                            {{item.name}}
+                        </div>
+                        <div class="book-detail">
+                            <div class="book-author">作者 {{item.author}}</div>
+                            <div class="book-borrow">{{item.borrow}}位借过</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <van-popup v-model="showQrcode" class="card-popup">
@@ -84,6 +100,7 @@ export default {
             showQrcode:false,
             praise: 0,
             totalReading: 0,
+            readingList:[],
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -93,6 +110,7 @@ export default {
             next(vm => {
                 vm.qrcode()
                 if(res.data.child){
+                    vm.readingList = res.data.child.recentlyReading.bookList
                     vm.totalReading = res.data.child.totalReading.number
                     vm.praise = res.data.child.praise.number
                     vm.childInfo = res.data.child.data
@@ -166,8 +184,23 @@ export default {
     margin-right: .625rem /* 10/16 */;
 }
 
-.name{
-    font-size: 1.125rem /* 18/16 */;
+.book-list{
+    padding-left: .625rem /* 10/16 */;
+}
+
+.book-cover{
+    width: 7.5rem /* 120/16 */;
+    height: 7.5rem /* 120/16 */;
+}
+
+.book-item{
+    margin-right: .625rem /* 10/16 */;
+}
+
+.book-name{
+    margin-top: .3125rem /* 5/16 */;
+    font-size: .875rem /* 14/16 */;
+    color: #303133;
 }
 
 .detail,

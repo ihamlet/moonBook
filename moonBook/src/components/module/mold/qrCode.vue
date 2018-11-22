@@ -16,8 +16,8 @@
                         <div class="label">{{label}}</div>
                     </div>
                     <div class="text" v-if='totalReading!=0'>
-                        <span>{{childInfo.name}}宝贝在阅亮书架一共阅读了</span>
-                        <span class="book-number">{{totalReading}}本书</span>
+                        <span>{{childInfo.name}}宝贝在阅亮书架一共阅读了图书</span>
+                        <span class="book-number">{{totalReading}}本</span>
                     </div>
                     <div class="code-img">
                         <img :src="qrImage" alt="二维码">
@@ -101,14 +101,15 @@ export default {
 }
 
 .code-img{
-    width: 6.625rem /* 106/16 */;
-    padding:1.875rem /* 30/16 */ 0;
+    width: 100%;
+    padding:1.25rem /* 20/16 */ 0;
     margin: 0 auto;
 }
 
 .code-img img{
-    width: 6.25rem /* 100/16 */;
-    border: .1875rem /* 3/16 */ solid #000;
+    width: 7.5rem /* 120/16 */;
+    margin: 0 auto;
+    display: block;
 }
 
 .bg,

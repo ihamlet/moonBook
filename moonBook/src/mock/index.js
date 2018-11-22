@@ -547,16 +547,49 @@ Mock.mock('/api/drying', (req, res) => {
 
 Mock.mock('/api/addPraise', addPraise)
 
+// 图书数据
+let bookData = Mock.mock({
+    'bookList|5-20':[{
+        id:function(){
+            return Mock.mock('@increment')
+        },
+        cover:function(){
+            return Mock.mock("@image('300x300','#DCDFE6','#fff','jpeg','封面')")
+        },
+        name:function(){
+            return Mock.mock('@ctitle(3, 20)')
+        },
+        borrow:function(){
+            return Mock.mock('@integer(800, 3000)')
+        },
+        author:function(){
+            return Mock.mock('@name(true)')
+        },
+        sort: function(){
+            return Mock.mock({'label|1-3':[
+                '感情认知','兴趣爱好','英文启蒙','科普百科','启蒙认知','人文历史','品格塑造','习惯养成','必读'
+            ]})
+        }
+    }]
+})
+
+Mock.mock('/api/bookData', (req, res) => {
+    return {
+        bookData
+    }
+})
+
+
 // 添加孩子信息
 let addChild = function (options) {
     let data = JSON.parse(options.body).childInfo
-
     userData.childInfo.unshift({
         id: Mock.mock('@increment'),
         totalReading: Mock.mock({ "number|20-100": 50 }), //总阅读量
         readings: Mock.mock({ "number|10-30": 20 }), //周阅读量
         praise: Mock.mock({ "number|10-30": 20 }), //总获赞数
         //最近在读
+        recentlyReading:bookData,
         data
     })
 
