@@ -15,7 +15,7 @@
                         <div class="name">{{childInfo.name}}</div>
                         <div class="label">{{label}}</div>
                     </div>
-                    <div class="text">
+                    <div class="text" v-if='totalReading!=0'>
                         <span>{{childInfo.name}}宝贝在阅亮书架一共阅读了</span>
                         <span class="book-number">{{totalReading}}本书</span>
                     </div>
