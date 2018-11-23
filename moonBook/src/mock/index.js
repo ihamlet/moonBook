@@ -583,7 +583,6 @@ Mock.mock('/api/bookData', (req, res) => {
     }
 })
 
-
 // 添加孩子信息
 let addChild = function (options) {
     let data = JSON.parse(options.body).childInfo
@@ -674,6 +673,7 @@ Mock.mock('/api/hotCity', (req, res) => {
 let reg = function(options){
     let data = JSON.parse(options.body).data
     userData.regInfo = data
+    userData.childInfo[0].reg = data
     return {
         userData
     }

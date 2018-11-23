@@ -14,18 +14,7 @@
                 </van-steps>
             </div>
             <div class="school" v-if='active==0'>
-                <div class="fixed">
-                    <search-bar :prompt='prompt' @show='listShow'/>
-                </div>
-                <van-list v-model="loading" :finished="finished" @load="onLoad">
-                    <van-cell v-for="(item,index) in list" :key="index" is-link center @click="selectSchool(item)">
-                        <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
-                        <div class="school-address" v-line-clamp:20="1">
-                            <span>{{item.adname}}</span>
-                            <span v-if='item.address.length!=0'>{{item.address}}</span>
-                        </div>
-                    </van-cell>
-                </van-list>
+                <add-school :prompt='prompt' @select='selectSchool' @showSearchList='listShow = true'/>
             </div>
             <div class="identity" v-if='active==1'>
                 <van-cell-group>
@@ -38,17 +27,12 @@
                 <form-teacher v-if="formType=='teacher'" :regInfo='regInfo' @close="toPageMy"/>
             </div>
         </div>
-
-        <van-popup v-model="show" class="page-popup" :overlay="false">
-            <school-list :prompt='prompt' @close='listHide'/>
-        </van-popup>
     </div>
 </template>
 <script>
-import axios from 'axios'
 import { mapGetters, mapActions } from 'vuex'
 import searchBar from './../module/search/searchBar'
-import schoolList from './../module/search/schoolList'
+import addSchool from './../module/addSchool'
 
 // 表单
 import formParent from './../module/form/parent'
@@ -58,7 +42,7 @@ export default {
     name:'register',
     components: {
         searchBar,
-        schoolList,
+        addSchool,
         formParent,
         formTeacher
     },
@@ -69,11 +53,8 @@ export default {
         return {
             show:false,
             active:0,
-            page:0,
             list: [],
-            loading: false,
             takeUp: false,
-            finished: false,
             startX:'',
             startY:'',
             location:'',
@@ -129,12 +110,6 @@ export default {
             }
  
         },
-        listShow(){
-            this.show = true
-        },
-        listHide(){
-            this.show = false
-        },
         selectSchool(school){
             this.regInfo.school = school.name
             this.active = 1
@@ -158,13 +133,6 @@ export default {
 
 .register{
     padding-bottom: 5.5rem /* 88/16 */;
-}
-
-.fixed{
-    position: fixed;
-    top: 2.8125rem /* 45/16 */;
-    z-index: 1001;
-    width: 100%;
 }
 
 .search-module{

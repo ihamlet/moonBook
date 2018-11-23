@@ -29,8 +29,7 @@
                         </div>
                     </div>
                     <div class="label">{{label}}</div>
-                    <div class="school" v-line-clamp:20="1" v-if='userDataState.regInfo'>{{userDataState.regInfo.school}}</div>
-                    <div class="school" v-line-clamp:20="1" v-if='userDataState.vipInfo&&!userDataState.regInfo'>{{userDataState.vipInfo.school.schoolName.name}}</div>
+                    <div class="school" v-line-clamp:20="1" v-if='regInfo'>{{regInfo.school}}</div>
                 </div>
                 <div class="qr-code" @click="showQrcode=true">
                     <van-icon name="qr"/>
@@ -120,6 +119,7 @@ export default {
             fixedHeaderBar:true,
             domHeight:'',
             childInfo:'',
+            regInfo:'',
             qrImage:'',
             showQrcode:false,
             praise: 0,
@@ -144,6 +144,7 @@ export default {
                     vm.totalReading = res.data.child.totalReading.number
                     vm.praise = res.data.child.praise.number
                     vm.childInfo = res.data.child.data
+                    vm.regInfo = res.data.child.reg
                 }else{
                     vm.$dialog.alert({
                         message:`<div class='text-center'>请添加宝贝，帮助孩子更好的养成阅读习惯</div>`,

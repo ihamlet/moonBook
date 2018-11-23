@@ -186,18 +186,17 @@ export default {
                 axios.put('/api/addChild',{
                     childInfo: this.childInfo
                 }).then(res=>{
-                    this.$store.dispatch('getUserData')
                     setTimeout(()=>{
                         this.$toast.success('提交成功')
                         this.submitLoading = false
                         this.$emit('close')
                     },1000)
-                })
 
-                axios.put('/api/reg',{
-                    data:this.regInfo
-                }).then(res=>{
-                    this.$store.dispatch('getUserData')
+                    axios.put('/api/reg',{
+                        data:this.regInfo
+                    }).then(res=>{
+                        this.$store.dispatch('getUserData')
+                    })
                 })
             }
         }
