@@ -1,6 +1,6 @@
 <template>
     <div class="add-school">
-        <div class="fixed">
+        <div class="fixed" :class="[type='type'?'sticky':'']">
             <search-bar :prompt='prompt' @show='isListShow = true'/>
         </div>
         <van-list v-model="loading" :finished="finished" @load="onLoad">
@@ -71,5 +71,9 @@ export default {
     top: 2.8125rem /* 45/16 */;
     z-index: 1001;
     width: 100%;
+}
+
+.fixed.sticky{
+    position: sticky;
 }
 </style>

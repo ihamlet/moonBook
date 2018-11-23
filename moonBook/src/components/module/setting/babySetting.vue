@@ -16,8 +16,8 @@
         </van-cell-group>
 
         <van-popup v-model="showSchoolList" class="page-popup" position="bottom" :overlay="false">
-            <van-nav-bar title="选择学校" left-text="返回" left-arrow @click-left="showSchoolList = false" />
-            <add-school type='popup'/>
+            <van-nav-bar class="sticky" title="选择学校" left-text="返回" left-arrow @click-left="showSchoolList = false" />
+            <add-school :prompt='prompt' type='popup'/>
         </van-popup>
     </div>
 </template>
@@ -45,6 +45,7 @@ export default {
     data () {
         return {
             showSchoolList: false,
+            prompt:'搜索学校名称/拼音',
             setting:{
                 school:'',
                 class:'',
@@ -62,4 +63,8 @@ export default {
 }
 </script>
 <style scoped>
+.sticky{
+    position: sticky;
+    top: 0;
+}
 </style>
