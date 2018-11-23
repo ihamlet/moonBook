@@ -68,7 +68,7 @@ import axios from 'axios'
 import { sum } from './../lib/js/util.js'
 import { mapGetters } from 'vuex'
 import graphic from './../module/release/graphic'
-import graphicCrad from './../module/list/graphicCrad'
+import graphicCrad from './../module/card/graphicCrad'
 import slogan from './../module/slogan'
 
 export default {

@@ -44,21 +44,21 @@
                 <div class="bar-item praise">赞 {{praise}}</div>
             </div>
             <lazy-component class="module">
-                <reading :list='readBook' :moduleTitle='`${childInfo.name}读过的书`'/>
+                <reading :list='readBook' moduleTitle='宝贝读过的书'/>
             </lazy-component>
             <lazy-component class="module">
-                <reading :list='lateBook' :moduleTitle='`${childInfo.name}最近在读`'/>
+                <reading :list='lateBook' moduleTitle='宝贝最近在读的书'/>
             </lazy-component>
             <lazy-component class="module">
                 <div class="module-title">晒一晒</div>
-                <div class="not-content" v-if='dryingListLengthState==0'>
+                <div class="not-content" v-if='dryingListLengthState == 0'>
                     尚无记录
                 </div>
                 <van-list v-model="loading" :finished="finished" @load="onLoad" v-else>
                     <div class="list">
                         <div class="item" v-for="(item,index) in list" :key="index">
                             <van-cell>
-                                <graphic-crad :item='item'/>
+                                <graphic-crad :item='item' type='babyHome' :familyTitle='childInfo.familyTitle' :babyName='childInfo.name'/>
                             </van-cell>
                         </div> 
                     </div> 
@@ -66,10 +66,14 @@
             </lazy-component>
         </div>
 
-        <slogan v-if='finished||dryingListLengthState==0'/>
+        <slogan v-if='finished||dryingListLengthState == 0'/>
         
         <van-popup v-model="showQrcode" class="card-popup">
             <qr-code :qrImage='qrImage' :totalReading='totalReading' :label='label' @close="showQrcode = false" :childInfo='childInfo'/>
+        </van-popup>
+
+        <van-popup v-model="showSetting" class="page-popup" position="right">
+            <baby-setting @close="showSetting = false"/>
         </van-popup>
     </div>
 </template>
@@ -82,7 +86,8 @@ import wave from './../module/animate/anWave'
 import qrCode from './../module/mold/qrCode'
 import avatar from './../module/avatar'
 import reading from './../module/reading'
-import graphicCrad from './../module/list/graphicCrad'
+import graphicCrad from './../module/card/graphicCrad'
+import babySetting from './../module/setting/babySetting'
 import slogan from './../module/slogan'
 
 export default {
@@ -93,6 +98,7 @@ export default {
         reading,
         avatar,
         graphicCrad,
+        babySetting,
         slogan
     },
     computed: {
@@ -123,6 +129,7 @@ export default {
             list:[],
             loading: false,
             finished: false,
+            showSetting: false
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -200,7 +207,7 @@ export default {
             })
         },
         onClickRight(){
-            
+            this.showSetting = true
         }
     }
 }

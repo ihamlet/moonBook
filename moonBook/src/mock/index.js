@@ -342,6 +342,7 @@ Mock.mock('/api/cardInfo', (req, res) => {
 
 let userData = {
     id: Mock.mock('@increment'),
+    school:'',
     regInfo:'',
     userInfo:{
         avatar: Mock.mock("@image('120x120')"),

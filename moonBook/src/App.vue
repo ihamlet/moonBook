@@ -29,11 +29,11 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_zf5diu4i1h.eot');
-  src: url('//at.alicdn.com/t/font_893274_zf5diu4i1h.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_zf5diu4i1h.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_zf5diu4i1h.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_zf5diu4i1h.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_yub2xhyct2c.eot');
+  src: url('//at.alicdn.com/t/font_893274_yub2xhyct2c.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_yub2xhyct2c.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_yub2xhyct2c.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_yub2xhyct2c.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -181,10 +181,14 @@ body{
 /* 主题色 */
 .theme-btn.van-button--primary,
 .order-popup .content::before,
+.theme-switch .van-switch--on,
 .theme-background{
   background: linear-gradient(135deg, #00BCD4, #409eff);
 }
 
+.theme-switch .van-switch{
+  background-color: #EBEEF5;
+}
 
 .theme-btn.van-button--plain.van-button--primary,
 .theme-radio.van-radio .van-icon-checked,

@@ -6,7 +6,8 @@
             </div>
             <div class="info">
                 <div class="name">
-                    {{item.name}} 
+                    <span v-if="type=='babyHome'">{{babyName}}{{familyTitle?`的${familyTitle}`:`的家长`}}</span>
+                    <span v-else>{{item.name}}</span>
                     <i class="iconfont vip-masonry" v-if="item.isVip==1&&item.vipType.borrow==7">&#xe611;</i>
                     <i class="iconfont vip-gold" v-if="item.isVip==1&&item.vipType.borrow==5">&#xe611;</i>
                     <i class="iconfont vip-ordinary" v-if="item.isVip==1&&item.vipType.borrow==3">&#xe611;</i>     
@@ -66,7 +67,7 @@ import axios from 'axios'
 
 export default {
     name:'graphic-crad',
-    props: ['item'],
+    props: ['item','type','babyName','familyTitle'],
     components: {
         pictureBox  
     },
