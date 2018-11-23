@@ -43,15 +43,30 @@
                 <div class="bar-item totalReading">总阅读量 {{totalReading}}</div>
                 <div class="bar-item praise">赞 {{praise}}</div>
             </div>
-            <lazy-component>
+            <lazy-component class="module">
                 <reading :list='readBook' :moduleTitle='`${childInfo.name}读过的书`'/>
             </lazy-component>
-            <lazy-component>
+            <lazy-component class="module">
                 <reading :list='lateBook' :moduleTitle='`${childInfo.name}最近在读`'/>
+            </lazy-component>
+            <lazy-component class="module">
+                <div class="module-title">晒一晒</div>
+                <div class="not-content" v-if='dryingListLengthState==0'>
+                    尚无记录
+                </div>
+                <van-list v-model="loading" :finished="finished" @load="onLoad" v-else>
+                    <div class="list">
+                        <div class="item" v-for="(item,index) in list" :key="index">
+                            <van-cell>
+                                <graphic-crad :item='item'/>
+                            </van-cell>
+                        </div> 
+                    </div> 
+                </van-list>
             </lazy-component>
         </div>
 
-        <slogan/>
+        <slogan v-if='finished||dryingListLengthState==0'/>
         
         <van-popup v-model="showQrcode" class="card-popup">
             <qr-code :qrImage='qrImage' :totalReading='totalReading' :label='label' @close="showQrcode = false" :childInfo='childInfo'/>
@@ -67,6 +82,7 @@ import wave from './../module/animate/anWave'
 import qrCode from './../module/mold/qrCode'
 import avatar from './../module/avatar'
 import reading from './../module/reading'
+import graphicCrad from './../module/list/graphicCrad'
 import slogan from './../module/slogan'
 
 export default {
@@ -76,10 +92,11 @@ export default {
         qrCode,
         reading,
         avatar,
+        graphicCrad,
         slogan
     },
     computed: {
-        ...mapGetters(['userDataState']),
+        ...mapGetters(['userDataState','dryingListLengthState']),
         age(){
             if(this.childInfo){
                 let year = format(new Date(),'yyyy') - this.childInfo.birthday.split('-')[0]
@@ -103,7 +120,9 @@ export default {
             totalReading: 0,
             lateBook:[],
             readBook:[],
-
+            list:[],
+            loading: false,
+            finished: false,
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -164,6 +183,21 @@ export default {
             if(this.$refs.head){
                 this.domHeight = this.$refs.head.offsetHeight/2
             }
+        },
+        onLoad() {
+            axios.get('/api/userData').then(res=>{
+                setTimeout(() => {
+                    let array = res.data.userData.dryingList
+                    let length = this.dryingListLengthState < 10 ? 1 : 5
+                    for (let i = 0; i < length; i++) {
+                        this.list.push( array[this.list.length] )
+                    }
+                    this.loading = false
+                    if (this.list.length >= this.dryingListLengthState) {
+                        this.finished = true;
+                    }
+                },500)
+            })
         },
         onClickRight(){
             

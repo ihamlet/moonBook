@@ -757,5 +757,6 @@ i.iconfont.rotate{
   background: #fff;
   text-align: center;
   line-height: 12.5rem /* 200/16 */;
+  color: #C0C4CC;
 }
 </style>
