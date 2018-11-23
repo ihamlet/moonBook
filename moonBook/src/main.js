@@ -13,7 +13,7 @@ import axios from './fetch/api'
 import VueAMap from 'vue-amap'
 
 import Vant from 'vant'
-import 'vant-css/lib/index.css'
+import 'vant/lib/index.css'
 import { Lazyload } from 'vant'
 
 import lineClamp from 'vue-line-clamp'

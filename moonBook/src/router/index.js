@@ -15,7 +15,6 @@ import Register from '@/components/pages/register'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
   scrollBehavior,
   routes: [
     {
