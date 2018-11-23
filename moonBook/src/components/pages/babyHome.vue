@@ -3,7 +3,7 @@
         <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :title="fixedHeaderBar?$route.meta.title:childInfo.name" @click-left="onClickLeft" @click-right="onClickRight">
             <div class="btn-left" slot='left'>
                 <i class="iconfont">&#xe657;</i>
-                <span class="text">返回</span>
+                <span class="text">个人中心</span>
             </div>
             <div class="head-bar-icon" slot='right'>
                 <i class="iconfont">&#xe60c;</i>

@@ -20,7 +20,7 @@ import { mapGetters } from 'vuex'
 
 export default {
     name:'baby-setting',
-    components: {
+    computed: {
         ...mapGetters(['userDataState']),
         school(){
             if(this.userDataState.regInfo){
