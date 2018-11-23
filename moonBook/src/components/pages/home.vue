@@ -16,7 +16,7 @@
                 <van-swipe :autoplay="3000">
                     <van-swipe-item v-for='(list,index) in banner' :key="index">
                         <a :href="list.link">
-                            <img class="banner" :src="list.image" :alt="`banner-1125x549-${index+1}`">
+                            <img class="banner" :src="list.image" :alt="list.title">
                         </a>
                     </van-swipe-item>
                 </van-swipe>
@@ -118,7 +118,7 @@ export default {
             scrollTop:'',
             domHeight:'',
             searchText:'搜索图书/幼儿园/文章',
-            banner:'',
+            banner:[],
             appsList:'',
             investmentAd:'',
             newsList:'',
