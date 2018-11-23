@@ -1,19 +1,20 @@
 <template>
     <div class="baby-home page-padding">
-        <van-nav-bar fixed class="theme-nav" :title="$route.meta.title" @click-left="onClickLeft" @click-right="onClickRight">
+        <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :title="fixedHeaderBar?$route.meta.title:childInfo.name" @click-left="onClickLeft" @click-right="onClickRight">
             <div class="btn-left" slot='left'>
                 <i class="iconfont">&#xe657;</i>
                 <span class="text">返回</span>
             </div>
-            <div class="btn-right" slot='right'>
-                <van-icon name="setting"/>
+            <div class="head-bar-icon" slot='right'>
+                <i class="iconfont">&#xe60c;</i>
             </div>
         </van-nav-bar>
-        <div class="header" :class="[childInfo.gender=='boy'?'theme-background':'background']">
+        <div class="header" ref='head' :class="[childInfo.gender=='boy'?'theme-background':'background']">
             <div class="baby-info flex flex-align">
-                <div class="avatar">
-                    <img class="lazy" v-lazy="childInfo.avatar" :alt="childInfo.name" />
+                <div class="avatar" v-if='childInfo.avatar'>
+                    <img class="avatar-img" :src="childInfo.avatar" :alt="childInfo.name"/>
                 </div>
+                <avatar :gender='childInfo.gender' v-else/>
                 <div class="baby-data">
                     <div class="list flex flex-align">
                         <div class="item name">
@@ -43,9 +44,10 @@
                 <div class="bar-item praise">赞 {{praise}}</div>
             </div>
             <lazy-component>
-                <reading :readingList='readingList'/>
+                <reading :list='readBook' :moduleTitle='`${childInfo.name}读过的书`'/>
             </lazy-component>
             <lazy-component>
+                <reading :list='lateBook' :moduleTitle='`${childInfo.name}最近在读`'/>
             </lazy-component>
         </div>
 
@@ -63,6 +65,7 @@ import QRCode from 'qrcode'
 import { format } from './../lib/js/util.js'
 import wave from './../module/animate/anWave'
 import qrCode from './../module/mold/qrCode'
+import avatar from './../module/avatar'
 import reading from './../module/reading'
 import slogan from './../module/slogan'
 
@@ -72,6 +75,7 @@ export default {
         wave,
         qrCode,
         reading,
+        avatar,
         slogan
     },
     computed: {
@@ -90,12 +94,16 @@ export default {
     },
     data () {
         return {
+            fixedHeaderBar:true,
+            domHeight:'',
             childInfo:'',
             qrImage:'',
             showQrcode:false,
             praise: 0,
             totalReading: 0,
-            readingList:[],
+            lateBook:[],
+            readBook:[],
+
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -105,7 +113,8 @@ export default {
             next(vm => {
                 vm.qrcode()
                 if(res.data.child){
-                    vm.readingList = res.data.child.recentlyReading.bookList
+                    vm.lateBook = res.data.child.lateBook
+                    vm.readBook = res.data.child.readBook
                     vm.totalReading = res.data.child.totalReading.number
                     vm.praise = res.data.child.praise.number
                     vm.childInfo = res.data.child.data
@@ -125,6 +134,9 @@ export default {
             })
         })
     },
+    mounted () {
+        window.addEventListener('scroll', this.handleScroll)
+    },
     methods: {
         onClickLeft(){
             this.$router.go(-1)
@@ -137,6 +149,21 @@ export default {
             .catch(err => {
                 console.error(err)
             })
+        },
+        handleScroll(){
+            this.getDomHeight()  
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+            this.scrollTop = scrollTop
+            if( this.domHeight < this.scrollTop){
+               this.fixedHeaderBar = false
+            }else{
+               this.fixedHeaderBar = true
+            }
+        },
+        getDomHeight(){
+            if(this.$refs.head){
+                this.domHeight = this.$refs.head.offsetHeight/2
+            }
         },
         onClickRight(){
             
@@ -157,14 +184,12 @@ export default {
 
 .baby-info .avatar{
     margin-right: .625rem /* 10/16 */;
-}
-
-.baby-info .avatar img{
     width: 3.75rem /* 60/16 */;
     height: 3.75rem /* 60/16 */;
     border-radius: 50%;
-    border: .1875rem /* 3/16 */ solid #fff;
+    overflow: hidden;
     box-shadow: 0 .3125rem /* 5/16 */ 1.25rem /* 20/16 */ rgba(0, 0, 0, .2);
+    border: .1875rem /* 3/16 */ solid #fff;
 }
 
 .baby-info{

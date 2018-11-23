@@ -1,8 +1,11 @@
 <template>
     <div class="reading">
-        <van-cell title="正在读的书" />
-        <div class="book-list scroll-x">
-            <div class="book-item scroll-item" v-for='(item,index) in readingList' :key="index">
+        <van-cell :title="moduleTitle" />
+        <div class="not-content" v-if='list.length==0'>
+            尚无记录
+        </div>
+        <div class="book-list scroll-x" v-else>
+            <div class="book-item scroll-item" v-for='(item,index) in list' :key="index">
                 <div class="book-cover">
                     <img class="lazy" v-lazy="item.cover" :alt="item.name" />
                 </div>
@@ -27,7 +30,7 @@
 <script>
 export default {
     name:'reading',
-    props: ['readingList']
+    props: ['list','moduleTitle']
 }
 </script>
 <style scoped>

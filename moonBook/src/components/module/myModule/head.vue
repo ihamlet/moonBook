@@ -244,14 +244,6 @@ export default {
     font-size: x-small;
 }
 
-.head-bar-icon i.iconfont{
-    font-size: 1.25rem /* 20/16 */;
-}
-
-.theme-nav .head-bar-text{
-    color: #fff;
-}
-
 .theme-color{
     margin: 0 .3125rem /* 5/16 */;
 }

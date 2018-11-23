@@ -554,7 +554,7 @@ let bookSort = [
  
 // 图书数据
 let bookData = Mock.mock({
-    'bookList|5-20':[{
+    'list|5-20':[{
         id:function(){
             return Mock.mock('@increment')
         },
@@ -591,8 +591,8 @@ let addChild = function (options) {
         totalReading: Mock.mock({ "number|20-100": 50 }), //总阅读量
         readings: Mock.mock({ "number|10-30": 20 }), //周阅读量
         praise: Mock.mock({ "number|10-30": 20 }), //总获赞数
-        //最近在读
-        recentlyReading:bookData,
+        lateBook: bookData.list, //最近在读
+        readBook: bookData.list, //读过的书
         data
     })
 

@@ -24,10 +24,7 @@
                             <div class="avatar" v-if='list.data.avatar'>
                                 <img :src="list.data.avatar" alt="宝贝头像" />
                             </div>
-                            <div class="avatar" v-else>
-                                <img v-if="list.data.gender=='boy'" src="https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/boy-avatar.png" alt="默认男孩头像" />
-                                <img v-else src="https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/girl-avatar.png" alt="默认男孩头像" />
-                            </div>
+                            <avatar :gender='list.data.gende' v-else/>
                             <div class="age">{{age[index]}}岁</div>
                         </div>
                         <div class="volume">
@@ -53,12 +50,14 @@ import { mapGetters } from 'vuex'
 import { format } from './../../lib/js/util.js'
 import addChild from './../addChild'
 import numberGrow from './../../module/animate/numberGrow'
+import avatar from './../../module/avatar'
 
 export default {
     name:'baby-home',
     components: {
         numberGrow,
         addChild,
+        avatar
     },
     computed: {
         ...mapGetters(['userDataState']),

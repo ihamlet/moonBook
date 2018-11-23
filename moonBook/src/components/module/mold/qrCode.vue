@@ -9,9 +9,10 @@
                 <round/>
                 <div class="card flex-justify" >
                     <div class="baby-info">
-                        <div class="avatar">
+                        <div class="avatar" v-if='childInfo.avatar'>
                             <img class="avatar-img" :src="childInfo.avatar" :alt="childInfo.name"/>
                         </div>
+                        <avatar :gender='childInfo.gender' v-else/>
                         <div class="name">{{childInfo.name}}</div>
                         <div class="label">{{label}}</div>
                     </div>
@@ -39,12 +40,14 @@
 <script>
 import round from './../animate/round'
 import html2canvas from 'html2canvas'
+import avatar from './../../module/avatar'
 
 export default {
     name:'qr-code',
     props: ['childInfo','qrImage','totalReading','label'],
     components: {
-        round
+        round,
+        avatar
     },
     data () {
         return {
@@ -87,11 +90,12 @@ export default {
     font-size: .8125rem /* 13/16 */;
 }
 
-.avatar img{
+.avatar{
     width: 5rem /* 80/16 */;
     height: 5rem /* 80/16 */;
     border-radius: 50%;
-    box-shadow: 0 .125rem /* 2/16 */ 1.25rem /* 20/16 */ rgba(0, 0, 0, .2)
+    box-shadow: 0 .125rem /* 2/16 */ 1.25rem /* 20/16 */ rgba(0, 0, 0, .2);
+    overflow: hidden;
 }
 
 .name{

@@ -25,7 +25,7 @@ Vue.use(Lazyload, {
   error: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
   loading: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
   attempt: 3,
-  listenEvents: scroll,
+  observer: true,
   observerOptions: {
     rootMargin: '0px',
     threshold: 0.1

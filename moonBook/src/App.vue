@@ -29,11 +29,11 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_fqy3quppmlq.eot');
-  src: url('//at.alicdn.com/t/font_893274_fqy3quppmlq.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_fqy3quppmlq.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_fqy3quppmlq.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_fqy3quppmlq.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_zf5diu4i1h.eot');
+  src: url('//at.alicdn.com/t/font_893274_zf5diu4i1h.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_zf5diu4i1h.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_zf5diu4i1h.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_zf5diu4i1h.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -237,6 +237,14 @@ body.theme .head-bar-text,
 .theme-nav.van-nav-bar .btn-right .van-icon{
     color: #fff;
     font-size: 1.25rem /* 20/16 */;
+}
+
+.head-bar-icon i.iconfont{
+    font-size: 1.25rem /* 20/16 */;
+}
+
+.theme-nav .head-bar-text{
+    color: #fff;
 }
 
 .default-head-bar-background{
@@ -740,5 +748,14 @@ i.iconfont.rotate{
     right: .625rem /* 10/16 */;
     font-size: 1.25rem /* 20/16 */;
     color: #C0C4CC;
+}
+
+/* 尚无记录 */
+.not-content{
+  width: 100%;
+  height: 12.5rem /* 200/16 */;
+  background: #fff;
+  text-align: center;
+  line-height: 12.5rem /* 200/16 */;
 }
 </style>
