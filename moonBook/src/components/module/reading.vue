@@ -45,7 +45,7 @@ export default {
 .book-cover{
     width: 9.375rem /* 150/16 */;
     height: 9.375rem /* 150/16 */;
-    box-shadow: 0 .1875rem /* 3/16 */ .9375rem /* 15/16 */ -.1875rem /* 3/16 */ rgba(0,0,0,.2);
+    box-shadow: 0 .1875rem /* 3/16 */ .9375rem /* 15/16 */ -.3125rem /* 5/16 */ rgba(0,0,0,.2);
 }
 
 .book-item{
