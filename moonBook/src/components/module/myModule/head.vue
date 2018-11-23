@@ -87,10 +87,10 @@ export default {
     computed: {
         ...mapGetters(['userDataState']),
         school(){
-            if(this.userDataState.childInfo.length!=0){
-                if(this.userDataState.childInfo[0].reg){
-                    return this.userDataState.childInfo[0].reg.school
-                }
+            if(this.userDataState.childInfo.length!=0&&this.userDataState.childInfo[0].reg){
+                return this.userDataState.childInfo[0].reg.school
+            }else if(this.userDataState.vipInfo){
+                return this.userDataState.vipInfo.school.schoolName.name
             }else{
                 return null
             }

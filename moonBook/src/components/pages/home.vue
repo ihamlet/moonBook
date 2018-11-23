@@ -59,12 +59,12 @@
 
         <!-- 城市列表 -->
         <van-popup v-model="cityListShow" class="page-popup" position="right" :overlay="false">
-            <city :cityCounty='cityCounty' @setcityCounty='setcityCounty' @close='cityListShow = false' @show='searchShow=true'/>
+            <city @close='cityListShow = false' @show='searchShow=true'/>
         </van-popup>
 
         <!-- 城市列表搜索 -->
         <van-popup v-model="searchShow" class="page-popup" :overlay="false">
-            <city-list :cityCounty='cityCounty' :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
+            <city-list :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
         </van-popup>
     </div>
 </template>

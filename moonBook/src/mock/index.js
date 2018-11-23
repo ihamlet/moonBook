@@ -593,6 +593,9 @@ let addChild = function (options) {
         praise: Mock.mock({ "number|10-30": 20 }), //总获赞数
         lateBook: bookData.list, //最近在读
         readBook: bookData.list, //读过的书
+        setting:{
+            
+        },
         data
     })
 

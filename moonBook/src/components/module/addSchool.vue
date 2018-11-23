@@ -25,6 +25,7 @@ import schoolList from './search/schoolList'
 
 export default {
     name:'add-school',
+    props: ['type'],
     components: {
         searchBar,
         schoolList

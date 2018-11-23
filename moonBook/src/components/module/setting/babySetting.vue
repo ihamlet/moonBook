@@ -4,8 +4,8 @@
 
         <van-cell-group>
             <div class="form-title">修改校园信息</div>
-            <van-field v-model="setting.school" input-align='right' readonly center label="修改班级" placeholder="修改班级" />
-            <van-field v-model="setting.school" input-align='right' readonly center label="修改学校" :placeholder="school" />
+            <van-field v-model="setting.class" input-align='right' readonly center label="修改班级" placeholder="请选择班级" />
+            <van-field v-model="setting.school" input-align='right' readonly center label="修改学校" :placeholder="school" @click="showSchoolList = true" />
         </van-cell-group>
 
         <van-cell-group class="theme-switch">
@@ -15,19 +15,20 @@
             <van-switch-cell v-model="setting.synchronous" title="同步发布内容" />
         </van-cell-group>
 
-        <!-- <van-popup v-model="showSchoolList" class="popup-page" position="bottom" :overlay="false">
-            <school-list @close='showSchoolList = false'/>
-        </van-popup> -->
+        <van-popup v-model="showSchoolList" class="page-popup" position="bottom" :overlay="false">
+            <van-nav-bar title="选择学校" left-text="返回" left-arrow @click-left="showSchoolList = false" />
+            <add-school type='popup'/>
+        </van-popup>
     </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import schoolList from './../search/schoolList'
+import addSchool from './../addSchool'
 
 export default {
     name:'baby-setting',
     components: {
-        schoolList
+        addSchool
     },
     computed: {
         ...mapGetters(['userDataState']),
@@ -43,9 +44,10 @@ export default {
     },
     data () {
         return {
-            // showSchoolList: false,
+            showSchoolList: false,
             setting:{
                 school:'',
+                class:'',
                 current: true,
                 public: true,
                 synchronous: true,
