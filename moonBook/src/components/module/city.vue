@@ -9,12 +9,12 @@
         <div class="new-city" ref='domHeight'>
             <div class="current-city">
                 <div class="district">
-                    <van-cell-group>
+                    <van-cell-group v-if='userPointState'>
                         <van-cell :title="`当前城市:${userPointState.city}`" is-link :arrow-direction="isSilde?'up':'down'" value="切换区县" @click="silde"/>
                     </van-cell-group>
                     <div class="list" v-show='isSilde'>
                         <div class="item scroll-x">
-                            <div class="district-name scroll-item" @click="selectCity(item.name)" v-for='item in cityCounty'>
+                            <div class="district-name scroll-item" @click="selectCity(item.name)" v-for='(item,index) in cityCounty' :key="index">
                                 {{item.name}}
                             </div>
                         </div>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="form-title">定位/最近访问</div>
                 <ul class="recent flex wrap">
-                    <li class="city-name" @click="selectCity(city)" v-line-clamp:20="1" v-for='city in cityHistory'>
+                    <li class="city-name" @click="selectCity(city)" v-line-clamp:20="1" v-for='(city,index) in cityHistory' :key="index">
                         {{city}}
                     </li>
                 </ul>
@@ -31,7 +31,7 @@
             <div class="hot-city">
                 <div class="form-title">热门城市</div>
                 <ul class="flex wrap">
-                    <li class="city-name" @click="selectCity(city)" v-for='city in hotCity'>
+                    <li class="city-name" @click="selectCity(city)" v-for='(city,index) in hotCity' :key="index">
                         {{city}}
                     </li>
                 </ul>
@@ -85,13 +85,15 @@ export default {
             cityCounty:[]
         }
     },
-    created () {   
-        this.cityHistory.unshift(this.userPointState.city)
+    created () {
+        if(this.userPointState){
+            this.cityHistory.unshift(this.userPointState.city)
 
-        if(localStorage.getItem('cityHistory')){
-            let array = this.cityHistory.concat(localStorage.getItem('cityHistory').split(','))
-            this.cityHistory = [...new Set(array)]
-        }    
+            if(localStorage.getItem('cityHistory')){
+                let array = this.cityHistory.concat(localStorage.getItem('cityHistory').split(','))
+                this.cityHistory = [...new Set(array)]
+            }    
+        }   
 
         this.fetchData()
     },
@@ -142,6 +144,7 @@ export default {
             this.cityHistory = [...new Set(this.cityHistory)]
             localStorage.setItem('cityHistory', this.cityHistory)
             this.$emit('close')
+            this.isSilde = false
         },
         silde(){
             if(this.userPointState){

@@ -6,7 +6,6 @@
 
 <script>
 import './../src/components/lib/css/neat.css'
-
 export default {
   name: 'App'
 }
@@ -682,8 +681,8 @@ i.iconfont.rotate{
 .avatar-uploader i.iconfont{
   position: absolute;
   font-size: 1.875rem /* 30/16 */;
-  top: 0;
-  left: 0;
+  top: .9375rem /* 15/16 */;
+  left: -.125rem /* 2/16 */;
   transform:rotate(-40deg);
 }
 

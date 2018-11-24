@@ -56,10 +56,12 @@ export default {
   },
   watch: {
       center(val){
-        let products = {
-          location:val
-        }      
-        this.getUserLocation(products)
+        setTimeout(()=>{
+          let products = {
+            location:val
+          }      
+          this.getUserLocation(products)
+        },this.plugin[0].timeout)
       },
       '$route': 'fetchData'
   },       

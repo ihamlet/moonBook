@@ -7,7 +7,7 @@
         <slot v-else>
             <div class="bg" ref="imageWrapper">
                 <round/>
-                <div class="card flex-justify" >
+                <div class="flex-justify" >
                     <div class="baby-info">
                         <div class="avatar" v-if='childInfo.avatar'>
                             <img class="avatar-img" :src="childInfo.avatar" :alt="childInfo.name"/>
@@ -81,6 +81,7 @@ export default {
     padding:2.5rem /* 40/16 */ 0;
 }
 
+
 .avatar{
     margin: 0 auto;
 }
@@ -143,6 +144,9 @@ export default {
 
 .qrcode-image{
     position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
 }
 
 .close{

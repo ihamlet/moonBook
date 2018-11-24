@@ -6,7 +6,7 @@
             </div>
         </van-nav-bar>        
         <div class="container" ref='listContainer'>
-            <div :class="[active==0?'steps':'']">
+            <div class="step">
                 <van-steps active-color='#409eff' :active="active">
                     <van-step>选择学校</van-step>
                     <van-step>选择角色</van-step>
@@ -126,8 +126,7 @@ export default {
 }
 </script>
 <style scoped>
-.container,
-.steps{
+.container{
     padding-top: 2.8125rem /* 45/16 */;
 }
 
