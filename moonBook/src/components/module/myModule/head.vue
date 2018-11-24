@@ -16,10 +16,9 @@
                 <div class="avatar">
                     <img :src="userDataState.avatar" :alt="userDataState.name">
                 </div>
-
-                <div class="name">{{userDataState.name}}</div>
-                <div class="school" v-if='userDataState.school'>{{userDataState.school.title}}</div>
-                <div class="school" v-if='userDataState.level_info&&!userDataState.school'>{{userDataState.school.title}}</div>
+                <div class="name">{{userDataState.userInfo.name}}</div>
+                <div class="school" v-line-clamp:20="1" v-if='school'>{{school}}</div>
+                <div class="school" v-line-clamp:20="1" v-if='userDataState.vipInfo && userDataState.childInfo.length==0'>{{userDataState.vipInfo.school.schoolName.name}}</div>
             </div>
         </div>
         <div class="card">
@@ -132,9 +131,17 @@ export default {
     onClickRight() {
       this.punchShow = true;
     },
-    toAccept() {
-      this.applyShow = true;
-      this.active = 0;
+    computed: {
+        ...mapGetters(['userDataState']),
+        school(){
+            if(this.userDataState.childInfo.length!=0&&this.userDataState.childInfo[0].reg){
+                return this.userDataState.childInfo[0].reg.school
+            }else if(this.userDataState.vipInfo){
+                return this.userDataState.vipInfo.school.schoolName.name
+            }else{
+                return null
+            }
+        }
     },
     onAccpetPage() {
       this.applyShow = false;
@@ -154,22 +161,13 @@ export default {
   position: relative;
 }
 
-.theme-nav.van-nav-bar {
-  background: transparent;
-  color: #fff;
-}
-
-.theme-nav.van-nav-bar::after {
-  display: none;
-}
-
-.card {
-  position: absolute;
-  bottom: -3.125rem /* 50/16 */;
-  padding: 0;
-  width: 95%;
-  left: 50%;
-  transform: translate3d(-50%, 0, 0);
+.card{
+    position: absolute;
+    bottom: -3.125rem /* 50/16 */;
+    padding: 0;
+    width: 95%;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
 }
 
 .borrow-card,
@@ -257,16 +255,8 @@ export default {
   font-size: x-small;
 }
 
-.head-bar-icon i.iconfont {
-  font-size: 1.25rem /* 20/16 */;
-}
-
-.theme-nav .head-bar-text {
-  color: #fff;
-}
-
-.theme-color {
-  margin: 0 0.3125rem /* 5/16 */;
+.theme-color{
+    margin: 0 .3125rem /* 5/16 */;
 }
 
 .punch {

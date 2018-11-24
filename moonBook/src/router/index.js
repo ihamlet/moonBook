@@ -9,6 +9,7 @@ import My from '@/components/pages/my'
 import Login from '@/components/pages/login'
 
 import Zoom from '@/components/pages/zoom'
+import BabyHome from '@/components/pages/babyHome'
 
 import Register from '@/components/pages/register'
 
@@ -91,6 +92,15 @@ export default new Router({
           scrollToTop: true,
           tabActive:3
         }
+      },{
+        path: '/baby-home',
+        name: 'baby-home',
+        component: BabyHome,
+        meta: {
+          title: '宝贝主页',
+          scrollToTop: true,
+          tabActive:3
+        }
       }]
     },
 
@@ -107,14 +117,6 @@ const scrollBehavior = (to, from, savedPosition) => {
   if (savedPosition) {
     return savedPosition
   } else {
-    const position = {}
-    if (to.hash) {
-      position.selector = to.hash
-    }
-    if (to.matched.some(m => m.meta.scrollToTop)) {
-      position.x = 0
-      position.y = 0
-    }
-    return position
+    return { x: 0, y: 0 }
   }
 }

@@ -7,6 +7,7 @@
             <div class="info">
                 <div class="name">
                     {{item.user.name}} 
+                    <span v-if="type=='item.childInfo'">{{item.child.name}}{{item.parent.name?`的${item.parent.name}`:`的家长`}}</span>
                     <i class="iconfont vip-masonry" v-if="item.card_level&&item.level.level==3">&#xe611;</i>
                     <i class="iconfont vip-gold" v-if="item.card_level&&item.level.level==2">&#xe611;</i>
                     <i class="iconfont vip-ordinary" v-if="item.card_level&&item.level.level==1">&#xe611;</i>     
@@ -66,7 +67,7 @@ import axios from 'axios'
 
 export default {
     name:'graphic-crad',
-    props: ['item'],
+    props: ['item','type','babyName','familyTitle'],
     components: {
         pictureBox  
     },

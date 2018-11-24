@@ -12,7 +12,7 @@ export default {
     props: ['prompt'],
     methods: {
         isListShow(){
-            this.$emit('show', true)
+            this.$emit('show')
         }
     }
 }

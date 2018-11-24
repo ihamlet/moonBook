@@ -1,8 +1,8 @@
 <template>
     <div class="city-list" @scroll.passive="onScroll($event)">
         <div class="bar flex felx-align fixed">
-            <i class="iconfont" @click="close">&#xe657;</i>
-            <div class="search" @click="show">
+            <i class="iconfont" @click="$emit('close')">&#xe657;</i>
+            <div class="search" @click="$emit('show')">
                 <search-bar :prompt='prompt'/>
             </div>
         </div>
@@ -14,7 +14,7 @@
                     </van-cell-group>
                     <div class="list" v-show='isSilde'>
                         <div class="item scroll-x">
-                            <div class="district-name scroll-item" @click="selectCity(item.name)" v-for='item in cityCurrent'>
+                            <div class="district-name scroll-item" @click="selectCity(item.name)" v-for='item in cityCounty'>
                                 {{item.name}}
                             </div>
                         </div>
@@ -64,7 +64,6 @@ import cityArray from './../lib/js/city.js'
 
 export default {
     name:'city',
-    props: ['cityCurrent'],
     components: {
         searchBar,
     },
@@ -82,12 +81,9 @@ export default {
             addClass:false,
             hotCity:[],
             domHeight:'',
-            cityHistory:[]
+            cityHistory:[],
+            cityCounty:[]
         }
-    },
-    mold:{
-        prop:'cityCurrent',
-        event:'setCityCurrent'
     },
     created () {   
         this.cityHistory.unshift(this.userPointState.city)
@@ -108,12 +104,6 @@ export default {
             axios.get('/api/hotCity').then(res=>{
                 this.hotCity = res.data.hotCity
             })
-        },
-        close(){
-            this.$emit('close')
-        },
-        show(){
-            this.$emit('show')
         },
         onScroll(e){
             this.scrollTop = e.target.scrollTop
@@ -148,16 +138,22 @@ export default {
             let products = {
                 city:city
             }
-            this.getCityDistrict(products).then(res=>{
-                if(res.districts){
-                    this.$emit('setCityCurrent',res.districts[0].districts)
-                }
-            })
+            this.getCityDistrict(products)
             this.cityHistory = [...new Set(this.cityHistory)]
             localStorage.setItem('cityHistory', this.cityHistory)
             this.$emit('close')
         },
         silde(){
+            if(this.userPointState){
+                let products = {
+                    city:this.userPointState.city
+                }
+                this.getCityDistrict(products).then(res=>{
+                    if(res.districts){
+                        this.cityCounty = res.districts[0].districts
+                    }
+                })
+            }
             this.isSilde = !this.isSilde
         }
     }
@@ -326,6 +322,7 @@ i.bubble.show{
     margin-left: .625rem /* 10/16 */;
     margin-bottom: .625rem /* 10/16 */;
     border: .0625rem /* 1/16 */ solid #ededed;
+    white-space: nowrap;
 }
 
 .city-name{

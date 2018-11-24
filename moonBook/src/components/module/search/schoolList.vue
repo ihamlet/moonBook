@@ -13,8 +13,8 @@
         </div>
 
         <div class="list">
-            <div class="item" v-for='item in list'>
-                <van-cell v-for="(item,index) in list" :key="index" is-link center>
+            <div class="item" v-for='(item,index) in list' :key="index" @click="selectSchool(item)">
+                <van-cell is-link center>
                     <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
                     <div class="school-address" v-line-clamp:20="1">
                         <span v-if='item.address.length!=0'>{{item.address}}</span>
@@ -60,6 +60,9 @@ export default {
         },
         clear(){
             this.searchContent=''
+        },
+        selectSchool(item){
+            this.$emit('select',item)
         }
     }
 }

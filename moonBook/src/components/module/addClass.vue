@@ -1,6 +1,6 @@
 <template>
     <div class="add-class page-padding">
-        <van-nav-bar class="theme-nav" fixed :zIndex='99' :title="userDataState.regInfo.school" left-text="返回" left-arrow @click-left="onClickLeft" />
+        <van-nav-bar class="bar-fixed" fixed :zIndex='99' :title="userDataState.regInfo.school" left-text="返回" left-arrow @click-left="onClickLeft" />
         <div class="container">
             <div class="baby-info flex flex-justify">
                 <div class="avatar">
@@ -9,7 +9,7 @@
                 <div class="name">{{userDataState.childInfo[0].data.name}}（{{age[0]}}岁）</div>
             </div>
             <div class="title">请选择所在班级</div>
-            <div class="list" v-for='list in classList'>
+            <div class="list" v-for='(list,index) in classList' :key="index">
                 <div class="class-title">{{list.title}}</div>
                 <van-row>
                     <van-col span="8" v-for='(item,itemIndex) in list.class' :key='itemIndex'>
@@ -52,7 +52,6 @@ export default {
     methods: {
         fetchData(){
             axios.get('/api/classData').then(res=>{
-                console.log(res)
                 this.classList = res.data.classData.classList
             })
         },
@@ -101,7 +100,7 @@ export default {
     text-align: center;
 }
 
-.theme-nav{
+.bar-fixed{
     position: sticky;
 }
 

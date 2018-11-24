@@ -18,7 +18,7 @@
                     </div>
                     <div class="social flex flex-align">
                         <div class="data-box">
-                            <div class="number">{{ release }}</div>
+                            <div class="number">{{ dryingListLengthState }}</div>
                             <div class="text">发布</div>
                         </div>
                         <div class="data-box">
@@ -68,7 +68,7 @@ import axios from 'axios'
 import { sum } from './../lib/js/util.js'
 import { mapGetters } from 'vuex'
 import graphic from './../module/release/graphic'
-import graphicCrad from './../module/list/graphicCrad'
+import graphicCrad from './../module/card/graphicCrad'
 import slogan from './../module/slogan'
 
 export default {
@@ -79,12 +79,9 @@ export default {
         slogan
     },
     computed: {
-        ...mapGetters(['userDataState']),
+        ...mapGetters(['userDataState','dryingListLengthState','userPraiseState']),
         praise(){
-            return sum(this.$store.getters.userPraiseState)
-        },
-        release(){
-            return this.$store.getters.dryingListLengthState
+            return sum(this.userPraiseState)
         }
     },
     data () {
@@ -131,12 +128,12 @@ export default {
             axios.get('/api/userData').then(res=>{
                 setTimeout(() => {
                     let array = res.data.userData.dryingList
-                    let length = this.release < 10 ? 1 : 5
+                    let length = this.dryingListLengthState < 10 ? 1 : 5
                     for (let i = 0; i < length; i++) {
                         this.list.push( array[this.list.length] )
                     }
                     this.loading = false
-                    if (this.list.length >= this.release) {
+                    if (this.list.length >= this.dryingListLengthState) {
                         this.finished = true;
                     }
                 },500)

@@ -29,11 +29,11 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_azlk5wc3x0r.eot');
-  src: url('//at.alicdn.com/t/font_893274_azlk5wc3x0r.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_azlk5wc3x0r.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_azlk5wc3x0r.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_azlk5wc3x0r.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_yub2xhyct2c.eot');
+  src: url('//at.alicdn.com/t/font_893274_yub2xhyct2c.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_yub2xhyct2c.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_yub2xhyct2c.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_yub2xhyct2c.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -123,9 +123,10 @@ body{
 .scroll-x{
     overflow-x: auto;
     overflow-y: hidden;
-    white-space: nowrap;
     padding: .625rem /* 10/16 */ 0;
     background: #fff;
+    display: flex;
+    flex-wrap: nowrap;
 }
 
 .scroll-item{
@@ -179,10 +180,14 @@ body{
 /* 主题色 */
 .theme-btn.van-button--primary,
 .order-popup .content::before,
+.theme-switch .van-switch--on,
 .theme-background{
   background: linear-gradient(135deg, #00BCD4, #409eff);
 }
 
+.theme-switch .van-switch{
+  background-color: #EBEEF5;
+}
 
 .theme-btn.van-button--plain.van-button--primary,
 .theme-radio.van-radio .van-icon-checked,
@@ -221,6 +226,28 @@ body.theme .head-bar-text,
 
 .theme-btn i.iconfont{
   margin-right: .3125rem /* 5/16 */;
+}
+
+.theme-nav.van-nav-bar{
+    background: transparent;
+    color: #fff;
+}
+
+.theme-nav.van-nav-bar::after{
+    display: none;
+}
+
+.theme-nav.van-nav-bar .btn-right .van-icon{
+    color: #fff;
+    font-size: 1.25rem /* 20/16 */;
+}
+
+.head-bar-icon i.iconfont{
+    font-size: 1.25rem /* 20/16 */;
+}
+
+.theme-nav .head-bar-text{
+    color: #fff;
 }
 
 .default-head-bar-background{
@@ -480,6 +507,11 @@ img.lazy[lazy=error],
   height: 100vh;
 }
 
+.card-popup{
+  width: 18.75rem /* 300/16 */;
+  height: 34.25rem /* 548/16 */;
+}
+
 .page-popup-layer{
   width: 100%;
   height: calc(100% - 2.8125rem);
@@ -719,5 +751,15 @@ i.iconfont.rotate{
     right: .625rem /* 10/16 */;
     font-size: 1.25rem /* 20/16 */;
     color: #C0C4CC;
+}
+
+/* 尚无记录 */
+.not-content{
+  width: 100%;
+  height: 12.5rem /* 200/16 */;
+  background: #fff;
+  text-align: center;
+  line-height: 12.5rem /* 200/16 */;
+  color: #C0C4CC;
 }
 </style>

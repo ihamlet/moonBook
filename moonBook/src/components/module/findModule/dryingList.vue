@@ -17,7 +17,7 @@
 <script>
 import axios from '@/fetch/api'
 import slogan from './../slogan'
-import graphicCrad from './../list/graphicCrad'
+import graphicCrad from './../card/graphicCrad'
 
 export default {
     name:'drying-list',

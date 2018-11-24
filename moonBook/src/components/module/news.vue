@@ -1,7 +1,7 @@
 <template>
     <div class="news">
         <div class="list">
-            <div class="item" v-for='(item,idx) in newsList' :key="idx">
+            <div class="item" v-for='(item,index) in newsList' :key="index">
                 <van-cell-group>
                     <van-cell>
                         <van-row gutter="10">

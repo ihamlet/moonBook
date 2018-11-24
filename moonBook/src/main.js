@@ -28,7 +28,7 @@ Vue.use(Lazyload, {
   preLoad: 1.3,
   error: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
   loading: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
-  attempt: 1,
+  attempt: 3,
   observer: true,
   observerOptions: {
     rootMargin: '0px',

@@ -59,12 +59,12 @@
 
         <!-- 城市列表 -->
         <van-popup v-model="cityListShow" class="page-popup" position="right" :overlay="false">
-            <city :cityCurrent='cityCurrent' @setCityCurrent='setCityCurrent' @close='cityListShow = false' @show='searchShow=true'/>
+            <city @close='cityListShow = false' @show='searchShow=true'/>
         </van-popup>
 
         <!-- 城市列表搜索 -->
         <van-popup v-model="searchShow" class="page-popup" :overlay="false">
-            <city-list :cityCurrent='cityCurrent' @setCityCurrent='setCityCurrent' :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
+            <city-list :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
         </van-popup>
     </div>
 </template>
@@ -123,7 +123,6 @@ export default {
             investmentAd:'',
             newsList:'',
             videoList:'',
-            cityCurrent:[],
         }
     },
     created () {
@@ -150,18 +149,6 @@ export default {
                 this.newsList = res.data.homeData.newsList
                 this.videoList = res.data.homeData.videoList
             })
-
-            if(this.userPointState){
-                let products = {
-                    city:this.userPointState.city
-                }
-
-                this.getCityDistrict(products).then(res=>{
-                    if(res.districts){
-                        this.cityCurrent = res.districts[0].districts
-                    }
-                })
-            }
         },
         handleScroll(){
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
@@ -187,9 +174,6 @@ export default {
         toAccept(){
             this.applyShow = true
             this.active = 0
-        },
-        setCityCurrent(val){
-            this.cityCurrent = val
         }
     }
 }

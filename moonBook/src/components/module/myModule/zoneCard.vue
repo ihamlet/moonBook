@@ -8,7 +8,7 @@
                 </span>
                 <div class="content flex flex-align flex-justify" slot="title">
                     <div class="img-preview flex flex-justify" v-if='imageslength > 0'>
-                        <div class="img-grid" v-if='index < 4' v-for='(item,index) in userDataState.dryingList[0].imgs' v-lazy:background-image='item.img'></div>
+                        <div class="img-grid" v-if='index < 4' v-for='(item,index) in userDataState.dryingList[0].media.imgList' :key="index" v-lazy:background-image='item.img'></div>
                         <div class="robe"  v-if='imageslength > 4'>
                             <photo-stack/>
                         </div>

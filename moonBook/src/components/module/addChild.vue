@@ -1,13 +1,12 @@
 <template>
     <div class="add-child">
-        <van-nav-bar v-if='!userDataState.vipInfo' :title="pageTitle" left-arrow left-text="返回" :right-text="userDataState.childInfo.length==0?'':'删除'" @click-left="onClickLeft" @click-right="onClickRight('delete')" />
+        <van-nav-bar v-if="userDataState.childInfo.length!=0" :title="pageTitle=='addBaby'?'添加宝贝':'编辑'" left-arrow left-text="返回" :right-text="pageTitle=='addBaby'?'':'删除'" @click-left="onClickLeft" @click-right="onClickRight('delete')" />
         <van-nav-bar v-else title="添加孩子" right-text="跳过" @click-right="onClickRight('jump')" />
         <div class="avatar-uploader">
             <i class="iconfont" v-if='userDataState.vipInfo' :class="`vip-${userDataState.vipInfo.card.level.name}`">&#xe776;</i>
             <van-uploader :after-read="onRead">
                 <div class="prompt" v-if='!childInfo.avatar'>
-                    <img v-if="childInfo.gender=='boy'" src="https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/boy-avatar.png" alt="男孩默认头像">
-                    <img v-else src="https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/girl-avatar.png" alt="女孩默认头像">
+                    <avatar :gender='childInfo.gender'/>
                     <div class="text">请上传头像</div>
                 </div>
                 <div class="avatar-preview" v-else>
@@ -44,12 +43,12 @@
         </van-popup>
 
         <!-- 提交编辑 -->
-        <div class="form-submit" v-if="pageTitle=='编辑'">
+        <div class="form-submit" v-if="pageTitle=='editBaby'">
             <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="edit">提交修改</van-button>
         </div>
 
         <!-- 添加宝贝 -->
-        <div class="form-submit">
+        <div class="form-submit" v-else>
             <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="submit">提  交</van-button>
         </div>
     </div>
@@ -59,12 +58,14 @@ import axios from 'axios'
 import { mapGetters } from 'vuex'
 import { VueCropper }  from 'vue-cropper'
 import { format } from './../lib/js/util.js'
+import avatar from './../module/avatar'
 
 export default {
     name:'add-child',
     props: ['pageTitle','dataId','listenData'],
     components: {
-       VueCropper
+       VueCropper,
+       avatar
     },
     computed: {
         ...mapGetters(['userDataState'])
