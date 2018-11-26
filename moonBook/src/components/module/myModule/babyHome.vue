@@ -18,7 +18,7 @@
                     <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
                         <div class="volume">
                             周阅读量
-                            <span class="number">{{list.readings.number}}</span>
+                            <span class="number">{{list.dataStatistics.readings}}</span>
                         </div>
                         <div class="content">
                             <div class="avatar" v-if='list.data.avatar'>
@@ -29,7 +29,7 @@
                         </div>
                         <div class="volume">
                             总获赞量
-                            <span class="number">{{list.praise.number}}</span>
+                            <span class="number">{{list.dataStatistics.praise}}</span>
                         </div>
                     </div>
                 </div>
@@ -129,9 +129,10 @@ export default {
     text-align: center;
 }
 
-.volume .number {
+.volume .number{
+    height: 2.875rem /* 46/16 */;
+    line-height: 2.875rem /* 46/16 */;
     font-size: 1.875rem /* 30/16 */;
-    margin-top: 0.625rem /* 10/16 */;
     color: #303133;
 }
 

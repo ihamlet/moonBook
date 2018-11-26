@@ -21,7 +21,7 @@
                     </div>
                 </van-col>
                 <van-col span="6" class="flex flex-justify">
-                    <van-button class="theme-btn" size="small" type="primary" plain @click="toRegister">免费注册</van-button>
+                    <van-button class="theme-btn" size="small" type="primary" plain @click="toRegister">注册</van-button>
                 </van-col>
             </van-row>
         </div>

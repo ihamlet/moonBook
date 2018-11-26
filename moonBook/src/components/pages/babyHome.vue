@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="label">{{label}}</div>
-                    <div class="school" v-line-clamp:20="1" v-if='regInfo'>{{regInfo.school}}</div>
+                    <div class="school" v-line-clamp:20="1" v-if='school'>{{school}}</div>
                 </div>
                 <div class="qr-code" @click="showQrcode=true">
                     <van-icon name="qr"/>
@@ -39,8 +39,8 @@
         </div>
         <div class="container">
             <div class="bar flex flex-align">
-                <div class="bar-item totalReading">总阅读量 {{totalReading}}</div>
-                <div class="bar-item praise">赞 {{praise}}</div>
+                <div class="bar-item totalReading">总阅读量 {{dataStatistics.totalReading}}</div>
+                <div class="bar-item praise">赞 {{dataStatistics.praise}}</div>
             </div>
             <lazy-component class="module">
                 <reading :list='readBook' moduleTitle='宝贝读过的书'/>
@@ -68,7 +68,7 @@
         <slogan v-if='finished||dryingListLengthState == 0'/>
         
         <van-popup v-model="showQrcode" class="card-popup">
-            <qr-code :qrImage='qrImage' :totalReading='totalReading' :label='label' @close="showQrcode = false" :childInfo='childInfo'/>
+            <qr-code :qrImage='qrImage' :dataStatistics='dataStatistics' :school="school?school:''" :label='label' @close="showQrcode = false" :childInfo='childInfo'/>
         </van-popup>
 
         <van-popup v-model="showSetting" class="page-popup" position="right">
@@ -111,7 +111,7 @@ export default {
             }
         },
         label(){
-            return this.totalReading > 50 ? '阅读小明星':'阅读新秀'
+            return this.dataStatistics.totalReading > 50 ? '阅读小明星':'阅读新秀'
         }
     },
     data () {
@@ -119,11 +119,10 @@ export default {
             fixedHeaderBar:true,
             domHeight:'',
             childInfo:'',
-            regInfo:'',
+            school:'',
             qrImage:'',
             showQrcode:false,
-            praise: 0,
-            totalReading: 0,
+            dataStatistics:'',
             lateBook:[],
             readBook:[],
             list:[],
@@ -141,17 +140,16 @@ export default {
                 if(res.data.child){
                     vm.lateBook = res.data.child.lateBook
                     vm.readBook = res.data.child.readBook
-                    vm.totalReading = res.data.child.totalReading.number
-                    vm.praise = res.data.child.praise.number
+                    vm.dataStatistics = res.data.child.dataStatistics
+                    vm.school = res.data.child.school
                     vm.childInfo = res.data.child.data
-                    vm.regInfo = res.data.child.reg
                 }else{
                     vm.$dialog.alert({
-                        message:`<div class='text-center'>请添加宝贝，帮助孩子更好的养成阅读习惯</div>`,
+                        message:`<div class='text-center'>请注册阅亮书架 帮助宝贝更好的阅读</div>`,
                         showConfirmButton:true,
                         showCancelButton:true,
-                        confirmButtonText:'添加宝贝',
-                        cancelButtonText:'稍后添加'
+                        confirmButtonText:'注册',
+                        cancelButtonText:'稍后'
                     }).then(() => {
                         vm.$router.push({name:'register'})
                     }).catch(() => {

@@ -32,9 +32,12 @@
                     </li>
                 </ul>
                 <ul class="days" v-else key="week">
-                    <li v-for="(dayobject,index) in days" :key="index" v-if='WeekStartDate.getDate()+1 <= dayobject.day.getDate() && WeekEndDate.getDate()+1 >= dayobject.day.getDate() '>
-                        <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
-                        <span v-else>{{dayobject.day.getDate()}}</span>
+                    <li v-for="(dayobject,index) in days" :key="index" v-if='Math.ceil((index+1)/7) == calendarData'>
+                        <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
+                        <span v-else>
+                            <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
+                            <span v-else>{{ dayobject.day.getDate() }}</span>
+                        </span>
                     </li>
                 </ul>
             </transition>
@@ -45,8 +48,6 @@
     </div>
 </template>
 <script>
-import {format, getWeekStartDate, getWeekEndDate} from './../../lib/js/util.js'
-
 export default {
     name:'calendar',
     data () {
@@ -56,13 +57,16 @@ export default {
             currentYear: 1970,
             currentWeek: 1,
             days: [],
-            pack: false,
-            WeekStartDate: getWeekStartDate(),
-            WeekEndDate: getWeekEndDate()
+            pack: false
         }
     },
     created(){ 
         this.initData(null)
+    },
+    computed:{
+        calendarData(){
+            return Math.ceil(((Date.now()-this.days[0].day.getTime())/86400000)/7)
+        },
     },
     methods: {
         initData(cur){

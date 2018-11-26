@@ -63,7 +63,7 @@ const mutations = {
         state.tabBtn = params.data
     },
     setUserPoint(state,params){
-        Cookies.set('userPoint', params.data, { expires: 1 })
+        Cookies.set('userPoint', params.data, { expires: 7 })
         state.userPoint = params.data
     }
 }
@@ -91,6 +91,7 @@ const actions = {
         })
     },
     getUserLocation(context,products){
+
         let cityInfo = {
             location: products.location
         }
@@ -106,7 +107,6 @@ const actions = {
             return response.json()
         }).then(res => {
             cityInfo.city = res.regeocode.addressComponent.city
-
             context.commit('setUserPoint',{
                 data: cityInfo
             })

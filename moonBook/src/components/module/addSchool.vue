@@ -1,6 +1,6 @@
 <template>
     <div class="add-school">
-        <div class="fixed" :class="[type='type'?'sticky':'']">
+        <div class="fixed" :class="[pageType=='popup'?'sticky':'']">
             <search-bar :prompt='prompt' @show='isListShow = true'/>
         </div>
         <van-list v-model="loading" :finished="finished" @load="onLoad">
@@ -25,14 +25,13 @@ import schoolList from './search/schoolList'
 
 export default {
     name:'add-school',
-    props: ['type'],
+    props: ['prompt','pageType'],
     components: {
         searchBar,
         schoolList
     },
-    props: ['prompt'],
     computed: {
-      ...mapGetters(['userPointState'])
+      ...mapGetters(['userPointState']),
     },
     data () {
         return {
