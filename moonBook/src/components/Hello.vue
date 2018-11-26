@@ -58,7 +58,7 @@ export default {
       center(val){
           let products = {
             location:val
-          }      
+          }
           this.getUserLocation(products)
       },
       '$route': 'fetchData'

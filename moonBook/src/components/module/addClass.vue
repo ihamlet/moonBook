@@ -13,7 +13,7 @@
                 <div class="class-title">{{list.title}}</div>
                 <van-row>
                     <van-col span="8" v-for='(item,itemIndex) in list.class' :key='itemIndex'>
-                        <div class="select">{{item.name}}</div>
+                        <div class="select" @click="select(item)">{{item.name}}</div>
                     </van-col>
                 </van-row>
             </div>
@@ -57,6 +57,9 @@ export default {
         },
         onClickLeft(){
             this.$emit('close')
+        },
+        select(item){
+            this.$emit('select',item)
         }
     }
 }

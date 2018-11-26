@@ -5,7 +5,7 @@
                 <i class="iconfont">&#xe657;</i>
                 <span class="text">个人中心</span>
             </div>
-            <div class="head-bar-icon" slot='right'>
+            <div class="head-bar-icon" slot='right' v-if='childInfo'>
                 <i class="iconfont">&#xe60c;</i>
             </div>
         </van-nav-bar>
@@ -68,11 +68,11 @@
         <slogan v-if='finished||dryingListLengthState == 0'/>
         
         <van-popup v-model="showQrcode" class="card-popup">
-            <qr-code :qrImage='qrImage' :dataStatistics='dataStatistics' :school="school?school:''" :label='label' @close="showQrcode = false" :childInfo='childInfo'/>
+            <qr-code :qrImage='qrImage' :dataStatistics='dataStatistics' :school="school" :label='label' @close="showQrcode = false" :childInfo='childInfo'/>
         </van-popup>
 
         <van-popup v-model="showSetting" class="page-popup" position="right">
-            <baby-setting @close="showSetting = false"/>
+            <baby-setting @close="showSetting = false" @setting='babySetting'/>
         </van-popup>
     </div>
 </template>
@@ -207,6 +207,9 @@ export default {
         },
         onClickRight(){
             this.showSetting = true
+        },
+        babySetting(data){
+            this.school = data.school
         }
     }
 }

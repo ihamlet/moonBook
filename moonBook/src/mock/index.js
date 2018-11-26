@@ -384,8 +384,8 @@ let pay = function (options) {
       card:content.card,
       school:content.school.schoolName.name,
       vipInterval:content.vipInterval
-    },
-    userData.childInfo[0].school = schoolName()
+    }
+    
     messageData.messageList.unshift({
       id: Mock.mock('@increment'),
       content: {
@@ -646,6 +646,7 @@ let addChild = function (options) {
   userData.childInfo.unshift({
     id: Mock.mock('@increment'),
     dataStatistics: childReading(),
+    school: schoolName(),
     lateBook: bookData.list, //最近在读
     readBook: bookData.list, //读过的书
     setting: {
@@ -663,12 +664,25 @@ let addChild = function (options) {
 
 //孩子设置
 
-let setting = function (options) {
-    let data = JSON.parse(options.body).setting
-    console.log(data)
+let childSetting = function (options) {
+
+    let id = JSON.parse(options.body).id
+    let setting = JSON.parse(options.body).setting
+
+    let child = ''
+    userData.childInfo.forEach(element => {
+      if (id == element.id) {
+        element.school = setting.babySchool
+        child = element
+      }
+    })
+    
+    return {
+      child
+    }
 }
 
-Mock.mock('/api/setting', setting) //添加设置
+Mock.mock('/api/childSetting', childSetting) //添加设置
 
 //编辑孩子信息
 let editChild = function (options) {

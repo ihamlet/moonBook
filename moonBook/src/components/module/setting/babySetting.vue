@@ -4,8 +4,8 @@
 
         <van-cell-group>
             <div class="form-title">修改校园信息</div>
-            <van-field v-model="babyClass" input-align='right' readonly center label="修改班级" placeholder="请选择班级" />
-            <van-field v-model="babySchool" input-align='right' readonly center label="修改学校" :placeholder="school" @click="showSchoolList = true" />
+            <van-field input-align='right' readonly center label="修改学校" :placeholder="setting.babySchool?setting.babySchool:'请选择学校'" @click="showSchoolList = true" />
+            <van-field v-model="setting.babyClass" input-align='right' readonly center label="修改班级" placeholder="请选择班级" @click="showClassList = true"/>
         </van-cell-group>
 
         <van-cell-group class="theme-switch">
@@ -16,44 +16,41 @@
         </van-cell-group>
 
         <van-popup v-model="showSchoolList" class="page-popup" position="bottom">
-            <van-nav-bar class="sticky" title="选择学校" left-text="返回" left-arrow @click-left="showSchoolList = false" />
-            <add-school :prompt='prompt' pageType='popup' @select='selectSchool'/>
+            <add-school :prompt='prompt' pageType='popup' @select='selectSchool' @close="showSchoolList = false"/>
+        </van-popup>
+
+        <van-popup v-model="showClassList" class="page-popup" position="bottom">
+          <add-class @close='showClassList = false' @select='selectClass' />
         </van-popup>
     </div>
 </template>
 <script>
 import axios from 'axios'
-import { mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 import addSchool from './../addSchool'
+import addClass from './../addClass'
 
 export default {
   name: 'baby-setting',
   components: {
-    addSchool
-  },
-  computed: {
-    ...mapGetters(['userDataState']),
-    school() {
-      if (this.childInfo.regInfo) {
-        return this.childInfo.regInfo.school
-      } else if (this.userDataState.vipInfo) {
-        return this.userDataState.vipInfo.school
-      } else {
-        return '请选择学校'
-      }
-    }
+    addSchool,
+    addClass
   },
   data() {
     return {
       showSchoolList: false,
+      showClassList: false,
       prompt: '搜索学校名称/拼音',
-      babyClass: '',
-      babySchool: '',
-      childInfo: '',
+      child:'',
       setting: {
         current: false,
         public: false,
-        synchronous: false
+        synchronous: false,
+        babyClass: '',
+        babySchool: '',
+      },
+      interactive:{
+
       }
     }
   },
@@ -61,30 +58,47 @@ export default {
     this.fetchData()
   },
   watch: {
+    setting:{
+      handler(val){
+        axios.put('/api/childSetting',{
+            id: this.$route.query.id,
+            setting:val
+        }).then(res=>{
+          this.setting.babySchool = res.data.child.school
+          this.$emit('setting',res.data.child)
+        })
+      },
+      deep: true
+    },
     $route: 'fetchData'
   },
   methods: {
+    ...mapActions(['getUserData']),
     fetchData() {
       axios.put('/api/ChildInfo', {
         id: this.$route.query.id
       }).then(res => {
         this.child = res.data.child
-        this.setting = res.data.child.setting
+        this.setting.babySchool = res.data.child.school
+        this.setting.current = res.data.child.setting.current
+        this.setting.public = res.data.child.setting.public
+        this.setting.synchronous = res.data.child.setting.synchronous
       })
     },
     onClickLeft() {
       this.$emit('close')
     },
+    selectClass(Class){
+      this.showClassList = false
+      this.setting.babyClass = Class.name
+    },
     selectSchool(school) {
       this.showSchoolList = false
-      this.babySchool = school.name
+      this.setting.babySchool = school.name
     }
   }
 }
 </script>
 <style scoped>
-.sticky {
-  position: sticky;
-  top: 0;
-}
+
 </style>
