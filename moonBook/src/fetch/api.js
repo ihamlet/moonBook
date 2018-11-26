@@ -2,6 +2,22 @@ import axios from 'axios'
 import router from '@/router/index'
 
 axios.defaults.timeout = 5000;
+
+// http request 拦截器
+axios.interceptors.request.use(
+    config => {
+        let token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `token ${token}`
+      }
+      return config
+    },
+    err => {
+      return Promise.reject(err)
+    },
+  )
+
+
 axios.interceptors.response.use(
     response => {
         return response;

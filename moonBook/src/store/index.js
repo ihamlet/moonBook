@@ -68,6 +68,9 @@ const mutations = {
     },
     getMsgs(state, msgs) {
         state.msgs = msgs;
+    },
+    getToken(state, token) {
+        state.token = token;
     }
 }
 
@@ -193,6 +196,23 @@ const actions = {
                 resolve(res)
             })
         })
+    },
+    getToken(context) {
+        return new Promise((resolve) => {
+            let token = localStorage.getItem('token');
+            if(token) {
+                context.commit('getToken', token);
+                resolve(token);
+            } else {
+                const url = `/book/login/login`;
+                axios.get(url).then((res) => {
+                    token = res.data.token;
+                    localStorage.setItem('token', token);
+                    resolve(token);
+                });
+            }
+        });    
+        
     }
 }
 
