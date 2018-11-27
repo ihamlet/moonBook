@@ -13,7 +13,7 @@
                 <div class="module-title">宝贝阅读档案</div>
                 <div class="item module" v-for='(list,index) in userDataState.childInfo' :key="index">
                     <div class="card-top-bar">
-                        <van-nav-bar :title="`${list.data.name}`" right-text="编辑" :left-text="userDataState.regInfo?'班级':''"  @click-right="onClickRight(list)" />
+                        <van-nav-bar :title="`${list.data.name}`" right-text="编辑" :left-text="schoolState?'班级':''"  @click-right="onClickRight(list)" />
                     </div>
                     <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
                         <div class="volume">
@@ -60,7 +60,7 @@ export default {
         avatar
     },
     computed: {
-        ...mapGetters(['userDataState']),
+        ...mapGetters(['userDataState','schoolState']),
         age(){
             let data = []
             this.userDataState.childInfo.forEach(e=>{

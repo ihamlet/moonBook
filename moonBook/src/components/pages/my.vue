@@ -2,7 +2,7 @@
     <div class="my page-padding">
         <card-head />
         <lazy-component class="gutter gap-top">
-           <class-home v-if='userDataState.regInfo'/>
+           <class-home v-if='schoolState'/>
         </lazy-component>
         <lazy-component class="gutter gap" v-if='dryingListLengthState > 0'>
             <zone-card/> 
@@ -15,6 +15,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import axios from 'axios'
 
 import cardHead from './../module/myModule/head'
 import classHome from './../module/myModule/classHome'
@@ -32,7 +33,7 @@ export default {
         classHome
     },
     computed: {
-        ...mapGetters(['dryingListLengthState','userDataState'])
+        ...mapGetters(['dryingListLengthState','schoolState'])
     }
 }
 </script>

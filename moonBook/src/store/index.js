@@ -16,16 +16,27 @@ const state = {
 }
 
 const getters = {
-   userDataState: state=> {
+   userDataState: state => {
        return state.userData
    },
    MsgLengthState: state => {
        return state.msgLength.length
    },
-   dryingListLengthState: state =>{
+   dryingListLengthState: state => {
        if(state.userData.dryingList){
             return state.userData.dryingList.length
        }
+   },
+   schoolState: state => {
+        let school = ''
+        if(state.userData.childInfo){
+            state.userData.childInfo.forEach((element,i)=>{
+                if(i==0){
+                    school = element.school
+                }
+            })
+        }
+        return school
    },
    userPraiseState: state => {
        let praise = []

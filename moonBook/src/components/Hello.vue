@@ -59,7 +59,10 @@ export default {
           let products = {
             location:val
           }
-          this.getUserLocation(products)
+          setTimeout(()=>{
+            this.getUserLocation(products)
+          },1000)
+         
       },
       '$route': 'fetchData'
   },       

@@ -1,6 +1,6 @@
 <template>
     <div class="add-class page-padding">
-        <van-nav-bar class="bar-fixed" fixed :zIndex='99' :title="userDataState.regInfo.school" left-text="返回" left-arrow @click-left="onClickLeft" />
+        <van-nav-bar class="bar-fixed" fixed :zIndex='99' :title="type=='select'?'选择班级':school" left-text="返回" left-arrow @click-left="onClickLeft" />
         <div class="container">
             <div class="baby-info flex flex-justify">
                 <div class="avatar">
@@ -27,6 +27,7 @@ import { format } from './../lib/js/util.js'
 
 export default {
     name:'add-class',
+    props:['type','school'],
     computed: {
         ...mapGetters(['userDataState']),
         age(){

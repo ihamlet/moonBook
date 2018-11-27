@@ -755,8 +755,10 @@ Mock.mock('/api/hotCity', (req, res) => {
 //注册
 let reg = function (options) {
   let data = JSON.parse(options.body).data
+  console.log(data)
   userData.regInfo = data
   userData.childInfo[0].reg = data
+  userData.childInfo[0].school = schoolName()
   return {
     userData
   }

@@ -14,7 +14,7 @@
                     <img :src="userDataState.userInfo.avatar" :alt="userDataState.userInfo.name">
                 </div>
                 <div class="name">{{userDataState.userInfo.name}}</div>
-                <div class="school" v-line-clamp:20="1" v-if='school'>{{school}}</div>
+                <div class="school" v-line-clamp:20="1" v-if='schoolState'>{{schoolState}}</div>
             </div>
         </div>
         <div class="card">
@@ -84,16 +84,7 @@ export default {
         punch
     },
     computed: {
-        ...mapGetters(['userDataState']),
-        school(){
-            if(this.userDataState.childInfo.length!=0&&this.userDataState.childInfo[0].reg){
-                return this.userDataState.childInfo[0].reg.school
-            }else if( this.userDataState.vipInfo.school ){
-                return this.userDataState.vipInfo.school
-            }else{
-                return null
-            }
-        }
+        ...mapGetters(['userDataState','schoolState'])
     },
     data () {
         return {

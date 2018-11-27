@@ -4,8 +4,8 @@
 
         <van-cell-group>
             <div class="form-title">修改校园信息</div>
-            <van-field input-align='right' readonly center label="修改学校" :placeholder="setting.babySchool?setting.babySchool:'请选择学校'" @click="showSchoolList = true" />
-            <van-field v-model="setting.babyClass" input-align='right' readonly center label="修改班级" placeholder="请选择班级" @click="showClassList = true"/>
+            <van-field input-align='right' readonly center label="修改学校" :placeholder="setting.babySchool?setting.babySchool:'请选择学校'" @click="showSchoolList = true" icon="question" @click-icon="$toast('重新设置可能会导致信息不准确')"/>
+            <van-field v-model="setting.babyClass" input-align='right' readonly center label="修改班级" placeholder="请选择班级" :disabled='isSelectClass' @click="showClassList = true" icon="question" @click-icon="$toast('您需要选择学校后才可选择班级')"/>
         </van-cell-group>
 
         <van-cell-group class="theme-switch">
@@ -20,7 +20,7 @@
         </van-popup>
 
         <van-popup v-model="showClassList" class="page-popup" position="bottom">
-          <add-class @close='showClassList = false' @select='selectClass' />
+          <add-class @close='showClassList = false' type='select' @select='selectClass' />
         </van-popup>
     </div>
 </template>
@@ -40,6 +40,7 @@ export default {
     return {
       showSchoolList: false,
       showClassList: false,
+      isSelectClass: true,
       prompt: '搜索学校名称/拼音',
       child:'',
       setting: {
@@ -67,6 +68,10 @@ export default {
           this.setting.babySchool = res.data.child.school
           this.$emit('setting',res.data.child)
         })
+        
+        if(val.babySchool){
+          this.isSelectClass = false
+        }
       },
       deep: true
     },
