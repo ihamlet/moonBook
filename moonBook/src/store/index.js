@@ -7,7 +7,7 @@ import Cookies from 'js-cookie'
 Vue.use(Vuex)
 
 const state = {
-    slogan:'阅读点亮人生',
+    slogan:'阅读照亮人生',
     userData:{},
     msgLength:1,
     tabBtn:[],

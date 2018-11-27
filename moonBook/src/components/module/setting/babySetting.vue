@@ -4,15 +4,14 @@
 
         <van-cell-group>
             <div class="form-title">修改校园信息</div>
-            <van-field input-align='right' readonly center label="修改学校" :placeholder="setting.babySchool?setting.babySchool:'请选择学校'" @click="showSchoolList = true" icon="question" @click-icon="$toast('重新设置可能会导致信息不准确')"/>
-            <van-field v-model="setting.babyClass" input-align='right' readonly center label="修改班级" placeholder="请选择班级" :disabled='isSelectClass' @click="showClassList = true" icon="question" @click-icon="$toast('您需要选择学校后才可选择班级')"/>
+            <van-field input-align='right' readonly center label="修改学校" v-model="setting.babySchool" placeholder="请选择学校" @click="showSchoolList = true" icon="question" @click-icon="$toast('设置孩子学校，将可以同步同班信息！')"/>
+            <van-field input-align='right' readonly center label="修改班级" v-model="setting.babyClass" placeholder="请选择班级" :disabled='isSelectClass' @click="showClassList = true" icon="question" @click-icon="$toast('您需要选择学校后才可选择班级')"/>
         </van-cell-group>
 
         <van-cell-group class="theme-switch">
             <div class="form-title">基本设置</div>
             <van-switch-cell v-model="setting.current" title="设为当前宝贝" />
             <van-switch-cell v-model="setting.public" title="公开宝贝主页" />
-            <van-switch-cell v-model="setting.synchronous" title="同步发布内容" />
         </van-cell-group>
 
         <van-popup v-model="showSchoolList" class="page-popup" position="bottom">
@@ -46,7 +45,6 @@ export default {
       setting: {
         current: false,
         public: false,
-        synchronous: false,
         babyClass: '',
         babySchool: '',
       },
@@ -85,9 +83,9 @@ export default {
       }).then(res => {
         this.child = res.data.child
         this.setting.babySchool = res.data.child.school
+        this.setting.babyClass = res.data.child.class
         this.setting.current = res.data.child.setting.current
         this.setting.public = res.data.child.setting.public
-        this.setting.synchronous = res.data.child.setting.synchronous
       })
     },
     onClickLeft() {

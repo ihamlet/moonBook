@@ -434,7 +434,13 @@ let freshData = Mock.mock({
   }]
 })
 
+let schoolArray = []
+schoolData.schoolList.forEach(e=>{
+  schoolArray.push(e.schoolName.name)
+})
+
 let dryingData = Mock.mock({
+
   'dryingList|25': [{
     avatar: Mock.mock("@image('120x120')"),
     id: function () {
@@ -454,7 +460,7 @@ let dryingData = Mock.mock({
     text: function () {
       return Mock.mock('@cparagraph(0,5)')
     },
-    'school|1': schoolData.schoolList,
+    'school|1': schoolArray,
     "media|1": [{
       videoCover: Mock.mock("@image('750x1134','#000','#fff','jpeg','封面750x1134')")
     }, {
@@ -495,8 +501,8 @@ Mock.mock('/api/fresh', (req, res) => {
 // 数据是否有学校字段
 let schoolName = function(){
   var name = ''
-  if (userData.regInfo) {
-    name = userData.regInfo.school
+  if (userData.childInfo.length!=0) {
+    name = userData.childInfo[0].school
   } else if (userData.vipInfo) {
     name = userData.vipInfo.school
   } else {
@@ -521,9 +527,7 @@ let addDrying = function (options) {
     },
     isVip: userData.isVip,
     vipType: userData.vipInfo.card,
-    school: {
-      name: schoolName()
-    },
+    school: schoolName(),
     text: data.text,
     social: {
       praise: Mock.mock({
@@ -543,6 +547,14 @@ let addDrying = function (options) {
     if (e == 'find') {
       dryingData.dryingList.unshift(array)
     }
+
+    if(e == 'classHome') {
+      classAticleList.unshift(array)
+    }
+
+    if(e == 'babyHome'){
+      childAticleList.unshift(array)
+    }
   })
 
   userData.dryingList.unshift(array)
@@ -551,6 +563,27 @@ let addDrying = function (options) {
     dryingData
   }
 }
+
+//孩子文章列表
+
+let childAticleList = []
+
+Mock.mock('/api/childAticleList', (req, res) => {
+  return {
+    childAticleList,
+    length:childAticleList.length
+  }
+})
+
+//班级文章列表
+
+let classAticleList = []
+
+Mock.mock('/api/classAticleList', (req, res) => {
+  return {
+    classAticleList
+  }
+})
 
 Mock.mock('/api/addDrying', addDrying)
 
@@ -646,15 +679,22 @@ let addChild = function (options) {
   userData.childInfo.unshift({
     id: Mock.mock('@increment'),
     dataStatistics: childReading(),
+    dryingList:'',
     school: schoolName(),
     lateBook: bookData.list, //最近在读
     readBook: bookData.list, //读过的书
-    setting: {
+    setting:{
       current: true,
       public: true,
-      synchronous: true,
     },
     data
+  })
+
+  userData.childInfo.forEach((element,i)=>{
+    if(i != 0){
+      element.setting.current = false
+      element.dryingList = []
+    }
   })
 
   return {
@@ -755,10 +795,9 @@ Mock.mock('/api/hotCity', (req, res) => {
 //注册
 let reg = function (options) {
   let data = JSON.parse(options.body).data
-  console.log(data)
   userData.regInfo = data
   userData.childInfo[0].reg = data
-  userData.childInfo[0].school = schoolName()
+  userData.childInfo[0].school = data.school
   return {
     userData
   }
@@ -812,3 +851,14 @@ Mock.mock('/api/classData', (req, res) => {
     classData
   }
 })
+
+// 添加班级
+let addClass = function (options) {
+  let data = JSON.parse(options.body).data
+  userData.childInfo[0].class = data
+  return {
+    userData
+  }
+}
+
+Mock.mock('/api/addClass', addClass)

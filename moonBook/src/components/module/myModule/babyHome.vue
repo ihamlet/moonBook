@@ -13,7 +13,7 @@
                 <div class="module-title">宝贝阅读档案</div>
                 <div class="item module" v-for='(list,index) in userDataState.childInfo' :key="index">
                     <div class="card-top-bar">
-                        <van-nav-bar :title="`${list.data.name}`" right-text="编辑" :left-text="schoolState?'班级':''"  @click-right="onClickRight(list)" />
+                        <van-nav-bar :title="`${list.data.name}`" right-text="编辑" :left-text="list.school?'班级':''" @click-left="onClickLeft(list)"  @click-right="onClickRight(list)" />
                     </div>
                     <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
                         <div class="volume">
@@ -26,6 +26,7 @@
                             </div>
                             <avatar :gender='list.data.gende' v-else/>
                             <div class="age">{{age[index]}}岁</div>
+                            <div class="school" v-line-clamp:20="1">{{list.school}}</div>
                         </div>
                         <div class="volume">
                             总获赞量
@@ -39,8 +40,13 @@
         </div>
 
         <!-- 添加孩子页面 -->
-        <van-popup v-model="show" class="page-popup" position="right">
-            <add-child @close='closeAddChildPage' :dataId='dataId' :listenData='listenData' :pageTitle='pageTitle' />
+        <van-popup v-model="addChildShow" class="page-popup" position="right">
+            <add-child @close='addChildShow = false' :dataId='dataId' :listenData='listenData' :pageTitle='pageTitle' />
+        </van-popup>
+        
+        <!-- 添加班级页面 -->
+        <van-popup v-model="addClassShow" class="page-popup" position="right">
+           <add-class :school="schoolState" @close='addClassShow = false'/>
         </van-popup>
     </div>
 </template>
@@ -49,6 +55,7 @@ import axios from 'axios'
 import { mapGetters } from 'vuex'
 import { format } from './../../lib/js/util.js'
 import addChild from './../addChild'
+import addClass from './../addClass'
 import numberGrow from './../../module/animate/numberGrow'
 import avatar from './../../module/avatar'
 
@@ -57,6 +64,7 @@ export default {
     components: {
         numberGrow,
         addChild,
+        addClass,
         avatar
     },
     computed: {
@@ -74,20 +82,18 @@ export default {
         return {
             listenData:'',
             dataId:'',
-            show:false,
+            addChildShow:false,
+            addClassShow:false,
             pageTitle:'addBaby'
         }
     },
     methods: {
         toAddChild(){
             this.pageTitle = 'addBaby'
-            this.show = true
-        },
-        closeAddChildPage(){
-            this.show = false
+            this.addChildShow = true
         },
         onClickRight(list){
-            this.show = true
+            this.addChildShow = true
             this.pageTitle = 'editBaby'
             this.dataId = list.id
 
@@ -96,6 +102,13 @@ export default {
             }).then(res=>{
                 this.listenData = res.data.child.data
             })
+        },
+        onClickLeft(list){
+            if(list.class){
+                console.log(this.$router)
+            }else{
+                this.addClassShow = true
+            }
         },
         toPageBabyHome(list){
             this.$router.push({name:'baby-home',query:{
@@ -192,6 +205,10 @@ i.iconfont.hot {
 
 .age {
     margin: .625rem /* 10/16 */ 0;
+}
+
+.school{
+    font-size: .8125rem /* 13/16 */;
 }
 
 .name {

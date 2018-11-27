@@ -50,7 +50,7 @@
             </lazy-component>
             <lazy-component class="module">
                 <div class="module-title">晒一晒</div>
-                <div class="not-content" v-if='dryingListLengthState == 0'>
+                <div class="not-content" v-if='!listLength'>
                     尚无记录
                 </div>
                 <van-list v-model="loading" :finished="finished" @load="onLoad" v-else>
@@ -65,7 +65,7 @@
             </lazy-component>
         </div>
 
-        <slogan v-if='finished||dryingListLengthState == 0'/>
+        <slogan v-if='finished||!listLength'/>
         
         <van-popup v-model="showQrcode" class="card-popup">
             <qr-code :qrImage='qrImage' :dataStatistics='dataStatistics' :school="school" :label='label' @close="showQrcode = false" :childInfo='childInfo'/>
@@ -120,12 +120,14 @@ export default {
             domHeight:'',
             childInfo:'',
             school:'',
+            class:'',
             qrImage:'',
             showQrcode:false,
             dataStatistics:'',
             lateBook:[],
             readBook:[],
             list:[],
+            listLength:'',
             loading: false,
             finished: false,
             showSetting: false
@@ -142,6 +144,7 @@ export default {
                     vm.readBook = res.data.child.readBook
                     vm.dataStatistics = res.data.child.dataStatistics
                     vm.school = res.data.child.school
+                    vm.class= res.data.child.class
                     vm.childInfo = res.data.child.data
                 }else{
                     vm.$dialog.alert({
@@ -159,12 +162,23 @@ export default {
             })
         })
     },
+    created () {
+        this.fetchData()
+    },
     mounted () {
         window.addEventListener('scroll', this.handleScroll)
     },
+    watch: {
+        '$router':'fetchData'
+    },
     methods: {
+        fetchData(){
+            axios.get('/api/childAticleList').then(res=>{
+                this.listLength = res.data.length
+            })
+        },
         onClickLeft(){
-            this.$router.go(-1)
+            this.$router.push({name:'my'})
         },
         qrcode(){
             QRCode.toDataURL(window.location.href)
@@ -191,16 +205,16 @@ export default {
             }
         },
         onLoad() {
-            axios.get('/api/userData').then(res=>{
+            axios.get('/api/childAticleList').then(res=>{
                 setTimeout(() => {
-                    let array = res.data.userData.dryingList
+                    let array = res.data.childAticleList
                     let length = this.dryingListLengthState < 10 ? 1 : 5
                     for (let i = 0; i < length; i++) {
                         this.list.push( array[this.list.length] )
                     }
                     this.loading = false
-                    if (this.list.length >= this.dryingListLengthState) {
-                        this.finished = true;
+                    if (this.list.length >= res.data.length) {
+                        this.finished = true
                     }
                 },500)
             })

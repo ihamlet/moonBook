@@ -33,7 +33,7 @@
             <van-checkbox-group v-model="result">
                 <div class="form-title">同步到</div>
                 <van-cell-group>
-                    <van-cell v-for="(item,index) in list" clickable :key="index" :title="item.title" @click="toggle(index)">
+                    <van-cell v-for="(item,index) in resultList" clickable :key="index" :title="item.title" @click="toggle(index)">
                         <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" />
                     </van-cell>
                 </van-cell-group>
@@ -66,6 +66,7 @@
 import axios from 'axios'
 import topicList from './topicList'
 import { compress } from './../../lib/js/util.js'
+import { mapGetters } from 'vuex'
 
 export default {
     name:'graphic',
@@ -73,20 +74,48 @@ export default {
         topicList
     },
     computed: {
+        ...mapGetters(['userDataState']),
       imagesLength(){
           return this.grapicData.images.length
-      }  
+      },
+      babyName(){
+          let name = ''
+          if(this.userDataState.childInfo.length!=0){
+              name = this.userDataState.childInfo[0].data.name
+          }
+          return name
+      },
+      resultList(){
+        let array = [{
+                title:'发现',
+                name: 'find'
+        }]
+        
+        if(this.babyName){
+            array.push({
+                title:`${this.babyName}@宝贝主页`,
+                name: 'babyHome'
+            })
+        } 
+
+        this.userDataState.childInfo.forEach((e,i)=>{
+            if(i==0){
+                if(e.class){
+                    array.push({
+                        title:`${this.babyName}@班级主页`,
+                        name: 'classHome'
+                    })
+                }
+            }
+        })
+        
+        return array
+      }
     },
     data () {
+        let self = this
         return {
-            list:[{
-                title:'发现',
-                name:'find'
-            },{
-                title:'班级主页',
-                name:'class'
-            }],
-            result:['find','class'],
+            result:['find','classHome','babyHome'],
             show:false,
             grapicData:{
                 text:'',

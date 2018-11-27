@@ -9,6 +9,7 @@ import My from '@/components/pages/my'
 
 import Zoom from '@/components/pages/zoom'
 import BabyHome from '@/components/pages/babyHome'
+import ClassHome from '@/components/pages/classHome'
 
 import Register from '@/components/pages/register'
 
@@ -80,6 +81,15 @@ export default new Router({
         component: BabyHome,
         meta: {
           title: '宝贝主页',
+          scrollToTop: true,
+          tabActive:3
+        }
+      },{
+        path: '/class-home',
+        name: 'class-home',
+        component: ClassHome,
+        meta: {
+          title: '班级主页',
           scrollToTop: true,
           tabActive:3
         }

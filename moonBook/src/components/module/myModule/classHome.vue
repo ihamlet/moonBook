@@ -1,7 +1,7 @@
 <template>
     <div class="class module-card">
         <van-cell-group>
-            <van-cell :title="userDataState.childInfo[0].data.name" :value="`选择班级`" is-link center @click="show = true">
+            <van-cell :title="userDataState.childInfo[0].data.name" :value="classInfo?classInfo:'选择班级'" is-link center @click="toClassHome">
                 <div class="icon" slot="icon">
                     <i class="iconfont">&#xe802;</i>
                 </div>
@@ -24,13 +24,30 @@ export default {
       addClass  
     },
     computed: {
-        ...mapGetters(['userDataState','schoolState'])
+        ...mapGetters(['userDataState','schoolState']),
+        classInfo(){
+            if(this.userDataState.childInfo[0].class){
+                return this.userDataState.childInfo[0].class
+            }else{
+                return null
+            }
+        }
     },
     data () {
         return {
             show:false
         }
-    } 
+    },
+    methods:{
+        toClassHome(){
+            if(this.classInfo){
+                console.log(this.$router)
+                this.$router.push({name:'class-home'})
+            }else{
+                this.show = true
+            }
+        }
+    }
 }
 </script>
 <style scoped>
