@@ -1,6 +1,6 @@
 <template>
     <div class="baby-home page-padding">
-        <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :title="fixedHeaderBar?$route.meta.title:childInfo.name" @click-left="onClickLeft" @click-right="onClickRight">
+        <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' :title="fixedHeaderBar?$route.meta.title:childInfo.name" @click-left="onClickLeft" @click-right="onClickRight">
             <div class="btn-left" slot='left'>
                 <i class="iconfont">&#xe657;</i>
                 <span class="text">个人中心</span>
@@ -42,9 +42,15 @@
                 <div class="bar-item totalReading">总阅读量 {{dataStatistics.totalReading}}</div>
                 <div class="bar-item praise">赞 {{dataStatistics.praise}}</div>
             </div>
-            <lazy-component class="module">
-                <reading :list='readBook' moduleTitle='宝贝读过的书'/>
-            </lazy-component>
+            <div class="baby-class" v-if='classInfo'>
+                <van-cell-group>
+                    <van-cell :title="classInfo.name" is-link center @click="toClassHome">
+                        <div class="icon" slot="icon">
+                            <i class="iconfont">&#xe802;</i>
+                        </div>
+                    </van-cell>
+                </van-cell-group>
+            </div>
             <lazy-component class="module">
                 <reading :list='lateBook' moduleTitle='宝贝最近在读的书'/>
             </lazy-component>
@@ -120,7 +126,7 @@ export default {
             domHeight:'',
             childInfo:'',
             school:'',
-            class:'',
+            classInfo:'',
             qrImage:'',
             showQrcode:false,
             dataStatistics:'',
@@ -141,14 +147,13 @@ export default {
                 vm.qrcode()
                 if(res.data.child){
                     vm.lateBook = res.data.child.lateBook
-                    vm.readBook = res.data.child.readBook
                     vm.dataStatistics = res.data.child.dataStatistics
                     vm.school = res.data.child.school
-                    vm.class= res.data.child.class
+                    vm.classInfo= res.data.child.class
                     vm.childInfo = res.data.child.data
                 }else{
                     vm.$dialog.alert({
-                        message:`<div class='text-center'>请注册阅亮书架 帮助宝贝更好的阅读</div>`,
+                        message:`<div class='text-center'>注册阅亮书架 宝贝会爱上阅读</div>`,
                         showConfirmButton:true,
                         showCancelButton:true,
                         confirmButtonText:'注册',
@@ -156,7 +161,7 @@ export default {
                     }).then(() => {
                         vm.$router.push({name:'register'})
                     }).catch(() => {
-                        vm.$router.go(-1)
+                        vm.$router.push({name:'my'})
                     })
                 }
             })
@@ -224,6 +229,11 @@ export default {
         },
         babySetting(data){
             this.school = data.school
+        },
+        toClassHome(){
+            this.$router.push({name:'class-home',query:{
+                id: this.$route.query.id
+            }})
         }
     }
 }
@@ -314,5 +324,16 @@ export default {
 .label{
     font-size: .8125rem /* 13/16 */;
     color: #fff;
+}
+
+.baby-class .icon{
+    margin-right: .625rem /* 10/16 */;
+}
+
+.baby-class .icon i.iconfont{
+    font-size: 1.5rem /* 24/16 */;
+    background-image: linear-gradient( 135deg, #795548 10%, #000 100%);
+    -webkit-background-clip: text;
+    color: transparent;
 }
 </style>

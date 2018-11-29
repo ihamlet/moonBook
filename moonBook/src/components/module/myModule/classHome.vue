@@ -1,7 +1,7 @@
 <template>
     <div class="class module-card">
-        <van-cell-group>
-            <van-cell :title="userDataState.childInfo[0].data.name" :value="classInfo?classInfo:'选择班级'" is-link center @click="toClassHome">
+        <van-cell-group v-for='(list,index) in userDataState.childInfo' :key="index">
+            <van-cell :title="list.data.name" v-if='index==0' :value="list.class?list.class.name:'选择班级'" is-link center @click="toClassHome(list)">
                 <div class="icon" slot="icon">
                     <i class="iconfont">&#xe802;</i>
                 </div>
@@ -10,7 +10,7 @@
 
         <!-- 选择班级 -->
         <van-popup v-model="show" class="page-popup" position="right">
-           <add-class :school="schoolState" @close='show = false'/>
+           <add-class :school="schoolState" :babyId='userDataState.childInfo[0].id' @close='show = false'/>
         </van-popup>
     </div>
 </template>
@@ -25,13 +25,6 @@ export default {
     },
     computed: {
         ...mapGetters(['userDataState','schoolState']),
-        classInfo(){
-            if(this.userDataState.childInfo[0].class){
-                return this.userDataState.childInfo[0].class
-            }else{
-                return null
-            }
-        }
     },
     data () {
         return {
@@ -39,10 +32,11 @@ export default {
         }
     },
     methods:{
-        toClassHome(){
-            if(this.classInfo){
-                console.log(this.$router)
-                this.$router.push({name:'class-home'})
+        toClassHome(list){
+            if(list.class){
+                this.$router.push({name:'class-home',query:{
+                    id: list.id
+                }})
             }else{
                 this.show = true
             }

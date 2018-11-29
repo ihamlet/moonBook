@@ -79,7 +79,7 @@ export default {
 <style scoped>
 .baby-info{
     display: grid;
-    padding:2.5rem /* 40/16 */ 0;
+    padding: 1.875rem /* 30/16 */ 0;
 }
 
 

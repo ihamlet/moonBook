@@ -1,6 +1,6 @@
 <template>
     <div class="add-class page-padding">
-        <van-nav-bar class="bar-fixed" fixed :zIndex='99' :title="type=='select'?'选择班级':school" left-text="返回" left-arrow @click-left="onClickLeft" />
+        <van-nav-bar class="bar-fixed" fixed :title="type=='select'?'选择班级':school" left-text="返回" left-arrow @click-left="onClickLeft" />
         <div class="container">
             <div class="baby-info flex flex-justify">
                 <div class="avatar" v-if='userDataState.childInfo[0].data.avatar'>
@@ -40,7 +40,7 @@ import round from './animate/round'
 
 export default {
     name:'add-class',
-    props:['type','school'],
+    props:['type','school','babyId'],
     components: {
         avatar,
         round
@@ -81,7 +81,13 @@ export default {
             this.$emit('close')
             this.$emit('select',item)
             axios.put('/api/addClass',{
-                data:item.name
+                data:{
+                    id:this.babyId,
+                    className: item.name,
+                    people: item.people,
+                    sort: item.sort,
+                    weekList: item.weekList
+                }
             }).then(res=>{
                 this.getUserData() //写入数据vuex
             })

@@ -1,45 +1,138 @@
 <template>
-  <div class="class-home">
-    <van-nav-bar :title="$route.meta.title" class="theme-nav" fixed @click-left="onClickLeft">
+  <div class="class-home page-padding">
+    <van-nav-bar :title="fixedHeaderBar?$route.meta.title:babyData.class.name" :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft">
         <div class="btn-left" slot='left'>
             <i class="iconfont">&#xe657;</i>
             <span class="text">个人中心</span>
         </div>
+        <div class="btn-right-qrcode" slot='right'>
+            <i class="iconfont">&#xe7a3;</i>
+        </div>
     </van-nav-bar>
-    <div class="header theme-background">
-      <div class="class-info">
-        <div class="class-name">{{userDataState.childInfo[0].class}}</div>
-        <div class="school">{{userDataState.childInfo[0].school}}</div>
-      </div>
+    <div class="header theme-background flex flex-align"  ref='head'>
+        <div class="class-avatar">
+            <img src="https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/avatar-class.jpg" alt="班级头像" />
+        </div>
+        <div class="class-info">
+            <div class="class-name">{{classInfo.name}}</div>
+            <div class="class-people">{{classInfo.sort}}（{{classInfo.people}}人）</div>
+            <div class="school">{{babyData.school}}</div>
+        </div>
+    </div>
+    <div class="container">
+        <lazy-component class="module">
+            <class-show/>
+        </lazy-component>
+        <lazy-component class="module">
+            <week-list/>
+        </lazy-component>
     </div>
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import axios from 'axios'
+import { mapGetters } from "vuex"
+import QRCode from 'qrcode'
+import weekList from './../module/classModule/weekList'
+import classShow from './../module/classModule/classShow'
 
 export default {
-  name: "class-home",
-  data() {
-    return {};
-  },
-  computed: {
-    ...mapGetters(["userDataState"])
-  },
-  methods:{
-      onClickLeft(){
-          this.$router.push({name:'my'})
-      }
-  }
+    name: "class-home",
+    components: {
+        classShow,
+        weekList
+    },
+    computed: {
+        ...mapGetters(["userDataState"])
+    },
+    data() {
+        return {
+            fixedHeaderBar:true,
+            qrImage:'',
+            babyData:'',
+            classInfo:'',
+        }
+    },
+    created () {
+        this.fetchData()
+    },
+    mounted () {
+        window.addEventListener('scroll', this.handleScroll)
+    },
+    watch: {
+        '$router':'fetchData'
+    },
+    methods:{
+        fetchData(){
+            axios.put('/api/ChildInfo',{
+                id: this.$route.query.id
+            }).then(res => {
+                this.qrcode()
+                if(res.data.child){
+                    this.babyData = res.data.child
+                    this.classInfo = res.data.child.class
+                }else{
+                    this.$dialog.alert({
+                        message:`<div class='text-center'>您还未注册阅亮书架</div>`,
+                        showConfirmButton:true,
+                        showCancelButton:true,
+                        confirmButtonText:'注册',
+                        cancelButtonText:'稍后'
+                    }).then(() => {
+                        this.$router.push({name:'register'})
+                    }).catch(() => {
+                        this.$router.push({name:'my'})
+                    })
+                }
+            })
+        },
+        onClickLeft(){
+            this.$router.push({name:'my'})
+        },
+        qrcode(){
+            QRCode.toDataURL(window.location.href)
+            .then(url => {
+                this.qrImage = url
+            })
+            .catch(err => {
+                console.error(err)
+            })
+        },
+        handleScroll(){
+            this.getDomHeight()  
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+            this.scrollTop = scrollTop
+            if( this.domHeight < this.scrollTop){
+               this.fixedHeaderBar = false
+            }else{
+               this.fixedHeaderBar = true
+            }
+        },
+        getDomHeight(){
+            if(this.$refs.head){
+                this.domHeight = this.$refs.head.offsetHeight/2
+            }
+        }
+    }
 };
 </script>
 <style scoped>
 .school{
     text-align: left;
-    font-size: .8125rem /* 13/16 */
+    margin-top: .3125rem /* 5/16 */;
+}
+
+.school,
+.class-people{
+    font-size: .8125rem /* 13/16 */;
 }
 
 .header{
-    padding: 3.75rem /* 60/16 */ 1.25rem /* 20/16 */ 1.875rem /* 30/16 */ 1.25rem /* 20/16 */;
+    padding: 1.25rem /* 20/16 */;
+    background: url('https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/header-bg.jpg');
+    background-size: cover;
+    background-position:68%;
+    height: 9.375rem /* 150/16 */;
 }
 
 .class-name{
@@ -48,5 +141,25 @@ export default {
 
 .class-info{
     color: #fff;
+}
+
+.class-avatar{
+    width: 4.25rem /* 68/16 */;
+    height: 4.25rem /* 68/16 */;
+    border-radius: 50%;
+    overflow: hidden;
+    border: .1875rem /* 3/16 */ solid #fff;
+    box-shadow: 0 .125rem /* 2/16 */ 1.25rem /* 20/16 */ rgba(0, 0, 0, .3);
+    margin-right: .625rem /* 10/16 */;
+}
+
+.btn-right-qrcode{
+    position: fixed;
+    right: 0;
+    top: -.4375rem /* 7/16 */;
+}
+
+.btn-right-qrcode i.iconfont{
+    font-size: 1.875rem /* 30/16 */;
 }
 </style>

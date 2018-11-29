@@ -682,7 +682,6 @@ let addChild = function (options) {
     dryingList:'',
     school: schoolName(),
     lateBook: bookData.list, //最近在读
-    readBook: bookData.list, //读过的书
     setting:{
       current: true,
       public: true,
@@ -817,8 +816,37 @@ let classData = Mock.mock({
         return Mock.mock({
           "number|15-50": 20
         })
+      },  		
+      sort:'小班',
+      weekList:{
+        'week|10-30':[{
+          avatar: Mock.mock("@image('120x120')"),
+          name: function () {
+            return Mock.mock('@cname()')
+          },
+          id: function () {
+            return Mock.mock('@increment')
+          },
+          num: function(){
+            return Mock.mock('@natural(5, 30)')
+          },
+          lateBook: bookData.list
+        }],	
+        'total|15-30':[{
+          avatar: Mock.mock("@image('120x120')"),
+          name: function () {
+            return Mock.mock('@cname()')
+          },
+          id: function () {
+            return Mock.mock('@increment')
+          },
+          num: function(){
+            return Mock.mock('@natural(5, 30)')
+          },
+          lateBook: bookData.list
+        }]
       }
-    }],
+    }]
   }, {
     title: '中班',
     'class|10': [{
@@ -829,8 +857,37 @@ let classData = Mock.mock({
         return Mock.mock({
           "number|15-50": 20
         })
+      },
+      sort:'中班',
+      weekList:{
+        'week|15-30':[{
+          avatar: Mock.mock("@image('120x120')"),
+          name: function () {
+            return Mock.mock('@cname()')
+          },
+          id: function () {
+            return Mock.mock('@increment')
+          },
+          num: function(){
+            return Mock.mock('@natural(5, 30)')
+          },
+          lateBook: bookData.list
+        }],	
+        'total|15-30':[{
+          avatar: Mock.mock("@image('120x120')"),
+          id: function () {
+            return Mock.mock('@increment')
+          },
+          name: function () {
+            return Mock.mock('@cname()')
+          },
+          num: function(){
+            return Mock.mock('@natural(5, 30)')
+          },
+          lateBook: bookData.list
+        }]
       }
-    }],
+    }]
   }, {
     title: '大班',
     'class|10': [{
@@ -841,6 +898,35 @@ let classData = Mock.mock({
         return Mock.mock({
           "number|15-50": 20
         })
+      },
+      sort:'大班',
+      weekList:{
+        'week|20-30':[{
+          avatar: Mock.mock("@image('120x120')"),
+          name: function () {
+            return Mock.mock('@cname()')
+          },
+          id: function () {
+            return Mock.mock('@increment')
+          },
+          num: function(){
+            return Mock.mock('@natural(5, 30)')
+          },
+          lateBook: bookData.list
+        }],	
+        'total|20-30':[{
+          avatar: Mock.mock("@image('120x120')"),
+          name: function () {
+            return Mock.mock('@cname()')
+          },
+          id: function () {
+            return Mock.mock('@increment')
+          },
+          num: function(){
+            return Mock.mock('@natural(5, 30)')
+          },
+          lateBook: bookData.list
+        }]
       }
     }]
   }]
@@ -855,7 +941,17 @@ Mock.mock('/api/classData', (req, res) => {
 // 添加班级
 let addClass = function (options) {
   let data = JSON.parse(options.body).data
-  userData.childInfo[0].class = data
+  userData.childInfo.forEach(e => {
+    if(e.id == data.id){
+        e.class = {
+          name:data.className,
+          people:data.people.number,
+          sort:data.sort,
+          weekList:data.weekList
+        }
+      }
+  })
+
   return {
     userData
   }

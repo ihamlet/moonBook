@@ -46,7 +46,7 @@
         
         <!-- 添加班级页面 -->
         <van-popup v-model="addClassShow" class="page-popup" position="right">
-           <add-class :school="schoolState" @close='addClassShow = false'/>
+           <add-class :school="schoolState" :babyId='babyId' @close='addClassShow = false'/>
         </van-popup>
     </div>
 </template>
@@ -80,6 +80,7 @@ export default {
     },
     data () {
         return {
+            babyId:'',
             listenData:'',
             dataId:'',
             addChildShow:false,
@@ -105,15 +106,21 @@ export default {
         },
         onClickLeft(list){
             if(list.class){
-                console.log(this.$router)
+                this.$router.push({name:'class-home',query:{
+                    id: list.id,
+                }})
             }else{
+                this.babyId = list.id
                 this.addClassShow = true
             }
         },
         toPageBabyHome(list){
-            this.$router.push({name:'baby-home',query:{
-                id: list.id
-            }})
+            this.$router.push({
+                name:'baby-home',
+                query:{
+                    id: list.id
+                }
+            })
         }
     }
 }

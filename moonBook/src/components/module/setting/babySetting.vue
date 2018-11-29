@@ -19,7 +19,7 @@
         </van-popup>
 
         <van-popup v-model="showClassList" class="page-popup" position="bottom">
-          <add-class @close='showClassList = false' type='select' @select='selectClass' />
+          <add-class @close='showClassList = false' :babyId='$route.query.id' type='select' @select='selectClass' />
         </van-popup>
     </div>
 </template>
@@ -83,7 +83,9 @@ export default {
       }).then(res => {
         this.child = res.data.child
         this.setting.babySchool = res.data.child.school
-        this.setting.babyClass = res.data.child.class
+        if(res.data.child.class){
+          this.setting.babyClass = res.data.child.class.name
+        }
         this.setting.current = res.data.child.setting.current
         this.setting.public = res.data.child.setting.public
       })

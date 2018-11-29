@@ -118,9 +118,7 @@ export default {
     },
     radio(val) {
       localStorage.setItem('radio', val)
-      val == '1'
-        ? (this.childInfo.gender = 'boy')
-        : (this.childInfo.gender = 'girl')
+      val == '1'? (this.childInfo.gender = 'boy') : (this.childInfo.gender = 'girl')
     },
     currentDate(val) {
       this.childInfo.birthday = format(new Date(val), 'yyyy-MM-dd')

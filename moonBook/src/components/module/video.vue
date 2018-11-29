@@ -6,11 +6,11 @@
                 <div class="video-item scroll-item" v-for='(item,index) in videoList' :key="index">
                     <div class="video">
                         <div class="video-cover">
-                            <img class="lazy" v-lazy="item.cover" :alt="`视频封面-${index}`">
+                            <img :src="item.cover" :alt="`视频封面-${index}`">
                         </div>
                         <div class="video-info flex flex-align">
                             <div class="avatar">
-                                <img class="lazy" v-lazy="item.avatar" :alt="item.name">
+                                <img :src="item.avatar" :alt="item.name">
                             </div>
                             <div class="name">
                                 {{item.name}}
