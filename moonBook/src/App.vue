@@ -762,7 +762,7 @@ i.iconfont.rotate {
   color: #c0c4cc;
 }
 
-.bar-fixed{
+.bar-fixed.van-nav-bar--fixed{
     position: sticky;
 }
 </style>
