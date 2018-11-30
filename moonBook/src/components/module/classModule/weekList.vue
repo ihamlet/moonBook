@@ -14,7 +14,7 @@
               </div>
               <van-tag class="my-baby-tag" round v-if="item.isMyBaby" type="danger">我的孩子</van-tag>
               <div class="name">
-                <span>{{item.name}}</span>
+                <span v-line-clamp:20="1">{{item.name}}</span>
                 <span class="topic" v-if="index==1">{{item.num>50?'阅读之星':'阅读新秀'}}</span>
               </div>
             </div>
@@ -120,52 +120,34 @@
 
   .week-list {
     overflow: hidden;
-    padding-bottom: 1.875rem;
-    /* 30/16 */
+    padding-bottom: 1.875rem /* 30/16 */;
   }
 
   .list {
-    padding: 0.3125rem
-      /* 5/16 */
-      0.625rem
-      /* 10/16 */
-    ;
+    padding: 0.3125rem/* 5/16 */ 0.625rem/* 10/16 */;
   }
 
   .avatar {
-    width: 3.125rem
-      /* 50/16 */
-    ;
-    height: 3.125rem
-      /* 50/16 */
-    ;
+    width: 3.125rem/* 50/16 */;
+    height: 3.125rem/* 50/16 */;
     border-radius: 50%;
     overflow: hidden;
-    margin-right: 0.625rem;
-    /* 10/16 */
+    margin-right: 0.625rem/* 10/16 */;
   }
 
   .name {
-    font-size: 1.125rem
-      /* 18/16 */
-    ;
+    font-size: 1.125rem/* 18/16 */;
     display: grid;
   }
 
   .my-baby-tag {
     position: absolute;
-    left: 4.0625rem
-      /* 65/16 */
-    ;
-    bottom: 0.3125rem
-      /* 5/16 */
-    ;
+    left: 3.75rem /* 60/16 */;
+    bottom: 0.3125rem/* 5/16 */;
   }
 
   .topic {
-    font-size: 0.8125rem
-      /* 13/16 */
-    ;
+    font-size: 0.8125rem/* 13/16 */;
     color: #909399;
   }
 

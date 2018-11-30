@@ -10,6 +10,7 @@ import My from '@/components/pages/my'
 import Zoom from '@/components/pages/zoom'
 import BabyHome from '@/components/pages/babyHome'
 import ClassHome from '@/components/pages/classHome'
+import ClassZoom from '@/components/pages/classZoom'
 
 import Register from '@/components/pages/register'
 
@@ -90,6 +91,15 @@ export default new Router({
         component: ClassHome,
         meta: {
           title: '班级主页',
+          scrollToTop: true,
+          tabActive:3
+        }
+      },{
+        path: '/class-zoom',
+        name: 'class-zoom',
+        component: ClassZoom,
+        meta: {
+          title: '班级风采',
           scrollToTop: true,
           tabActive:3
         }

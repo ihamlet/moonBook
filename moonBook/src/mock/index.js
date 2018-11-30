@@ -959,3 +959,29 @@ let addClass = function (options) {
 }
 
 Mock.mock('/api/addClass', addClass)
+
+//班级成员
+
+let classMemberData = Mock.mock({
+  'memberList|20-30':[{
+      avatar: Mock.mock("@image('120x120')"),
+      name: function () {
+        return Mock.mock('@cname()')
+      },
+      id: function () {
+        return Mock.mock('@increment')
+      },
+      num: function(){
+        return Mock.mock('@natural(5, 30)')
+      }
+  }]
+})
+
+classMemberData.memberList[0].name = `${Mock.mock('@cfirst()')}老师`
+classMemberData.memberList[0].teacher = true
+
+Mock.mock('/api/classMemberData', (req, res) => {
+  return {
+    classMemberData
+  }
+})

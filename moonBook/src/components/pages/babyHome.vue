@@ -71,8 +71,7 @@
     <slogan v-if="finished||!listLength" />
 
     <van-popup v-model="showQrcode" class="card-popup">
-      <qr-code :qrImage="qrImage" :dataStatistics="dataStatistics" :school="school" :label="label" @close="showQrcode = false"
-        :childInfo="childInfo" />
+      <qr-code :qrImage="qrImage" type="babyHome" :dataStatistics="dataStatistics" :school="school" :label="label" @close="showQrcode = false" :childInfo="childInfo" />
     </van-popup>
 
     <van-popup v-model="showSetting" class="page-popup" position="right">
@@ -82,13 +81,9 @@
 </template>
 <script>
   import axios from "axios"
-  import {
-    mapGetters
-  } from "vuex"
+  import { mapGetters } from "vuex"
+  import { format } from "./../lib/js/util.js"
   import QRCode from "qrcode"
-  import {
-    format
-  } from "./../lib/js/util.js"
   import wave from "./../module/animate/anWave"
   import qrCode from "./../module/mold/qrCode"
   import avatar from "./../module/avatar"
@@ -140,7 +135,7 @@
         loading: false,
         finished: false,
         showSetting: false
-      };
+      }
     },
     beforeRouteEnter(to, from, next) {
       axios.put("/api/ChildInfo", {

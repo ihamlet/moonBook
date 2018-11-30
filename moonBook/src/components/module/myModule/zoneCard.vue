@@ -7,7 +7,7 @@
             <i class="iconfont">&#xe606;</i>
           </span>
           <div class="content flex flex-align flex-justify" slot="title">
-            <show-crad :drying="drying" />
+            <show-card :imgList="userDataState.dryingList[0].media.imgList" :text='userDataState.dryingList[0].text' />
           </div>
         </van-cell>
       </van-cell-group>
@@ -25,16 +25,9 @@
       showCard
     },
     computed: {
-      ...mapGetters(["userDataState"]),
-      drying() {
-        this.userDataState.dryingList.forEach((element, i) => {
-          if (i == 0) {
-            return element
-          }
-        })
-      }
+      ...mapGetters(["userDataState"])
     }
-  };
+  }
 
 </script>
 <style scoped>

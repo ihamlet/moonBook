@@ -1,32 +1,31 @@
 <template>
   <div class="class-show">
     <van-cell-group class="cell-group">
-      <van-cell is-link center @click="show = true">
+      <van-cell is-link center @click="toClassZoom">
         <windmill slot="icon" />
+        <div class="content flex flex-align flex-justify" slot="title" v-if='drying'>
+          <show-crad :imgList="drying.media.imgList" :text='drying.text'/>
+        </div>
 
-        <div class="content flex flex-align flex-justify" slot="title">
-          <show-crad :drying="drying" />
+        <div class="value flex" v-else>
+          <span class="title">暂无班级动态</span>
+          <span class="text">班级风采</span>
         </div>
       </van-cell>
     </van-cell-group>
-
-    <van-popup v-model="show" class="page-popup" position="right">
-      <class-zoom @close="show = false" />
-    </van-popup>
   </div>
 </template>
 <script>
   import axios from "axios"
   import windmill from "./../animate/svg/windmill"
   import photoStack from "./../animate/photoStack"
-  import classZoom from "./../classZoom"
   import showCrad from "./../card/showCrad"
   export default {
     name: "class-show",
+    props: ['className'],
     components: {
       windmill,
       photoStack,
-      classZoom,
       showCrad
     },
     data() {
@@ -52,16 +51,33 @@
             })
           }
         })
+      },
+      toClassZoom(){
+        this.$router.push({
+          name:'class-zoom',
+          query:{
+            id:this.$route.query.id,
+            className:this.className
+          }
+        })
       }
     }
   }
-
 </script>
 <style scoped>
   .content {
-    padding: 0 0.625rem
-      /* 10/16 */
-    ;
+    padding: 0 0.625rem/* 10/16 */;
+  }
+  
+  .value span{
+    flex: 1;
   }
 
+  .title{
+    color:#909399;
+  }
+
+  .text{
+    text-align: right;
+  }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="class-home page-padding">
-    <van-nav-bar :title="fixedHeaderBar?$route.meta.title:babyData.class.name" :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft">
+    <van-nav-bar :title="fixedHeaderBar?$route.meta.title:babyData.class.name" :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
         <div class="btn-left" slot='left'>
             <i class="iconfont">&#xe657;</i>
             <span class="text">个人中心</span>
@@ -21,12 +21,18 @@
     </div>
     <div class="container">
         <lazy-component class="module">
-            <class-show/>
+            <class-show :className='classInfo.name'/>
         </lazy-component>
         <lazy-component class="module">
             <week-list/>
         </lazy-component>
     </div>
+    
+    <van-popup v-model="show">
+        <qr-code :classInfo="classData" :qrImage="qrImage" type='classHome' @close='show = false'/>
+    </van-popup>
+    
+    <slogan/>
   </div>
 </template>
 <script>
@@ -35,18 +41,32 @@ import { mapGetters } from "vuex"
 import QRCode from 'qrcode'
 import weekList from './../module/classModule/weekList'
 import classShow from './../module/classModule/classShow'
+import qrCode from './../module/mold/qrCode'
+import slogan from './../module/slogan'
 
 export default {
     name: "class-home",
     components: {
         classShow,
-        weekList
+        weekList,
+        slogan,
+        qrCode
     },
     computed: {
-        ...mapGetters(["userDataState"])
+        ...mapGetters(["userDataState"]),
+        classData(){
+            let data = {
+                name: this.classInfo.name,
+                sort: this.classInfo.sort,
+                people: this.classInfo.people,
+                school: this.babyData.school
+            }
+            return data
+        }
     },
     data() {
         return {
+            show:false,
             fixedHeaderBar:true,
             qrImage:'',
             babyData:'',
@@ -90,8 +110,7 @@ export default {
             this.$router.push({name:'my'})
         },
         qrcode(){
-            QRCode.toDataURL(window.location.href)
-            .then(url => {
+            QRCode.toDataURL(window.location.href).then(url => {
                 this.qrImage = url
             })
             .catch(err => {
