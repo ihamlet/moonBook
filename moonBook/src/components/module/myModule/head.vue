@@ -17,8 +17,7 @@
                     <img :src="userDataState.avatar" :alt="userDataState.name">
                 </div>
                 <div class="name">{{userDataState.userInfo.name}}</div>
-                <div class="school" v-line-clamp:20="1" v-if='school'>{{school}}</div>
-                <div class="school" v-line-clamp:20="1" v-if='userDataState.vipInfo && userDataState.childInfo.length==0'>{{userDataState.vipInfo.school.schoolName.name}}</div>
+                <div class="school" v-line-clamp:20="1" v-if='schoolState'>{{schoolState}}</div>
             </div>
         </div>
         <div class="card">
@@ -132,16 +131,7 @@ export default {
       this.punchShow = true;
     },
     computed: {
-        ...mapGetters(['userDataState']),
-        school(){
-            if(this.userDataState.childInfo.length!=0&&this.userDataState.childInfo[0].reg){
-                return this.userDataState.childInfo[0].reg.school
-            }else if(this.userDataState.vipInfo){
-                return this.userDataState.vipInfo.school.schoolName.name
-            }else{
-                return null
-            }
-        }
+        ...mapGetters(['userDataState','schoolState'])
     },
     onAccpetPage() {
       this.applyShow = false;

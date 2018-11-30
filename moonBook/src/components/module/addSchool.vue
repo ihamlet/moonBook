@@ -1,18 +1,20 @@
 <template>
     <div class="add-school">
-        <div class="fixed" :class="[type='type'?'sticky':'']">
-            <search-bar :prompt='prompt' @show='isListShow = true'/>
+        <div v-if='!isListShow'>
+            <div class="fixed" :class="[pageType=='popup'?'sticky':'']">
+                <van-nav-bar v-if="pageType=='popup'" title="选择学校" left-text="返回" left-arrow @click-left="close" />
+                <search-bar :prompt='prompt' @show='isListShow = true'/>
+            </div>
+            <van-list v-model="loading" :finished="finished" @load="onLoad">
+                <van-cell v-for="(item,index) in list" :key="index" is-link center @click="selectSchool(item)">
+                    <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
+                    <div class="school-address" v-line-clamp:20="1">
+                        <span>{{item.adname}}</span>
+                        <span v-if='item.address.length!=0'>{{item.address}}</span>
+                    </div>
+                </van-cell>
+            </van-list>
         </div>
-        <van-list v-model="loading" :finished="finished" @load="onLoad">
-            <van-cell v-for="(item,index) in list" :key="index" is-link center @click="selectSchool(item)">
-                <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
-                <div class="school-address" v-line-clamp:20="1">
-                    <span>{{item.adname}}</span>
-                    <span v-if='item.address.length!=0'>{{item.address}}</span>
-                </div>
-            </van-cell>
-        </van-list>
-
         <van-popup v-model="isListShow" class="page-popup" :overlay="false">
             <school-list :prompt='prompt' @close='isListShow = false' @select='selectSchool'/>
         </van-popup>
@@ -25,14 +27,13 @@ import schoolList from './search/schoolList'
 
 export default {
     name:'add-school',
-    props: ['type'],
+    props: ['prompt','pageType'],
     components: {
         searchBar,
         schoolList
     },
-    props: ['prompt'],
     computed: {
-      ...mapGetters(['userPointState'])
+      ...mapGetters(['userPointState']),
     },
     data () {
         return {
@@ -61,6 +62,9 @@ export default {
         },
         selectSchool(item){
             this.$emit('select',item)
+        },
+        close(){
+            this.$emit('close')
         }
     }
 }
@@ -74,6 +78,7 @@ export default {
 }
 
 .fixed.sticky{
+    top: 0;
     position: sticky;
 }
 </style>

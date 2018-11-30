@@ -6,7 +6,6 @@
 
 <script>
 import './../src/components/lib/css/neat.css'
-
 export default {
   name: 'App'
 }
@@ -29,11 +28,11 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_yub2xhyct2c.eot');
-  src: url('//at.alicdn.com/t/font_893274_yub2xhyct2c.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_yub2xhyct2c.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_yub2xhyct2c.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_yub2xhyct2c.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_r43ptpor5o.eot');
+  src: url('//at.alicdn.com/t/font_893274_r43ptpor5o.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_r43ptpor5o.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_r43ptpor5o.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_r43ptpor5o.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -682,8 +681,8 @@ i.iconfont.rotate{
 .avatar-uploader i.iconfont{
   position: absolute;
   font-size: 1.875rem /* 30/16 */;
-  top: 0;
-  left: 0;
+  top: .9375rem /* 15/16 */;
+  left: -.125rem /* 2/16 */;
   transform:rotate(-40deg);
 }
 

@@ -7,7 +7,7 @@
         <slot v-else>
             <div class="bg" ref="imageWrapper">
                 <round/>
-                <div class="card flex-justify" >
+                <div class="flex-justify" >
                     <div class="baby-info">
                         <div class="avatar" v-if='childInfo.avatar'>
                             <img class="avatar-img" :src="childInfo.avatar" :alt="childInfo.name"/>
@@ -15,10 +15,11 @@
                         <avatar :gender='childInfo.gender' v-else/>
                         <div class="name">{{childInfo.name}}</div>
                         <div class="label">{{label}}</div>
+                        <div class="school" v-line-clamp:20="1">{{school}}</div>
                     </div>
-                    <div class="text" v-if='totalReading!=0'>
+                    <div class="text" v-if='dataStatistics.totalReading!=0'>
                         <span>{{childInfo.name}}宝贝在阅亮书架一共阅读了图书</span>
-                        <span class="book-number">{{totalReading}}本</span>
+                        <span class="book-number">{{dataStatistics.totalReading}}本</span>
                     </div>
                     <div class="code-img">
                         <img :src="qrImage" alt="二维码">
@@ -44,7 +45,7 @@ import avatar from './../../module/avatar'
 
 export default {
     name:'qr-code',
-    props: ['childInfo','qrImage','totalReading','label'],
+    props: ['childInfo','qrImage','dataStatistics','label','school'],
     components: {
         round,
         avatar
@@ -78,14 +79,16 @@ export default {
 <style scoped>
 .baby-info{
     display: grid;
-    padding:2.5rem /* 40/16 */ 0;
+    padding: 1.875rem /* 30/16 */ 0;
 }
+
 
 .avatar{
     margin: 0 auto;
 }
 
-.label{
+.label,
+.school{
     text-align: center;
     font-size: .8125rem /* 13/16 */;
 }
@@ -96,6 +99,11 @@ export default {
     border-radius: 50%;
     box-shadow: 0 .125rem /* 2/16 */ 1.25rem /* 20/16 */ rgba(0, 0, 0, .2);
     overflow: hidden;
+}
+
+.school{
+    margin:.3125rem /* 5/16 */ auto 0;
+    width: 80%;
 }
 
 .name{
@@ -143,6 +151,9 @@ export default {
 
 .qrcode-image{
     position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
 }
 
 .close{

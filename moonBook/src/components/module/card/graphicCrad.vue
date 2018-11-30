@@ -12,8 +12,8 @@
                     <i class="iconfont vip-gold" v-if="item.card_level&&item.level.level==2">&#xe611;</i>
                     <i class="iconfont vip-ordinary" v-if="item.card_level&&item.level.level==1">&#xe611;</i>     
                 </div>
-                <div class="school" v-if='item.school.name'>
-                    {{item.school.name}}
+                <div class="school" v-if='item.school'>
+                    {{item.school}}
                 </div>
             </div>
             <div class="date">

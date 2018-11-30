@@ -1,5 +1,4 @@
 // 计算经纬度
-
 function GetDistance(lat1, lng1, lat2, lng2) {
   var radLat1 = lat1 * Math.PI / 180.0
   var radLat2 = lat2 * Math.PI / 180.0
@@ -13,7 +12,6 @@ function GetDistance(lat1, lng1, lat2, lng2) {
 }
 
 //日期转换
-
 function format(time, format) {
   var t = new Date(time)
   var tf = function (i) {
@@ -43,32 +41,15 @@ function format(time, format) {
   })
 }
 
-var now = new Date()
-var nowDay = now.getDate()
-var nowMonth = now.getMonth()
-var nowYear = now.getYear()
-var nowDayOfWeek = now.getDay()
-
-//获得本周的开始日期
-function getWeekStartDate() {
-  var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek)
-  return weekStartDate
-}
-//获得本周的结束日期
-function getWeekEndDate() {
-  var weekEndDate = new Date(nowYear, nowMonth, nowDay + (6 - nowDayOfWeek))
-  return weekEndDate
-}
-
 //字段排序
 function createComparison(propertyName) {
   return function (object1, object2) {
-    var value1 = parseFloat(object1[propertyName])
-    var value2 = parseFloat(object2[propertyName])
+    let value1 = parseFloat(object1[propertyName])
+    let value2 = parseFloat(object2[propertyName])
     if (value1 < value2) {
-      return -1
-    } else if (value1 > value2) {
       return 1
+    } else if (value1 > value2) {
+      return -1
     } else {
       return 0
     }
@@ -118,23 +99,51 @@ function compress(base64String, w, quality) {
 
 // 数组随机抽取
 function getRandomArrayElements(arr, count) {
-  let shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+  let shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index
   while (i-- > min) {
-  index = Math.floor((i + 1) * Math.random());
-  temp = shuffled[index];
-  shuffled[index] = shuffled[i];
-  shuffled[i] = temp;
+  index = Math.floor((i + 1) * Math.random())
+  temp = shuffled[index]
+  shuffled[index] = shuffled[i]
+  shuffled[i] = temp
   }
-  return shuffled.slice(min);
+  return shuffled.slice(min)
+}
+
+
+// 排名
+function rankArray(arr, key) {
+  let currentRank = 0 // 当前排名
+  let currentNum = 0 // 当前数量
+  arr.sort((a, b) => a[key] > b[key] ? -1 : 1)
+  arr.forEach( item => {
+    if(currentNum != item[key]) {    
+      ++currentRank
+      currentNum = item[key]
+    }
+    item.rank = currentRank
+  })
+  return arr
+}
+
+//数组指定元素置顶
+
+function arrayKeyTop(arr,key){
+  arr.forEach((element,i) => {
+    if(element[key]){
+      arr.splice(i, 1)
+      arr.unshift(element)
+    }
+  })  
+  return arr
 }
 
 export {
   GetDistance,
   format,
   createComparison,
+  arrayKeyTop,
+  rankArray,
   sum,
   compress,
-  getWeekStartDate,
-  getWeekEndDate,
   getRandomArrayElements
 }

@@ -1,13 +1,13 @@
 <template>
     <div class="reading">
-        <van-cell :title="moduleTitle" />
+        <van-cell :title="moduleTitle" :is-link="type =='rank'" @click="toBabyHome"/>
         <div class="not-content" v-if='list.length==0'>
             尚无记录
         </div>
         <div class="book-list scroll-x" v-else>
             <div class="book-item scroll-item" v-for='(item,index) in list' :key="index">
                 <div class="book-cover">
-                    <img class="lazy" v-lazy="item.cover" :alt="item.name" />
+                    <img :src="item.cover" :alt="item.name" />
                 </div>
                 <div class="book-name" v-line-clamp:20="2">
                     {{item.name}}
@@ -30,7 +30,17 @@
 <script>
 export default {
     name:'reading',
-    props: ['list','moduleTitle']
+    props: ['list','moduleTitle','type','babyId'],
+    methods: {
+        toBabyHome(){
+            this.$router.push({
+                name:'baby-home',
+                query:{
+                    id: this.babyId
+                }
+            })
+        }
+    }
 }
 </script>
 <style scoped>

@@ -1,11 +1,11 @@
 <template>
     <div class="baby-home page-padding">
-        <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :title="fixedHeaderBar?$route.meta.title:childInfo.name" @click-left="onClickLeft" @click-right="onClickRight">
+        <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' :title="fixedHeaderBar?$route.meta.title:childInfo.name" @click-left="onClickLeft" @click-right="onClickRight">
             <div class="btn-left" slot='left'>
                 <i class="iconfont">&#xe657;</i>
                 <span class="text">个人中心</span>
             </div>
-            <div class="head-bar-icon" slot='right'>
+            <div class="head-bar-icon" slot='right' v-if='childInfo'>
                 <i class="iconfont">&#xe60c;</i>
             </div>
         </van-nav-bar>
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="label">{{label}}</div>
-                    <div class="school" v-line-clamp:20="1" v-if='regInfo'>{{regInfo.school}}</div>
+                    <div class="school" v-line-clamp:20="1" v-if='school'>{{school}}</div>
                 </div>
                 <div class="qr-code" @click="showQrcode=true">
                     <van-icon name="qr"/>
@@ -39,18 +39,24 @@
         </div>
         <div class="container">
             <div class="bar flex flex-align">
-                <div class="bar-item totalReading">总阅读量 {{totalReading}}</div>
-                <div class="bar-item praise">赞 {{praise}}</div>
+                <div class="bar-item totalReading">总阅读量 {{dataStatistics.totalReading}}</div>
+                <div class="bar-item praise">赞 {{dataStatistics.praise}}</div>
             </div>
-            <lazy-component class="module">
-                <reading :list='readBook' moduleTitle='宝贝读过的书'/>
-            </lazy-component>
+            <div class="baby-class" v-if='classInfo'>
+                <van-cell-group>
+                    <van-cell :title="classInfo.name" is-link center @click="toClassHome">
+                        <div class="icon" slot="icon">
+                            <i class="iconfont">&#xe802;</i>
+                        </div>
+                    </van-cell>
+                </van-cell-group>
+            </div>
             <lazy-component class="module">
                 <reading :list='lateBook' moduleTitle='宝贝最近在读的书'/>
             </lazy-component>
             <lazy-component class="module">
                 <div class="module-title">晒一晒</div>
-                <div class="not-content" v-if='dryingListLengthState == 0'>
+                <div class="not-content" v-if='!listLength'>
                     尚无记录
                 </div>
                 <van-list v-model="loading" :finished="finished" @load="onLoad" v-else>
@@ -65,14 +71,14 @@
             </lazy-component>
         </div>
 
-        <slogan v-if='finished||dryingListLengthState == 0'/>
+        <slogan v-if='finished||!listLength'/>
         
         <van-popup v-model="showQrcode" class="card-popup">
-            <qr-code :qrImage='qrImage' :totalReading='totalReading' :label='label' @close="showQrcode = false" :childInfo='childInfo'/>
+            <qr-code :qrImage='qrImage' :dataStatistics='dataStatistics' :school="school" :label='label' @close="showQrcode = false" :childInfo='childInfo'/>
         </van-popup>
 
         <van-popup v-model="showSetting" class="page-popup" position="right">
-            <baby-setting @close="showSetting = false"/>
+            <baby-setting @close="showSetting = false" @setting='babySetting'/>
         </van-popup>
     </div>
 </template>
@@ -111,7 +117,7 @@ export default {
             }
         },
         label(){
-            return this.totalReading > 50 ? '阅读小明星':'阅读新秀'
+            return this.dataStatistics.totalReading > 50 ? '阅读小明星':'阅读新秀'
         }
     },
     data () {
@@ -119,14 +125,15 @@ export default {
             fixedHeaderBar:true,
             domHeight:'',
             childInfo:'',
-            regInfo:'',
+            school:'',
+            classInfo:'',
             qrImage:'',
             showQrcode:false,
-            praise: 0,
-            totalReading: 0,
+            dataStatistics:'',
             lateBook:[],
             readBook:[],
             list:[],
+            listLength:'',
             loading: false,
             finished: false,
             showSetting: false
@@ -140,33 +147,43 @@ export default {
                 vm.qrcode()
                 if(res.data.child){
                     vm.lateBook = res.data.child.lateBook
-                    vm.readBook = res.data.child.readBook
-                    vm.totalReading = res.data.child.totalReading.number
-                    vm.praise = res.data.child.praise.number
+                    vm.dataStatistics = res.data.child.dataStatistics
+                    vm.school = res.data.child.school
+                    vm.classInfo= res.data.child.class
                     vm.childInfo = res.data.child.data
-                    vm.regInfo = res.data.child.reg
                 }else{
                     vm.$dialog.alert({
-                        message:`<div class='text-center'>请添加宝贝，帮助孩子更好的养成阅读习惯</div>`,
+                        message:`<div class='text-center'>注册阅亮书架 宝贝会爱上阅读</div>`,
                         showConfirmButton:true,
                         showCancelButton:true,
-                        confirmButtonText:'添加宝贝',
-                        cancelButtonText:'稍后添加'
+                        confirmButtonText:'注册',
+                        cancelButtonText:'稍后'
                     }).then(() => {
                         vm.$router.push({name:'register'})
                     }).catch(() => {
-                        vm.$router.go(-1)
+                        vm.$router.push({name:'my'})
                     })
                 }
             })
         })
     },
+    created () {
+        this.fetchData()
+    },
     mounted () {
         window.addEventListener('scroll', this.handleScroll)
     },
+    watch: {
+        '$router':'fetchData'
+    },
     methods: {
+        fetchData(){
+            axios.get('/api/childAticleList').then(res=>{
+                this.listLength = res.data.length
+            })
+        },
         onClickLeft(){
-            this.$router.go(-1)
+            this.$router.push({name:'my'})
         },
         qrcode(){
             QRCode.toDataURL(window.location.href)
@@ -193,22 +210,30 @@ export default {
             }
         },
         onLoad() {
-            axios.get('/api/userData').then(res=>{
+            axios.get('/api/childAticleList').then(res=>{
                 setTimeout(() => {
-                    let array = res.data.userData.dryingList
+                    let array = res.data.childAticleList
                     let length = this.dryingListLengthState < 10 ? 1 : 5
                     for (let i = 0; i < length; i++) {
                         this.list.push( array[this.list.length] )
                     }
                     this.loading = false
-                    if (this.list.length >= this.dryingListLengthState) {
-                        this.finished = true;
+                    if (this.list.length >= res.data.length) {
+                        this.finished = true
                     }
                 },500)
             })
         },
         onClickRight(){
             this.showSetting = true
+        },
+        babySetting(data){
+            this.school = data.school
+        },
+        toClassHome(){
+            this.$router.push({name:'class-home',query:{
+                id: this.$route.query.id
+            }})
         }
     }
 }
@@ -299,5 +324,16 @@ export default {
 .label{
     font-size: .8125rem /* 13/16 */;
     color: #fff;
+}
+
+.baby-class .icon{
+    margin-right: .625rem /* 10/16 */;
+}
+
+.baby-class .icon i.iconfont{
+    font-size: 1.5rem /* 24/16 */;
+    background-image: linear-gradient( 135deg, #795548 10%, #000 100%);
+    -webkit-background-clip: text;
+    color: transparent;
 }
 </style>

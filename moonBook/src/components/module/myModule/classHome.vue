@@ -1,7 +1,7 @@
 <template>
     <div class="class module-card">
-        <van-cell-group>
-            <van-cell :title="userDataState.childInfo[0].data.name" :value="`选择班级`" is-link center @click="toPageClass">
+        <van-cell-group v-for='(list,index) in userDataState.childInfo' :key="index">
+            <van-cell :title="list.data.name" v-if='index==0' :value="list.class?list.class.name:'选择班级'" is-link center @click="toClassHome(list)">
                 <div class="icon" slot="icon">
                     <i class="iconfont">&#xe802;</i>
                 </div>
@@ -10,7 +10,7 @@
 
         <!-- 选择班级 -->
         <van-popup v-model="show" class="page-popup" position="right">
-            <add-class :school='userDataState.regInfo.school' @close='show = false'/>
+           <add-class :school="schoolState" :babyId='userDataState.childInfo[0].id' @close='show = false'/>
         </van-popup>
     </div>
 </template>
@@ -19,23 +19,29 @@ import { mapGetters } from 'vuex'
 import addClass from './../addClass'
 
 export default {
-    name:'class',
+    name:'class-home',
     components: {
       addClass  
     },
     computed: {
-      ...mapGetters(['userDataState'])
+        ...mapGetters(['userDataState','schoolState']),
     },
     data () {
         return {
             show:false
         }
     },
-    methods: {
-        toPageClass(){
-            this.show = true
+    methods:{
+        toClassHome(list){
+            if(list.class){
+                this.$router.push({name:'class-home',query:{
+                    id: list.id
+                }})
+            }else{
+                this.show = true
+            }
         }
-    }   
+    }
 }
 </script>
 <style scoped>

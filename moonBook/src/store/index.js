@@ -7,29 +7,40 @@ import Cookies from 'js-cookie'
 Vue.use(Vuex)
 
 const state = {
-    slogan: '阅读点亮人生',
-    userData: {},
-    msgLength: 1,
-    tabBtn: [],
-    amapApiKey: '0522f462288e296eac959dbde42718ab',
-    userPoint: ''
+    slogan:'阅读照亮人生',
+    userData:{},
+    msgLength:1,
+    tabBtn:[],
+    amapApiKey:'0522f462288e296eac959dbde42718ab',
+    userPoint:''
 }
 
 const getters = {
-    userDataState: state => {
-        return state.userData
-    },
-    MsgLengthState: state => {
-        return state.msgLength
-    },
-    dryingListLengthState: state => {
-        if (state.userData.dryingList) {
+   userDataState: state => {
+       return state.userData
+   },
+   MsgLengthState: state => {
+       return state.msgLength.length
+   },
+   dryingListLengthState: state => {
+       if(state.userData.dryingList){
             return state.userData.dryingList.length
+       }
+   },
+   schoolState: state => {
+        let school = ''
+        if(state.userData.childInfo){
+            state.userData.childInfo.forEach((element,i)=>{
+                if(i==0){
+                    school = element.school
+                }
+            })
         }
-    },
-    userPraiseState: state => {
-        let praise = []
-        if (state.userData.dryingList) {
+        return school
+   },
+   userPraiseState: state => {
+       let praise = []
+       if(state.userData.dryingList){
             state.userData.dryingList.forEach(element => {
                 praise.push(element.social.praise.number)
             })
@@ -62,8 +73,8 @@ const mutations = {
     setTabBtn(state, params) {
         state.tabBtn = params.data
     },
-    setUserPoint(state, params) {
-        Cookies.set('userPoint', params.data, { expires: 1 })
+    setUserPoint(state,params){
+        Cookies.set('userPoint', params.data, { expires: 7 })
         state.userPoint = params.data
     },
     getMsgs(state, msgs) {
@@ -108,7 +119,8 @@ const actions = {
             })
         })
     },
-    getUserLocation(context, products) {
+    getUserLocation(context,products){
+
         let cityInfo = {
             location: products.location
         }
@@ -124,8 +136,7 @@ const actions = {
             return response.json()
         }).then(res => {
             cityInfo.city = res.regeocode.addressComponent.city
-
-            context.commit('setUserPoint', {
+            context.commit('setUserPoint',{
                 data: cityInfo
             })
         })

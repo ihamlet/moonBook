@@ -29,7 +29,7 @@ export default {
     return {
       show:false,
       startPageShow:true,
-      center: '116.397477,39.908692',
+      center: '114.085947,22.547',
       plugin:[{
           timeout:1000,
           pName: 'Geolocation',
@@ -56,10 +56,10 @@ export default {
   },
   watch: {
       center(val){
-        let products = {
-          location:val
-        }      
-        this.getUserLocation(products)
+          let products = {
+            location:val
+          }
+          this.getUserLocation(products)
       },
       '$route': 'fetchData'
   },       

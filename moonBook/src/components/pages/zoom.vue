@@ -39,7 +39,7 @@
                     <van-cell title="孩子所在学校" :value='userDataState.regInfo.school' is-link/>
                 </van-cell-group>
                 <van-cell-group v-if='userDataState.vipInfo&&!userDataState.regInfo'>
-                    <van-cell title="孩子所在学校" :value='userDataState.vipInfo.school.schoolName.name' is-link/>
+                    <van-cell title="孩子所在学校" :value='userDataState.vipInfo.school' is-link/>
                 </van-cell-group>
             </lazy-component>
 
