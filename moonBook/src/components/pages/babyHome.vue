@@ -156,20 +156,20 @@
             vm.childInfo = res.data.child.data
           } else {
             vm.$dialog.alert({
-                message: `<div class='text-center'>注册阅亮书架 宝贝会爱上阅读</div>`,
-                showConfirmButton: true,
-                showCancelButton: true,
-                confirmButtonText: "注册",
-                cancelButtonText: "稍后"
-              }).then(() => {
-                vm.$router.push({
-                  name: "register"
-                })
-              }).catch(() => {
-                vm.$router.push({
-                  name: "my"
-                })
+              message: `<div class='text-center'>注册阅亮书架 宝贝会爱上阅读</div>`,
+              showConfirmButton: true,
+              showCancelButton: true,
+              confirmButtonText: "注册",
+              cancelButtonText: "稍后"
+            }).then(() => {
+              vm.$router.push({
+                name: "register"
               })
+            }).catch(() => {
+              vm.$router.push({
+                name: "my"
+              })
+            })
           }
         })
       })
@@ -196,10 +196,10 @@
       },
       qrcode() {
         QRCode.toDataURL(window.location.href).then(url => {
-            this.qrImage = url
-          }).catch(err => {
-            console.error(err)
-          })
+          this.qrImage = url
+        }).catch(err => {
+          console.error(err)
+        })
       },
       handleScroll() {
         this.getDomHeight();
