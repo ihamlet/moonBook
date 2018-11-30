@@ -34,9 +34,12 @@ export default {
     methods:{
         toClassHome(list){
             if(list.class){
-                this.$router.push({name:'class-home',query:{
-                    id: list.id
-                }})
+                this.$router.push({
+                    name:'class-home',
+                    query:{
+                        id: list.id
+                    }
+                })
             }else{
                 this.show = true
             }

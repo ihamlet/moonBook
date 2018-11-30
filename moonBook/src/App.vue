@@ -289,7 +289,7 @@ body.theme .head-bar-text,
 
 .img-grid{
     width: 100%;
-    height: 6.875rem /* 110/16 */;
+    padding-bottom: 100%;
     position: relative;
     overflow: hidden;
     background: #dcdfe6;
@@ -760,5 +760,41 @@ i.iconfont.rotate{
   text-align: center;
   line-height: 12.5rem /* 200/16 */;
   color: #C0C4CC;
+}
+
+
+/* 卡片视图 */
+.text-preview,
+.img-preview{
+    position: relative;
+}
+
+.badge{
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 2;
+}
+
+.robe,
+.img-preview .grid{
+    width:3.375rem /* 54/16 */;
+    height: 3.375rem /* 54/16 */;
+    border-radius: .25rem /* 4/16 */;
+    margin-right: .3125rem /* 5/16 */;
+    background-size: cover;
+    background-position: 50%;
+    z-index: 2;
+}
+
+.robe{
+    position: absolute;
+    right: -.3125rem /* 5/16 */;
+    top: .25rem /* 4/16 */;
+    z-index: 1;
+}
+
+.img-preview .grid:last-child{
+    box-shadow: 0 .125rem /* 2/16 */ .625rem /* 10/16 */ rgba(0, 0, 0, .3)
 }
 </style>

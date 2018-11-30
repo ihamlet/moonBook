@@ -124,7 +124,7 @@ export default {
     top: 0;
     font-size: 3.125rem /* 50/16 */;
     text-align: center;
-    animation: rotate 2s linear infinite;
+    animation: rotate 1s linear infinite;
     transform-origin:50% 43.4%;
 }
 

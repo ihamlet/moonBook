@@ -581,7 +581,8 @@ let classAticleList = []
 
 Mock.mock('/api/classAticleList', (req, res) => {
   return {
-    classAticleList
+    classAticleList,
+    length:classAticleList.length
   }
 })
 
