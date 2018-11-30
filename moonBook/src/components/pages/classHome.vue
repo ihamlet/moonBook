@@ -28,7 +28,7 @@
         </lazy-component>
     </div>
     
-    <van-popup v-model="show">
+    <van-popup v-model="show" class="plate-card">
         <qr-code :classInfo="classData" :qrImage="qrImage" type='classHome' @close='show = false'/>
     </van-popup>
     
@@ -180,5 +180,10 @@ export default {
 
 .btn-right-qrcode i.iconfont{
     font-size: 1.875rem /* 30/16 */;
+}
+
+.plate-card{
+    width: 18.75rem /* 300/16 */;
+    height: 35.625rem /* 570/16 */;
 }
 </style>

@@ -41,7 +41,7 @@
                             <span>{{classInfo.name}}</span>
                             <span class="people">{{classInfo.people}}人</span>
                         </div>
-                        <div class="school" v-line-clamp:20="1">{{classInfo.school}}</div>
+                        <div class="school">{{classInfo.school}}</div>
                     </div>
                     <div class="code-img">
                         <img :src="qrImage" alt="二维码">
@@ -206,7 +206,7 @@
 
 
   .img-bg{
-      width: 18.75rem /* 300/16 */;
+      width: 100%;
       height: 27.5rem /* 440/16 */;
       background: url('./../../../assets/img/qc-bg-img.png');
       background-size: cover;
