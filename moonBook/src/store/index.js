@@ -35,6 +35,8 @@ const getters = {
                     school = element.school
                 }
             })
+        }else if(state.userData.vipInfo){
+            school = state.vipInfo.school
         }
         return school
    },

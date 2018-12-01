@@ -184,6 +184,6 @@ export default {
 
 .plate-card{
     width: 18.75rem /* 300/16 */;
-    height: 35.625rem /* 570/16 */;
+    overflow: hidden;
 }
 </style>

@@ -385,7 +385,7 @@ let pay = function (options) {
       school:content.school.schoolName.name,
       vipInterval:content.vipInterval
     }
-    
+
     messageData.messageList.unshift({
       id: Mock.mock('@increment'),
       content: {
@@ -831,7 +831,8 @@ let classData = Mock.mock({
           num: function(){
             return Mock.mock('@natural(5, 30)')
           },
-          lateBook: bookData.list
+          lateBook: bookData.list,
+          'gender|1':['boy','girl']
         }],	
         'total|15-30':[{
           avatar: Mock.mock("@image('120x120')"),
@@ -844,7 +845,8 @@ let classData = Mock.mock({
           num: function(){
             return Mock.mock('@natural(5, 30)')
           },
-          lateBook: bookData.list
+          lateBook: bookData.list,
+          'gender|1':['boy','girl']
         }]
       }
     }]
@@ -872,7 +874,8 @@ let classData = Mock.mock({
           num: function(){
             return Mock.mock('@natural(5, 30)')
           },
-          lateBook: bookData.list
+          lateBook: bookData.list,
+          'gender|1':['boy','girl']
         }],	
         'total|15-30':[{
           avatar: Mock.mock("@image('120x120')"),
@@ -885,7 +888,8 @@ let classData = Mock.mock({
           num: function(){
             return Mock.mock('@natural(5, 30)')
           },
-          lateBook: bookData.list
+          lateBook: bookData.list,
+          'gender|1':['boy','girl']
         }]
       }
     }]
@@ -913,7 +917,8 @@ let classData = Mock.mock({
           num: function(){
             return Mock.mock('@natural(5, 30)')
           },
-          lateBook: bookData.list
+          lateBook: bookData.list,
+          'gender|1':['boy','girl']
         }],	
         'total|20-30':[{
           avatar: Mock.mock("@image('120x120')"),
@@ -926,7 +931,8 @@ let classData = Mock.mock({
           num: function(){
             return Mock.mock('@natural(5, 30)')
           },
-          lateBook: bookData.list
+          lateBook: bookData.list,
+          'gender|1':['boy','girl']
         }]
       }
     }]

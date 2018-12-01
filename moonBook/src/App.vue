@@ -27,13 +27,12 @@ textarea {
 }
 
 @font-face {
-  font-family: "iconfont"; /* project id 893274 */
-  src: url("//at.alicdn.com/t/font_893274_r43ptpor5o.eot");
-  src: url("//at.alicdn.com/t/font_893274_r43ptpor5o.eot?#iefix")
-      format("embedded-opentype"),
-    url("//at.alicdn.com/t/font_893274_r43ptpor5o.woff") format("woff"),
-    url("//at.alicdn.com/t/font_893274_r43ptpor5o.ttf") format("truetype"),
-    url("//at.alicdn.com/t/font_893274_r43ptpor5o.svg#iconfont") format("svg");
+  font-family: 'iconfont';  /* project id 893274 */
+  src: url('//at.alicdn.com/t/font_893274_9grij59yh8j.eot');
+  src: url('//at.alicdn.com/t/font_893274_9grij59yh8j.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_9grij59yh8j.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_9grij59yh8j.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_9grij59yh8j.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -209,6 +208,7 @@ body.theme .head-bar-text,
   border: 0.0625rem /* 1/16 */ solid #409eff;
 }
 
+.punch .theme-btn,
 .theme-borrowing-btn {
   background: linear-gradient(90deg, #ff765c, #ff23b3);
 }
@@ -258,6 +258,7 @@ body.theme .head-bar-text,
   margin-bottom: 0.625rem /* 10/16 */;
 }
 
+.punch,
 .apply {
   position: fixed;
   bottom: 4.875rem /* 78/16 */;

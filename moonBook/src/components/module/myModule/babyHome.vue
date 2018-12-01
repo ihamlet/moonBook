@@ -53,12 +53,8 @@
 </template>
 <script>
   import axios from 'axios'
-  import {
-    mapGetters
-  } from 'vuex'
-  import {
-    format
-  } from './../../lib/js/util.js'
+  import { mapGetters } from 'vuex'
+  import { format } from './../../lib/js/util.js'
   import addChild from './../addChild'
   import addClass from './../addClass'
   import numberGrow from './../../module/animate/numberGrow'

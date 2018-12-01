@@ -16,9 +16,7 @@
   </div>
 </template>
 <script>
-import {
-  mapGetters
-} from "vuex"
+import { mapGetters } from "vuex"
 import addClass from "./../addClass"
 
 export default {

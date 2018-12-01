@@ -244,6 +244,7 @@ export default {
       axios.put('/api/pay', {
           data: this.pushUserInfo
         }).then(res => {
+          this.getUserData() //写入用户数据
           setTimeout(() => {
             this.payLoading = false
             this.iconSuccessShow = true
@@ -251,7 +252,6 @@ export default {
           setTimeout(() => {
             this.stepActive = 2
             this.iconSuccessShow = false
-            this.getUserData() //写入用户数据
             this.getMsgLength()
             if ( this.pushUserInfo.school.addChild.boolean && this.userDataState.childInfo.length == 0 ) {
               this.addChildShow = true

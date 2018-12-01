@@ -47,6 +47,10 @@
                         <img :src="qrImage" alt="二维码">
                     </div>
                 </div>
+                <div class="explain">
+                  <span> — 长按识别二维码进入 — </span>
+                  <span> © 阅亮书架 </span>
+              </div>
             </div>
         </slot>
 
@@ -207,20 +211,26 @@
 
   .img-bg{
       width: 100%;
-      height: 27.5rem /* 440/16 */;
+      height: 21.25rem /* 340/16 */;
       background: url('./../../../assets/img/qc-bg-img.png');
       background-size: cover;
-      background-position: 50%;
+      background-position: bottom;
+      background-repeat: no-repeat;
   }
 
     .card{
         width: 16.25rem /* 260/16 */;
-        padding: 0 1.25rem /* 20/16 */
+        padding: .3125rem /* 5/16 */ 1.25rem /* 20/16 */
     }
 
     .plate .class-card{
       flex: 2;
       padding-left: .625rem /* 10/16 */;
+    }
+
+    .plate .explain{
+      margin-top: 0;
+      padding-bottom: 1.25rem /* 20/16 */
     }
 
     .plate .class-card .name,
