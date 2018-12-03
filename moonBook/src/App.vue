@@ -28,11 +28,11 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_9grij59yh8j.eot');
-  src: url('//at.alicdn.com/t/font_893274_9grij59yh8j.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_9grij59yh8j.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_9grij59yh8j.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_9grij59yh8j.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_zu0diij9bxs.eot');
+  src: url('//at.alicdn.com/t/font_893274_zu0diij9bxs.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_zu0diij9bxs.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_zu0diij9bxs.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_zu0diij9bxs.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -765,5 +765,28 @@ i.iconfont.rotate {
 
 .bar-fixed.van-nav-bar--fixed{
     position: sticky;
+}
+
+/* 登录 */
+.login .van-cell-group{
+   background: transparent;
+}
+
+.login .form .van-field__control{
+  height: 2rem /* 32/16 */;
+  line-height: 2rem /* 32/16 */;
+  padding-left:2.5rem /* 40/16 */;
+  font-size: 1rem /* 16/16 */;
+  font-weight: 700;
+}
+
+.login .form .van-field__control::-webkit-input-placeholder{
+  font-weight: normal;
+}
+
+.login .van-field{
+  margin-bottom: .625rem /* 10/16 */;
+  box-shadow: 0 .625rem /* 10/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.1);
+  border-radius: .3125rem /* 5/16 */;
 }
 </style>

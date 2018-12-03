@@ -12,6 +12,7 @@ const state = {
     msgLength:1,
     tabBtn:[],
     amapApiKey:'0522f462288e296eac959dbde42718ab',
+    token:'',
     userPoint:''
 }
 
@@ -62,6 +63,17 @@ const getters = {
    },
    userTabBtn: state =>{
        return state.tabBtn
+   },
+   userToken: state =>{
+        if(state.token){
+            return state.token
+        }else{
+            let data
+            if(Cookies.get('Token')){
+                data = Cookies.get('Token')
+            }
+            return state.token = data
+        }
    }
 }
 
@@ -78,6 +90,10 @@ const mutations = {
     setUserPoint(state,params){
         Cookies.set('userPoint', params.data, { expires: 7 })
         state.userPoint = params.data
+    },
+    setToken(state,params){
+        Cookies.set('Token', params.data, { expires: 365 })
+        state.token = params.data
     }
 }
 
@@ -191,6 +207,17 @@ const actions = {
                 resolve(res)
             })
         })     
+    },
+    login(context,products){
+        let data = products
+        return new Promise((resolve, reject) => {
+            axios.post('/book/login/mobileLogin', data).then(res=>{
+                resolve(res.data)
+                context.commit('setToken',{
+                    data: res.data.token
+                })
+            })
+        })
     }
 }
 

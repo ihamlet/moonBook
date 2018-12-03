@@ -1,11 +1,11 @@
 <template>
   <div class="week-list">
     <div class="module-title">班级榜</div>
-      <van-tabs color="#409EFF" :offsetTop="44" sticky :lineWidth='20' @click="onClickTabs"> 
+      <van-tabs color="#409EFF" :offsetTop="46" sticky :lineWidth='20' @click="onClickTabs"> 
         <van-tab v-for='(tab,tabIndex) in tabArray' :key='tabIndex' :title='tab.title'>
           <!-- 周榜月榜选项卡 -->
           <div class="tab-card">
-            <van-tabs color="#409EFF" :line-width='50' type="card" @change="tabChange">
+            <van-tabs color="#409EFF" type="card" @change="tabChange">
                 <van-tab :title="list.title" v-for="(list,index) in tabs" :key="index">
                   <van-cell-group v-for="(item,itemIndex) in list.content" :key="itemIndex">
                     <van-cell :value="`${item.num}本`" center is-link :arrow-direction="item.id == selectId?'up':'down'" @click="select(item)">
@@ -127,6 +127,9 @@
       },
       onClickTabs(index, title){
         console.log(index,title)
+      },
+      punch(){
+        console.log('扫描图书二维码')
       }
     }
   }

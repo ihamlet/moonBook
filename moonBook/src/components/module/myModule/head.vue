@@ -8,18 +8,17 @@
                 <i class="iconfont">&#xe609;</i>
             </div>
         </van-nav-bar>
-        <div class="user-info flex flex-justify" v-if='userDataState.userInfo'>
+        <div class="user-info flex flex-justify">
             <div class="info">
                 <div class="avatar">
-                    <img :src="userDataState.userInfo.avatar" :alt="userDataState.userInfo.name">
+                    <img :src="avatar" :alt="name">
                 </div>
-                <div class="name">{{userDataState.userInfo.name}}</div>
-                <div class="school" v-line-clamp:20="1" v-if='schoolState'>{{schoolState}}</div>
+                <div class="name">{{name}}</div>
             </div>
         </div>
         <div class="card">
             <div class="borrow-card flex flex-align">
-                <div class="service flex flex-align" v-if='userDataState.vipInfo'>
+                <div class="service flex flex-align" v-if='isVip'>
                     <div class="data-flow">
                         <i class="iconfont" :class="`vip-${userDataState.vipInfo.card.level.name}`">&#xe604;</i>
                         <b class="card-name">
@@ -64,7 +63,7 @@
             <accept @close='onAccpetPage' v-model='active'/>
         </van-popup>
 
-        <van-popup v-model="punchShow" class="page-popup punch" position="right">
+        <van-popup v-model="punchShow" class="page-popup page-punch" position="right">
             <punch @close='closePunch'/>
         </van-popup>
     </div>
@@ -84,7 +83,7 @@ export default {
         punch
     },
     computed: {
-        ...mapGetters(['userDataState','schoolState'])
+        ...mapGetters(['userDataState','userToken'])
     },
     data () {
         return {
@@ -93,16 +92,29 @@ export default {
             fixedHeaderBar:true,
             active:0,
             punchShow:false,
-            applyShow:false
+            applyShow:false,
+            avatar:'',
+            name:'',
+            isVip:''
         }
+    },
+    created () {
+        this.fetchData()
     },
     mounted () {
         window.addEventListener('scroll', this.handleScroll)
     },
+    watch: {
+      '$router':'fetchData'  
+    },
     methods: {
         fetchData(){
-            axios.get('/api/userData').then(res=>{
-                this.userDataState = res.data.userData
+            console.log('1111')
+            axios.get(`/book/memberUser/getInfo?token=${this.userToken}`).then(res=>{
+                console.log(res)
+                this.avatar = res.data.avatar
+                this.name = res.data.name
+                this.isVip = res.data.isVip
             })
         },
         handleScroll(){
@@ -247,7 +259,7 @@ export default {
     margin: 0 .3125rem /* 5/16 */;
 }
 
-.punch{
+.page-punch{
     background: #DE4313;
 }
 </style>

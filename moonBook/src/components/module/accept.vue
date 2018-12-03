@@ -15,21 +15,21 @@
         <lazy-component>
             <div class="container" v-if='stepActive==0'>
                 <div class="list scroll-y" ref="scrollContainer">
-                    <div class="item" v-for='(item,index) in schoolList' :key="index" @click="select(item)">
-                        <van-cell-group>
-                            <van-cell is-link class="flex flex-align">
-                                <div class="school-info">
-                                    <div class="school-name">
-                                        {{item.schoolName.name}}
-                                        <i class="iconfont" v-if='item.addChild.boolean'>&#xe601;</i>
-                                    </div>
-                                    <div class="school-address">
-                                        {{item.schoolAddress}}
-                                    </div>
+                    <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+                        <van-cell v-for="(item,index) in list" :key="index" is-link class="flex flex-align">
+                          <div class="item">
+                            <div class="school-info">
+                                <div class="school-name">
+                                    {{item.title}}
+                                    <i class="iconfont">&#xe601;</i>
                                 </div>
-                            </van-cell>
-                        </van-cell-group>
-                    </div>
+                                <div class="school-address">
+                                    {{item.addr}}
+                                </div>
+                            </div>
+                          </div>
+                        </van-cell>
+                    </van-list>
                 </div>
             </div>
         </lazy-component>
@@ -159,10 +159,21 @@ export default {
     addChild
   },
   computed: {
-    ...mapGetters(['userDataState'])
+    ...mapGetters(['userDataState','userPointState']),
+    lng(){
+       return this.userPointState.location.split(',')[0]
+    },
+    lat(){
+      return this.userPointState.location.split(',')[1]
+    }
   },
   data() {
     return {
+      list: [],
+      loading: false,
+      finished: false,
+      page:1,
+
       pageTitle: 'addBaby',
       addChildShow: false,
       disabled: false,
@@ -188,6 +199,7 @@ export default {
   },
   created() {
     this.fetchData()
+    console.log(this.$store.state.slogan)
   },
   watch: {
     active(val) {
@@ -201,13 +213,27 @@ export default {
   methods: {
     ...mapActions(['getUserData', 'getMsgLength']),
     fetchData() {
-      axios.get('/api/schoolList').then(res => {
-        this.schoolList = res.data.schoolData.schoolList
-      })
       axios.get('/api/cardInfo').then(res => {
         this.cardInfo.card = res.data.card
         this.cardInfo.vipInterval = res.data.vipInterval
       })
+    },
+    onLoad(){
+      let data = {
+        lat:this.lat,
+        lng:this.lng,
+        page:this.page
+      }
+
+      axios.get(`/book/school/index?ajax=1&lat=${data.lat}&lng=${data.lng}&page=${data.page}`).then(res => {
+          this.page++
+          this.list = this.list.concat(res.data.data)
+          this.loading = false
+          if(this.list.length >= res.data.count){
+            this.finished = true
+          }
+      })
+
     },
     onClickLeft() {
       this.stepActive < 0 ? this.stepActive : this.stepActive--

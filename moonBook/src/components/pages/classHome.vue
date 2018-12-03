@@ -16,7 +16,7 @@
         <div class="class-info">
             <div class="class-name">{{classInfo.name}}</div>
             <div class="class-people">{{classInfo.sort}}（{{classInfo.people}}人）</div>
-            <div class="school">{{babyData.school}}</div>
+            <div class="school" v-line-clamp:20="1">{{babyData.school}}</div>
         </div>
     </div>
     <div class="container">
@@ -29,7 +29,7 @@
     </div>
     
     <van-popup v-model="show" class="plate-card">
-        <qr-code :classInfo="classData" :qrImage="qrImage" type='classHome' @close='show = false'/>
+        <qr-code :classInfo="classData" :school='classData.school' :qrImage="qrImage" type='classHome' @close='show = false'/>
     </van-popup>
     
     <slogan/>
@@ -160,6 +160,7 @@ export default {
 
 .class-info{
     color: #fff;
+    width: 9.375rem /* 150/16 */;
 }
 
 .class-avatar{

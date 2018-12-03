@@ -219,7 +219,9 @@ i.iconfont.hot {
 }
 
 .school {
-  font-size: .8125rem/* 13/16 */; 
+  font-size: .8125rem/* 13/16 */;
+  width: 11.25rem /* 180/16 */; 
+  text-align: center;
 }
 
 .name {

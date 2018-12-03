@@ -13,6 +13,7 @@ import ClassHome from '@/components/pages/classHome'
 import ClassZoom from '@/components/pages/classZoom'
 
 import Register from '@/components/pages/register'
+import Login from '@/components/pages/login'
 
 Vue.use(Router)
 
@@ -29,7 +30,8 @@ export default new Router({
         component: Home,
         meta: { 
           scrollToTop: true, 
-          tabActive:0
+          tabActive:0,
+          LoginRequire: false
         }
       },{
         path: '/register',
@@ -38,7 +40,18 @@ export default new Router({
         meta: {
           title: '注册',
           scrollToTop: true,
-          tabActive:0
+          tabActive:0,
+          LoginRequire: false
+        }
+      },{
+        path: '/login',
+        name: 'login',
+        component: Login,
+        meta: {
+          title: '登录',
+          scrollToTop: true,
+          tabActive:3,
+          LoginRequire: false
         }
       },{
         path: '/find',
@@ -47,7 +60,8 @@ export default new Router({
         meta: {
           title: '发现',
           scrollToTop: true,
-          tabActive:1
+          tabActive:1,
+          LoginRequire: false
         }
       },{
         path: '/notice',
@@ -56,7 +70,8 @@ export default new Router({
         meta: {
           title: '消息中心',
           scrollToTop: true,
-          tabActive:2
+          tabActive:2,
+          LoginRequire: true
         }
       },{
         path: '/my',
@@ -65,7 +80,8 @@ export default new Router({
         meta: {
           title: '个人中心',
           scrollToTop: true,
-          tabActive:3
+          tabActive:3,
+          LoginRequire: true
         }
       },{
         path: '/zoom',
@@ -74,7 +90,8 @@ export default new Router({
         meta: {
           title: '个人空间',
           scrollToTop: true,
-          tabActive:3
+          tabActive:3,
+          LoginRequire: true
         }
       },{
         path: '/baby-home',
@@ -83,7 +100,8 @@ export default new Router({
         meta: {
           title: '宝贝主页',
           scrollToTop: true,
-          tabActive:3
+          tabActive:3,
+          LoginRequire: true
         }
       },{
         path: '/class-home',
@@ -92,7 +110,8 @@ export default new Router({
         meta: {
           title: '班级主页',
           scrollToTop: true,
-          tabActive:3
+          tabActive:3,
+          LoginRequire: true
         }
       },{
         path: '/class-zoom',
@@ -101,7 +120,8 @@ export default new Router({
         meta: {
           title: '班级风采',
           scrollToTop: true,
-          tabActive:3
+          tabActive:3,
+          LoginRequire: true
         }
       }]
     },{
