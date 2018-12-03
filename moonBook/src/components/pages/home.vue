@@ -130,7 +130,7 @@ export default {
         this.fetchData()
     }, 
     mounted () {
-        window.addEventListener('scroll', this.handleScroll)
+        window.addEventListener('scroll', this.handleScroll)   
     },
     watch: {
       '$router':'fetchData'
