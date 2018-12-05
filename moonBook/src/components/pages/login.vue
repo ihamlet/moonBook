@@ -44,7 +44,7 @@
                     console.log(res);
                     toast.clear();
                     if(res.data.status === 1) {
-                        console.log('登陆成功');
+                        localStorage.setItem('token', res.data.token);
                         this.$route.change({path:this.redirect});
                     } else {
                         this.$toast.fail(res.data.info);
