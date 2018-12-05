@@ -49,18 +49,18 @@ export default {
 }
 </script>
 <style scoped>
-  .class {
-    overflow: hidden;
-  }
+.class {
+  overflow: hidden;
+}
 
-  .icon {
-    margin-right: 0.625rem/* 10/16 */;
-  }
+.icon {
+  margin-right: 0.625rem /* 10/16 */;
+}
 
-  .icon i.iconfont {
-    font-size: 1.5rem/* 24/16 */;
-    background-image: linear-gradient(135deg, #795548 10%, #000 100%);
-    -webkit-background-clip: text;
-    color: transparent;
-  }
+.icon i.iconfont {
+  font-size: 1.5rem /* 24/16 */;
+  background-image: linear-gradient(135deg, #795548 10%, #000 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
 </style>

@@ -6,7 +6,7 @@
     </transition>
     <div class="root-dom" v-if='!startPageShow'>
       <router-view />
-      <footer-bar />
+      <footer-bar v-if='$route.meta.isFooterBar'/>
     </div>
   </div>
 </template>

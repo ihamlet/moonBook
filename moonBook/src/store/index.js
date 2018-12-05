@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import axios from './../components/lib/js/api'
 import fetchJsonp from 'fetch-jsonp'
 import Cookies from 'js-cookie'
 
@@ -86,8 +86,8 @@ const getters = {
             return state.token
         }else{
             let data
-            if(Cookies.get('Token')){
-                data = Cookies.get('Token')
+            if(Cookies.get('WWW_TOKEN')){
+                data = Cookies.get('WWW_TOKEN')
             }
             return state.token = data
         }
@@ -106,7 +106,6 @@ const mutations = {
         state.userPoint = params.data
     },
     setToken(state,params){
-        Cookies.set('Token', params.data, { expires: 365 })
         state.token = params.data
     }
 }
@@ -180,12 +179,7 @@ const actions = {
             datatype:'all'
         }
 
-        console.log(products)
-
-        console.log(context.getters.userPointState.location)
-
         let locationArray = context.getters.userPointState.location.split(',')
-
 
         let joinData = {
             lat:locationArray[1],

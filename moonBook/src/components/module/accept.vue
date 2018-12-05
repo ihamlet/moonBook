@@ -141,7 +141,7 @@
     </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from './../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
 import iconSuccess from './animate/iconSuccess'
 import addChild from './addChild'

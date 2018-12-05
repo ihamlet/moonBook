@@ -15,7 +15,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import axios from 'axios'
+import axios from './../lib/js/api'
 
 import cardHead from './../module/myModule/head'
 import classHome from './../module/myModule/classHome'

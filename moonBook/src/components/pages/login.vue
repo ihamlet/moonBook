@@ -53,7 +53,7 @@ export default {
                         duration: 1000,
                         background: '#409EFF'
                     })
-                    this.$router.push({name:'my'})
+                    this.$router.push({path:this.$route.query.redirect})
                 }else{
                     this.$notify(res.info)
                     this.userLogin.mobile = ''

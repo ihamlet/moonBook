@@ -28,11 +28,11 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_zu0diij9bxs.eot');
-  src: url('//at.alicdn.com/t/font_893274_zu0diij9bxs.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_zu0diij9bxs.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_zu0diij9bxs.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_zu0diij9bxs.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_mxrvsickrfj.eot');
+  src: url('//at.alicdn.com/t/font_893274_mxrvsickrfj.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_mxrvsickrfj.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_mxrvsickrfj.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_mxrvsickrfj.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -808,5 +808,26 @@ i.iconfont.rotate {
 
 .head-bar-text .van-icon-arrow-left{
   color: #fff;
+}
+
+.video-cover {
+  position: relative;
+  width: 100%;
+}
+
+.video-cover .play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3.5rem /* 56/16 */;
+  height: 3.5rem /* 56/16 */;
+  text-align: center;
+  line-height: 3.5rem /* 56/16 */;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.video-cover .play i.iconfont {
+  color: #fff;
+  font-size: 3.5rem /* 56/16 */;
 }
 </style>

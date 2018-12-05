@@ -15,6 +15,8 @@ import ClassZoom from '@/components/pages/classZoom'
 import Register from '@/components/pages/register'
 import Login from '@/components/pages/login'
 
+import Article from '@/components/pages/article'
+
 Vue.use(Router)
 
 export default new Router({
@@ -31,7 +33,7 @@ export default new Router({
         meta: { 
           scrollToTop: true, 
           tabActive:0,
-          LoginRequire: false
+          isFooterBar: true
         }
       },{
         path: '/register',
@@ -41,7 +43,7 @@ export default new Router({
           title: '注册',
           scrollToTop: true,
           tabActive:0,
-          LoginRequire: false
+          isFooterBar: false
         }
       },{
         path: '/login',
@@ -51,7 +53,7 @@ export default new Router({
           title: '登录',
           scrollToTop: true,
           tabActive:3,
-          LoginRequire: false
+          isFooterBar: false
         }
       },{
         path: '/find',
@@ -61,7 +63,17 @@ export default new Router({
           title: '发现',
           scrollToTop: true,
           tabActive:1,
-          LoginRequire: false
+          isFooterBar: true
+        }
+      },{
+        path: '/article',
+        name: 'article',
+        component: Article,
+        meta: {
+          title: '正文',
+          scrollToTop: true,
+          tabActive:1,
+          isFooterBar: false
         }
       },{
         path: '/notice',
@@ -71,7 +83,7 @@ export default new Router({
           title: '消息中心',
           scrollToTop: true,
           tabActive:2,
-          LoginRequire: true
+          isFooterBar: true
         }
       },{
         path: '/my',
@@ -81,7 +93,7 @@ export default new Router({
           title: '个人中心',
           scrollToTop: true,
           tabActive:3,
-          LoginRequire: true
+          isFooterBar: true
         }
       },{
         path: '/zoom',
@@ -91,7 +103,7 @@ export default new Router({
           title: '个人空间',
           scrollToTop: true,
           tabActive:3,
-          LoginRequire: true
+          isFooterBar: true
         }
       },{
         path: '/baby-home',
@@ -101,7 +113,7 @@ export default new Router({
           title: '宝贝主页',
           scrollToTop: true,
           tabActive:3,
-          LoginRequire: true
+          isFooterBar: true
         }
       },{
         path: '/class-home',
@@ -111,7 +123,7 @@ export default new Router({
           title: '班级主页',
           scrollToTop: true,
           tabActive:3,
-          LoginRequire: true
+          isFooterBar: true
         }
       },{
         path: '/class-zoom',
@@ -121,7 +133,7 @@ export default new Router({
           title: '班级风采',
           scrollToTop: true,
           tabActive:3,
-          LoginRequire: true
+          isFooterBar: true
         }
       }]
     },{
