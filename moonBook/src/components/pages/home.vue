@@ -48,22 +48,22 @@
         </div>
 
         <!-- 发布 -->
-        <van-popup v-model="releasePageShow" class="page-popup" position="bottom" :overlay="false">
+        <van-popup v-model="releasePageShow" class="page-popup" position="bottom" get-container='#app'>
             <graphic @close='releasePageShow = false'/>
         </van-popup>
 
         <!-- 借阅卡办理页面 -->
-        <van-popup v-model="applyShow" class="page-popup" position="bottom" :overlay="false">
+        <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
             <accept @close='applyShow = false' v-model='active'/>
         </van-popup>
 
         <!-- 城市列表 -->
-        <van-popup v-model="cityListShow" class="page-popup" position="right" :overlay="false">
+        <van-popup v-model="cityListShow" class="page-popup" position="right" get-container='#app'>
             <city @close='cityListShow = false' @show='searchShow=true'/>
         </van-popup>
 
         <!-- 城市列表搜索 -->
-        <van-popup v-model="searchShow" class="page-popup" :overlay="false">
+        <van-popup v-model="searchShow" class="page-popup" get-container='#app'>
             <city-list :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
         </van-popup>
     </div>

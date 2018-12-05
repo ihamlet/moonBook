@@ -1,10 +1,10 @@
 <template>
   <div class="class-home page-padding">
     <van-nav-bar :title="fixedHeaderBar?$route.meta.title:babyData.class.name" :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
-        <div class="btn-left" slot='left'>
-            <i class="iconfont">&#xe657;</i>
-            <span class="text">个人中心</span>
-        </div>
+      <div class="head-bar-text" slot="left">
+        <van-icon name="arrow-left" />
+        <span class="text">个人中心</span>
+      </div>
         <div class="btn-right-qrcode" slot='right'>
             <i class="iconfont">&#xe7a3;</i>
         </div>

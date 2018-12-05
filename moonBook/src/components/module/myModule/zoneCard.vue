@@ -33,10 +33,8 @@
     line-height: normal;
   }
 
-  .cell {
-    height: 5rem
-      /* 80/16 */
-    ;
+  .cell { 
+    height: 5rem/* 80/16 */;
   }
 
   .cell-group {

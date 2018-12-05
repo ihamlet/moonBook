@@ -23,7 +23,7 @@
           <span>{{item.time}}</span>
         </div>
       </div>
-      <div class="text" v-line-clamp:20="2" v-html="item.details"></div>
+      <div class="text" v-line-clamp:20="2" v-html="item.details" @click="articleShow = true"></div>
       <!-- 媒体图片  -->
       <div class="media img"  v-if='item.hasvideo!=1&&item.hasaudio!=1'>
         <van-row gutter="5">
@@ -54,7 +54,7 @@
           <i class="iconfont">&#xe731;</i> {{item.reply_num>1000?'999+':item.reply_num}}
         </div>
         <div class="praise flex flex-align flex-justify" @click="addPraise(item)">
-          <i class="iconfont" v-if="!item.getPraise">&#xe644;</i>
+          <i class="iconfont" v-if="!item.isZan">&#xe644;</i>
           <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
           {{item.zan_num>1000?'999+':item.zan_num}}
         </div>
@@ -64,27 +64,34 @@
     <van-popup v-model="pictureShow" class="picture-box-popup" get-container='#app'>
       <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item" />
     </van-popup>
+
+    <van-popup v-model="articleShow" class="page-popup" position="right" get-container='#app'>
+      <details-article  @close="articleShow = false" :item="item"/>
+    </van-popup>
   </div>
 </template>
 <script>
   import axios from "axios"
   import pictureBox from "./../mold/pictureBox"
+  import detailsArticle from './../mold/details/article'
 
   export default {
     name: "graphic-crad",
     props: ["item", "type", "babyName","className","familyTitle"],
     components: {
-      pictureBox
+      pictureBox,
+      detailsArticle
     },
     data() {
       return {
         imgIndex: 0,
-        pictureShow: false
+        pictureShow: false,
+        articleShow: false
       }
     },
     methods: {
       addPraise(item) {
-        item.getPraise = !item.getPraise
+        item.isZan = !item.isZan
         axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
           item.zan_num = res.data.data.like
         })

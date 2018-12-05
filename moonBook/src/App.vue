@@ -801,4 +801,12 @@ i.iconfont.rotate {
   top: -.25rem /* 4/16 */;
   border: none;
 }
+
+.head-bar-text .text{
+  color: #fff;
+}
+
+.head-bar-text .van-icon-arrow-left{
+  color: #fff;
+}
 </style>

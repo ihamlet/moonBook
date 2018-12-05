@@ -2,7 +2,7 @@
     <div class="punch-module">
         <van-nav-bar class="theme-nav" fixed title="阅读日历" @click-left="onClickLeft">
             <div class="head-bar-text" slot='left'>
-                <i class="iconfont">&#xe657;</i>
+                <van-icon name="arrow-left" />
                 个人中心
             </div>
         </van-nav-bar>
