@@ -6,10 +6,10 @@
         </lazy-component>
         <lazy-component>
             <div class="container">
-                <van-tabs color='#409eff' :line-width='20' sticky swipeable>
+                <van-tabs color='#409eff' :line-width='20' sticky swipeable animated>
                     <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-                        <div class="tab-content" v-if='index == 0'>
-                            <drying-list/>
+                        <div class="tab-content">
+                            <drying-list :sort='list.sort'/>
                         </div>
                     </van-tab>
                 </van-tabs>
@@ -32,11 +32,11 @@ export default {
         return {
             freshList:[],
             tab:[{
-                title:'关注'
+                title:'最新',
+                sort:'new',
             },{
-                title:'推荐'
-            },{
-                title:'最新'
+                title:'推荐',
+                sort:'tuijian',
             }]
         }
     },
@@ -48,8 +48,8 @@ export default {
     },
     methods: {
         fetchData(){
-            axios.get('/api/fresh').then(res=>{
-                this.freshList = res.data.freshData.freshList
+            axios.get('/book/SchoolArticle/recommendUsers').then(res=>{
+                this.freshList = res.data
             })
         }
     }

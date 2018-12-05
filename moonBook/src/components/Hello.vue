@@ -64,11 +64,10 @@ export default {
       '$route': 'fetchData'
   },       
   methods: {
-    ...mapActions(['getUserData','getMsgLength','getTabBtn','getUserLocation']),
+    ...mapActions(['getUserData','getMsgLength','getUserLocation']),
     fetchData(){
       this.getUserData()
       this.getMsgLength()
-      this.getTabBtn()
     },
     onStartPage(){
       this.startPageShow = false

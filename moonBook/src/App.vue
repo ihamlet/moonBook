@@ -590,7 +590,7 @@ img.lazy[lazy="error"],
 }
 
 .explain {
-  font-size: x-small;
+  font-size: xx-small;
   margin-top: 1.25rem /* 20/16 */;
   color: #909399;
 }
@@ -598,6 +598,12 @@ img.lazy[lazy="error"],
 .explain b {
   margin-bottom: 0.3125rem /* 5/16 */;
   display: block;
+}
+
+.explain p{
+  margin-bottom: .3125rem /* 5/16 */;
+  text-indent: 1.625rem /* 26/16 */;
+  text-align: justify;
 }
 /* end */
 /* icon */
@@ -788,5 +794,11 @@ i.iconfont.rotate {
   margin-bottom: .625rem /* 10/16 */;
   box-shadow: 0 .625rem /* 10/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.1);
   border-radius: .3125rem /* 5/16 */;
+}
+/* 底部tab */
+
+.footer-bar .van-info{
+  top: -.25rem /* 4/16 */;
+  border: none;
 }
 </style>

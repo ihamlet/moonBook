@@ -13,7 +13,24 @@ const state = {
     tabBtn:[],
     amapApiKey:'0522f462288e296eac959dbde42718ab',
     token:'',
-    userPoint:''
+    userPoint:'',
+    footerTab:[{
+        iconClass: 'icon-home',
+        name: '首页',
+        path: '/',
+    }, {
+        iconClass: 'icon-faxian',
+        name: '发现',
+        path: 'find'
+    }, {
+        iconClass: 'icon-community',
+        name: '消息',
+        path: 'notice'
+    }, {
+        iconClass: 'icon-people',
+        name: '个人中心',
+        path: 'my'
+    }]
 }
 
 const getters = {
@@ -62,7 +79,7 @@ const getters = {
         }
    },
    userTabBtn: state =>{
-       return state.tabBtn
+       return state.footerTab
    },
    userToken: state =>{
         if(state.token){
@@ -83,9 +100,6 @@ const mutations = {
     },
     setMsgLength(state,params){
         state.msgLength = params.data
-    },
-    setTabBtn(state,params){
-        state.tabBtn = params.data
     },
     setUserPoint(state,params){
         Cookies.set('userPoint', params.data, { expires: 7 })
@@ -112,19 +126,12 @@ const actions = {
             })
         })
     },
-    getTabBtn(context){
-        axios.get('/api/barBtn').then(res=>{
-            context.commit('setTabBtn',{
-                data:res.data.barBtn
-            })
-        })
-    },
     getUserLocation(context,products){
 
         let cityInfo = {
             location: products.location
         }
-
+        
         let data = {
             Key: context.state.amapApiKey,
             location: products.location,
@@ -173,15 +180,45 @@ const actions = {
             datatype:'all'
         }
 
-        let amamApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
-    
-        return new Promise((resolve, reject) => {
-            fetchJsonp(amamApiLink).then(response => {
-                return response.json()
-            }).then(res => {
-                resolve(res)
+        console.log(products)
+
+        console.log(context.getters.userPointState.location)
+
+        let locationArray = context.getters.userPointState.location.split(',')
+
+
+        let joinData = {
+            lat:locationArray[1],
+            lng:locationArray[0],
+            page:1,
+            keyword: products.keywords
+        }
+        
+        if(products.searchType == 'joinSchool'){
+
+            let WMlifeSearchSchoolLink = `/book/school/index?ajax=1&lat=${joinData.lat}&lng=${joinData.lng}&page=${joinData.page}&keyword=${joinData.keyword}`
+            
+            return new Promise((resolve, reject) =>{
+                axios.get(WMlifeSearchSchoolLink).then(res=>{
+                    let datas = {
+                        searchType:products.searchType,
+                        resData:res.data
+                    }
+                    resolve(datas)
+                })
             })
-        }) 
+
+        }else{
+            let amamApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
+    
+            return new Promise((resolve, reject) => {
+                fetchJsonp(amamApiLink).then(response => {
+                    return response.json()
+                }).then(res => {
+                    resolve(res)
+                })
+            }) 
+        }
     },
     getCityDistrict(context,products){
         let data = {

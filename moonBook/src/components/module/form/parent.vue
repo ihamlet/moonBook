@@ -38,7 +38,7 @@
         </van-cell-group>
 
         <!-- 截图工具 -->
-        <van-popup class="cropper-popup" v-model="cropperShow">
+        <van-popup class="cropper-popup" v-model="cropperShow" get-container='#app'>
             <vue-cropper class="theme-cropper" ref="cropper" :img="option.img" :output-size="option.size" :output-type="option.outputType" :info="true" :full="option.full" :can-move="option.canMove" :can-move-box="option.canMoveBox" :fixed-box="option.fixedBox" :original="option.original" :auto-crop="option.autoCrop" :auto-crop-width="option.autoCropWidth" :auto-crop-height="option.autoCropHeight" :center-box="option.centerBox"></vue-cropper>
             <van-button class="theme-btn" round type="primary" @click="getCropData">完成</van-button>
         </van-popup>

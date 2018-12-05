@@ -2,10 +2,10 @@
     <div class="fresh-list scroll-x">
         <div class="scroll-item" v-for='(item,index) in list' :key="index" :class="type=='classShow'&&item.teacher?'teacher':''" @click='toBabyHome(item)'>
             <div class="avatar">
-                <img :src="item.avatar" :alt="item.name">
+                <img v-if='item.avatar' :src="item.avatar" :alt="item.nickname">
             </div>
             <div class="name" v-line-clamp:20="1">
-                {{item.name}}
+                {{item.nickname}}
             </div>
         </div>
     </div>
@@ -32,6 +32,8 @@ export default {
 }
 
 .avatar{
+    width: 3.125rem /* 50/16 */;
+    height: 3.125rem /* 50/16 */;
     padding: .1875rem /* 3/16 */;
     border: .0625rem /* 1/16 */ solid #DCDFE6;
     border-radius: 50%;
@@ -44,7 +46,7 @@ export default {
 }
 
 .scroll-item{
-    margin-right: .625rem /* 10/16 */;
+    padding-right: .625rem /* 10/16 */;
     width: 3.5rem /* 56/16 */;
     display: inline-grid;
 }

@@ -2,28 +2,30 @@
   <div class="picture-box">
     <div class="header-bar flex flex-align flex-justify" v-show='isFold'>
       <div class="avatar">
-        <img :src="item.avatar" :alt="item.name">
+        <img :src="item.user.avatar" :alt="item.user.name">
       </div>
-      <div class="name">
-        {{item.name}}
-        <i class="iconfont vip-masonry" v-if="item.isVip==1&&item.vipType.borrow==7">&#xe611;</i>
-        <i class="iconfont vip-gold" v-if="item.isVip==1&&item.vipType.borrow==5">&#xe611;</i>
-        <i class="iconfont vip-ordinary" v-if="item.isVip==1&&item.vipType.borrow==3">&#xe611;</i>
+      <div class="name flex flex-align">
+        {{item.user.name}}
+        <div class="memberships" v-if='item.card_level&&item.card_level.type == 1'>
+          <i class="iconfont vip-masonry" v-if="item.card_level.level == 3">&#xe611;</i>
+          <i class="iconfont vip-gold" v-if="item.card_level.level == 2">&#xe611;</i>
+          <i class="iconfont vip-ordinary" v-if="item.card_level.level == 1">&#xe611;</i>
+        </div>
       </div>
     </div>
     <van-swipe :initial-swipe='imgIndex' :loop='false' @change='onChange'>
-      <van-swipe-item v-for='(list,index) in item.media.imgList' :key='index' class="flex flex-align">
+      <van-swipe-item v-for='(list,index) in item.photos' :key='index' class="flex flex-align">
         <div class="scroll-view" @click="closePopup">
-          <img class="img lazy" v-lazy="list.img" />
+          <img class="img lazy" v-lazy="list.photo" />
         </div>
       </van-swipe-item>
       <div class="custom-indicator" slot="indicator">
-        {{ imgIndex + 1 }}/{{item.media.imgList.length}}
+        {{ imgIndex + 1 }}/{{item.photos.length}}
       </div>
     </van-swipe>
     <div class="picture-info">
       <div class="content">
-        <div class="text" v-if='item.text!=""&&isFold'>{{item.text}}</div>
+        <div class="text" v-show='isFold' v-html="item.details"></div>
         <div class="social flex flex-align">
           <div class="fold" @click="fold">
             <i class="iconfont" :class="[isFold?'rotate':'']">&#xe6c4;</i>
@@ -31,16 +33,16 @@
           </div>
           <div class="share">
             <i class="iconfont">&#xe6eb;</i>
-            {{item.social.share.number>1000?'999+':item.social.share.number}}
+            {{item.share_num>1000?'999+':item.share_num}}
           </div>
           <div class="message">
             <i class="iconfont">&#xe731;</i>
-            {{item.social.message.number>1000?'999+':item.social.message.number}}
+            {{item.reply_num>1000?'999+':item.reply_num}}
           </div>
           <div class="praise flex flex-align flex-justify" @click="addPraise(item)">
             <i class="iconfont" v-if='!item.getPraise'>&#xe644;</i>
             <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
-            {{item.social.praise.number>1000?'999+':item.social.praise.number}}
+            {{item.zan_num>1000?'999+':item.zan_num}}
           </div>
         </div>
       </div>

@@ -46,11 +46,16 @@ export default {
         Login(){
             this.isLoading = true
             this.login(this.userLogin).then(res=>{
+                this.isLoading = false
                 if(res.status){
-                    this.$toast.success(res.info)
-                    this.$router.go(-1)
+                    this.$notify({
+                        message: res.info,
+                        duration: 1000,
+                        background: '#409EFF'
+                    })
+                    this.$router.push({name:'my'})
                 }else{
-                    this.$toast.fail(res.info)
+                    this.$notify(res.info)
                     this.userLogin.mobile = ''
                     this.userLogin.password = ''
                 }

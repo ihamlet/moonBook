@@ -31,6 +31,11 @@ export default {
 }
 </script>
 <style scoped>
+.footer-bar{
+    overflow: hidden;
+    height: 3rem /* 48/16 */;
+}
+
 .footer-bar .van-tabbar{
     background: rgba(255, 255, 255, 0.9);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
