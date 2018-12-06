@@ -141,10 +141,6 @@ export default {
     text-align: center;
 }
 
-.bar-fixed{
-    position: sticky;
-}
-
 .select{
     width: 6.875rem /* 110/16 */;
     padding: .3125rem /* 5/16 */ 0;

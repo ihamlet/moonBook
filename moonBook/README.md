@@ -1,6 +1,6 @@
 # moonbook
 
-> A Vue.js project 2018年11月09日17:59:21
+> A Vue.js project 修改若干bug
 
 ## Build Setup
 

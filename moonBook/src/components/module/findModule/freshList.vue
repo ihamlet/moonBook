@@ -1,8 +1,8 @@
 <template>
     <div class="fresh-list scroll-x">
-        <div class="scroll-item" v-for='(item,index) in list' :key="index">
+        <div class="scroll-item" v-for='(item,index) in list' :key="index" :class="type=='classShow'&&item.teacher?'teacher':''" @click='toBabyHome(item)'>
             <div class="avatar">
-                <img v-lazy="item.user.avatar" :alt="item.user.name">
+                <img :src="item.avatar" :alt="item.name">
             </div>
             <div class="name" v-line-clamp:20="1">
                 {{item.user.name}}
@@ -13,7 +13,17 @@
 <script>
 export default {
     name:'fresh-list',
-    props: ['list']
+    props: ['list','type'],
+    methods: {
+        toBabyHome(item){
+            this.$router.push({
+                name:'baby-home',
+                query:{
+                    id:item.id
+                }
+            })
+        }
+    }
 }
 </script>
 <style scoped>
@@ -45,5 +55,15 @@ export default {
     text-align: center;
     margin-top: .3125rem /* 5/16 */;
     white-space: normal;
+}
+
+.teacher .avatar{
+    border-color: #FFC107;
+    border-style: dashed;
+    box-shadow: 0 .3125rem /* 5/16 */ .9375rem /* 15/16 */ rgba(255, 193, 7, 0.2)
+}
+
+.teacher .name{
+    color: #303133;
 }
 </style>

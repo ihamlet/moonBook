@@ -47,7 +47,7 @@
                             <i class="iconfont" @click="deletePhoto(index)">&#xe683;</i>
                         </div>
                     </van-col>
-                    <van-col :span="8" v-if='imagesLength < 9'>
+                    <van-col :span="8" v-if='9 > imagesLength'>
                         <van-uploader class="img-grid" :after-read="onRead" multiple>
                             <div class="photo-upload">
                                 <i class="iconfont">&#xe607;</i>
@@ -87,8 +87,8 @@ export default {
       },
       resultList(){
         let array = [{
-                title:'发现',
-                name: 'find'
+            title:'发现',
+            name: 'find'
         }]
         
         if(this.babyName){
@@ -102,7 +102,7 @@ export default {
             if(i==0){
                 if(e.class){
                     array.push({
-                        title:`${this.babyName}@班级主页`,
+                        title:`${this.babyName}@班级风采`,
                         name: 'classHome'
                     })
                 }
@@ -205,8 +205,10 @@ export default {
 }
 
 .photo-upload {
-    line-height: 6.875rem /* 110/16 */;
-    text-align: center;
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
 }
 
 .photo-upload i.iconfont {

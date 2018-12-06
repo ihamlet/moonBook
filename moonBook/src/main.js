@@ -41,6 +41,7 @@ VueAMap.initAMapApiLoader({
   plugin: ['AMap.Geolocation']
 })
 
+
 // Vue.config.productionTip = false
 
 /* eslint-disable no-new */
