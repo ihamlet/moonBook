@@ -32,7 +32,7 @@ export default {
     computed: {
       ...mapGetters(['userPointState'])
     },
-    props: ['prompt'],
+    props: ['prompt','type'],
     data () {
         return {
             searchContent:'',
@@ -46,10 +46,24 @@ export default {
                 type: 141204,
                 location: this.userPointState.location,
                 city: this.userPointState.city,
-                datatype:'poi'
+                datatype:'poi',
+                searchType:this.type
             }
             this.getSearch(products).then(res=>{
-                this.list = res.tips
+                if(res.searchType == 'joinSchool'){
+                    let nweArray = []
+                    res.resData.data.forEach(element => {
+                        nweArray.push({
+                            name: element.title,
+                            address: element.addr,
+                            shelf_id: element.shelf_id
+                        })
+                    })
+
+                    this.list = nweArray
+                }else{
+                    this.list = res.tips
+                }
             })
         }
     },

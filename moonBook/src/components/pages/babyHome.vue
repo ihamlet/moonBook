@@ -2,8 +2,8 @@
   <div class="baby-home page-padding">
     <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" :title="fixedHeaderBar?$route.meta.title:childInfo.name"
       @click-left="onClickLeft" @click-right="onClickRight">
-      <div class="btn-left" slot="left">
-        <i class="iconfont">&#xe657;</i>
+      <div class="head-bar-text" slot="left">
+        <van-icon name="arrow-left" />
         <span class="text">个人中心</span>
       </div>
       <div class="head-bar-icon" slot="right" v-if="childInfo">

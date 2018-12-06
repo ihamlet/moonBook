@@ -1,8 +1,8 @@
 <template>
-    <div class="punch">
+    <div class="punch-module">
         <van-nav-bar class="theme-nav" fixed title="阅读日历" @click-left="onClickLeft">
             <div class="head-bar-text" slot='left'>
-                <i class="iconfont">&#xe657;</i>
+                <van-icon name="arrow-left" />
                 个人中心
             </div>
         </van-nav-bar>
@@ -11,11 +11,11 @@
         </lazy-component>
         <lazy-component>
             <div class="calendar-module">
-                <div class="punch">
+                <div class="punch-module">
                     <van-row class="flex flex-align" gutter='10'>
                         <van-col span="8">
                             <div class="push-illustrated">
-                                <img src="http://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/punch.png" alt="打卡">
+                                <img src="https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/punch.png" alt="打卡">
                             </div>
                         </van-col>
                         <van-col span="8">
@@ -37,9 +37,9 @@
         </lazy-component>
     </div>
 </template>
+
 <script>
 import calendar from './../module/mold/calendar'
-
 export default {
     name:'punch',
     components: {
@@ -84,7 +84,7 @@ export default {
     padding: 0 .625rem /* 10/16 */;
 }
 
-.punch{
+.punch-module{
     width: 100%;
     height: 6.25rem /* 100/16 */;
     background: #fff;
@@ -101,7 +101,7 @@ export default {
     width: 100%;
 }
 
-.punch .text{
+.punch-module .text{
     color: #000;
     font-weight: 700;
 }

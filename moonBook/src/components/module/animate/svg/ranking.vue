@@ -121,13 +121,16 @@ export default {
 };
 </script>
 <style scoped>
+.icon{
+  width: 2.8125rem /* 45/16 */;
+}
+
 svg.icon{
   font-size: 2.5rem /* 40/16 */;
 }
 
 .number{
   font-size: 1.625rem /* 26/16 */;
-  width: 2.8125rem /* 45/16 */;
   text-align: center;
   font-style: oblique;
 }
