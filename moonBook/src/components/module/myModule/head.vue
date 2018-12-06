@@ -110,7 +110,6 @@ export default {
   },
   methods: {
     fetchData() {
-      console.log('1111')
       axios.get(`/book/memberUser/getInfo?token=${this.userToken}`).then(res => {
         console.log(res)
         this.avatar = res.data.avatar
