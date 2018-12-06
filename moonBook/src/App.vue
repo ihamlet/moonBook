@@ -837,13 +837,18 @@ video{
   width: 100%;
 }
 
-.article .article-content{
+.article-content{
   background: #fff;
   padding: 1.25rem /* 20/16 */;
 }
 
-.article .article-content .content img{
+.article-content .content img{
   margin: 1.25rem /* 20/16 */ auto;
   display: block;
+}
+
+.article-content .content p{
+  font-size: 1rem /* 16/16 */ !important;
+  margin: .625rem /* 10/16 */ 0
 }
 </style>
