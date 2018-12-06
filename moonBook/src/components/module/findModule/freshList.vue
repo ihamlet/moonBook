@@ -1,15 +1,4 @@
 <template>
-<<<<<<< HEAD
-    <div class="fresh-list scroll-x">
-        <div class="scroll-item" v-for='(item,index) in list' :key="index" :class="type=='classShow'&&item.teacher?'teacher':''" @click='toBabyHome(item)'>
-            <div class="avatar">
-                <img :src="item.avatar" :alt="item.name">
-            </div>
-            <div class="name" v-line-clamp:20="1">
-                {{item.user.name}}
-            </div>
-        </div>
-=======
   <div class="fresh-list scroll-x">
     <div class="scroll-item" v-for="(item,index) in list" :key="index" :class="type=='classShow'&&item.teacher?'teacher':''"
       @click="toBabyHome(item)">
@@ -17,7 +6,6 @@
         <img v-if="item.avatar" :src="item.avatar" :alt="item.nickname">
       </div>
       <div class="name" v-line-clamp:20="1">{{item.nickname}}</div>
->>>>>>> master
     </div>
   </div>
 </template>

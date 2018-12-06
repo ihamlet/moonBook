@@ -18,52 +18,12 @@
   </div>
 </template>
 <script>
-<<<<<<< HEAD
-=======
 import axios from './../lib/js/api'
->>>>>>> master
 import freshList from './../module/findModule/freshList'
 import dryingList from './../module/findModule/dryingList'
 import axios from '@/fetch/api'
 
 export default {
-<<<<<<< HEAD
-    name:'find',
-    components: {
-        freshList,
-        dryingList
-    },  
-    data () {
-        return {
-            freshList:[],
-            tab:[{
-                title:'关注'
-            },{
-                title:'推荐'
-            },{
-                title:'最新'
-            }]
-        }
-    },
-    created () {
-        this.fetchData()
-    },
-    watch: {
-        '$router':'fetchData'  
-    },
-    methods: {
-        fetchData(){
-            const url = '/book/MemberFollow/index';
-            const params = {
-                params:{
-                    order:'article'
-                }                
-            };
-            axios.get(url, params).then(res=>{
-                this.freshList = res.data
-            })
-        }
-=======
   name: 'find',
   components: {
     freshList,
@@ -79,7 +39,6 @@ export default {
         title: '推荐',
         sort: 'tuijian',
       }]
->>>>>>> master
     }
   },
   created() {

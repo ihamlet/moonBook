@@ -11,16 +11,9 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-<<<<<<< HEAD
-      '/book': {
-        // 测试环境
-        target:'http://book.wmdev.com/',
-        changeOrigin:true, // 是否跨域
-=======
       '/book':{
         target:'https://hu.wmlife.net/',
         changeOrigin:true
->>>>>>> master
       }
     },
 

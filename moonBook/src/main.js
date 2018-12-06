@@ -41,10 +41,6 @@ VueAMap.initAMapApiLoader({
   plugin: ['AMap.Geolocation']
 })
 
-<<<<<<< HEAD
-
-// Vue.config.productionTip = false
-=======
 Vue.config.productionTip = false
 
 
@@ -64,7 +60,6 @@ Vue.config.productionTip = false
 //     next()
 //   }
 // })
->>>>>>> master
 
 /* eslint-disable no-new */
 new Vue({
