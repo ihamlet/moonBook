@@ -1,6 +1,6 @@
 <template>
     <div class="comment-card">
-    
+        
     </div>    
 </template>
 <script>

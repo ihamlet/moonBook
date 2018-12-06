@@ -3,6 +3,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
+console.log('path', path)
 
 module.exports = {
   dev: {
@@ -12,15 +13,15 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/book':{
-        target:'http://book.wmdev.com/',
+        target:'https://hu.wmlife.net/',
         changeOrigin: true
       },
       '/Public': {
-        target: 'http://book.wmdev.com/',
+        target: 'https://hu.wmlife.net/',
         changeOrigin: true
       },
       '/attachs': {
-        target: 'http://book.wmdev.com/',
+        target: 'https://hu.wmlife.net/',
         changeOrigin: true
       }
     },

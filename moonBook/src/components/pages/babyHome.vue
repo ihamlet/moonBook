@@ -54,7 +54,7 @@
         <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
       </lazy-component>
       <lazy-component class="module">
-        <div class="module-title">晒一晒</div>
+        <div class="module-title">成长日记</div>
         <div class="not-content" v-if="!listLength">尚无记录</div>
         <van-list v-model="loading" :finished="finished" @load="onLoad" v-else>
           <div class="list">

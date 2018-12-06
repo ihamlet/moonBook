@@ -26,7 +26,7 @@
       <div class="text" v-line-clamp:20="2" v-html="item.details" @click="toArticle(item)"></div>
       <!-- 媒体图片  -->
       <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1'>
-        <van-row gutter="5">
+        <van-row gutter="2">
           <van-col :span="8" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
             <div class="img-grid" v-lazy:background-image="photo.thumb" @click="mediaLamp(item,photoIndex)"></div>
           </van-col>
@@ -46,11 +46,15 @@
 
       </div>
 
+      <div class="temp-type">
+         <van-tag plain type="primary">文章</van-tag>
+      </div>
+
       <div class="social flex flex-align">
         <div class="share">
           <i class="iconfont">&#xe6eb;</i> {{item.share_num>1000?'999+':item.share_num}}
         </div>
-        <div class="message">
+        <div class="message"  @click="toArticle(item)">
           <i class="iconfont">&#xe731;</i> {{item.reply_num>1000?'999+':item.reply_num}}
         </div>
         <div class="praise flex flex-align flex-justify" @click="addPraise(item)">
@@ -85,6 +89,7 @@ export default {
   },
   methods: {
     addPraise(item) {
+      console.log(item)
       item.isZan = !item.isZan
       axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
         item.zan_num = res.data.data.like
