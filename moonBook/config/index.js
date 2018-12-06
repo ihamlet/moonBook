@@ -12,8 +12,16 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/book':{
-        target:'https://hu.wmlife.net/',
-        changeOrigin:true
+        target:'http://book.wmdev.com/',
+        changeOrigin: true
+      },
+      '/Public': {
+        target: 'http://book.wmdev.com/',
+        changeOrigin: true
+      },
+      '/attachs': {
+        target: 'http://book.wmdev.com/',
+        changeOrigin: true
       }
     },
 

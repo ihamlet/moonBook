@@ -14,7 +14,6 @@ import ClassHome from '@/components/pages/classHome'
 import ClassZoom from '@/components/pages/classZoom'
 
 import Register from '@/components/pages/register'
-import Login from '@/components/pages/login'
 
 import Article from '@/components/pages/article'
 
@@ -104,15 +103,7 @@ export default new Router({
           title: '个人空间',
           scrollToTop: true
         }
-      },{
-          path: '/login',
-          name: 'login',
-          component: Login,
-          meta: {
-              title: '登陆',
-              scrollToTop: true
-          }
-        },
+      },
         {
         path: '/register',
         name: 'register',

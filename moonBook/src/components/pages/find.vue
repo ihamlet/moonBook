@@ -21,7 +21,6 @@
 import axios from './../lib/js/api'
 import freshList from './../module/findModule/freshList'
 import dryingList from './../module/findModule/dryingList'
-import axios from '@/fetch/api'
 
 export default {
   name: 'find',
