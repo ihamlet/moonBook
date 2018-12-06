@@ -5,7 +5,7 @@
                 <van-nav-bar v-if="pageType=='popup'" title="选择学校" left-text="返回" left-arrow @click-left="close" />
                 <search-bar :prompt='prompt' @show='isListShow = true'/>
             </div>
-            <van-list v-model="loading" :finished="finished" @load="onLoad">
+            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
                 <van-cell v-for="(item,index) in list" :key="index" is-link center @click="selectSchool(item)">
                     <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
                     <div class="school-address" v-line-clamp:20="1">

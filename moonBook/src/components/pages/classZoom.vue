@@ -33,6 +33,7 @@ import { mapGetters } from "vuex"
 import freshList from './../module/findModule/freshList'
 import graphicCrad from './../module/card/graphicCrad'
 import graphic from './../module/release/graphic'
+import qrCode from "./../module/mold/qrCode"
 
 export default {
   name: "class-zoom",

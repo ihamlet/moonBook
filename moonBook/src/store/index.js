@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+<<<<<<< HEAD
 import axios from '../fetch/api'
+=======
+import axios from './../components/lib/js/api'
+>>>>>>> master
 import fetchJsonp from 'fetch-jsonp'
 import Cookies from 'js-cookie'
 
@@ -12,7 +16,25 @@ const state = {
     msgLength:1,
     tabBtn:[],
     amapApiKey:'0522f462288e296eac959dbde42718ab',
-    userPoint:''
+    token:'',
+    userPoint:'',
+    footerTab:[{
+        iconClass: 'icon-home',
+        name: '首页',
+        path: '/',
+    }, {
+        iconClass: 'icon-faxian',
+        name: '发现',
+        path: 'find'
+    }, {
+        iconClass: 'icon-community',
+        name: '消息',
+        path: 'notice'
+    }, {
+        iconClass: 'icon-people',
+        name: '个人中心',
+        path: 'my'
+    }]
 }
 
 const getters = {
@@ -35,6 +57,8 @@ const getters = {
                     school = element.school
                 }
             })
+        }else if(state.userData.vipInfo){
+            school = state.vipInfo.school
         }
         return school
    },
@@ -57,10 +81,28 @@ const getters = {
             }
             return state.userPoint = data
         }
+<<<<<<< HEAD
     },
     userTabBtn: state => {
         return state.tabBtn
     }
+=======
+   },
+   userTabBtn: state =>{
+       return state.footerTab
+   },
+   userToken: state =>{
+        if(state.token){
+            return state.token
+        }else{
+            let data
+            if(Cookies.get('WWW_TOKEN')){
+                data = Cookies.get('WWW_TOKEN')
+            }
+            return state.token = data
+        }
+   }
+>>>>>>> master
 }
 
 const mutations = {
@@ -70,18 +112,26 @@ const mutations = {
     setMsgLength(state, count) {
         state.msgLength = count
     },
+<<<<<<< HEAD
     setTabBtn(state, params) {
         state.tabBtn = params.data
     },
+=======
+>>>>>>> master
     setUserPoint(state,params){
         Cookies.set('userPoint', params.data, { expires: 7 })
         state.userPoint = params.data
     },
+<<<<<<< HEAD
     getMsgs(state, msgs) {
         state.msgs = msgs;
     },
     getToken(state, token) {
         state.token = token;
+=======
+    setToken(state,params){
+        state.token = params.data
+>>>>>>> master
     }
 }
 
@@ -99,6 +149,7 @@ const actions = {
             }
         });
     },
+<<<<<<< HEAD
     async getMsgs(context, params = {}) {
         const url = '/book/MemberMsg/getList';
         return new Promise((resolve, reject)=>{
@@ -119,12 +170,14 @@ const actions = {
             })
         })
     },
+=======
+>>>>>>> master
     getUserLocation(context,products){
 
         let cityInfo = {
             location: products.location
         }
-
+        
         let data = {
             Key: context.state.amapApiKey,
             location: products.location,
@@ -173,6 +226,7 @@ const actions = {
             datatype: 'all'
         }
 
+<<<<<<< HEAD
         let amamApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
 
         return new Promise((resolve, reject) => {
@@ -182,6 +236,42 @@ const actions = {
                 resolve(res)
             })
         })
+=======
+        let locationArray = context.getters.userPointState.location.split(',')
+
+        let joinData = {
+            lat:locationArray[1],
+            lng:locationArray[0],
+            page:1,
+            keyword: products.keywords
+        }
+        
+        if(products.searchType == 'joinSchool'){
+
+            let WMlifeSearchSchoolLink = `/book/school/index?ajax=1&lat=${joinData.lat}&lng=${joinData.lng}&page=${joinData.page}&keyword=${joinData.keyword}`
+            
+            return new Promise((resolve, reject) =>{
+                axios.get(WMlifeSearchSchoolLink).then(res=>{
+                    let datas = {
+                        searchType:products.searchType,
+                        resData:res.data
+                    }
+                    resolve(datas)
+                })
+            })
+
+        }else{
+            let amamApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
+    
+            return new Promise((resolve, reject) => {
+                fetchJsonp(amamApiLink).then(response => {
+                    return response.json()
+                }).then(res => {
+                    resolve(res)
+                })
+            }) 
+        }
+>>>>>>> master
     },
     getCityDistrict(context, products) {
         let data = {
@@ -206,6 +296,7 @@ const actions = {
                 })
                 resolve(res)
             })
+<<<<<<< HEAD
         })
     },
     getToken(context) {
@@ -224,6 +315,20 @@ const actions = {
             }
         });    
         
+=======
+        })     
+    },
+    login(context,products){
+        let data = products
+        return new Promise((resolve, reject) => {
+            axios.post('/book/login/mobileLogin', data).then(res=>{
+                resolve(res.data)
+                context.commit('setToken',{
+                    data: res.data.token
+                })
+            })
+        })
+>>>>>>> master
     }
 }
 

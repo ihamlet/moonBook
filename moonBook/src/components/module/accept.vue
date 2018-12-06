@@ -1,123 +1,117 @@
 <template>
     <div class="accept" :class="stepActive==2?'background-grey':''">
-        <van-nav-bar :title="title" :left-text="stepActive!=0?'上一步':'返回'" @click-left="onClickLeft">
+        <van-nav-bar :title="title" :left-text="stepActive!=0?'上一步':'返回'" left-arrow @click-left="onClickLeft">
             <div class="icon-right" slot="right">
                 <i class="iconfont">&#xe618;</i>
             </div>
         </van-nav-bar>
+        <search-bar v-if='stepActive==0' prompt='搜索学校名称' @show='searchListShow = true'/>
         <lazy-component>
             <van-steps :active="stepActive" active-color='#409eff'>
+                <van-step>选择学校</van-step>
                 <van-step>每天借书需求</van-step>
                 <van-step>会员时间</van-step>
-                <van-step>选择学校</van-step>
             </van-steps>
         </lazy-component>
         <lazy-component>
             <div class="container" v-if='stepActive==0'>
                 <div class="list scroll-y" ref="scrollContainer">
-                    <div class="item" v-for='(item,index) in schoolList' :key="index" @click="select(item)">
-                        <van-cell-group>
-                            <van-cell is-link class="flex flex-align">
-                                <div class="school-info">
-                                    <div class="school-name">
-                                        {{item.schoolName.name}}
-                                        <i class="iconfont" v-if='item.addChild.boolean'>&#xe601;</i>
-                                    </div>
-                                    <div class="school-address">
-                                        {{item.schoolAddress}}
-                                    </div>
+                    <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad">
+                        <van-cell v-for="(item,index) in list" :key="index" is-link class="flex flex-align" @click="select(item)">
+                          <div class="item">
+                            <div class="school-info">
+                                <div class="school-name">
+                                    {{item.title}}
                                 </div>
-                            </van-cell>
-                        </van-cell-group>
-                    </div>
+                                <div class="school-address"  v-line-clamp:20="1">
+                                    {{item.addr}}
+                                </div>
+                            </div>
+                          </div>
+                        </van-cell>
+                    </van-list>
                 </div>
             </div>
         </lazy-component>
         <lazy-component>
         <div class="container"  v-if='stepActive==1'>
             <div class="card-list">
-                <div class="card-box" v-for='(item,index) in cardInfo.card' :key="index" @click="selectCard(item,index)">
+                <div class="card-box" v-for='(item,index) in levels' :key="index" @click="selectCard(item,index)">
                     <div class="borrow-card flex animated" :class="[cardIndex==index?'rotate':'bounceInUp',`an-${index}`]">
                         <div class="borrow">
                             <span class="l">每天</span>
-                            {{item.borrow}}
+                            {{item.borrow_count}}
                             <span class="r">本</span>
                         </div>
                         <div class="info">
-                            <div class="type">{{item.type}}</div>
-                            <div class="period">租期{{item.period}}天</div>
+                            <div class="type">{{item.name}}</div>
+                            <div class="period">租期{{item.borrow_day}}天</div>
                         </div>
                         <div class="deposit">
-                            {{item.deposit}}
+                            {{item.price/100}}
                         </div>
                     </div>
                 </div>
-
-                    <div class="explain">
-                        <b>押金说明</b>
-                        <p>阅亮书架根据同时可借阅图书的数量设置不同等级的会员押金。</p>
-                        <p>请根据您的实际需要选择相应的会员押金</p>
-                        <p>退出会员时，扣除部分消耗金额并将其退还</p>
-                    </div>
-                </div>
+              </div>
             </div>
         </lazy-component>
         <lazy-component>
             <div class="container"  v-if='stepActive==2'>
                 <div class="select-list">
                     <div class="card-list">
-                        <div class="item" :class="[intervalIndex==index?'select':'']" v-for='(item,index) in cardInfo.vipInterval' :key="index" @click="selectInterval(item,index)">
+                        <div class="item" :class="[intervalIndex==index?'select':'']" v-for='(item,index) in fees' :key="index" @click="selectInterval(item,index)">
                             <van-row class="flex flex-align">
                                 <van-col span="6">
                                     <div class="focus col-box theme-background">
-                                        {{item.month}}
+                                        {{item.months}}
                                     </div>
                                 </van-col>
                                 <van-col span="6">
                                     <div class="col-box date">
-                                        {{index==1?'年费':'季费'}}
+                                       {{item.name}}
                                     </div>
                                 </van-col>
                                 <van-col span="6">
                                     <div class="col-box day">
-                                        {{item.day}}天
+                                        {{item.duration}}天
                                     </div>
                                 </van-col>
                                 <van-col span="6">
                                     <div class="col-box price">
-                                        {{item.price}}
+                                        {{item.price/100}}
                                     </div>
                                 </van-col>
                             </van-row>
                         </div>
 
                         <div class="explain">
-                            <b>会员时间说明</b>
-                            <p>会员时间将决定您的会员功能能够使用多长时间</p>
-                            <p>退出会员时购买会员时间的金额不会退还</p>
+                            <b>会员说明</b>
+                            <p>{{tips.borrow_tip}}</p>
+                            <p>{{tips.member_tip}}</p>
+                            <p>{{tips.notice}}</p>
                         </div>
                     </div>
                 </div>
             </div>
         </lazy-component>
         <van-popup v-model="show" position="bottom" class="order-popup">
-            <div class="content" v-if='pushUserInfo.length!=0'>
+            <div class="content">
                 <div class="title">支付信息</div>
                 <div class="list">
                     <div class="item">
-                        会员类型:{{pushUserInfo.card.type}}
+                        会员类型:{{order.levelsName}}
                     </div>
                     <div class="item">
                         会员时长:{{pushUserInfo.vipInterval.day==365?'年费':'季费'}}
                     </div>
                     <div class="item">
-                        支付押金:{{pushUserInfo.card.deposit}}
+                        支付押金:{{order.levelsPrice}}
                     </div>
                     <div class="item">
-                        会员金额:{{pushUserInfo.vipInterval.price}}
+                        会员金额:{{order.feesPrice}}
                     </div>
                     <div class="item">
-                        总计:{{pushUserInfo.vipInterval.price+pushUserInfo.card.deposit}}
+                        总计:{{order.total}}
                     </div>
                 </div>
 
@@ -139,13 +133,20 @@
         <van-popup v-model="addChildShow" class="page-popup" position="right">
             <add-child @close='closeAddChildPage' :pageTitle='pageTitle'/>
         </van-popup>
+
+        <!-- 搜索列表 -->
+        <van-popup v-model="searchListShow"  class="page-popup">
+          <search-list prompt='搜索学校名称' type='joinSchool' @close='searchListShow = false' @select='select'/>
+        </van-popup>
     </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from './../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
 import iconSuccess from './animate/iconSuccess'
 import addChild from './addChild'
+import searchBar from './search/searchBar'
+import searchList from './search/schoolList'
 
 export default {
   name: 'accept',
@@ -156,13 +157,39 @@ export default {
   },
   components: {
     iconSuccess,
-    addChild
+    addChild,
+    searchBar,
+    searchList
   },
   computed: {
-    ...mapGetters(['userDataState'])
+    ...mapGetters(['userDataState','userPointState']),
+    lng(){
+       return this.userPointState.location.split(',')[0]
+    },
+    lat(){
+      return this.userPointState.location.split(',')[1]
+    }
   },
   data() {
     return {
+      list: [],
+      loading: false,
+      finished: false,
+      page:1,
+      searchListShow:false,
+      levels:'',
+      tips:'',
+      fees:'',
+      cardIndex: -1,
+      intervalIndex: -1,
+      order:{
+        levelsName:'',
+        levelsPrice:'',
+        feesName:'',
+        feesPrice:'',
+        total:''
+      },
+
       pageTitle: 'addBaby',
       addChildShow: false,
       disabled: false,
@@ -172,13 +199,6 @@ export default {
       title: '借阅卡办理',
       next: '下一步',
       stepActive: 0,
-      schoolList: [],
-      cardInfo: {
-        card: '',
-        vipInterval: ''
-      },
-      cardIndex: -1,
-      intervalIndex: -1,
       pushUserInfo: {
         school: '',
         card: '',
@@ -186,27 +206,30 @@ export default {
       }
     }
   },
-  created() {
-    this.fetchData()
-  },
   watch: {
     active(val) {
       this.stepActive = val
     },
     stepActive(val) {
       this.$emit('stepActiveChange', val)
-    },
-    $router: 'fetchData'
+    }
   },
   methods: {
     ...mapActions(['getUserData', 'getMsgLength']),
-    fetchData() {
-      axios.get('/api/schoolList').then(res => {
-        this.schoolList = res.data.schoolData.schoolList
-      })
-      axios.get('/api/cardInfo').then(res => {
-        this.cardInfo.card = res.data.card
-        this.cardInfo.vipInterval = res.data.vipInterval
+    onLoad(){
+      let data = {
+        lat:this.lat,
+        lng:this.lng,
+        page:this.page
+      }
+
+      axios.get(`/book/school/index?ajax=1&lat=${data.lat}&lng=${data.lng}&page=${data.page}`).then(res => {
+          this.page++
+          this.list = this.list.concat(res.data.data)
+          this.loading = false
+          if(this.list.length >= res.data.count){
+            this.finished = true
+          }
       })
     },
     onClickLeft() {
@@ -218,25 +241,33 @@ export default {
       }
     },
     select(item) {
-        this.pushUserInfo.school = item
-        this.stepActive = 1
+        if(item.shelf_id > 0){
+          this.stepActive = 1
+          this.searchListShow = false
+
+          axios.get(`/book/MemberCard/getMemberRegPayConfig?shelf_id=${item.shelf_id}`).then(res=>{
+            console.log(res)
+            this.levels = res.data.data.levels
+            this.tips = res.data.data.tips
+            this.fees = res.data.data.fees
+          })
+
+        }else{
+          this.$notify('该学校暂未有书架')
+        }
     },
     selectCard(item, index) {
       this.stepActive = 2
       this.cardIndex = index
-      this.pushUserInfo.card = item
+      this.order.levelsName = item.name
+      this.order.levelsPrice = item.price/100
     },
     selectInterval(item, index) {
       this.show = true
-      if (this.userDataState.vipInfo) {
-        ;(this.pushUserInfo.card = this.userDataState.vipInfo.card),
-          (this.pushUserInfo.vipInterval = this.userDataState.vipInfo.vipInterval)
-        this.disabled = false
-        this.iconSuccessShow = true
-      } else {
-        this.intervalIndex = index
-        this.pushUserInfo.vipInterval = item
-      }
+      this.order.feesName = item.name
+      this.order.feesPrice = item.price/100
+      this.intervalIndex = index
+      this.order.total = this.order.feesPrice + this.order.levelsPrice
     },
     pay() {
       this.disabled = true
@@ -244,6 +275,7 @@ export default {
       axios.put('/api/pay', {
           data: this.pushUserInfo
         }).then(res => {
+          this.getUserData() //写入用户数据
           setTimeout(() => {
             this.payLoading = false
             this.iconSuccessShow = true
@@ -251,7 +283,6 @@ export default {
           setTimeout(() => {
             this.stepActive = 2
             this.iconSuccessShow = false
-            this.getUserData() //写入用户数据
             this.getMsgLength()
             if ( this.pushUserInfo.school.addChild.boolean && this.userDataState.childInfo.length == 0 ) {
               this.addChildShow = true
@@ -321,7 +352,7 @@ export default {
   top: 2.5rem /* 40/16 */;
   width: 100%;
   height: 11.25rem /* 180/16 */;
-  background: #000;
+  background: #fff;
   border-radius: 0.625rem /* 10/16 */;
   box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.3);
 }

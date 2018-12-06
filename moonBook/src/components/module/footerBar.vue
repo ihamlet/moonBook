@@ -41,10 +41,22 @@ export default {
 };
 </script>
 <style scoped>
+<<<<<<< HEAD
 .footer-bar .van-tabbar {
   background: rgba(255, 255, 255, 0.9);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   box-shadow: 0 0 10px 0 hsla(0, 6%, 58%, 0.6);
+=======
+.footer-bar{
+    overflow: hidden;
+    height: 3rem /* 48/16 */;
+}
+
+.footer-bar .van-tabbar{
+    background: rgba(255, 255, 255, 0.9);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    box-shadow: 0 0 10px 0 hsla(0,6%,58%,.6);
+>>>>>>> master
 }
 
 .footer-bar .van-info {

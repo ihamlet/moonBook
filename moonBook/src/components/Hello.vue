@@ -6,7 +6,7 @@
     </transition>
     <div class="root-dom" v-if='!startPageShow'>
       <router-view />
-      <footer-bar />
+      <footer-bar v-if='$route.meta.isFooterBar'/>
     </div>
   </div>
 </template>
@@ -64,11 +64,10 @@ export default {
       '$route': 'fetchData'
   },       
   methods: {
-    ...mapActions(['getUserData','getMsgLength','getTabBtn','getUserLocation']),
+    ...mapActions(['getUserData','getMsgLength','getUserLocation']),
     fetchData(){
       this.getUserData()
       this.getMsgLength()
-      this.getTabBtn()
     },
     onStartPage(){
       this.startPageShow = false

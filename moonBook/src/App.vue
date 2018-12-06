@@ -27,13 +27,12 @@ textarea {
 }
 
 @font-face {
-  font-family: "iconfont"; /* project id 893274 */
-  src: url("//at.alicdn.com/t/font_893274_r43ptpor5o.eot");
-  src: url("//at.alicdn.com/t/font_893274_r43ptpor5o.eot?#iefix")
-      format("embedded-opentype"),
-    url("//at.alicdn.com/t/font_893274_r43ptpor5o.woff") format("woff"),
-    url("//at.alicdn.com/t/font_893274_r43ptpor5o.ttf") format("truetype"),
-    url("//at.alicdn.com/t/font_893274_r43ptpor5o.svg#iconfont") format("svg");
+  font-family: 'iconfont';  /* project id 893274 */
+  src: url('//at.alicdn.com/t/font_893274_mxrvsickrfj.eot');
+  src: url('//at.alicdn.com/t/font_893274_mxrvsickrfj.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_mxrvsickrfj.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_mxrvsickrfj.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_mxrvsickrfj.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -209,6 +208,7 @@ body.theme .head-bar-text,
   border: 0.0625rem /* 1/16 */ solid #409eff;
 }
 
+.punch .theme-btn,
 .theme-borrowing-btn {
   background: linear-gradient(90deg, #ff765c, #ff23b3);
 }
@@ -258,6 +258,7 @@ body.theme .head-bar-text,
   margin-bottom: 0.625rem /* 10/16 */;
 }
 
+.punch,
 .apply {
   position: fixed;
   bottom: 4.875rem /* 78/16 */;
@@ -589,7 +590,7 @@ img.lazy[lazy="error"],
 }
 
 .explain {
-  font-size: x-small;
+  font-size: xx-small;
   margin-top: 1.25rem /* 20/16 */;
   color: #909399;
 }
@@ -597,6 +598,12 @@ img.lazy[lazy="error"],
 .explain b {
   margin-bottom: 0.3125rem /* 5/16 */;
   display: block;
+}
+
+.explain p{
+  margin-bottom: .3125rem /* 5/16 */;
+  text-indent: 1.625rem /* 26/16 */;
+  text-align: justify;
 }
 /* end */
 /* icon */
@@ -764,5 +771,63 @@ i.iconfont.rotate {
 
 .bar-fixed.van-nav-bar--fixed{
     position: sticky;
+}
+
+/* 登录 */
+.login .van-cell-group{
+   background: transparent;
+}
+
+.login .form .van-field__control{
+  height: 2rem /* 32/16 */;
+  line-height: 2rem /* 32/16 */;
+  padding-left:2.5rem /* 40/16 */;
+  font-size: 1rem /* 16/16 */;
+  font-weight: 700;
+}
+
+.login .form .van-field__control::-webkit-input-placeholder{
+  font-weight: normal;
+}
+
+.login .van-field{
+  margin-bottom: .625rem /* 10/16 */;
+  box-shadow: 0 .625rem /* 10/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.1);
+  border-radius: .3125rem /* 5/16 */;
+}
+/* 底部tab */
+
+.footer-bar .van-info{
+  top: -.25rem /* 4/16 */;
+  border: none;
+}
+
+.head-bar-text .text{
+  color: #fff;
+}
+
+.head-bar-text .van-icon-arrow-left{
+  color: #fff;
+}
+
+.video-cover {
+  position: relative;
+  width: 100%;
+}
+
+.video-cover .play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3.5rem /* 56/16 */;
+  height: 3.5rem /* 56/16 */;
+  text-align: center;
+  line-height: 3.5rem /* 56/16 */;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.video-cover .play i.iconfont {
+  color: #fff;
+  font-size: 3.5rem /* 56/16 */;
 }
 </style>
