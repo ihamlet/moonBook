@@ -18,7 +18,7 @@
         <i class="iconfont">&#xe635;</i>
       </div>
     </van-nav-bar>
-    <div class="container page-padding" ref="imageWrapper">
+    <div class="container page-padding">
       <div class="user-card flex flex-align" ref="userCard" v-if='item.user'>
         <div class="avatar">
           <img :src="item.user.avatar" :alt="item.user.username">
@@ -42,33 +42,9 @@
           <van-button size="small" round>+ 关注</van-button>
         </div>
       </div>
-      <div class="article-content">
-        <div class="title">{{item.title}}</div>
-        <div class="main">
-          <div class="text" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
-          <!-- 媒体图片  -->
-          <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1'>
-            <van-row gutter="5">
-              <van-col :span="8" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-                <div class="img-grid" v-lazy:background-image="photo.thumb" @click="mediaLamp(item,photoIndex)"></div>
-              </van-col>
-            </van-row>
-          </div>
-          <!-- 媒体视频 -->
-          <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
-            <div class="video-cover">
-              <div class="play">
-                <i class="iconfont">&#xe602;</i>
-              </div>
-              <img :src="item.cover" alt="视频封面">
-            </div>
-          </div>
-          <!-- 媒体音频 -->
-          <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
+     
+      <article-content :item='item'/>
 
-          </div>
-        </div>
-      </div>
 
       <div class="comment">
         <div class="comment-list">
@@ -91,7 +67,24 @@
 
     <!-- 生成图片 -->
     <van-popup v-model="imageShow" get-container='#app'>
-      <img :src='dataURL'>
+      <div class="screenshot" ref="imageWrapper" v-if='!dataURL'>
+        <div class="user flex flex-justify" v-if='item.user'>
+          <div class="avatar">
+            <img :src="item.user.avatar" :alt="item.user.username"/>
+          </div>
+          <div class="name">{{item.user.username}}</div>
+        </div>
+
+        <div class="content">
+          <article-content :item='item' type='screenshot'/>
+        </div>
+
+        <div class="press">
+          <span>长按二维码识别</span>
+          <span>查看更多</span>
+        </div>
+      </div>
+      <img :src='dataURL' v-else>
     </van-popup>
   </div>
 </template>
@@ -103,12 +96,15 @@ import html2canvas from 'html2canvas'
 import pictureBox from "./../module/mold/pictureBox"
 import share from './../module/mold/share'
 import comment from './../module/mold/comment'
+import articleContent from './../module/articleContent'
+
 
 export default {
   name: 'detailsArticle',
   components: {
     pictureBox,
     comment,
+    articleContent,
     share
   },
   data() {
@@ -173,6 +169,27 @@ export default {
           }
           resolve()
         })
+<<<<<<< HEAD
+=======
+      })
+    },
+    toImage() {
+      this.imageShow = true
+      this.toProxy(this.$refs.imageWrapper).then(()=>{
+        html2canvas(this.$refs.imageWrapper, {
+          logging: false,
+          useCORS: true,
+          timeout: 1000,
+          backgroundColor: '#fff',
+          windowWidth: this.$refs.imageWrapper.clientWidth,
+          windowHeight: this.$refs.imageWrapper.clientHeight,
+        }).then(canvas => {
+          // this.shareShow = false
+        
+          let dataURL = canvas.toDataURL("image/png")
+          this.dataURL = dataURL
+        })
+>>>>>>> master
       })
     },
     toImage() {
@@ -234,20 +251,6 @@ export default {
   margin-left: 0.3125rem /* 5/16 */;
 }
 
-.title {
-  font-size: 1.125rem /* 18/16 */;
-  margin-bottom: 1.875rem /* 30/16 */;
-  font-weight: 700;
-}
-
-.text {
-  line-height: 1.8;
-}
-
-.media {
-  margin-top: 1.25rem /* 20/16 */;
-}
-
 .slide-fade-enter-active {
   transition: all 0.18s ease;
 }
@@ -263,5 +266,32 @@ export default {
 .follow-ben {
   position: absolute;
   right: 0.625rem /* 10/16 */;
+}
+
+.screenshot{
+  width: 17.5rem /* 280/16 */;
+  height: 37.5rem /* 600/16 */;
+  background: #f2f6fc;
+  padding: .625rem /* 10/16 */ 1.25rem /* 20/16 */;
+}
+
+.screenshot .user{
+  display: grid;
+  margin-bottom: 1.25rem /* 20/16 */;
+}
+
+.screenshot .user .avatar{
+  width: 3.75rem /* 60/16 */;
+  height: 3.75rem /* 60/16 */;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: .625rem /* 10/16 */ auto;
+}
+
+.press{
+  display: grid;
+  text-align: center;
+  margin: .625rem /* 10/16 */ 0;
+  font-size: .75rem /* 12/16 */;
 }
 </style>
