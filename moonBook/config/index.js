@@ -13,7 +13,15 @@ module.exports = {
     proxyTable: {
       '/book':{
         target:'https://hu.wmlife.net/',
-        changeOrigin:true
+        changeOrigin: true
+      },
+      '/Public': {
+        target: 'https://hu.wmlife.net/',
+        changeOrigin: true
+      },
+      '/attachs': {
+        target: 'https://hu.wmlife.net/',
+        changeOrigin: true
       }
     },
 

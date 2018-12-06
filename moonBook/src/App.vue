@@ -28,11 +28,11 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_mxrvsickrfj.eot');
-  src: url('//at.alicdn.com/t/font_893274_mxrvsickrfj.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_mxrvsickrfj.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_mxrvsickrfj.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_mxrvsickrfj.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_2w50wbnso8j.eot');
+  src: url('//at.alicdn.com/t/font_893274_2w50wbnso8j.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_2w50wbnso8j.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_2w50wbnso8j.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_2w50wbnso8j.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -246,9 +246,16 @@ body.theme .head-bar-text,
   font-size: 1.25rem /* 20/16 */;
 }
 
-.theme-nav .head-bar-text {
+.head-bar-text .text,
+.head-bar-text .van-icon-arrow-left{
+  color: #606266;
+}
+
+.theme-nav .head-bar-text .text,
+.theme-nav .head-bar-text .van-icon-arrow-left{
   color: #fff;
 }
+
 
 .default-head-bar-background {
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
@@ -295,7 +302,7 @@ body.theme .head-bar-text,
   position: relative;
   overflow: hidden;
   background: #dcdfe6;
-  margin-top: 0.3125rem /* 5/16 */;
+  margin-top: .125rem /* 2/16 */;
   background-size: cover;
   background-position: 50%;
 }
@@ -795,21 +802,16 @@ i.iconfont.rotate {
   box-shadow: 0 .625rem /* 10/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.1);
   border-radius: .3125rem /* 5/16 */;
 }
-/* 底部tab */
 
+/* 底部tab */
 .footer-bar .van-info{
   top: -.25rem /* 4/16 */;
   border: none;
 }
 
-.head-bar-text .text{
-  color: #fff;
-}
 
-.head-bar-text .van-icon-arrow-left{
-  color: #fff;
-}
 
+/* 内容 */
 .video-cover {
   position: relative;
   width: 100%;
@@ -829,5 +831,19 @@ i.iconfont.rotate {
 .video-cover .play i.iconfont {
   color: #fff;
   font-size: 3.5rem /* 56/16 */;
+}
+
+video{
+  width: 100%;
+}
+
+.article .article-content{
+  background: #fff;
+  padding: 1.25rem /* 20/16 */;
+}
+
+.article .article-content .content img{
+  margin: 1.25rem /* 20/16 */ auto;
+  display: block;
 }
 </style>
