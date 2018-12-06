@@ -169,8 +169,6 @@ export default {
           }
           resolve()
         })
-<<<<<<< HEAD
-=======
       })
     },
     toImage() {
@@ -189,7 +187,6 @@ export default {
           let dataURL = canvas.toDataURL("image/png")
           this.dataURL = dataURL
         })
->>>>>>> master
       })
     },
     toImage() {
