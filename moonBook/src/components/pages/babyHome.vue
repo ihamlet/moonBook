@@ -71,7 +71,8 @@
     <slogan v-if="finished||!listLength" />
 
     <van-popup v-model="showQrcode" class="card-popup">
-      <qr-code :qrImage="qrImage" type="babyHome" :dataStatistics="dataStatistics" :school="school" :label="label" @close="showQrcode = false" :childInfo="childInfo" />
+      <qr-code :qrImage="qrImage" type="babyHome" :dataStatistics="dataStatistics" :school="school" :label="label"
+        @close="showQrcode = false" :childInfo="childInfo" />
     </van-popup>
 
     <van-popup v-model="showSetting" class="page-popup" position="right">
@@ -80,311 +81,266 @@
   </div>
 </template>
 <script>
-  import axios from "axios"
-  import { mapGetters } from "vuex"
-  import { format } from "./../lib/js/util.js"
-  import QRCode from "qrcode"
-  import wave from "./../module/animate/anWave"
-  import qrCode from "./../module/mold/qrCode"
-  import avatar from "./../module/avatar"
-  import reading from "./../module/reading"
-  import graphicCrad from "./../module/card/graphicCrad"
-  import babySetting from "./../module/setting/babySetting"
-  import slogan from "./../module/slogan"
+import axios from "axios"
+import { mapGetters } from "vuex"
+import { format } from "./../lib/js/util.js"
+import QRCode from "qrcode"
+import wave from "./../module/animate/anWave"
+import qrCode from "./../module/mold/qrCode"
+import avatar from "./../module/avatar"
+import reading from "./../module/reading"
+import graphicCrad from "./../module/card/graphicCrad"
+import babySetting from "./../module/setting/babySetting"
+import slogan from "./../module/slogan"
 
-  export default {
-    name: "baby-home",
-    components: {
-      wave,
-      qrCode,
-      reading,
-      avatar,
-      graphicCrad,
-      babySetting,
-      slogan
+export default {
+  name: "baby-home",
+  components: {
+    wave,
+    qrCode,
+    reading,
+    avatar,
+    graphicCrad,
+    babySetting,
+    slogan
+  },
+  computed: {
+    ...mapGetters(["userDataState", "dryingListLengthState"]),
+    age() {
+      if (this.childInfo) {
+        let year =
+          format(new Date(), "yyyy") - this.childInfo.birthday.split("-")[0]
+        return year;
+      } else {
+        return 0;
+      }
     },
-    computed: {
-      ...mapGetters(["userDataState", "dryingListLengthState"]),
-      age() {
-        if (this.childInfo) {
-          let year =
-            format(new Date(), "yyyy") - this.childInfo.birthday.split("-")[0]
-          return year;
+    label() {
+      return this.dataStatistics.totalReading > 50 ? "阅读小明星" : "阅读新秀"
+    }
+  },
+  data() {
+    return {
+      fixedHeaderBar: true,
+      domHeight: "",
+      childInfo: "",
+      school: "",
+      classInfo: "",
+      qrImage: "",
+      showQrcode: false,
+      dataStatistics: "",
+      lateBook: [],
+      readBook: [],
+      list: [],
+      listLength: "",
+      loading: false,
+      finished: false,
+      showSetting: false
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    axios.put("/api/ChildInfo", {
+      id: to.query.id
+    }).then(res => {
+      next(vm => {
+        vm.qrcode()
+        if (res.data.child) {
+          vm.lateBook = res.data.child.lateBook
+          vm.dataStatistics = res.data.child.dataStatistics
+          vm.school = res.data.child.school
+          vm.classInfo = res.data.child.class
+          vm.childInfo = res.data.child.data
         } else {
-          return 0;
-        }
-      },
-      label() {
-        return this.dataStatistics.totalReading > 50 ? "阅读小明星" : "阅读新秀"
-      }
-    },
-    data() {
-      return {
-        fixedHeaderBar: true,
-        domHeight: "",
-        childInfo: "",
-        school: "",
-        classInfo: "",
-        qrImage: "",
-        showQrcode: false,
-        dataStatistics: "",
-        lateBook: [],
-        readBook: [],
-        list: [],
-        listLength: "",
-        loading: false,
-        finished: false,
-        showSetting: false
-      }
-    },
-    beforeRouteEnter(to, from, next) {
-      axios.put("/api/ChildInfo", {
-        id: to.query.id
-      }).then(res => {
-        next(vm => {
-          vm.qrcode()
-          if (res.data.child) {
-            vm.lateBook = res.data.child.lateBook
-            vm.dataStatistics = res.data.child.dataStatistics
-            vm.school = res.data.child.school
-            vm.classInfo = res.data.child.class
-            vm.childInfo = res.data.child.data
-          } else {
-            vm.$dialog.alert({
-              message: `<div class='text-center'>注册阅亮书架 宝贝会爱上阅读</div>`,
-              showConfirmButton: true,
-              showCancelButton: true,
-              confirmButtonText: "注册",
-              cancelButtonText: "稍后"
-            }).then(() => {
-              vm.$router.push({
-                name: "register"
-              })
-            }).catch(() => {
-              vm.$router.push({
-                name: "my"
-              })
+          vm.$dialog.alert({
+            message: `<div class='text-center'>注册阅亮书架 宝贝会爱上阅读</div>`,
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonText: "注册",
+            cancelButtonText: "稍后"
+          }).then(() => {
+            vm.$router.push({
+              name: "register"
             })
-          }
-        })
+          }).catch(() => {
+            vm.$router.push({
+              name: "my"
+            })
+          })
+        }
+      })
+    })
+  },
+  created() {
+    this.fetchData();
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll)
+  },
+  watch: {
+    $router: "fetchData"
+  },
+  methods: {
+    fetchData() {
+      axios.get("/api/childAticleList").then(res => {
+        this.listLength = res.data.length
+      });
+    },
+    onClickLeft() {
+      this.$router.push({
+        name: "my"
       })
     },
-    created() {
-      this.fetchData();
+    qrcode() {
+      QRCode.toDataURL(window.location.href).then(url => {
+        this.qrImage = url
+      }).catch(err => {
+        console.error(err)
+      })
     },
-    mounted() {
-      window.addEventListener("scroll", this.handleScroll)
-    },
-    watch: {
-      $router: "fetchData"
-    },
-    methods: {
-      fetchData() {
-        axios.get("/api/childAticleList").then(res => {
-          this.listLength = res.data.length
-        });
-      },
-      onClickLeft() {
-        this.$router.push({
-          name: "my"
-        })
-      },
-      qrcode() {
-        QRCode.toDataURL(window.location.href).then(url => {
-          this.qrImage = url
-        }).catch(err => {
-          console.error(err)
-        })
-      },
-      handleScroll() {
-        this.getDomHeight();
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-        this.scrollTop = scrollTop
-        if (this.domHeight < this.scrollTop) {
-          this.fixedHeaderBar = false
-        } else {
-          this.fixedHeaderBar = true
-        }
-      },
-      getDomHeight() {
-        if (this.$refs.head) {
-          this.domHeight = this.$refs.head.offsetHeight / 2
-        }
-      },
-      onLoad() {
-        axios.get("/api/childAticleList").then(res => {
-          setTimeout(() => {
-            let array = res.data.childAticleList
-            let length = this.dryingListLengthState < 10 ? 1 : 5
-            for (let i = 0; i < length; i++) {
-              this.list.push(array[this.list.length])
-            }
-            this.loading = false
-            if (this.list.length >= res.data.length) {
-              this.finished = true
-            }
-          }, 500)
-        })
-      },
-      onClickRight() {
-        this.showSetting = true
-      },
-      babySetting(data) {
-        this.school = data.school
-      },
-      toClassHome() {
-        this.$router.push({
-          name: "class-home",
-          query: {
-            id: this.$route.query.id
-          }
-        });
+    handleScroll() {
+      this.getDomHeight();
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      this.scrollTop = scrollTop
+      if (this.domHeight < this.scrollTop) {
+        this.fixedHeaderBar = false
+      } else {
+        this.fixedHeaderBar = true
       }
+    },
+    getDomHeight() {
+      if (this.$refs.head) {
+        this.domHeight = this.$refs.head.offsetHeight / 2
+      }
+    },
+    onLoad() {
+      axios.get("/api/childAticleList").then(res => {
+        setTimeout(() => {
+          let array = res.data.childAticleList
+          let length = this.dryingListLengthState < 10 ? 1 : 5
+          for (let i = 0; i < length; i++) {
+            this.list.push(array[this.list.length])
+          }
+          this.loading = false
+          if (this.list.length >= res.data.length) {
+            this.finished = true
+          }
+        }, 500)
+      })
+    },
+    onClickRight() {
+      this.showSetting = true
+    },
+    babySetting(data) {
+      this.school = data.school
+    },
+    toClassHome() {
+      this.$router.push({
+        name: "class-home",
+        query: {
+          id: this.$route.query.id
+        }
+      });
     }
-  };
+  }
+};
 
 </script>
 <style scoped>
-  .header {
-    width: 100%;
-    height: 11.25rem
-      /* 180/16 */
-    ;
-    position: relative;
-  }
+.header {
+  width: 100%;
+  height: 11.25rem /* 180/16 */;
+  position: relative;
+}
 
-  .background {
-    background: linear-gradient(-135deg, #ff765c, #ff23b3);
-  }
+.background {
+  background: linear-gradient(-135deg, #ff765c, #ff23b3);
+}
 
-  .baby-info .avatar {
-    margin-right: 0.625rem
-      /* 10/16 */
-    ;
-    width: 3.75rem
-      /* 60/16 */
-    ;
-    height: 3.75rem
-      /* 60/16 */
-    ;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 0.3125rem
-      /* 5/16 */
-      1.25rem
-      /* 20/16 */
-      rgba(0, 0, 0, 0.2);
-    border: 0.1875rem
-      /* 3/16 */
-      solid #fff;
-  }
+.baby-info .avatar {
+  margin-right: 0.625rem /* 10/16 */;
+  width: 3.75rem /* 60/16 */;
+  height: 3.75rem /* 60/16 */;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0.3125rem /* 5/16 */ 1.25rem /* 20/16 */ rgba(0, 0, 0, 0.2);
+  border: 0.1875rem /* 3/16 */ solid #fff;
+}
 
-  .baby-info {
-    padding: 3.5rem
-      /* 56/16 */
-      1.25rem
-      /* 20/16 */
-    ;
-  }
+.baby-info {
+  padding: 3.5rem /* 56/16 */ 1.25rem /* 20/16 */;
+}
 
-  .list {
-    color: #fff;
-  }
+.list {
+  color: #fff;
+}
 
-  .list .item {
-    margin-right: 0.625rem
-      /* 10/16 */
-    ;
-  }
+.list .item {
+  margin-right: 0.625rem /* 10/16 */;
+}
 
-  .detail,
-  .school {
-    font-size: 0.875rem
-      /* 14/16 */
-    ;
-  }
+.detail,
+.school {
+  font-size: 0.875rem /* 14/16 */;
+}
 
-  .school {
-    width: 10rem
-      /* 160/16 */
-    ;
-    text-align: left;
-    margin-top: 0.3125rem
-      /* 5/16 */
-    ;
-    color: #fff;
-  }
+.school {
+  width: 10rem /* 160/16 */;
+  text-align: left;
+  margin-top: 0.3125rem /* 5/16 */;
+  color: #fff;
+}
 
-  .qr-code {
-    position: absolute;
-    right: 1.25rem
-      /* 20/16 */
-    ;
-  }
+.qr-code {
+  position: absolute;
+  right: 1.25rem /* 20/16 */;
+}
 
-  .qr-code i.van-icon {
-    font-size: 1.5rem
-      /* 24/16 */
-    ;
-    color: #fff;
-  }
+.qr-code i.van-icon {
+  font-size: 1.5rem /* 24/16 */;
+  color: #fff;
+}
 
-  .follow .theme-btn {
-    border-color: #fff;
-    color: #fff;
-  }
+.follow .theme-btn {
+  border-color: #fff;
+  color: #fff;
+}
 
-  .bar {
-    height: 2.875rem
-      /* 46/16 */
-    ;
-    line-height: 2.875rem
-      /* 46/16 */
-    ;
-    background: #fff;
-    position: relative;
-  }
+.bar {
+  height: 2.875rem /* 46/16 */;
+  line-height: 2.875rem /* 46/16 */;
+  background: #fff;
+  position: relative;
+}
 
-  .bar::before {
-    content: "";
-    position: absolute;
-    width: 0.0625rem
-      /* 1/16 */
-    ;
-    height: 1.25rem
-      /* 20/16 */
-    ;
-    background: #dcdfe6;
-    left: 50%;
-    top: 50%;
-    transform: translate3d(0, -50%, 0);
-  }
+.bar::before {
+  content: '';
+  position: absolute;
+  width: 0.0625rem /* 1/16 */;
+  height: 1.25rem /* 20/16 */;
+  background: #dcdfe6;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+}
 
-  .bar-item {
-    flex: 1;
-    text-align: center;
-  }
+.bar-item {
+  flex: 1;
+  text-align: center;
+}
 
-  .label {
-    font-size: 0.8125rem
-      /* 13/16 */
-    ;
-    color: #fff;
-  }
+.label {
+  font-size: 0.8125rem /* 13/16 */;
+  color: #fff;
+}
 
-  .baby-class .icon {
-    margin-right: 0.625rem
-      /* 10/16 */
-    ;
-  }
+.baby-class .icon {
+  margin-right: 0.625rem /* 10/16 */;
+}
 
-  .baby-class .icon i.iconfont {
-    font-size: 1.5rem
-      /* 24/16 */
-    ;
-    background-image: linear-gradient(135deg, #795548 10%, #000 100%);
-    -webkit-background-clip: text;
-    color: transparent;
-  }
-
+.baby-class .icon i.iconfont {
+  font-size: 1.5rem /* 24/16 */;
+  background-image: linear-gradient(135deg, #795548 10%, #000 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
 </style>

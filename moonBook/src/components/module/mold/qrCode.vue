@@ -158,8 +158,6 @@ export default {
 
 .code-img img {
   width: 6.25rem /* 100/16 */;
-  margin: 0 auto;
-  display: block;
 }
 
 .bg,
@@ -194,19 +192,11 @@ export default {
   height: 100%;
 }
 
-.close {
-  position: absolute;
-  right: 0.625rem /* 10/16 */;
-  top: 0.625rem /* 10/16 */;
-  z-index: 10;
-}
-
 .close.plate i.iconfont {
   color: #fff;
 }
 
 .close i.iconfont {
-  font-size: 1.5rem /* 24/16 */;
   color: #f56c6c;
 }
 
@@ -224,7 +214,7 @@ export default {
 .img-bg {
   width: 100%;
   height: 21.25rem /* 340/16 */;
-  background: url('./../../../assets/img/qc-bg-img.png');
+  background: url('/Public/images/qc-bg-img.png');
   background-size: cover;
   background-position: bottom;
   background-repeat: no-repeat;
@@ -232,12 +222,13 @@ export default {
 
 .card {
   width: 16.25rem /* 260/16 */;
-  padding: 0.3125rem /* 5/16 */ 1.25rem; /* 20/16 */
+  padding: 0.3125rem /* 5/16 */ 1.25rem; /* 20/16 */;
+  justify-content: space-between;
 }
 
 .plate .class-card {
   flex: 2;
-  padding-left: 0.625rem /* 10/16 */;
+  padding-left: .625rem /* 10/16 */;
 }
 
 .plate .explain {

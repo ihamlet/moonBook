@@ -32,12 +32,7 @@
 <script>
 export default {
   name: 'article-content',
-  props: ['item', 'type'],
-  data() {
-    return {
-
-    }
-  }
+  props: ['item', 'type']
 }
 </script>
 <style scoped>
@@ -59,16 +54,28 @@ export default {
   height: 17.5rem /* 280/16 */;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 0.9375rem /* 15/16 */ 3.125rem /* 50/16 */ rgba(0, 0, 0, 0.2);
+}
+
+.article-content.img-content{
+    padding: .625rem /* 10/16 */ 1.25rem /* 20/16 */;
+    border: .0625rem /* 1/16 */ solid #EBEEF5;
+    overflow: hidden;
+    position: relative;
+    border-radius: .5rem /* 8/16 */;
+}
+
+.img-content .title{
+    font-size: 1rem /* 16/16 */;
+    margin-bottom: .625rem /* 10/16 */;
 }
 
 .img-content::before {
   content: '';
   position: absolute;
-  bottom: 0;
+  left: 0;
+  bottom: -1.25rem /* 20/16 */;
   width: 100%;
   height: 3.75rem /* 60/16 */;
   background: linear-gradient(bottom, #fff, rgba(255, 255, 255, 0));
-  left: 0;
 }
 </style>

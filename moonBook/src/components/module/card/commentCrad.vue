@@ -1,18 +1,13 @@
 <template>
-    <div class="comment-card">
-        
-    </div>    
+  <div class="comment-card">
+      {{item}}
+  </div>
 </template>
 <script>
 export default {
-    name:'comment-card',
-    data () {
-        return {
-            
-        }
-    }
+  name: 'comment-card',
+  props: ['item'],
 }
 </script>
 <style scoped>
-
 </style>

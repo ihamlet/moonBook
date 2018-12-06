@@ -36,7 +36,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['login']),
+        ...mapActions(['getLogin']),
         fieldType(type){
             this.tpye = type
         },
@@ -45,7 +45,7 @@ export default {
         },
         Login(){
             this.isLoading = true
-            this.login(this.userLogin).then(res=>{
+            this.getLogin(this.userLogin).then(res=>{
                 this.isLoading = false
                 if(res.status){
                     this.$notify({
@@ -60,7 +60,7 @@ export default {
                     this.userLogin.password = ''
                 }
             }).catch(err=>{
-                this.$toast.fail('服务器错误 500')
+                this.$toast.fail('服务器错误')
             })
         }
     }

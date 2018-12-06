@@ -42,49 +42,55 @@
           <van-button size="small" round>+ 关注</van-button>
         </div>
       </div>
-     
-      <article-content :item='item'/>
-
-
-      <div class="comment">
-        <div class="comment-list">
-          <div class="user-card flex flex-align">
-
-          </div>
-        </div>
-      </div>
+      <article-content :item='item' />
+      <comment-list />
+      <comment :item='item' />
     </div>
-
-    <comment :item='item' />
 
     <van-popup v-model="pictureShow" class="picture-box-popup" get-container='#app'>
       <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item" />
     </van-popup>
 
     <van-popup v-model="shareShow" class="share-popup" position="bottom" get-container='#app'>
-      <share @close='shareShow = false' @generateImg='toImage'/>
+      <share @close='shareShow = false' @show='imageShow = true' />
     </van-popup>
 
     <!-- 生成图片 -->
-    <van-popup v-model="imageShow" get-container='#app'>
-      <div class="screenshot" ref="imageWrapper" v-if='!dataURL'>
-        <div class="user flex flex-justify" v-if='item.user'>
-          <div class="avatar">
-            <img :src="item.user.avatar" :alt="item.user.username"/>
-          </div>
-          <div class="name">{{item.user.username}}</div>
-        </div>
-
-        <div class="content">
-          <article-content :item='item' type='screenshot'/>
-        </div>
-
-        <div class="press">
-          <span>长按二维码识别</span>
-          <span>查看更多</span>
-        </div>
+    <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
+      <div class="close" @click="imageShow = false">
+        <i class="iconfont">&#xe683;</i>
       </div>
-      <img :src='dataURL' v-else>
+      <div class="image-wrapper" ref="imageWrapper">
+        <transition name="fade" mode="out-in">
+          <div class="screenshot" v-if='!dataURL'>
+            <div class="user flex flex-align" v-if='item.user'>
+              <div class="avatar">
+                <img :src="item.user.avatar" :alt="item.user.username" />
+              </div>
+              <div class="name">{{item.user.username}}</div>
+            </div>
+            <div class="content">
+              <article-content :item='item' type='screenshot' />
+            </div>
+            <div class="press flex flex-align">
+              <div class="text">
+                <span>长按二维码识别查看更多</span>
+                <span>© 阅亮书架</span>
+              </div>
+              <div class="qr-image">
+                <img :src="qrImage" alt="页面二维码" />
+              </div>
+            </div>
+          </div>
+          <img :src='dataURL' v-else>
+        </transition>
+      </div>
+      <div class="popup-btn">
+        <van-button class="theme-btn" :loading='isLoading' size="large" square :disabled='isDisabled' type="primary"
+          @click="toImage">
+          {{dataURL?'长按上图保存分享':'生成图片'}}
+        </van-button>
+      </div>
     </van-popup>
   </div>
 </template>
@@ -92,9 +98,10 @@
 import axios from './../lib/js/api'
 
 import html2canvas from 'html2canvas'
-
+import QRCode from "qrcode"
 import pictureBox from "./../module/mold/pictureBox"
 import share from './../module/mold/share'
+import commentList from './../module/commentList'
 import comment from './../module/mold/comment'
 import articleContent from './../module/articleContent'
 
@@ -105,6 +112,7 @@ export default {
     pictureBox,
     comment,
     articleContent,
+    commentList,
     share
   },
   data() {
@@ -118,7 +126,10 @@ export default {
       shareShow: false,
       imgIndex: '',
       item: '',
-      dataURL: ''
+      dataURL: '',
+      qrImage: '',
+      isLoading: false,
+      isDisabled: false
     }
   },
   created() {
@@ -144,6 +155,7 @@ export default {
       }
     },
     fetchData() {
+      this.qrcode()
       axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id}`).then(res => {
         this.item = res.data.data.post
       })
@@ -158,35 +170,26 @@ export default {
       this.imgIndex = photoIndex
       this.item = item
     },
-    toProxy(element) {
-      return new Promise((resolve, reject) => {
-        let imgs = element.querySelectorAll('img')
-        imgs.forEach((img) => {
-          let host = img.src.indexOf(location.host)
-          if(host === -1) {           
-            img.setAttribute('crossOrigin', 'anonymous')
-            img.src = '/book/api/remotePic?url=' + encodeURIComponent(img.src)
-          }
-          resolve()
-        })
+    qrcode() {
+      QRCode.toDataURL(window.location.href).then(url => {
+        this.qrImage = url
+      }).catch(err => {
+        console.error(err)
       })
     },
     toImage() {
-      this.imageShow = true
-      this.toProxy(this.$refs.imageWrapper).then(()=>{
-        html2canvas(this.$refs.imageWrapper, {
-          logging: false,
-          useCORS: true,
-          timeout: 1000,
-          backgroundColor: '#fff',
-          windowWidth: this.$refs.imageWrapper.clientWidth,
-          windowHeight: this.$refs.imageWrapper.clientHeight,
-        }).then(canvas => {
-          // this.shareShow = false
-        
-          let dataURL = canvas.toDataURL("image/png")
-          this.dataURL = dataURL
-        })
+      this.isLoading = true
+      html2canvas(this.$refs.imageWrapper, {
+        logging: false,
+        useCORS: true,
+        timeout: 1000,
+        windowWidth: this.$refs.imageWrapper.clientWidth,
+        windowHeight: this.$refs.imageWrapper.clientHeight,
+      }).then(canvas => {
+        let dataURL = canvas.toDataURL("image/png")
+        this.dataURL = dataURL
+        this.isLoading = false
+        this.isDisabled = true
       })
     }
   }
@@ -209,7 +212,7 @@ export default {
 .user-card {
   padding: 0.625rem /* 10/16 */;
   background: #fff;
-  margin-bottom: .3125rem /* 5/16 */;
+  margin-bottom: 0.3125rem /* 5/16 */;
 }
 
 .user-card .avatar {
@@ -251,30 +254,58 @@ export default {
   right: 0.625rem /* 10/16 */;
 }
 
-.screenshot{
+.screenshot-popup {
+  overflow: hidden;
+}
+
+.screenshot {
   width: 17.5rem /* 280/16 */;
-  height: 37.5rem /* 600/16 */;
-  background: #f2f6fc;
-  padding: .625rem /* 10/16 */ 1.25rem /* 20/16 */;
+  overflow: hidden;
+  padding: 0.625rem /* 10/16 */ 1.25rem /* 20/16 */;
 }
 
-.screenshot .user{
-  display: grid;
-  margin-bottom: 1.25rem /* 20/16 */;
+.image-wrapper {
+  width: 20rem /* 320/16 */;
+  overflow: hidden;
 }
 
-.screenshot .user .avatar{
-  width: 3.75rem /* 60/16 */;
-  height: 3.75rem /* 60/16 */;
+.image-wrapper .content {
+  background: #fff;
+}
+
+.screenshot .user {
+  margin-bottom: 0.625rem /* 10/16 */;
+}
+
+.screenshot .user .avatar {
+  width: 2.875rem /* 46/16 */;
+  height: 2.875rem /* 46/16 */;
   border-radius: 50%;
   overflow: hidden;
-  margin: .625rem /* 10/16 */ auto;
+  margin-right: 0.3125rem /* 5/16 */;
 }
 
-.press{
+.press {
+  margin-top: 0.625rem /* 10/16 */;
+  font-size: 0.75rem /* 12/16 */;
+  justify-content: space-between;
+}
+
+.press .text {
   display: grid;
-  text-align: center;
-  margin: .625rem /* 10/16 */ 0;
-  font-size: .75rem /* 12/16 */;
+  padding-left: 0.9375rem /* 15/16 */;
+}
+
+.qr-image {
+  width: 6.25rem /* 100/16 */;
+  height: 6.25rem /* 100/16 */;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

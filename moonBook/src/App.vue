@@ -837,6 +837,8 @@ video{
   width: 100%;
 }
 
+/* 文章 */
+
 .article-content{
   background: #fff;
   padding: 1.25rem /* 20/16 */;
@@ -850,5 +852,17 @@ video{
 .article-content .content p{
   font-size: 1rem /* 16/16 */ !important;
   margin: .625rem /* 10/16 */ 0
+}
+
+.close {
+  position: absolute;
+  right: 0.625rem /* 10/16 */;
+  top: 0.625rem /* 10/16 */;
+  z-index: 10;
+}
+
+.close i.iconfont {
+  font-size: 1.5rem /* 24/16 */;
+  color: #DCDFE6;
 }
 </style>
