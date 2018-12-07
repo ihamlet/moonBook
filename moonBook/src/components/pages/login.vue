@@ -73,7 +73,7 @@ export default {
 
 .theme-btn{
     margin-top: 1.25rem /* 20/16 */;
-    box-shadow: 0 .625rem /* 10/16 */ 2.5rem /* 40/16 */ rgba(64, 158, 255, .5);
+    box-shadow: 0 .625rem /* 10/16 */ 2.5rem /* 40/16 */ -.5rem /* 8/16 */ rgba(64, 158, 255, .5);
 }
 
 .icon{

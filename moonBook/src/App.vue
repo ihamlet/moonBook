@@ -28,11 +28,11 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_2w50wbnso8j.eot');
-  src: url('//at.alicdn.com/t/font_893274_2w50wbnso8j.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_2w50wbnso8j.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_2w50wbnso8j.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_2w50wbnso8j.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_i7hwsxkr1v.eot');
+  src: url('//at.alicdn.com/t/font_893274_i7hwsxkr1v.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_i7hwsxkr1v.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_i7hwsxkr1v.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_i7hwsxkr1v.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -244,11 +244,6 @@ body.theme .head-bar-text,
 
 .head-bar-icon i.iconfont {
   font-size: 1.25rem /* 20/16 */;
-}
-
-.head-bar-text .text,
-.head-bar-text .van-icon-arrow-left{
-  color: #606266;
 }
 
 .theme-nav .head-bar-text .text,
@@ -597,7 +592,7 @@ img.lazy[lazy="error"],
 }
 
 .explain {
-  font-size: xx-small;
+  font-size: x-small;
   margin-top: 1.25rem /* 20/16 */;
   color: #909399;
 }
@@ -609,7 +604,7 @@ img.lazy[lazy="error"],
 
 .explain p{
   margin-bottom: .3125rem /* 5/16 */;
-  text-indent: 1.625rem /* 26/16 */;
+  line-height: 1.8;
   text-align: justify;
 }
 /* end */
@@ -633,27 +628,6 @@ i.iconfont.rotate {
   -webkit-background-clip: text;
   color: transparent;
   display: inline-block;
-}
-
-/* 砖石会员 */
-.iconfont.vip-masonry {
-  background-image: linear-gradient(135deg, #5efce8 10%, #736efe 100%);
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-/* 黄金会员 */
-.iconfont.vip-gold {
-  background-image: linear-gradient(135deg, #ffe985 10%, #fa742b 100%);
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-/* 普通会员 */
-.iconfont.vip-ordinary {
-  background-image: linear-gradient(135deg, #fff5c3 10%, #9452a5 100%);
-  -webkit-background-clip: text;
-  color: transparent;
 }
 
 .social div {
@@ -799,7 +773,7 @@ i.iconfont.rotate {
 
 .login .van-field{
   margin-bottom: .625rem /* 10/16 */;
-  box-shadow: 0 .625rem /* 10/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.1);
+  box-shadow: 0 .625rem /* 10/16 */ 1.875rem /* 30/16 */ -.5rem /* 8/16 */ rgba(0, 0, 0, 0.1);
   border-radius: .3125rem /* 5/16 */;
 }
 

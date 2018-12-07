@@ -30,14 +30,14 @@
                 <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' hidden>
                 <input type="file" accept="audio/*" capture="microphone" ref='fileAudio' hidden>
             </van-cell-group>
-            <van-checkbox-group v-model="result">
+            <!-- <van-checkbox-group v-model="result">
                 <div class="form-title">同步到</div>
                 <van-cell-group>
                     <van-cell v-for="(item,index) in resultList" clickable :key="index" :title="item.title" @click="toggle(index)">
                         <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" />
                     </van-cell>
                 </van-cell-group>
-            </van-checkbox-group>
+            </van-checkbox-group> -->
         </div>
         <div class="upload-module flex wrap">
             <van-cell>
@@ -63,7 +63,7 @@
     </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from './../../lib/js/api'
 import topicList from './topicList'
 import { compress } from './../../lib/js/util.js'
 import { mapGetters } from 'vuex'
@@ -85,37 +85,37 @@ export default {
           }
           return name
       },
-      resultList(){
-        let array = [{
-            title:'发现',
-            name: 'find'
-        }]
+    //   resultList(){
+    //     let array = [{
+    //         title:'发现',
+    //         name: 'find'
+    //     }]
         
-        if(this.babyName){
-            array.push({
-                title:`${this.babyName}@宝贝主页`,
-                name: 'babyHome'
-            })
-        } 
+    //     if(this.babyName){
+    //         array.push({
+    //             title:`${this.babyName}@宝贝主页`,
+    //             name: 'babyHome'
+    //         })
+    //     } 
 
-        this.userDataState.childInfo.forEach((e,i)=>{
-            if(i==0){
-                if(e.class){
-                    array.push({
-                        title:`${this.babyName}@班级风采`,
-                        name: 'classHome'
-                    })
-                }
-            }
-        })
+    //     this.userDataState.childInfo.forEach((e,i)=>{
+    //         if(i==0){
+    //             if(e.class){
+    //                 array.push({
+    //                     title:`${this.babyName}@班级风采`,
+    //                     name: 'classHome'
+    //                 })
+    //             }
+    //         }
+    //     })
         
-        return array
-      }
+    //     return array
+    //   }
     },
     data () {
         let self = this
         return {
-            result:['find','classHome','babyHome'],
+            // result:['find','classHome','babyHome'],
             show:false,
             grapicData:{
                 text:'',
@@ -160,17 +160,20 @@ export default {
             if( this.grapicData.text.length == 0 && this.grapicData.images.length == 0){
                 this.$emit('close')
             }else if( this.grapicData.text.length < 140 ){
-                axios.put('/api/addDrying',{
-                    graphic: this.grapicData,
-                    result: this.result
-                }).then(res=>{
-                    this.$emit('close')
+                let data = {
+                    details: this.grapicData.text,
+                    template_id:1
+                }
 
-                    if(this.result.indexOf('find') == 0){
-                        this.$router.push({name:'find'})
-                    }else{
-                        this.$router.push({name:'zoom'})
-                    }
+                axios.post(`/book/SchoolArticle/edit?ajax=1`,data).then(res=>{
+                    this.$emit('close')
+                    console.log(res)
+
+                    // if(this.result.indexOf('find') == 0){
+                    //     this.$router.push({name:'find'})
+                    // }else{
+                    //     this.$router.push({name:'zoom'})
+                    // }
                 })
             }
         },

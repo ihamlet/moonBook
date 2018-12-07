@@ -1,7 +1,7 @@
 <template>
   <div class="article-content" :class="[type=='screenshot'?'img-content':'']">
     <div>
-      <div class="title">{{item.title}}</div>
+      <div class="title" v-if='item.template_id!=1'>{{item.title}}</div>
       <div class="main">
         <div class="text" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
         <!-- 媒体图片  -->
@@ -38,6 +38,7 @@ export default {
 <style scoped>
 .text {
   line-height: 1.8;
+  text-align: justify;
 }
 
 .media {

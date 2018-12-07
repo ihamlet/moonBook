@@ -6,11 +6,7 @@
       </div>
       <div class="name flex flex-align">
         {{item.user.name}}
-        <div class="memberships" v-if="item.card_level&&item.card_level.type == 1">
-          <i class="iconfont vip-masonry" v-if="item.card_level.level == 3">&#xe611;</i>
-          <i class="iconfont vip-gold" v-if="item.card_level.level == 2">&#xe611;</i>
-          <i class="iconfont vip-ordinary" v-if="item.card_level.level == 1">&#xe611;</i>
-        </div>
+        <vip-level v-if='item.card_level' :animate='false' :level='item.card_level.level'/>
       </div>
     </div>
     <van-swipe :initial-swipe="imgIndex" :loop="false" @change="onChange">
@@ -23,7 +19,9 @@
     </van-swipe>
     <div class="picture-info">
       <div class="content">
-        <div class="text" v-show="isFold" v-html="item.details"></div>
+        <div class="text" @click="toArticle(item)" v-line-clamp:20="3" v-show="isFold">
+          {{item.details}}
+        </div>
         <div class="social flex flex-align">
           <div class="fold" @click="fold">
             <i class="iconfont" :class="[isFold?'rotate':'']">&#xe6c4;</i>
@@ -49,6 +47,7 @@
 </template>
 <script>
 import axios from "axios"
+import vipLevel from './../animate/svg/vipLevel'
 
 export default {
   name: "pictureBox",
@@ -56,6 +55,9 @@ export default {
   model: {
     prop: "imgIndex",
     event: "changeIndex"
+  },
+  components: {
+    vipLevel
   },
   data() {
     return {
@@ -79,6 +81,15 @@ export default {
         .then(res => {
           item.zan_num = res.data.data.like
         })
+    },
+    toArticle(item){
+      this.$router.push({
+        name:'article',
+        query:{
+          id: item.post_id,
+          type: item.template_id
+        }
+      })
     }
   }
 }
@@ -135,7 +146,8 @@ export default {
 }
 
 .picture-info .content .text {
-  margin-bottom: 1.875rem /* 30/16 */;
+  margin-bottom: 1.25rem /* 20/16 */;
+  text-align: justify;
 }
 
 .fold {

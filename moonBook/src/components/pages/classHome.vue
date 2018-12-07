@@ -113,10 +113,9 @@ export default {
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {
         this.qrImage = url
-      })
-        .catch(err => {
+      }).catch(err => {
           console.error(err)
-        })
+      })
     },
     handleScroll() {
       this.getDomHeight()

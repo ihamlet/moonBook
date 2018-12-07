@@ -86,9 +86,7 @@
 
                         <div class="explain">
                             <b>会员说明</b>
-                            <p>{{tips.borrow_tip}}</p>
-                            <p>{{tips.member_tip}}</p>
-                            <p>{{tips.notice}}</p>
+                            <p>{{tips.borrow_tip}}{{tips.member_tip}}{{tips.notice}}</p>
                         </div>
                     </div>
                 </div>
