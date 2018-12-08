@@ -76,11 +76,11 @@
         <div class="comment-content flex">
           <div class="field-box">
             <van-cell-group>
-              <van-field v-model="message" ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
+              <van-field v-model="message" minHeight='50px' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
             </van-cell-group>
           </div>
           <div class="submit-btn theme-color">
-            <van-button class="theme-btn" :loading="isLoading" type="primary" @click="submit">发送</van-button>
+            <van-button class="theme-btn" :loading="isLoading"  size="large" type="primary" @click="submit">发送</van-button>
           </div>
         </div>
       </van-popup>
