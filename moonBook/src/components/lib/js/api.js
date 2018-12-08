@@ -1,3 +1,8 @@
+/*
+2018年12月8日08:32:06
+引入vuex 获取到getters的token
+*/
+
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
