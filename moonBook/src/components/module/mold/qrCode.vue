@@ -158,6 +158,7 @@ export default {
 
 .code-img img {
   width: 6.25rem /* 100/16 */;
+  margin:  0 auto;
 }
 
 .bg,

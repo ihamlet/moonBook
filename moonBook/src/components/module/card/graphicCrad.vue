@@ -51,7 +51,7 @@
         <div class="share">
           <i class="iconfont">&#xe6eb;</i> {{item.share_num>1000?'999+':item.share_num}}
         </div>
-        <div class="message"  @click="toArticle(item)">
+        <div class="message"  @click="toArticle(item,'#comment')">
           <i class="iconfont">&#xe731;</i> {{item.reply_num>1000?'999+':item.reply_num}}
         </div>
         <div class="praise flex flex-align flex-justify" @click="addPraise(item)">
@@ -99,14 +99,14 @@ export default {
       this.imgIndex = photoIndex
       this.item = item
     },
-    toArticle(item){
-      this.$router.push({
-        name:'article',
-        query:{
-          id: item.post_id,
-          type: item.template_id
-        }
-      })
+    toArticle(item,point){
+        this.$router.push({
+          name:'article',
+          query:{
+            id: item.post_id,
+            type: item.template_id
+          }
+        })
     }
   }
 }
@@ -115,6 +115,7 @@ export default {
 .text {
   margin: 0.9375rem /* 15/16 */0;
   text-align: justify;
+  font-size: .9375rem /* 15/16 */;
 }
 
 .social {

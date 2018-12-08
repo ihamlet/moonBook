@@ -147,7 +147,8 @@ export default {
 
 .picture-info .content .text {
   margin-bottom: 1.25rem /* 20/16 */;
-  text-align: justify;
+  width: 100%;
+  height: 3.75rem /* 60/16 */;
 }
 
 .fold {

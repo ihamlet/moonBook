@@ -1,6 +1,8 @@
 <template>
-  <div class="comment-list">
-    <div class="module-title">评论</div>
+  <div class="comment-list" id='comment'>
+    <van-nav-bar  title="评论" :zIndex='0' @click-right="showField()">
+      <van-button round size="small" type="danger" slot="right"> {{listLength}}评论</van-button>
+    </van-nav-bar>
     <div class="no-centent" v-if='list.length == 0'>
       <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
         viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15655">
@@ -36,12 +38,26 @@
           <div class="reply">
             <div v-if="item.replyList.length != 0" class="reply-content">
               <div class="list" v-for='(reply,replyIndex) in  item.replyList' :key='replyIndex'>
-                <div class="item flex flex-align">
+                <div class="item">
                   <span class="reply-title">
-                    <i class="iconfont">&#xe631;</i> {{reply.username}}回复{{item.username}}
+                    <i class="iconfont">&#xe6ea;</i>
+                    {{reply.username}}回复{{item.username}}
                   </span>
-                  <span>
+                  <span class="reply-contents">
                     {{reply.contents}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div v-if='item.quote' class="reply-content">
+              <div class="list">
+                <div class="item">
+                  <span class="reply-title">
+                    <i class="iconfont">&#xe60d;</i>
+                    {{item.quote.username}}的评论
+                  </span>
+                  <span class="reply-contents">
+                    {{item.quote.contents}}
                   </span>
                 </div>
               </div>
@@ -61,7 +77,7 @@
             写评论
           </div>
           <div class="btn-icon flex flex-align">
-            <div class="btn" @click="addPraise">
+            <div class="btn" @click="addPraise(item)">
               <i class="iconfont" v-if="!item.isZan">&#xe644;</i>
               <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
             </div>
@@ -76,11 +92,12 @@
         <div class="comment-content flex">
           <div class="field-box">
             <van-cell-group>
-              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
+              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1"
+                autosize />
             </van-cell-group>
           </div>
           <div class="submit-btn theme-color">
-            <van-button class="theme-btn" :loading="isLoading"  size="large" type="primary" @click="submit">发送</van-button>
+            <van-button class="theme-btn" :loading="isLoading" size="large" type="primary" @click="submit">发送</van-button>
           </div>
         </div>
       </van-popup>
@@ -100,6 +117,7 @@ export default {
   data() {
     return {
       list: [],
+      listLength: '',
       loading: false,
       finished: false,
       prompt: '写评论',
@@ -114,7 +132,7 @@ export default {
   methods: {
     onLoad() {
       axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.$route.query.id}&page=${this.page}&limit=10&sort=new`).then(res => {
-        console.log(res)
+        this.listLength = res.data.count
         let array = res.data.data
         this.loading = false
         if (this.page == 1) {
@@ -153,7 +171,6 @@ export default {
     },
     addPraise(item) {
       item.isZan = !item.isZan
-      console.log(item.isZan)
       axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
         item.zan_num = res.data.data.like
       })
@@ -164,6 +181,7 @@ export default {
         this.prompt = `回复：${item.username}`
         this.commentId = item.comment_id
       } else {
+        this.commentId = ''
         this.prompt = '写评论'
       }
       this.show = true
@@ -176,7 +194,7 @@ export default {
 </script>
 <style scoped>
 .comment-list {
-  margin-top: .3125rem /* 5/16 */
+  margin-top: 0.3125rem; /* 5/16 */
 }
 
 .no-centent {
@@ -302,11 +320,11 @@ export default {
 
 span.reply-title {
   color: #909399;
-  margin-right: .625rem /* 10/16 */;
+  margin-right: 0.625rem /* 10/16 */;
 }
 
-.theme-btn{
-  height: 2.875rem /* 46/16 */;
+.theme-btn {
+  height: 2.8125rem /* 45/16 */;
 }
 </style>
 

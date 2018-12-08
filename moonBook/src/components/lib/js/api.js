@@ -11,7 +11,7 @@ import store from './../../../store/index'
 
 Vue.use(Vuex)
 
-axios.defaults.timeout = 5000;
+axios.defaults.timeout = 5000
 
 axios.interceptors.request.use(
     config => {

@@ -1,7 +1,7 @@
 <template>
   <div class="baby-home">
     <div class="module-card">
-      <div class="add-baby flipInX animated" v-if="userDataState.childInfo == false" @click="toAddChild">
+      <div class="add-baby flipInX animated" v-if="childrenList.length == 0" @click="toAddChild">
         <i class="iconfont hot">&#xe750;</i>
         <div class="container">
           <i class="iconfont baby-hd">&#xe603;</i>
@@ -11,27 +11,27 @@
       </div>
       <div class="list" v-else>
         <div class="module-title">宝贝阅读档案</div>
-        <div class="item module" v-for="(list,index) in userDataState.childInfo" :key="index">
+        <div class="item module" v-for="(list,index) in childrenList" :key="index">
           <div class="card-top-bar">
-            <van-nav-bar :title="`${list.data.name}`" right-text="编辑" :left-text="list.school?'班级':''" @click-left="onClickLeft(list)"
+            <van-nav-bar :title="`${list.child_name}`" right-text="编辑" :left-text="list.school?'班级':''" @click-left="onClickLeft(list)"
               @click-right="onClickRight(list)" />
           </div>
           <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
             <div class="volume">
               周阅读量
-              <span class="number">{{list.dataStatistics.readings}}</span>
+              <span class="number">{{list.week_read_count}}</span>
             </div>
             <div class="content">
-              <div class="avatar" v-if="list.data.avatar">
-                <img :src="list.data.avatar" alt="宝贝头像">
+              <div class="avatar" v-if="list.avatar">
+                <img :src="list.avatar" alt="宝贝头像">
               </div>
               <avatar :gender="list.data.gende" v-else />
-              <div class="age">{{age[index]}}岁</div>
-              <div class="school" v-line-clamp:20="1">{{list.school}}</div>
+              <div class="age">{{list.age}}岁</div>
+              <div class="school" v-line-clamp:20="1">{{list.school_name}}</div>
             </div>
             <div class="volume">
               总获赞量
-              <span class="number">{{list.dataStatistics.praise}}</span>
+              <span class="number">{{list.zan_count}}</span>
             </div>
           </div>
         </div>
@@ -42,7 +42,7 @@
 
     <!-- 添加孩子页面 -->
     <van-popup v-model="addChildShow" class="page-popup" position="right">
-      <add-child @close="addChildShow = false" :dataId="dataId" :listenData="listenData" :pageTitle="pageTitle" />
+      <add-child @close="addChildShow = false" :dataId="dataId" :pageTitle="pageTitle" />
     </van-popup>
 
     <!-- 添加班级页面 -->
@@ -52,7 +52,7 @@
   </div>
 </template>
 <script>
-import axios from "axios"
+import axios from "./../../lib/js/api"
 import { mapGetters } from "vuex"
 import { format } from "./../../lib/js/util.js"
 import addChild from "./../addChild"
@@ -86,10 +86,22 @@ export default {
       dataId: "",
       addChildShow: false,
       addClassShow: false,
-      pageTitle: "addBaby"
+      pageTitle: "addBaby",
+      childrenList:[]
     }
   },
+  created () {
+    this.fetchData()
+  },
+  watch: {
+    '$router':'fetchData'
+  },
   methods: {
+    fetchData(){
+      axios.get('/book/family/getChildrenByUser').then(res => {
+        this.childrenList = res.data.data
+      })
+    },
     toAddChild() {
       this.pageTitle = "addBaby"
       this.addChildShow = true
@@ -98,14 +110,6 @@ export default {
       this.addChildShow = true
       this.pageTitle = "editBaby"
       this.dataId = list.id
-
-      axios
-        .put("/api/ChildInfo", {
-          id: list.id
-        })
-        .then(res => {
-          this.listenData = res.data.child.data
-        })
     },
     onClickLeft(list) {
       if (list.class) {

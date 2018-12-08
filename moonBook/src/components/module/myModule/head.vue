@@ -1,6 +1,6 @@
 <template>
   <div class="head head-background" ref='head'>
-    <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userDataState.userInfo.name"
+    <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:name"
       @click-left="onClickLeft" @click-right="onClickRight">
       <div class="head-bar-icon" slot='left'>
         <i class="iconfont">&#xe60e;</i>
@@ -110,7 +110,7 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get(`/book/memberUser/getInfo?token=${this.userToken}`).then(res => {
+      axios.get('/book/memberUser/getInfo').then(res => {
         this.avatar = res.data.avatar
         this.name = res.data.name
         this.isVip = res.data.isVip

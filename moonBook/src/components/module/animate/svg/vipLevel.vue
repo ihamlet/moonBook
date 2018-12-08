@@ -41,7 +41,7 @@ export default {
 
 .highlight {
   position: absolute;
-  width: .5rem /* 8/16 */;
+  width: 1rem /* 16/16 */;
   height: 100%;
   top: 0;
   left: -1.5rem /* 24/16 */;

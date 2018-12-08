@@ -67,7 +67,7 @@ export default {
 </script>
 <style scoped>
 .svg-list {
-  padding: 0.625rem /* 10/16 */ 0 3.125rem /* 50/16 */ 0;
+  padding: 0.625rem /* 10/16 */ 0;
 }
 
 .svg-list .btn {

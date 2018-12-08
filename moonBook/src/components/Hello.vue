@@ -59,6 +59,8 @@ export default {
           let products = {
             location:val
           }
+
+          console.log(products)
           this.getUserLocation(products)
       },
       '$route': 'fetchData'
