@@ -35,16 +35,16 @@
 
           <div class="reply">
             <div v-if="item.replyList.length != 0" class="reply-content">
-                <div class="list" v-for='(reply,replyIndex) in  item.replyList' :key='replyIndex'>
-                  <div class="item">
-                    <span class="reply-title">
-                       <i class="iconfont">&#xe631;</i> {{reply.username}}回复{{item.username}} 
-                    </span>
-                    <span>
-                      {{reply.contents}}
-                    </span>
-                  </div>
+              <div class="list" v-for='(reply,replyIndex) in  item.replyList' :key='replyIndex'>
+                <div class="item">
+                  <span class="reply-title">
+                    <i class="iconfont">&#xe631;</i> {{reply.username}}回复{{item.username}}
+                  </span>
+                  <span>
+                    {{reply.contents}}
+                  </span>
                 </div>
+              </div>
             </div>
             <div class="theme-color" @click="showField(item)">回复</div>
           </div>
@@ -130,12 +130,21 @@ export default {
     },
     submit() {
       this.isLoading = true
-      let data = {
-        post_id: this.$route.query.id,
-        contents: this.message,
-        reply_comment_id: this.commentId
+      let data = ''
+      if (this.commentId) {
+        data = {
+          post_id: this.$route.query.id,
+          contents: this.message,
+          reply_comment_id: this.commentId
+        }
+      } else {
+        data = {
+          post_id: this.$route.query.id,
+          contents: this.message
+        }
       }
-      axios.post(`/book/SchoolArticleComment/edit?ajax=1&token=${this.userToken}`, data).then(res => {
+
+      axios.post(`/book/SchoolArticleComment/edit?ajax=1`, data).then(res => {
         this.show = false
         this.isLoading = false
         this.page = 1
@@ -149,16 +158,16 @@ export default {
         item.zan_num = res.data.data.like
       })
     },
-    showField(item){
+    showField(item) {
       this.message = ''
-      if(item){
+      if (item) {
         this.prompt = `回复：${item.username}`
         this.commentId = item.comment_id
-      }else{
+      } else {
         this.prompt = '写评论'
       }
       this.show = true
-      this.$nextTick(()=>{
+      this.$nextTick(() => {
         this.$refs.field.focus()
       })
     }
@@ -216,7 +225,7 @@ export default {
   text-align: justify;
 }
 
-.reply .reply-content{
+.reply .reply-content {
   text-align: justify;
 }
 
@@ -224,7 +233,7 @@ export default {
   font-size: 0.8125rem /* 13/16 */;
 }
 
-.reply{
+.reply {
   margin-left: 3.4375rem /* 55/16 */;
 }
 
@@ -238,11 +247,11 @@ export default {
 }
 
 .comment-popup {
-  padding:  .625rem /* 10/16 */;
+  padding: 0.625rem /* 10/16 */;
 }
 
 .comment-content {
-  padding: 0 .625rem /* 10/16 */;
+  padding: 0 0.625rem /* 10/16 */;
   align-items: flex-end;
 }
 
@@ -280,7 +289,7 @@ export default {
 
 .field-box {
   border: 0.0625rem /* 1/16 */ solid #dcdfe6;
-  border-radius: .25rem /* 4/16 */;
+  border-radius: 0.25rem /* 4/16 */;
   overflow: hidden;
   flex: 4;
 }
@@ -288,10 +297,10 @@ export default {
 .submit-btn {
   flex: 1;
   text-align: center;
-  margin-left: .3125rem /* 5/16 */;
+  margin-left: 0.3125rem /* 5/16 */;
 }
 
-span.reply-title{
+span.reply-title {
   color: #909399;
 }
 </style>
