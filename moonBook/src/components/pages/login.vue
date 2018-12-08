@@ -21,6 +21,17 @@
     </div>    
 </template>
 <script>
+/* 
+2018年12月8日08:34:08
+写入讲token写入 vuex getter
+
+vuex的运用 是否是多项目应用？
+
+
+> <..
+*/
+
+
 import { mapActions } from "vuex"
 
 export default {
