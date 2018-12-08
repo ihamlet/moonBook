@@ -36,7 +36,7 @@
           <div class="reply">
             <div v-if="item.replyList.length != 0" class="reply-content">
               <div class="list" v-for='(reply,replyIndex) in  item.replyList' :key='replyIndex'>
-                <div class="item">
+                <div class="item flex flex-align">
                   <span class="reply-title">
                     <i class="iconfont">&#xe631;</i> {{reply.username}}回复{{item.username}}
                   </span>
@@ -76,7 +76,7 @@
         <div class="comment-content flex">
           <div class="field-box">
             <van-cell-group>
-              <van-field v-model="message" minHeight='50px' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
+              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
             </van-cell-group>
           </div>
           <div class="submit-btn theme-color">
@@ -176,7 +176,7 @@ export default {
 </script>
 <style scoped>
 .comment-list {
-  margin-top: 0.625rem; /* 10/16 */
+  margin-top: .3125rem /* 5/16 */
 }
 
 .no-centent {
@@ -302,6 +302,11 @@ export default {
 
 span.reply-title {
   color: #909399;
+  margin-right: .625rem /* 10/16 */;
+}
+
+.theme-btn{
+  height: 2.875rem /* 46/16 */;
 }
 </style>
 

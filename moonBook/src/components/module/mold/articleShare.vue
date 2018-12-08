@@ -44,7 +44,7 @@ export default {
   name: 'article-share',
   props: ['item', 'qrImage'],
   components: {
-      articleContent
+    articleContent
   },
   data() {
     return {
@@ -68,8 +68,8 @@ export default {
         this.isDisabled = true
       })
     },
-    close(){
-        this.$emit('close')
+    close() {
+      this.$emit('close')
     }
   }
 }
@@ -78,7 +78,7 @@ export default {
 .screenshot {
   width: 17.5rem /* 280/16 */;
   overflow: hidden;
-  padding: 0.625rem /* 10/16 */ 1.25rem /* 20/16 */;
+  padding: 1.25rem /* 20/16 */;
 }
 
 .image-wrapper {

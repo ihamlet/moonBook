@@ -1,38 +1,43 @@
 <template>
-  <div class="article-content" :class="[type=='screenshot'?'img-content':'']">
-    <div>
+  <div class="article-content" :class="[type=='screenshot'?'img-content':'',item.template_id!=0?'flex flex-align':'']">
+    <article>
       <div class="title" v-if='item.template_id!=1'>{{item.title}}</div>
       <div class="main">
         <div class="text" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
-        <!-- 媒体图片  -->
-        <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1'>
-          <van-row gutter="5">
-            <van-col :span="8" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-              <div class="img-grid" v-lazy:background-image="photo.thumb" @click="mediaLamp(item,photoIndex)"></div>
-            </van-col>
-          </van-row>
-        </div>
-        <!-- 媒体视频 -->
-        <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
-          <div class="video-cover">
-            <div class="play">
-              <i class="iconfont">&#xe602;</i>
+        <!-- 媒体  -->
+        <div class="media-content">
+          <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1'>
+            <van-row gutter="5">
+              <van-col :span="8" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
+                <div class="img-grid" v-lazy:background-image="photo.thumb" @click="mediaLamp(item,photoIndex)"></div>
+              </van-col>
+            </van-row>
+          </div>
+          <!-- 媒体视频 -->
+          <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
+            <div class="video-cover">
+              <div class="play">
+                <i class="iconfont">&#xe602;</i>
+              </div>
+              <img :src="item.cover" alt="视频封面">
             </div>
-            <img :src="item.cover" alt="视频封面">
+          </div>
+          <!-- 媒体音频 -->
+          <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
+
           </div>
         </div>
-        <!-- 媒体音频 -->
-        <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
-
-        </div>
       </div>
-    </div>
+    </article>
   </div>
 </template>
 <script>
 export default {
   name: 'article-content',
-  props: ['item', 'type']
+  props: ['item', 'type'],
+  created () {
+    console.log(this.item)
+  }
 }
 </script>
 <style scoped>

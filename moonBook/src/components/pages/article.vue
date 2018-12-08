@@ -7,10 +7,10 @@
             {{$route.meta.title}}
           </div>
           <div class="head-bar-title-conent flex flex-align flex-justify" :key="2" v-else>
-            <div class="avatar">
+            <div class="avatar" v-if='item.user'>
               <img :src="item.user.avatar" :alt="item.user.username">
             </div>
-            <div class="name">{{item.user.username}}</div>
+            <div class="name" v-if='item.user'>{{item.user.username}}</div>
             <vip-level v-if='item.card_level' :animate='true' :level='item.card_level.level'/>
           </div>
         </transition>
