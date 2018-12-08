@@ -43,26 +43,21 @@ export default {
   },
   methods: {
     getList() {
-      return axios
-        .get(
-          `/book/SchoolArticle/getList?page=${this.page}&token=${
-          this.userToken
-          }&sort=${this.sort}`
-        )
-        .then(res => {
-          this.page++
-          let datas = []
-          res.data.data.forEach(element => {
-            datas.push(element)
-          })
-
-          this.list = this.list.concat(datas)
-          this.loading = false
-
-          if (this.list.length >= res.data.count) {
-            this.finished = true
-          }
+      return axios.get(`/book/SchoolArticle/getList?page=${this.page}&sort=${this.sort}`).then(res => {
+        console.log(res)
+        this.page++
+        let datas = []
+        res.data.data.forEach(element => {
+          datas.push(element)
         })
+
+        this.list = this.list.concat(datas)
+        this.loading = false
+
+        if (this.list.length >= res.data.count) {
+          this.finished = true
+        }
+      })
     },
     onLoad() {
       this.getList()

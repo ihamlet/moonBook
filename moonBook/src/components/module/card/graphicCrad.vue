@@ -9,11 +9,7 @@
           <div class="name flex flex-align">
             <span v-if="type=='babyHome'">{{babyName}}{{familyTitle?`的${familyTitle}`:`的家长`}}</span>
             <span v-else>{{item.user.name}}</span>
-            <div class="memberships" v-if='item.card_level&&item.card_level.type == 1'>
-              <i class="iconfont vip-masonry" v-if="item.card_level.level == 3">&#xe611;</i>
-              <i class="iconfont vip-gold" v-if="item.card_level.level == 2">&#xe611;</i>
-              <i class="iconfont vip-ordinary" v-if="item.card_level.level == 1">&#xe611;</i>
-            </div>
+            <vip-level v-if='item.card_level' :animate='true' :level='item.card_level.level'/>
             <div class="class-name">{{className}}</div>
           </div>
           <div class="school">{{item.schoolName}}</div>
@@ -47,7 +43,8 @@
       </div>
 
       <div class="temp-type">
-         <van-tag plain type="primary">文章</van-tag>
+         <van-tag plain type="primary" v-if='item.template_id == 0'>文章</van-tag>
+         <van-tag plain type="primary" v-if='item.template_id == 1'>新鲜事</van-tag>
       </div>
 
       <div class="social flex flex-align">
@@ -73,12 +70,14 @@
 <script>
 import axios from "./../../lib/js/api"
 import pictureBox from "./../mold/pictureBox"
+import vipLevel from './../animate/svg/vipLevel'
 
 export default {
   name: "graphic-crad",
   props: ["item", "type", "babyName", "className", "familyTitle"],
   components: {
-    pictureBox
+    pictureBox,
+    vipLevel
   },
   data() {
     return {
@@ -114,7 +113,7 @@ export default {
 </script>
 <style scoped>
 .text {
-  margin: 0.9375rem /* 15/16 */ 0.3125rem /* 5/16 */;
+  margin: 0.9375rem /* 15/16 */0;
   text-align: justify;
 }
 
@@ -142,12 +141,12 @@ export default {
 }
 
 .memberships {
-  margin-left: 0.625rem /* 10/16 */;
+  margin-left: .3125rem /* 5/16 */;
 }
 
 .avatar img {
-  width: 3.75rem /* 60/16 */;
-  height: 3.75rem /* 60/16 */;
+  width: 3.125rem /* 50/16 */;
+  height: 3.125rem /* 50/16 */;
   border-radius: 50%;
 }
 

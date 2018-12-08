@@ -239,7 +239,7 @@ const actions = {
             })
         })     
     },
-    login(context,products){
+    getLogin(context,products){
         let data = products
         return new Promise((resolve, reject) => {
             axios.post('/book/login/mobileLogin', data).then(res=>{

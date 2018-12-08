@@ -111,7 +111,6 @@ export default {
   methods: {
     fetchData() {
       axios.get(`/book/memberUser/getInfo?token=${this.userToken}`).then(res => {
-        console.log(res)
         this.avatar = res.data.avatar
         this.name = res.data.name
         this.isVip = res.data.isVip

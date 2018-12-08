@@ -21,6 +21,17 @@
     </div>    
 </template>
 <script>
+/* 
+2018年12月8日08:34:08
+写入讲token写入 vuex getter
+
+vuex的运用 是否是多项目应用？
+
+
+> <..
+*/
+
+
 import { mapActions } from "vuex"
 
 export default {
@@ -36,7 +47,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['login']),
+        ...mapActions(['getLogin']),
         fieldType(type){
             this.tpye = type
         },
@@ -45,7 +56,7 @@ export default {
         },
         Login(){
             this.isLoading = true
-            this.login(this.userLogin).then(res=>{
+            this.getLogin(this.userLogin).then(res=>{
                 this.isLoading = false
                 if(res.status){
                     this.$notify({
@@ -60,7 +71,7 @@ export default {
                     this.userLogin.password = ''
                 }
             }).catch(err=>{
-                this.$toast.fail('服务器错误 500')
+                this.$toast.fail('服务器错误')
             })
         }
     }
@@ -73,7 +84,7 @@ export default {
 
 .theme-btn{
     margin-top: 1.25rem /* 20/16 */;
-    box-shadow: 0 .625rem /* 10/16 */ 2.5rem /* 40/16 */ rgba(64, 158, 255, .5);
+    box-shadow: 0 .625rem /* 10/16 */ 2.5rem /* 40/16 */ -.5rem /* 8/16 */ rgba(64, 158, 255, .5);
 }
 
 .icon{

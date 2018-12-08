@@ -1,42 +1,42 @@
 <template>
-    <div class="topic-list">
-        <van-nav-bar title="选择话题"/>
-        <div class="list">
-            <div class="item" v-for='(item,index) in topicList' :key="index">
-                <van-cell-group>
-                    <van-cell is-link>
-                        <div class="theme-color">#{{item}}</div>
-                    </van-cell>
-                </van-cell-group>
-            </div>
+  <div class="topic-list">
+    <van-nav-bar title="选择话题" />
+    <div class="list">
+      <van-cell-group>
+        <div class="item" v-for='(item,index) in topicList' :key="index">
+          <van-cell is-link>
+            <div class="theme-color">#{{item}}</div>
+          </van-cell>
+
         </div>
+      </van-cell-group>
     </div>
+  </div>
 </template>
 <script>
-import axios from 'axios';
+import axios from 'axios'
 
 export default {
-    name:'topic-list',
-    data () {
-        return {
-            topicList:''
-        }
-    },
-    created () {
-        this.fetchData()
-    },
-    watch: {
-        '$router':'fetchData'
-    },
-    methods: {
-        fetchData(){
-            axios.get('/api/topicList').then(res=>{
-                this.topicList = res.data.topicList
-            })
-        }
+  name: 'topic-list',
+  data() {
+    return {
+      topicList: ''
     }
+  },
+  created() {
+    this.fetchData()
+  },
+  watch: {
+    '$router': 'fetchData'
+  },
+  methods: {
+    fetchData() {
+      axios.get('/api/topicList').then(res => {
+        this.topicList = res.data.topicList
+      })
+    }
+  }
 }
 </script>
 <style scoped>
-
 </style>

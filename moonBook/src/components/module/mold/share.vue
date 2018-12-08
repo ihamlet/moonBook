@@ -60,7 +60,7 @@ export default {
           this.$emit('close')
       },
       generateImg(){
-          this.$emit('generateImg')
+          this.$emit('show')
       }
   }
 }
