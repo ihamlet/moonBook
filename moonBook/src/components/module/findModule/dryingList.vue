@@ -44,7 +44,6 @@ export default {
   methods: {
     getList() {
       return axios.get(`/book/SchoolArticle/getList?page=${this.page}&sort=${this.sort}`).then(res => {
-        console.log(res)
         this.page++
         let datas = []
         res.data.data.forEach(element => {

@@ -51,7 +51,7 @@
         <div class="share">
           <i class="iconfont">&#xe6eb;</i> {{item.share_num>1000?'999+':item.share_num}}
         </div>
-        <div class="message"  @click="toArticle(item,'#comment')">
+        <div class="message"  @click="toArticle(item)">
           <i class="iconfont">&#xe731;</i> {{item.reply_num>1000?'999+':item.reply_num}}
         </div>
         <div class="praise flex flex-align flex-justify" @click="addPraise(item)">
@@ -100,13 +100,13 @@ export default {
       this.item = item
     },
     toArticle(item,point){
-        this.$router.push({
-          name:'article',
-          query:{
-            id: item.post_id,
-            type: item.template_id
-          }
-        })
+      this.$router.push({
+        name:'article',
+        query:{
+          id: item.post_id,
+          type: item.template_id
+        }
+      })
     }
   }
 }

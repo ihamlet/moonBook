@@ -88,7 +88,7 @@
         </div>
       </div>
 
-      <van-popup v-model="show" class="comment-popup" position="bottom" lazy-render='#app'>
+      <van-popup v-model="show" class="comment-popup" position="bottom" get-container='#app'>
         <div class="comment-content flex">
           <div class="field-box">
             <van-cell-group>

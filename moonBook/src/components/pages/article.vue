@@ -40,16 +40,12 @@
         </div>
       </div>
       <lazy-component>
-        <article-content :item='item' />
+        <article-content :item='item'/>
       </lazy-component>
       <lazy-component>
         <comment :item='item'/>
       </lazy-component>
     </div>
-
-    <van-popup v-model="pictureShow" class="picture-box-popup" get-container='#app'>
-      <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item" />
-    </van-popup>
 
     <van-popup v-model="shareShow" class="share-popup" position="bottom" get-container='#app'>
       <share @close='shareShow = false' @show='imageShow = true' />
@@ -129,11 +125,6 @@ export default {
       this.$router.push({
         name: 'find'
       })
-    },
-    mediaLamp(item, photoIndex) {
-      this.pictureShow = true
-      this.imgIndex = photoIndex
-      this.item = item
     },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {

@@ -6,7 +6,7 @@
         <div class="text" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
         <!-- 媒体  -->
         <div class="media-content">
-          <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1'>
+          <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1&&item.photos'>
             <van-row gutter="5">
               <van-col :span="8" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
                 <div class="img-grid" v-lazy:background-image="photo.thumb" @click="mediaLamp(item,photoIndex)"></div>
@@ -29,14 +29,27 @@
         </div>
       </div>
     </article>
+
+    <van-popup v-model="pictureShow" class="picture-box-popup" get-container='#app'>
+      <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item" />
+    </van-popup>
   </div>
 </template>
 <script>
 export default {
   name: 'article-content',
-  props: ['item', 'type'],
-  created () {
-    console.log(this.item)
+  props: ['item','type'],
+  data () {
+    return {
+      imgIndex:'',
+      pictureShow:false
+    }
+  },
+  methods: {
+    mediaLamp(){
+      this.pictureShow = true
+      this.imgIndex = photoIndex
+    }
   }
 }
 </script>
