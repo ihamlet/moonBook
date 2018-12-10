@@ -3,10 +3,10 @@
     <van-nav-bar left-text="发现" left-arrow fixed :zIndex='100' @click-left="onClickLeft" @click-right="shareShow = true">
       <div class="head-bar-title" slot="title">
         <transition name="slide-fade" mode="out-in">
-          <div class="head-bar-title-conent" :key="1" v-if='!themeBarSearch'>
+          <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
             {{$route.meta.title}}
           </div>
-          <div class="head-bar-title-conent flex flex-align flex-justify" :key="2" v-else>
+          <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else>
             <div class="avatar" v-if='item.user'>
               <img :src="item.user.avatar" :alt="item.user.username">
             </div>
@@ -39,8 +39,12 @@
           <van-button size="small" round>+ 关注</van-button>
         </div>
       </div>
-      <article-content :item='item' />
-      <comment :item='item'/>
+      <lazy-component>
+        <article-content :item='item' />
+      </lazy-component>
+      <lazy-component>
+        <comment :item='item'/>
+      </lazy-component>
     </div>
 
     <van-popup v-model="pictureShow" class="picture-box-popup" get-container='#app'>

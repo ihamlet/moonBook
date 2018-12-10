@@ -43,7 +43,7 @@
     <div class="upload-module flex wrap">
       <van-cell>
         <van-row gutter="5">
-          <van-col :span="8" v-for='(item,index) in grapicData.images' :key="index">
+          <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
             <div class="preview img-grid" v-lazy:background-image='item.img'>
               <i class="iconfont" @click="deletePhoto(index)">&#xe683;</i>
             </div>
@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     imagesLength() {
-      return this.grapicData.images.length
+      return this.grapicData.photos.length
     }
   },
   data() {
@@ -86,7 +86,7 @@ export default {
       show: false,
       grapicData: {
         text: '',
-        images: []
+        photos: []
       }
     }
   },
@@ -138,7 +138,7 @@ export default {
         file.forEach(element => {
           compress(element.content, 800, 0.5).then(val => {
             if (this.imagesLength < 9) {
-              this.grapicData.images.push({
+              this.grapicData.photos.push({
                 img: val
               })
             }
@@ -146,11 +146,16 @@ export default {
         })
       } else {
         compress(file.content, 800, 0.5).then(val => {
-          this.grapicData.images.push({
+          this.grapicData.photos.push({
             img: val
           })
         })
       }
+
+      
+      axios.post('/book/file/upload_img',this.grapicData.photos).then(res=>{
+        console.log(res)
+      })
     },
     onClickLeft() {
       this.$emit('close')
@@ -160,7 +165,6 @@ export default {
       if (this.grapicData.text.length == 0 && this.grapicData.images.length == 0) {
         this.$emit('close')
       } else if (this.grapicData.text.length < 140) {
-
         let data = {
           details: this.grapicData.text,
           template_id: 1

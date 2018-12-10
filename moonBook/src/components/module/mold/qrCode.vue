@@ -99,8 +99,10 @@ export default {
         useCORS: true,
         timeout: 1000,
         backgroundColor: '#fff',
-        windowWidth: this.$refs.imageWrapper.clientWidth,
-        windowHeight: this.$refs.imageWrapper.clientHeight,
+        width:  this.$refs.imageWrapper.offsetWidth,
+        height: this.$refs.imageWrapperoffsetHeight,
+        windowWidth: this.$refs.imageWrapper.offsetWidth,
+        windowHeight: this.$refs.imageWrapper.offsetHeight,
       }).then(canvas => {
         let dataURL = canvas.toDataURL("image/png")
         this.dataURL = dataURL

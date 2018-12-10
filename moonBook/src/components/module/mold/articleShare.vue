@@ -58,9 +58,17 @@ export default {
       this.isLoading = true
       html2canvas(this.$refs.imageWrapper, {
         logging: false,
+        useCORS: true,
         timeout: 1000,
-        windowWidth: this.$refs.imageWrapper.clientWidth,
-        windowHeight: this.$refs.imageWrapper.clientHeight,
+        backgroundColor: '#fff',
+        dpi: window.devicePixelRatio*2,
+        x: this.$refs.imageWrapper.offsetTop,
+        y: this.$refs.imageWrapper.offsetLeft,
+        scale: 2,
+        width:  this.$refs.imageWrapper.offsetWidth,
+        height: this.$refs.imageWrapper.offsetHeight,
+        windowWidth: this.$refs.imageWrapper.offsetWidth,
+        windowHeight: this.$refs.imageWrapper.offsetHeight,
       }).then(canvas => {
         let dataURL = canvas.toDataURL("image/png")
         this.dataURL = dataURL

@@ -3,7 +3,7 @@
     <van-nav-bar  title="评论" :zIndex='0' @click-right="showField()">
       <van-button round size="small" type="danger" slot="right"> {{listLength}}评论</van-button>
     </van-nav-bar>
-    <div class="no-centent" v-if='list.length == 0'>
+    <div class="no-centent" v-if='listLength == 0'>
       <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
         viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15655">
         <path d="M169.5 541.6V318.8c0-98.3 66.3-178.7 147.4-178.7h400c81.1 0 147.4 80.4 147.4 178.7v222.8" fill="#D9DFFF"
@@ -109,7 +109,7 @@ import { mapGetters } from 'vuex'
 import axios from './../lib/js/api'
 
 export default {
-  name: 'comment-card',
+  name: 'comment',
   props: ['item'],
   computed: {
     ...mapGetters(['userToken'])
@@ -135,6 +135,7 @@ export default {
         this.listLength = res.data.count
         let array = res.data.data
         this.loading = false
+
         if (this.page == 1) {
           this.list = array
         } else {
