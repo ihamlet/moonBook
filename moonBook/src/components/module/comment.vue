@@ -17,7 +17,7 @@
         <path d="M462.7 228.5h-0.5l-19.6-0.7c-8.3-0.3-14.8-7.2-14.5-15.5 0.3-8.3 7.2-14.8 15.5-14.5l19.6 0.7c8.3 0.3 14.8 7.2 14.5 15.5-0.3 8.2-6.9 14.5-15 14.5zM796.2 344.9l-28.9-8s0 0.1-0.1 0.3c0-0.2 3.5-15.7-0.4-64.4-3-38.3-66.5-44.5-71.7-44.9H521.6c-8.3 0-15-6.7-15-15s6.7-15 15-15h174.9c0.9 0.1 23 1.5 45.9 10.1 42 15.9 52.7 42.7 54.3 62.4 4.3 53.8 0.3 71.5-0.5 74.5z"
           fill="#FFFFFF" p-id="15660"></path>
       </svg>
-      <span>快来抢沙发</span>
+      <div class="prompt">快来抢沙发</div>
     </div>
     <div class="container">
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
@@ -88,7 +88,7 @@
         </div>
       </div>
 
-      <van-popup v-model="show" class="comment-popup" position="bottom">
+      <van-popup v-model="show" class="comment-popup" position="bottom" lazy-render='#app'>
         <div class="comment-content flex">
           <div class="field-box">
             <van-cell-group>
@@ -198,10 +198,14 @@ export default {
 }
 
 .no-centent {
-  display: grid;
   text-align: center;
   background: #fff;
   padding-bottom: 1.25rem /* 20/16 */;
+}
+
+.no-centent .prompt{
+  color: #C0C4CC;
+  font-size: .875rem /* 14/16 */;
 }
 
 .no-centent svg {
@@ -240,11 +244,6 @@ export default {
 .contents {
   padding: 0.625rem /* 10/16 */ 0 0.625rem /* 10/16 */ 3.4375rem /* 55/16 */;
   font-size: 1rem /* 16/16 */;
-  text-align: justify;
-}
-
-.reply .reply-content {
-  
 }
 
 .reply .reply-content .theme-color {
@@ -261,7 +260,7 @@ export default {
   width: 100%;
   height: 3rem /* 48/16 */;
   background: #fff;
-  border-top: 0.0625rem /* 1/16 */ solid #ededed;
+  border-top: 0.0625rem /* 1/16 */ solid #EBEEF5;
 }
 
 .comment-popup {
@@ -306,9 +305,6 @@ export default {
 }
 
 .field-box {
-  border: 0.0625rem /* 1/16 */ solid #dcdfe6;
-  border-radius: 0.25rem /* 4/16 */;
-  overflow: hidden;
   flex: 4;
 }
 
@@ -318,13 +314,18 @@ export default {
   margin-left: 0.3125rem /* 5/16 */;
 }
 
-span.reply-title {
+.reply-title {
   color: #909399;
-  margin-right: 0.625rem /* 10/16 */;
+  margin-top: .3125rem /* 5/16 */;
+  margin-bottom: .3125rem /* 5/16 */;
+}
+
+.reply-contents{
+  color: #606266;
 }
 
 .theme-btn {
-  height: 2.8125rem /* 45/16 */;
+  height:2.75rem /* 44/16 */;
 }
 </style>
 

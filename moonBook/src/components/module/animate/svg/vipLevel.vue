@@ -48,6 +48,7 @@ export default {
   overflow: hidden;
   background: linear-gradient(left, rgba(255, 255, 255, 0), #fff);
   animation: glint 3s infinite;
+  z-index: 10;
 }
 
 @keyframes glint {

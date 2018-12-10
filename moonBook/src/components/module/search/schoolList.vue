@@ -4,7 +4,7 @@
             <div class="search-nav-bar">
                 <form class="form-search flex flex-align" action="#">
                     <div class="close" @click="closeList">
-                        <i class="iconfont">&#xe657;</i>
+                        <i class="iconfont">&#xe683;</i>
                     </div>
                     <input type="text" class="search-input" v-model="searchContent" :placeholder="prompt">
                     <i class="iconfont clear" v-if='searchContent.length > 0' @click="clear">&#xe683;</i>

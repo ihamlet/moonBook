@@ -188,7 +188,7 @@ export default {
 
         axios.post(`/book/SchoolArticle/edit?ajax=1`, data).then(res => {
           this.$emit('close')
-         this.$router.push({ name: this.result[0] })
+          this.$router.push({ name: this.result[0] })
         })
       }
     },
