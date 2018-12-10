@@ -20,22 +20,22 @@
     <div class="card">
       <div class="borrow-card flex flex-align">
         <div class="service flex flex-align" v-if='isVip'>
-          <div class="data-flow">
-            <i class="iconfont" :class="`vip-${userDataState.vipInfo.card.level.name}`">&#xe604;</i>
+          <!-- <div class="data-flow">
+            <i class="iconfont" :class="`vip-${card[0].level_info.level}`">&#xe604;</i>
             <b class="card-name">
-              {{userDataState.vipInfo.card.type}}
+              {{card[0].name}}
             </b>
           </div>
           <div class="data-flow read">
             <span class="data-name">读过</span>
             <span class="number">
-              <number-grow :value='userDataState.readInfo.read.number' :time='.2' />
+              <number-grow :value='card[0].borrow_count' :time='.2' />
             </span>
           </div>
           <div class="data-flow reading">
             <span class="data-name">在读</span>
             <span class="number">
-              <number-grow :value='userDataState.readInfo.reading.number' :time='.2' />
+              <number-grow :value='card[0].borrowing_count' :time='.2' />
             </span>
           </div>
           <div class="data-flow collection">
@@ -49,7 +49,7 @@
             <span class="number">
               <number-grow :value='userDataState.readInfo.abrasion.number' :time='.2' />
             </span>
-          </div>
+          </div> -->
         </div>
         <div class="no-service flex flex-align flex-justify" v-else @click="toAccept">
           您还没有办理借阅卡?
@@ -96,7 +96,8 @@ export default {
       applyShow: false,
       avatar: '',
       name: '',
-      isVip: ''
+      isVip: '',
+      card:''
     }
   },
   created() {
@@ -115,6 +116,11 @@ export default {
         this.name = res.data.name
         this.isVip = res.data.isVip
       })
+
+      axios.get('/book/memberCard/getList').then(res=>{
+        console.log(res)
+        this.card = res.data.data
+      })
     },
     handleScroll() {
       this.getDomHeight()
@@ -132,7 +138,7 @@ export default {
       }
     },
     onClickLeft() {
-
+      this.$router.push({name:'card-list'})
     },
     onClickRight() {
       this.punchShow = true

@@ -62,7 +62,8 @@ function sum(arr) {
 }
 
 // 图片压缩
-function compress(base64String, w, quality) {
+function compress(base64String, w, quality, type) {
+  type = type || 'base64'
   var getMimeType = function (urlData) {
       var arr = urlData.split(',')
       var mime = arr[0].match(/:(.*?);/)[1]
@@ -92,8 +93,12 @@ function compress(base64String, w, quality) {
       }
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.drawImage(newImage, 0, 0, canvas.width, canvas.height)
-      var base64 = canvas.toDataURL(getMimeType(base64String), quality)
-      return base64
+      if(type === 'base64') {
+        var base64 = canvas.toDataURL(getMimeType(base64String), quality)
+        return base64  
+      } else {        
+        return canvas              
+      }       
   })
 }
 
@@ -136,6 +141,18 @@ function arrayKeyTop(arr,key){
   return arr
 }
 
+//支付
+function createPayFrame(dom,levelId,feeId){
+  console.log(dom)
+  let payFrame = dom.querySelector('#payFrame')
+  if(!payFrame) {
+      payFrame = document.createElement('iframe')
+      payFrame.id = 'payFrame'
+      dom.append(payFrame)
+  }
+  payFrame.src = `/book/memberCard/buycard?level_id=${levelId}&fee_id=${feeId}&is_auto=1`
+}
+
 export {
   GetDistance,
   format,
@@ -144,5 +161,6 @@ export {
   rankArray,
   sum,
   compress,
-  getRandomArrayElements
+  getRandomArrayElements,
+  createPayFrame
 }

@@ -12,6 +12,8 @@ import BabyHome from '@/components/pages/babyHome'
 import ClassHome from '@/components/pages/classHome'
 import ClassZoom from '@/components/pages/classZoom'
 
+import cardList from '@/components/pages/cardList' 
+
 import Register from '@/components/pages/register'
 import Login from '@/components/pages/login'
 
@@ -134,6 +136,16 @@ export default new Router({
           scrollToTop: true,
           tabActive:3,
           isFooterBar: true
+        }
+      },{
+        path: '/card-list',
+        name: 'card-list',
+        component: cardList,
+        meta: {
+          title: '借阅卡',
+          scrollToTop: true,
+          tabActive:3,
+          isFooterBar: false
         }
       }]
     },{

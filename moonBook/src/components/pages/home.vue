@@ -40,7 +40,7 @@
             </lazy-component>
         </div>
 
-        <div class="apply" v-if='!$store.state.userData.vipInfo'>
+        <div class="apply" v-if='isVip == 0'>
             <van-button class="theme-btn" :class="[btnPulse?'rubberBand animated second':'']" round size="normal" type="primary" @click="toAccept"> 
                 <i class="iconfont">&#xe619;</i>  
                 办理借阅卡
@@ -71,7 +71,7 @@
 <script>
 
 import { mapGetters, mapActions } from 'vuex'
-import axios from 'axios'
+import axios from './../lib/js/api'
 
 import appsList from './../module/apps'
 import investmentAd from './../module/investment'
@@ -123,6 +123,7 @@ export default {
             investmentAd:'',
             newsList:'',
             videoList:'',
+            isVip:''
         }
     },
     created () {
@@ -148,6 +149,10 @@ export default {
                 this.investmentAd = res.data.homeData.investmentAd
                 this.newsList = res.data.homeData.newsList
                 this.videoList = res.data.homeData.videoList
+            })
+
+            axios.get('/book/memberUser/getInfo').then(res => {
+                this.isVip = res.data.isVip
             })
         },
         handleScroll(){

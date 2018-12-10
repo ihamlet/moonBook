@@ -42,9 +42,9 @@
     </div>
     <div class="upload-module flex wrap">
       <van-cell>
-        <van-row gutter="5">
+        <van-row gutter="2">
           <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
-            <div class="preview img-grid" v-lazy:background-image='item.img'>
+            <div class="preview img-grid" v-lazy:background-image='item.thumb'>
               <i class="iconfont" @click="deletePhoto(index)">&#xe683;</i>
             </div>
           </van-col>
@@ -135,27 +135,52 @@ export default {
     },
     onRead(file) {
       if (file.length) {
-        file.forEach(element => {
-          compress(element.content, 800, 0.5).then(val => {
-            if (this.imagesLength < 9) {
-              this.grapicData.photos.push({
-                img: val
+        if (this.grapicData.photos <= 9) {
+          file.forEach(element => {
+            compress(element.content, 800, 0.5, 'blob').then(val => {
+              val.toBlob((blob) => {
+                let fd = new FormData()
+                let config = {
+                  headers: { 'Content-Type': 'multipart/form-data' }
+                }
+                fd.append('file', blob, element.file.name)
+                axios.post('/book/file/upload', fd, config).then((res) => {
+                  console.log('upload', res)
+                  if (res.data.status === 1) {
+                    this.grapicData.photos.push({
+                      photo: res.data.data.path,
+                      thumb: res.data.data.thumb
+                    })
+                  } else {
+                    this.$toast.fail('上传失败,请重新上传')
+                  }
+                })
               })
-            }
+            })
           })
-        })
+        }
       } else {
-        compress(file.content, 800, 0.5).then(val => {
-          this.grapicData.photos.push({
-            img: val
+        compress(file.content, 800, 0.5, 'blob').then(val => {
+          val.toBlob((blob) => {
+            let fd = new FormData()
+            let config = {
+              headers: { 'Content-Type': 'multipart/form-data' }
+            }
+            fd.append('file', blob, file.file.name)
+            axios.post('/book/file/upload', fd, config).then((res) => {
+              console.log('upload', res)
+              if (res.data.status === 1) {
+                this.grapicData.photos.push({
+                  photo: res.data.data.path,
+                  thumb: res.data.data.thumb
+                })
+              } else {
+                this.$toast.fail('上传失败,请重新上传')
+              }
+            })
           })
         })
       }
-
-      
-      axios.post('/book/file/upload_img',this.grapicData.photos).then(res=>{
-        console.log(res)
-      })
     },
     onClickLeft() {
       this.$emit('close')
@@ -167,7 +192,8 @@ export default {
       } else if (this.grapicData.text.length < 140) {
         let data = {
           details: this.grapicData.text,
-          template_id: 1
+          template_id: 1,
+          photos: this.grapicData.photos
         }
 
         this.result.forEach(e => {
@@ -197,7 +223,7 @@ export default {
       }
     },
     deletePhoto(index) {
-      this.grapicData.images.splice(index, 1)
+      this.grapicData.photos.splice(index, 1)
     },
     toTopicPage() {
       this.show = true
