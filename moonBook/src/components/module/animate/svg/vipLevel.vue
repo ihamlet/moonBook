@@ -47,11 +47,10 @@ export default {
   left: -1.5rem /* 24/16 */;
   overflow: hidden;
   background: linear-gradient(left, rgba(255, 255, 255, 0), #fff);
-  transform: skewX(-25deg);
-  animation: myfirst 5s  cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+  animation: glint 3s infinite;
 }
 
-@keyframes myfirst {
+@keyframes glint {
   from {
     left: -1.5rem; /* 24/16 */
   }

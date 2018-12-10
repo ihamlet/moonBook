@@ -8,7 +8,7 @@
         <div class="screenshot" v-if='!dataURL'>
           <div class="user flex flex-align" v-if='item.user'>
             <div class="avatar">
-              <img :src="item.user.avatar" :alt="item.user.username" />
+              <img :src="avatar(item.user.avatar)" :alt="item.user.username" />
             </div>
             <div class="name">{{item.user.username}}</div>
           </div>
@@ -70,6 +70,9 @@ export default {
     },
     close() {
       this.$emit('close')
+    },
+    avatar(data){
+      console.log(data)
     }
   }
 }

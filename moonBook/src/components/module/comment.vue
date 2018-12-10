@@ -244,7 +244,7 @@ export default {
 }
 
 .reply .reply-content {
-  text-align: justify;
+  
 }
 
 .reply .reply-content .theme-color {
