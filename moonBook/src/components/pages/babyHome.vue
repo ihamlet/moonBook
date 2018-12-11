@@ -28,7 +28,7 @@
             </div>
           </div>
           <div class="label">{{label}}</div>
-          <div class="school" v-line-clamp:20="1" v-if="school">{{school}}</div>
+          <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
         </div>
         <div class="qr-code" @click="showQrcode=true">
           <van-icon name="qr" />
@@ -38,8 +38,8 @@
     </div>
     <div class="container">
       <div class="bar flex flex-align">
-        <div class="bar-item totalReading">总阅读量 {{dataStatistics.totalReading}}</div>
-        <div class="bar-item praise">赞 {{dataStatistics.praise}}</div>
+        <div class="bar-item totalReading">总阅读量 {{childInfo.read_count}}</div>
+        <div class="bar-item praise">赞 {{childInfo.zan_count}}</div>
       </div>
       <div class="baby-class" v-if="classInfo">
         <van-cell-group>
@@ -54,7 +54,14 @@
         <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
       </lazy-component>
       <lazy-component class="module">
-        <div class="module-title">成长日记</div>
+        <van-nav-bar title="成长日记" @click-right="releasePageShow = true">
+          <div class="head-bar-btn theme-color" slot="right">
+            <i class="iconfont">
+              &#xe72c;
+            </i>
+            发布
+          </div>
+        </van-nav-bar>
         <div class="not-content" v-if="!listLength">尚无记录</div>
         <van-list v-model="loading" :finished="finished" @load="onLoad" v-else>
           <div class="list">
@@ -71,13 +78,17 @@
     <slogan v-if="finished||!listLength" />
 
     <van-popup v-model="showQrcode" class="card-popup">
-      <qr-code :qrImage="qrImage" type="babyHome" :dataStatistics="dataStatistics" :school="school" :label="label"
-        @close="showQrcode = false" :childInfo="childInfo" />
+      <qr-code :qrImage="qrImage" type="babyHome" :label="label" :childInfo="childInfo" @close="showQrcode = false" />
     </van-popup>
 
     <van-popup v-model="showSetting" class="page-popup" position="right">
       <baby-setting @close="showSetting = false" @setting="babySetting" />
     </van-popup>
+
+        <!-- 发布 -->
+      <van-popup v-model="releasePageShow" class="page-popup" position="bottom" get-container='#app'>
+          <graphic @close='releasePageShow = false'/>
+      </van-popup>
   </div>
 </template>
 <script>
@@ -91,6 +102,7 @@ import avatar from "./../module/avatar"
 import reading from "./../module/reading"
 import graphicCrad from "./../module/card/graphicCrad"
 import babySetting from "./../module/setting/babySetting"
+import graphic from './../module/release/graphic'
 import slogan from "./../module/slogan"
 
 export default {
@@ -102,21 +114,21 @@ export default {
     avatar,
     graphicCrad,
     babySetting,
+    graphic,
     slogan
   },
   computed: {
     ...mapGetters(["userDataState", "dryingListLengthState"]),
     age() {
-      if (this.childInfo) {
-        let year =
-          format(new Date(), "yyyy") - this.childInfo.birthday.split("-")[0]
-        return year;
-      } else {
-        return 0;
-      }
+      // if (this.childInfo) {
+      //   let year = format(new Date(), "yyyy") - this.childInfo.birthday.split("-")[0]
+      //   return year
+      // } else {
+      //   return 0
+      // }
     },
     label() {
-      return this.dataStatistics.totalReading > 50 ? "阅读小明星" : "阅读新秀"
+      return this.childInfo.read_count > 50 ? "阅读小明星" : "阅读新秀"
     }
   },
   data() {
@@ -124,32 +136,28 @@ export default {
       fixedHeaderBar: true,
       domHeight: "",
       childInfo: "",
-      school: "",
-      classInfo: "",
       qrImage: "",
       showQrcode: false,
-      dataStatistics: "",
       lateBook: [],
       readBook: [],
       list: [],
       listLength: "",
       loading: false,
       finished: false,
-      showSetting: false
+      showSetting: false,
+      releasePageShow:false
     }
   },
   beforeRouteEnter(to, from, next) {
-    axios.put("/api/ChildInfo", {
-      id: to.query.id
-    }).then(res => {
+    axios.get(`/book/family/getChildByUser?child_id=${to.query.id}`).then(res => {
       next(vm => {
         vm.qrcode()
-        if (res.data.child) {
-          vm.lateBook = res.data.child.lateBook
-          vm.dataStatistics = res.data.child.dataStatistics
-          vm.school = res.data.child.school
-          vm.classInfo = res.data.child.class
-          vm.childInfo = res.data.child.data
+        if (res.data.status == 1) {
+          // vm.lateBook = res.data.child.lateBook
+          // vm.dataStatistics = res.data.child.dataStatistics
+          // vm.school = res.data.child.school
+          // vm.classInfo = res.data.child.class
+          vm.childInfo = res.data.data
         } else {
           vm.$dialog.alert({
             message: `<div class='text-center'>注册阅亮书架 宝贝会爱上阅读</div>`,

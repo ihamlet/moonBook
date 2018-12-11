@@ -1,6 +1,6 @@
 <template>
   <div class="graphic">
-    <van-nav-bar title="发布图文" left-text="取消" @click-left="onClickLeft" @click-right="onClickRight">
+    <van-nav-bar title="发布" left-text="取消" @click-left="onClickLeft" @click-right="onClickRight">
       <div class="head-bar-btn theme-color" slot="right">
         <i class="iconfont">
           &#xe72c;
@@ -44,7 +44,7 @@
       <van-cell>
         <van-row gutter="2">
           <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
-            <div class="preview img-grid" v-lazy:background-image='item.thumb'>
+            <div class="preview img-grid" v-lazy:background-image='item.thumb' :class="[item.thumb?'transparent':'']">
               <i class="iconfont" @click="deletePhoto(index)">&#xe683;</i>
             </div>
           </van-col>
@@ -108,12 +108,12 @@ export default {
     fetchData() {
       axios.get('/book/memberUser/getInfo').then(res => {
         let array = []
-        if (res.data.hasSchool == 1) {
+
           array.push({
             title: '发现',
             name: 'find'
           })
-        }
+
         if (res.data.hasChild == 1) {
           array.push({
             title: `${res.data.children[0].info.name}@宝贝主页`,
@@ -134,15 +134,17 @@ export default {
       })
     },
     onRead(file) {
+      let config = {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }
+
       if (file.length) {
-        if (this.grapicData.photos <= 9) {
+        if (this.grapicData.photos < 10 && file.length < 10) {
           file.forEach(element => {
             compress(element.content, 800, 0.5, 'blob').then(val => {
               val.toBlob((blob) => {
                 let fd = new FormData()
-                let config = {
-                  headers: { 'Content-Type': 'multipart/form-data' }
-                }
+
                 fd.append('file', blob, element.file.name)
                 axios.post('/book/file/upload', fd, config).then((res) => {
                   console.log('upload', res)
@@ -163,9 +165,6 @@ export default {
         compress(file.content, 800, 0.5, 'blob').then(val => {
           val.toBlob((blob) => {
             let fd = new FormData()
-            let config = {
-              headers: { 'Content-Type': 'multipart/form-data' }
-            }
             fd.append('file', blob, file.file.name)
             axios.post('/book/file/upload', fd, config).then((res) => {
               console.log('upload', res)
@@ -273,7 +272,7 @@ export default {
   right: 0.3125rem /* 5/16 */;
   top: 0.3125rem /* 5/16 */;
   font-size: 1.5rem /* 24/16 */;
-  color: #fff;
+  color: #F44336;
 }
 
 .btn-video,

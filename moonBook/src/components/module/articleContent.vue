@@ -6,10 +6,10 @@
         <div class="text" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
         <!-- 媒体  -->
         <div class="media-content">
-          <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1&&item.photos'>
-            <van-row gutter="5">
+          <div class="media img" v-if='item.template_id == 1'>
+            <van-row gutter="2">
               <van-col :span="8" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-                <div class="img-grid" v-lazy:background-image="photo.thumb" @click="mediaLamp(item,photoIndex)"></div>
+                <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']" @click="mediaLamp(item,photoIndex)"></div>
               </van-col>
             </van-row>
           </div>
@@ -36,9 +36,14 @@
   </div>
 </template>
 <script>
+import pictureBox from './../module/mold/pictureBox'
+
 export default {
   name: 'article-content',
   props: ['item','type'],
+  components: {
+    pictureBox
+  },
   data () {
     return {
       imgIndex:'',
@@ -46,7 +51,7 @@ export default {
     }
   },
   methods: {
-    mediaLamp(){
+    mediaLamp(item,photoIndex){
       this.pictureShow = true
       this.imgIndex = photoIndex
     }
@@ -69,14 +74,9 @@ export default {
   font-weight: 700;
 }
 
-.img-content {
-  height: 17.5rem /* 280/16 */;
-  overflow: hidden;
-  position: relative;
-}
-
 .article-content.img-content{
     padding: .625rem /* 10/16 */ 1.25rem /* 20/16 */;
+    height: 18.75rem /* 300/16 */;
     border: .0625rem /* 1/16 */ solid #EBEEF5;
     overflow: hidden;
     position: relative;
@@ -96,5 +96,9 @@ export default {
   width: 100%;
   height: 3.75rem /* 60/16 */;
   background: linear-gradient(bottom, #fff, rgba(255, 255, 255, 0));
+}
+
+article{
+  width: -webkit-fill-available;
 }
 </style>

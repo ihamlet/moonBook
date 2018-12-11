@@ -231,10 +231,12 @@ export default {
         this.iconSuccessShow = true
         setTimeout(() => {
           this.$router.push({ name: 'card-list' })
+          this.$emit('close')
         }, 2000)
       } else {
         this.toast.fail('支付失败');
         this.$router.push({name:'home'})
+        this.$emit('close')
       }
     },
     onLoad() {
@@ -349,15 +351,19 @@ export default {
 }
 
 .card-box:nth-child(1) .borrow-card {
-  background-image: linear-gradient(-45deg, #fccf31 10%, #f55555 100%);
+  background-image: linear-gradient(to top, #209cff 0%, #68e0cf 100%);
 }
 
 .card-box:nth-child(2) .borrow-card {
-  background-image: linear-gradient(-45deg, #f761a1 10%, #8c1bab 100%);
+background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
 }
 
 .card-box:nth-child(3) .borrow-card {
-  background-image: linear-gradient(-45deg, #43cbff 10%, #9708cc 100%);
+  background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);
+}
+
+.card-box:nth-child(4) .borrow-card {
+  background-image: linear-gradient(-225deg, #CBBACC 0%, #2580B3 100%);
 }
 
 .card-box::before {

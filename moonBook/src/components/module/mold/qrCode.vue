@@ -4,11 +4,10 @@
       <i class="iconfont">&#xe683;</i>
     </div>
     <transition name="fade" mode="out-in">
-      <img :src="dataURL" v-if="dataURL">
-      <slot v-else>
+     
+      <slot v-if="!dataURL">
         <div class="container" ref="imageWrapper" v-if="type=='babyHome'">
           <div class="bg">
-            <round />
             <div class="flex-justify">
               <div class="baby-info">
                 <div class="avatar" v-if='childInfo.avatar'>
@@ -16,14 +15,14 @@
                 </div>
                 <avatar :gender='childInfo.gender' v-else />
                 <div class="name">{{childInfo.name}}</div>
+                <div class="school">{{schoolEllipsis}}</div>               
                 <div class="label">{{label}}</div>
-                <div class="school">{{schoolEllipsis}}</div>
               </div>
-              <div class="text" v-if='dataStatistics.totalReading!=0'>
+              <div class="text" v-if='childInfo.read_count!=0'>
                 <span>{{childInfo.name}}宝贝在阅亮书架一共阅读了图书</span>
-                <span class="book-number">{{dataStatistics.totalReading}}本</span>
+                <span class="book-number">{{childInfo.read_count}}本</span>
               </div>
-              <div class="code-img">
+              <div class="code-img flex flex-justify">
                 <img :src="qrImage" alt="二维码">
               </div>
               <div class="explain">
@@ -31,6 +30,7 @@
                 <span> © 阅亮书架 </span>
               </div>
             </div>
+            <round />
           </div>
         </div>
 
@@ -54,6 +54,7 @@
           </div>
         </div>
       </slot>
+      <img :src="dataURL" v-else>
     </transition>
     <div class="popup-btn">
       <van-button class="theme-btn" :loading='isLoading' size="large" square :disabled='isDisabled' type="primary"
@@ -66,21 +67,23 @@
 <script>
 import round from './../animate/round'
 import html2canvas from 'html2canvas'
+import rasterizeHTML from 'rasterizehtml'
+
 import avatar from './../../module/avatar'
 
 export default {
   name: 'qr-code',
-  props: ['childInfo', 'classInfo', 'qrImage', 'dataStatistics', 'label', 'school', 'type'],
+  props: ['childInfo', 'classInfo', 'qrImage', 'label', 'type'],
   components: {
     round,
     avatar
   },
   computed: {
     schoolEllipsis() {
-      if (this.school.length > 10) {
-        return this.school.substr(0, 9) + '...'
+      if (this.childInfo.school_name.length > 10) {
+        return this.childInfo.school_name.substr(0, 9) + '...'
       } else {
-        return this.school
+        return this.childInfo.school_name
       }
     }
   },
@@ -99,17 +102,16 @@ export default {
         useCORS: true,
         timeout: 1000,
         backgroundColor: '#fff',
-        width:  this.$refs.imageWrapper.offsetWidth,
-        height: this.$refs.imageWrapperoffsetHeight,
-        windowWidth: this.$refs.imageWrapper.offsetWidth,
+        windowWidth:  this.$refs.imageWrapper.offsetWidth,
         windowHeight: this.$refs.imageWrapper.offsetHeight,
       }).then(canvas => {
+        console.log(canvas)
         let dataURL = canvas.toDataURL("image/png")
         this.dataURL = dataURL
         this.isLoading = false
         this.isDisabled = true
       })
-    },
+    },  
     closeQrcode() {
       this.$emit('close')
     }
@@ -160,6 +162,7 @@ export default {
 
 .code-img img {
   width: 6.25rem /* 100/16 */;
+  height: 6.25rem /* 100/16 */;
   margin:  0 auto;
 }
 
@@ -172,6 +175,7 @@ export default {
 .bg .welt {
   position: absolute;
   z-index: -10;
+  top: 0;
 }
 
 .explain {

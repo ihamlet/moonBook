@@ -6,16 +6,7 @@
 <script>
 export default {
     name:'number-grow',
-    props: {
-        time: {
-            type: Number,
-            default: 2
-        },
-        value: {
-            type: Number,
-            default: 720000
-        }
-    },
+    props: ['time','value'],
     mounted () {
         this.numberGrow(this.$refs.numberGrow)
     },

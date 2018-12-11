@@ -8,7 +8,7 @@
         <div class="screenshot" v-if='!dataURL'>
           <div class="user flex flex-align" v-if='item.user'>
             <div class="avatar">
-              <img crossOrigin='anonymous' :src="avatar(item.user.avatar)" :alt="item.user.username" />
+              <img :src="item.user.avatar" :alt="item.user.username" />
             </div>
             <div class="name">{{item.user.username}}</div>
           </div>
@@ -61,14 +61,8 @@ export default {
         useCORS: true,
         timeout: 1000,
         backgroundColor: '#fff',
-        dpi: window.devicePixelRatio*2,
-        x: this.$refs.imageWrapper.offsetTop,
-        y: this.$refs.imageWrapper.offsetLeft,
-        scale: 2,
         width:  this.$refs.imageWrapper.offsetWidth,
         height: this.$refs.imageWrapper.offsetHeight,
-        windowWidth: this.$refs.imageWrapper.offsetWidth,
-        windowHeight: this.$refs.imageWrapper.offsetHeight,
       }).then(canvas => {
         let dataURL = canvas.toDataURL("image/png")
         this.dataURL = dataURL
@@ -78,19 +72,14 @@ export default {
     },
     close() {
       this.$emit('close')
-    },
-    avatar(data){
-      let newLink = data.replace("http", "https")
-      return `/book/api/remotePic?url=${newLink}`
     }
   }
 }
 </script>
 <style scoped>
 .screenshot {
-  width: 17.5rem /* 280/16 */;
   overflow: hidden;
-  padding: 1.25rem /* 20/16 */;
+  padding: .625rem /* 10/16 */;
 }
 
 .image-wrapper {

@@ -4,7 +4,7 @@
     <i class="iconfont" :class="[level == 2?'icon-2':'']" v-if='level == 2'>&#xe6c0;</i>
     <i class="iconfont" :class="[level == 3?'icon-3':'']" v-if='level == 3'>&#xe6c1;</i>
     <i class="iconfont" :class="[level == 4?'icon-4':'']" v-if='level == 4'>&#xe6c9;</i>
-    <div class="highlight" v-if='animate'></div>
+    <div class="highlight" v-if='animate == 1'></div>
   </div>
 </template>
 <script>
@@ -41,13 +41,15 @@ export default {
 
 .highlight {
   position: absolute;
-  width: 1rem /* 16/16 */;
+  width: .5rem /* 8/16 */;
   height: 100%;
   top: 0;
   left: -1.5rem /* 24/16 */;
   overflow: hidden;
-  background: linear-gradient(left, rgba(255, 255, 255, 0), #fff);
+  background: #fff;
+  transform:skewX(-25deg);
   animation: glint 3s infinite;
+  opacity: .92;
   z-index: 10;
 }
 

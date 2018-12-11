@@ -302,6 +302,10 @@ body.theme .head-bar-text,
   background-position: 50%;
 }
 
+.img-grid.transparent{
+  background-color: transparent;
+}
+
 /* 图片懒加载 */
 @keyframes fadeIn {
   from {
@@ -838,5 +842,17 @@ video{
 .close i.iconfont {
   font-size: 1.5rem /* 24/16 */;
   color: #DCDFE6;
+}
+
+/* 卡列表 */
+.card-list-nav-bar.van-nav-bar{
+  background-image: linear-gradient(60deg, #29323c 0%, #485563 100%);
+  opacity: .9;
+}
+
+.card-list-nav-bar.van-nav-bar .van-nav-bar__title,
+.card-list-nav-bar.van-nav-bar .van-icon,
+.card-list-nav-bar.van-nav-bar .van-nav-bar__text{
+  color: #fff;
 }
 </style>

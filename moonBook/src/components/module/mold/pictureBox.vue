@@ -6,13 +6,14 @@
       </div>
       <div class="name flex flex-align">
         {{item.user.name}}
-        <vip-level v-if='item.card_level' :animate='false' :level='item.card_level.level'/>
+        <vip-level v-if='item.card_level' animate='0' :level='item.card_level.level'/>
       </div>
     </div>
     <van-swipe :initial-swipe="imgIndex" :loop="false" @change="onChange">
       <van-swipe-item v-for="(list,index) in item.photos" :key="index" class="flex flex-align">
         <div class="scroll-view" @click="closePopup">
           <img class="img lazy" v-lazy="list.photo">
+          <van-loading class="picture-loading"/>
         </div>
       </van-swipe-item>
       <div class="custom-indicator" slot="indicator">{{ imgIndex + 1 }}/{{item.photos.length}}</div>
@@ -114,6 +115,7 @@ export default {
 
 .scroll-view {
   width: 100%;
+  position: relative;
 }
 
 .scroll-img {
@@ -188,5 +190,18 @@ export default {
   width: 2.125rem /* 34/16 */;
   height: 2.125rem /* 34/16 */;
   border-radius: 50%;
+}
+
+img.lazy[lazy="loading"]{
+  background: #000;
+  opacity: 0;
+}
+
+.picture-loading{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  z-index: -1;
 }
 </style>

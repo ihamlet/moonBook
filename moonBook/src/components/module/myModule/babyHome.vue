@@ -70,14 +70,6 @@ export default {
   },
   computed: {
     ...mapGetters(["userDataState", "schoolState"]),
-    age() {
-      let data = []
-      this.userDataState.childInfo.forEach(e => {
-        let year = format(new Date(), "yyyy") - e.data.birthday.split("-")[0]
-        data.push(year)
-      })
-      return data
-    }
   },
   data() {
     return {
@@ -128,7 +120,7 @@ export default {
       this.$router.push({
         name: "baby-home",
         query: {
-          id: list.id
+          id: list.child_id
         }
       })
     }
@@ -208,6 +200,8 @@ i.iconfont.hot {
 }
 
 .avatar img {
+  width: 4.375rem /* 70/16 */;
+  height: 4.375rem /* 70/16 */;
   border-radius: 50%;
 }
 

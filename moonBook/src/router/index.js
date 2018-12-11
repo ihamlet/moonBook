@@ -142,7 +142,7 @@ export default new Router({
         name: 'card-list',
         component: cardList,
         meta: {
-          title: '借阅卡',
+          title: '我的卡包',
           scrollToTop: true,
           tabActive:3,
           isFooterBar: false

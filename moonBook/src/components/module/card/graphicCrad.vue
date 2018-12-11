@@ -9,7 +9,7 @@
           <div class="name flex flex-align">
             <span v-if="type=='babyHome'">{{babyName}}{{familyTitle?`的${familyTitle}`:`的家长`}}</span>
             <span v-else>{{item.user.name}}</span>
-            <vip-level v-if='item.card_level' :animate='true' :level='item.card_level.level'/>
+            <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
             <div class="class-name">{{className}}</div>
           </div>
           <div class="school">{{item.schoolName}}</div>
@@ -24,7 +24,7 @@
       <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1'>
         <van-row gutter="2">
           <van-col :span="8" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-            <div class="img-grid" v-lazy:background-image="photo.thumb" @click="mediaLamp(item,photoIndex)"></div>
+            <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']" @click="mediaLamp(item,photoIndex)"></div>
           </van-col>
         </van-row>
       </div>
