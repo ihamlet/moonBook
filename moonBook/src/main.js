@@ -16,7 +16,7 @@ import { Lazyload } from 'vant'
 
 import lineClamp from 'vue-line-clamp'
 
-import './mock' //模拟数据
+// import './mock' //模拟数据
 
 Vue.use(Vuex)
 Vue.use(Vant)

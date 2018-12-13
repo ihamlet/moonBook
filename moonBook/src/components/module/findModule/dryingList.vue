@@ -44,15 +44,9 @@ export default {
   methods: {
     getList() {
       return axios.get(`/book/SchoolArticle/getList?page=${this.page}&sort=${this.sort}`).then(res => {
-        this.page++
-        let datas = []
-        res.data.data.forEach(element => {
-          datas.push(element)
-        })
-
-        this.list = this.list.concat(datas)
+        this.list = this.list.concat(res.data.data)
         this.loading = false
-
+        this.page++
         if (this.list.length >= res.data.count) {
           this.finished = true
         }

@@ -2,12 +2,15 @@
   <div class="graphic-card">
     <div class="container">
       <div class="user-card flex flex-align">
-        <div class="avatar">
+        <div class="avatar" v-if="type=='babyHome'">
+          <img :src="avatar" alt="宝贝头像" />
+        </div>  
+        <div class="avatar" v-else>
           <img :src="item.user.avatar" :alt="item.user.name">
         </div>
         <div class="info">
           <div class="name flex flex-align">
-            <span v-if="type=='babyHome'">{{babyName}}{{familyTitle?`的${familyTitle}`:`的家长`}}</span>
+            <span v-if="type=='babyHome'">{{item.user.name}}的宝贝</span>
             <span v-else>{{item.user.name}}</span>
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
             <div class="class-name">{{className}}</div>
@@ -30,12 +33,9 @@
       </div>
       <!-- 媒体视频 -->
       <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
-        <div class="video-cover">
-          <div class="play">
-            <i class="iconfont">&#xe602;</i>
-          </div>
-          <img :src="item.cover" alt="视频封面">
-        </div>
+        <video controls="controls" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
+          <source :src="videoItem.photo">
+        </video>
       </div>
       <!-- 媒体音频 -->
       <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
@@ -74,7 +74,7 @@ import vipLevel from './../animate/svg/vipLevel'
 
 export default {
   name: "graphic-crad",
-  props: ["item", "type", "babyName", "className", "familyTitle"],
+  props: ["item", "type", "className",'avatar'],
   components: {
     pictureBox,
     vipLevel

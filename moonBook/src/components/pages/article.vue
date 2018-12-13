@@ -60,7 +60,6 @@
 <script>
 import axios from './../lib/js/api'
 
-import html2canvas from 'html2canvas'
 import QRCode from "qrcode"
 import pictureBox from "./../module/mold/pictureBox"
 import share from './../module/mold/share'

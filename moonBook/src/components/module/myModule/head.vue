@@ -1,6 +1,6 @@
 <template>
   <div class="head head-background" ref='head'>
-    <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:name"
+    <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userInfo.name"
       @click-left="onClickLeft" @click-right="onClickRight">
       <div class="head-bar-icon" slot='left'>
         <i class="iconfont">&#xe60e;</i>
@@ -12,42 +12,42 @@
     <div class="user-info flex flex-justify">
       <div class="info">
         <div class="avatar">
-          <img :src="avatar" :alt="name">
+          <img :src="userInfo.avatar" :alt="userInfo.name">
         </div>
-        <div class="name">{{name}}</div>
+        <div class="name">{{userInfo.name}}</div>
       </div>
     </div>
     <div class="card">
       <div class="borrow-card flex flex-align">
-        <div class="service flex flex-align" v-if='isVip'>
+        <div class="service flex flex-align" v-if='userInfo.isVip'>
           <div class="data-flow" @click="$router.push({name:'card-list'})">
-            <i class="iconfont" :class="`vip-${cardLevel}`">&#xe604;</i>
+            <i class="iconfont" :class="`vip-${userInfo.cardLevel}`">&#xe604;</i>
             <b class="card-name">
-              {{card.name}}
+              {{userInfo.card.name}}
             </b>
           </div>
           <div class="data-flow read">
             <span class="data-name">读过</span>
             <span class="number">
-              <number-grow :value="card.borrow_count" :time='.2' />
+              <number-grow :value="userInfo.card.borrow_count" :time='.2' />
             </span>
           </div>
           <div class="data-flow reading">
             <span class="data-name">在读</span>
             <span class="number">
-              <number-grow :value="card.borrowing_count" :time='.2' />
+              <number-grow :value="userInfo.card.borrowing_count" :time='.2' />
             </span>
           </div>
           <div class="data-flow collection">
             <span class="data-name">收藏</span>
             <span class="number">
-              <number-grow :value="collectCount" :time='.2' />
+              <number-grow :value="userInfo.collect_count" :time='.2' />
             </span>
           </div>
           <div class="data-flow abrasion">
             <span class="data-name">破损</span>
             <span class="number">
-              <number-grow :value="brokenCount" :time='.2' />
+              <number-grow :value="userInfo.broken_count" :time='.2' />
             </span>
           </div>
         </div>
@@ -71,7 +71,6 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapGetters } from 'vuex'
 import numberGrow from './../../module/animate/numberGrow'
 import punch from './../../module/punch'
 import accept from './../accept'
@@ -83,9 +82,7 @@ export default {
     accept,
     punch
   },
-  computed: {
-    ...mapGetters(['userDataState', 'userToken'])
-  },
+  props: ['userInfo'],
   data() {
     return {
       domHeight: 0,
@@ -94,36 +91,12 @@ export default {
       active: 0,
       punchShow: false,
       applyShow: false,
-      avatar: '',
-      name: '',
-      isVip: '',
-      cardLevel:'',
-      brokenCount:'',
-      collectCount:'',
-      card:''
     }
-  },
-  created() {
-    this.fetchData()
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
   },
-  watch: {
-    '$router': 'fetchData'
-  },
   methods: {
-    fetchData() {
-      axios.get('/book/memberUser/getInfo').then(res => {
-        this.avatar = res.data.avatar
-        this.name = res.data.name
-        this.isVip = res.data.isVip
-        this.brokenCount = res.data.broken_count
-        this.collectCount = res.data.collect_count
-        this.card = res.data.card
-        this.cardLevel = res.data.cardLevel
-      })
-    },
     handleScroll() {
       this.getDomHeight()
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop

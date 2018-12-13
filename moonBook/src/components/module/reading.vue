@@ -7,18 +7,18 @@
         <div class="book-list scroll-x" v-else>
             <div class="book-item scroll-item" v-for='(item,index) in list' :key="index">
                 <div class="book-cover">
-                    <img :src="item.cover" :alt="item.name" />
+                    <img :src="thumb(item.book_thumb)" :alt="item.book_name" />
                 </div>
                 <div class="book-name" v-line-clamp:20="2">
-                    {{item.name}}
+                    {{item.book_name}}
                 </div>
                 <div class="book-detail">
-                    <div class="book-author" v-line-clamp:20="1">作者:{{item.author}}</div>
+                    <div class="book-author" v-line-clamp:20="1">作者:{{item.book_author}}</div>
                     <div class="book-borrow">
-                        <span>{{item.borrow}}</span>人借过
+                        <span>{{item.book_borrow_count}}</span>人借过
                     </div>
                     <div class="book-label">
-                        <div class="label-item" v-for='(sortItem,sortIndex) in item.sort' :key="sortIndex">
+                        <div class="label-item" v-for='(sortItem,sortIndex) in item.book_tags' :key="sortIndex">
                             {{sortItem}}
                         </div>
                     </div>
@@ -39,6 +39,9 @@ export default {
                     id: this.babyId
                 }
             })
+        },
+        thumb(src){
+           return src.replace('http','https')
         }
     }
 }
@@ -53,10 +56,11 @@ export default {
 }
 
 .book-cover{
-    width: 9.375rem /* 150/16 */;
-    height: 9.375rem /* 150/16 */;
-    box-shadow: 0 .1875rem /* 3/16 */ .9375rem /* 15/16 */ -.5rem /* 8/16 */ rgba(0,0,0,.3);
+    width: 8.125rem /* 130/16 */;
+    height: 8.125rem /* 130/16 */;
+    padding: .625rem /* 10/16 */;
 }
+
 
 .book-item{
     padding-right: .625rem /* 10/16 */;

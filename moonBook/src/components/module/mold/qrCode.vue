@@ -11,7 +11,7 @@
             <div class="flex-justify">
               <div class="baby-info">
                 <div class="avatar" v-if='childInfo.avatar'>
-                  <img class="avatar-img" :src="childInfo.avatar" :alt="childInfo.name" />
+                  <img crossOrigin="anonymous" class="avatar-img" :src="avatar(childInfo.avatar)" :alt="childInfo.name" />
                 </div>
                 <avatar :gender='childInfo.gender' v-else />
                 <div class="name">{{childInfo.name}}</div>
@@ -66,9 +66,7 @@
 </template>
 <script>
 import round from './../animate/round'
-import html2canvas from 'html2canvas'
-import rasterizeHTML from 'rasterizehtml'
-
+import domtoimage  from 'dom-to-image'
 import avatar from './../../module/avatar'
 
 export default {
@@ -97,23 +95,23 @@ export default {
   methods: {
     toImage() {
       this.isLoading = true
-      html2canvas(this.$refs.imageWrapper, {
-        logging: false,
-        useCORS: true,
-        timeout: 1000,
-        backgroundColor: '#fff',
-        windowWidth:  this.$refs.imageWrapper.offsetWidth,
-        windowHeight: this.$refs.imageWrapper.offsetHeight,
-      }).then(canvas => {
-        console.log(canvas)
-        let dataURL = canvas.toDataURL("image/png")
-        this.dataURL = dataURL
+      domtoimage.toPng(this.$refs.imageWrapper).then(dataUrl => {
+        console.log(dataUrl)
+        this.dataURL = dataUrl
         this.isLoading = false
         this.isDisabled = true
       })
     },  
     closeQrcode() {
       this.$emit('close')
+    },
+    avatar(img){
+      let hostMatch = img.match(/https?:\/\/(.+?)\//)
+      if(hostMatch) {
+        return `/book/api/remotePic?url=${img}`
+      } else {
+        return img
+      }
     }
   }
 }
@@ -176,6 +174,7 @@ export default {
   position: absolute;
   z-index: -10;
   top: 0;
+  background: #fff;
 }
 
 .explain {

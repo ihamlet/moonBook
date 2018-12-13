@@ -1,6 +1,6 @@
 <template>
   <div class="img-preview flex flex-justify" v-if="imgList.length > 0">
-    <div class="grid" v-if="4 > index" v-for="(item,index) in imgList" :key="index" v-lazy:background-image="item.img"></div>
+    <div class="grid" v-if="4 > index" v-for="(item,index) in imgList" :key="index" v-lazy:background-image="item.photo"></div>
     <div class="robe" v-if="imgList.length > 4">
       <photo-stack />
     </div>
@@ -9,15 +9,14 @@
   <div class="text-preview" v-line-clamp:20="2" v-else>{{text}}</div>
 </template>
 <script>
-  import photoStack from "./../animate/photoStack"
-  export default {
-    name: "show-card",
-    props: ["imgList", 'text'],
-    components: {
-      photoStack
-    }
+import photoStack from "./../animate/photoStack"
+export default {
+  name: "show-card",
+  props: ["imgList", 'text'],
+  components: {
+    photoStack
   }
-
+}
 </script>
 <style scoped>
 .text-preview,

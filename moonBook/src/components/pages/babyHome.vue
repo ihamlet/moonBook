@@ -10,24 +10,24 @@
         <i class="iconfont">&#xe60c;</i>
       </div>
     </van-nav-bar>
-    <div class="header" ref="head" :class="[childInfo.gender=='boy'?'theme-background':'background']">
+    <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
       <div class="baby-info flex flex-align">
         <div class="avatar" v-if="childInfo.avatar">
           <img class="avatar-img" :src="childInfo.avatar" :alt="childInfo.name">
         </div>
-        <avatar :gender="childInfo.gender" v-else />
+        <avatar :gender="childInfo.sex" v-else />
         <div class="baby-data">
           <div class="list flex flex-align">
             <div class="item name">{{childInfo.name}}</div>
             <div class="item detail">
               <span class="gender">
-                <i class="iconfont" v-if="childInfo.gender=='boy'">&#xe646;</i>
+                <i class="iconfont" v-if="childInfo.sex=='boy'">&#xe646;</i>
                 <i class="iconfont" v-else>&#xe645;</i>
               </span>
-              <span class="age">{{age}}岁</span>
+              <span class="age">{{childInfo.age}}岁</span>
             </div>
           </div>
-          <div class="label">{{label}}</div>
+          <div class="label">{{childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
         </div>
         <div class="qr-code" @click="showQrcode=true">
@@ -41,9 +41,9 @@
         <div class="bar-item totalReading">总阅读量 {{childInfo.read_count}}</div>
         <div class="bar-item praise">赞 {{childInfo.zan_count}}</div>
       </div>
-      <div class="baby-class" v-if="classInfo">
+      <div class="baby-class" v-if="childInfo.class_id > 0">
         <van-cell-group>
-          <van-cell :title="classInfo.name" is-link center @click="toClassHome">
+          <van-cell :title="`${childInfo.class_name}班`" is-link center @click="toClassHome">
             <div class="icon" slot="icon">
               <i class="iconfont">&#xe802;</i>
             </div>
@@ -62,12 +62,12 @@
             发布
           </div>
         </van-nav-bar>
-        <div class="not-content" v-if="!listLength">尚无记录</div>
-        <van-list v-model="loading" :finished="finished" @load="onLoad" v-else>
+
+        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <div class="list">
             <div class="item" v-for="(item,index) in list" :key="index">
               <van-cell>
-                <graphic-crad :item="item" type="babyHome" :familyTitle="childInfo.familyTitle" :babyName="childInfo.name" />
+                <graphic-crad :item="item" type="babyHome" :avatar='childInfo.avatar'/>
               </van-cell>
             </div>
           </div>
@@ -75,20 +75,18 @@
       </lazy-component>
     </div>
 
-    <slogan v-if="finished||!listLength" />
-
     <van-popup v-model="showQrcode" class="card-popup">
-      <qr-code :qrImage="qrImage" type="babyHome" :label="label" :childInfo="childInfo" @close="showQrcode = false" />
+      <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
     </van-popup>
 
     <van-popup v-model="showSetting" class="page-popup" position="right">
       <baby-setting @close="showSetting = false" @setting="babySetting" />
     </van-popup>
 
-        <!-- 发布 -->
-      <van-popup v-model="releasePageShow" class="page-popup" position="bottom" get-container='#app'>
-          <graphic @close='releasePageShow = false'/>
-      </van-popup>
+    <!-- 发布 -->
+    <van-popup v-model="releasePageShow" class="page-popup" position="bottom" get-container='#app'>
+      <graphic @close='releasePageShow = false' />
+    </van-popup>
   </div>
 </template>
 <script>
@@ -119,17 +117,6 @@ export default {
   },
   computed: {
     ...mapGetters(["userDataState", "dryingListLengthState"]),
-    age() {
-      // if (this.childInfo) {
-      //   let year = format(new Date(), "yyyy") - this.childInfo.birthday.split("-")[0]
-      //   return year
-      // } else {
-      //   return 0
-      // }
-    },
-    label() {
-      return this.childInfo.read_count > 50 ? "阅读小明星" : "阅读新秀"
-    }
   },
   data() {
     return {
@@ -139,13 +126,12 @@ export default {
       qrImage: "",
       showQrcode: false,
       lateBook: [],
-      readBook: [],
       list: [],
-      listLength: "",
       loading: false,
       finished: false,
       showSetting: false,
-      releasePageShow:false
+      releasePageShow: false,
+      page: 1
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -153,10 +139,6 @@ export default {
       next(vm => {
         vm.qrcode()
         if (res.data.status == 1) {
-          // vm.lateBook = res.data.child.lateBook
-          // vm.dataStatistics = res.data.child.dataStatistics
-          // vm.school = res.data.child.school
-          // vm.classInfo = res.data.child.class
           vm.childInfo = res.data.data
         } else {
           vm.$dialog.alert({
@@ -189,9 +171,9 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get("/api/childAticleList").then(res => {
-        this.listLength = res.data.length
-      });
+      axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
+        this.lateBook = res.data.data
+      })
     },
     onClickLeft() {
       this.$router.push({
@@ -221,18 +203,15 @@ export default {
       }
     },
     onLoad() {
-      axios.get("/api/childAticleList").then(res => {
-        setTimeout(() => {
-          let array = res.data.childAticleList
-          let length = this.dryingListLengthState < 10 ? 1 : 5
-          for (let i = 0; i < length; i++) {
-            this.list.push(array[this.list.length])
-          }
-          this.loading = false
-          if (this.list.length >= res.data.length) {
-            this.finished = true
-          }
-        }, 500)
+      axios.get(`/book/SchoolArticle/getList?page=${this.page}&sort=new&child_id=${this.$route.query.id}`).then(res => {
+        this.page++
+
+        this.list = this.list.concat(res.data.data)
+        this.loading = false
+
+        if (this.list.length >= res.data.count) {
+          this.finished = true
+        }
       })
     },
     onClickRight() {

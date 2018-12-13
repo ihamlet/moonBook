@@ -13,7 +13,7 @@
         <div class="module-title">阅读记录</div>
         <div class="item module" v-for="(list,index) in childrenList" :key="index">
           <div class="card-top-bar">
-            <van-nav-bar :title="`${list.child_name}`" right-text="编辑" :left-text="list.school?'班级':''" @click-left="onClickLeft(list)"
+            <van-nav-bar :title="`${list.child_name}`" right-text="编辑" :left-text="list.class_id > 0?'班级':''" @click-left="onClickLeft(list)"
               @click-right="onClickRight(list)" />
           </div>
           <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
@@ -108,7 +108,7 @@ export default {
         this.$router.push({
           name: "class-home",
           query: {
-            id: list.id
+            id: list.class_id
           }
         })
       } else {

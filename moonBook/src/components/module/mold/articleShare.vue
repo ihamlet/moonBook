@@ -8,7 +8,7 @@
         <div class="screenshot" v-if='!dataURL'>
           <div class="user flex flex-align" v-if='item.user'>
             <div class="avatar">
-              <img :src="item.user.avatar" :alt="item.user.username" />
+              <img crossOrigin="anonymous" :src="avatar(item.user.avatar)" :alt="item.user.username" />
             </div>
             <div class="name">{{item.user.username}}</div>
           </div>
@@ -37,7 +37,7 @@
   </div>
 </template>
 <script>
-import html2canvas from 'html2canvas'
+import domtoimage  from 'dom-to-image'
 import articleContent from './../articleContent'
 
 export default {
@@ -56,22 +56,22 @@ export default {
   methods: {
     toImage() {
       this.isLoading = true
-      html2canvas(this.$refs.imageWrapper, {
-        logging: false,
-        useCORS: true,
-        timeout: 1000,
-        backgroundColor: '#fff',
-        width:  this.$refs.imageWrapper.offsetWidth,
-        height: this.$refs.imageWrapper.offsetHeight,
-      }).then(canvas => {
-        let dataURL = canvas.toDataURL("image/png")
-        this.dataURL = dataURL
+      domtoimage.toPng(this.$refs.imageWrapper).then(dataUrl => {
+        this.dataURL = dataUrl
         this.isLoading = false
         this.isDisabled = true
       })
     },
     close() {
       this.$emit('close')
+    },
+    avatar(img){      
+      let hostMatch = img.match(/https?:\/\/(.+?)\//)
+      if(hostMatch) {
+        return `/book/api/remotePic?url=${img}`
+      } else {
+        return img
+      }
     }
   }
 }
@@ -85,6 +85,7 @@ export default {
 .image-wrapper {
   width: 20rem /* 320/16 */;
   overflow: hidden;
+  background: #fff;
 }
 
 .image-wrapper .content {

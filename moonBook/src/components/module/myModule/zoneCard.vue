@@ -2,26 +2,12 @@
   <div class="zone">
     <div class="module-card">
       <van-cell-group class="cell-group">
-        <van-cell
-          class="cell"
-          center
-          is-link
-          to="./zoom"
-        >
-          <span
-            class="icon"
-            slot="icon"
-          >
+        <van-cell class="cell" center is-link :to="`./zoom?id=${userId}`">
+          <span class="icon" slot="icon">
             <i class="iconfont">&#xe606;</i>
           </span>
-          <div
-            class="content flex flex-align flex-justify"
-            slot="title"
-          >
-            <show-card
-              :imgList="userDataState.dryingList[0].media.imgList"
-              :text='userDataState.dryingList[0].text'
-            />
+          <div class="content flex flex-align flex-justify" slot="title">
+            <show-card :imgList="imgList" :text='zoomCard.details' />
           </div>
         </van-cell>
       </van-cell-group>
@@ -29,17 +15,27 @@
   </div>
 </template>
 <script>
-import showCard from "./../card/showCrad";
-import { mapGetters } from "vuex";
+import showCard from "./../card/showCrad"
+
 export default {
   name: "zone",
+  props: ['zoomCard','userId'],
   components: {
     showCard
   },
   computed: {
-    ...mapGetters(["userDataState"])
+    imgList(){
+      if(this.zoomCard.photos){
+        return this.zoomCard.photos
+      }else{
+        return ''
+      }
+    }
+  },
+  created () {
+    console.log(this.userId)
   }
-};
+}
 </script>
 <style scoped>
 .cell.van-cell {
