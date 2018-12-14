@@ -1,7 +1,7 @@
 <template>
   <div class="baby-home">
     <div class="module-card">
-      <div class="add-baby flipInX animated" v-if="childrenList.length == 0" @click="toAddChild">
+      <div class="add-baby flipInX animated" v-if="!childrenList" @click="toAddChild">
         <i class="iconfont hot">&#xe750;</i>
         <div class="container">
           <i class="iconfont baby-hd">&#xe603;</i>
@@ -13,7 +13,7 @@
         <div class="module-title">阅读记录</div>
         <div class="item module" v-for="(list,index) in childrenList" :key="index">
           <div class="card-top-bar">
-            <van-nav-bar :title="`${list.child_name}`" right-text="编辑" :left-text="list.class_id > 0?'班级':''" @click-left="onClickLeft(list)"
+            <van-nav-bar :title="`${list.child_name}`" right-text="编辑" left-text="班级" @click-left="onClickLeft(list)"
               @click-right="onClickRight(list)" />
           </div>
           <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
@@ -22,12 +22,12 @@
               <span class="number">{{list.week_read_count}}</span>
             </div>
             <div class="content">
-              <div class="avatar" v-if="list.avatar">
+              <div class="avatar" v-if="list.avatar" :class="list.gender">
                 <img :src="list.avatar" alt="宝贝头像">
               </div>
-              <avatar :gender="list.data.gende" v-else />
+              <avatar :gender="list.gender" v-else />
               <div class="age">{{list.age}}岁</div>
-              <div class="school" v-line-clamp:20="1">{{list.school_name}}</div>
+              <div class="school" v-if='list.school_id > 0' v-line-clamp:20="1">{{list.school_name}}</div>
             </div>
             <div class="volume">
               总获赞量
@@ -39,81 +39,76 @@
         <van-button class="theme-btn" plain round type="primary" @click="toAddChild">添加宝贝</van-button>
       </div>
     </div>
-
-    <!-- 添加孩子页面 -->
-    <van-popup v-model="addChildShow" class="page-popup" position="right">
-      <add-child @close="addChildShow = false" :dataId="dataId" :pageTitle="pageTitle" />
-    </van-popup>
-
-    <!-- 添加班级页面 -->
-    <van-popup v-model="addClassShow" class="page-popup" position="right">
-      <add-class :school="schoolState" :babyId="babyId" @close="addClassShow = false" />
-    </van-popup>
   </div>
 </template>
 <script>
 import axios from "./../../lib/js/api"
-import { mapGetters } from "vuex"
-import { format } from "./../../lib/js/util.js"
-import addChild from "./../addChild"
-import addClass from "./../addClass"
 import numberGrow from "./../../module/animate/numberGrow"
 import avatar from "./../../module/avatar"
 
 export default {
   name: "baby-home",
+  props: ['childrenList'],
   components: {
     numberGrow,
-    addChild,
-    addClass,
+    // addClass,
     avatar
-  },
-  computed: {
-    ...mapGetters(["userDataState", "schoolState"]),
   },
   data() {
     return {
       babyId: "",
       listenData: "",
-      dataId: "",
-      addChildShow: false,
-      addClassShow: false,
+      childId: "",
       pageTitle: "addBaby",
-      childrenList:[]
+      schoolName:'',
+      child:''
     }
   },
-  created () {
-    this.fetchData()
-  },
-  watch: {
-    '$router':'fetchData'
-  },
   methods: {
-    fetchData(){
-      axios.get('/book/family/getChildrenByUser').then(res => {
-        this.childrenList = res.data.data
-      })
-    },
     toAddChild() {
       this.pageTitle = "addBaby"
-      this.addChildShow = true
+        this.$router.push({
+        name:'edit-child',
+        query:{
+          pageTitle:'添加宝贝',
+          type:'add'
+        }
+      })
     },
     onClickRight(list) {
-      this.addChildShow = true
       this.pageTitle = "editBaby"
-      this.dataId = list.id
+      this.$router.push({
+        name:'edit-child',
+        query:{
+          id: list.child_id,
+          pageTitle:'编辑宝贝',
+          type:'edit'
+        }
+      })
     },
     onClickLeft(list) {
-      if (list.class) {
+      if(!list.school_id){
+        this.$router.push({
+          name:'edit-school',
+          query:{
+            id: list.child_id
+          }
+        })
+      }else if(!list.class_id){
+        this.$router.push({
+          name:'edit-class',
+          query:{
+            id: list.child_id,
+            schoolId:list.school_id
+          }
+        })
+      }else{
         this.$router.push({
           name: "class-home",
           query: {
             id: list.class_id
           }
         })
-      } else {
-        this.babyId = list.id
-        this.addClassShow = true
       }
     },
     toPageBabyHome(list) {
@@ -197,6 +192,10 @@ i.iconfont.hot {
   margin-right: 0.625rem /* 10/16 */;
   border-radius: 50%;
   border: 0.25rem /* 4/16 */ solid #f8d800;
+}
+
+.avatar.girl{
+  border-color: #ff76a4;
 }
 
 .avatar img {

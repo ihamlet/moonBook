@@ -1,51 +1,77 @@
 <template>
   <div class="class module-card">
     <van-cell-group>
-      <van-cell :value="children.class_id==0?'选择班级':`进入${children.child_name}班级`" is-link center
-        @click="toClassHome">
+      <van-cell :value="selectPrompt.prompt" is-link center @click="toClassHome">
         <div class="icon" slot="icon">
           <i class="iconfont">&#xe802;</i>
         </div>
         <div class="title flex flex-align" slot="title">
           <div class="avatar">
-            <img :src="children.avatar" :alt="children.name" />
+            <img :src="children.avatar" :alt="children.child_name" />
           </div>
-          {{children.class_name}}班
+          {{children.child_name}}
         </div>
       </van-cell>
     </van-cell-group>
-
-    <!-- 选择班级 -->
-    <van-popup v-model="show" class="page-popup" position="right">
-      <add-class :school="children.school_name" :babyId="children.child_id" @close="show = false" />
-    </van-popup>
   </div>
 </template>
 <script>
-import addClass from "./../addClass"
+import axios from './../../lib/js/api'
 
 export default {
   name: "class-home",
   props: ['children'],
-  components: {
-    addClass
+  computed: {
+    selectPrompt(){
+      if(!this.children.school_id){
+        return {
+          prompt:'请选择学校班级',
+          type:0
+        }
+      }else if(!this.children.class_id){
+        return {
+          prompt:'请选择班级',
+          type:1
+        }
+      }else{
+        return {
+          prompt: this.children.class_name,
+          type:2
+        }
+      }
+    }
   },
   data() {
     return {
-      show: false,
+      showSchool: false,
+      showClass: false,
+      school:''
     }
   },
   methods: {
     toClassHome() {
-      if(children.class_id>0){
+      if(this.selectPrompt.type == 0){
         this.$router.push({
-          name: "class-home",
-          query: {
+          name:'edit-school',
+          query:{
             id: this.children.child_id
           }
         })
-      }else{
-        this.show = true
+      }else if(this.selectPrompt.type == 1){
+        this.$router.push({
+          name:'edit-class',
+          query:{
+            id: this.children.child_id,
+            schoolId: this.children.school_id
+          }
+        })
+      }else if(this.selectPrompt.type == 2){
+        this.$router.push({
+          name: "class-home",
+          query: {
+            id: this.children.class_id
+          }
+        })
       }
     }
   }

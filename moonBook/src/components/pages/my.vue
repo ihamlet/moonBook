@@ -2,13 +2,13 @@
   <div class="my page-padding">
     <card-head :userInfo='userInfo' />
     <lazy-component class="gutter gap-top">
-      <class-home v-if='children.length != 0' :children="children[0]" />
+      <class-home v-if='children' :children="children[0]" />
     </lazy-component>
     <lazy-component class="gutter gap" v-if='zoomCard'>
-      <zone-card :zoomCard='zoomCard' :userId='userInfo.id'/>
+      <zone-card :zoomCard='zoomCard' :userInfo='userInfo'/>
     </lazy-component>
     <lazy-component class="gutter gap">
-      <baby-home />
+      <baby-home :childrenList='children'/>
     </lazy-component>
     <slogan />
   </div>
@@ -46,16 +46,15 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get('/book/family/getChildrenByUser').then(res => {
+      axios.get('/book/family/getChildrenByUser?sort=old').then(res => {
         this.children = res.data.data
       })
 
       axios.get('/book/memberUser/getInfo').then(res => {
         this.userInfo = res.data
-      })
-
-      axios.get(`/book/SchoolArticle/getList?page=1&sort=new&limit=1&user_id=${this.userInfo.id}`).then(res => {
-        this.zoomCard = res.data.data[0]
+        axios.get(`/book/SchoolArticle/getList?page=1&sort=new&user_id=${res.data.id}`).then(res => {
+          this.zoomCard = res.data.data[0]
+        })
       })
     }
   }

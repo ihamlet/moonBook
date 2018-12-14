@@ -14,26 +14,26 @@
             <van-switch-cell v-model="setting.public" title="公开宝贝主页" />
         </van-cell-group>
 
-        <van-popup v-model="showSchoolList" class="page-popup" position="bottom">
+        <!-- <van-popup v-model="showSchoolList" class="page-popup" position="bottom">
             <add-school :prompt='prompt' pageType='popup' @select='selectSchool' @close="showSchoolList = false"/>
         </van-popup>
 
         <van-popup v-model="showClassList" class="page-popup" position="bottom">
           <add-class @close='showClassList = false' :babyId='$route.query.id' type='select' @select='selectClass' />
-        </van-popup>
+        </van-popup> -->
     </div>
 </template>
 <script>
 import axios from 'axios'
 import { mapActions } from 'vuex'
-import addSchool from './../addSchool'
-import addClass from './../addClass'
+// import addSchool from './../addSchool'
+// import addClass from './../addClass'
 
 export default {
   name: 'baby-setting',
   components: {
-    addSchool,
-    addClass
+    // addSchool,
+    // addClass
   },
   data() {
     return {

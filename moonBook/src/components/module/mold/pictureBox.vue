@@ -111,6 +111,7 @@ export default {
   width: 100%;
   min-height: 1.875rem /* 30/16 */;
   height: auto;
+  background: #000;
 }
 
 .scroll-view {
@@ -202,6 +203,7 @@ img.lazy[lazy="loading"]{
   top: 50%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
-  z-index: -1;
+  z-index: -1
+  ;
 }
 </style>

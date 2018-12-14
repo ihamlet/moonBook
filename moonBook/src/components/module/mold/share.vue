@@ -1,6 +1,5 @@
 <template>
   <div class="share-box">
-      <div class="module-title">分享到</div>
       <van-row class="svg-list">
         <van-col span="8">
           <div class='btn'>
@@ -51,18 +50,12 @@
           </div>
         </van-col>
       </van-row>
-      <div class="close-popup">
-        <van-button square size="large" @click="close">关闭</van-button>
-      </div>
     </div>
 </template>
 <script>
 export default {
   name: 'share',
   methods: {
-    close() {
-      this.$emit('close')
-    },
     generateImg() {
       this.$emit('show')
     }

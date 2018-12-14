@@ -62,6 +62,7 @@ export default {
 .text {
   line-height: 1.8;
   text-align: justify;
+  overflow: hidden;
 }
 
 .media {

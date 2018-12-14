@@ -17,6 +17,10 @@ import cardList from '@/components/pages/cardList'
 import Register from '@/components/pages/register'
 import Login from '@/components/pages/login'
 
+import EditChild from '@/components/pages/editBaby/child'
+import EditSchool from '@/components/pages/editBaby/school'
+import EditClass from '@/components/pages/editBaby/class'
+
 import Article from '@/components/pages/article'
 
 Vue.use(Router)
@@ -102,9 +106,9 @@ export default new Router({
         name: 'zoom',
         component: Zoom,
         meta: {
-          title: '个人空间',
+          title: 'BookZoom',
           scrollToTop: true,
-          tabActive:3,
+          tabActive:1,
           isFooterBar: true
         }
       },{
@@ -143,6 +147,33 @@ export default new Router({
         component: cardList,
         meta: {
           title: '我的卡包',
+          scrollToTop: true,
+          tabActive:3,
+          isFooterBar: false
+        }
+      },{
+        path: '/edit/child',
+        name: 'edit-child',
+        component: EditChild,
+        meta: {
+          scrollToTop: true,
+          tabActive:3,
+          isFooterBar: false
+        }
+      },{
+        path: '/edit/school',
+        name: 'edit-school',
+        component: EditSchool,
+        meta: {
+          scrollToTop: true,
+          tabActive:3,
+          isFooterBar: false
+        }
+      },{
+        path: '/edit/class',
+        name: 'edit-class',
+        component: EditClass,
+        meta: {
           scrollToTop: true,
           tabActive:3,
           isFooterBar: false

@@ -109,10 +109,10 @@ export default {
 .card-box {
   width: 100%;
   height: 7.5rem /* 120/16 */;
-  border-radius: 0.625rem /* 10/16 */ 0.625rem /* 10/16 */ 0.25rem /* 4/16 */ 0.25rem /* 4/16 */;
-  margin-top: 0.625rem /* 10/16 */;
-  border-bottom: 0.0625rem /* 1/16 */ solid #000;
+  border-radius: 0.625rem /* 10/16 */ 0.625rem /* 10/16 */ 0 0;
+  margin-top: 1.25rem /* 20/16 */;
   position: relative;
+  border-bottom: .125rem /* 2/16 */ solid rgba(0,0,0,.3);
 }
 
 .card-box::after{
@@ -131,9 +131,9 @@ export default {
   position: absolute;
   content: '';
   width: 100%;
-  height: 0.0625rem /* 1/16 */;
-  background: rgba(255, 255, 255, 0.2);
-  bottom: 0;
+  height: .125rem /* 2/16 */;
+  border-bottom:.125rem /* 2/16 */ dashed rgba(0,0,0,.3); 
+  bottom: -.375rem /* 6/16 */;
 }
 
 .card-type-1 {

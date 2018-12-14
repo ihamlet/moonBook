@@ -2,7 +2,7 @@
   <div class="zone">
     <div class="module-card">
       <van-cell-group class="cell-group">
-        <van-cell class="cell" center is-link :to="`./zoom?id=${userId}`">
+        <van-cell class="cell" center is-link @click="toZoom">
           <span class="icon" slot="icon">
             <i class="iconfont">&#xe606;</i>
           </span>
@@ -19,7 +19,7 @@ import showCard from "./../card/showCrad"
 
 export default {
   name: "zone",
-  props: ['zoomCard','userId'],
+  props: ['zoomCard','userInfo'],
   components: {
     showCard
   },
@@ -32,8 +32,15 @@ export default {
       }
     }
   },
-  created () {
-    console.log(this.userId)
+  methods: {
+    toZoom(){
+      this.$router.push({
+        name:'zoom',
+        query: {
+          id: this.userInfo.id
+        }
+      })
+    }
   }
 }
 </script>

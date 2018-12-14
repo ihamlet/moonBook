@@ -1,5 +1,6 @@
 <template>
     <div class="video-player">
+        
     </div>    
 </template>
 <script>

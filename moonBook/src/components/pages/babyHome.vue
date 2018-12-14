@@ -53,8 +53,8 @@
       <lazy-component class="module">
         <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
       </lazy-component>
-      <lazy-component class="module">
-        <van-nav-bar title="成长日记" @click-right="releasePageShow = true">
+      <lazy-component>
+        <van-nav-bar title="成长记录" @click-right="releasePageShow = true">
           <div class="head-bar-btn theme-color" slot="right">
             <i class="iconfont">
               &#xe72c;
@@ -64,6 +64,9 @@
         </van-nav-bar>
 
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+          <div class="no-list" v-if='list.length == 0'>
+            没有记录
+          </div>
           <div class="list">
             <div class="item" v-for="(item,index) in list" :key="index">
               <van-cell>
@@ -101,7 +104,6 @@ import reading from "./../module/reading"
 import graphicCrad from "./../module/card/graphicCrad"
 import babySetting from "./../module/setting/babySetting"
 import graphic from './../module/release/graphic'
-import slogan from "./../module/slogan"
 
 export default {
   name: "baby-home",
@@ -112,8 +114,7 @@ export default {
     avatar,
     graphicCrad,
     babySetting,
-    graphic,
-    slogan
+    graphic
   },
   computed: {
     ...mapGetters(["userDataState", "dryingListLengthState"]),
@@ -259,10 +260,6 @@ export default {
 
 .list {
   color: #fff;
-}
-
-.list .item {
-  margin-right: 0.625rem /* 10/16 */;
 }
 
 .detail,

@@ -1,6 +1,6 @@
 <template>
   <div class="img-preview flex flex-justify" v-if="imgList.length > 0">
-    <div class="grid" v-if="4 > index" v-for="(item,index) in imgList" :key="index" v-lazy:background-image="item.photo"></div>
+    <div class="grid" v-if="4 > index" v-for="(item,index) in imgList" :key="index" v-lazy:background-image="item.thumb"></div>
     <div class="robe" v-if="imgList.length > 4">
       <photo-stack />
     </div>

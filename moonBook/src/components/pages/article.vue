@@ -35,8 +35,9 @@
             <span>{{item.createDate}}</span>
           </div>
         </div>
-        <div class="follow-ben">
-          <van-button size="small" round>+ 关注</van-button>
+        <div class="follow-ben"  v-if='item.isSubscribe!=3'>
+          <van-button size="small" v-if='item.isSubscribe' round @click="follow(item)">已关注</van-button>
+          <van-button size="small" v-else class="theme-btn" type="primary" round @click="follow(item)">+ 关注</van-button>
         </div>
       </div>
       <lazy-component>
@@ -47,9 +48,9 @@
       </lazy-component>
     </div>
 
-    <van-popup v-model="shareShow" class="share-popup" position="bottom" get-container='#app'>
-      <share @close='shareShow = false' @show='imageShow = true' />
-    </van-popup>
+    <van-actionsheet v-model="shareShow" title="分享">
+      <share @show='imageShow = true' />
+    </van-actionsheet>
 
     <!-- 生成图片 -->
     <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
@@ -130,6 +131,12 @@ export default {
         this.qrImage = url
       }).catch(err => {
         console.error(err)
+      })
+    },
+    follow(item){
+      item.isSubscribe = !item.isSubscribe
+      axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res=>{
+        this.$toast.success(res.data.msg)
       })
     }
   }

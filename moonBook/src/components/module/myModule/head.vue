@@ -21,21 +21,21 @@
       <div class="borrow-card flex flex-align">
         <div class="service flex flex-align" v-if='userInfo.isVip'>
           <div class="data-flow" @click="$router.push({name:'card-list'})">
-            <i class="iconfont" :class="`vip-${userInfo.cardLevel}`">&#xe604;</i>
+            <i class="iconfont" :class="`vip-${userInfo.card_level}`">&#xe604;</i>
             <b class="card-name">
-              {{userInfo.card.name}}
+              {{userInfo.card_name}}
             </b>
           </div>
           <div class="data-flow read">
             <span class="data-name">读过</span>
             <span class="number">
-              <number-grow :value="userInfo.card.borrow_count" :time='.2' />
+              <number-grow :value="userInfo.borrow_count" :time='.2' />
             </span>
           </div>
           <div class="data-flow reading">
             <span class="data-name">在读</span>
             <span class="number">
-              <number-grow :value="userInfo.card.borrowing_count" :time='.2' />
+              <number-grow :value="userInfo.borrowing_count" :time='.2' />
             </span>
           </div>
           <div class="data-flow collection">

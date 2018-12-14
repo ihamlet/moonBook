@@ -1,6 +1,6 @@
 <template>
   <div class="graphic">
-    <van-progress :percentage="process" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)"/>
+    <van-progress :percentage="process" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
     <van-nav-bar title="发布" left-text="取消" @click-left="onClickLeft" @click-right="onClickRight">
       <div class="head-bar-btn theme-color" slot="right">
         <i class="iconfont">
@@ -98,7 +98,7 @@ export default {
         text: '',
         photos: []
       },
-      ossSign:'',
+      ossSign: '',
       mediaContent: [],
       process: 0,
     }
@@ -157,7 +157,6 @@ export default {
             compress(element.content, 800, 0.5, 'blob').then(val => {
               val.toBlob((blob) => {
                 let fd = new FormData()
-
                 fd.append('file', blob, element.file.name)
                 axios.post('/book/file/upload', fd, config).then((res) => {
                   console.log('upload', res)
@@ -198,7 +197,6 @@ export default {
       this.$emit('close')
     },
     onClickRight() {
-
       if (this.grapicData.text.length == 0 && this.grapicData.images.length == 0) {
         this.$emit('close')
       } else if (this.grapicData.text.length < 140) {
@@ -391,9 +389,7 @@ export default {
   color: #f44336;
 }
 
-.progress{
-  padding: .625rem /* 10/16 */;
+.progress {
+  padding: 0.625rem /* 10/16 */;
 }
-
-
 </style>

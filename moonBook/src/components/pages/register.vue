@@ -8,21 +8,20 @@
         <div class="container" ref='listContainer'>
             <div :class="[active==0?'steps':'']">
                 <van-steps active-color='#409eff' :active="active">
-                    <van-step>选择学校</van-step>
                     <van-step>选择角色</van-step>
                     <van-step>添加信息</van-step>
                 </van-steps>
             </div>
-            <div class="school" v-if='active==0'>
+            <!-- <div class="school" v-if='active==0'>
                 <add-school :prompt='prompt' @select='selectSchool' pageType='register' @showSearchList='listShow = true'/>
-            </div>
-            <div class="identity" v-if='active==1'>
+            </div> -->
+            <div class="identity" v-if='active==0'>
                 <van-cell-group>
                     <div class="form-title">您的角色？</div>
                     <van-cell class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role' :key='index' @click="selectRole(item)"/>
                 </van-cell-group>
             </div>
-            <div class="form"  v-if='active==2'>
+            <div class="form"  v-if='active==1'>
                 <form-parent v-if="formType=='parent'" :regInfo='regInfo' @close="toPageMy"/>
                 <form-teacher v-if="formType=='teacher'" :regInfo='regInfo' @close="toPageMy"/>
             </div>
@@ -31,8 +30,6 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import searchBar from './../module/search/searchBar'
-import addSchool from './../module/addSchool'
 
 // 表单
 import formParent from './../module/form/parent'
@@ -41,8 +38,6 @@ import formTeacher from './../module/form/teacher'
 export default {
   name: 'register',
   components: {
-    searchBar,
-    addSchool,
     formParent,
     formTeacher
   },

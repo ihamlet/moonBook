@@ -1,9 +1,9 @@
 <template>
   <div class="fresh-list scroll-x">
     <div class="scroll-item" v-for="(item,index) in list" :key="index" :class="type=='classShow'&&item.teacher?'teacher':''"
-      @click="toBabyHome(item)">
+      @click="toZoom(item)">
       <div class="avatar">
-        <img v-if="item.avatar" :src="item.avatar" :alt="item.nickname">
+        <img v-if="item.avatar" @error='imgError' :src="item.avatar" :alt="item.nickname">
       </div>
       <div class="name" v-line-clamp:20="1">{{item.nickname}}</div>
     </div>
@@ -14,13 +14,16 @@ export default {
   name: 'fresh-list',
   props: ['list', 'type'],
   methods: {
-    toBabyHome(item) {
+    toZoom(item) {
       this.$router.push({
-        name: 'baby-home',
+        name: 'zoom',
         query: {
-          id: item.id
+          id: item.user_id
         }
       })
+    },
+    imgError(e){
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     }
   }
 }

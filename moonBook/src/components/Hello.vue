@@ -68,8 +68,8 @@ export default {
   methods: {
     ...mapActions(['getUserData','getMsgLength','getUserLocation']),
     fetchData(){
-      this.getUserData()
-      this.getMsgLength()
+      // this.getUserData()
+      // this.getMsgLength()
     },
     onStartPage(){
       this.startPageShow = false

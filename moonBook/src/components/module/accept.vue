@@ -128,10 +128,6 @@
       </div>
     </van-popup>
 
-    <!-- 添加孩子页面 -->
-    <van-popup v-model="addChildShow" class="page-popup" position="right">
-      <add-child @close='closeAddChildPage' :pageTitle='pageTitle' />
-    </van-popup>
 
     <!-- 搜索列表 -->
     <van-popup v-model="searchListShow" class="page-popup">
@@ -146,7 +142,6 @@ import axios from './../lib/js/api'
 import { createPayFrame } from './../lib/js/util'
 import { mapGetters, mapActions } from 'vuex'
 import iconSuccess from './animate/iconSuccess'
-import addChild from './addChild'
 import searchBar from './search/searchBar'
 import searchList from './search/schoolList'
 
@@ -159,7 +154,6 @@ export default {
   },
   components: {
     iconSuccess,
-    addChild,
     searchBar,
     searchList
   },
