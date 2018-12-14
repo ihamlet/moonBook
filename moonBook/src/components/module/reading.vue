@@ -1,7 +1,7 @@
 <template>
   <div class="reading">
     <van-cell :title="moduleTitle" :is-link="type =='rank'" @click="toBabyHome" />
-    <div class="not-content" v-if='!list'>
+    <div class="not-content" v-if='!list.length'>
       尚无记录, <span class="theme-color">阅读是与心灵沟通</span>
     </div>
     <div class="book-list scroll-x" v-else>
@@ -175,7 +175,7 @@ export default {
 .three-d-book-author {
   padding: 0.625rem;
   text-align: right;
-  background: linear-gradient(left, #fff, #F2F6FC);
+  background-image: linear-gradient(180deg, #fff, #F2F6FC);
   font-size: 0.75rem;
   box-shadow: 0 5px 20px -9px rgba(0, 0, 0, 0.5);
   margin-top: 1.25rem;

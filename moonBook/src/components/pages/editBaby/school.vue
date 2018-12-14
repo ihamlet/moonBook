@@ -24,14 +24,13 @@
 <script>
 import axios from './../../lib/js/api'
 
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters,mapActions } from 'vuex'
 import avatar from './../../module/avatar'
 import searchBar from './../../module/search/searchBar'
 import schoolList from './../../module/search/schoolList'
 
 export default {
   name: 'edit-school',
-  // props: ['prompt','pageType'],
   components: {
     searchBar,
     schoolList,
@@ -67,16 +66,30 @@ export default {
       })
     },
     selectSchool(item) {
-      axios.get(`/book/babySchool/bind?school_name=${item.name}&cityname=${item.cityname}&child_id=${this.$route.query.id}`).then(res => {
-          console.log(res)
-        this.$toast.success('加入成功')
-        this.$router.push({
-            name:'edit-class',
-            query:{
-                id: this.$route.query.id,
-                schoolId: res.data.school_id
-            }
-        })
+      console.log(item.cityname)
+      let cityname = ''
+      if(item.cityname){
+          cityname = item.cityname
+      }else{
+        let match = item.district.match(/省(.*?)市/)
+        cityname = match ? match[1] + '市' : ''
+      }
+
+      let location = item.location.split(',')
+      axios.get(`/book/babySchool/bind?school_name=${item.name}&amap_id=${item.id}&cityname=${cityname}&lat=${location[1]}&lng=${location[0]}&child_id=${this.$route.query.id}`).then(res => {
+          if(res.data.data.status){
+            this.$toast.success(res.data.data.msg)
+            this.$router.push({
+                name:'edit-class',
+                query:{
+                    id: this.$route.query.id,
+                    schoolId: res.data.data.school_id
+                }
+            })
+          }else{
+            this.$toast.fail(res.data.data.msg)
+            this.$router.go(-1)
+          }
       })
     },
     close(){

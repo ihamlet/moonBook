@@ -3,7 +3,6 @@
     <div class="module-title">班级榜</div>
     <van-tabs :lineWidth="20" :offsetTop="46" @click="onClickTabs" color="#409EFF" sticky>
       <van-tab :key="tabIndex" :title="tab.title" v-for="(tab,tabIndex) in tabArray">
-        <!-- 周榜月榜选项卡 -->
         <div class="tab-card">
           <van-tabs @change="tabChange" color="#409EFF" type="card">
             <van-tab :key="index" :title="list.title" v-for="(list,index) in tabs">
@@ -43,7 +42,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from './../../lib/js/api'
 import { rankArray, arrayKeyTop } from './../../lib/js/util'
 import svgRanking from './../animate/svg/ranking'
 import reading from './../reading'
@@ -87,41 +86,40 @@ export default {
   },
   methods: {
     fetchData() {
-      axios
-        .put('/api/ChildInfo', {
-          id: this.$route.query.id
-        })
-        .then(res => {
-          if (res.data.child) {
-            let weekList = res.data.child.class.weekList.week
-            let totalList = res.data.child.class.weekList.total
-            this.childId = res.data.child.id
-            this.selectId = res.data.child.id
-            let babyWeekData = {
-              id: res.data.child.id,
-              avatar: res.data.child.data.avatar,
-              name: res.data.child.data.name,
-              gender: res.data.child.data.gender,
-              num: res.data.child.dataStatistics.readings,
-              lateBook: res.data.child.lateBook,
-              isMyBaby: true
-            }
-            weekList.push(babyWeekData)
-            let babyTotal = {
-              id: res.data.child.id,
-              avatar: res.data.child.data.avatar,
-              name: res.data.child.data.name,
-              gender: res.data.child.data.gender,
-              num: res.data.child.dataStatistics.totalReading,
-              lateBook: res.data.child.lateBook,
-              isMyBaby: true
-            }
-            totalList.push(babyTotal)
-            let weekRankArray = rankArray(weekList, 'num')
-            let totalRankArray = rankArray(totalList, 'num')
-            this.tabs[0].content = arrayKeyTop(weekRankArray, 'isMyBaby')
-            this.tabs[1].content = arrayKeyTop(totalRankArray, 'isMyBaby')
-          }
+      axios.get('/book/SchoolTushuBorrow/getRank?region=banji&group=baby').then(res => {
+          console.log(res)
+          
+
+          // if (res.data.child) {
+          //   let weekList = res.data.child.class.weekList.week
+          //   let totalList = res.data.child.class.weekList.total
+          //   this.childId = res.data.child.id
+          //   this.selectId = res.data.child.id
+          //   let babyWeekData = {
+          //     id: res.data.child.id,
+          //     avatar: res.data.child.data.avatar,
+          //     name: res.data.child.data.name,
+          //     gender: res.data.child.data.gender,
+          //     num: res.data.child.dataStatistics.readings,
+          //     lateBook: res.data.child.lateBook,
+          //     isMyBaby: true
+          //   }
+          //   weekList.push(babyWeekData)
+          //   let babyTotal = {
+          //     id: res.data.child.id,
+          //     avatar: res.data.child.data.avatar,
+          //     name: res.data.child.data.name,
+          //     gender: res.data.child.data.gender,
+          //     num: res.data.child.dataStatistics.totalReading,
+          //     lateBook: res.data.child.lateBook,
+          //     isMyBaby: true
+          //   }
+          //   totalList.push(babyTotal)
+          //   let weekRankArray = rankArray(weekList, 'num')
+          //   let totalRankArray = rankArray(totalList, 'num')
+          //   this.tabs[0].content = arrayKeyTop(weekRankArray, 'isMyBaby')
+          //   this.tabs[1].content = arrayKeyTop(totalRankArray, 'isMyBaby')
+          // }
         })
     },
     select(item) {

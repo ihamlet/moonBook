@@ -43,7 +43,7 @@
       </div>
       <div class="baby-class" v-if="childInfo.class_id > 0">
         <van-cell-group>
-          <van-cell :title="`${childInfo.class_name}班`" is-link center @click="toClassHome">
+          <van-cell :title="`${childInfo.class_name}`" is-link center @click="toClassHome">
             <div class="icon" slot="icon">
               <i class="iconfont">&#xe802;</i>
             </div>

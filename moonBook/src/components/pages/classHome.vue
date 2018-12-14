@@ -1,6 +1,6 @@
 <template>
   <div class="class-home page-padding">
-    <van-nav-bar :title="fixedHeaderBar?$route.meta.title:babyData.class.name" :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']"
+    <van-nav-bar :title="fixedHeaderBar?$route.meta.title:`${classInfo.title}班`" :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']"
       fixed @click-left="onClickLeft" @click-right="show = true">
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -12,17 +12,20 @@
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-avatar">
-        <img src="https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/avatar-class.jpg" alt="班级头像" />
+        <img :src="classInfo.logo" alt="班级头像" />
       </div>
       <div class="class-info">
-        <div class="class-name">{{classInfo.name}}</div>
-        <div class="class-people">{{classInfo.sort}}（{{classInfo.people}}人）</div>
-        <div class="school" v-line-clamp:20="1">{{babyData.school}}</div>
+        <div class="class-name">{{classInfo.title}}班</div>
+        <div class="class-people">{{classInfo.grade_name}}班（{{classInfo.student_count}}人）</div>
+        <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
       </div>
     </div>
     <div class="container">
       <lazy-component class="module">
-        <class-show :className='classInfo.name' />
+        <class-show :className='classInfo.title' />
+      </lazy-component>
+      <lazy-component class="module">
+        <reading :list="lateBook" moduleTitle="老师推荐的书"/>
       </lazy-component>
       <lazy-component class="module">
         <week-list />
@@ -30,18 +33,18 @@
     </div>
 
     <van-popup v-model="show" class="plate-card">
-      <qr-code :classInfo="classData" :school='classData.school' :qrImage="qrImage" type='classHome' @close='show = false' />
+      <qr-code :classInfo="classInfo" :qrImage="qrImage" type='classHome' @close='show = false' />
     </van-popup>
 
     <slogan />
   </div>
 </template>
 <script>
-import axios from 'axios'
-import { mapGetters } from "vuex"
+import axios from './../lib/js/api'
 import QRCode from 'qrcode'
 import weekList from './../module/classModule/weekList'
 import classShow from './../module/classModule/classShow'
+import reading from './../module/reading'
 import qrCode from './../module/mold/qrCode'
 import slogan from './../module/slogan'
 
@@ -51,27 +54,16 @@ export default {
     classShow,
     weekList,
     slogan,
+    reading,
     qrCode
-  },
-  computed: {
-    ...mapGetters(["userDataState"]),
-    classData() {
-      let data = {
-        name: this.classInfo.name,
-        sort: this.classInfo.sort,
-        people: this.classInfo.people,
-        school: this.babyData.school
-      }
-      return data
-    }
   },
   data() {
     return {
       show: false,
       fixedHeaderBar: true,
       qrImage: '',
-      babyData: '',
       classInfo: '',
+      lateBook:'',
     }
   },
   created() {
@@ -85,26 +77,13 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.put('/api/ChildInfo', {
-        id: this.$route.query.id
-      }).then(res => {
-        this.qrcode()
-        if (res.data.child) {
-          this.babyData = res.data.child
-          this.classInfo = res.data.child.class
-        } else {
-          this.$dialog.alert({
-            message: `<div class='text-center'>您还未注册阅亮书架</div>`,
-            showConfirmButton: true,
-            showCancelButton: true,
-            confirmButtonText: '注册',
-            cancelButtonText: '稍后'
-          }).then(() => {
-            this.$router.push({ name: 'register' })
-          }).catch(() => {
-            this.$router.push({ name: 'my' })
-          })
-        }
+      axios.get(`/book/SchoolBanji/getInfo?banji_id=${this.$route.query.id}`).then(res=>{
+        this.classInfo = res.data.data
+      })
+
+      axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${this.$route.query.id}`).then(res=>{
+        console.log(res)
+        this.lateBook = res.data.data
       })
     },
     onClickLeft() {
