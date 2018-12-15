@@ -43,7 +43,7 @@
       </div>
       <div class="baby-class" v-if="childInfo.class_id > 0">
         <van-cell-group>
-          <van-cell :title="`${childInfo.class_name}`" is-link center @click="toClassHome">
+          <van-cell :title="`${childInfo.class_name}班`" is-link center @click="toClassHome(childInfo)">
             <div class="icon" slot="icon">
               <i class="iconfont">&#xe802;</i>
             </div>
@@ -221,11 +221,12 @@ export default {
     babySetting(data) {
       this.school = data.school
     },
-    toClassHome() {
+    toClassHome(data) {
+      console.log('宝贝主页banji_id没有给到我',data)
       this.$router.push({
         name: "class-home",
         query: {
-          id: this.$route.query.id
+          id: data.banji_id
         }
       });
     }

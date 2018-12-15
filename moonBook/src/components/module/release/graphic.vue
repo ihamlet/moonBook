@@ -11,8 +11,8 @@
     </van-nav-bar>
     <div class="textarea-module">
       <van-cell-group>
-        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="想说点什么？" rows="4"
-          autosize />
+        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="说些什么？不妨分享最近看的书 (∩_∩)"
+          rows="4" autosize />
         <div class="media flex flex-align">
           <div class="theme-color" v-for='(list,index) in mediaContent' :key="index">
             <div class="file-name">
@@ -53,7 +53,7 @@
     <div class="upload-module flex wrap">
       <van-cell>
         <van-row gutter="2">
-          <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index" v-if='!item.media'>
+          <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
             <div class="preview img-grid" v-lazy:background-image='item.thumb' :class="[item.thumb?'transparent':'']">
               <i class="iconfont" @click="deletePhoto(index)">&#xe683;</i>
             </div>
@@ -101,6 +101,7 @@ export default {
       ossSign: '',
       mediaContent: [],
       process: 0,
+      photoLength: 0
     }
   },
   created() {
@@ -120,6 +121,8 @@ export default {
   methods: {
     fetchData() {
       return axios.get('/book/memberUser/getInfo').then(res => {
+        console.log('/book/memberUser/getInfo 需要给我当前宝贝ID，名字', res)
+
         let array = []
 
         array.push({
@@ -150,11 +153,12 @@ export default {
       let config = {
         headers: { 'Content-Type': 'multipart/form-data' }
       }
-
       if (file.length) {
-        if (this.grapicData.photos < 10 && file.length < 10) {
-          file.forEach(element => {
-            compress(element.content, 800, 0.5, 'blob').then(val => {
+        file.forEach(element => {
+          this.photoLength++
+          if (this.photoLength < 10) {
+            this.grapicData.photos.isLoading = true
+            compress(element.content, 500, 0.618, 'blob').then(val => {
               val.toBlob((blob) => {
                 let fd = new FormData()
                 fd.append('file', blob, element.file.name)
@@ -163,7 +167,8 @@ export default {
                   if (res.data.status === 1) {
                     this.grapicData.photos.push({
                       photo: res.data.data.path,
-                      thumb: res.data.data.thumb
+                      thumb: res.data.data.thumb,
+                      isLoading: false
                     })
                   } else {
                     this.$toast.fail('上传失败,请重新上传')
@@ -171,10 +176,14 @@ export default {
                 })
               })
             })
-          })
-        }
+          } else {
+            this.$dialog.alert({
+              message: `<div class='text-center'>最多只能上传9张图片</div>`
+            })
+          }
+        })
       } else {
-        compress(file.content, 800, 0.5, 'blob').then(val => {
+        compress(file.content, 500, 0.618, 'blob').then(val => {
           val.toBlob((blob) => {
             let fd = new FormData()
             fd.append('file', blob, file.file.name)
@@ -197,7 +206,7 @@ export default {
       this.$emit('close')
     },
     onClickRight() {
-      if (this.grapicData.text.length == 0 && this.grapicData.images.length == 0) {
+      if (!this.grapicData.text.length && !this.grapicData.photos.length) {
         this.$emit('close')
       } else if (this.grapicData.text.length < 140) {
         let data = {
