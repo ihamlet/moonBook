@@ -4,7 +4,7 @@
     <van-tabs color='#409eff' :line-width='20' animated swipeable @change='onChange'>
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-          <van-cell v-for="(item,itemIndex) in list.list" :key="itemIndex" center>
+          <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" center title-class='cell-title'>
             <div class="flex flex-align" slot="title">
               <div class="ranking">
                 <svg-ranking :ranking="item.rank" />
@@ -54,17 +54,18 @@ export default {
   },
   data() {
     return {
-      tab: [{
-        title: '读书榜',
-        list: [],
-      }, {
-        title: '借书榜',
-        list: []
-      }],
-
       readList:[],
+      borrowList:[],
       loading: false,
       finished: false,
+      tab:[{
+        title:'阅读榜',
+        content:[]
+      },{
+        title:'借阅榜',
+        content:[]
+      }],
+      tabIndex:0
     }
   },
   mounted() {
@@ -73,13 +74,38 @@ export default {
     }
   },
   methods: {
-    onLoad(index) {
+    onChange(index){
+      this.tabIndex = index
+      this.onLoad()
+    },
+    onLoad(){
+      if( this.tabIndex == 0){
+        this.getReadList()
+      }
+      if( this.tabIndex == 1){
+       this.getBorrowList()
+      }
+    },
+    getReadList(){
       axios.get(`/book/babySign/rank?banji_id=${this.$route.query.id}`).then(res => {
         this.loading = false
-        this.tab[0].list = this.tab[0].list.concat(res.data.data)
-        if (this.tab[0].list.length >= 10) {
-          this.finished = true
-        }
+        this.tab[ this.tabIndex].content = res.data.data
+        this.finished = true
+      })
+    },
+    getBorrowList(){
+      axios.get('/book/SchoolTushuBorrow/getRank?region=banji&group=baby').then(res => {
+        let myArr = [res.data.data.myInfo];
+        let list = myArr.concat(res.data.data.list)
+        list.forEach((item) => {
+          let info = item.info || item.babyInfo
+          item.name = info.name
+          item.avatar = info.avatar
+          item.title = item.read_count > 50 ? '阅读小明星' : '阅读新秀',
+          item.sign_read_count = item.read_count || 0
+        })
+
+        this.tab[ this.tabIndex ].content = list
       })
     },
     onPunch(res){
@@ -93,10 +119,6 @@ export default {
     },
     punch(){
       readPunchFrame(this.$refs.punchFrame,this.tab[0].list[0].id)
-    },
-    onChange(index,title){
-      // console.log(index)
-      this.onLoad(index)
     }
   }
 }
@@ -158,5 +180,10 @@ export default {
 
 .punch{
   z-index: 2018;
+}
+</style>
+<style>
+.week-list .van-cell__title.cell-title{
+  flex: 2;
 }
 </style>
