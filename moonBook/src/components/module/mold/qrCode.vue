@@ -39,8 +39,8 @@
           <div class="card flex flex-align">
             <div class="class-card">
               <div class="name">
-                <span>{{classInfo.name}}</span>
-                <span class="people">{{classInfo.people}}人</span>
+                <span>{{classInfo.title}}班</span>
+                <span class="people">{{classInfo.student_count}}人</span>
               </div>
               <div class="school">{{schoolEllipsis}}</div>
             </div>
@@ -78,10 +78,10 @@ export default {
   },
   computed: {
     schoolEllipsis() {
-      if (this.childInfo.school_name.length > 10) {
-        return this.childInfo.school_name.substr(0, 9) + '...'
+      if (this.classInfo.school_name.length > 10) {
+        return this.classInfo.school_name.substr(0, 9) + '...'
       } else {
-        return this.childInfo.school_name
+        return this.classInfo.school_name
       }
     }
   },
@@ -263,6 +263,11 @@ span.people {
 .plate .code-img {
   flex: 1;
   padding: 0;
+}
+
+.plate .code-img img{
+  width: 100%;
+  height: 100%;
 }
 
 .fade-enter-active,

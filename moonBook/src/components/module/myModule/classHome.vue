@@ -35,7 +35,7 @@ export default {
         }
       }else{
         return {
-          prompt: this.children.class_name,
+          prompt: `${this.children.class_name}班`,
           type:2
         }
       }

@@ -41,7 +41,7 @@
         <div class="bar-item totalReading">总阅读量 {{childInfo.read_count}}</div>
         <div class="bar-item praise">赞 {{childInfo.zan_count}}</div>
       </div>
-      <div class="baby-class" v-if="childInfo.class_id > 0">
+      <div class="baby-class" v-if="childInfo.banji_id > 0">
         <van-cell-group>
           <van-cell :title="`${childInfo.class_name}班`" is-link center @click="toClassHome(childInfo)">
             <div class="icon" slot="icon">
@@ -70,7 +70,7 @@
           <div class="list">
             <div class="item" v-for="(item,index) in list" :key="index">
               <van-cell>
-                <graphic-crad :item="item" type="babyHome" :avatar='childInfo.avatar'/>
+                <graphic-crad :item="item" type="babyHome" :avatar='childInfo.avatar' />
               </van-cell>
             </div>
           </div>
@@ -139,25 +139,7 @@ export default {
     axios.get(`/book/family/getChildByUser?child_id=${to.query.id}`).then(res => {
       next(vm => {
         vm.qrcode()
-        if (res.data.status == 1) {
-          vm.childInfo = res.data.data
-        } else {
-          vm.$dialog.alert({
-            message: `<div class='text-center'>注册阅亮书架 宝贝会爱上阅读</div>`,
-            showConfirmButton: true,
-            showCancelButton: true,
-            confirmButtonText: "注册",
-            cancelButtonText: "稍后"
-          }).then(() => {
-            vm.$router.push({
-              name: "register"
-            })
-          }).catch(() => {
-            vm.$router.push({
-              name: "my"
-            })
-          })
-        }
+        vm.childInfo = res.data.data
       })
     })
   },
@@ -222,7 +204,7 @@ export default {
       this.school = data.school
     },
     toClassHome(data) {
-      console.log('宝贝主页banji_id没有给到我',data)
+      console.log('宝贝主页banji_id没有给到我', data)
       this.$router.push({
         name: "class-home",
         query: {

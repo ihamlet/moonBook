@@ -35,7 +35,6 @@
     <van-popup v-model="show" class="plate-card">
       <qr-code :classInfo="classInfo" :qrImage="qrImage" type='classHome' @close='show = false' />
     </van-popup>
-
     <slogan />
   </div>
 </template>
@@ -66,26 +65,21 @@ export default {
       lateBook:'',
     }
   },
-  created() {
-    this.fetchData()
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.qrcode()
+      axios.get(`/book/SchoolBanji/getInfo?banji_id=${to.query.id}`).then(res=>{
+          vm.classInfo = res.data.data
+      })
+      axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${to.query.id}`).then(res=>{
+          vm.lateBook = res.data.data
+      })
+    })
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
   },
-  watch: {
-    '$router': 'fetchData'
-  },
   methods: {
-    fetchData() {
-      axios.get(`/book/SchoolBanji/getInfo?banji_id=${this.$route.query.id}`).then(res=>{
-        this.classInfo = res.data.data
-      })
-
-      axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${this.$route.query.id}`).then(res=>{
-        console.log(res)
-        this.lateBook = res.data.data
-      })
-    },
     onClickLeft() {
       this.$router.push({ name: 'my' })
     },

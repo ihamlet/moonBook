@@ -53,7 +53,7 @@
     <div class="upload-module flex wrap">
       <van-cell>
         <van-row gutter="2">
-          <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
+          <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index" v-if='!item.media'>
             <div class="preview img-grid" v-lazy:background-image='item.thumb' :class="[item.thumb?'transparent':'']">
               <i class="iconfont" @click="deletePhoto(index)">&#xe683;</i>
             </div>
@@ -121,8 +121,6 @@ export default {
   methods: {
     fetchData() {
       return axios.get('/book/memberUser/getInfo').then(res => {
-        console.log('/book/memberUser/getInfo 需要给我当前宝贝ID，名字', res)
-
         let array = []
 
         array.push({
@@ -190,7 +188,6 @@ export default {
           })
         }
       })
-
     },
     onClickLeft() {
       this.$emit('close')
