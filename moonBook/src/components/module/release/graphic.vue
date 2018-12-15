@@ -138,7 +138,7 @@ export default {
         }
         if (res.data.banji_id > 0) {
           array.push({
-            title: `${res.data.child_name}@${res.data.class_name}班`,
+            title: `${res.data.child_name}@${res.data.banji_name}班`,
             name: 'class-zoom'
           })
         }
@@ -153,54 +153,44 @@ export default {
       let config = {
         headers: { 'Content-Type': 'multipart/form-data' }
       }
-      if (file.length) {
-        file.forEach(element => {
+
+      let array = []
+
+      if (!file.length) {
+        array.push(file)
+      } else {
+        array = file
+      }
+
+      array.forEach(element => {
+        if (this.photoLength < 9) {
           this.photoLength++
-          if (this.photoLength < 10) {
-            this.grapicData.photos.isLoading = true
-            compress(element.content, 500, 0.618, 'blob').then(val => {
-              val.toBlob((blob) => {
-                let fd = new FormData()
-                fd.append('file', blob, element.file.name)
-                axios.post('/book/file/upload', fd, config).then((res) => {
-                  console.log('upload', res)
-                  if (res.data.status === 1) {
-                    this.grapicData.photos.push({
-                      photo: res.data.data.path,
-                      thumb: res.data.data.thumb,
-                      isLoading: false
-                    })
-                  } else {
-                    this.$toast.fail('上传失败,请重新上传')
-                  }
-                })
+          this.grapicData.photos.isLoading = true
+          compress(element.content, 500, 0.618, 'blob').then(val => {
+            val.toBlob((blob) => {
+              let fd = new FormData()
+              fd.append('file', blob, element.file.name)
+              axios.post('/book/file/upload', fd, config).then((res) => {
+                console.log('upload', res)
+                if (res.data.status === 1) {
+                  this.grapicData.photos.push({
+                    photo: res.data.data.path,
+                    thumb: res.data.data.thumb,
+                    isLoading: false
+                  })
+                } else {
+                  this.$toast.fail('上传失败,请重新上传')
+                }
               })
             })
-          } else {
-            this.$dialog.alert({
-              message: `<div class='text-center'>最多只能上传9张图片</div>`
-            })
-          }
-        })
-      } else {
-        compress(file.content, 500, 0.618, 'blob').then(val => {
-          val.toBlob((blob) => {
-            let fd = new FormData()
-            fd.append('file', blob, file.file.name)
-            axios.post('/book/file/upload', fd, config).then((res) => {
-              console.log('upload', res)
-              if (res.data.status === 1) {
-                this.grapicData.photos.push({
-                  photo: res.data.data.path,
-                  thumb: res.data.data.thumb
-                })
-              } else {
-                this.$toast.fail('上传失败,请重新上传')
-              }
-            })
           })
-        })
-      }
+        } else {
+          this.$dialog.alert({
+            message: `<div class='text-center'>最多只能上传9张图片</div>`
+          })
+        }
+      })
+
     },
     onClickLeft() {
       this.$emit('close')
@@ -238,6 +228,7 @@ export default {
     deletePhoto(index) {
       this.grapicData.photos.splice(index, 1)
       this.mediaContent.splice(index, 1)
+      this.photoLength--
     },
     toTopicPage() {
       this.show = true

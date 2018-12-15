@@ -102,19 +102,16 @@ export default {
         case 1:
           this.active = 0
           break
-        case 2:
-          this.active = 1
-          break
       }
     },
     selectSchool(school) {
       this.regInfo.school = school.name
-      this.active = 1
+      this.active = 0
     },
     selectRole(role) {
       this.regInfo.role = role.name
       this.formType = role.type
-      this.active = 2
+      this.active = 1
     },
     toPageMy() {
       this.$router.push({ name: 'my' })
