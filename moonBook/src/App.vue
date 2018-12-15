@@ -27,13 +27,12 @@ textarea {
 }
 
 @font-face {
-  font-family: 'iconfont'; /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_yzdtzmh5r6o.eot');
-  src: url('//at.alicdn.com/t/font_893274_yzdtzmh5r6o.eot?#iefix')
-      format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_893274_yzdtzmh5r6o.woff') format('woff'),
-    url('//at.alicdn.com/t/font_893274_yzdtzmh5r6o.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_893274_yzdtzmh5r6o.svg#iconfont') format('svg');
+  font-family: 'iconfont';  /* project id 893274 */
+  src: url('//at.alicdn.com/t/font_893274_px9sivze9k.eot');
+  src: url('//at.alicdn.com/t/font_893274_px9sivze9k.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_px9sivze9k.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_px9sivze9k.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_px9sivze9k.svg#iconfont') format('svg');
 }
 
 .iconfont {

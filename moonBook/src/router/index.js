@@ -58,7 +58,7 @@ export default new Router({
         meta: {
           title: '登录',
           scrollToTop: true,
-          tabActive:3,
+          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -98,7 +98,7 @@ export default new Router({
         meta: {
           title: '个人中心',
           scrollToTop: true,
-          tabActive:3,
+          tabActive:4,
           isFooterBar: true
         }
       },{
@@ -118,7 +118,7 @@ export default new Router({
         meta: {
           title: '宝贝主页',
           scrollToTop: true,
-          tabActive:3,
+          tabActive:4,
           isFooterBar: true
         }
       },{
@@ -138,7 +138,7 @@ export default new Router({
         meta: {
           title: '班级风采',
           scrollToTop: true,
-          tabActive:3,
+          tabActive:4,
           isFooterBar: true
         }
       },{
@@ -148,7 +148,7 @@ export default new Router({
         meta: {
           title: '我的卡包',
           scrollToTop: true,
-          tabActive:3,
+          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -157,7 +157,7 @@ export default new Router({
         component: EditChild,
         meta: {
           scrollToTop: true,
-          tabActive:3,
+          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -166,7 +166,7 @@ export default new Router({
         component: EditSchool,
         meta: {
           scrollToTop: true,
-          tabActive:3,
+          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -175,7 +175,7 @@ export default new Router({
         component: EditClass,
         meta: {
           scrollToTop: true,
-          tabActive:3,
+          tabActive:4,
           isFooterBar: false
         }
       }]

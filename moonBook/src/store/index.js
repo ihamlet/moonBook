@@ -27,6 +27,10 @@ const state = {
         name: '消息',
         path: 'notice'
     }, {
+        iconClass: 'icon-banji',
+        name: '班级',
+        path: 'class-home'
+    }, {
         iconClass: 'icon-people',
         name: '个人中心',
         path: 'my'
@@ -112,9 +116,9 @@ const mutations = {
 
 const actions = {
     getUserData(context){
-        axios.get('/api/userData').then(res=>{
+        axios.get('/book/memberUser/getInfo').then(res=>{
             context.commit('setUserData', {
-                data:res.data.userData
+                data:res.data
             })
         })
     },

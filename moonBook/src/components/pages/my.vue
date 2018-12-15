@@ -47,7 +47,6 @@ export default {
   methods: {
     fetchData() {
       axios.get('/book/baby/getList?sort=old').then(res => {
-        console.log(res)
         this.children = res.data.data
       })
 

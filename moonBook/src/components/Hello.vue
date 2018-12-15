@@ -59,7 +59,6 @@ export default {
           let products = {
             location:val
           }
-
           console.log(products)
           this.getUserLocation(products)
       },
@@ -68,8 +67,7 @@ export default {
   methods: {
     ...mapActions(['getUserData','getMsgLength','getUserLocation']),
     fetchData(){
-      // this.getUserData()
-      // this.getMsgLength()
+      this.getUserData()
     },
     onStartPage(){
       this.startPageShow = false

@@ -1,7 +1,7 @@
 <template>
     <div class="footer-bar flex flex-align">
         <van-tabbar :zIndex='100' v-model="active" fixed>
-            <van-tabbar-item v-for='(item,index) in userTabBtn' :key="index" :to='item.path' :info="index==2&&MsgLengthState>0?MsgLengthState:''">
+            <van-tabbar-item v-for='(item,index) in userTabBtn' :key="index" :to='goPage(item.path)' :info="index==2&&MsgLengthState>0?MsgLengthState:''">
                 <i class="iconfont" :class="[props.active?`${item.iconClass}fill bounceIn animated`: item.iconClass]" slot='icon' slot-scope="props"></i>
                 <span>{{item.name}}</span>
             </van-tabbar-item>
@@ -13,7 +13,7 @@ import { mapGetters } from 'vuex'
 export default {
     name:'footer-bar',
     computed: {
-        ...mapGetters(['MsgLengthState','userTabBtn'])
+        ...mapGetters(['MsgLengthState','userTabBtn','userDataState'])
     },
     data () {
         return {
@@ -24,8 +24,17 @@ export default {
         this.active = this.$route.meta.tabActive
     },
     watch: {
-        '$route' (to, from) {
+        '$router' (to, from) {
             this.active = to.meta.tabActive
+        }
+    },
+    methods: {
+        goPage(router){
+            if(router == 'class-home'){
+               return `${router}?id=339`
+            }else{
+                return router
+            }
         }
     }
 }
@@ -81,4 +90,8 @@ export default {
 /* 书架 */
 .icon-tushuguan:before {content:"\e6a2"}
 .icon-tushuguanfill:before {content:"\e619"}
+
+/* 班级 */
+.icon-banji::before {content:"\e746"}
+.icon-banjifill:before {content:"\e745"}
 </style>
