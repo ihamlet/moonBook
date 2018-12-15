@@ -1,6 +1,6 @@
 <template>
     <div class="footer-bar flex flex-align">
-        <van-tabbar v-model="active" fixed>
+        <van-tabbar :zIndex='100' v-model="active" fixed>
             <van-tabbar-item v-for='(item,index) in userTabBtn' :key="index" :to='item.path' :info="index==2&&MsgLengthState>0?MsgLengthState:''">
                 <i class="iconfont" :class="[props.active?`${item.iconClass}fill bounceIn animated`: item.iconClass]" slot='icon' slot-scope="props"></i>
                 <span>{{item.name}}</span>
@@ -32,8 +32,8 @@ export default {
 </script>
 <style scoped>
 .footer-bar{
+    width: 100%;
     overflow: hidden;
-    height: 3rem /* 48/16 */;
 }
 
 .footer-bar .van-tabbar{

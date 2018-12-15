@@ -1,52 +1,50 @@
 <template>
   <div class="week-list">
-    <div class="module-title">班级榜</div>
-    <van-tabs :lineWidth="20" :offsetTop="46" @click="onClickTabs" color="#409EFF" sticky>
-      <van-tab :key="tabIndex" :title="tab.title" v-for="(tab,tabIndex) in tabArray">
-        <div class="tab-card">
-          <van-tabs @change="tabChange" color="#409EFF" type="card">
-            <van-tab :key="index" :title="list.title" v-for="(list,index) in tabs">
-              <van-cell-group :key="itemIndex" v-for="(item,itemIndex) in list.content">
-                <van-cell :arrow-direction="item.id == selectId?'up':'down'" :value="`${item.num}本`" @click="select(item)"
-                  center is-link>
-                  <div class="flex flex-align" slot="title">
-                    <div class="ranking">
-                      <svg-ranking :ranking="item.rank" />
-                    </div>
-                    <div class="avatar" v-if="item.avatar">
-                      <img :alt="item.name" :src="item.avatar">
-                    </div>
-                    <avatar :gender="item.gender" v-else />
-                    <van-tag class="my-baby-tag" round type="danger" v-if="item.isMyBaby">我的孩子</van-tag>
-                    <div class="name">
-                      <span v-line-clamp:20="1">{{item.name}}</span>
-                      <span class="topic" v-if="index==1">{{item.num>50?'阅读之星':'阅读新秀'}}</span>
-                    </div>
-                  </div>
-                </van-cell>
-                <div class="reading-mould" v-if="item.id == selectId">
-                  <reading :babyId="item.id" :list="item.lateBook" :moduleTitle="`${item.name}最近在读`" type="rank" />
+    <van-nav-bar title="读书榜" />
+    <van-tabs color='#409eff' :line-width='20' animated swipeable @change='onChange'>
+      <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
+        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+          <van-cell v-for="(item,itemIndex) in list.list" :key="itemIndex" center>
+            <div class="flex flex-align" slot="title">
+              <div class="ranking">
+                <svg-ranking :ranking="item.rank" />
+              </div>
+                <div class="avatar" v-if="item.avatar">
+                  <img :src="item.avatar" :alt="item.name" />
                 </div>
-              </van-cell-group>
-            </van-tab>
-          </van-tabs>
-          <div class="punch" v-if="tabIndex == 0">
-            <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
-              <i class="iconfont">&#xe60a;</i>
-              阅读打卡
-            </van-button>
-          </div>
-        </div>
+                <avatar :gender="item.sex" v-else />
+              <div class="name">
+                <span v-line-clamp:20="1">{{item.name}}</span>
+                <span class="topic">{{item.title}}</span>
+              </div>
+            </div>
+
+            <div class="sign-read">
+              <span class="numb">{{item.sign_read_count}}</span>
+              <span>本</span>
+            </div>
+          </van-cell>
+        </van-list>
       </van-tab>
     </van-tabs>
+
+    <div class="punch">
+      <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
+        <i class="iconfont">&#xe60a;</i>
+        阅读打卡
+      </van-button>
+    </div>
+
+    <div ref='punchFrame' v-show='false'></div>
   </div>
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { rankArray, arrayKeyTop } from './../../lib/js/util'
+import { readPunchFrame } from './../../lib/js/util'
 import svgRanking from './../animate/svg/ranking'
 import reading from './../reading'
 import avatar from './../avatar'
+
 export default {
   name: 'week-list',
   components: {
@@ -56,83 +54,49 @@ export default {
   },
   data() {
     return {
-      tabArray: [
-        {
-          title: '阅读榜'
-        },
-        {
-          title: '借书榜'
-        }
-      ],
-      tabs: [
-        {
-          title: '周榜',
-          content: ''
-        },
-        {
-          title: '总榜',
-          content: ''
-        }
-      ],
-      childId: '',
-      selectId: ''
+      tab: [{
+        title: '读书榜',
+        list: [],
+      }, {
+        title: '借书榜',
+        list: []
+      }],
+
+      readList:[],
+      loading: false,
+      finished: false,
     }
   },
-  created() {
-    this.fetchData()
-  },
-  watch: {
-    $router: 'fetchData'
+  mounted() {
+    window.onPunch = (res) => {
+      this.onPunch(res)
+    }
   },
   methods: {
-    fetchData() {
-      axios.get('/book/SchoolTushuBorrow/getRank?region=banji&group=baby').then(res => {
-          console.log(res)
-          
-
-          // if (res.data.child) {
-          //   let weekList = res.data.child.class.weekList.week
-          //   let totalList = res.data.child.class.weekList.total
-          //   this.childId = res.data.child.id
-          //   this.selectId = res.data.child.id
-          //   let babyWeekData = {
-          //     id: res.data.child.id,
-          //     avatar: res.data.child.data.avatar,
-          //     name: res.data.child.data.name,
-          //     gender: res.data.child.data.gender,
-          //     num: res.data.child.dataStatistics.readings,
-          //     lateBook: res.data.child.lateBook,
-          //     isMyBaby: true
-          //   }
-          //   weekList.push(babyWeekData)
-          //   let babyTotal = {
-          //     id: res.data.child.id,
-          //     avatar: res.data.child.data.avatar,
-          //     name: res.data.child.data.name,
-          //     gender: res.data.child.data.gender,
-          //     num: res.data.child.dataStatistics.totalReading,
-          //     lateBook: res.data.child.lateBook,
-          //     isMyBaby: true
-          //   }
-          //   totalList.push(babyTotal)
-          //   let weekRankArray = rankArray(weekList, 'num')
-          //   let totalRankArray = rankArray(totalList, 'num')
-          //   this.tabs[0].content = arrayKeyTop(weekRankArray, 'isMyBaby')
-          //   this.tabs[1].content = arrayKeyTop(totalRankArray, 'isMyBaby')
-          // }
+    onLoad(index) {
+      axios.get(`/book/babySign/rank?banji_id=${this.$route.query.id}`).then(res => {
+        this.loading = false
+        this.tab[0].list = this.tab[0].list.concat(res.data.data)
+        if (this.tab[0].list.length >= 10) {
+          this.finished = true
+        }
+      })
+    },
+    onPunch(res){
+      if(res.status == 1){
+        this.tab[0].list[0].sign_read_count++
+      }else{
+        this.$dialog.alert({
+          message: `<div class='text-center'>${res.msg}</div>`
         })
+      }
     },
-    select(item) {
-      this.selectId = item.id
+    punch(){
+      readPunchFrame(this.$refs.punchFrame,this.tab[0].list[0].id)
     },
-    tabChange() {
-      this.selectId = this.childId
-    },
-    onClickTabs(index, title) {
-      console.log(index, title)
-    },
-    punch() {
-      console.log('扫描图书二维码')
+    onChange(index,title){
+      // console.log(index)
+      this.onLoad(index)
     }
   }
 }
@@ -155,7 +119,7 @@ export default {
   padding: 0.3125rem /* 5/16 */ 0.625rem /* 10/16 */;
 }
 
-.avatar {
+.avatar img{
   width: 3.125rem /* 50/16 */;
   height: 3.125rem /* 50/16 */;
   border-radius: 50%;
@@ -185,5 +149,14 @@ export default {
 
 .tab-sticky.van-tabs .van-tabs__wrap {
   z-index: 100;
+}
+
+.sign-read .numb {
+  font-size: 1.125rem /* 18/16 */;
+  font-weight: 500;
+}
+
+.punch{
+  z-index: 2018;
 }
 </style>

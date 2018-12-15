@@ -240,6 +240,10 @@ export default {
   justify-content: space-between;
 }
 
+.container.plate{
+  background: #fff;
+}
+
 .plate .class-card {
   flex: 2;
   padding-left: .625rem /* 10/16 */;

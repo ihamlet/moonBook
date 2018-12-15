@@ -25,9 +25,9 @@
         <class-show :className='classInfo.title' />
       </lazy-component>
       <lazy-component class="module">
-        <reading :list="lateBook" moduleTitle="老师推荐的书"/>
+        <reading :list="lateBook" moduleTitle="老师推荐的书" />
       </lazy-component>
-      <lazy-component class="module">
+      <lazy-component>
         <week-list />
       </lazy-component>
     </div>
@@ -35,7 +35,6 @@
     <van-popup v-model="show" class="plate-card">
       <qr-code :classInfo="classInfo" :qrImage="qrImage" type='classHome' @close='show = false' />
     </van-popup>
-    <slogan />
   </div>
 </template>
 <script>
@@ -45,14 +44,12 @@ import weekList from './../module/classModule/weekList'
 import classShow from './../module/classModule/classShow'
 import reading from './../module/reading'
 import qrCode from './../module/mold/qrCode'
-import slogan from './../module/slogan'
 
 export default {
   name: "class-home",
   components: {
     classShow,
     weekList,
-    slogan,
     reading,
     qrCode
   },
@@ -62,17 +59,17 @@ export default {
       fixedHeaderBar: true,
       qrImage: '',
       classInfo: '',
-      lateBook:'',
+      lateBook: '',
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.qrcode()
-      axios.get(`/book/SchoolBanji/getInfo?banji_id=${to.query.id}`).then(res=>{
-          vm.classInfo = res.data.data
+      axios.get(`/book/SchoolBanji/getInfo?banji_id=${to.query.id}`).then(res => {
+        vm.classInfo = res.data.data
       })
-      axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${to.query.id}`).then(res=>{
-          vm.lateBook = res.data.data
+      axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${to.query.id}`).then(res => {
+        vm.lateBook = res.data.data
       })
     })
   },
@@ -87,7 +84,7 @@ export default {
       QRCode.toDataURL(window.location.href).then(url => {
         this.qrImage = url
       }).catch(err => {
-          console.error(err)
+        console.error(err)
       })
     },
     handleScroll() {

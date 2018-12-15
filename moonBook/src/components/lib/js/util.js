@@ -143,7 +143,6 @@ function arrayKeyTop(arr,key){
 
 //支付
 function createPayFrame(dom,levelId,feeId){
-  console.log(dom)
   let payFrame = dom.querySelector('#payFrame')
   if(!payFrame) {
       payFrame = document.createElement('iframe')
@@ -151,6 +150,17 @@ function createPayFrame(dom,levelId,feeId){
       dom.append(payFrame)
   }
   payFrame.src = `/book/memberCard/buycard?level_id=${levelId}&fee_id=${feeId}&is_auto=1`
+}
+
+//阅读打卡
+function readPunchFrame(dom,childId,){
+  let punchFrame = dom.querySelector('#pushFrame')
+  if(!punchFrame) {
+    punchFrame = document.createElement('iframe')
+    punchFrame.id = 'payFrame'
+    dom.append(punchFrame)
+  }
+  punchFrame.src = `/book/MemberSign/punch?child_id=${childId}&is_auto=1`
 }
 
 export {
@@ -162,5 +172,6 @@ export {
   sum,
   compress,
   getRandomArrayElements,
-  createPayFrame
+  createPayFrame,
+  readPunchFrame
 }

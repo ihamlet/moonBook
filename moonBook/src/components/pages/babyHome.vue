@@ -204,16 +204,15 @@ export default {
       this.school = data.school
     },
     toClassHome(data) {
-      console.log('宝贝主页banji_id没有给到我', data)
       this.$router.push({
         name: "class-home",
         query: {
           id: data.banji_id
         }
-      });
+      })
     }
   }
-};
+}
 
 </script>
 <style scoped>
