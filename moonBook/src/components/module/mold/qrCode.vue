@@ -78,10 +78,17 @@ export default {
   },
   computed: {
     schoolEllipsis() {
-      if (this.classInfo.school_name.length > 10) {
-        return this.classInfo.school_name.substr(0, 9) + '...'
+      let data = ''
+      if(this.childInfo){
+        data = this.childInfo
+      }else{
+        data = this.classInfo
+      }
+
+      if (data.school_name.length > 10) {
+        return data.school_name.substr(0, 9) + '...'
       } else {
-        return this.classInfo.school_name
+        return data.school_name
       }
     }
   },
@@ -196,6 +203,7 @@ export default {
   overflow: hidden;
   width: 100%;
   height: 100%;
+  background: #fff;
 }
 
 .close.plate i.iconfont {

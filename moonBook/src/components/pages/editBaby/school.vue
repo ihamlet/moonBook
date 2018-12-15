@@ -66,7 +66,7 @@ export default {
       })
     },
     selectSchool(item) {
-      console.log(item.cityname)
+      //这里是传城市编码 还是城市名
       let cityname = ''
       if(item.cityname){
           cityname = item.cityname
@@ -77,8 +77,8 @@ export default {
 
       let location = item.location.split(',')
       axios.get(`/book/babySchool/bind?school_name=${item.name}&amap_id=${item.id}&cityname=${cityname}&lat=${location[1]}&lng=${location[0]}&child_id=${this.$route.query.id}`).then(res => {
-          if(res.data.data.status){
-            this.$toast.success(res.data.data.msg)
+          if(res.data.status){
+            this.$toast.success('已加入学校')
             this.$router.push({
                 name:'edit-class',
                 query:{
@@ -87,7 +87,7 @@ export default {
                 }
             })
           }else{
-            this.$toast.fail(res.data.data.msg)
+            this.$toast.fail('操作失败')
             this.$router.go(-1)
           }
       })

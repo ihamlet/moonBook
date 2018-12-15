@@ -23,19 +23,19 @@ export default {
   props: ['children'],
   computed: {
     selectPrompt(){
-      if(!this.children.school_id){
+      if(this.children.school_id == 0){
         return {
           prompt:'请选择学校班级',
           type:0
         }
-      }else if(!this.children.class_id){
+      }else if(this.children.banji_id == 0){
         return {
           prompt:'请选择班级',
           type:1
         }
       }else{
         return {
-          prompt: `${this.children.class_name}班`,
+          prompt: this.children.banji_name,
           type:2
         }
       }
@@ -48,20 +48,23 @@ export default {
       school:''
     }
   },
+  created () {
+    console.log(this.children)
+  },
   methods: {
     toClassHome() {
       if(this.selectPrompt.type == 0){
         this.$router.push({
           name:'edit-school',
           query:{
-            id: this.children.child_id
+            id: this.children.id
           }
         })
       }else if(this.selectPrompt.type == 1){
         this.$router.push({
           name:'edit-class',
           query:{
-            id: this.children.child_id,
+            id: this.children.id,
             schoolId: this.children.school_id
           }
         })
@@ -69,7 +72,7 @@ export default {
         this.$router.push({
           name: "class-home",
           query: {
-            id: this.children.class_id
+            id: this.children.banji_id
           }
         })
       }

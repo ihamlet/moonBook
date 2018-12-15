@@ -2,7 +2,7 @@
   <div class="my page-padding">
     <card-head :userInfo='userInfo' />
     <lazy-component class="gutter gap-top">
-      <class-home v-if='children' :children="children[0]" />
+      <class-home v-if='children.length!=0' :children="children[0]" />
     </lazy-component>
     <lazy-component class="gutter gap" v-if='zoomCard'>
       <zone-card :zoomCard='zoomCard' :userInfo='userInfo'/>
@@ -46,7 +46,8 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get('/book/family/getChildrenByUser?sort=old').then(res => {
+      axios.get('/book/baby/getList?sort=old').then(res => {
+        console.log(res)
         this.children = res.data.data
       })
 

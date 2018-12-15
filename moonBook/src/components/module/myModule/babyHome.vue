@@ -1,7 +1,7 @@
 <template>
   <div class="baby-home">
     <div class="module-card">
-      <div class="add-baby flipInX animated" v-if="!childrenList" @click="toAddChild">
+      <div class="add-baby flipInX animated" v-if="childrenList.length == 0" @click="toAddChild">
         <i class="iconfont hot">&#xe750;</i>
         <div class="container">
           <i class="iconfont baby-hd">&#xe603;</i>
@@ -13,7 +13,7 @@
         <div class="module-title">阅读记录</div>
         <div class="item module" v-for="(list,index) in childrenList" :key="index">
           <div class="card-top-bar">
-            <van-nav-bar :title="`${list.child_name}`" right-text="编辑" left-text="班级" @click-left="onClickLeft(list)"
+            <van-nav-bar :title="`${list.name}`" right-text="编辑" left-text="班级" @click-left="onClickLeft(list)"
               @click-right="onClickRight(list)" />
           </div>
           <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
@@ -22,10 +22,10 @@
               <span class="number">{{list.week_read_count}}</span>
             </div>
             <div class="content">
-              <div class="avatar" v-if="list.avatar" :class="list.gender">
+              <div class="avatar" v-if="list.avatar" :class="list.sex">
                 <img :src="list.avatar" alt="宝贝头像">
               </div>
-              <avatar :gender="list.gender" v-else />
+              <avatar :gender="list.sex" v-else />
               <div class="age">{{list.age}}岁</div>
               <div class="school" v-if='list.school_id > 0' v-line-clamp:20="1">{{list.school_name}}</div>
             </div>
@@ -80,25 +80,25 @@ export default {
       this.$router.push({
         name:'edit-child',
         query:{
-          id: list.child_id,
+          id: list.id,
           pageTitle:'编辑宝贝',
           type:'edit'
         }
       })
     },
     onClickLeft(list) {
-      if(!list.school_id){
+      if(list.school_id == 0){
         this.$router.push({
           name:'edit-school',
           query:{
-            id: list.child_id
+            id: list.id
           }
         })
-      }else if(!list.class_id){
+      }else if(list.banji_id == 0){
         this.$router.push({
           name:'edit-class',
           query:{
-            id: list.child_id,
+            id: list.id,
             schoolId:list.school_id
           }
         })
@@ -106,7 +106,7 @@ export default {
         this.$router.push({
           name: "class-home",
           query: {
-            id: list.class_id
+            id: list.banji_id
           }
         })
       }
@@ -115,7 +115,7 @@ export default {
       this.$router.push({
         name: "baby-home",
         query: {
-          id: list.child_id
+          id: list.id
         }
       })
     }

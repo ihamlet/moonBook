@@ -58,12 +58,13 @@ export default {
     select(item, itemIndex) {
         console.log(item)
         axios.get(`/book/babyBanji/bind?banji_name=${item.title}&child_id=${this.$route.query.id}`).then(res=>{
+            console.log(res)
             if(res.data.status){
                 this.$toast.success(res.data.msg)
                 this.$router.push({
                     name:'class-home',
                     query:{
-                        id: res.data.banji_id
+                        id: res.data.data.banji_id
                     }
                 })
             }else{
