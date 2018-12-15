@@ -130,15 +130,15 @@ export default {
           name: 'find'
         })
 
-        if (res.data.hasChild == 1) {
+        if (res.data.child_id > 0) {
           array.push({
-            title: `${res.data.children[0].info.name}@宝贝主页`,
+            title: `${res.data.child_name}@宝贝主页`,
             name: 'baby-home'
           })
         }
-        if (res.data.hasBanji == 1) {
+        if (res.data.banji_id > 0) {
           array.push({
-            title: `${res.data.children[0].info.name}@班级`,
+            title: `${res.data.child_name}@${res.data.class_name}班`,
             name: 'class-zoom'
           })
         }
