@@ -118,7 +118,7 @@ export default {
       }
     },
     punch(){
-      readPunchFrame(this.$refs.punchFrame,this.tab[0].list[0].id)
+      readPunchFrame(this.$refs.punchFrame,this.tab[0].list[0].id) //这个ID用vuex里面的吧
     }
   }
 }
