@@ -3,7 +3,7 @@
     <van-nav-bar :title="$route.query.pageTitle" left-arrow left-text="个人中心" :right-text="$route.query.type=='edit'?'删除':''"
       @click-left="onClickLeft" @click-right="onClickRight('delete')" />
     <div class="avatar-uploader">
-      <i class="iconfont" v-if='userInfo.isVip' :class="`vip-${userInfo.cardLevel.level}`">&#xe776;</i>
+      <i class="iconfont" v-if='userDataState.isVip' :class="`vip-${userDataState.card_level}`">&#xe776;</i>
       <van-uploader :after-read="onRead">
         <div class="prompt" v-if='!childInfo.avatar'>
           <avatar :gender='childInfo.gender' />
@@ -61,10 +61,10 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapActions } from 'vuex'
+import { mapActions,mapGetters } from 'vuex'
 import { VueCropper } from 'vue-cropper'
 import { format } from './../../lib/js/util'
-import avatar from './../article'
+import avatar from './../../module/avatar'
 
 export default {
   name: 'child',
@@ -72,12 +72,13 @@ export default {
     VueCropper,
     avatar
   },
+  computed: {
+    ...mapGetters(['userDataState'])
+  },
   data() {
     return {
-      userInfo: '',
       fileName: '',
       cropperLoading: false,
-
       radio: '1',
       submitLoading: false,
       minHour: 10,
