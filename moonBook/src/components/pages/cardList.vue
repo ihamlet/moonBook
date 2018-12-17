@@ -1,6 +1,6 @@
 <template>
   <div class="card-list-container page-padding">
-    <van-nav-bar class="card-list-nav-bar" fixed :border='false' :title="$route.meta.title" left-text="个人中心" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar class="card-list-nav-bar" :zIndex='99' fixed :border='false' :title="$route.meta.title" left-text="个人中心" left-arrow @click-left="onClickLeft" />
     <div class="list flex flex-justify" v-if='cardList.length == 0'>
       <van-loading class="card-loading"/>
     </div>
@@ -95,9 +95,7 @@ export default {
 </script>
 <style scoped>
 .card-list-container {
-  background: linear-gradient(to bottom, #323232 0%, #3f3f3f 40%, #1c1c1c 150%),
-              linear-gradient(to top,rgba(255, 255, 255, 0.4) 0%,rgba(0, 0, 0, 0.25) 200%);
-  background-blend-mode: multiply;
+  background:url('./../../assets/img/giftly.png');
   padding-top: 2.8125rem /* 45/16 */;
   min-height: 100vh;
 }
@@ -112,7 +110,7 @@ export default {
   border-radius: 0.625rem /* 10/16 */ 0.625rem /* 10/16 */ 0 0;
   margin-top: 1.25rem /* 20/16 */;
   position: relative;
-  border-bottom: .125rem /* 2/16 */ solid rgba(0,0,0,.3);
+  border-bottom: .125rem /* 2/16 */ solid rgba(0,0,0,.1);
 }
 
 .card-box::after{
@@ -132,8 +130,8 @@ export default {
   content: '';
   width: 100%;
   height: .125rem /* 2/16 */;
-  border-bottom:.125rem /* 2/16 */ dashed rgba(0,0,0,.3); 
-  bottom: -.375rem /* 6/16 */;
+  border-bottom:.125rem /* 2/16 */ dashed rgba(255,255,255,.7); 
+  bottom: -.5rem /* 8/16 */;
 }
 
 .card-type-1 {

@@ -14,7 +14,7 @@
       <div class="title">请选择班级</div>
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="`${item.title}班`" :label='`${item.student_count}同学`' value="加入" @click='select(item)'/>
+          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="`${item.title}班`" :value='`${item.student_count}人已加入`' @click='select(item)'/>
         </van-list>
       </div>
     </div>
@@ -22,6 +22,7 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
+import { mapGetters, mapActions } from 'vuex'
 import avatar from './../../module/avatar'
 import round from './../../module/animate/round'
 
@@ -47,6 +48,7 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
+    ...mapActions(['getUserData']),
     fetchData() {
       axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
         this.childInfo = res.data.data
@@ -55,10 +57,8 @@ export default {
     onClickLeft() {
       this.$router.go(-1)
     },
-    select(item, itemIndex) {
-        console.log(item)
+    select(item) {
         axios.get(`/book/babyBanji/bind?banji_name=${item.title}&child_id=${this.$route.query.id}`).then(res=>{
-            console.log(res)
             if(res.data.status){
                 this.$toast.success(res.data.msg)
                 this.$router.push({
@@ -67,6 +67,7 @@ export default {
                         id: res.data.data.banji_id
                     }
                 })
+                this.getUserData()
             }else{
                 this.$toast.fail('加入失败')
                 this.$router.push({

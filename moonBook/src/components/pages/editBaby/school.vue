@@ -23,7 +23,6 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-
 import { mapGetters,mapActions } from 'vuex'
 import avatar from './../../module/avatar'
 import searchBar from './../../module/search/searchBar'
@@ -50,7 +49,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getSchoolList']),
+    ...mapActions(['getSchoolList','getUserData']),
     onLoad() {
       this.page++
       let products = {
@@ -86,6 +85,8 @@ export default {
                     schoolId: res.data.data.school_id
                 }
             })
+
+            this.getUserData()
           }else{
             this.$toast.fail('操作失败')
             this.$router.go(-1)
@@ -93,7 +94,13 @@ export default {
       })
     },
     close(){
+      if(this.$route.query.type == 'classHome'){
+        this.$router.push({
+          name:'my'
+        })
+      }else{
         this.$router.go(-1)
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="find">
+  <div class="find page-padding">
     <van-nav-bar :title="$route.meta.title" />
     <lazy-component class="module">
       <fresh-list :list='freshList' />

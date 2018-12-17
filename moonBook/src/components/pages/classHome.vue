@@ -39,6 +39,7 @@
 </template>
 <script>
 import axios from './../lib/js/api'
+import { mapGetters } from 'vuex'
 import QRCode from 'qrcode'
 import weekList from './../module/classModule/weekList'
 import classShow from './../module/classModule/classShow'
@@ -53,6 +54,9 @@ export default {
     reading,
     qrCode
   },
+  computed: {
+    ...mapGetters(['userDataState'])
+  },
   data() {
     return {
       show: false,
@@ -65,9 +69,30 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.qrcode()
-      axios.get(`/book/SchoolBanji/getInfo?banji_id=${to.query.id}`).then(res => {
-        vm.classInfo = res.data.data
-      })
+      if (vm.userDataState.child_id > 0) {
+        if (to.query.id > 0) {
+          axios.get(`/book/SchoolBanji/getInfo?banji_id=${to.query.id}`).then(res => {
+            vm.classInfo = res.data.data
+          })
+        } else {
+          vm.$router.push({
+            name: 'edit-school',
+            query: {
+              type: 'classHome',
+              id: vm.userDataState.child_id
+            }
+          })
+        }
+      } else {
+        vm.$router.push({
+          name: 'edit-child',
+          query: {
+            type: 'add',
+            pageTitle:'添加宝贝'
+          }
+        })
+      }
+
       axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${to.query.id}`).then(res => {
         vm.lateBook = res.data.data
       })

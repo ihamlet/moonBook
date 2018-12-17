@@ -296,7 +296,7 @@ body.theme .head-bar-text,
   position: relative;
   overflow: hidden;
   background: #dcdfe6;
-  margin-top: 0.125rem /* 2/16 */;
+  margin-top: .1625rem /* 2.6/16 */;
   background-size: cover;
   background-position: 50%;
 }
@@ -842,17 +842,6 @@ video {
 }
 
 /* 卡列表 */
-.card-list-nav-bar.van-nav-bar {
-  background-image: linear-gradient(60deg, #29323c 0%, #485563 100%);
-  opacity: 0.9;
-}
-
-.card-list-nav-bar.van-nav-bar .van-nav-bar__title,
-.card-list-nav-bar.van-nav-bar .van-icon,
-.card-list-nav-bar.van-nav-bar .van-nav-bar__text {
-  color: #fff;
-}
-
 .no-list {
   text-align: center;
   height: 12.5rem /* 200/16 */;

@@ -1,7 +1,12 @@
 <template>
   <div class="graphic">
     <van-progress :percentage="process" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
-    <van-nav-bar title="发布" left-text="取消" @click-left="onClickLeft" @click-right="onClickRight">
+    <van-nav-bar left-text="取消" @click-left="onClickLeft" :border='false' @click-right="onClickRight">
+      <div class="user-info" slot='title'>
+        <div class="avatar">
+          <img :src="userDataState.avatar" />
+        </div>
+      </div>
       <div class="head-bar-btn theme-color" slot="right">
         <i class="iconfont">
           &#xe72c;
@@ -71,10 +76,13 @@
     <van-popup class="page-popup-layer" position="bottom" v-model="show">
       <topic-list />
     </van-popup>
+
+    <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect"  @cancel="actionShow = false"/>
   </div>
 </template>
 <script>
 import axios from './../../lib/js/api'
+import { mapGetters } from 'vuex'
 import topicList from './topicList'
 import { compress } from './../../lib/js/util.js'
 
@@ -84,6 +92,7 @@ export default {
     topicList
   },
   computed: {
+    ...mapGetters(['userDataState']),
     imagesLength() {
       return this.grapicData.photos.length
     }
@@ -94,6 +103,7 @@ export default {
       result: [],
       resultList: '',
       show: false,
+      actionShow: false,
       grapicData: {
         text: '',
         photos: []
@@ -101,11 +111,18 @@ export default {
       ossSign: '',
       mediaContent: [],
       process: 0,
-      photoLength: 0
+      photoLength: 0,
+      actions:[{
+        name: '保存草稿',
+        type: 'save'
+      },{
+        name: '不保存',
+        type: 'noSave'
+      }]
     }
   },
   created() {
-    this.fetchData().then(this.getOssSign)
+    this.fetchData()
   },
   watch: {
     grapicData: {
@@ -120,31 +137,41 @@ export default {
   },
   methods: {
     fetchData() {
-      return axios.get('/book/memberUser/getInfo').then(res => {
-        let array = []
 
+      // 从本地存储获取发布数据
+      if(localStorage.getItem('grapicData')){
+        this.grapicData = JSON.parse(localStorage.getItem('grapicData'))
+      }
+
+      let array = []
+
+      array.push({
+        title: '发现',
+        name: 'find'
+      })
+
+      if (this.userDataState.child_id > 0) {
         array.push({
-          title: '发现',
-          name: 'find'
+          title: `${this.userDataState.child_name}@宝贝主页`,
+          name: 'baby-home'
         })
+      }
 
-        if (res.data.child_id > 0) {
-          array.push({
-            title: `${res.data.child_name}@宝贝主页`,
-            name: 'baby-home'
-          })
-        }
-        if (res.data.banji_id > 0) {
-          array.push({
-            title: `${res.data.child_name}@${res.data.banji_name}班`,
-            name: 'class-zoom'
-          })
-        }
-        this.resultList = array
-
-        array.forEach(e => {
-          this.result.push(e.name)
+      if (this.userDataState.banji_id > 0) {
+        array.push({
+          title: `${this.userDataState.child_name}@${this.userDataState.banji_name}班`,
+          name: 'class-zoom'
         })
+      }
+
+      this.resultList = array
+
+      array.forEach(e => {
+        this.result.push(e.name)
+      })
+
+      axios.get('/book/api/oss_sign').then(res => {
+        this.ossSign = res.data.data
       })
     },
     onRead(file) {
@@ -164,7 +191,7 @@ export default {
         if (this.photoLength < 9) {
           this.photoLength++
           this.grapicData.photos.isLoading = true
-          compress(element.content, 500, 0.618, 'blob').then(val => {
+          compress(element.content, 600, 0.618, 'blob').then(val => {
             val.toBlob((blob) => {
               let fd = new FormData()
               fd.append('file', blob, element.file.name)
@@ -190,7 +217,27 @@ export default {
       })
     },
     onClickLeft() {
-      this.$emit('close')
+      if(!this.grapicData.text.length && !this.grapicData.photos.length){
+        this.$emit('close')
+      }else{
+        this.actionShow = true
+      }
+    },
+    onSelect(item){
+      if(item.type == 'save'){
+        localStorage.setItem('grapicData', JSON.stringify(this.grapicData))
+        this.$emit('close')
+        this.actionShow = false
+      }else{
+        this.$emit('close')
+        localStorage.setItem('grapicData','')
+        this.actionShow = false
+
+        this.grapicData = {
+          text: '',
+          photos: []
+        }
+      }
     },
     onClickRight() {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
@@ -239,18 +286,13 @@ export default {
     uploadAudio() {
       this.$refs.fileAudio.click()
     },
-    getOssSign() {
-      axios.get('/book/api/oss_sign').then(res => {
-        console.log(res)
-        this.ossSign = res.data.data
-      })
-    },
     doUpload(e) {
       let file = e.target.files[0]
       let type = e.target.dataset.type
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
+
       let url = this.ossSign.host.replace('http:', 'https:')
       let data = new FormData()
       let key = this.ossSign.dir + '/' + Date.now() + file.name
@@ -321,7 +363,8 @@ export default {
   right: 0.3125rem /* 5/16 */;
   top: 0.3125rem /* 5/16 */;
   font-size: 1.5rem /* 24/16 */;
-  color: #f44336;
+  color: #000;
+  opacity: 0.72;
 }
 
 .btn-video,
@@ -388,5 +431,15 @@ export default {
 
 .progress {
   padding: 0.625rem /* 10/16 */;
+}
+
+.user-info .avatar {
+  padding: 0.125rem /* 2/16 */ 0;
+}
+
+.user-info .avatar img {
+  width: 2.625rem /* 42/16 */;
+  height: 2.625rem /* 42/16 */;
+  border-radius: 50%;
 }
 </style>

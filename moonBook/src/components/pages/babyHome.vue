@@ -82,10 +82,6 @@
       <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
     </van-popup>
 
-    <van-popup v-model="showSetting" class="page-popup" position="right">
-      <baby-setting @close="showSetting = false" @setting="babySetting" />
-    </van-popup>
-
     <!-- 发布 -->
     <van-popup v-model="releasePageShow" class="page-popup" position="bottom" get-container='#app'>
       <graphic @close='releasePageShow = false' />
@@ -94,7 +90,6 @@
 </template>
 <script>
 import axios from "axios"
-import { mapGetters } from "vuex"
 import { format } from "./../lib/js/util.js"
 import QRCode from "qrcode"
 import wave from "./../module/animate/anWave"
@@ -102,7 +97,6 @@ import qrCode from "./../module/mold/qrCode"
 import avatar from "./../module/avatar"
 import reading from "./../module/reading"
 import graphicCrad from "./../module/card/graphicCrad"
-import babySetting from "./../module/setting/babySetting"
 import graphic from './../module/release/graphic'
 
 export default {
@@ -113,11 +107,7 @@ export default {
     reading,
     avatar,
     graphicCrad,
-    babySetting,
     graphic
-  },
-  computed: {
-    ...mapGetters(["userDataState", "dryingListLengthState"]),
   },
   data() {
     return {
@@ -130,13 +120,12 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      showSetting: false,
       releasePageShow: false,
       page: 1
     }
   },
   beforeRouteEnter(to, from, next) {
-    axios.get(`/book/family/getChildByUser?child_id=${to.query.id}`).then(res => {
+    axios.get(`/book/baby/getInfo?child_id=${to.query.id}`).then(res => {
       next(vm => {
         vm.qrcode()
         vm.childInfo = res.data.data
@@ -198,7 +187,12 @@ export default {
       })
     },
     onClickRight() {
-      this.showSetting = true
+      this.$router.push({
+        name:'edit-setting',
+        query:{
+          id: this.$route.query.id
+        }
+      })
     },
     babySetting(data) {
       this.school = data.school

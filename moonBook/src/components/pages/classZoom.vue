@@ -6,24 +6,24 @@
       </div>
     </van-nav-bar>
     <lazy-component class="module">
-      <fresh-list :list='freshList' type='classShow' />
+      <fresh-list type='classZoom' :list='freshList' />
     </lazy-component>
     <lazy-component class="module">
-      <div class="module-title">班级风采</div>
-      <div class="not-content" v-if="!listLength">尚无记录</div>
-      <van-list v-model="loading" :finished="finished" @load="onLoad" v-else>
+      <van-nav-bar title="班级风采" />
+      <van-list v-model="loading" :finished="finished" @load="onLoad">
         <div class="list">
           <div class="item" v-for="(item,index) in list" :key="index">
             <van-cell>
-              <graphic-crad :item="item" type="classHome" :className='$route.query.className' />
+              <graphic-crad :item="item" type="classHome"/>
             </van-cell>
           </div>
         </div>
+        <div class="not-content" v-if="!listLength">尚无内容</div>
       </van-list>
     </lazy-component>
     <!-- 发布 -->
     <van-popup v-model="releasePageShow" class="page-popup" position="bottom">
-      <graphic @close='releasePageShow = false'/>
+      <graphic @close='releasePageShow = false' />
     </van-popup>
   </div>
 </template>
@@ -48,61 +48,57 @@ export default {
   },
   data() {
     return {
-      freshList:[],
+      freshList: [],
       list: [],
       listLength: "",
-      releasePageShow:false,
+      releasePageShow: false,
       loading: false,
-      finished: false
+      finished: false,
+      page:1,
     }
   },
   created() {
     this.fetchData()
   },
-  watch: { 
-    '$router':'fetchData'
+  watch: {
+    '$router': 'fetchData'
   },
   methods: {
-      onClickLeft(){
-          this.$router.push({
-            name:'class-home',
-            query:{
-              id: this.$route.query.id
-            }
-          })
-      },
-      onClickRight(){
-        this.releasePageShow = true
-      },
-      fetchData(){
-        axios.get('/api/classMemberData').then(res=>{
-          this.freshList = res.data.classMemberData.memberList
-        })
+    onClickLeft() {
+      this.$router.push({
+        name: 'class-home',
+        query: {
+          id: this.$route.query.id
+        }
+      })
+    },
+    onClickRight() {
+      this.releasePageShow = true
+    },
+    fetchData() {
+      axios.get(`/book/baby/getList?banji_id=${this.$route.query.id}`).then(res => {
+        this.freshList = res.data.data
+      })
 
-        axios.get("/api/classAticleList").then(res => {
-          this.listLength = res.data.length
-        })
-      },
-      onLoad() {
-        axios.get("/api/classAticleList").then(res => {
-          setTimeout(() => {
-            let array = res.data.classAticleList
-            let length = this.dryingListLengthState < 10 ? 1 : 5
-            for (let i = 0; i < length; i++) {
-              this.list.push(array[this.list.length])
-            }
-            this.loading = false
-            if (this.list.length >= res.data.length) {
-              this.finished = true
-            }
-          }, 500)
-        })
-      }
+      axios.get("/api/classAticleList").then(res => {
+        this.listLength = res.data.length
+      })
+    },
+    onLoad() {
+      axios.get(`/book/SchoolArticle/getList?page=${this.page}&limit=10&banji_id=${this.$route.query.id}`).then(res => {
+        this.list = this.list.concat(res.data.data)
+        this.loading = false
+        this.page++
+        if (this.list.length >= res.data.count) {
+          this.finished = true
+        }
+      })
+    }
   }
 };
 </script>
 <style scoped>
-.class-zoom{
+.class-zoom {
   padding-top: 2.8125rem /* 45/16 */;
 }
 </style>

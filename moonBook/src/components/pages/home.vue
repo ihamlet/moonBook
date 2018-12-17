@@ -40,7 +40,7 @@
             </lazy-component>
         </div>
 
-        <div class="apply" v-if='isVip == 0'>
+        <div class="apply" v-if='userDataState.isVip == 0'>
             <van-button class="theme-btn" :class="[btnPulse?'rubberBand animated second':'']" round size="normal" type="primary" @click="toAccept"> 
                 <i class="iconfont">&#xe619;</i>  
                 办理借阅卡
@@ -100,7 +100,7 @@ export default {
         graphic
     },
     computed: {
-        ...mapGetters(['userPointState'])
+        ...mapGetters(['userPointState','userDataState'])
     },
     data () {
         return {
@@ -143,7 +143,7 @@ export default {
                 this.btnPulse = true
             },3000)
 
-            axios.get('/api/home').then(res=>{
+            axios.get('/book/index/home_v2').then(res=>{
                 this.banner = res.data.homeData.banner
                 this.appsList = res.data.homeData.apps
                 this.investmentAd = res.data.homeData.investmentAd

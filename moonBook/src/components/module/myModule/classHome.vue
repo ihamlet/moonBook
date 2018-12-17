@@ -9,7 +9,7 @@
           <div class="avatar">
             <img :src="children.avatar" :alt="children.child_name" />
           </div>
-          {{children.child_name}}
+          {{children.name}}
         </div>
       </van-cell>
     </van-cell-group>
@@ -47,9 +47,6 @@ export default {
       showClass: false,
       school:''
     }
-  },
-  created () {
-    console.log(this.children)
   },
   methods: {
     toClassHome() {
@@ -96,7 +93,7 @@ export default {
   color: transparent;
 }
 
-.avatar{
+.avatar img{
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
   overflow: hidden;

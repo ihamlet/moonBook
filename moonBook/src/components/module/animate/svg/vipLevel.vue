@@ -50,7 +50,7 @@ export default {
   transform:skewX(-25deg);
   animation: glint 3s infinite;
   opacity: .92;
-  z-index: 10;
+  z-index: 1;
 }
 
 @keyframes glint {

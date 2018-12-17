@@ -2,7 +2,6 @@
   <div class="add-child">
     <van-nav-bar :title="$route.query.pageTitle" left-arrow left-text="个人中心" :right-text="$route.query.type=='edit'?'删除':''"
       @click-left="onClickLeft" @click-right="onClickRight('delete')" />
-    <!-- <van-nav-bar v-else title="添加孩子" right-text="跳过" @click-right="onClickRight('jump')" /> -->
     <div class="avatar-uploader">
       <i class="iconfont" v-if='userInfo.isVip' :class="`vip-${userInfo.cardLevel.level}`">&#xe776;</i>
       <van-uploader :after-read="onRead">
@@ -62,6 +61,7 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
+import { mapActions } from 'vuex'
 import { VueCropper } from 'vue-cropper'
 import { format } from './../../lib/js/util'
 import avatar from './../article'
@@ -137,6 +137,7 @@ export default {
     $router: 'fetchData'
   },
   methods: {
+    ...mapActions(['getUserData']),
     fetchData() {
       if (localStorage['childInfo'] != undefined) {
         this.childInfo = JSON.parse(localStorage['childInfo'])
@@ -209,11 +210,13 @@ export default {
             this.$router.push({
               name:'my'
             })
+
+            this.getUserData()
           }else{
             this.$toast.fail(`${msg}失败`)
             this.submitLoading = false        
           }
-        })
+       })
     },
     submit() {
       if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null){
@@ -241,7 +244,7 @@ export default {
       }
       if (type == 'delete') {
         this.$dialog.alert({
-          message: `<div class='text-center'>确定要删除吗？</div>`,
+          message: '确定要删除吗？这将删除您孩子所有阅读信息,请您谨慎操作。',
           confirmButtonText: '取消',
           cancelButtonText: '确认',
           showCancelButton: true
@@ -251,6 +254,7 @@ export default {
           })
         }).catch(() => {
           axios.get(`/book/baby/del?child_id=${this.$route.query.id}`).then(res=>{
+            this.getUserData()
             this.$router.push({
               name:'my'
             })

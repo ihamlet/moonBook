@@ -1,53 +1,25 @@
 <template>
     <div class="register">
-        <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' :left-text="active==0?'返回':'上一步'" left-arrow @click-left="onClickLeft">
+        <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft">
             <div class="icon-right" slot="right">
                 <i class="iconfont">&#xe618;</i>
             </div>
         </van-nav-bar>        
         <div class="container" ref='listContainer'>
-            <div :class="[active==0?'steps':'']">
-                <van-steps active-color='#409eff' :active="active">
-                    <van-step>选择角色</van-step>
-                    <van-step>添加信息</van-step>
-                </van-steps>
-            </div>
-            <!-- <div class="school" v-if='active==0'>
-                <add-school :prompt='prompt' @select='selectSchool' pageType='register' @showSearchList='listShow = true'/>
-            </div> -->
-            <div class="identity" v-if='active==0'>
+            <div class="identity">
                 <van-cell-group>
-                    <div class="form-title">您的角色？</div>
                     <van-cell class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role' :key='index' @click="selectRole(item)"/>
                 </van-cell-group>
-            </div>
-            <div class="form"  v-if='active==1'>
-                <form-parent v-if="formType=='parent'" :regInfo='regInfo' @close="toPageMy"/>
-                <form-teacher v-if="formType=='teacher'" :regInfo='regInfo' @close="toPageMy"/>
             </div>
         </div>
     </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
-
-// 表单
-import formParent from './../module/form/parent'
-import formTeacher from './../module/form/teacher'
-
 export default {
   name: 'register',
-  components: {
-    formParent,
-    formTeacher
-  },
-  computed: {
-    ...mapGetters(['userPointState'])
-  },
   data() {
     return {
       show: false,
-      active: 0,
       list: [],
       takeUp: false,
       startX: '',
@@ -70,58 +42,30 @@ export default {
           subtitle: '学校风采 掌握教育动态',
           type: 'headmaster'
         }
-      ],
-      regInfo: {
-        school: '',
-        role: ''
-      },
-      formType: ''
+      ]
     }
   },
   methods: {
-    ...mapActions(['getSchoolList']),
-    onLoad() {
-      this.page++
-      let products = {
-        page: this.page,
-        location: this.userPointState.location
-      }
-      this.getSchoolList(products).then(res => {
-        this.list = this.list.concat(res.pois)
-        this.loading = false
-        if (this.list.length >= res.count) {
-          this.finished = true
-        }
-      })
-    },
     onClickLeft() {
-      switch (this.active) {
-        case 0:
-          this.$router.go(-1)
-          break
-        case 1:
-          this.active = 0
-          break
-      }
-    },
-    selectSchool(school) {
-      this.regInfo.school = school.name
-      this.active = 0
+      this.$router.go(-1)
     },
     selectRole(role) {
-      this.regInfo.role = role.name
-      this.formType = role.type
-      this.active = 1
-    },
-    toPageMy() {
-      this.$router.push({ name: 'my' })
+      console.log(role)
+      if(role.type == 'parent'){
+        this.$router.push({
+          name:'edit-child',
+          query:{
+            pageTitle:'添加宝贝',
+            type:'add'
+          }
+        })
+      }
     }
   }
 }
 </script>
 <style scoped>
-.container,
-.steps {
+.container{
   padding-top: 2.8125rem /* 45/16 */;
 }
 

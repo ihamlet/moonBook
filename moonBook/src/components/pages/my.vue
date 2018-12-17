@@ -1,11 +1,11 @@
 <template>
   <div class="my page-padding">
-    <card-head :userInfo='userInfo' />
+    <card-head :userInfo='userDataState' />
     <lazy-component class="gutter gap-top">
       <class-home v-if='children.length!=0' :children="children[0]" />
     </lazy-component>
     <lazy-component class="gutter gap" v-if='zoomCard'>
-      <zone-card :zoomCard='zoomCard' :userInfo='userInfo'/>
+      <zone-card :zoomCard='zoomCard' :userInfo='userDataState'/>
     </lazy-component>
     <lazy-component class="gutter gap">
       <baby-home :childrenList='children'/>
@@ -15,7 +15,7 @@
 </template>
 <script>
 import axios from './../lib/js/api'
-
+import { mapGetters,mapActions } from 'vuex'
 import cardHead from './../module/myModule/head'
 import classHome from './../module/myModule/classHome'
 import zoneCard from './../module/myModule/zoneCard'
@@ -31,10 +31,12 @@ export default {
     babyHome,
     classHome
   },
+  computed: {
+    ...mapGetters(['userDataState'])
+  },
   data() {
     return {
       children: '',
-      userInfo: '',
       zoomCard: '',
     }
   },
@@ -45,16 +47,15 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
+    ...mapActions(['setUserData']),
     fetchData() {
-      axios.get('/book/baby/getList?sort=old').then(res => {
+      this.setUserData()
+      axios.get(`/book/baby/getList?sort=old&user_id=${this.userDataState.id}`).then(res => {
         this.children = res.data.data
       })
 
-      axios.get('/book/memberUser/getInfo').then(res => {
-        this.userInfo = res.data
-        axios.get(`/book/SchoolArticle/getList?page=1&sort=new&user_id=${res.data.id}`).then(res => {
-          this.zoomCard = res.data.data[0]
-        })
+      axios.get(`/book/SchoolArticle/getList?page=1&sort=new&user_id=${this.userDataState.id}`).then(res => {
+        this.zoomCard = res.data.data[0]
       })
     }
   }

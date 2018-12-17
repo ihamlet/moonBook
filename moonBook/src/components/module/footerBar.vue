@@ -25,13 +25,14 @@ export default {
     },
     watch: {
         '$router' (to, from) {
+            console.log(to.meta)
             this.active = to.meta.tabActive
         }
     },
     methods: {
         goPage(router){
             if(router == 'class-home'){
-               return `${router}?id=339`
+               return `${router}?id=${this.userDataState.banji_id}`
             }else{
                 return router
             }

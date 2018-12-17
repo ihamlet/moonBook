@@ -13,7 +13,6 @@
             <span v-if="type=='babyHome'">{{item.user.name}}的宝贝</span>
             <span v-else>{{item.user.name}}</span>
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
-            <div class="class-name">{{className}}</div>
           </div>
           <div class="school">{{item.schoolName}}</div>
         </div>
@@ -25,11 +24,13 @@
       <div class="text" v-line-clamp:20="2" v-html="item.details" @click="toArticle(item)"></div>
       <!-- 媒体图片  -->
       <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1'>
-        <van-row gutter="2">
-          <van-col :span="8" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-            <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']" @click="mediaLamp(item,photoIndex)"></div>
-          </van-col>
-        </van-row>
+        <div :class="item.photos.length > 5 ? 'layout-9':'layout-4'">
+          <van-row :gutter="2">
+            <van-col :span="item.photos.length > 5?'8':'12'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
+              <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']" @click="mediaLamp(item,photoIndex)"></div>
+            </van-col>
+          </van-row>
+        </div>
       </div>
       <!-- 媒体视频 -->
       <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
@@ -43,8 +44,8 @@
       </div>
 
       <div class="temp-type">
-         <van-tag plain type="primary" v-if='item.template_id == 0'>文章</van-tag>
-         <van-tag plain type="primary" v-if='item.template_id == 1'>新鲜事</van-tag>
+         <van-tag plain type="primary" v-if='item.template_id == 0'>长文</van-tag>
+         <van-tag plain type="primary" v-if='item.template_id == 1'>微博</van-tag>
       </div>
 
       <div class="social flex flex-align">
@@ -74,7 +75,7 @@ import vipLevel from './../animate/svg/vipLevel'
 
 export default {
   name: "graphic-crad",
-  props: ["item", "type", "className",'avatar'],
+  props: ["item", "type",'avatar'],
   components: {
     pictureBox,
     vipLevel
@@ -165,5 +166,9 @@ export default {
 
 .class-name {
   margin-left: 0.625rem /* 10/16 */;
+}
+
+.layout-4{
+  width: 70%;
 }
 </style>

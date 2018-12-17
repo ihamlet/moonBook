@@ -1,10 +1,7 @@
 <template>
   <div class="reading">
     <van-cell :title="moduleTitle" :is-link="type =='rank'" @click="toBabyHome" />
-    <div class="not-content" v-if='!list.length'>
-      尚无记录, <span class="theme-color">阅读是与心灵沟通</span>
-    </div>
-    <div class="book-list scroll-x" v-else>
+    <div class="book-list scroll-x" v-if='list.length > 0'>
       <div class="book-item scroll-item" v-for='(item,index) in list' :key="index">
         <div class="book-cover">
           <img :src="thumb(item.book_thumb)" @error="outThumb($event,item)" :alt="item.book_name">
@@ -24,6 +21,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="not-content" v-else>
+      尚无记录, <span class="theme-color">阅读是与心灵沟通</span>
     </div>
   </div>
 </template>
@@ -49,17 +49,25 @@ export default {
       }
     },
     outThumb(e, item) {
+      let book_author = ''
+
+      if (item.book_author.length > 7) {
+        book_author = item.book_author.substr(0, 7) + '...'
+      } else {
+        book_author = item.book_author
+      }
+
       e.target.outerHTML = `
-            <div class='three-d-book'>
-                <div class='three-d-book-cover'>
-                    <div class='three-d-book-name'>
-                        ${item.book_name}
-                    </div>
-                    <div class='three-d-book-author'>
-                        ${item.book_author}
-                    </div>
+        <div class='three-d-book'>
+            <div class='three-d-book-cover'>
+                <div class='three-d-book-name'>
+                    ${item.book_name}
+                </div>
+                <div class='three-d-book-author'>
+                    ${book_author}
                 </div>
             </div>
+        </div>
       `
     }
   }
@@ -128,7 +136,7 @@ export default {
 }
 </style>
 <style>
-.three-d-book{
+.three-d-book {
   perspective: 350;
   position: relative;
 }
@@ -143,15 +151,15 @@ export default {
   perspective: 350;
 }
 
-.three-d-book-cover::before{
-    content:'';
-    width: .625rem /* 10/16 */;
-    height: 100%;
-    background: linear-gradient(135deg, #F2F6FC, #DCDFE6);
-    position: absolute;
-    transform: rotateY(-32deg);
-    left: -.5rem /* 8/16 */;
-    top:0;
+.three-d-book-cover::before {
+  content: '';
+  width: 0.625rem /* 10/16 */;
+  height: 100%;
+  background: linear-gradient(135deg, #f2f6fc, #dcdfe6);
+  position: absolute;
+  transform: rotateY(-32deg);
+  left: -0.5rem /* 8/16 */;
+  top: 0;
 }
 
 .three-d-box,
@@ -175,7 +183,7 @@ export default {
 .three-d-book-author {
   padding: 0.625rem;
   text-align: right;
-  background-image: linear-gradient(180deg, #fff, #F2F6FC);
+  background-image: linear-gradient(180deg, #fff, #f2f6fc);
   font-size: 0.75rem;
   box-shadow: 0 5px 20px -9px rgba(0, 0, 0, 0.5);
   margin-top: 1.25rem;

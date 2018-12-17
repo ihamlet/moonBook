@@ -8,7 +8,7 @@
       <slot v-if="!dataURL">
         <div class="container" ref="imageWrapper" v-if="type=='babyHome'">
           <div class="bg">
-            <div class="flex-justify">
+            <div class="card flex-justify">
               <div class="baby-info">
                 <div class="avatar" v-if='childInfo.avatar'>
                   <img crossOrigin="anonymous" class="avatar-img" :src="avatar(childInfo.avatar)" :alt="childInfo.name" />
@@ -179,7 +179,6 @@ export default {
 
 .bg .welt {
   position: absolute;
-  z-index: -10;
   top: 0;
   background: #fff;
 }
@@ -238,6 +237,8 @@ export default {
   width: 16.25rem /* 260/16 */;
   padding: 0.3125rem /* 5/16 */ 1.25rem; /* 20/16 */;
   justify-content: space-between;
+  z-index: 1;
+  position: relative;
 }
 
 .container.plate{

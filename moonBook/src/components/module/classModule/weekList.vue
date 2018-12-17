@@ -40,6 +40,7 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
+import { mapGetters } from 'vuex'
 import { readPunchFrame } from './../../lib/js/util'
 import svgRanking from './../animate/svg/ranking'
 import reading from './../reading'
@@ -51,6 +52,9 @@ export default {
     svgRanking,
     reading,
     avatar
+  },
+  computed: {
+    ...mapGetters(['userDataState'])
   },
   data() {
     return {
@@ -95,7 +99,7 @@ export default {
     },
     getBorrowList(){
       axios.get('/book/SchoolTushuBorrow/getRank?region=banji&group=baby').then(res => {
-        let myArr = [res.data.data.myInfo];
+        let myArr = [res.data.data.myInfo]
         let list = myArr.concat(res.data.data.list)
         list.forEach((item) => {
           let info = item.info || item.babyInfo
@@ -110,7 +114,7 @@ export default {
     },
     onPunch(res){
       if(res.status == 1){
-        this.tab[0].list[0].sign_read_count++
+        this.tab[0].content[0].sign_read_count++
       }else{
         this.$dialog.alert({
           message: `<div class='text-center'>${res.msg}</div>`
@@ -118,7 +122,7 @@ export default {
       }
     },
     punch(){
-      readPunchFrame(this.$refs.punchFrame,this.tab[0].list[0].id)
+      readPunchFrame(this.$refs.punchFrame,this.userDataState.child_id)
     }
   }
 }
@@ -179,7 +183,7 @@ export default {
 }
 
 .punch{
-  z-index: 2018;
+  z-index: 101;
 }
 </style>
 <style>

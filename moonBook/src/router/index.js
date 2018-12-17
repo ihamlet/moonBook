@@ -20,6 +20,7 @@ import Login from '@/components/pages/login'
 import EditChild from '@/components/pages/editBaby/child'
 import EditSchool from '@/components/pages/editBaby/school'
 import EditClass from '@/components/pages/editBaby/class'
+import EditStting from '@/components/pages/editBaby/setting'
 
 import Article from '@/components/pages/article'
 
@@ -173,6 +174,15 @@ export default new Router({
         path: '/edit/class',
         name: 'edit-class',
         component: EditClass,
+        meta: {
+          scrollToTop: true,
+          tabActive:4,
+          isFooterBar: false
+        }
+      },{
+        path: '/edit/setting',
+        name: 'edit-setting',
+        component: EditStting,
         meta: {
           scrollToTop: true,
           tabActive:4,
