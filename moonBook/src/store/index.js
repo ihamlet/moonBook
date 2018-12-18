@@ -48,11 +48,10 @@ const getters = {
     if (state.userData) {
       return state.userData
     } else {
-      let data
       if (localStorage.getItem('userData')) {
-        data = JSON.parse(localStorage.getItem('userData'))
+        state.userData = JSON.parse(localStorage.getItem('userData'))
+        return state.userData
       }
-      return state.userData = data
     }
   },
   MsgLengthState: state => {
@@ -89,11 +88,10 @@ const getters = {
     if (state.userPoint) {
       return state.userPoint
     } else {
-      let data
       if (Cookies.get('userPoint')) {
-        data = JSON.parse(Cookies.get('userPoint'))
+        state.userPoint = JSON.parse(Cookies.get('userPoint'))
+        return state.userPoint
       }
-      return (state.userPoint = data)
     }
   },
   userTabBtn: state => {
@@ -107,7 +105,7 @@ const getters = {
       if (Cookies.get('WWW_TOKEN')) {
         data = Cookies.get('WWW_TOKEN')
       }
-      return (state.token = data)
+      return state.token = data
     }
   }
 }
@@ -131,9 +129,12 @@ const mutations = {
 
 const actions = {
   getUserData(context) {
-    axios.get('/book/memberUser/getInfo').then(res => {
-      context.commit('setUserData', {
-        data: res.data
+    return new Promise((resolve, reject) => {
+      axios.get('/book/memberUser/getInfo').then(res => {
+        resolve(res.data)
+        context.commit('setUserData', {
+          data: res.data
+        })
       })
     })
   },
@@ -161,8 +162,7 @@ const actions = {
     fetchJsonp(amapApiLink)
       .then(response => {
         return response.json()
-      })
-      .then(res => {
+      }).then(res => {
         cityInfo.city = res.regeocode.addressComponent.city
         context.commit('setUserPoint', {
           data: cityInfo
@@ -187,11 +187,9 @@ const actions = {
     }&types=${data.types}&offset=${data.offset}&page=${data.page}`
 
     return new Promise((resolve, reject) => {
-      fetchJsonp(amapApiLink)
-        .then(response => {
+      fetchJsonp(amapApiLink).then(response => {
           return response.json()
-        })
-        .then(res => {
+        }).then(res => {
           resolve(res)
         })
     })

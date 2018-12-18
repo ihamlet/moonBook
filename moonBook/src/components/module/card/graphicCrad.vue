@@ -24,9 +24,9 @@
       <div class="text" v-line-clamp:20="2" v-html="item.details" @click="toArticle(item)"></div>
       <!-- 媒体图片  -->
       <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1'>
-        <div :class="item.photos.length > 5 ? 'layout-9':'layout-4'">
+        <div :class="item.photos.length > 4 ? 'layout-9':'layout-4'">
           <van-row :gutter="2">
-            <van-col :span="item.photos.length > 5?'8':'12'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
+            <van-col :span="item.photos.length > 4?'8':'12'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
               <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']" @click="mediaLamp(item,photoIndex)"></div>
             </van-col>
           </van-row>

@@ -212,27 +212,27 @@ export default {
       this.$emit('stepActiveChange', val)
     }
   },
-  mounted() {
-    window.paySuccess = (res) => {
-      this.onPay(res)
-    }
-  },
+  // mounted() {
+  //   window.paySuccess = (res) => {
+  //     this.onPay(res)
+  //   }
+  // },
   methods: {
     ...mapActions(['getUserData', 'getMsgLength']),
-    onPay(res) {
-      if (res.status == 1) {
-        this.payLoading = false
-        this.iconSuccessShow = true
-        setTimeout(() => {
-          this.$router.push({ name: 'card-list' })
-          this.$emit('close')
-        }, 2000)
-      } else {
-        this.toast.fail('支付失败');
-        this.$router.push({name:'home'})
-        this.$emit('close')
-      }
-    },
+    // onPay(res) {
+    //   if (res.status == 1) {
+    //     this.payLoading = false
+    //     this.iconSuccessShow = true
+    //     setTimeout(() => {
+    //       this.$router.push({ name: 'card-list' })
+    //       this.$emit('close')
+    //     }, 2000)
+    //   } else {
+    //     this.toast.fail('支付失败');
+    //     this.$router.push({name:'home'})
+    //     this.$emit('close')
+    //   }
+    // },
     onLoad() {
       let data = {
         lat: this.lat,
@@ -290,29 +290,7 @@ export default {
     pay(res) {
       this.disabled = true
       this.payLoading = true
-      createPayFrame(this.$refs.domPay, this.levelId, this.feeId)
-      // axios.put('/api/pay', {
-      //     data: this.pushUserInfo
-      //   }).then(res => {
-      //     this.getUserData() //写入用户数据
-      //     setTimeout(() => {
-      //       this.payLoading = false
-      //       this.iconSuccessShow = true
-      //     }, 1000)
-      //     setTimeout(() => {
-      //       this.stepActive = 2
-      //       this.iconSuccessShow = false
-      //       this.getMsgLength()
-      //       if ( this.pushUserInfo.school.addChild.boolean && this.userDataState.childInfo.length == 0 ) {
-      //         this.addChildShow = true
-      //       } else {
-      //         this.$emit('close')
-      //       }
-      //       this.show = false
-      //     }, 3000)
-      //   }).catch(err => {
-      //     this.stepActive = 0
-      //   })
+      location.href = `/book/memberCard/buycard?level_id=${this.levelId}&fee_id=${this.feeId}&is_auto=1&url=${encodeURIComponent(location.href)}`
     },
     closeAddChildPage() {
       this.$emit('close')

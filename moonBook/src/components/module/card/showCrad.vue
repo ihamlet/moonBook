@@ -9,6 +9,7 @@
   <div class="text-preview" v-line-clamp:20="2" v-else>{{text}}</div>
 </template>
 <script>
+import axios from './../../lib/js/api'
 import photoStack from "./../animate/photoStack"
 export default {
   name: "show-card",

@@ -5,14 +5,14 @@
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" center title-class='cell-title'>
-            <div class="flex flex-align" slot="title">
+            <div class="item flex flex-align" slot="title">
               <div class="ranking">
                 <svg-ranking :ranking="item.rank" />
               </div>
                 <div class="avatar" v-if="item.avatar">
                   <img :src="item.avatar" :alt="item.name" />
                 </div>
-                <avatar :gender="item.sex" v-else />
+                <avatar class="avatar" :gender="item.sex" v-else />
               <div class="name">
                 <span v-line-clamp:20="1">{{item.name}}</span>
                 <span class="topic">{{item.title}}</span>
@@ -72,11 +72,11 @@ export default {
       tabIndex:0
     }
   },
-  mounted() {
-    window.onPunch = (res) => {
-      this.onPunch(res)
-    }
-  },
+  // mounted() {
+  //   window.onPunch = (res) => {
+  //     this.onPunch(res)
+  //   }
+  // },
   methods: {
     onChange(index){
       this.tabIndex = index
@@ -112,17 +112,17 @@ export default {
         this.tab[ this.tabIndex ].content = list
       })
     },
-    onPunch(res){
-      if(res.status == 1){
-        this.tab[0].content[0].sign_read_count++
-      }else{
-        this.$dialog.alert({
-          message: `<div class='text-center'>${res.msg}</div>`
-        })
-      }
-    },
+    // onPunch(res){
+    //   if(res.status == 1){
+    //     this.tab[0].content[0].sign_read_count++
+    //   }else{
+    //     this.$dialog.alert({
+    //       message: `<div class='text-center'>${res.msg}</div>`
+    //     })
+    //   }
+    // },
     punch(){
-      readPunchFrame(this.$refs.punchFrame,this.userDataState.child_id)
+      location.href=`/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
     }
   }
 }
@@ -143,6 +143,13 @@ export default {
 
 .list {
   padding: 0.3125rem /* 5/16 */ 0.625rem /* 10/16 */;
+}
+
+.avatar{
+  width: 3.125rem /* 50/16 */;
+  height: 3.125rem /* 50/16 */;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .avatar img{

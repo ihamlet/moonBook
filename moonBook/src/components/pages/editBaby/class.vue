@@ -57,8 +57,10 @@ export default {
     onClickLeft() {
       this.$router.go(-1)
     },
-    select(item) {
+    select(item, itemIndex) {
+        console.log(item)
         axios.get(`/book/babyBanji/bind?banji_name=${item.title}&child_id=${this.$route.query.id}`).then(res=>{
+            console.log(res)
             if(res.data.status){
                 this.$toast.success(res.data.msg)
                 this.$router.push({
@@ -67,6 +69,7 @@ export default {
                         id: res.data.data.banji_id
                     }
                 })
+                console.log('当前孩子的班级名字还有班级ID没有给到我 接口 /book/memberUser/getInfo')
                 this.getUserData()
             }else{
                 this.$toast.fail('加入失败')

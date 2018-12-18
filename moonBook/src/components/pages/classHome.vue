@@ -39,7 +39,7 @@
 </template>
 <script>
 import axios from './../lib/js/api'
-import { mapGetters } from 'vuex'
+import { mapGetters,mapActions } from 'vuex'
 import QRCode from 'qrcode'
 import weekList from './../module/classModule/weekList'
 import classShow from './../module/classModule/classShow'
@@ -69,30 +69,43 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.qrcode()
-      if (vm.userDataState.child_id > 0) {
-        if (to.query.id > 0) {
-          axios.get(`/book/SchoolBanji/getInfo?banji_id=${to.query.id}`).then(res => {
-            vm.classInfo = res.data.data
-          })
-        } else {
+      vm.getUserData().then(res=>{
+        console.log(res)
+        if( res.child_id > 0 ){
+          if(res.school_id > 0){
+            if(res.banji_id > 0){
+              axios.get(`/book/SchoolBanji/getInfo?banji_id=${ res.banji_id }`).then(res => {
+                vm.classInfo = res.data.data
+              })
+            }else{
+              vm.$router.push({
+                name: 'edit-class',
+                query: {
+                  id: res.child_id,
+                  schoolId:res.school_id
+                }
+              })
+            }
+          }else{
+            vm.$router.push({
+              name: 'edit-school',
+              query: {
+                type: 'classHome',
+                id: res.child_id
+              }
+            })
+          }
+        }else{
           vm.$router.push({
-            name: 'edit-school',
+            name: 'edit-child',
             query: {
-              type: 'classHome',
-              id: vm.userDataState.child_id
+              type: 'add',
+              pageTitle:'添加宝贝'
             }
           })
         }
-      } else {
-        vm.$router.push({
-          name: 'edit-child',
-          query: {
-            type: 'add',
-            pageTitle:'添加宝贝'
-          }
-        })
-      }
-
+      })
+      
       axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${to.query.id}`).then(res => {
         vm.lateBook = res.data.data
       })
@@ -102,6 +115,7 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
   },
   methods: {
+    ...mapActions(['getUserData']),
     onClickLeft() {
       this.$router.push({ name: 'my' })
     },

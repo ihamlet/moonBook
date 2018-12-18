@@ -1,6 +1,5 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-// 使用mock模拟数据交互
 
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -15,8 +14,6 @@ import 'vant/lib/index.css'
 import { Lazyload } from 'vant'
 
 import lineClamp from 'vue-line-clamp'
-
-// import './mock' //模拟数据
 
 Vue.use(Vuex)
 Vue.use(Vant)
@@ -38,24 +35,6 @@ VueAMap.initAMapApiLoader({
 })
 
 Vue.config.productionTip = false
-
-
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.LoginRequire)) {
-//     if (!store.getters.userToken) {
-//       next({
-//         name: 'login',
-//         query:{
-//           link: to.name
-//         }
-//       })
-//     } else {
-//       next()
-//     }
-//   } else {
-//     next()
-//   }
-// })
 
 /* eslint-disable no-new */
 new Vue({

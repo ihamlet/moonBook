@@ -56,10 +56,7 @@
       <lazy-component>
         <van-nav-bar title="成长记录" @click-right="releasePageShow = true">
           <div class="head-bar-btn theme-color" slot="right">
-            <i class="iconfont">
-              &#xe72c;
-            </i>
-            发布
+            <i class="iconfont">&#xe72c;</i>发布
           </div>
         </van-nav-bar>
 

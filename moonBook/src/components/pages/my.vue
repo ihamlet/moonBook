@@ -38,7 +38,7 @@ export default {
     return {
       children: '',
       zoomCard: '',
-    }
+    }  
   },
   created() {
     this.fetchData()
@@ -47,15 +47,15 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
-    ...mapActions(['setUserData']),
+    ...mapActions(['getUserData']),
     fetchData() {
-      this.setUserData()
-      axios.get(`/book/baby/getList?sort=old&user_id=${this.userDataState.id}`).then(res => {
-        this.children = res.data.data
-      })
-
-      axios.get(`/book/SchoolArticle/getList?page=1&sort=new&user_id=${this.userDataState.id}`).then(res => {
-        this.zoomCard = res.data.data[0]
+      this.getUserData().then(res=>{
+        axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
+          this.children = res.data.data
+        })
+        axios.get(`/book/SchoolArticle/getList?page=1&sort=new&user_id=${res.id}`).then(res => {
+          this.zoomCard = res.data.data[0]
+        })
       })
     }
   }

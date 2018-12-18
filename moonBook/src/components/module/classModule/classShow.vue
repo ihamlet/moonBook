@@ -4,7 +4,7 @@
       <van-cell @click="toClassZoom" center is-link>
         <windmill slot="icon"/>
         <div class="content flex flex-align flex-justify" slot="title" v-if="drying">
-          <show-crad :imgList="drying.media.imgList" :text="drying.text"/>
+          <show-crad :imgList="drying.photos" :text="drying.details"/>
         </div>
 
         <div class="value flex" v-else>
@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from './../../lib/js/api'
 import windmill from './../animate/svg/windmill'
 import photoStack from './../animate/photoStack'
 import showCrad from './../card/showCrad'
@@ -38,18 +38,13 @@ export default {
     this.fetchData()
   },
   watch: {
-    $router: 'fetchData'
+    '$router':'fetchData'
   },
   methods: {
     fetchData() {
-      axios.get('/api/classAticleList').then(res => {
-        if (res.data.classAticleList) {
-          res.data.classAticleList.forEach((element, i) => {
-            if (i == 0) {
-              this.drying = element
-            }
-          })
-        }
+      axios.get(`/book/SchoolArticle/getList?page=${this.page}&limit=1&banji_id=${this.$route.query.id}`).then(res => {
+        console.log(res.data.data[0])
+        this.drying = res.data.data[0]
       })
     },
     toClassZoom() {
