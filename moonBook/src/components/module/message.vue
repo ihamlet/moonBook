@@ -1,17 +1,17 @@
 <template>
   <div class="message">
     <van-tabs color='#409eff' :line-width='20' sticky @change='onChange'>
-      <van-tab v-for="(list,index) in tab" :key="index" :disabled="index==1&&tabDisabled">
+      <van-tab v-for="(list,index) in tab" :key="index">
         <div class="tab-title" slot="title">
           {{list.title}}
-          <div class="unread badge" v-if="index==0">
+          <div class="unread badge" v-if="index==0 && MsgLengthState > 0">
             {{MsgLengthState}}
           </div>
         </div>
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <van-pull-refresh v-model="loading" @refresh="onRefresh">
-            <div class="list">
-              <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
+            <div class="list"  v-if="list.content.length > 0">
+              <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex" @click="toMsgDetails(item)">
                 <van-swipe-cell :right-width="index==0?78:0">
                   <van-cell-group>
                     <van-cell>
@@ -24,7 +24,7 @@
                           <div class="type flex flex-align">
                             <div class="name">{{item.msg_type.name=='bookshelf'?'阅亮书架':'系统消息'}}</div>
                             <div class="date">
-                              {{item.create_date}}
+                              {{item.create_date_friendly}}
                             </div>
                           </div>
                           <div class="text" v-line-clamp:20="2"><span class="title">【{{item.title}}】</span>{{item.details}}</div>
@@ -33,40 +33,52 @@
                     </van-cell>
                   </van-cell-group>
                   <div slot="right" class="slot" :style="{width:'78px'}">
-                    <span class="topping" @click="topping(item)">置顶</span>
+                    <span class="topping" @click="topping(item)" :class="item.is_top == 1?'cancel':''">{{item.is_top == 1?'取消置顶':'置顶'}}</span>
                   </div>
                 </van-swipe-cell>
               </div>
             </div>
+            <div class="no-content" v-else>暂无{{list.title}}</div>
           </van-pull-refresh>
         </van-list>
       </van-tab>
     </van-tabs>
+
+    <van-popup v-model="show" class="page-popup" position="right">
+      <msg-details :details='details' @close='show = false'/>
+    </van-popup>
   </div>
 </template>
 <script>
 import { mapActions,mapGetters } from 'vuex'
 import axios from './../lib/js/api'
+import msgDetails from './../module/msgDetails'
 
 export default {
   name: 'message',
+  components: {
+    msgDetails
+  },
   computed: {
     ...mapGetters(['MsgLengthState'])
   },
   data() {
     return {
-      tabDisabled: true,
       tab: [{
         title: '未读消息',
+        isRead:0,
         content: []
       }, {
         title: '已读消息',
+        isRead: 1,
         content: []
       }],
       page: 1,
       loading: false,
       finished: false,
       tabIndex:0,
+      show: false,
+      details:''
     }
   },
   watch: {
@@ -83,20 +95,22 @@ export default {
     ...mapActions(['getMsg']),
     topping(item) {
       axios.get(`/book/MemberMsg/top?msg_id=${item.msg_id}`).then(res => {
-        console.log(res)
+        this.onRefresh()
       })
     },
+    toMsgDetails(item){
+      axios.get(`/book/MemberMsg/getInfo?msg_id=${item.msg_id}`).then(res=>{
+        this.details = res.data.data
+      })
+      this.show = true
+    },
     onLoad(){
-      if(this.tabIndex == 0){
-        this.getMsgList()
-      }
-      if(this.tabIndex == 1){
-
-      }
+      this.getMsgList()
     },
     getMsgList(){
       let products = {
-        page: this.page
+        page: this.page,
+        isRead: this.tab[this.tabIndex].isRead
       }
       return this.getMsg(products).then(res => {
         this.tab[this.tabIndex].content = res
@@ -115,6 +129,8 @@ export default {
     },
     onChange(index,title){
       this.tabIndex = index
+      this.page = 1
+      this.onRefresh()
     }
   }
 }
@@ -181,6 +197,10 @@ export default {
   display: block;
 }
 
+.topping.cancel{
+  background: #F56C6C;
+}
+
 .list .slot {
   text-align: center;
   height: 5.625rem /* 90/16 */;
@@ -191,5 +211,14 @@ export default {
 .title{
   font-size: .875rem /* 14/16 */;
   color: #409EFF;
+}
+
+.no-content{
+  width: 100%;
+  height: 18.75rem /* 300/16 */;
+  line-height: 18.75rem /* 300/16 */;
+  text-align: center;
+  background: #fff;
+  color: #C0C4CC;
 }
 </style>

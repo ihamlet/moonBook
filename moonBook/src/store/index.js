@@ -124,19 +124,17 @@ const actions = {
     })
   },
   getMsg(context,products) {
-
     let bookApiLink
     if( products ){
-      bookApiLink = `/book/MemberMsg/getList?page=${products.page}`
-    }else{
-      bookApiLink = '/book/MemberMsg/getList'
-    }    
-    
+      bookApiLink = `/book/MemberMsg/getList?page=${products.page}&is_read=${products.isRead}&sort=top`
+    }
     return new Promise((resolve, reject) => {
       axios.get(bookApiLink).then(res => {
-        context.commit('setMsgLength', {
-          data: res.data.count
-        })
+        if(products.isRead == 0){
+          context.commit('setMsgLength', {
+            data: res.data.count
+          })
+        }
         resolve(res.data.data)
       })
     })
@@ -151,9 +149,7 @@ const actions = {
       location: products.location
     }
 
-    let amapApiLink = `https://restapi.amap.com/v3/geocode/regeo?output=json&location=${
-      data.location
-    }&key=${data.Key}`
+    let amapApiLink = `https://restapi.amap.com/v3/geocode/regeo?output=json&location=${data.location}&key=${data.Key}`
 
     fetchJsonp(amapApiLink)
       .then(response => {
@@ -177,11 +173,7 @@ const actions = {
       radius: 24000
     }
 
-    let amapApiLink = `https://restapi.amap.com/v3/place/around?key=${
-      data.Key
-    }&location=${data.location}&radius=${data.radius}&keywords=${
-      data.keywords
-    }&types=${data.types}&offset=${data.offset}&page=${data.page}`
+    let amapApiLink = `https://restapi.amap.com/v3/place/around?key=${data.Key}&location=${data.location}&radius=${data.radius}&keywords=${data.keywords}&types=${data.types}&offset=${data.offset}&page=${data.page}`
 
     return new Promise((resolve, reject) => {
       fetchJsonp(amapApiLink)
@@ -214,9 +206,7 @@ const actions = {
     }
 
     if (products.searchType == 'joinSchool') {
-      let WMlifeSearchSchoolLink = `/book/school/index?ajax=1&lat=${
-        joinData.lat
-      }&lng=${joinData.lng}&page=${joinData.page}&keyword=${joinData.keyword}`
+      let WMlifeSearchSchoolLink = `/book/school/index?ajax=1&lat=${joinData.lat}&lng=${joinData.lng}&page=${joinData.page}&keyword=${joinData.keyword}`
 
       return new Promise((resolve, reject) => {
         axios.get(WMlifeSearchSchoolLink).then(res => {
@@ -228,11 +218,7 @@ const actions = {
         })
       })
     } else {
-      let amamApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${
-        data.Key
-      }&keywords=${data.keywords}&type=${data.type}&location=${
-        data.location
-      }&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
+      let amamApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${ data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
 
       return new Promise((resolve, reject) => {
         fetchJsonp(amamApiLink)
@@ -253,11 +239,7 @@ const actions = {
       extensions: 'base'
     }
 
-    let amamApiLink = `https://restapi.amap.com/v3/config/district?key=${
-      data.Key
-    }&keywords=${data.keywords}&subdistrict=${data.subdistrict}&extensions=${
-      data.extensions
-    }`
+    let amamApiLink = `https://restapi.amap.com/v3/config/district?key=${data.Key}&keywords=${data.keywords}&subdistrict=${data.subdistrict}&extensions=${data.extensions}`
 
     return new Promise((resolve, reject) => {
       fetchJsonp(amamApiLink)
