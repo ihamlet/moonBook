@@ -7,7 +7,7 @@
         <div class="avatar" v-if='childInfo'>
           <img :src="childInfo.avatar" :alt="childInfo.name">
         </div>
-        <avatar v-else />
+        <avatar class="avatar" v-else />
         <div class="name">{{childInfo.name}}（{{childInfo.age}}岁）</div>
         <round class="bg-round" />
       </div>

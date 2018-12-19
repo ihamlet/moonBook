@@ -206,7 +206,7 @@ export default {
       this.submitLoading = true
       axios.post('/book/baby/edit', this.childInfo).then(res => {
           if(res.data.status){
-            this.$toast.success(`${msg}成功`)
+            this.$toast.success('创建成功')
             this.submitLoading = false
             this.$router.push({
               name:'my'
@@ -214,12 +214,16 @@ export default {
 
             this.getUserData()
           }else{
-            this.$toast.fail(`${msg}失败`)
+            this.$toast.fail('创建失败')
             this.submitLoading = false        
           }
        })
     },
     submit() {
+      if(!this.childInfo.avatar){
+         this.$toast.fail('请上传头像')
+      }
+
       if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null){
         this.errorMessage.name = '请正确填写孩子的姓名'
         setTimeout(() => {

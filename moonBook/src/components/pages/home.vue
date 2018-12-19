@@ -66,6 +66,9 @@
         <van-popup v-model="searchShow" class="page-popup" get-container='#app'>
             <city-list :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
         </van-popup>
+
+
+        <el-amap vid="amap" class="amap-demo" :center="center" :plugin="plugin" v-show='false' />
     </div>
 </template>
 <script>
@@ -103,6 +106,7 @@ export default {
         ...mapGetters(['userPointState','userDataState'])
     },
     data () {
+        const shelf = this
         return {
             // 发布
             Param:'',
@@ -123,7 +127,21 @@ export default {
             investmentAd:'',
             newsList:'',
             videoList:'',
-            isVip:''
+            //高德地图API
+            center: '114.085947,22.547',
+            plugin:[{
+                timeout:1000,
+                pName: 'Geolocation',
+                events: {
+                    init:(map)=>{
+                        map.getCurrentPosition( (status, result) => {
+                        if (result && result.position) {
+                                self.center = `${result.position.lng},${result.position.lat}`
+                            }
+                        })
+                    }
+                }
+            }]
         }
     },
     created () {
@@ -134,10 +152,17 @@ export default {
         window.addEventListener('scroll', this.handleScroll)
     },
     watch: {
+        center(val){
+          let products = {
+            location:val
+          }
+          console.log(products)
+          this.getUserLocation(products)
+      },
       '$router':'fetchData'
     },
     methods: {
-        ...mapActions(['getCityDistrict']),
+        ...mapActions(['getCityDistrict','getUserLocation']),
         fetchData(){
             setInterval(()=>{
                 this.btnPulse = true

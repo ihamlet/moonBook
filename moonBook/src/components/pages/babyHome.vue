@@ -86,7 +86,8 @@
   </div>
 </template>
 <script>
-import axios from "axios"
+import axios from "./../lib/js/api"
+import { mapActions } from 'vuex'
 import { format } from "./../lib/js/util.js"
 import QRCode from "qrcode"
 import wave from "./../module/animate/anWave"
@@ -122,11 +123,23 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    axios.get(`/book/baby/getInfo?child_id=${to.query.id}`).then(res => {
       next(vm => {
         vm.qrcode()
-        vm.childInfo = res.data.data
-      })
+        vm.getUserData().then(res => {
+            if(res.child_id > 0){
+              axios.get(`/book/baby/getInfo?child_id=${to.query.id}`).then(res => {
+                  vm.childInfo = res.data.data
+              })
+            }else{
+              vm.$router.push({
+                name: 'edit-child',
+                query: {
+                  type: 'add',
+                  pageTitle:'添加宝贝'
+                }
+              })
+            }
+        })
     })
   },
   created() {
@@ -139,6 +152,7 @@ export default {
     $router: "fetchData"
   },
   methods: {
+    ...mapActions(["getUserData"]),
     fetchData() {
       axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
         this.lateBook = res.data.data

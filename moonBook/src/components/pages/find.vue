@@ -2,7 +2,7 @@
   <div class="find page-padding">
     <van-nav-bar :title="$route.meta.title" />
     <lazy-component class="module">
-      <fresh-list :list='freshList' />
+       <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname"/>
     </lazy-component>
     <lazy-component>
       <div class="container">

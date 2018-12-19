@@ -150,6 +150,7 @@ export default {
   height: 3.125rem /* 50/16 */;
   border-radius: 50%;
   overflow: hidden;
+  margin-right: 0.625rem /* 10/16 */;
 }
 
 .avatar img{
@@ -157,7 +158,6 @@ export default {
   height: 3.125rem /* 50/16 */;
   border-radius: 50%;
   overflow: hidden;
-  margin-right: 0.625rem /* 10/16 */;
 }
 
 .name {

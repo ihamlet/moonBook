@@ -81,8 +81,9 @@
               <i class="iconfont" v-if="!item.isZan">&#xe644;</i>
               <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
             </div>
-            <div class="btn">
-              <i class="iconfont">&#xe64c;</i>
+            <div class="btn" @click="addCollect(item)">
+              <i class="iconfont" v-if="!item.isShoucang">&#xe64c;</i>
+              <i class="iconfont star highlight swing animated" v-else>&#xe64b;</i>
             </div>
           </div>
         </div>
@@ -110,7 +111,7 @@ import axios from './../lib/js/api'
 
 export default {
   name: 'comment',
-  props: ['item'],
+  props: ['item','cid'],
   computed: {
     ...mapGetters(['userToken'])
   },
@@ -131,7 +132,7 @@ export default {
   },
   methods: {
     onLoad() {
-      axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.$route.query.id}&page=${this.page}&limit=10&sort=new`).then(res => {
+      axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.item[this.cid]}&page=${this.page}&limit=10&sort=new`).then(res => {
         this.listLength = res.data.count
         let array = res.data.data
         this.loading = false
@@ -152,13 +153,13 @@ export default {
       let data = ''
       if (this.commentId) {
         data = {
-          post_id: this.$route.query.id,
+          post_id: this.item[this.cid],
           contents: this.message,
           reply_comment_id: this.commentId
         }
       } else {
         data = {
-          post_id: this.$route.query.id,
+          post_id: this.item[this.cid],
           contents: this.message
         }
       }
@@ -174,6 +175,12 @@ export default {
       item.isZan = !item.isZan
       axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
         item.zan_num = res.data.data.like
+      })
+    },
+    addCollect(item){
+      item.isShoucang = !item.isShoucang
+      axios.get(`/book/SchoolArticleCollect/add?post_id=${this.item.post_id}`).then(res=>{
+        item.collect_num = res.data.data.collect_num
       })
     },
     showField(item) {

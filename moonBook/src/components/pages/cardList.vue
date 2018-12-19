@@ -130,7 +130,7 @@ export default {
   content: '';
   width: 100%;
   height: .125rem /* 2/16 */;
-  border-bottom:.125rem /* 2/16 */ dashed rgba(255,255,255,.7); 
+  border-bottom:.125rem /* 2/16 */ dashed rgba(189, 178, 170); 
   bottom: -.5rem /* 8/16 */;
 }
 

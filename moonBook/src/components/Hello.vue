@@ -1,6 +1,5 @@
 <template>
   <div class="page">
-    <el-amap vid="amap" class="amap-demo" :center="center" :plugin="plugin" v-show='false' />
     <transition name="fade">
       <start-page @listenStartPage='onStartPage' v-if='startPageShow' />
     </transition>
@@ -25,25 +24,9 @@ export default {
     footerBar
   },
   data () {
-    const self = this
     return {
       show:false,
       startPageShow:true,
-      center: '114.085947,22.547',
-      plugin:[{
-          timeout:1000,
-          pName: 'Geolocation',
-          events: {
-              init:(map)=>{
-                  map.getCurrentPosition( (status, result) => {
-                  if (result && result.position) {
-                        self.center = `${result.position.lng},${result.position.lat}`
-                        self.$nextTick()
-                      }
-                  })
-              }
-          }
-      }]
     }
   },
   created () {
@@ -55,19 +38,13 @@ export default {
     localStorage.setItem('access',true)
   },
   watch: {
-      center(val){
-          let products = {
-            location:val
-          }
-          console.log(products)
-          this.getUserLocation(products)
-      },
       '$route': 'fetchData'
   },       
   methods: {
-    ...mapActions(['getUserData','getMsgLength','getUserLocation']),
+    ...mapActions(['getUserData','getMsg']),
     fetchData(){
       this.getUserData()
+      this.getMsg()
     },
     onStartPage(){
       this.startPageShow = false

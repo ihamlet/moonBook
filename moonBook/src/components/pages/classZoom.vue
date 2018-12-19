@@ -1,24 +1,24 @@
 <template>
   <div class="class-zoom page-padding">
-    <van-nav-bar title="班级风采" fixed left-text="返回" left-arrow @click-left="onClickLeft" @click-right='onClickRight'>
+    <van-nav-bar title="班级风采" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" @click-right='onClickRight'>
       <div slot="right" class="theme-color">
         <i class="iconfont">&#xe612;</i>
       </div>
     </van-nav-bar>
     <lazy-component class="module">
-      <fresh-list type='classZoom' :list='freshList' />
+      <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name"/>
     </lazy-component>
     <lazy-component class="module">
-      <van-nav-bar title="班级风采" />
+      <van-nav-bar title="班级动态" />
       <van-list v-model="loading" :finished="finished" @load="onLoad">
-        <div class="list">
+        <div class="list" v-if='list.length > 0'>
           <div class="item" v-for="(item,index) in list" :key="index">
             <van-cell>
               <graphic-crad :item="item" type="classHome"/>
             </van-cell>
           </div>
         </div>
-        <div class="not-content" v-if="!listLength">尚无内容</div>
+        <div class="not-content" v-else>尚无内容</div>
       </van-list>
     </lazy-component>
     <!-- 发布 -->

@@ -23,6 +23,7 @@ import EditClass from '@/components/pages/editBaby/class'
 import EditStting from '@/components/pages/editBaby/setting'
 
 import Article from '@/components/pages/article'
+import BookDetails from '@/components/pages/bookDetails'
 
 Vue.use(Router)
 
@@ -89,7 +90,7 @@ export default new Router({
         meta: {
           title: '消息中心',
           scrollToTop: true,
-          tabActive:2,
+          tabActive:3,
           isFooterBar: true
         }
       },{
@@ -129,7 +130,7 @@ export default new Router({
         meta: {
           title: '班级主页',
           scrollToTop: true,
-          tabActive:3,
+          tabActive:2,
           isFooterBar: true
         }
       },{
@@ -184,6 +185,16 @@ export default new Router({
         name: 'edit-setting',
         component: EditStting,
         meta: {
+          scrollToTop: true,
+          tabActive:4,
+          isFooterBar: false
+        }
+      },{
+        path: '/book/details',
+        name: 'book-details',
+        component: BookDetails,
+        meta: {
+          title: '图书详情',
           scrollToTop: true,
           tabActive:4,
           isFooterBar: false

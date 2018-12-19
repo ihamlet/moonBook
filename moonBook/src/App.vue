@@ -633,6 +633,13 @@ i.iconfont.rotate {
   display: inline-block;
 }
 
+.iconfont.highlight.star{
+  background: linear-gradient(135deg, #FFEB3B, #FF9800);
+  -webkit-background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
 .social div {
   flex: 1;
   text-align: center;

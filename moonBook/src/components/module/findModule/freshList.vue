@@ -2,7 +2,7 @@
   <div class="fresh-list scroll-x">
     <div class="scroll-item" v-for="(item,index) in list" :key="index" @click="toZoom(item)">
       <div class="avatar">
-        <img v-if="item.avatar" @error='imgError' :src="item.avatar" :alt="item.name">
+        <img v-if="item[avatar]" @error='imgError' :src="item[avatar]" :alt="item[name]">
       </div>
     </div>
   </div>
@@ -10,24 +10,16 @@
 <script>
 export default {
   name: 'fresh-list',
-  props: ['list', 'type'],
+  props: ['list', 'type', 'avatar', 'name', 'cid', 'routerName'],
   methods: {
     toZoom(item) {
-      if(this.type == 'classZoom'){
-        this.$router.push({
-          name:'baby-home',
-          query:{
-            id: item.id
-          }
-        })
-      }else{
-        this.$router.push({
-          name: 'zoom',
-          query: {
-            id: item.user_id
-          }
-        })
-      }
+      this.$router.push({
+        name:this.routerName,
+        query:{
+          id: item[this.cid]
+        }
+        
+      })
     },
     imgError(e){
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'

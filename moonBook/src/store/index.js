@@ -55,25 +55,7 @@ const getters = {
     }
   },
   MsgLengthState: state => {
-    return state.msgLength.length
-  },
-  dryingListLengthState: state => {
-    if (state.userData.dryingList) {
-      return state.userData.dryingList.length
-    }
-  },
-  schoolState: state => {
-    let school = ''
-    if (state.userData.childInfo) {
-      state.userData.childInfo.forEach((element, i) => {
-        if (i == 0) {
-          school = element.school
-        }
-      })
-    } else if (state.userData.vipInfo) {
-      school = state.vipInfo.school
-    }
-    return school
+    return state.msgLength
   },
   userPraiseState: state => {
     let praise = []
@@ -105,7 +87,7 @@ const getters = {
       if (Cookies.get('WWW_TOKEN')) {
         data = Cookies.get('WWW_TOKEN')
       }
-      return state.token = data
+      return (state.token = data)
     }
   }
 }
@@ -115,13 +97,16 @@ const mutations = {
     localStorage.setItem('userData', JSON.stringify(params.data))
     state.userData = params.data
   },
+
   setMsgLength(state, params) {
     state.msgLength = params.data
   },
+
   setUserPoint(state, params) {
     Cookies.set('userPoint', params.data, { expires: 7 })
     state.userPoint = params.data
   },
+
   setToken(state, params) {
     state.token = params.data
   }
@@ -138,10 +123,21 @@ const actions = {
       })
     })
   },
-  getMsgLength(context) {
-    axios.get('/api/messageList').then(res => {
-      context.commit('setMsgLength', {
-        data: res.data.messageData.messageList
+  getMsg(context,products) {
+
+    let bookApiLink
+    if( products ){
+      bookApiLink = `/book/MemberMsg/getList?page=${products.page}`
+    }else{
+      bookApiLink = '/book/MemberMsg/getList'
+    }    
+    
+    return new Promise((resolve, reject) => {
+      axios.get(bookApiLink).then(res => {
+        context.commit('setMsgLength', {
+          data: res.data.count
+        })
+        resolve(res.data.data)
       })
     })
   },
@@ -162,7 +158,8 @@ const actions = {
     fetchJsonp(amapApiLink)
       .then(response => {
         return response.json()
-      }).then(res => {
+      })
+      .then(res => {
         cityInfo.city = res.regeocode.addressComponent.city
         context.commit('setUserPoint', {
           data: cityInfo
@@ -187,9 +184,11 @@ const actions = {
     }&types=${data.types}&offset=${data.offset}&page=${data.page}`
 
     return new Promise((resolve, reject) => {
-      fetchJsonp(amapApiLink).then(response => {
+      fetchJsonp(amapApiLink)
+        .then(response => {
           return response.json()
-        }).then(res => {
+        })
+        .then(res => {
           resolve(res)
         })
     })

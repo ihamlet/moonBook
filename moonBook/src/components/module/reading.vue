@@ -2,7 +2,7 @@
   <div class="reading">
     <van-cell :title="moduleTitle" :is-link="type =='rank'" @click="toBabyHome" />
     <div class="book-list scroll-x" v-if='list.length > 0'>
-      <div class="book-item scroll-item" v-for='(item,index) in list' :key="index">
+      <div class="book-item scroll-item" v-for='(item,index) in list' :key="index" @click="toBookDetails(item)">
         <div class="book-cover">
           <img :src="thumb(item.book_thumb)" @error="outThumb($event,item)" :alt="item.book_name">
         </div>
@@ -69,6 +69,14 @@ export default {
             </div>
         </div>
       `
+    },
+    toBookDetails(list){
+      this.$router.push({
+        name:'book-details',
+        query:{
+          id:list.book_id
+        }
+      })
     }
   }
 }
@@ -148,7 +156,7 @@ export default {
   padding: 0.625rem 0;
   transform: rotateY(8deg);
   position: relative;
-  perspective: 350;
+  perspective: 80;
 }
 
 .three-d-book-cover::before {
@@ -172,7 +180,7 @@ export default {
   width: 5.625rem /* 90/16 */;
   margin: 0 auto;
   font-size: 0.8125rem;
-  height: 3.125rem;
+  height: 3.75rem /* 60/16 */;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;

@@ -44,7 +44,7 @@
         <article-content :item='item'/>
       </lazy-component>
       <lazy-component>
-        <comment :item='item'/>
+        <comment :item='item' cid='post_id'/>
       </lazy-component>
     </div>
 
@@ -203,13 +203,6 @@ export default {
 
 .screenshot-popup {
   overflow: hidden;
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .18s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
 }
 
 .share-box{

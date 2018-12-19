@@ -1,7 +1,7 @@
 <template>
     <div class="footer-bar flex flex-align">
         <van-tabbar :zIndex='100' v-model="active" fixed>
-            <van-tabbar-item v-for='(item,index) in userTabBtn' :key="index" :to='goPage(item.path)' :info="index==2&&MsgLengthState>0?MsgLengthState:''">
+            <van-tabbar-item v-for='(item,index) in userTabBtn' :key="index" :to='goPage(item.path)' :info="index==3&&MsgLengthState>0?MsgLengthState:''">
                 <i class="iconfont" :class="[props.active?`${item.iconClass}fill bounceIn animated`: item.iconClass]" slot='icon' slot-scope="props"></i>
                 <span>{{item.name}}</span>
             </van-tabbar-item>
@@ -24,8 +24,7 @@ export default {
         this.active = this.$route.meta.tabActive
     },
     watch: {
-        '$router' (to, from) {
-            console.log(to.meta)
+        $route(to, from) {
             this.active = to.meta.tabActive
         }
     },
