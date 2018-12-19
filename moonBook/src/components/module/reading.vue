@@ -112,8 +112,9 @@ export default {
 
 .book-name {
   color: #303133;
-  height: 2.5rem /* 40/16 */;
+  height:2.25rem /* 36/16 */;
   margin: 0.3125rem /* 5/16 */ 0;
+  font-size: .875rem /* 14/16 */;
 }
 
 .book-label {

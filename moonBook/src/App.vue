@@ -519,7 +519,6 @@ img.lazy[lazy='error'],
 
 .page-popup-layer {
   width: 100%;
-  height: calc(100% - 2.8125rem);
   border-radius: 1.25rem /* 20/16 */ 1.25rem /* 20/16 */ 0 0;
 }
 

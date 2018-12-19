@@ -40,12 +40,15 @@
       </div>
       <!-- 媒体音频 -->
       <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
-
+        <audio controls="controls" v-for='(audioItem,audioIndex) in item.photos' :key="audioIndex">
+          <source :src="audioItem.photo">
+        </audio>
       </div>
 
       <div class="temp-type">
          <van-tag plain type="primary" v-if='item.template_id == 0'>长文</van-tag>
          <van-tag plain type="primary" v-if='item.template_id == 1'>微博</van-tag>
+         <van-tag type="primary" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
       </div>
 
       <div class="social flex flex-align">

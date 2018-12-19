@@ -14,6 +14,7 @@ const state = {
   amapApiKey: '0522f462288e296eac959dbde42718ab',
   token: '',
   userPoint: '',
+  location:'',
   footerTab: [
     {
       iconClass: 'icon-home',
@@ -101,12 +102,10 @@ const mutations = {
   setMsgLength(state, params) {
     state.msgLength = params.data
   },
-
   setUserPoint(state, params) {
     Cookies.set('userPoint', params.data, { expires: 7 })
     state.userPoint = params.data
   },
-
   setToken(state, params) {
     state.token = params.data
   }

@@ -15,7 +15,7 @@
 import axios from 'axios'
 import 'animate.css'
 import startPage from './module/startPage'
-import { mapActions } from 'vuex'
+import { mapActions,mapGetters } from 'vuex'
 import footerBar from './../components/module/footerBar'
 
 export default {
@@ -24,12 +24,22 @@ export default {
     startPage,
     footerBar
   },
+  computed: {
+    ...mapGetters(['userDataState']),
+    center(){
+      if(this.location){
+        return this.location
+      }else{
+        return `${this.userDataState.lng},${this.userDataState.lat}`
+      }
+    }
+  },
   data () {
     const self = this
     return {
       show:false,
       startPageShow:true,
-      center: '114.085947,22.547',
+      location: '',
       plugin:[{
           timeout:1000,
           pName: 'Geolocation',
@@ -37,8 +47,7 @@ export default {
               init:(map)=>{
                   map.getCurrentPosition( (status, result) => {
                   if (result && result.position) {
-                        self.center = `${result.position.lng},${result.position.lat}`
-                        self.$nextTick()
+                        self.location = `${result.position.lng},${result.position.lat}`
                       }
                   })
               }
@@ -54,13 +63,13 @@ export default {
     localStorage.setItem('access',true)
   },
   watch: {
-      center(val){
-          let products = {
-            location:val
-          }
-          this.getUserLocation(products)
-      },
-      '$route': 'fetchData'
+    center(val){
+        let products = {
+          location:val
+        }
+        this.getUserLocation(products)
+    },
+    '$route': 'fetchData'
   },       
   methods: {
     ...mapActions(['getUserData','getMsg','getUserLocation']),

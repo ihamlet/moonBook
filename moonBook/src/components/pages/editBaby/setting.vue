@@ -43,13 +43,9 @@ export default {
     ...mapActions(['getUserData']),
     fetchData(){
         axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
-            console.log(res)
             this.childName = res.data.data.name
             this.setting.babyClass = res.data.data.banji_name
             this.setting.babySchool = res.data.data.school_name
-
-            console.log(res.data.data.is_current_child)
-
             if(res.data.data.is_current_child == 1){
                 this.setting.current = true
             }

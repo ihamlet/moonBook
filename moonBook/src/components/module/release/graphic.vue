@@ -18,12 +18,13 @@
       <van-cell-group>
         <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="说些什么？不妨分享最近看的书 (∩_∩)"
           rows="4" autosize />
-        <div class="media flex flex-align">
+        <van-tag class="tag" type="primary" v-if='cateName'> #{{cateName}}</van-tag>
+        <div class="media flex flex-column">
           <div class="theme-color" v-for='(list,index) in mediaContent' :key="index">
-            <div class="file-name">
-              <i class="iconfont clear-file" @click="deletePhoto(index)">&#xe683;</i>
+            <div class="file-name flex flex-align">
               <i class="iconfont">&#xe61f;</i>
               {{list.name}}
+              <i class="iconfont clear-file" @click="deletePhoto(index)">&#xe683;</i>
             </div>
           </div>
         </div>
@@ -43,8 +44,8 @@
             <div class="text-length" :class="[grapicData.text.length>140?'danger':'']" v-if='grapicData.text.length>0'>{{grapicData.text.length}}</div>
           </div>
         </van-cell>
-        <input type="file" accept="video/*;capture=camcorder" multiple capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
-        <input type="file" accept="audio/*;capture=microphone" multiple capture="microphone" ref='fileAudio' data-type='audio' hidden @change='doUpload'>
+        <input type="file" accept="video" multiple capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
+        <input type="file" accept="audio" multiple capture="microphone" ref='fileAudio' data-type='audio' hidden @change='doUpload'>
       </van-cell-group>
       <van-checkbox-group v-model="result">
         <div class="form-title">同步到</div>
@@ -73,8 +74,8 @@
         </van-row>
       </van-cell>
     </div>
-    <van-popup class="page-popup-layer" position="bottom" v-model="show">
-      <topic-list />
+    <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
+      <topic-list @close='show = false' @select='selectTag'/>
     </van-popup>
 
     <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect"  @cancel="actionShow = false"/>
@@ -112,6 +113,8 @@ export default {
       mediaContent: [],
       process: 0,
       photoLength: 0,
+      cateId:'',
+      cateName:'',
       actions:[{
         name: '保存草稿',
         type: 'save'
@@ -246,7 +249,8 @@ export default {
         let data = {
           details: this.grapicData.text,
           template_id: 1,
-          photos: this.grapicData.photos
+          photos: this.grapicData.photos,
+          cate_id: this.cateId
         }
 
         this.result.forEach(e => {
@@ -328,6 +332,10 @@ export default {
         })
 
       })
+    },
+    selectTag(tag){
+      this.cateName = tag.cate_name
+      this.cateId = tag.cate_id
     }
   }
 }
@@ -415,17 +423,16 @@ export default {
 }
 
 .media div {
-  margin-right: 0.625rem /* 10/16 */;
+  height: 2.375rem /* 38/16 */;
+  line-height: 2.375rem /* 38/16 */;
 }
 
 .file-name {
   position: relative;
+  justify-content: space-between;
 }
 
 .file-name .clear-file {
-  position: absolute;
-  right: -0.9375rem /* 15/16 */;
-  top: -0.3125rem /* 5/16 */;
   color: #f44336;
 }
 
@@ -441,5 +448,10 @@ export default {
   width: 2.625rem /* 42/16 */;
   height: 2.625rem /* 42/16 */;
   border-radius: 50%;
+}
+
+.tag{
+  margin-left: 1.25rem /* 20/16 */;
+  margin-top: .3125rem /* 5/16 */;
 }
 </style>
