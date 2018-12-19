@@ -1,6 +1,6 @@
 <template>
   <div class="edit-class page-padding">
-    <van-nav-bar :border='false' class="bar-fixed" fixed :title="childInfo.school_name" left-text="返回" left-arrow
+    <van-nav-bar :border='false' fixed :title="childInfo.school_name" left-text="返回" left-arrow
       @click-left="onClickLeft" />
     <div class="container">
       <div class="baby-info flex flex-justify">
@@ -98,6 +98,10 @@ export default {
   height: 5rem /* 80/16 */;
   line-height: 5rem /* 80/16 */;
   background: #fff;
+}
+
+.container{
+  padding-top: 2.8125rem /* 45/16 */;
 }
 
 .class-title {

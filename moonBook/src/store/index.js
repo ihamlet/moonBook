@@ -124,10 +124,8 @@ const actions = {
     })
   },
   getMsg(context,products) {
-    let bookApiLink
-    if( products ){
-      bookApiLink = `/book/MemberMsg/getList?page=${products.page}&is_read=${products.isRead}&sort=top`
-    }
+    let  bookApiLink = `/book/MemberMsg/getList?page=${products.page}&is_read=${products.isRead}&sort=top`
+  
     return new Promise((resolve, reject) => {
       axios.get(bookApiLink).then(res => {
         if(products.isRead == 0){
@@ -151,11 +149,9 @@ const actions = {
 
     let amapApiLink = `https://restapi.amap.com/v3/geocode/regeo?output=json&location=${data.location}&key=${data.Key}`
 
-    fetchJsonp(amapApiLink)
-      .then(response => {
+    fetchJsonp(amapApiLink).then(response => {
         return response.json()
-      })
-      .then(res => {
+      }).then(res => {
         cityInfo.city = res.regeocode.addressComponent.city
         context.commit('setUserPoint', {
           data: cityInfo

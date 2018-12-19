@@ -128,6 +128,7 @@ export default {
         vm.getUserData().then(res => {
             if(res.child_id > 0){
               axios.get(`/book/baby/getInfo?child_id=${to.query.id}`).then(res => {
+                  console.log(`/book/baby/getInfo?child_id=${to.query.id} | 没有班级ID 班级名字是错的`)
                   vm.childInfo = res.data.data
               })
             }else{
