@@ -2,6 +2,9 @@
   <div class="my page-padding">
     <card-head :userInfo='userDataState' />
     <lazy-component class="gutter gap-top">
+      <family v-if='children.length!=0' :children='children[0]'/>
+    </lazy-component>
+    <lazy-component class="gutter gap">
       <class-home v-if='children.length!=0' :children="children[0]" />
     </lazy-component>
     <lazy-component class="gutter gap" v-if='zoomCard'>
@@ -20,6 +23,7 @@ import cardHead from './../module/myModule/head'
 import classHome from './../module/myModule/classHome'
 import zoneCard from './../module/myModule/zoneCard'
 import babyHome from './../module/myModule/babyHome'
+import family from './../module/myModule/family'
 import slogan from './../module/slogan'
 
 export default {
@@ -29,7 +33,8 @@ export default {
     cardHead,
     zoneCard,
     babyHome,
-    classHome
+    classHome,
+    family
   },
   computed: {
     ...mapGetters(['userDataState'])

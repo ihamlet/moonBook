@@ -21,6 +21,10 @@ import EditChild from '@/components/pages/editBaby/child'
 import EditSchool from '@/components/pages/editBaby/school'
 import EditClass from '@/components/pages/editBaby/class'
 import EditStting from '@/components/pages/editBaby/setting'
+import EditTeacher from '@/components/pages/editTeacher/teacher'
+
+import AddFamily from '@/components/pages/invite/addFamily'
+import VerifyFamily from '@/components/pages/invite/verifyList'
 
 import Article from '@/components/pages/article'
 import BookDetails from '@/components/pages/bookDetails'
@@ -98,7 +102,7 @@ export default new Router({
         name: 'my',
         component: My,
         meta: {
-          title: '个人中心',
+          title: '我的',
           scrollToTop: true,
           tabActive:4,
           isFooterBar: true
@@ -190,11 +194,40 @@ export default new Router({
           isFooterBar: false
         }
       },{
+        path: '/edit/teacher',
+        name: 'edit-teacher',
+        component: EditTeacher,
+        meta: {
+          scrollToTop: true,
+          tabActive:4,
+          isFooterBar: false
+        }
+      },{
         path: '/book/details',
         name: 'book-details',
         component: BookDetails,
         meta: {
           title: '图书详情',
+          scrollToTop: true,
+          tabActive:4,
+          isFooterBar: false
+        }
+      },{
+        path: '/invite/family',
+        name: 'add-family',
+        component: AddFamily,
+        meta: {
+          title: '加入家庭',
+          scrollToTop: true,
+          tabActive:4,
+          isFooterBar: false
+        }
+      },{
+        path: '/invite/verify',
+        name: 'verify-list',
+        component: VerifyFamily,
+        meta: {
+          title:'成员审核',
           scrollToTop: true,
           tabActive:4,
           isFooterBar: false

@@ -31,6 +31,12 @@
         <van-cell>
           <div class="flex flex-align">
             <div class="upload-media flex flex-align">
+              <div class="btn-video" @click="fileVideo">
+                <i class="iconfont">&#xe611;</i>
+              </div>
+              <div class="btn-audio" @click="fileAudio">
+                <i class="iconfont">&#xe613;</i>
+              </div>
               <div class="btn-video" @click="uploadVideo">
                 <i class="iconfont">&#xe625;</i>
               </div>
@@ -41,11 +47,13 @@
             <div class="topic theme-color" @click="toTopicPage">
               #选择话题
             </div>
-            <div class="text-length" :class="[grapicData.text.length>140?'danger':'']" v-if='grapicData.text.length>0'>{{grapicData.text.length}}</div>
+            <div class="text-length" :class="[grapicData.text.length > 800?'danger':'']" v-if='grapicData.text.length>0'>{{grapicData.text.length}}</div>
           </div>
         </van-cell>
-        <input type="file" accept="video" multiple capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
-        <input type="file" accept="audio" multiple capture="microphone" ref='fileAudio' data-type='audio' hidden @change='doUpload'>
+        <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
+        <input type="file" accept="audio/*" ref='selectFileAudio' data-type='audio' hidden @change='doUpload'>
+        <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
+        <input type="file" accept="audio/*" capture="microphone" ref='fileAudio' data-type='audio' hidden @change='doUpload'>
       </van-cell-group>
       <van-checkbox-group v-model="result">
         <div class="form-title">同步到</div>
@@ -245,7 +253,7 @@ export default {
     onClickRight() {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
         this.$emit('close')
-      } else if (this.grapicData.text.length < 140) {
+      } else if (this.grapicData.text.length < 800) {
         let data = {
           details: this.grapicData.text,
           template_id: 1,
@@ -289,6 +297,12 @@ export default {
     },
     uploadAudio() {
       this.$refs.fileAudio.click()
+    },
+    fileVideo(){
+      this.$refs.selectFileVideo.click()
+    },
+    fileAudio(){
+      this.$refs.selectFileAudio.click()
     },
     doUpload(e) {
       let file = e.target.files[0]
@@ -451,7 +465,7 @@ export default {
 }
 
 .tag{
-  margin-left: 1.25rem /* 20/16 */;
+  margin-left: .9375rem /* 15/16 */;
   margin-top: .3125rem /* 5/16 */;
 }
 </style>

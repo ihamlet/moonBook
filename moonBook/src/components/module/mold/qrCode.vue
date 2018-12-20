@@ -35,7 +35,9 @@
         </div>
 
         <div class="container" ref="imageWrapper" :class="[type=='classHome'?'plate':'']" v-if="type=='classHome'">
-          <div class="img-bg"></div>
+          <div class="img-bg">
+            <img src="./../../../assets/img/qc-bg-img.png" alt="" srcset="">
+          </div>
           <div class="card flex flex-align">
             <div class="class-card">
               <div class="name">
@@ -222,15 +224,6 @@ export default {
 .book-number {
   font-size: 1.75rem /* 28/16 */;
   color: #000;
-}
-
-.img-bg {
-  width: 100%;
-  height: 21.25rem /* 340/16 */;
-  background: url('/Public/images/qc-bg-img.png');
-  background-size: cover;
-  background-position: bottom;
-  background-repeat: no-repeat;
 }
 
 .card {

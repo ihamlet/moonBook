@@ -1,5 +1,5 @@
 <template>
-  <div class="class module-card">
+  <div class="module-card">
     <van-cell-group>
       <van-cell :value="selectPrompt.prompt" is-link center @click="toClassHome">
         <div class="icon" slot="icon">
@@ -78,7 +78,7 @@ export default {
 }
 </script>
 <style scoped>
-.class {
+.module-card {
   overflow: hidden;
 }
 

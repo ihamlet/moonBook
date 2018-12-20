@@ -50,12 +50,21 @@ export default {
       this.$router.go(-1)
     },
     selectRole(role) {
-      console.log(role)
       if(role.type == 'parent'){
         this.$router.push({
           name:'edit-child',
           query:{
             pageTitle:'添加宝贝',
+            type:'add'
+          }
+        })
+      }
+
+      if(role.type == 'teacher'){
+        this.$router.push({
+          name:'edit-teacher',
+          query:{
+            pageTitle:'成为老师',
             type:'add'
           }
         })

@@ -32,7 +32,7 @@
             <i class="iconfont">&#xe6eb;</i>
             {{item.share_num>1000?'999+':item.share_num}}
           </div>
-          <div class="message">
+          <div class="message" @click="toArticle(item)">
             <i class="iconfont">&#xe731;</i>
             {{item.reply_num>1000?'999+':item.reply_num}}
           </div>

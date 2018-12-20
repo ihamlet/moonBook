@@ -38,7 +38,7 @@ const state = {
     },
     {
       iconClass: 'icon-people',
-      name: '个人中心',
+      name: '我的',
       path: 'my'
     }
   ]
@@ -122,17 +122,11 @@ const actions = {
       })
     })
   },
-  getMsg(context,products) {
-    let  bookApiLink = `/book/MemberMsg/getList?page=${products.page}&is_read=${products.isRead}&sort=top`
-  
-    return new Promise((resolve, reject) => {
-      axios.get(bookApiLink).then(res => {
-        if(products.isRead == 0){
-          context.commit('setMsgLength', {
-            data: res.data.count
-          })
-        }
-        resolve(res.data.data)
+  getMsg(context) {
+    let  bookApiLink = '/book/MemberMsg/getList'
+    axios.get(bookApiLink).then(res => {
+      context.commit('setMsgLength', {
+        data: res.data.count
       })
     })
   },

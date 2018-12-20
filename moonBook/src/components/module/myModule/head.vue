@@ -22,7 +22,7 @@
         <div class="service flex flex-align" v-if='userInfo.isVip'>
           <div class="data-flow" @click="$router.push({name:'card-list'})">
             <i class="iconfont" :class="`vip-${userInfo.card_level}`">&#xe604;</i>
-            <b class="card-name">
+            <b class="card-name" v-line-clamp:20="1">
               {{userInfo.card_name}}
             </b>
           </div>

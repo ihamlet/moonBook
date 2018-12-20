@@ -3,8 +3,10 @@
     <van-nav-bar title="消息详情" left-text="返回" left-arrow @click-left="onClickLeft" />
     <div class="container">
       <div class="content">
-        <div class="title">{{details.title}}</div>
-        <div class="create-date">{{details.create_date}}</div>
+        <div class="hd flex flex-align">
+          <div class="title">{{details.title}}</div>
+          <div class="create-date">{{details.create_date}}</div>
+        </div>
         <div class="details">{{details.details}}</div>
       </div>
     </div>
@@ -41,7 +43,10 @@ export default {
 .content{
   background: #fff;
   padding: .625rem /* 10/16 */;
-  box-shadow: 0 .625rem /* 10/16 */ 3.75rem /* 60/16 */ rgba(0, 0, 0, .1)
+}
+
+.hd{
+  justify-content: space-between;
 }
 
 .msg-details{

@@ -6,7 +6,7 @@
         <van-icon name="arrow-left" />
         <span class="text">个人中心</span>
       </div>
-      <div class="head-bar-icon" slot="right" v-if="childInfo">
+      <div class="head-bar-icon" slot="right" v-if="childInfo.is_mine">
         <i class="iconfont">&#xe60c;</i>
       </div>
     </van-nav-bar>
@@ -41,7 +41,7 @@
         <div class="bar-item totalReading">总阅读量 {{childInfo.read_count}}</div>
         <div class="bar-item praise">赞 {{childInfo.zan_count}}</div>
       </div>
-      <div class="baby-class" v-if="childInfo.banji_id > 0">
+      <div class="baby-class" v-if="childInfo.is_mine">
         <van-cell-group>
           <van-cell :title="childInfo.banji_name" is-link center @click="toClassHome(childInfo)">
             <div class="icon" slot="icon">
@@ -209,13 +209,25 @@ export default {
     babySetting(data) {
       this.school = data.school
     },
-    toClassHome(data) {
-      this.$router.push({
-        name: "class-home",
-        query: {
-          id: data.banji_id
-        }
-      })
+    toClassHome(childInfo) {
+      console.log(childInfo)
+      if(childInfo.banji_id > 0){
+        this.$router.push({
+          name: "class-home",
+          query: {
+            id: childInfo.banji_id
+          }
+        })
+      }else{
+        this.$router.push({
+          name: "class-home",
+          query: {
+            id: childInfo.child_id,
+            schoolId: childInfo.school_id
+          }
+        })
+      }
+
     }
   }
 }
