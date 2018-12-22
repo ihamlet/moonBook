@@ -4,6 +4,9 @@
       <div class="avatar">
         <img v-if="item[avatar]" @error='imgError' :src="item[avatar]" :alt="item[name]">
       </div>
+      <div class="name" v-line-clamp:20="2">
+        {{item[name]}}
+      </div>
     </div>
   </div>
 </template>
@@ -47,13 +50,12 @@ export default {
 }
 
 .scroll-item {
+  width: 5rem /* 80/16 */;
   padding-right: 0.625rem /* 10/16 */;
-  width: 3.5rem /* 56/16 */;
   display: inline-grid;
 }
 
 .name {
-  width: 3.5rem /* 56/16 */;
   font-size: 0.875rem /* 14/16 */;
   text-align: center;
   margin-top: 0.3125rem /* 5/16 */;
@@ -69,5 +71,7 @@ export default {
 
 .teacher .name {
   color: #303133;
+  font-size: .75rem /* 12/16 */;
+  font-weight: 500;
 }
 </style>

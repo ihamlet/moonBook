@@ -27,9 +27,6 @@ export default {
   components: {
     showCard
   },
-  created () {
-    console.log(this.zoomCard)
-  },
   computed: {
     imgList(){
       if(this.zoomCard.photos){

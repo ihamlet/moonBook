@@ -26,25 +26,25 @@
               {{userInfo.card_name}}
             </b>
           </div>
-          <div class="data-flow read">
+          <div class="data-flow read" @click="toBorrowList">
             <span class="data-name">读过</span>
             <span class="number">
               <number-grow :value="userInfo.borrow_count" :time='.2' />
             </span>
           </div>
-          <div class="data-flow reading">
+          <div class="data-flow reading" @click="toBorrowList">
             <span class="data-name">在读</span>
             <span class="number">
               <number-grow :value="userInfo.borrowing_count" :time='.2' />
             </span>
           </div>
-          <div class="data-flow collection">
+          <div class="data-flow collection" @click="toBorrowList">
             <span class="data-name">收藏</span>
             <span class="number">
               <number-grow :value="userInfo.collect_count" :time='.2' />
             </span>
           </div>
-          <div class="data-flow abrasion">
+          <div class="data-flow abrasion" @click="toBorrowList">
             <span class="data-name">破损</span>
             <span class="number">
               <number-grow :value="userInfo.broken_count" :time='.2' />
@@ -130,6 +130,11 @@ export default {
     },
     closePunch() {
       this.punchShow = false
+    },
+    toBorrowList(){
+      this.$router.push({
+        name:'borrow-list'
+      })
     }
   }
 }

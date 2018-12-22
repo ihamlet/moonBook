@@ -1,6 +1,6 @@
 <template>
-  <div class="add-child">
-    <van-nav-bar :title="$route.query.pageTitle" left-arrow left-text="个人中心" :right-text="$route.query.type=='edit'?'删除':''"
+  <div class="add-child  page-padding">
+    <van-nav-bar :title="$route.query.pageTitle" left-arrow left-text="我的" :right-text="$route.query.type=='edit'?'删除':''"
       @click-left="onClickLeft" @click-right="onClickRight('delete')" />
     <div class="avatar-uploader">
       <i class="iconfont" v-if='userDataState.isVip' :class="`vip-${userDataState.card_level}`">&#xe776;</i>
@@ -29,6 +29,12 @@
         <van-cell title="女孩" clickable @click="radio = '2'">
           <van-radio class="theme-radio" name="2" />
         </van-cell>
+      </van-cell-group>
+    </van-radio-group>
+    <van-radio-group v-model="radio">
+      <div class="form-title">学校信息</div>
+      <van-cell-group>
+        <van-cell value='设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="toSetting(info)"/>
       </van-cell-group>
     </van-radio-group>
 
@@ -77,6 +83,7 @@ export default {
   },
   data() {
     return {
+      info:'',
       fileName: '',
       cropperLoading: false,
       radio: '1',
@@ -156,6 +163,8 @@ export default {
           this.childInfo.gender = res.data.data.sex
           this.childInfo.relation_name = res.data.data.relation_name
           this.currentDate = date
+
+          this.info = res.data.data
         })
       }
 
@@ -204,20 +213,19 @@ export default {
       }
 
       this.submitLoading = true
-      axios.post('/book/baby/edit', this.childInfo).then(res => {
-          if(res.data.status){
-            this.$toast.success('创建成功')
-            this.submitLoading = false
-            this.$router.push({
-              name:'my'
-            })
-
-            this.getUserData()
-          }else{
-            this.$toast.fail('创建失败')
-            this.submitLoading = false        
-          }
-       })
+      return new Promise((resolve, reject) => {
+        axios.post('/book/baby/edit', this.childInfo).then(res => {
+            if(res.data.status){
+              this.$toast.success('创建成功')
+              this.submitLoading = false
+              this.getUserData()
+              resolve(res.data.data.child_id)
+            }else{
+              this.$toast.fail('创建失败')
+              this.submitLoading = false        
+            }
+        })
+      })
     },
     submit() {
       if(!this.childInfo.avatar){
@@ -234,7 +242,12 @@ export default {
         setTimeout(() => {
           this.errorMessage.birthday = ''
         }, 2000)
-      } else {
+      } else {        
+        if(this.$route.query.back){
+          this.$router.push({
+            name:'my'
+          })
+        }
         this.operationApi('添加')
       }
     },
@@ -266,10 +279,24 @@ export default {
           })
         })
       }
+    },
+    toSetting(info){
+      this.operationApi('添加').then(res=>{
+        this.$router.push({
+          name:'edit-setting',
+          query:{
+            id:res,
+            back: 'edit-setting'
+          }
+        })
+      })
     }
   }
 }
 </script>
-<style scoped>
+<style>
+.add-child .van-cell__title.cell-school-title{
+  flex: 5;
+}
 </style>
 

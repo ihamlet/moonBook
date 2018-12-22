@@ -32,6 +32,9 @@ export default {
     return {
       freshList: [],
       tab: [{
+        title: '关注',
+        sort: 'subscribe',
+      }, {
         title: '最新',
         sort: 'new',
       }, {

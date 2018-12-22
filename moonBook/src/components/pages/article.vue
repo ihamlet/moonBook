@@ -201,12 +201,13 @@ export default {
   right: 0.625rem /* 10/16 */;
 }
 
-.screenshot-popup {
+.share-box{
+  width: 100%;
   overflow: hidden;
 }
 
-.share-box{
-  width: 100%;
+
+.screenshot-popup {
   overflow: hidden;
 }
 </style>

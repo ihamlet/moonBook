@@ -2,28 +2,32 @@
   <div class="my page-padding">
     <card-head :userInfo='userDataState' />
     <lazy-component class="gutter gap-top">
-      <family v-if='children.length!=0' :children='children[0]'/>
+      <apps :appsList='appsList'/>
     </lazy-component>
     <lazy-component class="gutter gap">
       <class-home v-if='children.length!=0' :children="children[0]" />
     </lazy-component>
     <lazy-component class="gutter gap" v-if='zoomCard'>
-      <zone-card :zoomCard='zoomCard' :userInfo='userDataState'/>
+      <zone-card :zoomCard='zoomCard' :userInfo='userDataState' />
     </lazy-component>
     <lazy-component class="gutter gap">
-      <baby-home :childrenList='children'/>
+      <family v-if='children.length!=0' :children='children[0]' />
+    </lazy-component>
+    <lazy-component class="gutter gap">
+      <baby-home :childrenList='children' />
     </lazy-component>
     <slogan />
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
-import { mapGetters,mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import cardHead from './../module/myModule/head'
 import classHome from './../module/myModule/classHome'
 import zoneCard from './../module/myModule/zoneCard'
 import babyHome from './../module/myModule/babyHome'
 import family from './../module/myModule/family'
+import apps from './../module/myModule/apps'
 import slogan from './../module/slogan'
 
 export default {
@@ -34,6 +38,7 @@ export default {
     zoneCard,
     babyHome,
     classHome,
+    apps,
     family
   },
   computed: {
@@ -43,7 +48,20 @@ export default {
     return {
       children: '',
       zoomCard: '',
-    }  
+      appsList: [{
+        name: '代借还',
+        iconClass: 'icon-huanshu'
+      }, {
+        name: '定位码',
+        iconClass: 'icon-saomadingwei'
+      }, {
+        name: '数据',
+        iconClass: 'icon-shuju'
+      }, {
+        name: '权限管理',
+        iconClass: 'icon-quanxian'
+      }]
+    }
   },
   created() {
     this.fetchData()
@@ -54,7 +72,7 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     fetchData() {
-      this.getUserData().then(res=>{
+      this.getUserData().then(res => {
         axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
           this.children = res.data.data
         })

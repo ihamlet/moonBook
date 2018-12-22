@@ -1,7 +1,7 @@
 <template>
   <div class="graphic-card">
     <div class="container">
-      <div class="user-card flex flex-align">
+      <div class="user-card flex flex-align" @click="item.user_id>0&&toBookZoom(item)">
         <div class="avatar" v-if="type=='babyHome'">
           <img :src="avatar" alt="宝贝头像" />
         </div>  
@@ -16,17 +16,16 @@
           </div>
           <div class="school">{{item.schoolName}}</div>
         </div>
-        <div class="date">
-          <span>{{item.date}}</span>
-          <span>{{item.time}}</span>
+        <div class="follow" v-if='!item.isMe&&item.user_id>0'>
+          <van-button class="theme-btn" type="primary" size='mini' plain v-if='item.isSubscribe == 0' @click="follow(item)"> + 关注</van-button>
         </div>
       </div>
       <div class="text" v-line-clamp:20="2" v-html="item.details" @click="toArticle(item)"></div>
       <!-- 媒体图片  -->
       <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1'>
-        <div :class="item.photos.length > 4 ? 'layout-9':'layout-4'">
-          <van-row :gutter="2">
-            <van-col :span="item.photos.length > 4?'8':'12'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
+        <div :class="item.photos.length == 4 ? 'layout-4':'layout-9'">
+          <van-row :gutter="4">
+            <van-col :span="item.photos.length == 4?'12':'8'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
               <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']" @click="mediaLamp(item,photoIndex)"></div>
             </van-col>
           </van-row>
@@ -46,13 +45,11 @@
       </div>
 
       <div class="temp-type">
-         <van-tag plain type="primary" v-if='item.template_id == 0'>长文</van-tag>
-         <van-tag plain type="primary" v-if='item.template_id == 1'>微博</van-tag>
          <van-tag type="primary" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
       </div>
 
       <div class="social flex flex-align">
-        <div class="share">
+        <div class="share" @click="share(item)">
           <i class="iconfont">&#xe6eb;</i> {{item.share_num>1000?'999+':item.share_num}}
         </div>
         <div class="message"  @click="toArticle(item)">
@@ -69,30 +66,47 @@
     <van-popup v-model="pictureShow" class="picture-box-popup" get-container='#app'>
       <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item" />
     </van-popup>
+
+    <van-actionsheet v-model="shareShow" title="分享" get-container='#app'>
+      <share @show='imageShow = true' />
+    </van-actionsheet>
+
+    <!-- 生成图片 -->
+    <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
+      <article-share :item='item' :qrImage='qrImage' @close='imageShow = false'/>
+    </van-popup>
   </div>
 </template>
 <script>
 import axios from "./../../lib/js/api"
+import QRCode from "qrcode"
 import pictureBox from "./../mold/pictureBox"
 import vipLevel from './../animate/svg/vipLevel'
+import share from './../mold/share'
+import articleShare from './../articleContent'
 
 export default {
   name: "graphic-crad",
   props: ["item", "type",'avatar'],
   components: {
     pictureBox,
+    share,
+    articleShare,
     vipLevel
   },
   data() {
     return {
       imgIndex: 0,
       pictureShow: false,
-      articleShow: false
+      articleShow: false,
+      shareShow:false,
+      imageShow:false,
+      qrImage:'',
+      link:''
     }
   },
   methods: {
     addPraise(item) {
-      console.log(item)
       item.isZan = !item.isZan
       axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
         item.zan_num = res.data.data.like
@@ -109,6 +123,26 @@ export default {
         query:{
           id: item.post_id,
           type: item.template_id
+        }
+      })
+    },
+    follow(item){
+      this.$emit('follow',item)
+    },
+    share(item){
+      this.shareShow = true
+      this.link = `/article?id=${item.post_id}&type=${item.template_id}`
+      QRCode.toDataURL(this.link).then(url => {
+        this.qrImage = url
+      }).catch(err => {
+        console.error(err)
+      })
+    },
+    toBookZoom(item){
+      this.$router.push({
+        name:'zoom',
+        query:{
+          id: item.user_id
         }
       })
     }
@@ -155,12 +189,9 @@ export default {
   border-radius: 50%;
 }
 
-.date {
+.follow {
   position: absolute;
-  top: 0;
   right: 0;
-  color: #c0c4cc;
-  font-size: 0.75rem /* 12/16 */;
 }
 
 .school {

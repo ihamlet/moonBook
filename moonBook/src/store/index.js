@@ -27,14 +27,14 @@ const state = {
       path: 'find'
     },
     {
+      iconClass: 'icon-release',
+      name: '发布',
+      path: ''
+    },
+    {
       iconClass: 'icon-banji',
       name: '班级',
       path: 'class-home'
-    },
-    {
-      iconClass: 'icon-community',
-      name: '消息',
-      path: 'notice'
     },
     {
       iconClass: 'icon-people',

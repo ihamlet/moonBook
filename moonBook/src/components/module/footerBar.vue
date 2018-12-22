@@ -1,7 +1,7 @@
 <template>
     <div class="footer-bar flex flex-align">
         <van-tabbar :zIndex='100' v-model="active" fixed>
-            <van-tabbar-item v-for='(item,index) in userTabBtn' :key="index" :to='goPage(item.path)' :info="index==3&&MsgLengthState>0?MsgLengthState:''">
+            <van-tabbar-item v-for='(item,index) in userTabBtn' :key="index" :to='goPage(item.path)' @click="onClick(index)">
                 <i class="iconfont" :class="[props.active?`${item.iconClass}fill bounceIn animated`: item.iconClass]" slot='icon' slot-scope="props"></i>
                 <span>{{item.name}}</span>
             </van-tabbar-item>
@@ -13,7 +13,7 @@ import { mapGetters } from 'vuex'
 export default {
     name:'footer-bar',
     computed: {
-        ...mapGetters(['MsgLengthState','userTabBtn','userDataState'])
+        ...mapGetters(['userTabBtn','userDataState'])
     },
     data () {
         return {
@@ -35,6 +35,12 @@ export default {
             }else{
                 return router
             }
+        },
+        onClick(index){
+           this.active = this.$route.meta.tabActive
+           if(index == 2){
+               this.$emit('release')
+           }
         }
     }
 }
@@ -94,4 +100,8 @@ export default {
 /* 班级 */
 .icon-banji::before {content:"\e746"}
 .icon-banjifill:before {content:"\e745"}
+
+/* 发布 */
+.icon-release::before { content:"\e727"}
+.icon-releasefill::before { content:"\e728"}
 </style>

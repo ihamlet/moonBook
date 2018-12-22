@@ -6,8 +6,12 @@
     </transition>
     <div class="root-dom" v-if='!startPageShow'>
       <router-view />
-      <footer-bar v-if='$route.meta.isFooterBar'/>
+      <footer-bar v-if='$route.meta.isFooterBar' @release="isGraphicShow = true"/>
     </div>
+
+    <van-popup v-model="isGraphicShow" class="page-popup" position="bottom" get-container='#app'>
+      <graphic @close='isGraphicShow = false'/>
+    </van-popup>
   </div>
 </template>
 
@@ -15,6 +19,7 @@
 import axios from 'axios'
 import 'animate.css'
 import startPage from './module/startPage'
+import graphic from './module/release/graphic'
 import { mapActions,mapGetters } from 'vuex'
 import footerBar from './../components/module/footerBar'
 
@@ -22,7 +27,8 @@ export default {
   name: 'Hello',
   components: {
     startPage,
-    footerBar
+    footerBar,
+    graphic
   },
   computed: {
     ...mapGetters(['userDataState']),
@@ -37,6 +43,7 @@ export default {
   data () {
     const self = this
     return {
+      isGraphicShow:false,
       show:false,
       startPageShow:true,
       location: '',

@@ -26,6 +26,8 @@ import EditTeacher from '@/components/pages/editTeacher/teacher'
 import AddFamily from '@/components/pages/invite/addFamily'
 import VerifyFamily from '@/components/pages/invite/verifyList'
 
+import BorrowList from '@/components/pages/borrowList'
+
 import Article from '@/components/pages/article'
 import BookDetails from '@/components/pages/bookDetails'
 
@@ -134,7 +136,7 @@ export default new Router({
         meta: {
           title: '班级主页',
           scrollToTop: true,
-          tabActive:2,
+          tabActive:3,
           isFooterBar: true
         }
       },{
@@ -228,6 +230,16 @@ export default new Router({
         component: VerifyFamily,
         meta: {
           title:'成员审核',
+          scrollToTop: true,
+          tabActive:4,
+          isFooterBar: false
+        }
+      },{
+        path: '/borrow-list',
+        name: 'borrow-list',
+        component: BorrowList,
+        meta: {
+          title:'借阅记录',
           scrollToTop: true,
           tabActive:4,
           isFooterBar: false

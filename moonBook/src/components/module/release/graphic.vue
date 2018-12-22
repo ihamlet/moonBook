@@ -455,12 +455,12 @@ export default {
 }
 
 .user-info .avatar {
-  padding: 0.125rem /* 2/16 */ 0;
+  padding: .3125rem /* 5/16 */ 0;
 }
 
 .user-info .avatar img {
-  width: 2.625rem /* 42/16 */;
-  height: 2.625rem /* 42/16 */;
+  width: 2rem /* 32/16 */;
+  height: 2rem /* 32/16 */;
   border-radius: 50%;
 }
 

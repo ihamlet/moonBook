@@ -11,9 +11,6 @@
       </div>
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
-      <div class="class-avatar">
-        <img :src="classInfo.logo" alt="班级头像" />
-      </div>
       <div class="class-info">
         <div class="class-name">{{classInfo.title}}班</div>
         <div class="class-people">{{classInfo.grade_name}}班（{{classInfo.student_count}}人）</div>
@@ -156,11 +153,11 @@ export default {
 }
 
 .header {
-  padding: 1.25rem /* 20/16 */;
+  padding: 2.8125rem /* 45/16 */ 1.25rem /* 20/16 */ .625rem /* 10/16 */;
   background: url('https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/header-bg.jpg');
   background-size: cover;
   background-position: 68%;
-  height: 9.375rem /* 150/16 */;
+  height: 5rem /* 80/16 */;
 }
 
 .class-name {

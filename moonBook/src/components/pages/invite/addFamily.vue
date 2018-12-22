@@ -20,8 +20,7 @@ export default {
   data() {
     return {
       show: true,
-      isLoading: false,
-      childInfo: ''
+      isLoading: false
     }
   },
   methods: {
@@ -39,7 +38,6 @@ export default {
                 name:'my'
             })  
           }
- 
       })
     },
     onClickLeft(){

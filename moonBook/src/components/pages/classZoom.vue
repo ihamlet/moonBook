@@ -9,7 +9,7 @@
       <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name"/>
     </lazy-component>
     <lazy-component class="module">
-      <van-nav-bar title="班级动态" />
+      <van-nav-bar title="最新动态" />
       <van-list v-model="loading" :finished="finished" @load="onLoad">
         <div class="list" v-if='list.length > 0'>
           <div class="item" v-for="(item,index) in list" :key="index">
@@ -78,10 +78,6 @@ export default {
     fetchData() {
       axios.get(`/book/baby/getList?banji_id=${this.$route.query.id}`).then(res => {
         this.freshList = res.data.data
-      })
-
-      axios.get("/api/classAticleList").then(res => {
-        this.listLength = res.data.length
       })
     },
     onLoad() {

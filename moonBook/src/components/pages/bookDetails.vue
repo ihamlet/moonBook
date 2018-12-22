@@ -34,7 +34,7 @@
         </div>
       </lazy-component>
       <lazy-component class="module" v-if='freshList.length > 0'>
-        <div class="module-title">他们看过</div>
+        <div class="module-title">谁在看</div>
         <freshList :list='freshList' cid="child_id" avatar="child_avatar" routerName="baby-home" name="child_name" />
       </lazy-component>
       <lazy-component class="module">

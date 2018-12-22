@@ -1,7 +1,7 @@
 <template>
   <div class="edit-school">
     <div class="fixed">
-      <van-nav-bar title="选择学校" left-text="返回" left-arrow @click-left="close" />
+      <van-nav-bar title="选择学校" left-arrow @click-left="close" />
       <search-bar :prompt='prompt' @show='isListShow = true' />
     </div>
     <div class="container" v-if='!isListShow'>
@@ -82,10 +82,10 @@ export default {
                 name:'edit-class',
                 query:{
                     id: this.$route.query.id,
-                    schoolId: res.data.data.school_id
+                    schoolId: res.data.data.school_id,
+                    back: this.$route.query.back
                 }
             })
-
             this.getUserData()
           }else{
             this.$toast.fail('操作失败')

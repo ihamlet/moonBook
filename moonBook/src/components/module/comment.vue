@@ -180,7 +180,7 @@ export default {
     addCollect(item){
       item.isShoucang = !item.isShoucang
       axios.get(`/book/SchoolArticleCollect/add?post_id=${this.item.post_id}`).then(res=>{
-        item.collect_num = res.data.data.collect_num
+        console.log(res)
       })
     },
     showField(item) {

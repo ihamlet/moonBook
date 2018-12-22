@@ -41,6 +41,9 @@
         <div class="bar-item totalReading">总阅读量 {{childInfo.read_count}}</div>
         <div class="bar-item praise">赞 {{childInfo.zan_count}}</div>
       </div>
+      <div class="apps">
+        <apps :appsList='appsList' type='babyHome'/>
+      </div>
       <div class="baby-class" v-if="childInfo.is_mine">
         <van-cell-group>
           <van-cell :title="childInfo.banji_name" is-link center @click="toClassHome(childInfo)">
@@ -67,7 +70,7 @@
           <div class="list">
             <div class="item" v-for="(item,index) in list" :key="index">
               <van-cell>
-                <graphic-crad :item="item" type="babyHome" :avatar='childInfo.avatar' />
+                <graphic-crad :item="item" type="babyHome" :avatar='childInfo.avatar'/>
               </van-cell>
             </div>
           </div>
@@ -96,6 +99,7 @@ import avatar from "./../module/avatar"
 import reading from "./../module/reading"
 import graphicCrad from "./../module/card/graphicCrad"
 import graphic from './../module/release/graphic'
+import apps from './../module/myModule/apps'
 
 export default {
   name: "baby-home",
@@ -105,7 +109,8 @@ export default {
     reading,
     avatar,
     graphicCrad,
-    graphic
+    graphic,
+    apps
   },
   data() {
     return {
@@ -119,7 +124,17 @@ export default {
       loading: false,
       finished: false,
       releasePageShow: false,
-      page: 1
+      page: 1,
+      appsList: [{
+        name: '阅读榜',
+        iconClass: 'icon-shuju'
+      }, {
+        name: '每日国学',
+        iconClass: 'icon-guoxue'
+      }, {
+        name: '讲故事',
+        iconClass: 'icon-jianggushi'
+      }]
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -227,7 +242,6 @@ export default {
           }
         })
       }
-
     }
   }
 }

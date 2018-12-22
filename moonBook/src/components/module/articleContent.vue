@@ -7,7 +7,7 @@
         <!-- 媒体  -->
         <div class="media-content">
           <div class="media img" v-if='item.template_id == 1'>
-            <van-row gutter="2">
+            <van-row gutter="4">
               <van-col :span="8" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
                 <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']" @click="mediaLamp(item,photoIndex)"></div>
               </van-col>

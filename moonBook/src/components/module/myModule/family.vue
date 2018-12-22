@@ -1,31 +1,34 @@
 <template>
   <div class="module-card">
-    <van-cell-group>
-      <van-cell is-link title-class='family' :value="count > 0? `${count}位待审核`:'邀请家庭成员'" center size='large' @click="toFamily">
-        <div class="icon" slot="icon">
-          <i class="iconfont">&#xe6a3;</i>
-        </div>
-        <div class="family-list" slot="title">
-          <div class="flex flex-align">
-            <div class="avatar" v-for='(item,index) in list' :key="index" v-if='index < 5'>
-              <img :src="item.avatar" />
-            </div>
+    <van-cell is-link title-class='family' :value="count > 0? `${count}位待审核`:'邀请家庭成员'" center size='large' @click="toFamily">
+      <div class="icon" slot="icon">
+        <i class="iconfont">&#xe6a3;</i>
+      </div>
+      <div class="family-list" slot="title">
+        <div class="flex flex-align">
+          <div class="avatar" v-for='(item,index) in list' :key="index" v-if='index < 5'>
+            <img :src="item.avatar" />
           </div>
         </div>
-      </van-cell>
-    </van-cell-group>
+      </div>
+    </van-cell>
   </div>
 </template>
 <script>
 import axios from './../../lib/js/api'
+import { mapGetters } from 'vuex'
+import { removeArray } from './../../lib/js/util'
 
 export default {
   name: 'family',
   props: ['children'],
+  computed: {
+    ...mapGetters(['userDataState'])
+  },
   data() {
     return {
       list: [],
-      count: ''
+      count: 0
     }
   },
   created() {
@@ -40,7 +43,15 @@ export default {
         this.list = res.data.data
       })
       axios.get(`/book/babyParent/getList?child_id=${this.children.id}&is_close=1`).then(res => {
-        this.count = res.data.count
+        let array = res.data.data
+
+        array.forEach((element, i) => {
+          if (this.userDataState.id == element.parent_id) {
+            array.splice(i, 1)
+          }
+        })
+
+        this.count = array.length
       })
     },
     toFamily() {

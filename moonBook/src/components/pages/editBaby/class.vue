@@ -1,6 +1,6 @@
 <template>
   <div class="edit-class page-padding">
-    <van-nav-bar :border='false' fixed :title="childInfo.school_name" left-text="返回" left-arrow
+    <van-nav-bar :border='false' fixed :title="childInfo.school_name" left-arrow
       @click-left="onClickLeft" />
     <div class="container">
       <div class="baby-info flex flex-justify">
@@ -51,17 +51,26 @@ export default {
     ...mapActions(['getUserData']),
     fetchData() {
       axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
-        this.childInfo = res.data.data
+        if(res.data.status == 1){
+          this.childInfo = res.data.data
+        }
       })
     },
     onClickLeft() {
       this.$router.go(-1)
     },
     select(item, itemIndex) {
-        console.log(item)
         axios.get(`/book/babyBanji/bind?banji_name=${item.title}&child_id=${this.$route.query.id}`).then(res=>{
-            console.log(res)
             if(res.data.status){
+              if(this.$route.query.back){
+                this.$router.push({
+                    name: this.$route.query.back,
+                    query: {
+                      id: this.$route.query.id,
+                      back: this.$route.query.back
+                    }
+                })
+              }else{
                 this.$toast.success(res.data.msg)
                 this.$router.push({
                     name:'class-home',
@@ -69,8 +78,8 @@ export default {
                         id: res.data.data.banji_id
                     }
                 })
-                console.log('当前孩子的班级名字还有班级ID没有给到我 接口 /book/memberUser/getInfo')
                 this.getUserData()
+              }
             }else{
                 this.$toast.fail('加入失败')
                 this.$router.push({

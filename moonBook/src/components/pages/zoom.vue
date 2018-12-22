@@ -23,11 +23,11 @@
               <div class="text">发布</div>
             </div>
             <div class="data-box">
-              <div class="number">{{ userInfo.subscribe_count }}</div>
+              <div class="number">{{ userInfo.fans_count }}</div>
               <div class="text">粉丝</div>
             </div>
             <div class="data-box">
-              <div class="number">{{ userInfo.follow_count }}</div>
+              <div class="number">{{ userInfo.collect_count }}</div>
               <div class="text">关注</div>
             </div>
             <div class="data-box">
@@ -118,7 +118,6 @@ export default {
     fetaData() {
       axios.get(`/book/memberUser/getInfo?user_id=${this.$route.query.id}`).then(res => {
         this.userInfo = res.data
-        console.log(res)
         axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${res.data.child_id}`).then(res=>{
           this.lateBook = res.data.data
         })
@@ -147,10 +146,8 @@ export default {
     onLoad() {
       axios.get(`/book/SchoolArticle/getList?page=${this.page}&sort=post&user_id=${this.$route.query.id}`).then(res => {
         this.page++
-
         this.list = this.list.concat(res.data.data)
         this.loading = false
-
         if (this.list.length >= res.data.count) {
           this.finished = true
         }
