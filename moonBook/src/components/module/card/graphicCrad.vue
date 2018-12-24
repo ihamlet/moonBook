@@ -1,11 +1,11 @@
 <template>
   <div class="graphic-card">
     <div class="container">
-      <div class="user-card flex flex-align" @click="item.user_id>0&&toBookZoom(item)">
+      <div class="user-card flex flex-align">
         <div class="avatar" v-if="type=='babyHome'">
           <img :src="avatar" alt="宝贝头像" />
         </div>  
-        <div class="avatar" v-else>
+        <div class="avatar" v-else @click="item.user_id>0&&toBookZoom(item)">
           <img :src="item.user.avatar" :alt="item.user.name">
         </div>
         <div class="info">

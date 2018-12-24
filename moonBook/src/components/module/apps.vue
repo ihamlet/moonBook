@@ -15,7 +15,7 @@ export default {
         return {
             appList:[{
                 iconClass:'icon-school',
-                name:'学校'
+                name:'学校主页'
             },{
                 iconClass:'icon-story',
                 name:'讲故事'
@@ -57,10 +57,10 @@ export default {
 
 .icon-article::before{
     content: '\e63f';
-    background: linear-gradient(127deg, #00BCD4,#3F51B5);
+    background: linear-gradient(127deg, #03A9F4,#673AB7);
     -webkit-background-clip: text;
     color: transparent;
-    text-shadow: 0 .0625rem /* 1/16 */ .375rem /* 6/16 */ rgba(63, 81, 181, 0.3);
+    text-shadow: 0 .0625rem /* 1/16 */ .375rem /* 6/16 */ rgba(103, 58, 183, 0.3);
 }
 
 .app-item{

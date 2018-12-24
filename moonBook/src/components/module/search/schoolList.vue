@@ -43,7 +43,7 @@ export default {
         searchContent(val){
             let products = {
                 keywords: val,
-                type: 141204,
+                type: '141204|141203',
                 location: this.userPointState.location,
                 city: this.userPointState.city,
                 datatype:'poi',

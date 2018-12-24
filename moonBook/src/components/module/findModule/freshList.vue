@@ -41,6 +41,7 @@ export default {
   padding: 0.1875rem /* 3/16 */;
   border: 0.0625rem /* 1/16 */ solid #dcdfe6;
   border-radius: 50%;
+  margin: 0 auto;
 }
 
 .avatar img {
@@ -50,7 +51,7 @@ export default {
 }
 
 .scroll-item {
-  width: 5rem /* 80/16 */;
+  width: 3.75rem /* 60/16 */;
   padding-right: 0.625rem /* 10/16 */;
   display: inline-grid;
 }

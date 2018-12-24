@@ -3,10 +3,10 @@
     <van-nav-bar title="设置" :left-text="childName" left-arrow @click-left="onClickLeft" />
 
     <van-cell-group>
-      <div class="form-title">修改校园信息</div>
-      <van-field input-align='right' readonly center label="修改学校" v-model="setting.babySchool" placeholder="请选择学校"
+      <div class="form-title">校园信息</div>
+      <van-field input-align='right' readonly center label="选择学校" v-model="setting.babySchool" placeholder="请选择学校"
         @click="toSelectSchool" icon="question" @click-icon="$toast('设置孩子学校，将可以同步同班信息！')" />
-      <van-field input-align='right' readonly center label="修改班级" v-model="setting.babyClass" placeholder="请选择班级"
+      <van-field input-align='right' readonly center label="选择班级" v-model="setting.babyClass" placeholder="请选择班级"
         @click="toSelectClass" icon="question" @click-icon="$toast('您需要选择学校后才可选择班级')" />
     </van-cell-group>
 

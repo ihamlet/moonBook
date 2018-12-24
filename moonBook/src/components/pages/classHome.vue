@@ -1,6 +1,6 @@
 <template>
   <div class="class-home page-padding">
-    <van-nav-bar :title="fixedHeaderBar?$route.meta.title:`${classInfo.title}班`" :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']"
+    <van-nav-bar :title="fixedHeaderBar?$route.meta.title:classInfo.title" :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']"
       fixed @click-left="onClickLeft" @click-right="show = true">
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />

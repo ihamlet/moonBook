@@ -154,7 +154,7 @@ const actions = {
     let data = {
       Key: context.state.amapApiKey,
       keywords: '教育',
-      types: 141204,
+      types: '141204|141203',
       location: products.location,
       offset: 20,
       page: products.page,
