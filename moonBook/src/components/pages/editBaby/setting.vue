@@ -87,7 +87,8 @@ export default {
         query: {
           id: this.child_id,
           schoolId: this.userDataState.school_id,
-          back: this.$route.query.back
+          back: this.$route.query.back,
+          type: this.$route.query.type
         }
       })
     },

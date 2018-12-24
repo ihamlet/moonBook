@@ -206,8 +206,8 @@ export default {
       this.pickerShow = false
     },
     // 孩子添加编辑API
-    operationApi(msg,id){
-      
+    operationApi(id){
+
       if(id){
         this.childInfo.id = id
       }
@@ -237,24 +237,32 @@ export default {
         setTimeout(() => {
           this.errorMessage.birthday = ''
         }, 2000)
-      } else {        
-        this.submitLoading = false
+      } else { 
         this.operationApi().then(res=>{
-          this.submitLoading = false   
-          if(this.$route.query.back){
-            this.$router.push({
-              name:'my'
-            })
-            this.$toast.success('添加成功')
+
+          this.$router.push({
+            name:'my'
+          })
+
+          this.submitLoading = false
+
+          if(res){
+            this.$toast.success('创建成功')
           }else{
-            this.$router.go(-1)
-            this.$toast.fail('添加失败')
+            this.$toast.fail('创建失败')
           }
         })
       }
     },
     edit() {
-        this.operationApi('修改',this.$route.query.id)
+        this.operationApi(this.$route.query.id).then(res=>{
+          this.$router.go(-1)
+          if(res){
+            this.$toast.success('修改成功')
+          }else{
+            this.$toast.success('修改成功')
+          }
+        })
     },
     onClickRight(type) {
       if (type == 'jump') {
@@ -264,7 +272,7 @@ export default {
       }
       if (type == 'delete') {
         this.$dialog.alert({
-          message: '确定要删除吗？这将删除您孩子所有阅读信息,请您谨慎操作。',
+          message: `<div class='text-center'>确定要删除吗？</div>`,
           confirmButtonText: '取消',
           cancelButtonText: '确认',
           showCancelButton: true
@@ -288,7 +296,8 @@ export default {
           name:'edit-setting',
           query:{
             id:res,
-            back: 'edit-setting'
+            back: 'edit-setting',
+            type: this.$route.query.type
           }
         })
       })

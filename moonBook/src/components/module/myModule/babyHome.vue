@@ -66,7 +66,6 @@ export default {
   },
   methods: {
     toAddChild() {
-      this.pageTitle = "addBaby"
         this.$router.push({
         name:'edit-child',
         query:{

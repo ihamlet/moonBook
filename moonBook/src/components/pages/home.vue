@@ -144,7 +144,7 @@ export default {
 
             axios.get('/book/index/home_v2').then(res=>{
                 this.banner = res.data.homeData.banner
-                this.appsList = res.data.homeData.apps
+                // this.appsList = res.data.homeData.apps
                 this.investmentAd = res.data.homeData.investmentAd
                 this.newsList = res.data.homeData.newsList
                 this.videoList = res.data.homeData.videoList
@@ -171,9 +171,6 @@ export default {
         },
         onStepActiveChange(val){
             this.active = val
-        },
-        weChatShare(){
-            console.log('调用微信分享接口')
         },
         toAccept(){
             this.applyShow = true

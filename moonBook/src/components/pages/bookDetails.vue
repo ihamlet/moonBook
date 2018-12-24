@@ -20,13 +20,9 @@
             <van-col span="15">
               <div class="content">
                 <div class="title" v-line-clamp:20="2">{{details.title}}</div>
-                <div class="borrow-count"><span class="people">{{details.borrow_count}}</span>人借过</div>
                 <div class="book-info">
                   <div class="author" v-line-clamp:20="1"><b>作者:</b>{{details.author}}</div>
-                  <div class="shelf-name" v-line-clamp:20="1"><b>幼儿园:</b>{{details.shelf_name}}</div>
-                  <div class="pos-name"><b>书架号:</b>{{details.pos_name}}</div>
-                  <div class="isbn"><b>ISBN:</b>{{details.isbn}}</div>
-                  <div class="book-price"><b>价格:</b>{{details.price}}元</div>
+                  <div class="borrow-count"><span class="people">{{details.borrow_count}}</span>人借过</div>
                 </div>
               </div>
             </van-col>
@@ -34,7 +30,6 @@
         </div>
       </lazy-component>
       <lazy-component class="module" v-if='freshList.length > 0'>
-        <div class="module-title">谁在看</div>
         <freshList :list='freshList' cid="child_id" avatar="child_avatar" routerName="baby-home" name="child_name" />
       </lazy-component>
       <lazy-component class="module">

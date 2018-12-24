@@ -1,28 +1,75 @@
 <template>
     <div class="apps">
         <div class="app-list flex">
-            <a class="app-item" :href='item.link' v-for='(item,index) in appsList' :key="index">
-                <img class="lazy app-icon" v-lazy="item.icon" :alt="item.name">
+            <div class="app-item" v-for='(item,index) in appList' :key="index">
+                <div class="icon iconfont" :class="item.iconClass"></div>
                 <div class="app-name">{{item.name}}</div>
-            </a>
+            </div>
         </div>
     </div>
 </template>
 <script>
 export default {
     name:'apps',
-    props: ['appsList']
+    data () {
+        return {
+            appList:[{
+                iconClass:'icon-school',
+                name:'学校'
+            },{
+                iconClass:'icon-story',
+                name:'讲故事'
+            },{
+                iconClass:'icon-zoom',
+                name:'爸妈专区'
+            },{
+                iconClass:'icon-article',
+                name:'教育头条'
+            }]
+        }
+    }
 }
 </script>
 <style scoped>
-.app-item{
-    flex: 1;
+.icon-school::before{
+    content: '\e636';
+    background: linear-gradient(127deg, #FFEB3B,#FF9800);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 0 .0625rem /* 1/16 */ .375rem /* 6/16 */ rgba(255, 152, 0, 0.3);
 }
 
-.app-icon{
-    width: 2.625rem /* 42/16 */;
-    margin: .3125rem /* 5/16 */ auto;
-    display: block;
+.icon-story::before{
+    content: '\e7ad';
+    background: linear-gradient(127deg, #FF9800,#E91E63);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 0 .0625rem /* 1/16 */ .375rem /* 6/16 */ rgba(233, 30, 99, 0.3);
+}
+
+.icon-zoom::before{
+    content: '\e64d';
+    background: linear-gradient(127deg, #CDDC39,#4CAF50);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 0 .0625rem /* 1/16 */ .375rem /* 6/16 */ rgba(76, 175, 80, 0.3);
+}
+
+.icon-article::before{
+    content: '\e63f';
+    background: linear-gradient(127deg, #00BCD4,#3F51B5);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 0 .0625rem /* 1/16 */ .375rem /* 6/16 */ rgba(63, 81, 181, 0.3);
+}
+
+.app-item{
+    flex: 1;
+    text-align: center;
+}
+
+.icon.iconfont{
+    font-size: 2rem /* 32/16 */;
 }
 
 .app-list{
