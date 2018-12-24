@@ -216,13 +216,8 @@ export default {
       return new Promise((resolve, reject) => {
         axios.post('/book/baby/edit', this.childInfo).then(res => {
             if(res.data.status){
-              this.$toast.success('创建成功')
-              this.submitLoading = false
               this.getUserData()
               resolve(res.data.data.child_id)
-            }else{
-              this.$toast.fail('创建失败')
-              this.submitLoading = false        
             }
         })
       })
@@ -243,12 +238,19 @@ export default {
           this.errorMessage.birthday = ''
         }, 2000)
       } else {        
-        if(this.$route.query.back){
-          this.$router.push({
-            name:'my'
-          })
-        }
-        this.operationApi('添加')
+        this.submitLoading = false
+        this.operationApi().then(res=>{
+          this.submitLoading = false   
+          if(this.$route.query.back){
+            this.$router.push({
+              name:'my'
+            })
+            this.$toast.success('添加成功')
+          }else{
+            this.$router.go(-1)
+            this.$toast.fail('添加失败')
+          }
+        })
       }
     },
     edit() {
@@ -281,7 +283,7 @@ export default {
       }
     },
     toSetting(info){
-      this.operationApi('添加').then(res=>{
+      this.operationApi().then(res=>{
         this.$router.push({
           name:'edit-setting',
           query:{

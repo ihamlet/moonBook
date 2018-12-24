@@ -20,7 +20,7 @@ import axios from 'axios'
 import 'animate.css'
 import startPage from './module/startPage'
 import graphic from './module/release/graphic'
-import { mapActions,mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 import footerBar from './../components/module/footerBar'
 
 export default {
@@ -30,23 +30,13 @@ export default {
     footerBar,
     graphic
   },
-  computed: {
-    ...mapGetters(['userDataState']),
-    center(){
-      if(this.location){
-        return this.location
-      }else{
-        return `${this.userDataState.lng},${this.userDataState.lat}`
-      }
-    }
-  },
   data () {
     const self = this
     return {
       isGraphicShow:false,
       show:false,
       startPageShow:true,
-      location: '',
+      center: '114.085947,22.547',
       plugin:[{
           timeout:1000,
           pName: 'Geolocation',
@@ -54,7 +44,7 @@ export default {
               init:(map)=>{
                   map.getCurrentPosition( (status, result) => {
                   if (result && result.position) {
-                        self.location = `${result.position.lng},${result.position.lat}`
+                        self.center = `${result.position.lng},${result.position.lat}`
                       }
                   })
               }

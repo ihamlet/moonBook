@@ -14,7 +14,6 @@ const state = {
   amapApiKey: '0522f462288e296eac959dbde42718ab',
   token: '',
   userPoint: '',
-  location:'',
   footerTab: [
     {
       iconClass: 'icon-home',
