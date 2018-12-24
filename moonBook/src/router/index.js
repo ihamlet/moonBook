@@ -31,7 +31,7 @@ import BorrowList from '@/components/pages/borrowList'
 import Article from '@/components/pages/article'
 import BookDetails from '@/components/pages/bookDetails'
 
-import AppsSchool from '@/components/pages/apps/school'
+import AppsSchool from '@/components/pages/apps/schoolHome'
 
 Vue.use(Router)
 
@@ -253,7 +253,7 @@ export default new Router({
         meta: {
           title:'学校主页',
           scrollToTop: true,
-          tabActive:1,
+          tabActive:0,
           isFooterBar: true
         }
       }]

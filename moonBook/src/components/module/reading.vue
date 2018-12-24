@@ -2,11 +2,15 @@
   <div class="reading">
     <van-cell :title="moduleTitle" :is-link="type =='rank'" @click="toBabyHome" />
     <div class="book-list scroll-x" v-if='list.length > 0'>
-      <div class="book-item scroll-item" v-for='(item,index) in list' :key="index" @click="toBookDetails(item)">
+      <div class="book-item scroll-item" v-for='(item,index) in list' :key="index">
         <div class="book-cover">
-          <img :src="thumb(item.book_thumb)" @error="outThumb($event,item)" :alt="item.book_name">
+          <img :src="thumb(item.photo)" @error="outThumb($event,item)" :alt="item.book_name" @click="toBookDetails(item)">
+
+          <div class="listening" @click="listening(item)">
+            <i class="iconfont">&#xe617;</i>
+          </div>
         </div>
-        <div class="book-name" v-line-clamp:20="2">
+        <div class="book-name" v-line-clamp:20="2"  @click="toBookDetails(item)">
           {{item.book_name}}
         </div>
         <div class="book-detail">
@@ -28,6 +32,8 @@
   </div>
 </template>
 <script>
+import axios from './../lib/js/api'
+
 export default {
   name: 'reading',
   props: ['list', 'moduleTitle', 'type', 'babyId'],
@@ -77,6 +83,20 @@ export default {
           id:list.book_id
         }
       })
+    },
+    listening(item){
+      let p = /（.+?）/
+      let pureTitle = item.title.replace(p, '')
+      let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
+      let isRead = localStorage.getItem('bookRead_' + item.book_id)
+      if(!isRead) {
+          axios.get('/book/story/updateRead').then(res => {
+              localStorage.setItem('bookRead_' + item.book_id, true)
+              location.href = url
+          })
+      } else {
+          location.href = url
+      }
     }
   }
 }
@@ -93,6 +113,7 @@ export default {
 .book-cover {
   width: 9.375rem /* 150/16 */;
   height: 9.375rem /* 150/16 */;
+  position: relative;
 }
 
 .book-cover img {
@@ -143,58 +164,19 @@ export default {
 .book-borrow {
   margin: 0.125rem /* 2/16 */ 0;
 }
-</style>
-<style>
-.three-d-book {
-  perspective: 350;
-  position: relative;
-}
 
-.three-d-book-cover {
-  background: linear-gradient(135deg, #00bcd4, #409eff);
-  width: 6.875rem /* 110/16 */;
-  margin: 0 auto;
-  padding: 0.625rem 0;
-  transform: rotateY(8deg);
-  position: relative;
-  perspective: 80;
-}
-
-.three-d-book-cover::before {
-  content: '';
-  width: 0.625rem /* 10/16 */;
-  height: 100%;
-  background: linear-gradient(135deg, #f2f6fc, #dcdfe6);
+.listening{
+  width: 1.75rem /* 28/16 */;
+  height: 1.75rem /* 28/16 */;
   position: absolute;
-  transform: rotateY(-32deg);
-  left: -0.5rem /* 8/16 */;
-  top: 0;
+  bottom: 0;
+  right: 0;
 }
 
-.three-d-box,
-.three-d-book-cover {
-  height: 7.5rem /* 120/16 */;
-}
-
-.three-d-book-name {
-  color: #fff;
-  width: 5.625rem /* 90/16 */;
-  margin: 0 auto;
-  font-size: 0.8125rem;
-  height: 3.75rem /* 60/16 */;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 3;
-}
-
-.three-d-book-author {
-  padding: 0.625rem;
-  text-align: right;
-  background-image: linear-gradient(180deg, #fff, #f2f6fc);
-  font-size: 0.75rem;
-  box-shadow: 0 5px 20px -9px rgba(0, 0, 0, 0.5);
-  margin-top: 1.25rem;
+.listening i.iconfont{
+  font-size: 1.75rem /* 28/16 */;
+  color: #f02b2b;
+  background: #fff;
+  display: block;
 }
 </style>

@@ -63,7 +63,7 @@ export default {
           name: 'edit-child',
           query: {
             id: this.$route.query.id,
-            type:'add',
+            type: this.$route.query.type,
             pageTitle: '添加宝贝',
             back:'my'
           }

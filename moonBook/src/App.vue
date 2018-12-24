@@ -28,11 +28,11 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_jhswhkz82hq.eot');
-  src: url('//at.alicdn.com/t/font_893274_jhswhkz82hq.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_jhswhkz82hq.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_jhswhkz82hq.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_jhswhkz82hq.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_2ft8fgw9u0i.eot');
+  src: url('//at.alicdn.com/t/font_893274_2ft8fgw9u0i.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_2ft8fgw9u0i.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_2ft8fgw9u0i.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_2ft8fgw9u0i.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -872,5 +872,59 @@ i.iconfont.vip-1 {
   background-image: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%);
   -webkit-background-clip: text;
   color: transparent;
+}
+
+/* 3D封面 */
+.three-d-book {
+  perspective: 350;
+  position: relative;
+}
+
+.three-d-book-cover {
+  background: linear-gradient(135deg, #00bcd4, #409eff);
+  width: 6.875rem /* 110/16 */;
+  margin: 0 auto;
+  padding: 0.625rem 0;
+  transform: rotateY(8deg);
+  position: relative;
+  perspective: 80;
+}
+
+.three-d-book-cover::before {
+  content: '';
+  width: 0.625rem /* 10/16 */;
+  height: 100%;
+  background: linear-gradient(135deg, #f2f6fc, #dcdfe6);
+  position: absolute;
+  transform: rotateY(-32deg);
+  left: -0.5rem /* 8/16 */;
+  top: 0;
+}
+
+.three-d-box,
+.three-d-book-cover {
+  height: 7.5rem /* 120/16 */;
+}
+
+.three-d-book-name {
+  color: #fff;
+  width: 5.625rem /* 90/16 */;
+  margin: 0 auto;
+  font-size: 0.8125rem;
+  height: 3.75rem /* 60/16 */;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+}
+
+.three-d-book-author {
+  padding: 0.625rem;
+  text-align: right;
+  background-image: linear-gradient(180deg, #fff, #f2f6fc);
+  font-size: 0.75rem;
+  box-shadow: 0 5px 20px -9px rgba(0, 0, 0, 0.5);
+  margin-top: 1.25rem;
 }
 </style>

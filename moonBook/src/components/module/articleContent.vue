@@ -9,22 +9,22 @@
           <div class="media img" v-if='item.template_id == 1'>
             <van-row gutter="4">
               <van-col :span="8" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-                <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']" @click="mediaLamp(item,photoIndex)"></div>
+                <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']"
+                  @click="mediaLamp(item,photoIndex)"></div>
               </van-col>
             </van-row>
           </div>
           <!-- 媒体视频 -->
           <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
-            <div class="video-cover">
-              <div class="play">
-                <i class="iconfont">&#xe602;</i>
-              </div>
-              <img :src="item.cover" alt="视频封面">
-            </div>
+            <video controls="controls" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
+              <source :src="videoItem.photo">
+            </video>
           </div>
           <!-- 媒体音频 -->
           <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
-
+            <audio controls="controls" v-for='(audioItem,audioIndex) in item.photos' :key="audioIndex">
+              <source :src="audioItem.photo">
+            </audio>
           </div>
         </div>
       </div>
@@ -40,18 +40,18 @@ import pictureBox from './../module/mold/pictureBox'
 
 export default {
   name: 'article-content',
-  props: ['item','type'],
+  props: ['item', 'type'],
   components: {
     pictureBox
   },
-  data () {
+  data() {
     return {
-      imgIndex:'',
-      pictureShow:false
+      imgIndex: '',
+      pictureShow: false
     }
   },
   methods: {
-    mediaLamp(item,photoIndex){
+    mediaLamp(item, photoIndex) {
       this.pictureShow = true
       this.imgIndex = photoIndex
     }
@@ -75,18 +75,18 @@ export default {
   font-weight: 700;
 }
 
-.article-content.img-content{
-    padding: .625rem /* 10/16 */ 1.25rem /* 20/16 */;
-    height: 18.75rem /* 300/16 */;
-    border: .0625rem /* 1/16 */ solid #EBEEF5;
-    overflow: hidden;
-    position: relative;
-    border-radius: .5rem /* 8/16 */;
+.article-content.img-content {
+  padding: 0.625rem /* 10/16 */ 1.25rem /* 20/16 */;
+  height: 18.75rem /* 300/16 */;
+  border: 0.0625rem /* 1/16 */ solid #ebeef5;
+  overflow: hidden;
+  position: relative;
+  border-radius: 0.5rem /* 8/16 */;
 }
 
-.img-content .title{
-    font-size: 1rem /* 16/16 */;
-    margin-bottom: .625rem /* 10/16 */;
+.img-content .title {
+  font-size: 1rem /* 16/16 */;
+  margin-bottom: 0.625rem /* 10/16 */;
 }
 
 .img-content::before {
@@ -99,7 +99,7 @@ export default {
   background: linear-gradient(bottom, #fff, rgba(255, 255, 255, 0));
 }
 
-article{
+article {
   width: -webkit-fill-available;
 }
 </style>

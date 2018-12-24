@@ -27,15 +27,6 @@
         </van-list>
       </van-tab>
     </van-tabs>
-
-    <div class="punch">
-      <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
-        <i class="iconfont">&#xe60a;</i>
-        阅读打卡
-      </van-button>
-    </div>
-
-    <div ref='punchFrame' v-show='false'></div>
   </div>
 </template>
 <script>
@@ -121,9 +112,6 @@ export default {
     //     })
     //   }
     // },
-    punch(){
-      location.href=`/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
-    }
   }
 }
 </script>
@@ -187,10 +175,6 @@ export default {
 .sign-read .numb {
   font-size: 1.125rem /* 18/16 */;
   font-weight: 500;
-}
-
-.punch{
-  z-index: 101;
 }
 </style>
 <style>

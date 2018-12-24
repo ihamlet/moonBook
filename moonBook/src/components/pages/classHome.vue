@@ -18,38 +18,52 @@
       </div>
     </div>
     <div class="container">
-      <lazy-component class="module">
-        <class-show :className='classInfo.title' />
+      <lazy-component  class="module">
+        <div class="apps">
+          <apps :appsList='appsList' type='classHome'/>
+        </div>
       </lazy-component>
       <lazy-component class="module">
+        
+      </lazy-component>
+      <!-- <lazy-component class="module">
         <reading :list="lateBook" moduleTitle="老师推荐的书" />
-      </lazy-component>
+      </lazy-component> -->
       <lazy-component>
-        <week-list />
+        <class-zoom type='template' :banji_id='classInfo.banji_id'/>
       </lazy-component>
     </div>
 
     <van-popup v-model="show" class="plate-card">
       <qr-code :classInfo="classInfo" :qrImage="qrImage" type='classHome' @close='show = false' />
     </van-popup>
+
+        <div class="punch">
+      <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
+        <i class="iconfont">&#xe60a;</i>
+        阅读打卡
+      </van-button>
+    </div>
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
 import { mapGetters,mapActions } from 'vuex'
 import QRCode from 'qrcode'
+import classZoom from './../pages/classZoom'
 import weekList from './../module/classModule/weekList'
-import classShow from './../module/classModule/classShow'
 import reading from './../module/reading'
 import qrCode from './../module/mold/qrCode'
+import apps from './../module/myModule/apps'
 
 export default {
   name: "class-home",
   components: {
-    classShow,
+    classZoom,
     weekList,
     reading,
-    qrCode
+    qrCode,
+    apps
   },
   computed: {
     ...mapGetters(['userDataState'])
@@ -61,13 +75,25 @@ export default {
       qrImage: '',
       classInfo: '',
       lateBook: '',
+      appsList: [{
+        name: '讲故事',
+        iconClass: 'icon-jianggushi'
+      },{
+        name: '阅读榜',
+        iconClass: 'icon-shuju'
+      }, {
+        name: '每日国学',
+        iconClass: 'icon-guoxue'
+      },{
+        name: '通讯录',
+        iconClass: 'icon-tongxunlu'
+      }]
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.qrcode()
       vm.getUserData().then(res=>{
-        console.log(res)
         if( res.child_id > 0 ){
           if(res.school_id > 0){
             if(res.banji_id > 0){
@@ -137,9 +163,12 @@ export default {
       if (this.$refs.head) {
         this.domHeight = this.$refs.head.offsetHeight / 2
       }
+    },
+    punch(){
+      location.href=`/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
     }
   }
-};
+}
 </script>
 <style scoped>
 .school {
@@ -192,5 +221,9 @@ export default {
 .plate-card {
   width: 18.75rem /* 300/16 */;
   overflow: hidden;
+}
+
+.punch{
+  z-index: 101;
 }
 </style>

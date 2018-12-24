@@ -10,7 +10,7 @@
                 <van-row gutter="10">
                   <van-col span="8">
                     <div class="book-cover" @click="toBookDetails(item)">
-                      <img :src="item.book.thumb" @error="outThumb($event,item)" />
+                      <img :src="item.book.photo" @error="outThumb($event,item)" />
                     </div>
                   </van-col>
                   <van-col span="13">
@@ -187,7 +187,7 @@ export default {
     listening(item){
       let p = /（.+?）/
       let pureTitle = item.book.title.replace(p, '')
-      let url = 'http://m.ximalaya.com/search/' + pureTitle
+      let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
       let isRead = localStorage.getItem('bookRead_' + item.book_id)
       if(!isRead) {
           axios.get('/book/story/updateRead').then(res => {
@@ -238,62 +238,8 @@ export default {
 
 .listening i.iconfont {
   font-size: 1.75rem /* 28/16 */;
-  background: linear-gradient(-75deg, #fe8537, #f02b2b);
+  background: linear-gradient(135deg, #fe8537, #f02b2b);
   -webkit-background-clip: text;
   color: transparent;
-}
-</style>
-<style>
-.three-d-book {
-  perspective: 350;
-  position: relative;
-}
-
-.three-d-book-cover {
-  background: linear-gradient(135deg, #00bcd4, #409eff);
-  width: 6.875rem /* 110/16 */;
-  margin: 0 auto;
-  padding: 0.625rem 0;
-  transform: rotateY(8deg);
-  position: relative;
-  perspective: 80;
-}
-
-.three-d-book-cover::before {
-  content: '';
-  width: 0.625rem /* 10/16 */;
-  height: 100%;
-  background: linear-gradient(135deg, #f2f6fc, #dcdfe6);
-  position: absolute;
-  transform: rotateY(-32deg);
-  left: -0.5rem /* 8/16 */;
-  top: 0;
-}
-
-.three-d-box,
-.three-d-book-cover {
-  height: 7.5rem /* 120/16 */;
-}
-
-.three-d-book-name {
-  color: #fff;
-  width: 5.625rem /* 90/16 */;
-  margin: 0 auto;
-  font-size: 0.8125rem;
-  height: 3.75rem /* 60/16 */;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 3;
-}
-
-.three-d-book-author {
-  padding: 0.625rem;
-  text-align: right;
-  background-image: linear-gradient(180deg, #fff, #f2f6fc);
-  font-size: 0.75rem;
-  box-shadow: 0 5px 20px -9px rgba(0, 0, 0, 0.5);
-  margin-top: 1.25rem;
 }
 </style>

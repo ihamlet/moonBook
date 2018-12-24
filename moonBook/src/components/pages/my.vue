@@ -11,9 +11,6 @@
       <zone-card :zoomCard='zoomCard' :userInfo='userDataState' />
     </lazy-component>
     <lazy-component class="gutter gap">
-      <family v-if='children.length!=0' :children='children[0]' />
-    </lazy-component>
-    <lazy-component class="gutter gap">
       <baby-home :childrenList='children' />
     </lazy-component>
     <slogan />
@@ -26,7 +23,6 @@ import cardHead from './../module/myModule/head'
 import classHome from './../module/myModule/classHome'
 import zoneCard from './../module/myModule/zoneCard'
 import babyHome from './../module/myModule/babyHome'
-import family from './../module/myModule/family'
 import apps from './../module/myModule/apps'
 import slogan from './../module/slogan'
 
@@ -38,8 +34,7 @@ export default {
     zoneCard,
     babyHome,
     classHome,
-    apps,
-    family
+    apps
   },
   computed: {
     ...mapGetters(['userDataState'])

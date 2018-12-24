@@ -1,13 +1,10 @@
 <template>
   <div class="baby-home page-padding">
     <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" :title="fixedHeaderBar?$route.meta.title:childInfo.name"
-      @click-left="onClickLeft" @click-right="onClickRight">
+      @click-left="onClickLeft">
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">个人中心</span>
-      </div>
-      <div class="head-bar-icon" slot="right" v-if="childInfo.is_mine">
-        <i class="iconfont">&#xe60c;</i>
       </div>
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
@@ -41,10 +38,11 @@
         <div class="bar-item totalReading">总阅读量 {{childInfo.read_count}}</div>
         <div class="bar-item praise">赞 {{childInfo.zan_count}}</div>
       </div>
-      <div class="apps">
-        <apps :appsList='appsList' type='babyHome'/>
-      </div>
-      <div class="baby-class" v-if="childInfo.is_mine">
+      <lazy-component class="module" v-if="childInfo.is_mine">
+        <family />
+      </lazy-component>
+
+      <div class="baby-class">
         <van-cell-group>
           <van-cell :title="childInfo.banji_name" is-link center @click="toClassHome(childInfo)">
             <div class="icon" slot="icon">
@@ -54,10 +52,13 @@
         </van-cell-group>
       </div>
       <lazy-component class="module">
+        <class-show />
+      </lazy-component>
+      <lazy-component class="module">
         <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
       </lazy-component>
       <lazy-component>
-        <van-nav-bar title="成长记录" @click-right="releasePageShow = true">
+        <van-nav-bar title="成长日记" @click-right="releasePageShow = true">
           <div class="head-bar-btn theme-color" slot="right">
             <i class="iconfont">&#xe72c;</i>发布
           </div>
@@ -99,7 +100,8 @@ import avatar from "./../module/avatar"
 import reading from "./../module/reading"
 import graphicCrad from "./../module/card/graphicCrad"
 import graphic from './../module/release/graphic'
-import apps from './../module/myModule/apps'
+import classShow from './../module/classModule/classShow'
+import family from './../module/myModule/family'
 
 export default {
   name: "baby-home",
@@ -110,7 +112,8 @@ export default {
     avatar,
     graphicCrad,
     graphic,
-    apps
+    classShow,
+    family
   },
   data() {
     return {
@@ -124,17 +127,7 @@ export default {
       loading: false,
       finished: false,
       releasePageShow: false,
-      page: 1,
-      appsList: [{
-        name: '阅读榜',
-        iconClass: 'icon-shuju'
-      }, {
-        name: '每日国学',
-        iconClass: 'icon-guoxue'
-      }, {
-        name: '讲故事',
-        iconClass: 'icon-jianggushi'
-      }]
+      page: 1
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -212,17 +205,6 @@ export default {
         }
       })
     },
-    onClickRight() {
-      this.$router.push({
-        name:'edit-setting',
-        query:{
-          id: this.$route.query.id
-        }
-      })
-    },
-    babySetting(data) {
-      this.school = data.school
-    },
     toClassHome(childInfo) {
       console.log(childInfo)
       if(childInfo.banji_id > 0){
@@ -249,7 +231,7 @@ export default {
 <style scoped>
 .header {
   width: 100%;
-  height: 8.75rem /* 140/16 */;
+  height: 9.375rem /* 150/16 */;
   position: relative;
 }
 

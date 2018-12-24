@@ -14,7 +14,7 @@
           <van-row gutter="10">
             <van-col span="9">
               <div class="book-thumb">
-                <img :src="details.thumb" @error="outThumb($event,details)" />
+                <img :src="details.photo" @error="outThumb($event,details)" />
               </div>
             </van-col>
             <van-col span="15">

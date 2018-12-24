@@ -20,6 +20,7 @@ export default {
 .icon-tongxunlu::before { content: '\e7ab'}
 .icon-guoxue::before { content: '\e61a'}
 .icon-jianggushi::before { content: '\e638'}
+.icon-tongxunlu::before { content: '\e6d3'}
 
 .apps{
     padding: .625rem /* 10/16 */ 0;
@@ -38,7 +39,7 @@ export default {
     color: transparent;
 }
 
-.babyHome.apps .icon .iconfont{
+.classHome.apps .icon .iconfont{
     background: linear-gradient(145deg, #51ebff,#2196F3);
     -webkit-background-clip: text;
     color: transparent;

@@ -10,7 +10,7 @@
             <div class="avatar">
               <img crossOrigin="anonymous" :src="avatar(item.user.avatar)" :alt="item.user.username" />
             </div>
-            <div class="name">{{item.user.username}}</div>
+            <div class="name">{{userName}}</div>
           </div>
           <div class="content">
             <article-content :item='item' type='screenshot' />
@@ -42,7 +42,7 @@ import articleContent from './../articleContent'
 
 export default {
   name: 'article-share',
-  props: ['item', 'qrImage'],
+  props: ['item', 'qrImage','userName'],
   components: {
     articleContent
   },

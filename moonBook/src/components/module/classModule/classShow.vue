@@ -22,7 +22,7 @@ import photoStack from './../animate/photoStack'
 import showCrad from './../card/showCrad'
 export default {
   name: 'class-show',
-  props: ['className'],
+  props: ['className','banji_id'],
   components: {
     windmill,
     photoStack,
@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get(`/book/SchoolArticle/getList?page=${this.page}&limit=1&banji_id=${this.$route.query.id}`).then(res => {
+      axios.get(`/book/SchoolArticle/getList?page=${this.page}&limit=1&banji_id=${this.banji_id}`).then(res => {
         console.log(res.data.data[0])
         this.drying = res.data.data[0]
       })
@@ -51,7 +51,7 @@ export default {
       this.$router.push({
         name: 'class-zoom',
         query: {
-          id: this.$route.query.id,
+          id: this.banji_id,
           className: this.className
         }
       })

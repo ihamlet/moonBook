@@ -73,7 +73,7 @@
 
     <!-- 生成图片 -->
     <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
-      <article-share :item='item' :qrImage='qrImage' @close='imageShow = false'/>
+      <article-share :item='item' :userName='item.user.name' :qrImage='qrImage' @close='imageShow = false'/>
     </van-popup>
   </div>
 </template>
@@ -83,7 +83,7 @@ import QRCode from "qrcode"
 import pictureBox from "./../mold/pictureBox"
 import vipLevel from './../animate/svg/vipLevel'
 import share from './../mold/share'
-import articleShare from './../articleContent'
+import articleShare from './../../module/mold/articleShare'
 
 export default {
   name: "graphic-crad",

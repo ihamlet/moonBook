@@ -1,6 +1,6 @@
 <template>
-  <div class="class-zoom page-padding">
-    <van-nav-bar title="班级风采" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" @click-right='onClickRight'>
+  <div class="class-zoom" :class="[type!='template'?'page-padding':'no-padding']">
+    <van-nav-bar v-if='type!="template"' title="班级风采" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" @click-right='onClickRight'>
       <div slot="right" class="theme-color">
         <i class="iconfont">&#xe612;</i>
       </div>
@@ -28,8 +28,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
-import { mapGetters } from "vuex"
+import axios from './../lib/js/api'
 import freshList from './../module/findModule/freshList'
 import graphicCrad from './../module/card/graphicCrad'
 import graphic from './../module/release/graphic'
@@ -37,14 +36,11 @@ import qrCode from "./../module/mold/qrCode"
 
 export default {
   name: "class-zoom",
-  props: ['classInfo'],
+  props: ['type'],
   components: {
     freshList,
     graphicCrad,
     graphic
-  },
-  computed: {
-    ...mapGetters(['dryingListLengthState'])
   },
   data() {
     return {
@@ -65,12 +61,7 @@ export default {
   },
   methods: {
     onClickLeft() {
-      this.$router.push({
-        name: 'class-home',
-        query: {
-          id: this.$route.query.id
-        }
-      })
+      this.$router.go(-1)
     },
     onClickRight() {
       this.releasePageShow = true
@@ -96,5 +87,9 @@ export default {
 <style scoped>
 .class-zoom {
   padding-top: 2.8125rem /* 45/16 */;
+}
+
+.class-zoom.no-padding{
+  padding-top: 0;
 }
 </style>

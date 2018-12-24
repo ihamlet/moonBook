@@ -21,7 +21,6 @@ import { removeArray } from './../../lib/js/util'
 
 export default {
   name: 'family',
-  props: ['children'],
   computed: {
     ...mapGetters(['userDataState'])
   },
@@ -39,10 +38,10 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get(`/book/babyParent/getList?child_id=${this.children.id}`).then(res => {
+      axios.get(`/book/babyParent/getList?child_id=${this.$route.query.id}`).then(res => {
         this.list = res.data.data
       })
-      axios.get(`/book/babyParent/getList?child_id=${this.children.id}&is_close=1`).then(res => {
+      axios.get(`/book/babyParent/getList?child_id=${this.$route.query.id}&is_close=1`).then(res => {
         let array = res.data.data
 
         array.forEach((element, i) => {
@@ -59,14 +58,14 @@ export default {
         this.$router.push({
           name: 'verify-list',
           query: {
-            id: this.children.id
+            id: this.$route.query.id
           }
         })
       } else {
         this.$router.push({
           name: 'add-family',
           query: {
-            id: this.children.id
+            id: this.$route.query.id
           }
         })
       }

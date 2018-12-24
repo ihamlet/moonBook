@@ -1,7 +1,7 @@
 <template>
     <div class="apps">
         <div class="app-list flex">
-            <div class="app-item" v-for='(item,index) in appList' :key="index">
+            <div class="app-item" v-for='(item,index) in appList' :key="index" @click="toPath(item)"> 
                 <div class="icon iconfont" :class="item.iconClass"></div>
                 <div class="app-name">{{item.name}}</div>
             </div>
@@ -15,17 +15,28 @@ export default {
         return {
             appList:[{
                 iconClass:'icon-school',
-                name:'学校主页'
+                name:'学校主页',
+                pathName:'apps-school'
             },{
                 iconClass:'icon-story',
-                name:'讲故事'
+                name:'讲故事',
+                pathName:''
             },{
                 iconClass:'icon-zoom',
-                name:'爸妈专区'
+                name:'爸妈专区',
+                pathName:''
             },{
                 iconClass:'icon-article',
-                name:'教育头条'
+                name:'教育头条',
+                pathName:''
             }]
+        }
+    },
+    methods: {
+        toPath(item){
+            this.$router.push({
+                name: item.pathName
+            })
         }
     }
 }
