@@ -6,7 +6,7 @@
         <span class="name">周阅读榜</span>
       </div>
       <van-row>
-        <van-col span="8" v-for='(item,index) in rankList' :key="index" v-if='item.rank < 4'>
+        <van-col span="8" v-for='(item,index) in rankList' :key="index" v-if='index < 3'>
           <div class="flex flex-align flex-justify">
             <div class="ranking">
               <svg-ranking :ranking="item.rank" type="class-module"/>

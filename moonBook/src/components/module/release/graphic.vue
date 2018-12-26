@@ -170,7 +170,7 @@ export default {
 
       if (this.userDataState.banji_id > 0) {
         array.push({
-          title: `${this.userDataState.child_name}@${this.userDataState.banji_name}班`,
+          title: `${this.userDataState.child_name}@${this.userDataState.banji_name}`,
           name: 'class-zoom'
         })
       }

@@ -13,7 +13,7 @@
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">
         <div class="class-name">{{classInfo.title}}</div>
-        <div class="class-people">{{classInfo.grade_name}}班（{{classInfo.student_count}}人）</div>
+        <div class="class-people">{{classInfo.grade_name}}（{{classInfo.student_count}}人）</div>
         <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
       </div>
     </div>
