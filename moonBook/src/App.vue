@@ -28,11 +28,11 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_2ft8fgw9u0i.eot');
-  src: url('//at.alicdn.com/t/font_893274_2ft8fgw9u0i.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_2ft8fgw9u0i.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_2ft8fgw9u0i.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_2ft8fgw9u0i.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_z3qzcqvraa.eot');
+  src: url('//at.alicdn.com/t/font_893274_z3qzcqvraa.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_z3qzcqvraa.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_z3qzcqvraa.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_z3qzcqvraa.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -713,6 +713,7 @@ i.iconfont.rotate {
   position: fixed;
   bottom: 0;
   width: 100%;
+  z-index: 10;
 }
 
 .btn-submit {
@@ -911,7 +912,7 @@ i.iconfont.vip-1 {
   width: 5.625rem /* 90/16 */;
   margin: 0 auto;
   font-size: 0.8125rem;
-  height: 3.75rem /* 60/16 */;
+  height: 3.125rem /* 50/16 */;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;

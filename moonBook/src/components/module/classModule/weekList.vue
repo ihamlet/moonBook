@@ -9,10 +9,10 @@
               <div class="ranking">
                 <svg-ranking :ranking="item.rank" />
               </div>
-                <div class="avatar" v-if="item.avatar">
-                  <img :src="item.avatar" :alt="item.name" />
-                </div>
-                <avatar class="avatar" :gender="item.sex" v-else />
+              <div class="avatar" v-if="item.avatar">
+                <img :src="item.avatar" :alt="item.name" />
+              </div>
+              <avatar class="avatar" :gender="item.sex" v-else />
               <div class="name">
                 <span v-line-clamp:20="1">{{item.name}}</span>
                 <span class="topic">{{item.title}}</span>
@@ -49,18 +49,18 @@ export default {
   },
   data() {
     return {
-      readList:[],
-      borrowList:[],
+      readList: [],
+      borrowList: [],
       loading: false,
       finished: false,
-      tab:[{
-        title:'阅读榜',
-        content:[]
-      },{
-        title:'借阅榜',
-        content:[]
+      tab: [{
+        title: '阅读榜',
+        content: []
+      }, {
+        title: '借阅榜',
+        content: []
       }],
-      tabIndex:0
+      tabIndex: 0
     }
   },
   // mounted() {
@@ -69,26 +69,26 @@ export default {
   //   }
   // },
   methods: {
-    onChange(index){
+    onChange(index) {
       this.tabIndex = index
       this.onLoad()
     },
-    onLoad(){
-      if( this.tabIndex == 0){
+    onLoad() {
+      if (this.tabIndex == 0) {
         this.getReadList()
       }
-      if( this.tabIndex == 1){
-       this.getBorrowList()
+      if (this.tabIndex == 1) {
+        this.getBorrowList()
       }
     },
-    getReadList(){
+    getReadList() {
       axios.get(`/book/babySign/rank?banji_id=${this.$route.query.id}`).then(res => {
         this.loading = false
-        this.tab[ this.tabIndex].content = res.data.data
+        this.tab[this.tabIndex].content = res.data.data
         this.finished = true
       })
     },
-    getBorrowList(){
+    getBorrowList() {
       axios.get('/book/SchoolTushuBorrow/getRank?region=banji&group=baby').then(res => {
         let myArr = [res.data.data.myInfo]
         let list = myArr.concat(res.data.data.list)
@@ -97,10 +97,10 @@ export default {
           item.name = info.name
           item.avatar = info.avatar
           item.title = item.read_count > 50 ? '阅读小明星' : '阅读新秀',
-          item.sign_read_count = item.read_count || 0
+            item.sign_read_count = item.read_count || 0
         })
 
-        this.tab[ this.tabIndex ].content = list
+        this.tab[this.tabIndex].content = list
       })
     },
     // onPunch(res){
@@ -133,7 +133,7 @@ export default {
   padding: 0.3125rem /* 5/16 */ 0.625rem /* 10/16 */;
 }
 
-.avatar{
+.avatar {
   width: 3.125rem /* 50/16 */;
   height: 3.125rem /* 50/16 */;
   border-radius: 50%;
@@ -141,7 +141,7 @@ export default {
   margin-right: 0.625rem /* 10/16 */;
 }
 
-.avatar img{
+.avatar img {
   width: 3.125rem /* 50/16 */;
   height: 3.125rem /* 50/16 */;
   border-radius: 50%;
@@ -178,7 +178,7 @@ export default {
 }
 </style>
 <style>
-.week-list .van-cell__title.cell-title{
+.week-list .van-cell__title.cell-title {
   flex: 2;
 }
 </style>

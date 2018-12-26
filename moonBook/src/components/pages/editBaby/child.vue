@@ -20,6 +20,9 @@
         :error-message="errorMessage.birthday" @click="pickerShow = true" />
       <van-field v-model="childInfo.relation_name" input-align='right' label="您是孩子的？" placeholder="例如：爸爸" />
     </van-cell-group>
+    <van-cell-group class="theme-switch">
+      <van-switch-cell v-model="settingSurrent" @input="onInput" title="设为当前宝贝" />
+    </van-cell-group>
     <van-radio-group v-model="radio">
       <div class="form-title">孩子性别</div>
       <van-cell-group>
@@ -31,10 +34,11 @@
         </van-cell>
       </van-cell-group>
     </van-radio-group>
-    <van-radio-group v-model="radio">
-      <div class="form-title">学校信息</div>
+    <van-radio-group>
+      <div class="form-title">学校设置</div>
       <van-cell-group>
-        <van-cell value='设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="toSetting(info)"/>
+        <van-cell value='设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center
+          is-link @click="toSetting(info)" />
       </van-cell-group>
     </van-radio-group>
 
@@ -67,7 +71,7 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapActions,mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { VueCropper } from 'vue-cropper'
 import { format } from './../../lib/js/util'
 import avatar from './../../module/avatar'
@@ -83,7 +87,7 @@ export default {
   },
   data() {
     return {
-      info:'',
+      info: '',
       fileName: '',
       cropperLoading: false,
       radio: '1',
@@ -93,6 +97,7 @@ export default {
       minDate: new Date(format(new Date(), 'yyyy') - 20, 0, 0),
       maxDate: new Date(format(new Date(), 'yyyy') - 1, 0),
       currentDate: new Date(format(new Date(), 'yyyy') - 2, 0, 0),
+      settingSurrent: false,
       childInfo: {
         name: '',
         gender: 'boy',
@@ -131,7 +136,7 @@ export default {
     },
     radio(val) {
       localStorage.setItem('radio', val)
-      val == '1' ? (this.childInfo.gender = 'boy') : (this.childInfo.gender = 'girl')
+      val == '1' ? this.childInfo.gender = 'boy' : this.childInfo.gender = 'girl'
     },
     currentDate(val) {
       this.childInfo.birthday = format(new Date(val), 'yyyy-MM-dd')
@@ -155,14 +160,18 @@ export default {
         this.radio = localStorage['radio']
       }
 
-      if(this.$route.query.id){
+      if (this.$route.query.id) {
         axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
-          let date = new Date(res.data.data.birthday*1000)
+          let date = new Date(res.data.data.birthday * 1000)
           this.childInfo.name = res.data.data.name
           this.childInfo.avatar = res.data.data.avatar
           this.childInfo.gender = res.data.data.sex
           this.childInfo.relation_name = res.data.data.relation_name
           this.currentDate = date
+
+          if (res.data.data.is_current_child == 1 || this.userDataState.child_id == this.$route.query.id) {
+            this.settingSurrent = true
+          }
 
           this.info = res.data.data
         })
@@ -198,7 +207,7 @@ export default {
     },
     onClickLeft() {
       this.$router.push({
-        name:'my'
+        name: 'my'
       })
     },
     cancelPicker() {
@@ -206,28 +215,28 @@ export default {
       this.pickerShow = false
     },
     // 孩子添加编辑API
-    operationApi(id){
+    operationApi(id) {
 
-      if(id){
+      if (id) {
         this.childInfo.id = id
       }
 
       this.submitLoading = true
       return new Promise((resolve, reject) => {
         axios.post('/book/baby/edit', this.childInfo).then(res => {
-            if(res.data.status){
-              this.getUserData()
-              resolve(res.data.data.child_id)
-            }
+          if (res.data.status) {
+            this.getUserData()
+            resolve(res.data.data.child_id)
+          }
         })
       })
     },
     submit() {
-      if(!this.childInfo.avatar){
-         this.$toast.fail('请上传头像')
+      if (!this.childInfo.avatar) {
+        this.$toast.fail('请上传头像')
       }
 
-      if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null){
+      if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
         this.errorMessage.name = '请正确填写孩子的姓名'
         setTimeout(() => {
           this.errorMessage.name = ''
@@ -237,37 +246,41 @@ export default {
         setTimeout(() => {
           this.errorMessage.birthday = ''
         }, 2000)
-      } else { 
-        this.operationApi().then(res=>{
+      } else {
+        this.operationApi().then(res => {
 
           this.$router.push({
-            name:'my'
+            name: 'my'
           })
 
           this.submitLoading = false
 
-          if(res){
+          if (res) {
             this.$toast.success('创建成功')
-          }else{
+          } else {
             this.$toast.fail('创建失败')
           }
         })
       }
     },
     edit() {
-        this.operationApi(this.$route.query.id).then(res=>{
-          this.$router.go(-1)
-          if(res){
-            this.$toast.success('修改成功')
-          }else{
-            this.$toast.success('修改成功')
-          }
+      this.operationApi(this.$route.query.id).then(res => {
+
+        this.$router.push({
+          name: 'my'
         })
+
+        if (res) {
+          this.$toast.success('修改成功')
+        } else {
+          this.$toast.success('修改成功')
+        }
+      })
     },
     onClickRight(type) {
       if (type == 'jump') {
         this.$router.push({
-          name:'my'
+          name: 'my'
         })
       }
       if (type == 'delete') {
@@ -278,35 +291,42 @@ export default {
           showCancelButton: true
         }).then(() => {
           this.$router.push({
-            name:'my'
+            name: 'my'
           })
         }).catch(() => {
-          axios.get(`/book/baby/del?child_id=${this.$route.query.id}`).then(res=>{
+          axios.get(`/book/baby/del?child_id=${this.$route.query.id}`).then(res => {
             this.getUserData()
             this.$router.push({
-              name:'my'
+              name: 'my'
             })
           })
         })
       }
     },
-    toSetting(info){
-      this.operationApi().then(res=>{
+    toSetting(info) {
+      this.operationApi().then(res => {
         this.$router.push({
-          name:'edit-setting',
-          query:{
-            id:res,
+          name: 'edit-setting',
+          query: {
+            id: res,
             back: 'edit-setting',
             type: this.$route.query.type
           }
         })
       })
+    },
+    onInput(checked) {
+      if (checked) {
+        axios.get(`/book/MemberChild/top?child_id=${this.$route.query.id}`).then(res => {
+          this.getUserData()
+        })
+      }
     }
   }
 }
 </script>
 <style>
-.add-child .van-cell__title.cell-school-title{
+.add-child .van-cell__title.cell-school-title {
   flex: 5;
 }
 </style>

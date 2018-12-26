@@ -12,25 +12,25 @@
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">
-        <div class="class-name">{{classInfo.title}}班</div>
+        <div class="class-name">{{classInfo.title}}</div>
         <div class="class-people">{{classInfo.grade_name}}班（{{classInfo.student_count}}人）</div>
         <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
       </div>
     </div>
     <div class="container">
-      <lazy-component  class="module">
+      <lazy-component class="module">
         <div class="apps">
-          <apps :appsList='appsList' type='classHome'/>
+          <apps :appsList='appsList' type='classHome' />
         </div>
       </lazy-component>
       <lazy-component class="module">
-        
+        <read-list />
       </lazy-component>
       <!-- <lazy-component class="module">
         <reading :list="lateBook" moduleTitle="老师推荐的书" />
       </lazy-component> -->
       <lazy-component>
-        <class-zoom type='template' :banji_id='classInfo.banji_id'/>
+        <class-zoom type='template' :banji_id='classInfo.banji_id' />
       </lazy-component>
     </div>
 
@@ -38,7 +38,7 @@
       <qr-code :classInfo="classInfo" :qrImage="qrImage" type='classHome' @close='show = false' />
     </van-popup>
 
-        <div class="punch">
+    <div class="punch">
       <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
         <i class="iconfont">&#xe60a;</i>
         阅读打卡
@@ -48,10 +48,10 @@
 </template>
 <script>
 import axios from './../lib/js/api'
-import { mapGetters,mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import QRCode from 'qrcode'
 import classZoom from './../pages/classZoom'
-import weekList from './../module/classModule/weekList'
+import readList from './../module/classModule/readList'
 import reading from './../module/reading'
 import qrCode from './../module/mold/qrCode'
 import apps from './../module/myModule/apps'
@@ -60,9 +60,9 @@ export default {
   name: "class-home",
   components: {
     classZoom,
-    weekList,
     reading,
     qrCode,
+    readList,
     apps
   },
   computed: {
@@ -78,57 +78,57 @@ export default {
       appsList: [{
         name: '讲故事',
         iconClass: 'icon-jianggushi'
-      },{
-        name: '阅读榜',
-        iconClass: 'icon-shuju'
       }, {
         name: '每日国学',
         iconClass: 'icon-guoxue'
-      },{
-        name: '通讯录',
-        iconClass: 'icon-tongxunlu'
+      }, {
+        name: '交流',
+        iconClass: 'icon-jiaoliu'
       }]
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.qrcode()
-      vm.getUserData().then(res=>{
-        if( res.child_id > 0 ){
-          if(res.school_id > 0){
-            if(res.banji_id > 0){
-              axios.get(`/book/SchoolBanji/getInfo?banji_id=${ res.banji_id }`).then(res => {
+      vm.getUserData().then(res => {
+        if (res.child_id > 0) {
+          if (res.school_id > 0) {
+            if (res.banji_id > 0) {
+              axios.get(`/book/SchoolBanji/getInfo?banji_id=${vm.$route.query.id}`).then(res => {
                 vm.classInfo = res.data.data
               })
-            }else{
+            } else {
               vm.$router.push({
                 name: 'edit-class',
                 query: {
                   id: res.child_id,
-                  schoolId:res.school_id
+                  back:'class-home',
+                  schoolId: res.school_id,
+                  type:'add'
                 }
               })
             }
-          }else{
+          } else {
             vm.$router.push({
               name: 'edit-school',
               query: {
-                type: 'classHome',
-                id: res.child_id
+                type: 'add',
+                enter:'my',
+                id: res.child_id,
               }
             })
           }
-        }else{
+        } else {
           vm.$router.push({
             name: 'edit-child',
             query: {
               type: 'add',
-              pageTitle:'添加宝贝'
+              pageTitle: '添加宝贝'
             }
           })
         }
       })
-      
+
       axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${to.query.id}`).then(res => {
         vm.lateBook = res.data.data
       })
@@ -164,8 +164,8 @@ export default {
         this.domHeight = this.$refs.head.offsetHeight / 2
       }
     },
-    punch(){
-      location.href=`/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
+    punch() {
+      location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
     }
   }
 }
@@ -182,7 +182,7 @@ export default {
 }
 
 .header {
-  padding: 2.8125rem /* 45/16 */ 1.25rem /* 20/16 */ .625rem /* 10/16 */;
+  padding: 2.8125rem /* 45/16 */ 1.25rem /* 20/16 */ 0.625rem /* 10/16 */;
   background: url('https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/header-bg.jpg');
   background-size: cover;
   background-position: 68%;
@@ -223,7 +223,7 @@ export default {
   overflow: hidden;
 }
 
-.punch{
+.punch {
   z-index: 101;
 }
 </style>

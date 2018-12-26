@@ -4,7 +4,7 @@
     <div class="book-list scroll-x" v-if='list.length > 0'>
       <div class="book-item scroll-item" v-for='(item,index) in list' :key="index">
         <div class="book-cover">
-          <img :src="thumb(item.photo)" @error="outThumb($event,item)" :alt="item.book_name" @click="toBookDetails(item)">
+          <img :src="thumb(item.book_thumb)" @error="outThumb($event,item)" :alt="item.book_name" @click="toBookDetails(item)">
 
           <div class="listening" @click="listening(item)">
             <i class="iconfont">&#xe617;</i>
@@ -86,16 +86,16 @@ export default {
     },
     listening(item){
       let p = /（.+?）/
-      let pureTitle = item.title.replace(p, '')
+      let pureTitle = item.book_name.replace(p, '')
       let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
       let isRead = localStorage.getItem('bookRead_' + item.book_id)
-      if(!isRead) {
-          axios.get('/book/story/updateRead').then(res => {
-              localStorage.setItem('bookRead_' + item.book_id, true)
-              location.href = url
-          })
-      } else {
+      if (!isRead) {
+        axios.get('/book/story/updateRead').then(res => {
+          localStorage.setItem('bookRead_' + item.book_id, true)
           location.href = url
+        })
+      } else {
+        location.href = url
       }
     }
   }

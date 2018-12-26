@@ -26,7 +26,7 @@ export default {
     slogan,
     graphicCrad
   },
-  props: ['sort'],
+  props: ['sort','tid'],
   computed: {
     ...mapGetters(['userToken'])
   },
@@ -44,7 +44,15 @@ export default {
   },
   methods: {
     getList() {
-      return axios.get(`/book/SchoolArticle/getList?page=${this.page}&sort=${this.sort}`).then(res => {
+      let data = {
+        params:{
+          page:this.page,
+          sort:this.sort,
+          tid: this.tid
+        }    
+      }
+
+      return axios.get('/book/SchoolArticle/getList',data).then(res => {
         this.list = this.list.concat(res.data.data)
         this.loading = false
         this.page++

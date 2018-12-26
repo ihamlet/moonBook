@@ -1,6 +1,6 @@
 <template>
   <div class="module-card">
-    <van-cell is-link title-class='family' :value="count > 0? `${count}位待审核`:'邀请家庭成员'" center size='large' @click="toFamily">
+    <van-cell is-link title-class='family' :value="count > 0? `${count}位待审核`:'邀请家人'" center size='large' @click="toFamily">
       <div class="icon" slot="icon">
         <i class="iconfont">&#xe6a3;</i>
       </div>
@@ -99,7 +99,7 @@ export default {
 </style>
 <style>
 .van-cell__title.family {
-  flex: 2;
+  flex: 3;
 }
 </style>
 

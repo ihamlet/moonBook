@@ -22,11 +22,11 @@
   </div>
 </template>
 <script>
-import axios from './../../lib/js/api'
+import axios from './../lib/js/api'
 import { mapGetters,mapActions } from 'vuex'
-import avatar from './../../module/avatar'
-import searchBar from './../../module/search/searchBar'
-import schoolList from './../../module/search/schoolList'
+import avatar from './../module/avatar'
+import searchBar from './../module/search/searchBar'
+import schoolList from './../module/search/schoolList'
 
 export default {
   name: 'edit-school',
@@ -75,28 +75,61 @@ export default {
       }
 
       let location = item.location.split(',')
-      axios.get(`/book/babySchool/bind?school_name=${item.name}&amap_id=${item.id}&cityname=${cityname}&lat=${location[1]}&lng=${location[0]}&child_id=${this.$route.query.id}`).then(res => {
-          if(res.data.status){
-            this.$toast.success('已加入学校')
-            this.$router.push({
-                name:'edit-class',
-                query:{
-                    id: this.$route.query.id,
-                    schoolId: res.data.data.school_id,
-                    back: this.$route.query.back
-                }
-            })
-            this.getUserData()
-          }else{
-            this.$toast.fail('操作失败')
-            this.$router.go(-1)
+      
+        let data = {
+          params:{
+            school_name:item.name,
+            amap_id:item.id,
+            lat:location[1],
+            lng:location[0],
+            cityname:cityname,
+            typecode:item.typecode
           }
-      })
+        }
+
+
+      if(this.$route.query.registerType == 'headmaster'){
+        data.params.is_master = 1
+      }
+
+      if(this.$route.query.registerType){
+        axios.get('/book/SchoolTeacher/bind',data).then(res=>{
+          this.getUserData().then(()=>{
+            this.$router.push({
+              name:'edit-setting',
+              query:{
+                pageTitle: this.$route.query.pageTitle,
+                registerType: this.$route.query.registerType
+              }
+            })
+          })
+        })
+      }else{
+        data.params.child_id = this.$route.query.id
+        axios.get('/book/babySchool/bind',data).then(res => {
+            if(res.data.status){
+              this.$toast.success('已加入学校')
+              this.$router.push({
+                  name:'edit-class',
+                  query:{
+                      id: this.$route.query.id,
+                      schoolId: res.data.data.school_id,
+                      back: this.$route.query.back,
+                      type: this.$route.query.type,
+                  }
+              })
+              this.getUserData()
+            }else{
+              this.$toast.fail('操作失败')
+              this.$router.go(-1)
+            }
+        })
+      }
     },
     close(){
-      if(this.$route.query.type == 'classHome'){
+      if(this.$route.query.enter){
         this.$router.push({
-          name:'my'
+          name: this.$route.query.enter
         })
       }else{
         this.$router.go(-1)

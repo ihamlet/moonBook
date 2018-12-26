@@ -18,10 +18,10 @@ import Register from '@/components/pages/register'
 import Login from '@/components/pages/login'
 
 import EditChild from '@/components/pages/editBaby/child'
-import EditSchool from '@/components/pages/editBaby/school'
-import EditClass from '@/components/pages/editBaby/class'
-import EditStting from '@/components/pages/editBaby/setting'
-import EditTeacher from '@/components/pages/editTeacher/teacher'
+import EditSchool from '@/components/pages/school'
+import EditClass from '@/components/pages/class'
+import EditStting from '@/components/pages/setting'
+import EditManager from '@/components/pages/editManager/manager'
 
 import AddFamily from '@/components/pages/invite/addFamily'
 import VerifyFamily from '@/components/pages/invite/verifyList'
@@ -32,6 +32,8 @@ import Article from '@/components/pages/article'
 import BookDetails from '@/components/pages/bookDetails'
 
 import AppsSchool from '@/components/pages/apps/schoolHome'
+
+
 
 Vue.use(Router)
 
@@ -198,9 +200,9 @@ export default new Router({
           isFooterBar: false
         }
       },{
-        path: '/edit/teacher',
-        name: 'edit-teacher',
-        component: EditTeacher,
+        path: '/edit/manager',
+        name: 'edit-manager',
+        component: EditManager,
         meta: {
           scrollToTop: true,
           tabActive:4,
@@ -247,7 +249,7 @@ export default new Router({
           isFooterBar: false
         }
       },{
-        path: 'apps/school',
+        path: '/apps-school',
         name: 'apps-school',
         component: AppsSchool,
         meta: {

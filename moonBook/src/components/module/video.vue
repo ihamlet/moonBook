@@ -25,7 +25,7 @@
             </div>
         </div> 
 
-        <van-popup v-model="show" class="add-like-popup" :overlay="false">
+        <van-popup v-model="show" class="add-like-popup" :overlay="false" :lock-scroll='false' get-container='#app'>
             <i class="iconfont" :class="[show?'bounceIn animated':'']">&#xe668;</i>
         </van-popup>
     </div>    

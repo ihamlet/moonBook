@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="list" v-else>
-        <div class="module-title">阅读记录</div>
+        <div class="module-title">我的宝贝</div>
         <div class="item module" v-for="(list,index) in childrenList" :key="index">
           <div class="card-top-bar">
             <van-nav-bar :title="`${list.name}`" right-text="编辑" :left-text="list.banji_name?list.banji_name:'班级'" @click-left="onClickLeft(list)"

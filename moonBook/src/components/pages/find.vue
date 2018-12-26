@@ -1,6 +1,6 @@
 <template>
   <div class="find page-padding">
-    <van-nav-bar :title="$route.meta.title" />
+    <van-nav-bar :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title" />
     <lazy-component class="module">
        <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname"/>
     </lazy-component>
@@ -9,7 +9,7 @@
         <van-tabs color='#409eff' :line-width='20' sticky swipeable animated>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
-              <drying-list :sort='list.sort' />
+              <drying-list :sort='list.sort' :tid='$route.query.tid'/>
             </div>
           </van-tab>
         </van-tabs>
@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get('/book/SchoolArticle/recommendUsers').then(res => {
+      axios.get(`/book/SchoolArticle/recommendUsers?tid=${this.$route.query.tid}`).then(res => {
         this.freshList = res.data
       })
     }

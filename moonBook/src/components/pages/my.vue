@@ -2,7 +2,7 @@
   <div class="my page-padding">
     <card-head :userInfo='userDataState' />
     <lazy-component class="gutter gap-top">
-      <apps :appsList='appsList'/>
+      <apps :appsList='appsList' v-if='userDataState.isTeacher == 1'/>
     </lazy-component>
     <lazy-component class="gutter gap">
       <class-home v-if='children.length!=0' :children="children[0]" />

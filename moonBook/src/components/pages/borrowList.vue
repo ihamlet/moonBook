@@ -3,17 +3,17 @@
     <van-nav-bar :title="$route.meta.title" left-text="我的" left-arrow @click-left="onClickLeft" />
     <van-tabs color='#409eff' @change='onChangeTab' :line-width='20' sticky swipeable animated v-model="tabIndex">
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-        <van-pull-refresh v-model="loading" @refresh="onRefresh">
-          <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+          <van-pull-refresh v-model="loading" @refresh="onRefresh">
             <div class="content" v-if='list.content.length > 0'>
               <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
                 <van-row gutter="10">
-                  <van-col span="8">
+                  <van-col span="9">
                     <div class="book-cover" @click="toBookDetails(item)">
-                      <img :src="item.book.photo" @error="outThumb($event,item)" />
+                      <img :src="thumb(item.book.thumb)" @error="outThumb($event,item)" />
                     </div>
                   </van-col>
-                  <van-col span="13">
+                  <van-col span="12">
                     <div class="book-info" @click="toBookDetails(item)">
                       <div class="title" v-line-clamp:20="2">{{item.book.title}}</div>
                       <div class="attach">
@@ -34,8 +34,9 @@
             <div class="no-content" v-else>
               还没有没有{{list.title}}的书
             </div>
-          </van-list>
-        </van-pull-refresh>
+          </van-pull-refresh>
+        </van-list>
+
       </van-tab>
     </van-tabs>
   </div>
@@ -184,25 +185,33 @@ export default {
         </div>
       `
     },
-    listening(item){
+    thumb(img){
+      let hostMatch = img.match(/https?:\/\/(.+?)\//)
+      if (hostMatch) {
+        return `/book/api/remotePic?url=${img}`
+      } else {
+        return img
+      }
+    },
+    listening(item) {
       let p = /（.+?）/
       let pureTitle = item.book.title.replace(p, '')
       let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
       let isRead = localStorage.getItem('bookRead_' + item.book_id)
-      if(!isRead) {
-          axios.get('/book/story/updateRead').then(res => {
-              localStorage.setItem('bookRead_' + item.book_id, true)
-              location.href = url
-          })
-      } else {
+      if (!isRead) {
+        axios.get('/book/story/updateRead').then(res => {
+          localStorage.setItem('bookRead_' + item.book_id, true)
           location.href = url
+        })
+      } else {
+        location.href = url
       }
     },
-    toBookDetails(item){
+    toBookDetails(item) {
       this.$router.push({
-        name:'book-details',
-        query:{
-          id:item.book_id
+        name: 'book-details',
+        query: {
+          id: item.book_id
         }
       })
     }

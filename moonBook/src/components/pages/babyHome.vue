@@ -27,22 +27,46 @@
           <div class="label">{{childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
         </div>
+        <div class="add-praise" @click="babyPraise(childInfo)">
+          <i class="iconfont">&#xe6e3;</i>
+        </div>
         <div class="qr-code" @click="showQrcode=true">
-          <van-icon name="qr" />
+          <i class="iconfont">&#xe622;</i>
         </div>
       </div>
       <wave />
     </div>
     <div class="container">
       <div class="bar flex flex-align">
-        <div class="bar-item totalReading">总阅读量 {{childInfo.read_count}}</div>
-        <div class="bar-item praise">赞 {{childInfo.zan_count}}</div>
+        <div class="bar-item totalReading">
+          <span class="number">{{childInfo.read_count}}</span>
+          <span class="bar-title">总阅读量</span>
+        </div>
+        <div class="bar-item praise">
+          <span class="number">{{childInfo.zan_count}}</span>
+          <span class="bar-title">赞</span>
+        </div>
+        <div class="bar-item diary">
+          <span class="number">{{childInfo.post_count}}</span>
+          <span class="bar-title">日记</span>
+        </div>
+        <div class="bar-item task">
+          <span class="number">0</span>
+          <span class="bar-title">亲子任务</span>
+        </div>
       </div>
       <lazy-component class="module" v-if="childInfo.is_mine">
         <family />
       </lazy-component>
 
-      <div class="baby-class">
+      <lazy-component class="module" >
+        <activity/>
+      </lazy-component>
+
+      <div class="baby-class" v-if='childInfo.is_mine'>
+        <lazy-component>
+          <class-show :banji_name='childInfo.banji_name' :banji_id='childInfo.banji_id' />
+        </lazy-component>
         <van-cell-group>
           <van-cell :title="childInfo.banji_name" is-link center @click="toClassHome(childInfo)">
             <div class="icon" slot="icon">
@@ -52,9 +76,6 @@
         </van-cell-group>
       </div>
       <lazy-component class="module">
-        <class-show />
-      </lazy-component>
-      <lazy-component class="module">
         <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
       </lazy-component>
       <lazy-component>
@@ -63,7 +84,6 @@
             <i class="iconfont">&#xe72c;</i>发布
           </div>
         </van-nav-bar>
-
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <div class="no-list" v-if='list.length == 0'>
             没有记录
@@ -71,7 +91,7 @@
           <div class="list">
             <div class="item" v-for="(item,index) in list" :key="index">
               <van-cell>
-                <graphic-crad :item="item" type="babyHome" :avatar='childInfo.avatar'/>
+                <graphic-crad :item="item" type="babyHome" :avatar='childInfo.avatar' />
               </van-cell>
             </div>
           </div>
@@ -86,6 +106,10 @@
     <!-- 发布 -->
     <van-popup v-model="releasePageShow" class="page-popup" position="bottom" get-container='#app'>
       <graphic @close='releasePageShow = false' />
+    </van-popup>
+
+    <van-popup v-model="zanShow" class="add-count-popup" :overlay="false" :lock-scroll='false' get-container='#app'>
+      <i class="iconfont" :class="[zanShow?'rotateInDownLeft animated':'']">&#xe6e3;</i>
     </van-popup>
   </div>
 </template>
@@ -102,6 +126,7 @@ import graphicCrad from "./../module/card/graphicCrad"
 import graphic from './../module/release/graphic'
 import classShow from './../module/classModule/classShow'
 import family from './../module/myModule/family'
+import activity from './../module/activity/activity'
 
 export default {
   name: "baby-home",
@@ -113,10 +138,12 @@ export default {
     graphicCrad,
     graphic,
     classShow,
-    family
+    family,
+    activity
   },
   data() {
     return {
+      zanShow: false,
       fixedHeaderBar: true,
       domHeight: "",
       childInfo: "",
@@ -131,23 +158,23 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-      next(vm => {
-        vm.qrcode()
-        vm.getUserData().then(res => {
-            if(res.child_id > 0){
-              axios.get(`/book/baby/getInfo?child_id=${to.query.id}`).then(res => {
-                  vm.childInfo = res.data.data
-              })
-            }else{
-              vm.$router.push({
-                name: 'edit-child',
-                query: {
-                  type: 'add',
-                  pageTitle:'添加宝贝'
-                }
-              })
+    next(vm => {
+      vm.qrcode()
+      vm.getUserData().then(res => {
+        if (res.child_id > 0) {
+          axios.get(`/book/baby/getInfo?child_id=${to.query.id}`).then(res => {
+            vm.childInfo = res.data.data
+          })
+        } else {
+          vm.$router.push({
+            name: 'edit-child',
+            query: {
+              type: 'add',
+              pageTitle: '添加宝贝'
             }
-        })
+          })
+        }
+      })
     })
   },
   created() {
@@ -207,14 +234,14 @@ export default {
     },
     toClassHome(childInfo) {
       console.log(childInfo)
-      if(childInfo.banji_id > 0){
+      if (childInfo.banji_id > 0) {
         this.$router.push({
           name: "class-home",
           query: {
             id: childInfo.banji_id
           }
         })
-      }else{
+      } else {
         this.$router.push({
           name: "class-home",
           query: {
@@ -223,6 +250,20 @@ export default {
           }
         })
       }
+    },
+    babyPraise(childInfo) {
+      axios.get(`/book/baby/zan?child_id=${this.$route.query.id}`).then(res => {
+        if (res.data.status == 1) {
+          this.zanShow = true
+          childInfo.zan_count = res.data.data.zan_count
+        }else{
+          this.$toast(res.data.msg)
+        }
+
+        setTimeout(()=>{
+          this.zanShow = false
+        },2000)
+      })
     }
   }
 }
@@ -249,6 +290,12 @@ export default {
   border: 0.1875rem /* 3/16 */ solid #fff;
 }
 
+.baby-info .avatar img{
+  width: 3.75rem /* 60/16 */;
+  height: 3.75rem /* 60/16 */;
+  border-radius: 50%;
+}
+
 .baby-info {
   padding: 3.5rem /* 56/16 */ 1.25rem /* 20/16 */;
   position: relative;
@@ -271,14 +318,24 @@ export default {
   color: #fff;
 }
 
+.add-praise,
 .qr-code {
   position: absolute;
+}
+
+.qr-code {
   right: 1.25rem /* 20/16 */;
 }
 
-.qr-code i.van-icon {
+.add-praise {
+  right: 4.375rem /* 70/16 */;
+}
+
+.add-praise i.iconfont,
+.qr-code i.iconfont {
   font-size: 1.5rem /* 24/16 */;
   color: #fff;
+  text-shadow: 0 0.125rem /* 2/16 */ 0.375rem /* 6/16 */ rgba(0, 0, 0, 0.1);
 }
 
 .follow .theme-btn {
@@ -287,26 +344,23 @@ export default {
 }
 
 .bar {
-  height: 2.875rem /* 46/16 */;
-  line-height: 2.875rem /* 46/16 */;
   background: #fff;
-  position: relative;
-}
-
-.bar::before {
-  content: '';
-  position: absolute;
-  width: 0.0625rem /* 1/16 */;
-  height: 1.25rem /* 20/16 */;
-  background: #dcdfe6;
-  left: 50%;
-  top: 50%;
-  transform: translate3d(0, -50%, 0);
+  padding: 0.625rem /* 10/16 */ 0;
 }
 
 .bar-item {
   flex: 1;
   text-align: center;
+  display: grid;
+}
+
+.bar-item .number {
+  font-size: 1.375rem /* 22/16 */;
+  font-weight: 500;
+}
+
+.bar-item .bar-title {
+  font-size: 0.875rem /* 14/16 */;
 }
 
 .label {
@@ -324,4 +378,18 @@ export default {
   -webkit-background-clip: text;
   color: transparent;
 }
+
+.add-count-popup .iconfont {
+  font-size: 2.25rem /* 36/16 */;
+  background: linear-gradient(90deg, #ff2a00, #ff00af);
+  -webkit-background-clip: text;
+  color: transparent;
+  display: block;
+}
 </style>
+<style>
+.add-count-popup.van-popup{
+  background: transparent
+}
+</style>
+

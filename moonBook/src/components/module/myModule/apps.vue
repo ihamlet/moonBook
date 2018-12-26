@@ -21,6 +21,8 @@ export default {
 .icon-guoxue::before { content: '\e61a'}
 .icon-jianggushi::before { content: '\e638'}
 .icon-tongxunlu::before { content: '\e6d3'}
+.icon-liuyanbo::before { content: '\e61c'}
+.icon-jiaoliu::before { content: '\e6af'}
 
 .apps{
     padding: .625rem /* 10/16 */ 0;

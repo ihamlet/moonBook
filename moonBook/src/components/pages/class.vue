@@ -1,9 +1,8 @@
 <template>
   <div class="edit-class page-padding">
-    <van-nav-bar :border='false' fixed :title="childInfo.school_name" left-arrow
-      @click-left="onClickLeft" />
+    <van-nav-bar :border='false' fixed :title="$route.query.registerType=='teacher'?userDataState.teacher_school_name:childInfo.school_name" left-arrow @click-left="onClickLeft" />
     <div class="container">
-      <div class="baby-info flex flex-justify">
+      <div class="baby-info flex flex-justify" v-if='$route.query.registerType!="teacher"'>
         <div class="avatar" v-if='childInfo'>
           <img :src="childInfo.avatar" :alt="childInfo.name">
         </div>
@@ -14,17 +13,18 @@
       <div class="title">请选择班级</div>
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="item.title" :value='`${item.student_count}人已加入`' @click='select(item)'/>
+          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="item.title" :value='`${item.student_count}人已加入`'
+            @click='select(item)' />
         </van-list>
       </div>
     </div>
   </div>
 </template>
 <script>
-import axios from './../../lib/js/api'
+import axios from './../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
-import avatar from './../../module/avatar'
-import round from './../../module/animate/round'
+import avatar from './../module/avatar'
+import round from './../module/animate/round'
 
 export default {
   name: 'edit-class',
@@ -32,12 +32,15 @@ export default {
     avatar,
     round
   },
+  computed: {
+    ...mapGetters(["userDataState"])
+  },
   data() {
     return {
       list: [],
       loading: false,
       finished: false,
-      page:1,
+      page: 1,
       childInfo: ''
     }
   },
@@ -51,7 +54,7 @@ export default {
     ...mapActions(['getUserData']),
     fetchData() {
       axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
-        if(res.data.status == 1){
+        if (res.data.status == 1) {
           this.childInfo = res.data.data
         }
       })
@@ -60,43 +63,55 @@ export default {
       this.$router.go(-1)
     },
     select(item, itemIndex) {
-        axios.get(`/book/babyBanji/bind?banji_name=${item.title}&child_id=${this.$route.query.id}`).then(res=>{
-            if(res.data.status){
-              if(this.$route.query.back){
-                this.$router.push({
-                    name: this.$route.query.back,
-                    query: {
-                      id: this.$route.query.id,
-                      back: this.$route.query.back
-                    }
-                })
-              }else{
-                this.$toast.success(res.data.msg)
-                this.$router.push({
-                    name:'class-home',
-                    query:{
-                        id: res.data.data.banji_id
-                    }
-                })
-                this.getUserData()
-              }
-            }else{
-                this.$toast.fail('加入失败')
-                this.$router.push({
-                    name:'my'
-                })
+      if (this.$route.query.registerType == 'teacher') {
+        axios.get(`/book/SchoolTeacher/bind_banji?banji_name=${item.title}`).then(res=>{
+          this.$router.push({
+            name:'edit-setting',
+            query:{
+              registerType:'teacher'
             }
+          })
         })
+      } else {
+        axios.get(`/book/babyBanji/bind?banji_name=${item.title}&child_id=${this.$route.query.id}`).then(res => {
+          if (res.data.status) {
+            if (this.$route.query.back) {
+              this.$router.push({
+                name: this.$route.query.back,
+                query: {
+                  id: this.$route.query.id,
+                  back: this.$route.query.back,
+                  type: this.$route.query.type
+                }
+              })
+            } else {
+              this.$toast.success(res.data.msg)
+              this.$router.push({
+                name: 'class-home',
+                query: {
+                  id: res.data.data.banji_id
+                }
+              })
+              this.getUserData()
+            }
+          } else {
+            this.$toast.fail('加入失败')
+            this.$router.push({
+              name: 'my'
+            })
+          }
+        })
+      }
     },
-    onLoad(){
-        axios.get(`/book/SchoolBanji/getList?page=${this.page}&limit=20&school_id=${this.$route.query.schoolId}`).then(res=>{
-            this.page++
-            this.list = this.list.concat(res.data.data)
-            this.loading = false
-            if (this.list.length >= res.data.count) {
-                this.finished = true
-            }
-        })
+    onLoad() {
+      axios.get(`/book/SchoolBanji/getList?page=${this.page}&limit=20&school_id=${this.$route.query.schoolId}`).then(res => {
+        this.page++
+        this.list = this.list.concat(res.data.data)
+        this.loading = false
+        if (this.list.length >= res.data.count) {
+          this.finished = true
+        }
+      })
     }
   }
 }
@@ -109,7 +124,7 @@ export default {
   background: #fff;
 }
 
-.container{
+.container {
   padding-top: 2.8125rem /* 45/16 */;
 }
 

@@ -16,7 +16,7 @@
     </van-nav-bar>
     <div class="textarea-module">
       <van-cell-group>
-        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="说些什么？不妨分享最近看的书 (∩_∩)"
+        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！"
           rows="4" autosize />
         <van-tag class="tag" type="primary" v-if='cateName'> #{{cateName}}</van-tag>
         <div class="media flex flex-column">
@@ -66,7 +66,7 @@
     </div>
     <div class="upload-module flex wrap">
       <van-cell>
-        <van-row gutter="2">
+        <van-row gutter="4">
           <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index" v-if='!item.media'>
             <div class="preview img-grid" v-lazy:background-image='item.thumb' :class="[item.thumb?'transparent':'']">
               <i class="iconfont" @click="deletePhoto(index)">&#xe683;</i>
@@ -207,7 +207,6 @@ export default {
               let fd = new FormData()
               fd.append('file', blob, element.file.name)
               axios.post('/book/file/upload', fd, config).then((res) => {
-                console.log('upload', res)
                 if (res.data.status === 1) {
                   this.grapicData.photos.push({
                     photo: res.data.data.path,
