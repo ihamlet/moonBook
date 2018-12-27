@@ -45,7 +45,7 @@
               </div>
             </div>
             <div class="topic theme-color" @click="toTopicPage">
-              #选择话题
+              #选择分类
             </div>
             <div class="text-length" :class="[grapicData.text.length > 800?'danger':'']" v-if='grapicData.text.length>0'>{{grapicData.text.length}}</div>
           </div>
@@ -55,14 +55,9 @@
         <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
         <input type="file" accept="audio/*" capture="microphone" ref='fileAudio' data-type='audio' hidden @change='doUpload'>
       </van-cell-group>
-      <van-checkbox-group v-model="result">
-        <div class="form-title">同步到</div>
-        <van-cell-group>
-          <van-cell v-for="(item,index) in resultList" clickable :key="index" :title="item.title" @click="toggle(index)">
-            <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" />
-          </van-cell>
-        </van-cell-group>
-      </van-checkbox-group>
+      <van-cell-group>
+        <van-cell title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true"/>
+      </van-cell-group>
     </div>
     <div class="upload-module flex wrap">
       <van-cell>
@@ -82,6 +77,18 @@
         </van-row>
       </van-cell>
     </div>
+
+    <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
+      <van-checkbox-group v-model="result">
+        <div class="form-title">同步到</div>
+        <van-cell-group>
+          <van-cell v-for="(item,index) in resultList" clickable :key="index" :title="item.title" @click="toggle(index)">
+            <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" />
+          </van-cell>
+        </van-cell-group>
+      </van-checkbox-group>
+    </van-popup>
+
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
       <topic-list @close='show = false' @select='selectTag'/>
     </van-popup>
@@ -104,12 +111,24 @@ export default {
     ...mapGetters(['userDataState']),
     imagesLength() {
       return this.grapicData.photos.length
+    },
+    synchronous(){
+      let array = []
+      this.resultList.forEach(element =>{
+        this.result.forEach(e => {
+          if(e == element.name){
+            array.push(element.title)
+          }
+        })
+      })
+      return array.join(',')
     }
   },
   data() {
     let self = this
     return {
       result: [],
+      isResultShow:false,
       resultList: '',
       show: false,
       actionShow: false,
@@ -163,14 +182,14 @@ export default {
 
       if (this.userDataState.child_id > 0) {
         array.push({
-          title: `${this.userDataState.child_name}@宝贝主页`,
+          title: `${this.userDataState.child_name}@主页`,
           name: 'baby-home'
         })
       }
 
       if (this.userDataState.banji_id > 0) {
         array.push({
-          title: `${this.userDataState.child_name}@${this.userDataState.banji_name}`,
+          title: `${this.userDataState.child_name}@班级`,
           name: 'class-zoom'
         })
       }
@@ -229,6 +248,8 @@ export default {
     onClickLeft() {
       if(!this.grapicData.text.length && !this.grapicData.photos.length){
         this.$emit('close')
+        this.cateName = ''
+        this.cateId = ''
       }else{
         this.actionShow = true
       }
@@ -274,8 +295,9 @@ export default {
           }
         })
 
-        axios.post(`/book/SchoolArticle/edit?ajax=1`, data).then(res => {
+        axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
           this.$emit('close')
+          this.$emit('refresh')
           this.$router.push({ name: this.result[0] })
         })
       }
@@ -468,3 +490,9 @@ export default {
   margin-top: .3125rem /* 5/16 */;
 }
 </style>
+<style>
+.cell-value.van-cell__value{
+  flex:5;
+}
+</style>
+

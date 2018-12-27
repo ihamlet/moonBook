@@ -5,7 +5,7 @@
         <div class="avatar" v-if="type=='babyHome'">
           <img :src="avatar" alt="宝贝头像" />
         </div>  
-        <div class="avatar" v-else @click="item.user_id>0&&toBookZoom(item)">
+        <div class="avatar" v-else @click="item.user_id > 0 && toBookZoom(item)">
           <img :src="item.user.avatar" :alt="item.user.name">
         </div>
         <div class="info">
@@ -48,6 +48,10 @@
          <van-tag type="primary" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
       </div>
 
+      <div class="task" v-if='$route.query.tid == 5'>
+        <task-card />
+      </div>
+
       <div class="social flex flex-align">
         <div class="share" @click="share(item)">
           <i class="iconfont">&#xe6eb;</i> {{item.share_num>1000?'999+':item.share_num}}
@@ -83,6 +87,7 @@ import QRCode from "qrcode"
 import pictureBox from "./../mold/pictureBox"
 import vipLevel from './../animate/svg/vipLevel'
 import share from './../mold/share'
+import taskCard from './taskCard'
 import articleShare from './../../module/mold/articleShare'
 
 export default {
@@ -92,6 +97,7 @@ export default {
     pictureBox,
     share,
     articleShare,
+    taskCard,
     vipLevel
   },
   data() {
@@ -204,5 +210,9 @@ export default {
 
 .layout-4{
   width: 70%;
+}
+
+.task{
+  margin-top: .625rem /* 10/16 */;
 }
 </style>

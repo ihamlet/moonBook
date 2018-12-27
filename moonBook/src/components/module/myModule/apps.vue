@@ -23,6 +23,9 @@ export default {
 .icon-tongxunlu::before { content: '\e6d3'}
 .icon-liuyanbo::before { content: '\e61c'}
 .icon-jiaoliu::before { content: '\e6af'}
+.icon-jianjie::before { content: '\eb0d'}
+.icon-shujia::before { content: '\e649'}
+
 
 .apps{
     padding: .625rem /* 10/16 */ 0;

@@ -1,7 +1,9 @@
 <template>
-  <div class="class-home page-padding">
-    <van-nav-bar :title="fixedHeaderBar?$route.meta.title:classInfo.title" :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']"
-      fixed @click-left="onClickLeft" @click-right="show = true">
+  <div class="class-home page-padding" v-if='hackReset'>
+    <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
+      <div class="head-bar-title" slot="title" @click="cutover">
+        {{fixedHeaderBar?$route.meta.title:classInfo.title}} <i class="iconfont" v-if="userDataState.isTeacher == 1">&#xe608;</i>
+      </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">我的</span>
@@ -23,8 +25,11 @@
           <apps :appsList='appsList' type='classHome' />
         </div>
       </lazy-component>
+      <lazy-component>
+        <notice type='banji' />
+      </lazy-component>
       <lazy-component class="module">
-        <read-list />
+        <read-list title='周阅读榜' type='banji' field='avatar' />
       </lazy-component>
       <!-- <lazy-component class="module">
         <reading :list="lateBook" moduleTitle="老师推荐的书" />
@@ -37,6 +42,8 @@
     <van-popup v-model="show" class="plate-card">
       <qr-code :classInfo="classInfo" :qrImage="qrImage" type='classHome' @close='show = false' />
     </van-popup>
+
+    <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" />
 
     <div class="punch">
       <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
@@ -55,6 +62,7 @@ import readList from './../module/classModule/readList'
 import reading from './../module/reading'
 import qrCode from './../module/mold/qrCode'
 import apps from './../module/myModule/apps'
+import notice from './../module/classModule/notice'
 
 export default {
   name: "class-home",
@@ -63,10 +71,37 @@ export default {
     reading,
     qrCode,
     readList,
+    notice,
     apps
   },
   computed: {
-    ...mapGetters(['userDataState'])
+    ...mapGetters(['userDataState']),
+    actions() {
+      let array = []
+
+      if (this.userDataState.isTeacher == 1 && this.userDataState.teacher_banji_id == this.classInfo.banji_id) {
+        array = [{
+          name: this.userDataState.teacher_banji_name,
+          subname: '管理的班级',
+          id: this.userDataState.teacher_banji_id
+        }, {
+          name: '返回',
+          subname: '宝贝的班级',
+        }]
+      } else {
+        array = [{
+          name: this.classInfo.title,
+          subname: '宝贝的班级',
+          id: this.classInfo.banji_id
+        }, {
+          name: this.userDataState.teacher_banji_name,
+          subname: '管理的班级',
+          id: this.userDataState.teacher_banji_id
+        }]
+      }
+
+      return array
+    }
   },
   data() {
     return {
@@ -75,6 +110,8 @@ export default {
       qrImage: '',
       classInfo: '',
       lateBook: '',
+      hackReset: true,
+      actionsheetShow: false,
       appsList: [{
         name: '讲故事',
         iconClass: 'icon-jianggushi'
@@ -91,44 +128,45 @@ export default {
     next(vm => {
       vm.qrcode()
       vm.getUserData().then(res => {
-        if (res.child_id > 0) {
-          if (res.school_id > 0) {
-            if (res.banji_id > 0) {
-              axios.get(`/book/SchoolBanji/getInfo?banji_id=${vm.$route.query.id}`).then(res => {
-                vm.classInfo = res.data.data
-              })
+        if (res.isTeacher == 1) {
+          vm.request()
+        } else {
+          if (res.child_id > 0) {
+            if (res.school_id > 0) {
+              if (res.banji_id > 0) {
+                vm.request()
+              } else {
+                vm.$router.push({
+                  name: 'edit-class',
+                  query: {
+                    id: res.child_id,
+                    back: 'class-home',
+                    schoolId: res.school_id,
+                    type: 'add'
+                  }
+                })
+              }
             } else {
               vm.$router.push({
-                name: 'edit-class',
+                name: 'edit-school',
                 query: {
+                  type: 'add',
+                  enter: 'my',
                   id: res.child_id,
-                  back:'class-home',
-                  schoolId: res.school_id,
-                  type:'add'
                 }
               })
             }
           } else {
             vm.$router.push({
-              name: 'edit-school',
+              name: 'edit-child',
               query: {
                 type: 'add',
-                enter:'my',
-                id: res.child_id,
+                pageTitle: '添加宝贝'
               }
             })
           }
-        } else {
-          vm.$router.push({
-            name: 'edit-child',
-            query: {
-              type: 'add',
-              pageTitle: '添加宝贝'
-            }
-          })
         }
       })
-
       axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${to.query.id}`).then(res => {
         vm.lateBook = res.data.data
       })
@@ -139,6 +177,11 @@ export default {
   },
   methods: {
     ...mapActions(['getUserData']),
+    request() {
+      axios.get(`/book/SchoolBanji/getInfo?banji_id=${this.$route.query.id}`).then(res => {
+        this.classInfo = res.data.data
+      })
+    },
     onClickLeft() {
       this.$router.push({ name: 'my' })
     },
@@ -166,6 +209,29 @@ export default {
     },
     punch() {
       location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
+    },
+    cutover() {
+      if (this.userDataState.isTeacher == 1) {
+        this.actionsheetShow = true
+      }
+    },
+    onSelect(item) {
+      if(!item.id){
+        this.$router.go(-1)
+      }else{
+        this.$router.push({
+          name: 'class-home',
+          query: {
+            id: item.id
+          }
+        })
+      }
+      this.hackReset = false
+      this.actionsheetShow = false
+      this.$nextTick(() => {
+        this.hackReset = true
+        this.request()
+      })
     }
   }
 }

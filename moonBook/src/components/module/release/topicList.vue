@@ -1,6 +1,6 @@
 <template>
   <div class="topic-list">
-    <van-nav-bar title="选择话题" />
+    <van-nav-bar title="选择分类" />
     <div class="list">
       <van-cell-group>
         <div class="item" v-for='(item,index) in topicList' :key="index">
@@ -14,9 +14,13 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'topic-list',
+  computed: {
+    ...mapGetters(['userDataState'])
+  },
   data() {
     return {
       topicList: ''

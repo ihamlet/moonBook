@@ -28,11 +28,11 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_aqwbd7t1t7c.eot');
-  src: url('//at.alicdn.com/t/font_893274_aqwbd7t1t7c.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_aqwbd7t1t7c.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_aqwbd7t1t7c.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_aqwbd7t1t7c.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_ymy94c0u1b.eot');
+  src: url('//at.alicdn.com/t/font_893274_ymy94c0u1b.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_ymy94c0u1b.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_ymy94c0u1b.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_ymy94c0u1b.svg#iconfont') format('svg');
 }
 
 .iconfont {

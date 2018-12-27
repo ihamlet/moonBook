@@ -41,7 +41,7 @@
           <div class="card flex flex-align">
             <div class="class-card">
               <div class="name">
-                <span>{{classInfo.title}}班</span>
+                <span>{{classInfo.title}}</span>
                 <span class="people">{{classInfo.student_count}}人</span>
               </div>
               <div class="school">{{schoolEllipsis}}</div>

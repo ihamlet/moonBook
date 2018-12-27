@@ -69,11 +69,11 @@ svg.icon {
   font-style: oblique;
 }
 
-.icon.class-module{
+.icon.module{
   width: 2.25rem /* 36/16 */;
 }
 
-.class-module svg.icon{
+.module svg.icon{
   font-size: 2.125rem /* 34/16 */;
 }
 </style>

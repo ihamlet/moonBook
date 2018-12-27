@@ -7,19 +7,23 @@
       </div>
     </van-nav-bar>
     <div class="container">
-      <div class="header-card flex flex-align theme-background">
+      <div class="header-card flex flex-align theme-school-background">
         <div class="school-info">
           <div class="school-logo" v-if='schoolInfo.logo'>
             <img :src="schoolInfo.logo" :alt="schoolInfo.title">
           </div>
-          <div class="school-name">{{schoolInfo.title}}</div>
+          <div class="school-name" v-line-clamp:20="1">{{schoolInfo.title}}</div>
         </div>
         <div class="arc"></div>
       </div>
       <lazy-component class="module">
         <div class="apps">
-          <apps :appsList='appsList' type='classHome' />
+          <apps :appsList='appsList' type='schoolHome'/>
         </div>
+      </lazy-component>
+
+      <lazy-component class="module">
+        <read-list type='school' title='流动红旗' field='logo'/>
       </lazy-component>
     </div>
   </div>
@@ -28,11 +32,13 @@
 import axios from './../../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
 import apps from './../../module/myModule/apps'
+import readList from './../../module/classModule/readList'
 
 export default {
   name: 'school',
   components: {
-    apps
+    apps,
+    readList
   },
   computed: {
     ...mapGetters(['userDataState'])
@@ -40,16 +46,17 @@ export default {
   data() {
     return {
       schoolInfo: '',
-      appsList: [{
-        name: '讲故事',
-        iconClass: 'icon-jianggushi'
-      }, {
-        name: '每日国学',
-        iconClass: 'icon-guoxue'
-      }, {
-        name: '交流',
-        iconClass: 'icon-jiaoliu'
-      }]
+      appsList: [
+        {
+          name: '简介',
+          iconClass: 'icon-jianjie'
+        }, {
+          name: '讲故事',
+          iconClass: 'icon-jianggushi'
+        }, {
+          name: '书架',
+          iconClass: 'icon-shujia'
+        }]
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -94,7 +101,8 @@ export default {
 </script>
 <style scoped>
 .header-card {
-  padding: 2.8125rem /* 45/16 */ 0.9375rem /* 15/16 */ .625rem /* 10/16 */ 0.9375rem /* 15/16 */;
+  padding: 2.8125rem /* 45/16 */ 0.9375rem /* 15/16 */ 0.625rem /* 10/16 */
+    0.9375rem /* 15/16 */;
   height: 6.25rem /* 100/16 */;
   position: relative;
   overflow: hidden;
@@ -121,22 +129,28 @@ export default {
 
 .school-logo {
   border: 0.25rem /* 4/16 */ solid #fff;
-  box-shadow: 0 0.3125rem /* 5/16 */ 0.9375rem /* 15/16 */ rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.3125rem /* 5/16 */ 0.9375rem /* 15/16 */ rgba(255, 87, 34, 0.2);
   margin: 0 auto;
 }
 
-.school-info{
+.school-info {
   z-index: 2;
   display: grid;
   margin: 0 auto;
+  width: 13.75rem /* 220/16 */;
+  text-align: center;
 }
 
 .school-name {
   font-weight: 500;
-  margin-top: .625rem /* 10/16 */;
+  margin-top: 0.625rem /* 10/16 */;
 }
 
 .school-type {
   font-size: 0.8125rem /* 13/16 */;
+}
+
+.theme-school-background{
+  background: linear-gradient(135deg, #F44336, #FF5722);
 }
 </style>

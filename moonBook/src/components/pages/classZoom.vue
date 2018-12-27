@@ -36,7 +36,7 @@ import qrCode from "./../module/mold/qrCode"
 
 export default {
   name: "class-zoom",
-  props: ['type'],
+  props: ['type','banji_id'],
   components: {
     freshList,
     graphicCrad,

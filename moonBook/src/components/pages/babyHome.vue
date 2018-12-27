@@ -1,6 +1,6 @@
 <template>
   <div class="baby-home page-padding">
-    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" :title="fixedHeaderBar?$route.meta.title:childInfo.name"
+    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" :title="pageTitle"
       @click-left="onClickLeft">
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -140,6 +140,23 @@ export default {
     classShow,
     family,
     activity
+  },
+  computed: {
+    pageTitle(){
+        let name = ''
+
+        if( this.childInfo.is_mine ){
+          if(this.fixedHeaderBar){
+            name = this.$route.meta.title
+          }else{
+            name = this.childInfo.name
+          }
+        }else{
+          name = `${this.childInfo?this.childInfo.name:''}小朋友`
+        }
+
+        return name
+    }
   },
   data() {
     return {

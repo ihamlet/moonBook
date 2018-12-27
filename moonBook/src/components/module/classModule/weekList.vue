@@ -63,11 +63,6 @@ export default {
       tabIndex: 0
     }
   },
-  // mounted() {
-  //   window.onPunch = (res) => {
-  //     this.onPunch(res)
-  //   }
-  // },
   methods: {
     onChange(index) {
       this.tabIndex = index
@@ -102,16 +97,7 @@ export default {
 
         this.tab[this.tabIndex].content = list
       })
-    },
-    // onPunch(res){
-    //   if(res.status == 1){
-    //     this.tab[0].content[0].sign_read_count++
-    //   }else{
-    //     this.$dialog.alert({
-    //       message: `<div class='text-center'>${res.msg}</div>`
-    //     })
-    //   }
-    // },
+    }
   }
 }
 </script>

@@ -194,7 +194,7 @@ export default {
 }
 
 .user-info {
-  padding-top: 3.75rem /* 60/16 */;
+  padding-top: 3.125rem /* 50/16 */;
   padding-bottom: 1.875rem /* 30/16 */;
 }
 

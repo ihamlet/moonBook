@@ -28,19 +28,31 @@ export default {
     freshList,
     dryingList
   },
+  computed: {
+    tab(){
+      let array = []
+      if( this.$route.query.tid ){
+        array = [{
+          title:'亲子阅读' 
+        }]
+      }else{
+        array = [{
+          title: '关注',
+          sort: 'subscribe',
+        }, {
+          title: '最新',
+          sort: 'new',
+        }, {
+          title: '推荐',
+          sort: 'tuijian',
+        }]
+      }
+      return array
+    }
+  },
   data() {
     return {
-      freshList: [],
-      tab: [{
-        title: '关注',
-        sort: 'subscribe',
-      }, {
-        title: '最新',
-        sort: 'new',
-      }, {
-        title: '推荐',
-        sort: 'tuijian',
-      }]
+      freshList: []
     }
   },
   created() {
@@ -51,7 +63,14 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get(`/book/SchoolArticle/recommendUsers?tid=${this.$route.query.tid}`).then(res => {
+
+      let data = {
+        params:{
+          tid: this.$route.query.tid
+        }
+      }
+
+      axios.get('/book/SchoolArticle/recommendUsers',data).then(res => {
         this.freshList = res.data
       })
     }
