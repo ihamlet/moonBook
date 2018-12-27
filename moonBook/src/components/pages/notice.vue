@@ -1,6 +1,6 @@
 <template>
     <div class="notice page-padding">
-        <van-nav-bar  @click-left="onClickLeft" left-text="个人中心"  left-arrow :title="$route.meta.title" />
+        <van-nav-bar  @click-left="onClickLeft" left-text="我的"  left-arrow :title="$route.meta.title" />
         <div class="container">
             <message-list :readList='readList'/>
         </div>

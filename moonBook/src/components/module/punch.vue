@@ -3,7 +3,7 @@
         <van-nav-bar class="theme-nav" fixed title="阅读日历" @click-left="onClickLeft">
             <div class="head-bar-text" slot='left'>
                 <van-icon name="arrow-left" />
-                个人中心
+                我的
             </div>
         </van-nav-bar>
         <lazy-component class="gap-top">

@@ -1,6 +1,6 @@
 <template>
   <div class="message">
-    <van-tabs color='#409eff' :line-width='20' sticky @change='onChange'>
+    <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky @change='onChange'>
       <van-tab v-for="(list,index) in tab" :key="index">
         <div class="tab-title" slot="title">
           {{list.title}}

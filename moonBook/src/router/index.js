@@ -128,7 +128,7 @@ export default new Router({
         name: 'baby-home',
         component: BabyHome,
         meta: {
-          title: '宝贝主页',
+          title: '我的宝贝',
           scrollToTop: true,
           tabActive:4,
           isFooterBar: true

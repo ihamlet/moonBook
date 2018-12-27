@@ -7,7 +7,7 @@
       </div>
       <div class="head-bar-icon bar-right" slot='right'>
         <span class="notice-badge">
-          <i class="iconfont" @click="toNotice">&#xe741;</i>
+          <i class="iconfont" @click="toNotice">{{msg>0?'&#xe623;':'&#xe798;'}}</i>
           <b class="read-dot" v-if='msg > 0'></b>
         </span>
         <i class="iconfont" @click="signIn">&#xe609;</i>
