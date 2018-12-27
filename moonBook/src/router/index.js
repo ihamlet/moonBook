@@ -100,7 +100,7 @@ export default new Router({
         meta: {
           title: '消息中心',
           scrollToTop: true,
-          tabActive:3,
+          tabActive:4,
           isFooterBar: true
         }
       },{
@@ -138,7 +138,7 @@ export default new Router({
         name: 'class-home',
         component: ClassHome,
         meta: {
-          title: '班级主页',
+          title: '我的班级',
           scrollToTop: true,
           tabActive:3,
           isFooterBar: true

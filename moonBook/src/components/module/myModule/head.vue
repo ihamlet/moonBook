@@ -1,12 +1,16 @@
 <template>
   <div class="head head-background" ref='head'>
     <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userInfo.name"
-      @click-left="onClickLeft" @click-right="onClickRight">
+      @click-left="onClickLeft">
       <div class="head-bar-icon" slot='left'>
         <i class="iconfont">&#xe60e;</i>
       </div>
-      <div class="head-bar-icon" slot='right'>
-        <i class="iconfont">&#xe609;</i>
+      <div class="head-bar-icon bar-right" slot='right'>
+        <span class="notice-badge">
+          <i class="iconfont" @click="toNotice">&#xe741;</i>
+          <b class="read-dot" v-if='msg > 0'></b>
+        </span>
+        <i class="iconfont" @click="signIn">&#xe609;</i>
       </div>
     </van-nav-bar>
     <div class="user-info flex flex-justify">
@@ -82,7 +86,7 @@ export default {
     accept,
     punch
   },
-  props: ['userInfo'],
+  props: ['userInfo','msg'],
   data() {
     return {
       domHeight: 0,
@@ -115,7 +119,7 @@ export default {
     onClickLeft() {
       this.$router.push({name:'card-list'})
     },
-    onClickRight() {
+    signIn() {
       this.punchShow = true
     },
     toAccept() {
@@ -137,6 +141,11 @@ export default {
         query:{
           tabActive:num
         }
+      })
+    },
+    toNotice(){
+      this.$router.push({
+        name:'notice'
       })
     }
   }
@@ -248,5 +257,20 @@ export default {
 
 .page-punch {
   background: #de4313;
+}
+
+span.notice-badge{
+  margin-right: .9375rem /* 15/16 */;
+  position: relative;
+}
+
+b.read-dot{
+  position: absolute;
+  width: .625rem /* 10/16 */;
+  height: .625rem /* 10/16 */;
+  background: #f44;
+  border-radius: .625rem /* 10/16 */;
+  bottom: .9375rem /* 15/16 */;
+  right: 0;
 }
 </style>

@@ -6,7 +6,7 @@
     </lazy-component>
     <lazy-component>
       <div class="container">
-        <van-tabs color='#409eff' :line-width='20' sticky swipeable animated>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
               <drying-list :sort='list.sort' :tid='$route.query.tid'/>

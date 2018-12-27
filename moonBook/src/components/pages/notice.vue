@@ -1,6 +1,6 @@
 <template>
     <div class="notice page-padding">
-        <van-nav-bar :title="$route.meta.title"/>
+        <van-nav-bar  @click-left="onClickLeft" left-text="个人中心"  left-arrow :title="$route.meta.title" />
         <div class="container">
             <message-list :readList='readList'/>
         </div>
@@ -18,6 +18,13 @@ export default {
     data () {
         return {
             readList:[]
+        }
+    },
+    methods: {
+        onClickLeft(){
+            this.$router.push({
+                name:'my'
+            })
         }
     }
 }

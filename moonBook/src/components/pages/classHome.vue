@@ -4,7 +4,7 @@
       fixed @click-left="onClickLeft" @click-right="show = true">
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
-        <span class="text">个人中心</span>
+        <span class="text">我的</span>
       </div>
       <div class="btn-right-qrcode" slot='right'>
         <i class="iconfont">&#xe7a3;</i>

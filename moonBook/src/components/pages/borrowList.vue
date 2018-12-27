@@ -1,7 +1,7 @@
 <template>
   <div class="borrow-list">
     <van-nav-bar :title="$route.meta.title" left-text="我的" left-arrow @click-left="onClickLeft" />
-    <van-tabs color='#409eff' @change='onChangeTab' :line-width='20' sticky swipeable animated v-model="tabIndex">
+    <van-tabs color='#409eff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex">
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <van-pull-refresh v-model="loading" @refresh="onRefresh">
