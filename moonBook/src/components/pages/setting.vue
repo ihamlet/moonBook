@@ -5,15 +5,15 @@
     <van-cell-group>
       <div class="form-title">学校设置</div>
       <van-field input-align='right' readonly center label="选择学校" v-model="setting.settingSchool" placeholder="请选择学校"
-        @click="toSelectSchool"/>
-      <van-field input-align='right' v-if='$route.query.registerType!="headmaster"' readonly center label="选择班级" v-model="setting.settingClass" placeholder="请选择班级"
-        @click="toSelectClass"/>
+        @click="toSelectSchool" />
+      <van-field input-align='right' v-if='$route.query.registerType!="headmaster"' readonly center label="选择班级"
+        v-model="setting.settingClass" placeholder="请选择班级" @click="toSelectClass" />
     </van-cell-group>
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'baby-setting',
@@ -37,12 +37,23 @@ export default {
     $route: 'fetchData'
   },
   methods: {
-    ...mapActions(['getUserData']),
     fetchData() {
-      if(this.$route.query.registerType == 'teacher'){
-        this.setting.settingSchool = this.userDataState.teacher_school_name
-        this.setting.settingClass = this.userDataState.teacher_banji_name
-      }else{
+      if (this.$route.query.registerType) {
+        let data
+
+        if (this.$route.query.registerType == 'headmaster') {
+          data = {
+            params: {
+              is_master: 1
+            }
+          }
+        }
+
+        axios.get('/book/SchoolTeacher/getMine', data).then(res => {
+          this.setting.settingSchool = res.data.data.school_name
+          this.setting.settingClass = res.data.data.banji_name
+        })
+      } else {
         axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
           if (res.data.status == 1) {
             this.child_id = res.data.data.id
@@ -61,19 +72,19 @@ export default {
             id: this.$route.query.id,
             type: this.$route.query.type,
             pageTitle: '添加宝贝',
-            back:'my'
+            back: 'my'
           }
         })
       } else {
-        if( this.$route.query.registerType){
+        if (this.$route.query.registerType) {
           this.$router.push({
-            name:'edit-manager',
-            query:{
+            name: 'edit-manager',
+            query: {
               pageTitle: this.$route.query.pageTitle,
               registerType: this.$route.query.registerType
             }
           })
-        }else{
+        } else {
           this.$router.go(-1)
         }
       }

@@ -1,7 +1,6 @@
 <template>
   <div class="baby-home page-padding">
-    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" :title="pageTitle"
-      @click-left="onClickLeft">
+    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" :title="pageTitle" @click-left="onClickLeft">
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">我的</span>
@@ -59,8 +58,8 @@
         <family />
       </lazy-component>
 
-      <lazy-component class="module" >
-        <activity/>
+      <lazy-component class="module">
+        <activity />
       </lazy-component>
 
       <div class="baby-class" v-if='childInfo.is_mine'>
@@ -142,20 +141,20 @@ export default {
     activity
   },
   computed: {
-    pageTitle(){
-        let name = ''
+    pageTitle() {
+      let name = ''
 
-        if( this.childInfo.is_mine ){
-          if(this.fixedHeaderBar){
-            name = this.$route.meta.title
-          }else{
-            name = this.childInfo.name
-          }
-        }else{
-          name = `${this.childInfo?this.childInfo.name:''}小朋友`
+      if (this.childInfo.is_mine) {
+        if (this.fixedHeaderBar) {
+          name = this.$route.meta.title
+        } else {
+          name = this.childInfo.name
         }
+      } else {
+        name = `${this.childInfo ? this.childInfo.name : ''}小朋友`
+      }
 
-        return name
+      return name
     }
   },
   data() {
@@ -250,7 +249,6 @@ export default {
       })
     },
     toClassHome(childInfo) {
-      console.log(childInfo)
       if (childInfo.banji_id > 0) {
         this.$router.push({
           name: "class-home",
@@ -273,13 +271,13 @@ export default {
         if (res.data.status == 1) {
           this.zanShow = true
           childInfo.zan_count = res.data.data.zan_count
-        }else{
+        } else {
           this.$toast(res.data.msg)
         }
 
-        setTimeout(()=>{
+        setTimeout(() => {
           this.zanShow = false
-        },2000)
+        }, 2000)
       })
     }
   }
@@ -307,7 +305,7 @@ export default {
   border: 0.1875rem /* 3/16 */ solid #fff;
 }
 
-.baby-info .avatar img{
+.baby-info .avatar img {
   width: 3.75rem /* 60/16 */;
   height: 3.75rem /* 60/16 */;
   border-radius: 50%;
@@ -405,8 +403,8 @@ export default {
 }
 </style>
 <style>
-.add-count-popup.van-popup{
-  background: transparent
+.add-count-popup.van-popup {
+  background: transparent;
 }
 </style>
 

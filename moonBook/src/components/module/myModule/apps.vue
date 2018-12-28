@@ -25,6 +25,7 @@ export default {
 .icon-jiaoliu::before { content: '\e6af'}
 .icon-jianjie::before { content: '\eb0d'}
 .icon-shujia::before { content: '\e649'}
+.icon-canpu::before { content: '\e729'}
 
 
 .apps{

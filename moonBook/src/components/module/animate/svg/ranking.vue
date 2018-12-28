@@ -1,6 +1,6 @@
 <template>
   <div class="svg-icon">
-    <div class="icon" v-if='ranking < 4' :class="type">
+    <div class="icon" v-if='ranking < 4' :class="`ranking-${type}`">
       <svg v-if="ranking == 1" class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
         viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="729">
         <path d="M392.192 440.32L244.224 367.104c-16.384-8.192-30.72 0-31.744 18.432l-10.752 164.864c-1.024 18.432 11.264 39.424 27.648 47.616l147.968 73.216c16.384 8.192 30.72 0 31.744-18.432L419.84 487.936c1.024-18.432-11.776-39.424-27.648-47.616z m338.944-196.096l-147.968-73.216c-16.384-8.192-30.72 0-31.744 18.432l-10.752 164.864c-1.024 18.432 11.264 39.424 27.648 47.616l147.968 73.216c16.384 8.192 30.72 0 31.744-18.432l10.752-164.864c1.024-17.92-11.264-39.424-27.648-47.616z"
@@ -69,11 +69,11 @@ svg.icon {
   font-style: oblique;
 }
 
-.icon.module{
+.icon.ranking-module{
   width: 2.25rem /* 36/16 */;
 }
 
-.module svg.icon{
+.ranking-module svg.icon{
   font-size: 2.125rem /* 34/16 */;
 }
 </style>

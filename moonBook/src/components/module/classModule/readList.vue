@@ -6,19 +6,25 @@
         <i class="iconfont" :class="`icon-${type}`" v-if='type == "banji"'>&#xe61d;</i>
         <span class="name">{{title}}</span>
       </div>
-      <van-row>
-        <van-col class="no-ranking flex flex-justify" span="24" v-if='rankList.length == 0'>
-           <i class="iconfont">&#xeab0;</i> 即将揭晓
-        </van-col>
-        <van-col span="8" v-for='(item,index) in rankList' :key="index" v-else-if='index < 3'>
-          <div class="flex flex-align flex-justify">
+      <van-row v-if='count > 0'>
+        <van-col span="8" class="flex flex-justify" v-if='index < 4'  v-for='(item,index) in rankList' :key="index">
+          <div class="item flex flex-align" v-if='item.rank < 4'>
             <div class="ranking">
-              <svg-ranking :ranking="item.rank" type="module"/>
+              <svg-ranking :ranking="item.rank" type="module" />
             </div>
-            <div class="avatar">
-              <img :src="item[field]" />
+
+            <div class="name"  v-if='type == "school"'>
+                {{item[field]}}
+            </div>
+            <div class="avatar" v-else>
+              <img :src="item[field]"/>
             </div>
           </div>
+        </van-col>
+      </van-row>
+      <van-row span="24" class="flex flex-justify" v-else>
+        <van-col  class="no-ranking">
+            <i class="iconfont">&#xeab0;</i> 即将揭晓
         </van-col>
       </van-row>
     </van-cell>
@@ -30,12 +36,13 @@ import svgRanking from './../animate/svg/ranking'
 
 export default {
   name: 'read-list',
-  props: ['title','type','field'],
+  props: ['title', 'type', 'field'],
   components: {
     svgRanking
   },
   data() {
     return {
+      count:0,
       rankList: []
     }
   },
@@ -47,9 +54,16 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get('/book/SchoolTushuBorrow/getRank?region=banji&group=baby').then(res => {
-        this.rankList = res.data.data.list
-      })
+      if(this.type == 'school'){
+        axios.get(`/book/SchoolTushuBorrow/getRank?school_id=${this.$route.query.id}&group=banji&region=school`).then(res=>{
+          this.rankList = res.data.data.list
+        })
+      }else{
+        axios.get(`/book/babySign/rank?banji_id=${this.$route.query.id}&time=week`).then(res => {
+          this.count = res.data.count
+          this.rankList = res.data.data
+        })
+      }
     }
   }
 }
@@ -60,40 +74,41 @@ export default {
   display: grid;
 }
 
-.icon .iconfont{
+.icon .iconfont {
   font-size: 1.75rem /* 28/16 */;
 }
 
-.icon .iconfont.icon-banji{
+.icon .iconfont.icon-banji {
   background: linear-gradient(127deg, #ffeb3b, #ff9800);
   -webkit-background-clip: text;
   color: transparent;
 }
 
-.icon .iconfont.icon-school{
-  background: linear-gradient(127deg, #FF5722, #F44336);
+.icon .iconfont.icon-school {
+  background: linear-gradient(127deg, #ff5722, #f44336);
   -webkit-background-clip: text;
   color: transparent;
 }
 
 .icon .name {
-  font-size: .75rem /* 12/16 */;
+  font-size: 0.75rem /* 12/16 */;
 }
 
+.avatar,
 .avatar img {
   width: 2.25rem /* 36/16 */;
   height: 2.25rem /* 36/16 */;
   border-radius: 50%;
 }
 
-.no-ranking{
-  opacity: .7;
+.no-ranking {
+  opacity: 0.7;
 }
 
-.no-ranking .iconfont{
+.no-ranking .iconfont {
   font-size: 1.5rem /* 24/16 */;
-  margin-right: .625rem /* 10/16 */;
-  background: linear-gradient(127deg, #FFEB3B, #FFC107);
+  margin-right: 0.625rem /* 10/16 */;
+  background: linear-gradient(127deg, #ffeb3b, #ffc107);
   -webkit-background-clip: text;
   color: transparent;
 }

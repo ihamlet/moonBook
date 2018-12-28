@@ -1,6 +1,7 @@
 <template>
   <div class="edit-class page-padding">
-    <van-nav-bar :border='false' fixed :title="$route.query.registerType=='teacher'?userDataState.teacher_school_name:childInfo.school_name" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar :border='false' fixed :title="$route.query.registerType=='teacher'?schoolName:childInfo.school_name"
+      left-arrow @click-left="onClickLeft" />
     <div class="container">
       <div class="baby-info flex flex-justify" v-if='$route.query.registerType!="teacher"'>
         <div class="avatar" v-if='childInfo'>
@@ -41,7 +42,8 @@ export default {
       loading: false,
       finished: false,
       page: 1,
-      childInfo: ''
+      childInfo: '',
+      schoolName: ''
     }
   },
   created() {
@@ -53,22 +55,39 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     fetchData() {
-      axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
-        if (res.data.status == 1) {
-          this.childInfo = res.data.data
+      if (this.$route.query.registerType) {
+        let data
+
+        if (this.$route.query.registerType == 'headmaster') {
+          data = {
+            params: {
+              is_master: 1
+            }
+          }
         }
-      })
+
+        axios.get('/book/SchoolTeacher/getMine', data).then(res => {
+          this.schoolName = res.data.data.school_name
+        })
+      } else {
+        axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
+          if (res.data.status == 1) {
+            this.childInfo = res.data.data
+          }
+        })
+      }
     },
     onClickLeft() {
       this.$router.go(-1)
     },
     select(item, itemIndex) {
       if (this.$route.query.registerType == 'teacher') {
-        axios.get(`/book/SchoolTeacher/bind_banji?banji_name=${item.title}`).then(res=>{
+        axios.get(`/book/SchoolTeacher/bind_banji?banji_name=${item.title}`).then(res => {
           this.$router.push({
-            name:'edit-setting',
-            query:{
-              registerType:'teacher'
+            name: 'edit-setting',
+            query: {
+              registerType: 'teacher',
+              pageTitle: this.$route.query.pageTitle
             }
           })
         })

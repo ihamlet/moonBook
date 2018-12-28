@@ -14,7 +14,6 @@
             <span v-else>{{item.user.name}}</span>
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
-          <div class="school">{{item.schoolName}}</div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0'>
           <van-button class="theme-btn" type="primary" size='mini' plain v-if='item.isSubscribe == 0' @click="follow(item)"> + 关注</van-button>
@@ -45,6 +44,9 @@
       </div>
 
       <div class="temp-type">
+        <van-tag type="primary" plain v-if='item.school_id > 0'>
+          <span @click="toSchoolHome(item.school_id)">{{item.schoolName}}</span>
+        </van-tag>
          <van-tag type="primary" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
       </div>
 
@@ -151,6 +153,19 @@ export default {
           id: item.user_id
         }
       })
+    },
+    toSchoolHome(id){
+      if(id > 0){
+        this.$router.push({
+          name:'apps-school',
+          query:{
+            id:id,
+            back: this.$route.name,
+            backPageName: this.$route.meta.title
+          }
+        })
+      }
+
     }
   }
 }
@@ -214,5 +229,10 @@ export default {
 
 .task{
   margin-top: .625rem /* 10/16 */;
+}
+
+.user-card{
+  position: relative;
+  z-index: 2;
 }
 </style>

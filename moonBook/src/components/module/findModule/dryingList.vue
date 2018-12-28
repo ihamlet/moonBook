@@ -26,7 +26,7 @@ export default {
     slogan,
     graphicCrad
   },
-  props: ['sort','tid'],
+  props: ['sort','tid','schoolId','type'],
   computed: {
     ...mapGetters(['userToken'])
   },
@@ -48,8 +48,13 @@ export default {
         params:{
           page:this.page,
           sort:this.sort,
-          tid: this.tid
+          tid: this.tid,
+          route: this.type
         }    
+      }
+
+      if(this.schoolId){
+        data.params.school_id = this.schoolId
       }
 
       return axios.get('/book/SchoolArticle/getList',data).then(res => {

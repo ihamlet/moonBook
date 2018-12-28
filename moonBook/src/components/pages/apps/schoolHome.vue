@@ -1,9 +1,9 @@
 <template>
-  <div class="school-home">
+  <div class="school-home page-padding">
     <van-nav-bar class="theme-nav" title="学校主页" left-arrow @click-left="onClickLeft" :border='false' :zIndex='99' fixed>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
-        <span class="text">首页</span>
+        <span class="text">{{$route.query.backPageName?$route.query.backPageName:'首页'}}</span>
       </div>
     </van-nav-bar>
     <div class="container">
@@ -18,12 +18,23 @@
       </div>
       <lazy-component class="module">
         <div class="apps">
-          <apps :appsList='appsList' type='schoolHome'/>
+          <apps :appsList='appsList' type='schoolHome' />
         </div>
       </lazy-component>
-
       <lazy-component class="module">
-        <read-list type='school' title='流动红旗' field='logo'/>
+          <notice type='school'/>
+      </lazy-component>
+      <lazy-component class="module">
+        <read-list type='school' title='流动红旗' field='logo' />
+      </lazy-component>
+      <lazy-component>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky animated swipeable>
+          <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
+            <div class="tab-content">
+              <drying-list :schoolId='$route.query.id' />
+            </div>
+          </van-tab>
+        </van-tabs>
       </lazy-component>
     </div>
   </div>
@@ -33,12 +44,16 @@ import axios from './../../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
 import apps from './../../module/myModule/apps'
 import readList from './../../module/classModule/readList'
+import dryingList from './../../module/findModule/dryingList'
+import notice from './../../module/classModule/notice'
 
 export default {
   name: 'school',
   components: {
     apps,
-    readList
+    readList,
+    notice,
+    dryingList
   },
   computed: {
     ...mapGetters(['userDataState'])
@@ -51,50 +66,79 @@ export default {
           name: '简介',
           iconClass: 'icon-jianjie'
         }, {
+          name: '每日餐谱',
+          iconClass: 'icon-canpu'
+        }, {
           name: '讲故事',
           iconClass: 'icon-jianggushi'
         }, {
           name: '书架',
           iconClass: 'icon-shujia'
-        }]
+        }],
+      tab: [{
+        title: '全部',
+        content: '',
+      }, {
+        title: '风采',
+        content: '',
+      }, {
+        title: '动态',
+        content: ''
+      }]
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.getUserData().then(res => {
-        if (res.child_id > 0) {
-          if (res.school_id > 0) {
-            axios.get(`/book/school/getInfo?school_id=${res.school_id}`).then(res => {
-              vm.schoolInfo = res.data.data
-            })
+        if (res.isHeaderTeacher == 1) {
+          vm.request()
+        } else {
+          if (res.child_id > 0) {
+            if (res.school_id > 0) {
+              vm.request()
+            } else {
+              vm.$router.push({
+                name: 'edit-school',
+                query: {
+                  type: 'add',
+                  enter: 'my',
+                  id: res.child_id,
+                }
+              })
+            }
           } else {
             vm.$router.push({
-              name: 'edit-school',
+              name: 'edit-child',
               query: {
                 type: 'add',
-                enter: 'my',
-                id: res.child_id,
+                pageTitle: '添加宝贝'
               }
             })
           }
-        } else {
-          vm.$router.push({
-            name: 'edit-child',
-            query: {
-              type: 'add',
-              pageTitle: '添加宝贝'
-            }
-          })
         }
       })
     })
   },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll)
+  },
   methods: {
     ...mapActions(['getUserData']),
-    onClickLeft() {
-      this.$router.push({
-        name: 'home'
+    request() {
+      axios.get(`/book/school/getInfo?school_id=${this.$route.query.id}`).then(res => {
+        this.schoolInfo = res.data.data
       })
+    },
+    onClickLeft() {
+      if(this.$route.query.back){
+        this.$router.push({
+          name: this.$route.query.back
+        }) 
+      }else{
+        this.$router.push({
+          name: 'home'
+        })
+      }
     }
   }
 }
@@ -129,7 +173,8 @@ export default {
 
 .school-logo {
   border: 0.25rem /* 4/16 */ solid #fff;
-  box-shadow: 0 0.3125rem /* 5/16 */ 0.9375rem /* 15/16 */ rgba(255, 87, 34, 0.2);
+  box-shadow: 0 0.3125rem /* 5/16 */ 0.9375rem /* 15/16 */
+    rgba(255, 87, 34, 0.2);
   margin: 0 auto;
 }
 
@@ -150,7 +195,7 @@ export default {
   font-size: 0.8125rem /* 13/16 */;
 }
 
-.theme-school-background{
-  background: linear-gradient(135deg, #F44336, #FF5722);
+.theme-school-background {
+  background: linear-gradient(135deg, #f44336, #ff5722);
 }
 </style>

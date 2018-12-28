@@ -1,14 +1,17 @@
 <template>
   <div class="add-child">
     <van-nav-bar :title="$route.query.pageTitle" left-arrow left-text="注册" @click-left="onClickLeft" />
-    <div class="teacher-form" v-if='managerType'>
+    <div class="verify" v-if='managerData.is_confirm == 0'>
+        您的表单需要审核，请等待审核通过...
+    </div>
+    <div class="teacher-form">
       <van-radio-group>
-        <div class="form-title">学校设置(必填)</div>
+        <div class="form-title">学校设置</div>
         <van-cell-group>
-          <van-cell value='设置' :title="cellTitle[0]" :label='cellTitle[1]' title-class='cell-school-title' center is-link @click="toSetting" />
+          <van-cell value='设置' :title="managerData.school_name" :label='managerData.banji_name' title-class='cell-school-title' center is-link @click="toSetting" />
         </van-cell-group>
       </van-radio-group>
-      <div class="office">
+      <div class="office" v-if='jobList'>
         <div class="form-title">职位设置</div>
         <van-cell-group>
           <van-field v-model="office" input-align='right' label="职位" readonly placeholder="请选择职位" @click="selectOffice"/>
@@ -18,18 +21,6 @@
       <van-popup v-model="show" position="bottom" get-container='#app'>
         <van-picker :columns="jobList" @change="onChange" />
       </van-popup>
-
-      <!-- 提交编辑 -->
-      <div class="form-submit">
-        <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="submit">提交</van-button>
-      </div>
-    </div>
-    <div class="verify" v-else>
-      <div class="wait-prompt">
-        <i class="iconfont">&#xe7ee;</i>
-        <h3 class="prompt-text">请等待校方审核...</h3> 
-        <div class="theme-color" @click="$router.push({name:'home'})">返回首页</div>
-      </div>
     </div>
   </div>
 </template>
@@ -47,48 +38,23 @@ export default {
     avatar
   },
   computed: {
-    ...mapGetters(['userDataState']),
+    ...mapGetters(['userDataState','userPointState']),
     jobList(){
       let array = []
-      if(this.$route.query.registerType == 'teacher' && this.userDataState.teacher_school_typecode == '141203'){
+      if(this.$route.query.registerType == 'teacher' && this.managerData.typecode == '141203'){
         array = ['班主任','任课老师','行政','其它']
       }
 
-      if(this.$route.query.registerType == 'teacher' && this.userDataState.teacher_school_typecode == '141204'){
+      if(this.$route.query.registerType == 'teacher' && this.managerData.typecode == '141204'){
         array = ['带班老师','信息老师','生活老师','其它']
       }
       
-      if(this.$route.query.registerType == 'headmaster' && this.userDataState.teacher_school_typecode == '141203'){
-        array = ['校长','副校长']
+      if(this.$route.query.registerType == 'headmaster' && this.managerData.typecode == '141203'){
+        array = ['校长','副校长','其它']
       }
 
-      if(this.$route.query.registerType == 'headmaster' && this.userDataState.teacher_school_typecode == '141204'){
-        array = ['园长','副园长']
-      } 
-
-      return array
-    },
-    managerType(){
-      let purview
-      if(this.$route.query.registerType == 'teacher' && this.userDataState.isTeacher < 2){
-        purview = true
-      }
-
-      if(this.$route.query.registerType == 'headmaster' && this.userDataState.isHeaderTeacher < 2){
-        purview = true
-      }
-      
-      return purview
-    },
-    cellTitle(){
-      let array = []
-
-      if(this.$route.query.registerType == 'teacher'){
-        array = [this.userDataState.teacher_school_name,this.userDataState.teacher_banji_name]
-      }
-
-      if(this.$route.query.registerType == 'headmaster'){
-        array = [this.userDataState.header_teacher_school_name,'']
+      if(this.$route.query.registerType == 'headmaster' && this.managerData.typecode == '141204'){
+        array = ['园长','副园长','其它']
       }
 
       return array
@@ -99,10 +65,37 @@ export default {
       office: '',
       show: false,
       submitLoading: false,
+      managerData:'',
+      schoolInfo:''
     }
+  },
+  created () {
+    this.fetchData()
+    this.office = this.managerData.duty
+  },
+  watch: {
+    '$router':'fetchData'
   },
   methods: {
     ...mapActions(['getUserData']),
+    fetchData(){
+      
+      let data
+
+      if(this.$route.query.registerType == 'headmaster'){
+        data = {
+          params:{
+            is_master:1
+          }
+        }
+      }
+
+      axios.get('/book/SchoolTeacher/getMine',data).then(res=>{
+        this.managerData = res.data.data
+        this.schoolInfo = res.data.school
+        this.office = res.data.data.duty
+      })
+    },
     onClickLeft() {
       this.$router.push({
         name: 'register'
@@ -121,7 +114,7 @@ export default {
       })
     },
     selectOffice(){
-      if(this.userDataState.teacher_school_typecode){
+      if(this.managerData.school_id > 0){
         this.show = true
       }else{
         this.$toast('您需要选择学校，才可以选择所在学校中的职位。感谢您的辛劳付出。')
@@ -129,6 +122,30 @@ export default {
     },
     onChange(picker, value, index){
       this.office = value
+      let data = {
+        params:{
+          school_name: this.managerData.school_name,
+          cityname: this.schoolInfo.cityname,
+          lat:this.schoolInfo.lat,
+          lng:this.schoolInfo.lng,
+          amap_id: this.schoolInfo.amap_id,
+          typecode: this.managerData.typecode
+        }
+      }
+
+      if (this.$route.query.registerType == 'headmaster') {
+        data.params.is_master = 1
+      }
+
+      data.params.duty = value
+
+      axios.get('/book/SchoolTeacher/bind', data).then(res => {
+        if(res.data.status == 1){
+          this.$toast.success('操作成功')
+        }else{
+          this.$toast.fail('操作失败')
+        }
+      })
     }
   }
 }
@@ -166,6 +183,14 @@ export default {
 
 .prompt-text{
   margin: 1.25rem /* 20/16 */ 0;
+}
+
+.verify{
+  text-align: center;
+  height: 7.5rem /* 120/16 */;
+  line-height: 7.5rem /* 120/16 */;
+  font-size: .875rem /* 14/16 */;
+  color: #909399;
 }
 </style>
 <style>

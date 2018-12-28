@@ -2,7 +2,7 @@
   <div class="class-home page-padding" v-if='hackReset'>
     <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?$route.meta.title:classInfo.title}} <i class="iconfont" v-if="userDataState.isTeacher == 1">&#xe608;</i>
+        {{fixedHeaderBar?$route.meta.title:classInfo.title}} <i class="iconfont" v-if="managerClass.is_confirm == 1">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -25,7 +25,7 @@
           <apps :appsList='appsList' type='classHome' />
         </div>
       </lazy-component>
-      <lazy-component>
+      <lazy-component class="module">
         <notice type='banji' />
       </lazy-component>
       <lazy-component class="module">
@@ -78,27 +78,19 @@ export default {
     ...mapGetters(['userDataState']),
     actions() {
       let array = []
+      let childClass = JSON.parse(localStorage.getItem('childClass'))
 
-      if (this.userDataState.isTeacher == 1 && this.userDataState.teacher_banji_id == this.classInfo.banji_id) {
-        array = [{
-          name: this.userDataState.teacher_banji_name,
-          subname: '管理的班级',
-          id: this.userDataState.teacher_banji_id
-        }, {
-          name: '返回',
-          subname: '宝贝的班级',
-        }]
-      } else {
-        array = [{
-          name: this.classInfo.title,
-          subname: '宝贝的班级',
-          id: this.classInfo.banji_id
-        }, {
-          name: this.userDataState.teacher_banji_name,
-          subname: '管理的班级',
-          id: this.userDataState.teacher_banji_id
-        }]
-      }
+
+      array = [{
+        name: this.managerClass.banji_name,
+        subname: '管理的班级',
+        id: this.managerClass.banji_id
+      }, {
+        name: childClass.title,
+        subname: '宝贝的班级',
+        id: childClass.banji_id
+      }]
+
 
       return array
     }
@@ -112,6 +104,7 @@ export default {
       lateBook: '',
       hackReset: true,
       actionsheetShow: false,
+      managerClass: '',
       appsList: [{
         name: '讲故事',
         iconClass: 'icon-jianggushi'
@@ -128,43 +121,39 @@ export default {
     next(vm => {
       vm.qrcode()
       vm.getUserData().then(res => {
-        if (res.isTeacher == 1) {
-          vm.request()
-        } else {
-          if (res.child_id > 0) {
-            if (res.school_id > 0) {
-              if (res.banji_id > 0) {
-                vm.request()
-              } else {
-                vm.$router.push({
-                  name: 'edit-class',
-                  query: {
-                    id: res.child_id,
-                    back: 'class-home',
-                    schoolId: res.school_id,
-                    type: 'add'
-                  }
-                })
-              }
+        if (res.child_id > 0) {
+          if (res.school_id > 0) {
+            if (res.banji_id > 0) {
+              vm.request()
             } else {
               vm.$router.push({
-                name: 'edit-school',
+                name: 'edit-class',
                 query: {
-                  type: 'add',
-                  enter: 'my',
                   id: res.child_id,
+                  back: 'class-home',
+                  schoolId: res.school_id,
+                  type: 'add'
                 }
               })
             }
           } else {
             vm.$router.push({
-              name: 'edit-child',
+              name: 'edit-school',
               query: {
                 type: 'add',
-                pageTitle: '添加宝贝'
+                enter: 'my',
+                id: res.child_id,
               }
             })
           }
+        } else {
+          vm.$router.push({
+            name: 'edit-child',
+            query: {
+              type: 'add',
+              pageTitle: '添加宝贝'
+            }
+          })
         }
       })
       axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${to.query.id}`).then(res => {
@@ -178,8 +167,13 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     request() {
+      axios.get('/book/SchoolTeacher/getMine').then(res => {
+        this.managerClass = res.data.data
+      })
+
       axios.get(`/book/SchoolBanji/getInfo?banji_id=${this.$route.query.id}`).then(res => {
         this.classInfo = res.data.data
+        localStorage.setItem('childClass', JSON.stringify(res.data.data))
       })
     },
     onClickLeft() {
@@ -211,21 +205,18 @@ export default {
       location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
     },
     cutover() {
-      if (this.userDataState.isTeacher == 1) {
+      if (this.managerClass.is_confirm == 1) {
         this.actionsheetShow = true
       }
     },
     onSelect(item) {
-      if(!item.id){
-        this.$router.go(-1)
-      }else{
-        this.$router.push({
-          name: 'class-home',
-          query: {
-            id: item.id
-          }
-        })
-      }
+
+      this.$router.push({
+        name: 'class-home',
+        query: {
+          id: item.id
+        }
+      })
       this.hackReset = false
       this.actionsheetShow = false
       this.$nextTick(() => {

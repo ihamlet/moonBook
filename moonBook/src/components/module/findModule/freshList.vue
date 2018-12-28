@@ -1,11 +1,13 @@
 <template>
-  <div class="fresh-list scroll-x">
-    <div class="scroll-item" v-for="(item,index) in list" :key="index" @click="toZoom(item)">
-      <div class="avatar">
-        <img v-if="item[avatar]" @error='imgError' :src="item[avatar]" :alt="item[name]">
-      </div>
-      <div class="name" v-line-clamp:20="2">
-        {{item[name]}}
+  <div class="fresh-list">
+    <div class="content scroll-x" v-if='list.length > 0'>
+      <div class="scroll-item" v-for="(item,index) in list" :key="index" @click="toZoom(item)">
+        <div class="avatar">
+          <img v-if="item[avatar]" @error='imgError' :src="item[avatar]" :alt="item[name]">
+        </div>
+        <div class="name" v-line-clamp:20="2">
+          {{item[name]}}
+        </div>
       </div>
     </div>
   </div>
@@ -17,21 +19,21 @@ export default {
   methods: {
     toZoom(item) {
       this.$router.push({
-        name:this.routerName,
-        query:{
+        name: this.routerName,
+        query: {
           id: item[this.cid]
         }
-        
+
       })
     },
-    imgError(e){
+    imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     }
   }
 }
 </script>
 <style scoped>
-.fresh-list {
+.content {
   padding-left: 0.625rem /* 10/16 */;
 }
 
@@ -72,7 +74,7 @@ export default {
 
 .teacher .name {
   color: #303133;
-  font-size: .75rem /* 12/16 */;
+  font-size: 0.75rem /* 12/16 */;
   font-weight: 500;
 }
 </style>

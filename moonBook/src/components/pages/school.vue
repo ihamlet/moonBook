@@ -23,7 +23,7 @@
 </template>
 <script>
 import axios from './../lib/js/api'
-import { mapGetters,mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import avatar from './../module/avatar'
 import searchBar from './../module/search/searchBar'
 import schoolList from './../module/search/schoolList'
@@ -49,7 +49,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getSchoolList','getUserData']),
+    ...mapActions(['getSchoolList', 'getUserData']),
     onLoad() {
       this.page++
       let products = {
@@ -65,73 +65,83 @@ export default {
       })
     },
     selectSchool(item) {
-      //这里是传城市编码 还是城市名
       let cityname = ''
-      if(item.cityname){
-          cityname = item.cityname
-      }else{
+      if (item.cityname) {
+        cityname = item.cityname
+      } else {
         let match = item.district.match(/省(.*?)市/)
         cityname = match ? match[1] + '市' : ''
       }
 
       let location = item.location.split(',')
-      
-        let data = {
-          params:{
-            school_name:item.name,
-            amap_id:item.id,
-            lat:location[1],
-            lng:location[0],
-            cityname:cityname,
-            typecode:item.typecode
-          }
+
+      let data = {
+        params: {
+          school_name: item.name,
+          amap_id: item.id,
+          lat: location[1],
+          lng: location[0],
+          cityname: cityname,
+          typecode: item.typecode
         }
+      }
 
-
-      if(this.$route.query.registerType == 'headmaster'){
+      if (this.$route.query.registerType == 'headmaster') {
         data.params.is_master = 1
       }
 
-      if(this.$route.query.registerType){
-        axios.get('/book/SchoolTeacher/bind',data).then(res=>{
-          this.getUserData().then(()=>{
+      if (this.$route.query.registerType) {
+        axios.get('/book/SchoolTeacher/bind', data).then(res => {
+          if (this.$route.query.registerType == 'teacher') {
             this.$router.push({
-              name:'edit-setting',
-              query:{
+              name: 'edit-class',
+              query: {
+                id: this.$route.query.id,
+                schoolId: res.data.data.school_id,
+                pageTitle: this.$route.query.pageTitle,
+                registerType: this.$route.query.registerType,
+                back: this.$route.query.back,
+                type: this.$route.query.type
+              }
+            })
+          } else {
+            this.$router.push({
+              name: 'edit-setting',
+              query: {
                 pageTitle: this.$route.query.pageTitle,
                 registerType: this.$route.query.registerType
               }
             })
-          })
+          }
         })
-      }else{
+      } else {
         data.params.child_id = this.$route.query.id
-        axios.get('/book/babySchool/bind',data).then(res => {
-            if(res.data.status){
-              this.$toast.success('已加入学校')
-              this.$router.push({
-                  name:'edit-class',
-                  query:{
-                      id: this.$route.query.id,
-                      schoolId: res.data.data.school_id,
-                      back: this.$route.query.back,
-                      type: this.$route.query.type,
-                  }
-              })
-              this.getUserData()
-            }else{
-              this.$toast.fail('操作失败')
-              this.$router.go(-1)
-            }
+        axios.get('/book/babySchool/bind', data).then(res => {
+          if (res.data.status) {
+            this.$toast.success('已加入学校')
+            this.$router.push({
+              name: 'edit-class',
+              query: {
+                id: this.$route.query.id,
+                schoolId: res.data.data.school_id,
+                back: this.$route.query.back,
+                type: this.$route.query.type,
+              }
+            })
+            this.getUserData()
+          } else {
+            this.$toast.fail('操作失败')
+            this.$router.go(-1)
+          }
         })
       }
     },
-    close(){
-      if(this.$route.query.enter){
+    close() {
+      if (this.$route.query.enter) {
         this.$router.push({
           name: this.$route.query.enter
         })
-      }else{
+      } else {
         this.$router.go(-1)
       }
     }
