@@ -1,6 +1,6 @@
 <template>
   <div class="read-list">
-    <van-cell size='large' is-link center>
+    <van-cell size='large' center>
       <div class="icon" slot="icon">
         <i class="iconfont" :class="`icon-${type}`" v-if='type == "school"'>&#xe64e;</i>
         <i class="iconfont" :class="`icon-${type}`" v-if='type == "banji"'>&#xe61d;</i>
@@ -12,11 +12,10 @@
             <div class="ranking">
               <svg-ranking :ranking="item.rank" type="module" />
             </div>
-
-            <div class="name"  v-if='type == "school"'>
+            <div class="name"  v-if='type == "school"' @click="toBanjiHome(item)">
                 {{item[field]}}
             </div>
-            <div class="avatar" v-else>
+            <div class="avatar" v-else @click="toBabyHome(item)">
               <img :src="item[field]"/>
             </div>
           </div>
@@ -56,7 +55,18 @@ export default {
     fetchData() {
       if(this.type == 'school'){
         axios.get(`/book/SchoolTushuBorrow/getRank?school_id=${this.$route.query.id}&group=banji&region=school`).then(res=>{
-          this.rankList = res.data.data.list
+          let data = []
+          let array = res.data.data.list
+          array.forEach(element => {
+            let obj = {
+              name: element.babyInfo.name,
+              rank: element.rank,
+              banji_id:element.banji_id
+            }
+            data.push(obj)
+          })
+          this.count = data.length
+          this.rankList = data
         })
       }else{
         axios.get(`/book/babySign/rank?banji_id=${this.$route.query.id}&time=week`).then(res => {
@@ -64,6 +74,26 @@ export default {
           this.rankList = res.data.data
         })
       }
+    },
+    toBanjiHome(item){
+      this.$router.push({
+        name:'class-home',
+        query:{
+          id:item.banji_id,
+          back: this.$route.name,
+          school_id: this.$route.query.id
+        }
+      })
+    },
+    toBabyHome(item){
+      this.$router.push({
+        name:'baby-home',
+        query:{
+          id:item.id,
+          back: this.$route.name,
+          banji_id: this.$route.query.id
+        }
+      })
     }
   }
 }

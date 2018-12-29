@@ -105,7 +105,8 @@ export default {
         this.$router.push({
           name: "class-home",
           query: {
-            id: list.banji_id
+            id: list.banji_id,
+            back: this.$route.name
           }
         })
       }
@@ -114,7 +115,8 @@ export default {
       this.$router.push({
         name: "baby-home",
         query: {
-          id: list.id
+          id: list.id,
+          back: this.$route.name
         }
       })
     }

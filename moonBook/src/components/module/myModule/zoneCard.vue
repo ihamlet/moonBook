@@ -41,7 +41,8 @@ export default {
       this.$router.push({
         name:'zoom',
         query: {
-          id: this.userInfo.id
+          id: this.userInfo.id,
+          back: this.$route.name
         }
       })
     }

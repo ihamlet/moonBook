@@ -25,7 +25,7 @@
           <notice type='school'/>
       </lazy-component>
       <lazy-component class="module">
-        <read-list type='school' title='流动红旗' field='logo' />
+        <read-list type='school' title='流动红旗' field='name' />
       </lazy-component>
       <lazy-component>
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky animated swipeable>

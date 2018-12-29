@@ -13,34 +13,7 @@ const state = {
   tabBtn: [],
   amapApiKey: '0522f462288e296eac959dbde42718ab',
   token: '',
-  userPoint: '',
-  footerTab: [
-    {
-      iconClass: 'icon-home',
-      name: '首页',
-      path: '/'
-    },
-    {
-      iconClass: 'icon-faxian',
-      name: '发现',
-      path: 'find'
-    },
-    {
-      iconClass: 'icon-release',
-      name: '发布',
-      path: ''
-    },
-    {
-      iconClass: 'icon-banji',
-      name: '班级',
-      path: 'class-home'
-    },
-    {
-      iconClass: 'icon-people',
-      name: '我的',
-      path: 'my'
-    }
-  ]
+  userPoint: ''
 }
 
 const getters = {
@@ -75,9 +48,6 @@ const getters = {
         return state.userPoint
       }
     }
-  },
-  userTabBtn: state => {
-    return state.footerTab
   },
   userToken: state => {
     if (state.token) {

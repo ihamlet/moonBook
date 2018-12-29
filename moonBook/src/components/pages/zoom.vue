@@ -1,6 +1,6 @@
 <template>
   <div class="zoom page-padding">
-    <van-nav-bar :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed left-text="发现" left-arrow @click-left="onClickLeft"
+    <van-nav-bar :zIndex='99' :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed left-text="返回" left-arrow @click-left="onClickLeft"
       @click-right="releasePageShow = true">
       <div slot="right" class="theme-color">
         <i class="iconfont">&#xe612;</i>
@@ -124,9 +124,15 @@ export default {
       })
     },
     onClickLeft() {
-      this.$router.push({
-        name: 'find'
-      })
+      if(this.$route.query.back){
+        this.$router.push({
+          name: this.$route.query.back
+        })
+      }else{
+        this.$router.push({
+          name: 'find'
+        })
+      }
     },
     handleScroll() {
       this.getDomHeight()

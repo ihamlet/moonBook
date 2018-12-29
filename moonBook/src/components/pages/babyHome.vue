@@ -3,7 +3,7 @@
     <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" :title="pageTitle" @click-left="onClickLeft">
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
-        <span class="text">我的</span>
+        <span class="text">{{this.$route.query.back?'返回':'首页'}}</span>
       </div>
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
@@ -39,7 +39,7 @@
       <div class="bar flex flex-align">
         <div class="bar-item totalReading">
           <span class="number">{{childInfo.read_count}}</span>
-          <span class="bar-title">总阅读量</span>
+          <span class="bar-title">阅读量</span>
         </div>
         <div class="bar-item praise">
           <span class="number">{{childInfo.zan_count}}</span>
@@ -77,7 +77,7 @@
       <lazy-component class="module">
         <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
       </lazy-component>
-      <lazy-component>
+      <lazy-component v-if="childInfo.is_mine">
         <van-nav-bar title="成长日记" @click-right="releasePageShow = true">
           <div class="head-bar-btn theme-color" slot="right">
             <i class="iconfont">&#xe72c;</i>发布
@@ -97,6 +97,8 @@
         </van-list>
       </lazy-component>
     </div>
+
+    <slogan v-if="!childInfo.is_mine"/>
 
     <van-popup v-model="showQrcode" class="card-popup">
       <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
@@ -126,6 +128,7 @@ import graphic from './../module/release/graphic'
 import classShow from './../module/classModule/classShow'
 import family from './../module/myModule/family'
 import activity from './../module/activity/activity'
+import slogan from './../module/slogan'
 
 export default {
   name: "baby-home",
@@ -138,6 +141,7 @@ export default {
     graphic,
     classShow,
     family,
+    slogan,
     activity
   },
   computed: {
@@ -210,9 +214,18 @@ export default {
       })
     },
     onClickLeft() {
-      this.$router.push({
-        name: "my"
-      })
+      if(this.$route.query.back){
+        this.$router.push({
+          name:this.$route.query.back,
+          query:{
+            id:this.$route.query.banji_id
+          }
+        })
+      }else{
+        this.$router.push({
+          name: "home"
+        })
+      }
     },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {
@@ -400,6 +413,10 @@ export default {
   -webkit-background-clip: text;
   color: transparent;
   display: block;
+}
+
+.name{
+  margin-right: .625rem /* 10/16 */;
 }
 </style>
 <style>

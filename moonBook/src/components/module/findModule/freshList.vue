@@ -21,9 +21,10 @@ export default {
       this.$router.push({
         name: this.routerName,
         query: {
-          id: item[this.cid]
+          id: item[this.cid],
+          back: this.$route.name,
+          banji_id: item.banji_id
         }
-
       })
     },
     imgError(e) {

@@ -2,7 +2,7 @@
   <div class="my page-padding">
     <card-head :userInfo='userDataState' :msg='MsgLengthState' />
     <lazy-component class="gutter gap-top">
-      <apps :appsList='appsList' v-if='userDataState.isTeacher == 1 || userDataState.isHeaderTeacher == 1'/>
+      <apps :appsList='appsList' v-if='isTeacher == 1 || isHeaderTeacher == 1' />
     </lazy-component>
     <lazy-component class="gutter gap">
       <class-home v-if='children.length!=0' :children="children[0]" />
@@ -37,12 +37,14 @@ export default {
     apps
   },
   computed: {
-    ...mapGetters(['userDataState','MsgLengthState'])
+    ...mapGetters(['userDataState', 'MsgLengthState'])
   },
   data() {
     return {
       children: '',
       zoomCard: '',
+      isTeacher: 0,
+      isHeaderTeacher: 0,
       appsList: [{
         name: '代借还',
         iconClass: 'icon-huanshu'
@@ -67,6 +69,14 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     fetchData() {
+      axios.get('/book/SchoolTeacher/getMine').then(res => {
+        this.isTeacher = res.data.data.is_confirm
+      })
+
+      axios.get('/book/SchoolTeacher/getMine?is_master=1').then(res => {
+        this.isHeaderTeacher = res.data.data.is_confirm
+      })
+
       this.getUserData().then(res => {
         axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
           this.children = res.data.data

@@ -56,17 +56,7 @@ export default {
     ...mapActions(['getUserData']),
     fetchData() {
       if (this.$route.query.registerType) {
-        let data
-
-        if (this.$route.query.registerType == 'headmaster') {
-          data = {
-            params: {
-              is_master: 1
-            }
-          }
-        }
-
-        axios.get('/book/SchoolTeacher/getMine', data).then(res => {
+        axios.get('/book/SchoolTeacher/getMine').then(res => {
           this.schoolName = res.data.data.school_name
         })
       } else {

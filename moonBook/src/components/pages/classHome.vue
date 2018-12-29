@@ -2,11 +2,11 @@
   <div class="class-home page-padding" v-if='hackReset'>
     <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?$route.meta.title:classInfo.title}} <i class="iconfont" v-if="managerClass.is_confirm == 1">&#xe608;</i>
+        {{fixedHeaderBar?pageTitle:classInfo.title}} <i class="iconfont" v-if="managerClass.is_confirm == 1">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
-        <span class="text">我的</span>
+        <span class="text">{{$route.query.back?'返回':'我的'}}</span>
       </div>
       <div class="btn-right-qrcode" slot='right'>
         <i class="iconfont">&#xe7a3;</i>
@@ -79,8 +79,7 @@ export default {
     actions() {
       let array = []
       let childClass = JSON.parse(localStorage.getItem('childClass'))
-
-
+      
       array = [{
         name: this.managerClass.banji_name,
         subname: '管理的班级',
@@ -93,6 +92,16 @@ export default {
 
 
       return array
+    },
+    pageTitle(){
+      let str = ''
+      if(this.classInfo.is_my_baby_banji){
+        str = '我的班级'
+      }else{
+        str = '班级'
+      }
+
+      return str
     }
   },
   data() {
@@ -173,11 +182,22 @@ export default {
 
       axios.get(`/book/SchoolBanji/getInfo?banji_id=${this.$route.query.id}`).then(res => {
         this.classInfo = res.data.data
-        localStorage.setItem('childClass', JSON.stringify(res.data.data))
+        if(!localStorage.getItem('childClass')){
+          localStorage.setItem('childClass', JSON.stringify(res.data.data))
+        }
       })
     },
     onClickLeft() {
-      this.$router.push({ name: 'my' })
+      if(this.$route.query.back){
+        this.$router.push({
+          name: this.$route.query.back,
+          query:{
+            id:this.$route.query.school_id
+          }
+        })
+      }else{
+        this.$router.push({ name: 'my' })
+      }
     },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {
@@ -210,7 +230,6 @@ export default {
       }
     },
     onSelect(item) {
-
       this.$router.push({
         name: 'class-home',
         query: {

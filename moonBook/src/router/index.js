@@ -33,6 +33,7 @@ import BookDetails from '@/components/pages/bookDetails'
 
 import AppsSchool from '@/components/pages/apps/schoolHome'
 
+import Ranking from '@/components/pages/ranking'
 
 
 Vue.use(Router)
@@ -130,7 +131,7 @@ export default new Router({
         meta: {
           title: '我的宝贝',
           scrollToTop: true,
-          tabActive:4,
+          tabActive:2,
           isFooterBar: true
         }
       },{
@@ -138,7 +139,7 @@ export default new Router({
         name: 'class-home',
         component: ClassHome,
         meta: {
-          title: '我的班级',
+          title: '宝贝的班级',
           scrollToTop: true,
           tabActive:3,
           isFooterBar: true
@@ -257,6 +258,16 @@ export default new Router({
           scrollToTop: true,
           tabActive:0,
           isFooterBar: true
+        }
+      },{
+        path: '/ranking',
+        name: 'ranking',
+        component: Ranking,
+        meta: {
+          title:'阅读榜',
+          scrollToTop: true,
+          tabActive:0,
+          isFooterBar: false
         }
       }]
     },{

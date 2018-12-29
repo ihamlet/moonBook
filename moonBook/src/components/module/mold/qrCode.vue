@@ -152,7 +152,6 @@ export default {
 
 .school {
   margin: 0.3125rem /* 5/16 */ auto 0;
-  width: 80%;
 }
 
 .name {
