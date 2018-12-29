@@ -1,5 +1,5 @@
 <template>
-  <div class="ranking page-padding">
+  <div class="ranking page-padding2018年12月29日17:47:40">
     <van-nav-bar :zIndex='99' class="theme-nav" title="阅读之星榜" fixed>
     </van-nav-bar>
     <div class="container">
