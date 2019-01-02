@@ -1,5 +1,5 @@
 <template>
-  <div class="ranking page-padding">
+  <div class="ranking-page page-padding">
     <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''"  left-text="返回" left-arrow title="阅读之星榜" fixed @click-left="onClickLeft">
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -383,13 +383,13 @@ export default {
 }
 </style>
 <style>
-.van-cell__value.cell-value{
+.ranking-page .van-cell__value.cell-value{
   color:#303133;
   font-size: 1rem /* 16/16 */;
   font-weight: 500;
 }
 
-.van-cell__title.cell-title{
+.ranking-page .van-cell__title.cell-title{
   flex: 4;
 }
 </style>
