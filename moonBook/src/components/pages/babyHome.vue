@@ -3,13 +3,13 @@
     <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" :title="pageTitle" @click-left="onClickLeft">
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
-        <span class="text">{{this.$route.query.back?'返回':'首页'}}</span>
+        <span class="text">{{$route.query.back?'返回':'首页'}}</span>
       </div>
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
       <div class="baby-info flex flex-align">
         <div class="avatar" v-if="childInfo.avatar">
-          <img class="avatar-img" :src="childInfo.avatar" :alt="childInfo.name">
+          <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">
         </div>
         <avatar :gender="childInfo.sex" v-else />
         <div class="baby-data">
@@ -218,7 +218,8 @@ export default {
         this.$router.push({
           name:this.$route.query.back,
           query:{
-            id:this.$route.query.banji_id
+            id:this.$route.query.banji_id,
+            back: this.$route.name
           }
         })
       }else{
@@ -235,7 +236,7 @@ export default {
       })
     },
     handleScroll() {
-      this.getDomHeight();
+      this.getDomHeight()
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       this.scrollTop = scrollTop
       if (this.domHeight < this.scrollTop) {
@@ -292,6 +293,9 @@ export default {
           this.zanShow = false
         }, 2000)
       })
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     }
   }
 }

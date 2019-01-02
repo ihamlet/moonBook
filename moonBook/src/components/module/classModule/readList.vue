@@ -1,7 +1,7 @@
 <template>
   <div class="read-list">
     <van-cell size='large' center>
-      <div class="icon" slot="icon">
+      <div class="icon" slot="icon" @click="toRanking">
         <i class="iconfont" :class="`icon-${type}`" v-if='type == "school"'>&#xe64e;</i>
         <i class="iconfont" :class="`icon-${type}`" v-if='type == "banji"'>&#xe61d;</i>
         <span class="name">{{title}}</span>
@@ -92,6 +92,15 @@ export default {
           id:item.id,
           back: this.$route.name,
           banji_id: this.$route.query.id
+        }
+      })
+    },
+    toRanking(){
+      this.$router.push({
+        name:'ranking',
+        query:{
+          back: this.$route.name,
+          id: this.$route.query.id
         }
       })
     }

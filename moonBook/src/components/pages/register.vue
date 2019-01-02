@@ -87,7 +87,8 @@ export default {
           name: 'edit-child',
           query: {
             pageTitle: '添加宝贝',
-            type: 'add'
+            type: 'add',
+            back: this.$route.name
           }
         })
       }else{
@@ -123,21 +124,21 @@ export default {
 }
 
 .icon-parent::before {
-  content: '\e66c';
+  content: '\e624';
   background: linear-gradient(127deg, #ff9800, #f44336);
   -webkit-background-clip: text;
   color: transparent;
 }
 
 .icon-teacher::before {
-  content: '\e61e';
+  content: '\e626';
   background: linear-gradient(127deg, #00c2ab, #3e94ff);
   -webkit-background-clip: text;
   color: transparent;
 }
 
 .icon-principal::before {
-  content: '\e7b6';
+  content: '\e628';
   background: linear-gradient(127deg, #2ad396, #85bb1f);
   -webkit-background-clip: text;
   color: transparent;

@@ -44,7 +44,7 @@
       </svg>
     </div>
     <div v-else class="icon">
-      <div class="number">{{ranking}}</div>
+      <div class="number">{{ranking > 100?'99+':ranking}}</div>
     </div>
   </div>
 </template>

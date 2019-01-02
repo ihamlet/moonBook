@@ -139,6 +139,8 @@
 </template>
 <script>
 import axios from './../lib/js/api'
+import Cookies from 'js-cookie'
+
 import { createPayFrame } from './../lib/js/util'
 import { mapGetters, mapActions } from 'vuex'
 import iconSuccess from './animate/iconSuccess'
@@ -290,6 +292,8 @@ export default {
     pay(res) {
       this.disabled = true
       this.payLoading = true
+
+      Cookies.set('payLink', location.href)
       location.href = `/book/memberCard/buycard?level_id=${this.levelId}&fee_id=${this.feeId}&is_auto=1&url=${encodeURIComponent(location.href)}`
     },
     closeAddChildPage() {

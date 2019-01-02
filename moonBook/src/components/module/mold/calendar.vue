@@ -24,34 +24,20 @@
       <transition name="fade" mode="out-in">
         <ul class="days" v-if="pack" key="month">
           <li v-for="(dayobject,index) in days" :key="index">
-            <span
-              v-if="dayobject.day.getMonth()+1 != currentMonth"
-              class="other-month"
-            >{{ dayobject.day.getDate() }}</span>
+            <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
             <span v-else>
-              <span
-                v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()"
-                class="active"
-              >{{ dayobject.day.getDate() }}</span>
+              <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()"
+                class="active">{{ dayobject.day.getDate() }}</span>
               <span v-else>{{ dayobject.day.getDate() }}</span>
             </span>
           </li>
         </ul>
         <ul class="days" v-else key="week">
-          <li
-            v-for="(dayobject,index) in days"
-            :key="index"
-            v-if="Math.ceil((index+1)/7) == calendarData"
-          >
-            <span
-              v-if="dayobject.day.getMonth()+1 != currentMonth"
-              class="other-month"
-            >{{ dayobject.day.getDate() }}</span>
+          <li v-for="(dayobject,index) in days" :key="index" v-if="Math.ceil((index+1)/7) == calendarData">
+            <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
             <span v-else>
-              <span
-                v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()"
-                class="active"
-              >{{ dayobject.day.getDate() }}</span>
+              <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()"
+                class="active">{{ dayobject.day.getDate() }}</span>
               <span v-else>{{ dayobject.day.getDate() }}</span>
             </span>
           </li>
@@ -64,6 +50,8 @@
   </div>
 </template>
 <script>
+import { format } from './../../lib/js/util' 
+
 export default {
   name: "calendar",
   data() {
@@ -86,53 +74,53 @@ export default {
   },
   methods: {
     initData(cur) {
-      var leftcount = 0
-      var date
+      let leftcount = 0
+      let date
       if (cur) {
         date = new Date(cur)
       } else {
-        var now = new Date()
-        var d = new Date(this.formatDate(now.getFullYear(), now.getMonth(), 1))
+        let now = new Date()
+        let d = new Date(format(now,'yyyy-MM-dd'))
         d.setDate(35)
         date = new Date(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1))
       }
       this.currentDay = date.getDate()
       this.currentYear = date.getFullYear()
-      this.currentMonth = date.getMonth() + 1
+      this.currentMonth = date.getMonth()
 
       this.currentWeek = date.getDay()
       if (this.currentWeek == 0) {
         this.currentWeek = 7
       }
-      var str = this.formatDate(
+      let str = this.formatDate(
         this.currentYear,
         this.currentMonth,
         this.currentDay
       )
       this.days.length = 0
-      for (var i = this.currentWeek - 1; i >= 0; i--) {
-        var d = new Date(str)
+      for (let i = this.currentWeek - 1; i >= 0; i--) {
+        let d = new Date(str)
         d.setDate(d.getDate() - i)
-        var dayobject = {}
+        let dayobject = {}
         dayobject.day = d
         this.days.push(dayobject)
       }
-      for (var i = 1; i <= 35 - this.currentWeek; i++) {
-        var d = new Date(str)
+      for (let i = 1; i <= 35 - this.currentWeek; i++) {
+        let d = new Date(str)
         d.setDate(d.getDate() + i)
-        var dayobject = {}
+        let dayobject = {}
         dayobject.day = d
         this.days.push(dayobject)
       }
     },
     pickPre(year, month) {
-      var d = new Date(this.formatDate(year, month, 1))
+      let d = new Date(this.formatDate(year, month, 1))
       d.setDate(0)
       this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1))
       this.pack = true
     },
     pickNext(year, month) {
-      var d = new Date(this.formatDate(year, month, 1))
+      let d = new Date(this.formatDate(year, month, 1))
       d.setDate(35)
       this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1))
       this.pack = true
@@ -141,12 +129,12 @@ export default {
       // alert(year + "," + month)
     },
     formatDate(year, month, day) {
-      var y = year
-      var m = month
+      let y = year
+      let m = month
       if (m < 10) m = "0" + m
-      var d = day
+      let d = day
       if (d < 10) d = "0" + d
-      return y + "-" + m + "-" + d
+      return y + "/" + m + "/" + d
     },
     slide() {
       this.pack = !this.pack
@@ -224,7 +212,7 @@ ul.days li {
 .active::before {
   left: 50%;
   top: 50%;
-  content: "";
+  content: '';
   width: 1.75rem /* 28/16 */;
   height: 1.75rem /* 28/16 */;
   position: absolute;

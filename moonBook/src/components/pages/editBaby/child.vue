@@ -1,6 +1,6 @@
 <template>
   <div class="add-child  page-padding">
-    <van-nav-bar :title="$route.query.pageTitle" left-arrow left-text="我的" :right-text="$route.query.type=='edit'?'删除':''"
+    <van-nav-bar :title="$route.query.pageTitle" left-arrow :left-text="$route.query.back?'返回':'我的'" :right-text="$route.query.type=='edit'?'删除':''"
       @click-left="onClickLeft" @click-right="onClickRight('delete')" />
     <div class="avatar-uploader">
       <i class="iconfont" v-if='userDataState.isVip' :class="`vip-${userDataState.card_level}`">&#xe776;</i>
@@ -206,9 +206,15 @@ export default {
       })
     },
     onClickLeft() {
-      this.$router.push({
-        name: 'my'
-      })
+      if(this.$route.query.back){
+        this.$router.push({
+          name:this.$route.query.back
+        })
+      }else{
+        this.$router.push({
+          name: 'my'
+        })
+      }
     },
     cancelPicker() {
       this.childInfo.birthday = ''

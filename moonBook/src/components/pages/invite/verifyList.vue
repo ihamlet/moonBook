@@ -2,10 +2,7 @@
   <div class="verify-list">
     <van-nav-bar :title="$route.meta.title" left-text="我的宝贝" right-text="邀请家人" left-arrow @click-left="onClickLeft" @click-right="onClickRight" />
     <div class="container">
-      <div class="no-content" v-if="list.length == 0">
-        暂无审核... <span class="theme-color" @click="onClickRight"> 邀请家人 </span>
-      </div>
-      <div class="list" v-else>
+      <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <van-cell v-for="(item,index) in list" :key="index" center>
               <div class="title flex flex-align" slot="title">
@@ -18,6 +15,10 @@
                   <van-button class="theme-btn" size='small' type="primary" @click="by(item)">通过</van-button>
               </div>
           </van-cell>
+
+          <div class="no-content" v-if='count == 0'>
+            暂无审核... <span class="theme-color" @click="onClickRight"> 邀请家人 </span>
+          </div>
         </van-list>
       </div>
     </div>
@@ -32,12 +33,14 @@ export default {
     return {
       list: [],
       loading: false,
-      finished: false
+      finished: false,
+      count:0
     }
   },
   methods: {
-    onLoad() {
+    onLoad(){
       axios.get(`/book/babyParent/getList?child_id=${this.$route.query.id}&is_close=1`).then(res => {
+        this.count = res.data.count
         this.list = res.data.data
         this.loading = false
         if (this.list.length >= res.data.count) {

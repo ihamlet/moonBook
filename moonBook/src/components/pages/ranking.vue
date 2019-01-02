@@ -1,20 +1,29 @@
 <template>
-  <div class="ranking page-padding2018年12月29日17:47:40">
-    <van-nav-bar :zIndex='99' class="theme-nav" title="阅读之星榜" fixed>
+  <div class="ranking page-padding">
+    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''"  left-text="返回" left-arrow title="阅读之星榜" fixed @click-left="onClickLeft">
+      <div class="head-bar-text" slot="left">
+        <van-icon name="arrow-left" />
+        <span class="text">{{$route.query.back?'返回':'我的'}}</span>
+      </div>
     </van-nav-bar>
     <div class="container">
-      <div class="header">
-
+      <div class="header" ref='head'>
+          <div class="my-info" v-if='tab[topTabIdx].content[secondTabIdx]'>
+              <card type='myInfo' :rankingData='tab[topTabIdx].content[secondTabIdx].content.myInfo'/>
+          </div>
       </div>
-      <van-tabs color='#409eff' :line-width='20' :line-height='4' swipeable animated>
+      <van-tabs color='#409eff' :line-width='20' :line-height='4' swipeable animated @change="onTopTabClick">
         <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
           <div class="content">
             <van-tabs color='#409eff' type="card" @disabled="onTabDisabledClick" @click="onTabClick">
               <van-tab v-for="(item,itemIndex) in list.content" :disabled="item.disabled" :title="item.title" :key="itemIndex">
                 <van-cell-group v-if="item.content">
-                    <van-cell v-for='(content,contentIndex) in item.content.list' :key="contentIndex" size='large' center>
+                    <van-cell v-for='(content,contentIndex) in item.content.list' :key="contentIndex" value-class='cell-value' title-class='cell-title' :value='`${content.read_count}本`' size='large' center @click="toPage(content)">
+                        <div class="icon" slot="icon">
+                          <svg-ranking :ranking="content.rank"/>
+                        </div>
                         <div class="title flex flex-align" slot="title">
-                            <div class="avatar">
+                            <div class="avatar" :class="content.rank < 4?'rank':''" v-if='content.babyInfo.avatar'>
                                 <img :src="content.babyInfo.avatar" @error='imgError' :alt="content.babyInfo.name" />
                             </div>
                             <div class="info">
@@ -31,12 +40,18 @@
       </van-tabs>
     </div>
 
+    <slogan/>
+
     <van-popup v-model="show" position="bottom">
         <van-picker :columns="times" @change="onChange"/>
     </van-popup>
   </div>
 </template>
 <script>
+import svgRanking from './../module/animate/svg/ranking'
+import card from './../module/ranking/card'
+import slogan from './../module/slogan'
+
 // 王伟  排行榜
 
 const TAB_CONTENT = 1
@@ -55,6 +70,11 @@ import axios from './../lib/js/api'
 
 export default {
   name: 'ranking',
+  components: {
+    svgRanking,
+    card,
+    slogan
+  },
   data() {
     return {
       topTabIdx: 0,
@@ -62,6 +82,8 @@ export default {
       times: ['总榜', '季榜', '上季', '月榜', '上月', '周榜', '上周'],
       time: 'all',
       show: false,
+      fixedHeaderBar: true,
+      domHeight: "",
       tab: [
         {
           title: "宝贝榜",
@@ -69,7 +91,7 @@ export default {
             {
               title: '同班',
               type: TAB_CONTENT,
-              content: null,
+              content: '',
               api: {
                 params: {
                   group: 'baby',
@@ -80,7 +102,7 @@ export default {
             {
               title: '同园',
               type: TAB_CONTENT,
-              content: null,
+              content: '',
               api: {
                 params: {
                   group: 'baby',
@@ -91,7 +113,7 @@ export default {
             {
               title: '同城',
               type: TAB_CONTENT,
-              content: null,
+              content: '',
               api: {
                 params: {
                   group: 'baby',
@@ -103,7 +125,7 @@ export default {
               title: '总计',
               type: TAB_SELECT,
               disabled: true,
-              content: null
+              content: ''
             }
           ]
         },
@@ -176,6 +198,9 @@ export default {
   created() {
     this.getTabContent()
   },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll)
+  },
   methods: {
     onTopTabClick(idx) {
       this.topTabIdx = idx
@@ -186,29 +211,53 @@ export default {
       this.secondTabIdx = idx
       this.getTabContent()
     },
+    getDomHeight(){
+      if (this.$refs.head) {
+        this.domHeight = this.$refs.head.offsetHeight / 2
+      }
+    },
+    handleScroll(){
+      this.getDomHeight()
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      this.scrollTop = scrollTop
+      if (this.domHeight < this.scrollTop) {
+        this.fixedHeaderBar = false
+      } else {
+        this.fixedHeaderBar = true
+      }
+    },
     onTabDisabledClick(idx) {
-      var content = this.tab[this.topTabIdx].content[idx]
+      let content = this.tab[this.topTabIdx].content[idx]
       if (content.type === TAB_SELECT) {
-        console.log('总计总击')
         this.show = true
       }
     },
     getTabContent() {
-      var content = this.tab[this.topTabIdx].content[this.secondTabIdx]
-      var toast = this.$toast.loading({
+      let content = this.tab[this.topTabIdx].content[this.secondTabIdx]
+      let toast = this.$toast.loading({
         forbidClick: true,
         loadingType: 'spinner'
       })
 
-      var data = {
-        params: content.api.params
+      let data = {
+        params: {
+          group: content.api.params.group,
+          region: content.api.params.region
+        }
       }
-      console.log('data', data)
+
+      if(this.$route.query.back == 'class-home' || this.$route.query.back == 'baby-home'){
+        data.params.banji_id = this.$route.query.id
+      }
+
+      if(this.$route.query.back == 'apps-school'){
+        data.params.school_id = this.$route.query.id
+      }
+
       axios.get('/book/SchoolTushuBorrow/getRank', data).then(res => {
         toast.clear()
         if (res.data.status === 1) {
           content.content = res.data.data
-          console.log('tabs', this.tab)
         } else {
           this.$toast(res.data.msg)
         }
@@ -216,18 +265,64 @@ export default {
     },
     onChange(picker, value, index) {
       this.time = value
-      var currentTopTab = this.tab[this.topTabIdx]
-      var lastIdx = currentTopTab.content.length - 1
-      var content = currentTopTab.content[lastIdx]
+      let currentTopTab = this.tab[this.topTabIdx]
+      let lastIdx = currentTopTab.content.length - 1
+      let content = currentTopTab.content[lastIdx]
       content.title = value
 
-      var currentContent = currentTopTab.content[this.secondTabIdx]
+      let currentContent = currentTopTab.content[this.secondTabIdx]
       currentContent.api.params.time = SELECT_VALUE[value]
       this.getTabContent()
       this.show = false
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    onClickLeft(){
+      if(this.$route.query.back){
+        this.$router.push({
+          name:this.$route.query.back,
+          query:{
+            id: this.$route.query.id
+          }
+        })
+      }else{
+        this.$router.push({
+          name:'my'
+        })
+      }
+    },
+    toPage(content){
+      if(this.topTabIdx == 0){
+        this.$router.push({
+          name:'baby-home',
+          query:{
+            id:content.child_id,
+            back: this.$route.name,
+            banji_id: this.$route.query.id
+          }
+        })
+      }
+
+      if(this.topTabIdx == 1){
+        this.$router.push({
+          name:'class-home',
+          query:{
+            id:content.banji_id,
+            back: this.$route.name
+          }
+        })
+      }
+
+      if(this.topTabIdx == 2){
+        this.$router.push({
+          name:'apps-school',
+          query:{
+            id:content.banji_id,
+            back: this.$route.name
+          }
+        })
+      }
     }
   }
 }
@@ -249,14 +344,25 @@ export default {
     line-height: 2.8125rem /* 45/16 */;
 }
 
-.avatar,
 .avatar img{
     width: 2.625rem /* 42/16 */;
     height: 2.625rem /* 42/16 */;
 }
 
+.avatar img{
+  border: .125rem /* 2/16 */ solid #fff;
+}
+
 .avatar{
-    margin-right: .625rem /* 10/16 */;
+  margin-right: .625rem /* 10/16 */;
+  border: .125rem /* 2/16 */ solid #409eff;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.avatar.rank{
+  border-color: #FFC107;
+  box-shadow: 0 .125rem /* 2/16 */ .625rem /* 10/16 */ rgba(255, 193, 7, .3);
 }
 
 .avatar img{
@@ -276,3 +382,15 @@ export default {
     color: #303133;
 }
 </style>
+<style>
+.van-cell__value.cell-value{
+  color:#303133;
+  font-size: 1rem /* 16/16 */;
+  font-weight: 500;
+}
+
+.van-cell__title.cell-title{
+  flex: 4;
+}
+</style>
+

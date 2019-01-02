@@ -3,7 +3,7 @@
     <van-nav-bar class="theme-nav" title="学校主页" left-arrow @click-left="onClickLeft" :border='false' :zIndex='99' fixed>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
-        <span class="text">{{$route.query.backPageName?$route.query.backPageName:'首页'}}</span>
+        <span class="text">{{$route.query.back?'返回':'首页'}}</span>
       </div>
     </van-nav-bar>
     <div class="container">

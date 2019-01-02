@@ -45,7 +45,7 @@
 
     <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" />
 
-    <div class="punch">
+    <div class="punch" v-if='classInfo.is_my_baby_banji'>
       <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
         <i class="iconfont">&#xe60a;</i>
         阅读打卡
@@ -55,6 +55,8 @@
 </template>
 <script>
 import axios from './../lib/js/api'
+import Cookies from 'js-cookie'
+
 import { mapGetters, mapActions } from 'vuex'
 import QRCode from 'qrcode'
 import classZoom from './../pages/classZoom'
@@ -120,6 +122,10 @@ export default {
       }, {
         name: '每日国学',
         iconClass: 'icon-guoxue'
+      }, {
+        name: '排行榜',
+        iconClass: 'icon-paihangbang',
+        path:'ranking'
       }, {
         name: '交流',
         iconClass: 'icon-jiaoliu'
@@ -222,6 +228,7 @@ export default {
       }
     },
     punch() {
+      Cookies.set('punckLink', location.href)
       location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
     },
     cutover() {

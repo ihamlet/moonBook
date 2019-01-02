@@ -1,6 +1,6 @@
 <template>
     <div class="apps module-card flex flex-align" :class="type">
-        <div class="icon" v-for='(list,index) in appsList' :key="index">
+        <div class="icon" v-for='(list,index) in appsList' :key="index" @click="toPage(list)">
             <div class="iconfont" :class="list.iconClass"></div>
             <div class="name">{{list.name}}</div>
         </div>
@@ -9,7 +9,18 @@
 <script>
 export default {
     name:'apps',
-    props: ['appsList','type']
+    props: ['appsList','type'],
+    methods: {
+        toPage(list){
+            this.$router.push({
+                name:list.path,
+                query:{
+                    back: this.$route.name,
+                    id: this.$route.query.id
+                }
+            })
+        }
+    }
 }
 </script>
 <style scoped>
@@ -26,7 +37,7 @@ export default {
 .icon-jianjie::before { content: '\eb0d'}
 .icon-shujia::before { content: '\e649'}
 .icon-canpu::before { content: '\e729'}
-
+.icon-paihangbang::before { content: '\e61d'}
 
 .apps{
     padding: .625rem /* 10/16 */ 0;
