@@ -1,19 +1,21 @@
 <template>
   <div class="card">
     <div class="content flex flex-align" v-if='rankingData'>
-        <div class="icon" slot="icon">
-          <svg-ranking :ranking="rankingData.rank" />
+      <div class="icon" slot="icon">
+        <svg-ranking :ranking="rankingData.rank" />
+      </div>
+      <div class="title flex flex-align" slot="title">
+        <div class="avatar" v-if='rankingData.info.avatar'>
+          <img :src="rankingData.info.avatar" @error='imgError' :alt="rankingData.info.name" />
         </div>
-        <div class="title flex flex-align" slot="title">
-          <div class="avatar" v-if='rankingData.info.avatar'>
-            <img :src="rankingData.info.avatar" @error='imgError' :alt="rankingData.info.name" />
-          </div>
-          <div class="info">
-            <span class="name">{{rankingData.info.name}}</span>
-            <span class="label" v-line-clamp:20="1">{{rankingData.title}}</span>
-          </div>
-          <div class="read">{{rankingData.info.read_count}}本</div>
+        <div class="info">
+          <span class="name">{{rankingData.info.name}}</span>
+          <span class="label" v-line-clamp:20="1">{{rankingData.title}}</span>
         </div>
+        <div class="read">{{rankingData.info.read_count}}本</div>
+
+        <i class="iconfont">&#xed8f;</i>
+      </div>
     </div>
   </div>
 </template>
@@ -38,10 +40,11 @@ export default {
   padding: 3.125rem /* 50/16 */ 1.25rem /* 20/16 */ 0 1.25rem /* 20/16 */;
 }
 
-.content{
-  padding: .625rem /* 10/16 */;
+.content {
+  padding: 0.625rem /* 10/16 */;
   background: #fff;
-  box-shadow: 0 .3125rem /* 5/16 */ .625rem /* 10/16 */ rgba(0, 0, 0, .1)
+  box-shadow: 0 0.3125rem /* 5/16 */ .9375rem /* 15/16 */ rgba(86, 104, 248, 0.8);
+  border-radius: 0.625rem /* 10/16 */;
 }
 
 .avatar,
@@ -68,7 +71,7 @@ export default {
   flex: 3;
 }
 
-.read{
+.read {
   flex: 2;
   text-align: right;
   font-size: 1rem /* 16/16 */;
@@ -84,7 +87,19 @@ export default {
   flex: 1;
 }
 
-.title{
+.title {
   flex: 5;
+  position: relative;
+}
+
+.iconfont {
+  position: absolute;
+  right: 28%;
+  top: -0.9375rem /* 15/16 */;
+  font-size: 1.875rem /* 30/16 */;
+  background: linear-gradient(127deg, #ff2a00, #ff00af);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 .125rem /* 2/16 */ .625rem /* 10/16 */ rgba(255, 0, 127, 0.3);
 }
 </style>

@@ -36,7 +36,7 @@
 
         <div class="container" ref="imageWrapper" :class="[type=='classHome'?'plate':'']" v-if="type=='classHome'">
           <div class="img-bg">
-            <img src="./../../../assets/img/qc-bg-img.png" alt="" srcset="">
+            <img src="./../../../assets/img/qc-bg-img.png" alt="" srcset="" />
           </div>
           <div class="card flex flex-align">
             <div class="class-card">
@@ -104,7 +104,7 @@ export default {
   methods: {
     toImage() {
       this.isLoading = true
-      domtoimage.toPng(this.$refs.imageWrapper).then(dataUrl => {
+      domtoimage.toSvg(this.$refs.imageWrapper).then(dataUrl => {
         console.log(dataUrl)
         this.dataURL = dataUrl
         this.isLoading = false

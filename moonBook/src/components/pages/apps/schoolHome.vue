@@ -1,13 +1,16 @@
 <template>
   <div class="school-home page-padding">
-    <van-nav-bar class="theme-nav" title="学校主页" left-arrow @click-left="onClickLeft" :border='false' :zIndex='99' fixed>
+    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" left-arrow @click-left="onClickLeft" :border='false' fixed>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'首页'}}</span>
       </div>
+      <div class="head-bar-title" slot="title" @click="cutover">
+        {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerSchool.is_confirm == 1">&#xe608;</i>
+      </div>
     </van-nav-bar>
     <div class="container">
-      <div class="header-card flex flex-align theme-school-background">
+      <div class="header-card flex flex-align theme-school-background" ref="head">
         <div class="school-info">
           <div class="school-logo" v-if='schoolInfo.logo'>
             <img :src="schoolInfo.logo" :alt="schoolInfo.title">
@@ -28,7 +31,7 @@
         <read-list type='school' title='流动红旗' field='name' />
       </lazy-component>
       <lazy-component>
-        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky animated swipeable>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' animated swipeable>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
               <drying-list :schoolId='$route.query.id' />
@@ -61,6 +64,9 @@ export default {
   data() {
     return {
       schoolInfo: '',
+      managerSchool:'',
+      domHeight:'',
+      fixedHeaderBar:true,
       appsList: [
         {
           name: '简介',
@@ -125,9 +131,31 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     request() {
+      axios.get('/book/SchoolTeacher/getMine?is_master=1').then(res => {
+        this.managerSchool = res.data.data
+      })
+
       axios.get(`/book/school/getInfo?school_id=${this.$route.query.id}`).then(res => {
         this.schoolInfo = res.data.data
+        if(!sessionStorage.getItem('childSchool')){
+          sessionStorage.setItem('childSchool', JSON.stringify(res.data.data))
+        }
       })
+    },
+    handleScroll(){
+      this.getDomHeight()
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      this.scrollTop = scrollTop
+      if (this.domHeight < this.scrollTop) {
+        this.fixedHeaderBar = false
+      } else {
+        this.fixedHeaderBar = true
+      }
+    },
+    getDomHeight() {
+      if (this.$refs.head) {
+        this.domHeight = this.$refs.head.offsetHeight / 2
+      }
     },
     onClickLeft() {
       if(this.$route.query.back){
@@ -139,6 +167,9 @@ export default {
           name: 'home'
         })
       }
+    },
+    cutover(){
+
     }
   }
 }

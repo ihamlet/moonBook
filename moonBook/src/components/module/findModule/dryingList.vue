@@ -58,7 +58,12 @@ export default {
       }
 
       return axios.get('/book/SchoolArticle/getList',data).then(res => {
-        this.list = this.list.concat(res.data.data)
+        if(this.page == 1){
+          this.list = res.data.data
+        }else{
+          this.list = this.list.concat(res.data.data)
+        }
+        
         this.loading = false
         this.page++
         if (this.list.length >= res.data.count) {

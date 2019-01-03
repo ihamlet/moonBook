@@ -56,7 +56,7 @@ export default {
   methods: {
     toImage() {
       this.isLoading = true
-      domtoimage.toPng(this.$refs.imageWrapper).then(dataUrl => {
+      domtoimage.toSvg(this.$refs.imageWrapper).then(dataUrl => {
         this.dataURL = dataUrl
         this.isLoading = false
         this.isDisabled = true

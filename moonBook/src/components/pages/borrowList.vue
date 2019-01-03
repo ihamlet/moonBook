@@ -145,6 +145,7 @@ export default {
     },
     onRefresh() {
       this.page = 1
+
       if (this.tabIndex < 2) {
         this.getReadList().then(res => {
           this.loading = false

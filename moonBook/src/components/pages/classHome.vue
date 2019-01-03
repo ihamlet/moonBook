@@ -80,7 +80,7 @@ export default {
     ...mapGetters(['userDataState']),
     actions() {
       let array = []
-      let childClass = JSON.parse(localStorage.getItem('childClass'))
+      let childClass = JSON.parse(sessionStorage.getItem('childClass'))
       
       array = [{
         name: this.managerClass.banji_name,
@@ -88,10 +88,9 @@ export default {
         id: this.managerClass.banji_id
       }, {
         name: childClass.title,
-        subname: '宝贝的班级',
+        subname: '宝贝所在的班级',
         id: childClass.banji_id
       }]
-
 
       return array
     },
@@ -188,8 +187,8 @@ export default {
 
       axios.get(`/book/SchoolBanji/getInfo?banji_id=${this.$route.query.id}`).then(res => {
         this.classInfo = res.data.data
-        if(!localStorage.getItem('childClass')){
-          localStorage.setItem('childClass', JSON.stringify(res.data.data))
+        if(!sessionStorage.getItem('childClass')){
+          sessionStorage.setItem('childClass', JSON.stringify(res.data.data))
         }
       })
     },

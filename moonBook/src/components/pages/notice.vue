@@ -7,8 +7,8 @@
     </div>
 </template>
 <script>
+import axios from './../lib/js/api'
 import messageList from './../module/message'
-import axios from 'axios'
 
 export default {
     name:'notice',

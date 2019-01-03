@@ -1,6 +1,7 @@
 <template>
   <div class="ranking-page page-padding">
-    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''"  left-text="返回" left-arrow title="阅读之星榜" fixed @click-left="onClickLeft">
+    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''" left-text="返回" left-arrow title="阅读之星榜" fixed
+      @click-left="onClickLeft">
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'我的'}}</span>
@@ -8,9 +9,9 @@
     </van-nav-bar>
     <div class="container">
       <div class="header" ref='head'>
-          <div class="my-info" v-if='tab[topTabIdx].content[secondTabIdx]'>
-              <card type='myInfo' :rankingData='tab[topTabIdx].content[secondTabIdx].content.myInfo'/>
-          </div>
+        <div class="my-info" v-if='tab[topTabIdx].content[secondTabIdx]'>
+          <card type='myInfo' :rankingData='tab[topTabIdx].content[secondTabIdx].content.myInfo' />
+        </div>
       </div>
       <van-tabs color='#409eff' :line-width='20' :line-height='4' swipeable animated @change="onTopTabClick">
         <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
@@ -18,20 +19,21 @@
             <van-tabs color='#409eff' type="card" @disabled="onTabDisabledClick" @click="onTabClick">
               <van-tab v-for="(item,itemIndex) in list.content" :disabled="item.disabled" :title="item.title" :key="itemIndex">
                 <van-cell-group v-if="item.content">
-                    <van-cell v-for='(content,contentIndex) in item.content.list' :key="contentIndex" value-class='cell-value' title-class='cell-title' :value='`${content.read_count}本`' size='large' center @click="toPage(content)">
-                        <div class="icon" slot="icon">
-                          <svg-ranking :ranking="content.rank"/>
-                        </div>
-                        <div class="title flex flex-align" slot="title">
-                            <div class="avatar" :class="content.rank < 4?'rank':''" v-if='content.babyInfo.avatar'>
-                                <img :src="content.babyInfo.avatar" @error='imgError' :alt="content.babyInfo.name" />
-                            </div>
-                            <div class="info">
-                                <span class="name">{{content.babyInfo.name}}</span>
-                                <span class="label">{{content.banji_name}}</span>
-                            </div>
-                        </div>
-                    </van-cell>
+                  <van-cell v-for='(content,contentIndex) in item.content.list' :key="contentIndex" value-class='cell-value'
+                    title-class='cell-title' :value='`${content.read_count}本`' size='large' center @click="toPage(content)">
+                    <div class="icon" slot="icon">
+                      <svg-ranking :ranking="content.rank" />
+                    </div>
+                    <div class="title flex flex-align" slot="title">
+                      <div class="avatar" :class="content.rank < 4?'rank':''" v-if='content.babyInfo.avatar'>
+                        <img :src="content.babyInfo.avatar" @error='imgError' :alt="content.babyInfo.name" />
+                      </div>
+                      <div class="info">
+                        <span class="name">{{content.babyInfo.name}}</span>
+                        <span class="label">{{content.banji_name}}</span>
+                      </div>
+                    </div>
+                  </van-cell>
                 </van-cell-group>
               </van-tab>
             </van-tabs>
@@ -40,10 +42,10 @@
       </van-tabs>
     </div>
 
-    <slogan/>
+    <slogan />
 
     <van-popup v-model="show" position="bottom">
-        <van-picker :columns="times" @change="onChange"/>
+      <van-picker :columns="times" @change="onChange" />
     </van-popup>
   </div>
 </template>
@@ -51,6 +53,8 @@
 import svgRanking from './../module/animate/svg/ranking'
 import card from './../module/ranking/card'
 import slogan from './../module/slogan'
+import { mapActions } from 'vuex'
+
 
 // 王伟  排行榜
 
@@ -202,6 +206,7 @@ export default {
     window.addEventListener("scroll", this.handleScroll)
   },
   methods: {
+    ...mapActions(['getUserData']),
     onTopTabClick(idx) {
       this.topTabIdx = idx
       this.secondTabIdx = 0
@@ -211,12 +216,12 @@ export default {
       this.secondTabIdx = idx
       this.getTabContent()
     },
-    getDomHeight(){
+    getDomHeight() {
       if (this.$refs.head) {
         this.domHeight = this.$refs.head.offsetHeight / 2
       }
     },
-    handleScroll(){
+    handleScroll() {
       this.getDomHeight()
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       this.scrollTop = scrollTop
@@ -246,21 +251,16 @@ export default {
         }
       }
 
-      if(this.$route.query.back == 'class-home' || this.$route.query.back == 'baby-home'){
-        data.params.banji_id = this.$route.query.id
-      }
-
-      if(this.$route.query.back == 'apps-school'){
-        data.params.school_id = this.$route.query.id
-      }
-
-      axios.get('/book/SchoolTushuBorrow/getRank', data).then(res => {
-        toast.clear()
-        if (res.data.status === 1) {
-          content.content = res.data.data
-        } else {
-          this.$toast(res.data.msg)
-        }
+      this.getUserData().then(res => {
+        data.params.banji_id = res.banji_id
+        axios.get('/book/SchoolTushuBorrow/getRank', data).then(res => {
+          toast.clear()
+          if (res.data.status === 1) {
+            content.content = res.data.data
+          } else {
+            this.$toast(res.data.msg)
+          }
+        })
       })
     },
     onChange(picker, value, index) {
@@ -278,47 +278,46 @@ export default {
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
-    onClickLeft(){
-      if(this.$route.query.back){
+    onClickLeft() {
+      if (this.$route.query.back) {
         this.$router.push({
-          name:this.$route.query.back,
-          query:{
+          name: this.$route.query.back,
+          query: {
             id: this.$route.query.id
           }
         })
-      }else{
+      } else {
         this.$router.push({
-          name:'my'
+          name: 'my'
         })
       }
     },
-    toPage(content){
-      if(this.topTabIdx == 0){
+    toPage(content) {
+      if (this.topTabIdx == 0) {
         this.$router.push({
-          name:'baby-home',
-          query:{
-            id:content.child_id,
-            back: this.$route.name,
-            banji_id: this.$route.query.id
-          }
-        })
-      }
-
-      if(this.topTabIdx == 1){
-        this.$router.push({
-          name:'class-home',
-          query:{
-            id:content.banji_id,
+          name: 'baby-home',
+          query: {
+            id: content.child_id,
             back: this.$route.name
           }
         })
       }
 
-      if(this.topTabIdx == 2){
+      if (this.topTabIdx == 1) {
         this.$router.push({
-          name:'apps-school',
-          query:{
-            id:content.banji_id,
+          name: 'class-home',
+          query: {
+            id: content.banji_id,
+            back: this.$route.name
+          }
+        })
+      }
+
+      if (this.topTabIdx == 2) {
+        this.$router.push({
+          name: 'apps-school',
+          query: {
+            id: content.banji_id,
             back: this.$route.name
           }
         })
@@ -338,58 +337,58 @@ export default {
   background: #fff;
 }
 
-.school-name{
-    text-align: center;
-    height: 2.8125rem /* 45/16 */;
-    line-height: 2.8125rem /* 45/16 */;
+.school-name {
+  text-align: center;
+  height: 2.8125rem /* 45/16 */;
+  line-height: 2.8125rem /* 45/16 */;
 }
 
-.avatar img{
-    width: 2.625rem /* 42/16 */;
-    height: 2.625rem /* 42/16 */;
+.avatar img {
+  width: 2.625rem /* 42/16 */;
+  height: 2.625rem /* 42/16 */;
 }
 
-.avatar img{
-  border: .125rem /* 2/16 */ solid #fff;
+.avatar img {
+  border: 0.125rem /* 2/16 */ solid #fff;
 }
 
-.avatar{
-  margin-right: .625rem /* 10/16 */;
-  border: .125rem /* 2/16 */ solid #409eff;
+.avatar {
+  margin-right: 0.625rem /* 10/16 */;
+  border: 0.125rem /* 2/16 */ solid #409eff;
   border-radius: 50%;
   overflow: hidden;
 }
 
-.avatar.rank{
-  border-color: #FFC107;
-  box-shadow: 0 .125rem /* 2/16 */ .625rem /* 10/16 */ rgba(255, 193, 7, .3);
+.avatar.rank {
+  border-color: #ffc107;
+  box-shadow: 0 0.125rem /* 2/16 */ 0.625rem /* 10/16 */ rgba(255, 193, 7, 0.3);
 }
 
-.avatar img{
-    border-radius: 50%;
+.avatar img {
+  border-radius: 50%;
 }
 
-.info .label{
-    font-size: .875rem /* 14/16 */;
+.info .label {
+  font-size: 0.875rem /* 14/16 */;
 }
 
-.info{
-    display: grid;
+.info {
+  display: grid;
 }
 
-.info .name{
-    font-weight: 500;
-    color: #303133;
+.info .name {
+  font-weight: 500;
+  color: #303133;
 }
 </style>
 <style>
-.ranking-page .van-cell__value.cell-value{
-  color:#303133;
+.ranking-page .van-cell__value.cell-value {
+  color: #303133;
   font-size: 1rem /* 16/16 */;
   font-weight: 500;
 }
 
-.ranking-page .van-cell__title.cell-title{
+.ranking-page .van-cell__title.cell-title {
   flex: 4;
 }
 </style>

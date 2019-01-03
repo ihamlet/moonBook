@@ -14,6 +14,9 @@
             <span v-else>{{item.user.name}}</span>
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
+          <div class="titmeago">
+            {{getTimeAgo(item.create_time)}}
+          </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0'>
           <van-button class="theme-btn" type="primary" size='mini' plain v-if='item.isSubscribe == 0' @click="follow(item)"> + 关注</van-button>
@@ -91,6 +94,7 @@ import vipLevel from './../animate/svg/vipLevel'
 import share from './../mold/share'
 import taskCard from './taskCard'
 import articleShare from './../../module/mold/articleShare'
+import { timeago } from './../../lib/js/util'
 
 export default {
   name: "graphic-crad",
@@ -165,7 +169,9 @@ export default {
           }
         })
       }
-
+    },
+    getTimeAgo(time){
+      return timeago(time*1000)
     }
   }
 }
