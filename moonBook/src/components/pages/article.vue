@@ -54,7 +54,7 @@
 
     <!-- 生成图片 -->
     <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
-      <article-share :item='item' :userName='item.user.username' :qrImage='qrImage' @close='imageShow = false'/>
+      <article-share :item='item' :userName='item.user?item.user.username:""' :qrImage='qrImage' @close='imageShow = false'/>
     </van-popup>
   </div>
 </template>

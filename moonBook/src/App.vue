@@ -564,6 +564,7 @@ img.lazy[lazy='error'],
 }
 
 /* 图片灯箱 */
+.video-box-popup.van-popup,
 .picture-box-popup.van-popup {
   width: 100%;
   height: 100vh;

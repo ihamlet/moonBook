@@ -218,8 +218,9 @@ export default {
         this.$router.push({
           name:this.$route.query.back,
           query:{
-            id:this.$route.query.banji_id,
-            back: this.$route.name
+            id:this.$route.query.banji_id?this.$route.query.banji_id:this.$route.query.id,
+            back: this.$route.name,
+            child_id: this.$route.query.id
           }
         })
       }else{

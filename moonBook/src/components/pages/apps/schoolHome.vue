@@ -160,7 +160,10 @@ export default {
     onClickLeft() {
       if(this.$route.query.back){
         this.$router.push({
-          name: this.$route.query.back
+          name: this.$route.query.back,
+          query:{
+            id: this.$route.query.banji_id
+          }
         }) 
       }else{
         this.$router.push({

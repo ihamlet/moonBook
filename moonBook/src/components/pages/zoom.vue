@@ -11,7 +11,7 @@
         <div class="user-card flex flex-align" ref='userCrad'>
           <div class="info">
             <div class="avatar">
-              <img :src="userInfo.avatar" :alt="userInfo.name" />
+              <img :src="getAvatar(userInfo.avatar)" :alt="userInfo.name" />
             </div>
             <div class="name" v-line-clamp:20="1">
               {{userInfo.name}}
@@ -178,6 +178,16 @@ export default {
 
         this.$toast.success('删除成功')
       }
+    },
+    getAvatar(img) {
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
     }
   }
 }

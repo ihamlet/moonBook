@@ -43,8 +43,8 @@ export default {
 .content {
   padding: 0.625rem /* 10/16 */;
   background: #fff;
-  box-shadow: 0 0.3125rem /* 5/16 */ .9375rem /* 15/16 */ rgba(86, 104, 248, 0.8);
-  border-radius: 0.625rem /* 10/16 */;
+  box-shadow: 0 0.3125rem /* 5/16 */ 1.25rem /* 20/16 */ rgba(86, 104, 248, 0.3);
+  border-radius: 0.625rem /* 10/16 */ 0 .625rem /* 10/16 */ .625rem /* 10/16 */;
 }
 
 .avatar,

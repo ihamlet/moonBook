@@ -247,6 +247,7 @@ export default {
       let data = {
         params: {
           group: content.api.params.group,
+          time: content.api.params.time,
           region: content.api.params.region
         }
       }
@@ -328,7 +329,7 @@ export default {
 </script>
 <style scoped>
 .header {
-  background: linear-gradient(180deg, #05dcfe, #5768f8);
+  background: linear-gradient(0deg, #05dcfe, #5768f8);
   height: 8.75rem /* 140/16 */;
 }
 
@@ -361,7 +362,7 @@ export default {
 
 .avatar.rank {
   border-color: #ffc107;
-  box-shadow: 0 0.125rem /* 2/16 */ 0.625rem /* 10/16 */ rgba(255, 193, 7, 0.3);
+  box-shadow: 0 0.125rem /* 2/16 */ 0.625rem /* 10/16 */ rgba(255, 193, 7, 0.2);
 }
 
 .avatar img {

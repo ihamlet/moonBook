@@ -8,7 +8,7 @@
         <div class="screenshot" v-if='!dataURL'>
           <div class="user flex flex-align" v-if='item.user'>
             <div class="avatar">
-              <img crossOrigin="anonymous" :src="avatar(item.user.avatar)" :alt="item.user.username" />
+              <img :src="getAvatar(item.user.avatar)" :alt="item.user.username" />
             </div>
             <div class="name">{{userName}}</div>
           </div>
@@ -65,13 +65,15 @@ export default {
     close() {
       this.$emit('close')
     },
-    avatar(img){      
-      let hostMatch = img.match(/https?:\/\/(.+?)\//)
-      if(hostMatch) {
-        return `/book/api/remotePic?url=${img}`
+    getAvatar(img) {
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
       } else {
-        return img
+         result = img
       }
+      return result
     }
   }
 }

@@ -3,10 +3,10 @@
     <div class="container">
       <div class="user-card flex flex-align">
         <div class="avatar" v-if="type=='babyHome'">
-          <img :src="avatar" alt="宝贝头像" />
+          <img :src="getAvatar(avatar)" alt="宝贝头像" />
         </div>  
         <div class="avatar" v-else @click="item.user_id > 0 && toBookZoom(item)">
-          <img :src="item.user.avatar" :alt="item.user.name">
+          <img :src="getAvatar(item.user.avatar)" :alt="item.user.name">
         </div>
         <div class="info">
           <div class="name flex flex-align">
@@ -35,9 +35,10 @@
       </div>
       <!-- 媒体视频 -->
       <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
-        <video controls="controls" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
-          <source :src="videoItem.photo">
-        </video>
+        <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
+            <i class="iconfont" @click="toVideoPage(videoItem)">&#xe602;</i>
+            <img :src="videoItem.thumb" alt="视频封面"/>
+        </div>
       </div>
       <!-- 媒体音频 -->
       <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
@@ -76,6 +77,10 @@
       <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item" />
     </van-popup>
 
+    <van-popup v-model="videoShow" class="video-box-popup" get-container='#app'>
+      <video-box @close="videoShow = false" :item="videoItem"/>
+    </van-popup>
+
     <van-actionsheet v-model="shareShow" title="分享" get-container='#app'>
       <share @show='imageShow = true' />
     </van-actionsheet>
@@ -94,6 +99,7 @@ import vipLevel from './../animate/svg/vipLevel'
 import share from './../mold/share'
 import taskCard from './taskCard'
 import articleShare from './../../module/mold/articleShare'
+import videoBox from './../mold/videoBox'
 import { timeago } from './../../lib/js/util'
 
 export default {
@@ -104,17 +110,20 @@ export default {
     share,
     articleShare,
     taskCard,
-    vipLevel
+    vipLevel,
+    videoBox
   },
   data() {
     return {
       imgIndex: 0,
       pictureShow: false,
+      videoShow:false,
       articleShow: false,
       shareShow:false,
       imageShow:false,
       qrImage:'',
-      link:''
+      link:'',
+      videoItem:''
     }
   },
   methods: {
@@ -170,8 +179,22 @@ export default {
         })
       }
     },
+    toVideoPage(videoItem){
+      this.videoItem = videoItem
+      this.videoShow = true
+    },
     getTimeAgo(time){
       return timeago(time*1000)
+    },
+    getAvatar(img) {
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
     }
   }
 }
@@ -240,5 +263,18 @@ export default {
 .user-card{
   position: relative;
   z-index: 2;
+}
+
+.thumb{
+  position: relative;
+}
+
+.thumb .iconfont{
+  font-size: 3.125rem /* 50/16 */;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: #fff;
+  transform: translate3d(-50%, -50%, 0);
 }
 </style>

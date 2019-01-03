@@ -2,7 +2,7 @@
   <div class="class-home page-padding" v-if='hackReset'>
     <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?pageTitle:classInfo.title}} <i class="iconfont" v-if="managerClass.is_confirm == 1">&#xe608;</i>
+        {{fixedHeaderBar?pageTitle:classInfo.title}} <i class="iconfont" v-if="managerList.length">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -80,17 +80,16 @@ export default {
     ...mapGetters(['userDataState']),
     actions() {
       let array = []
-      let childClass = JSON.parse(sessionStorage.getItem('childClass'))
-      
-      array = [{
-        name: this.managerClass.banji_name,
-        subname: '管理的班级',
-        id: this.managerClass.banji_id
-      }, {
-        name: childClass.title,
-        subname: '宝贝所在的班级',
-        id: childClass.banji_id
-      }]
+      this.managerList.forEach(element => {
+        let data = {
+          name: element.name,
+          subname: `${element.duty}-${element.desc}`,
+          id: element.id,
+          type: element.item_type
+        }
+
+        array.push(data)
+      })
 
       return array
     },
@@ -114,7 +113,7 @@ export default {
       lateBook: '',
       hackReset: true,
       actionsheetShow: false,
-      managerClass: '',
+      managerList:[],
       appsList: [{
         name: '讲故事',
         iconClass: 'icon-jianggushi'
@@ -181,15 +180,12 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     request() {
-      axios.get('/book/SchoolTeacher/getMine').then(res => {
-        this.managerClass = res.data.data
+      axios.get('/book/MemberBanji/getList').then(res=>{
+        this.managerList = res.data.data
       })
 
       axios.get(`/book/SchoolBanji/getInfo?banji_id=${this.$route.query.id}`).then(res => {
         this.classInfo = res.data.data
-        if(!sessionStorage.getItem('childClass')){
-          sessionStorage.setItem('childClass', JSON.stringify(res.data.data))
-        }
       })
     },
     onClickLeft() {
@@ -197,7 +193,7 @@ export default {
         this.$router.push({
           name: this.$route.query.back,
           query:{
-            id:this.$route.query.school_id
+            id:this.$route.query.child_id?this.$route.query.child_id:this.$route.query.school_id
           }
         })
       }else{
@@ -231,23 +227,35 @@ export default {
       location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
     },
     cutover() {
-      if (this.managerClass.is_confirm == 1) {
+      if (this.managerList.length) {
         this.actionsheetShow = true
       }
     },
     onSelect(item) {
-      this.$router.push({
-        name: 'class-home',
-        query: {
-          id: item.id
-        }
-      })
       this.hackReset = false
       this.actionsheetShow = false
-      this.$nextTick(() => {
-        this.hackReset = true
-        this.request()
-      })
+      if(item.type == 'banji'){
+        this.$router.push({
+          name: 'class-home',
+          query: {
+            id: item.id,
+            back: this.$route.name
+          }
+        })
+        this.$nextTick(() => {
+          this.hackReset = true
+          this.request()
+        })
+      }else if(item.type == 'school'){
+        this.$router.push({
+          name:'apps-school',
+          query:{
+            id: item.id,
+            back: this.$route.name,
+            banji_id: this.$route.query.id
+          }
+        })
+      }
     }
   }
 }

@@ -6,7 +6,7 @@
       </div>
     </van-nav-bar>
     <lazy-component class="module">
-      <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name"/>
+      <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template'/>
     </lazy-component>
     <lazy-component class="module">
       <van-nav-bar title="班级动态" />

@@ -14,6 +14,7 @@ export default {
   width: 100%;
   height: 1.875rem /* 30/16 */;
   position: relative;
+  overflow: hidden;
 }
 
 .wave1,
@@ -23,8 +24,8 @@ export default {
   width: 100%;
   z-index: 12;
   left: 0;
-  bottom: 0;
-  background: url('./../../../assets/img/wave1.png');
+  bottom: -.0625rem /* 1/16 */;
+  background: url('./../../../assets/img/wave1.png') 0 0 repeat-x;
 }
 
 .wave1{
@@ -37,11 +38,11 @@ export default {
 }
 
 @keyframes wave-animation {
-  from {
+  0% {
     background-position: 0 0;
   }
-  to {
-    background-position: 100rem /* 1600/16 */ 0;
+  100% {
+    background-position: 100.0625rem /* 1601/16 */ 0;
   }
 }
 </style>
