@@ -304,7 +304,6 @@ export default {
 <style scoped>
 .header {
   width: 100%;
-  height: 9.375rem /* 150/16 */;
   position: relative;
 }
 
@@ -329,7 +328,7 @@ export default {
 }
 
 .baby-info {
-  padding: 3.5rem /* 56/16 */ 1.25rem /* 20/16 */;
+  padding: 3.5rem /* 56/16 */ 1.25rem /* 20/16 */ 0 1.25rem /* 20/16 */;
   position: relative;
   z-index: 1;
 }
