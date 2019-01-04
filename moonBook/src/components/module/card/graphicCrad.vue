@@ -37,7 +37,7 @@
       <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
         <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
             <i class="iconfont" @click="toVideoPage(videoItem)">&#xe602;</i>
-            <img :src="videoItem.thumb" alt="视频封面"/>
+            <img :src="`${videoItem.photo}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`" alt="视频封面"/>
         </div>
       </div>
       <!-- 媒体音频 -->

@@ -40,10 +40,10 @@
           <van-button size="small" v-else class="theme-btn" type="primary" round @click="follow(item)">+ 关注</van-button>
         </div>
       </div>
-      <lazy-component>
+      <lazy-component class="module">
         <article-content :item='item'/>
       </lazy-component>
-      <lazy-component>
+      <lazy-component class="module">
         <comment :item='item' cid='post_id'/>
       </lazy-component>
     </div>

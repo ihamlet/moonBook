@@ -164,35 +164,55 @@ function timeago(dateTimeStamp) {
     let datetime = new Date()
     datetime.setTime(dateTimeStamp)
     let Nyear = datetime.getFullYear()
-    let Nmonth = datetime.getMonth() + 1 < 10 ? '0' + (datetime.getMonth() + 1) : datetime.getMonth() + 1
-    let Ndate = datetime.getDate() < 10 ? '0' + datetime.getDate() : datetime.getDate()
-    let Nhour = datetime.getHours() < 10 ? '0' + datetime.getHours() : datetime.getHours()
-    let Nminute = datetime.getMinutes() < 10 ? '0' + datetime.getMinutes() : datetime.getMinutes()
-    let Nsecond = datetime.getSeconds() < 10 ? '0' + datetime.getSeconds() : datetime.getSeconds()
+    let Nmonth =
+      datetime.getMonth() + 1 < 10
+        ? '0' + (datetime.getMonth() + 1)
+        : datetime.getMonth() + 1
+    let Ndate =
+      datetime.getDate() < 10 ? '0' + datetime.getDate() : datetime.getDate()
+    let Nhour =
+      datetime.getHours() < 10 ? '0' + datetime.getHours() : datetime.getHours()
+    let Nminute =
+      datetime.getMinutes() < 10
+        ? '0' + datetime.getMinutes()
+        : datetime.getMinutes()
+    let Nsecond =
+      datetime.getSeconds() < 10
+        ? '0' + datetime.getSeconds()
+        : datetime.getSeconds()
     result = Nyear + '-' + Nmonth + '-' + Ndate
   }
   return result
 }
 
-//图片转换成 base64
-//传入图片路径，返回base64
-
-function convertImgToBase64(url, callback, outputFormat){
-  let canvas = document.createElement('CANVAS'),
-　　ctx = canvas.getContext('2d'),
-　　img = new Image
-　　img.crossOrigin = 'Anonymous'
-　　img.onload = () => {
-   　　canvas.height = img.height
-   　　canvas.width = img.width
-   　　ctx.drawImage(img,0,0)
-   　　var dataURL = canvas.toDataURL(outputFormat || 'image/png')
-   　　callback.call(this, dataURL)
-   　　canvas = null;
-   }
-　　img.src = url
-}   
-
+// 视频时长
+function formatTime(a) {
+  let h = 0,
+    i = 0,
+    s = parseInt(a)
+  if (s > 60) {
+    i = parseInt(s / 60)
+    s = parseInt(s % 60)
+    if (i > 60) {
+      h = parseInt(i / 60)
+      i = parseInt(i % 60)
+    }
+  }
+  // 补零
+  let zero = function(v) {
+    return v >> 0 < 10 ? '0' + v : v
+  }
+  let h2 = zero(h)
+  let i2 = zero(i)
+  let s2 = zero(s)
+  let ok = ''
+  if (h2 <= 0) {
+    ok = [i2, s2].join(':')
+  } else {
+    ok = [h2, i2, s2].join(':')
+  }
+  return ok
+}
 
 export {
   GetDistance,
@@ -202,5 +222,5 @@ export {
   compress,
   getRandomArrayElements,
   timeago,
-  convertImgToBase64
+  formatTime
 }

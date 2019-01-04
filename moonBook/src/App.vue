@@ -28,11 +28,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_85iujxapz7p.eot');
-  src: url('//at.alicdn.com/t/font_893274_85iujxapz7p.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_85iujxapz7p.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_85iujxapz7p.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_85iujxapz7p.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_62f1169esk5.eot');
+  src: url('//at.alicdn.com/t/font_893274_62f1169esk5.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_62f1169esk5.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_62f1169esk5.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_62f1169esk5.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_62f1169esk5.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -568,6 +569,13 @@ img.lazy[lazy='error'],
 .picture-box-popup.van-popup {
   width: 100%;
   height: 100vh;
+}
+
+.video-box-popup.van-popup{
+  background: #fff;
+}
+
+.picture-box-popup.van-popup {
   background: #000;
 }
 

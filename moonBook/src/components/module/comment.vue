@@ -201,10 +201,6 @@ export default {
 }
 </script>
 <style scoped>
-.comment-list {
-  margin-top: 0.3125rem; /* 5/16 */
-}
-
 .no-centent {
   text-align: center;
   background: #fff;

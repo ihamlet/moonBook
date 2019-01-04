@@ -31,7 +31,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from './../lib/js/api'
 
 export default {
   name: 'Video',

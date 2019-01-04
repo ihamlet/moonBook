@@ -161,7 +161,6 @@ export default new Router({
         meta: {
           title: '我的卡包',
           scrollToTop: true,
-          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -170,7 +169,6 @@ export default new Router({
         component: EditChild,
         meta: {
           scrollToTop: true,
-          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -179,7 +177,6 @@ export default new Router({
         component: EditSchool,
         meta: {
           scrollToTop: true,
-          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -188,7 +185,6 @@ export default new Router({
         component: EditClass,
         meta: {
           scrollToTop: true,
-          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -197,7 +193,6 @@ export default new Router({
         component: EditStting,
         meta: {
           scrollToTop: true,
-          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -206,7 +201,7 @@ export default new Router({
         component: EditManager,
         meta: {
           scrollToTop: true,
-          tabActive:4,
+
           isFooterBar: false
         }
       },{
@@ -216,7 +211,6 @@ export default new Router({
         meta: {
           title: '图书详情',
           scrollToTop: true,
-          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -226,7 +220,6 @@ export default new Router({
         meta: {
           title: '加入家庭',
           scrollToTop: true,
-          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -236,7 +229,6 @@ export default new Router({
         meta: {
           title:'成员审核',
           scrollToTop: true,
-          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -246,7 +238,6 @@ export default new Router({
         meta: {
           title:'借阅记录',
           scrollToTop: true,
-          tabActive:4,
           isFooterBar: false
         }
       },{
@@ -266,7 +257,6 @@ export default new Router({
         meta: {
           title:'阅读榜',
           scrollToTop: true,
-          tabActive:0,
           isFooterBar: false
         }
       }]
