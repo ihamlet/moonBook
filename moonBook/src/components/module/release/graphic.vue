@@ -62,8 +62,8 @@
     <div class="upload-module flex wrap">
       <van-cell>
         <van-row gutter="4">
-          <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index" v-if='!item.media'>
-            <div class="preview img-grid" v-lazy:background-image='item.thumb' :class="[item.thumb?'transparent':'']">
+          <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
+            <div class="preview img-grid" v-lazy:background-image='item.thumb' v-if="!item.media" :class="[item.thumb?'transparent':'']">
               <i class="iconfont" @click="deletePhoto(index)">&#xe683;</i>
             </div>
           </van-col>
@@ -205,19 +205,25 @@ export default {
       })
     },
     onRead(file) {
+      console.log(file)
+
       let config = {
         headers: { 'Content-Type': 'multipart/form-data' }
       }
 
       let array = []
 
-      if (!file.length) {
-        array.push(file)
-      } else {
+      if (file.length) {
         array = file
+      } else {
+        array.push(file)
       }
 
       array.forEach(element => {
+        
+        let img = new Image()
+        img.src = element.content
+
         if (this.photoLength < 9) {
           this.photoLength++
           this.grapicData.photos.isLoading = true
@@ -230,6 +236,8 @@ export default {
                   this.grapicData.photos.push({
                     photo: res.data.data.path,
                     thumb: res.data.data.thumb,
+                    height: img.height || 0,
+                    width: img.width || 0,
                     isLoading: false
                   })
                 } else {

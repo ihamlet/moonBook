@@ -2,18 +2,18 @@
   <div class="picture-box">
     <div class="header-bar flex flex-align flex-justify" v-show="isFold">
       <div class="avatar">
-        <img :src="item.user.avatar" :alt="item.user.name">
+        <img :src="getAvatar(item.user.avatar)" :alt="item.user.name">
       </div>
       <div class="name flex flex-align">
         {{item.user.name}}
-        <vip-level v-if='item.card_level' animate='0' :level='item.card_level.level'/>
+        <vip-level v-if='item.card_level' animate='0' :level='item.card_level.level' />
       </div>
     </div>
     <van-swipe :initial-swipe="imgIndex" :loop="false" @change="onChange">
       <van-swipe-item v-for="(list,index) in item.photos" :key="index" class="flex flex-align">
-        <div class="scroll-view" @click="closePopup">
-          <img class="img lazy" v-lazy="list.photo">
-          <van-loading class="picture-loading"/>
+        <div class="scroll-view" v-iscroll :class="[list.height > winH?'scroll':'']" @click="closePopup">
+          <img ref='imgHeight' class="img lazy" v-lazy="list.photo" :class="[list.height > winH?'scroll-img':'']" />
+          <van-loading class="picture-loading" />
         </div>
       </van-swipe-item>
       <div class="custom-indicator" slot="indicator">{{ imgIndex + 1 }}/{{item.photos.length}}</div>
@@ -47,7 +47,7 @@
   </div>
 </template>
 <script>
-import axios from "axios"
+import axios from "./../../lib/js/api"
 import vipLevel from './../animate/svg/vipLevel'
 
 export default {
@@ -60,9 +60,24 @@ export default {
   components: {
     vipLevel
   },
+  computed: {
+    winH() {
+      return window.innerHeight
+    }
+  },
   data() {
     return {
-      isFold: false
+      isFold: false,
+      imgHeightArray: [],
+      iscrollConf: {
+        mouseWheel: true,
+        vScrollbar: true,
+        click: true,
+        preventDefault: true,
+        tap: true,
+        bounce: false,
+        disableTouch: true
+      }
     }
   },
   methods: {
@@ -77,20 +92,29 @@ export default {
     },
     addPraise(item) {
       item.isZan = !item.isZan
-      axios
-        .get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`)
+      axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`)
         .then(res => {
           item.zan_num = res.data.data.like
         })
     },
-    toArticle(item){
+    toArticle(item) {
       this.$router.push({
-        name:'article',
-        query:{
+        name: 'article',
+        query: {
           id: item.post_id,
           type: item.template_id
         }
       })
+    },
+    getAvatar(img) {
+      let pos = img.indexOf('http://')
+      let result
+      if (pos === 0) {
+        result = img.replace('http:', 'https:')
+      } else {
+        result = img
+      }
+      return result
     }
   }
 }
@@ -101,21 +125,18 @@ export default {
   height: 100vh;
 }
 
-.picture-box .van-swipe .van-swipe-item {
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  height: 100%;
-}
-
 .picture-box .van-swipe .van-swipe-item img {
   width: 100%;
   min-height: 1.875rem /* 30/16 */;
-  height: auto;
-  background: #000;
 }
 
 .scroll-view {
   width: 100%;
+}
+
+.scroll-view.scroll {
+  height: 100%;
+  overflow-y: scroll;
   position: relative;
 }
 
@@ -193,17 +214,16 @@ export default {
   border-radius: 50%;
 }
 
-img.lazy[lazy="loading"]{
+img.lazy[lazy='loading'] {
   background: #000;
   opacity: 0;
 }
 
-.picture-loading{
+.picture-loading {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
-  z-index: -1
-  ;
+  z-index: -1;
 }
 </style>

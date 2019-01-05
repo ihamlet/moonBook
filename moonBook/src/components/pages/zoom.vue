@@ -180,6 +180,10 @@ export default {
       }
     },
     getAvatar(img) {
+      if(!img){
+        return img
+      }
+
       let pos = img.indexOf('http://')
       let result
       if(pos === 0) {

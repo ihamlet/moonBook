@@ -4,7 +4,7 @@
       <div class="player-box">
         <video-player ref="videoPlayer" customEventName="customstatechangedeventname" @play="onPlayerPlay($event)"
           @pause="onPlayerPause($event)" @statechanged="playerStateChanged($event)" @timeupdate="onPlayerTimeupdate($event)"
-          @ended="onPlayerEnded($event)" :options="playerOptions" :playsinline="true" />
+          @ended="onPlayerEnded($event)" :options="playerOptions" :playsinline="true"/>
       </div>
 
       <div class="control" @click="isControl">
@@ -84,17 +84,16 @@ export default {
       videoCurrentTime: '',
       videoIndex:0,
       playerOptions: {
-        autoplay: true,
+        autoplay: false,
         muted: false,
         loop: false,
         preload: 'auto',
         language: 'zh-CN',
         aspectRatio: '16:9',
-        fluid: true,
         sources:[{
           src: this.item.photo
         }],
-        poster: this.item.thumb,
+        poster: `${this.item.photo}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`,
         width: document.documentElement.clientWidth,
         notSupportedMessage: '此视频暂无法播放，请稍后再试',
         controlBar: false
@@ -147,13 +146,13 @@ export default {
       // this.$refs.slider.setValue(this.currentTime)
     },
     fullScreenHandle() {
-      if (!this.player.isFullscreen()) {
-        this.player.requestFullscreen()
-        this.player.isFullscreen(true)
-      } else {
-        this.player.exitFullscreen()
-        this.player.isFullscreen(false)
-      }
+      // if (!this.player.isFullscreen()) {
+      //   this.player.requestFullscreen()
+      //   this.player.isFullscreen(true)
+      // } else {
+      //   this.player.exitFullscreen()
+      //   this.player.isFullscreen(false)
+      // }
     }
   }
 }
@@ -242,7 +241,7 @@ export default {
 }
 </style>
 <style>
-.video-js .vjs-big-play-button{
+#VideoBox .video-js .vjs-big-play-button{
   display: none;
 }
 

@@ -23,24 +23,26 @@
         </div>
       </div>
       <div class="text" v-line-clamp:20="2" v-html="item.details" @click="toArticle(item)"></div>
-      <!-- 媒体图片  -->
+      <!-- 图片  -->
       <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1'>
         <div :class="item.photos.length == 4 ? 'layout-4':'layout-9'">
           <van-row :gutter="4">
             <van-col :span="item.photos.length == 4?'12':'8'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-              <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']" @click="mediaLamp(item,photoIndex)"></div>
+              <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']" @click="mediaLamp(item,photoIndex)">
+                <van-tag class="photo-tag" type="danger" v-if='photo.height > winH'>长图</van-tag>
+              </div>
             </van-col>
           </van-row>
         </div>
       </div>
-      <!-- 媒体视频 -->
+      <!-- 视频 -->
       <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
         <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
             <i class="iconfont" @click="toVideoPage(videoItem)">&#xe602;</i>
             <img :src="`${videoItem.photo}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`" alt="视频封面"/>
         </div>
       </div>
-      <!-- 媒体音频 -->
+      <!-- 音频 -->
       <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
         <audio controls="controls" v-for='(audioItem,audioIndex) in item.photos' :key="audioIndex">
           <source :src="audioItem.photo">
@@ -74,7 +76,7 @@
     </div>
 
     <van-popup v-model="pictureShow" class="picture-box-popup" get-container='#app'>
-      <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item" />
+      <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item"/>
     </van-popup>
 
     <van-popup v-model="videoShow" class="video-box-popup" get-container='#app'>
@@ -112,6 +114,11 @@ export default {
     taskCard,
     vipLevel,
     videoBox
+  },
+  computed: {
+    winH(){
+      return window.innerHeight
+    }
   },
   data() {
     return {
@@ -276,5 +283,11 @@ export default {
   top: 50%;
   color: #fff;
   transform: translate3d(-50%, -50%, 0);
+}
+
+.photo-tag{
+  position: absolute;
+  right: .3125rem /* 5/16 */;
+  bottom: .3125rem /* 5/16 */;
 }
 </style>
