@@ -24,7 +24,7 @@
         <van-cell v-for="(item,index) in list" :key="index">
           <div class="user-card flex flex-align">
             <div class="avatar">
-              <img :src="item.avatar" :alt="item.username" />
+              <img :src="getAvatar(item.avatar)" :alt="item.username" />
             </div>
             <div class="user-data">
               <span class="user-name">{{item.username}}</span>
@@ -111,7 +111,7 @@ import axios from './../lib/js/api'
 
 export default {
   name: 'comment',
-  props: ['item','cid'],
+  props: ['item'],
   computed: {
     ...mapGetters(['userToken'])
   },
@@ -124,7 +124,6 @@ export default {
       prompt: '写评论',
       page: 1,
       commentId: '',
-
       show: false,
       isLoading: false,
       message: ''
@@ -132,11 +131,10 @@ export default {
   },
   methods: {
     onLoad() {
-      axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.item[this.cid]}&page=${this.page}&limit=10&sort=new`).then(res => {
+      axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.$route.query.id}&page=${this.page}&limit=10&sort=new`).then(res => {
         this.listLength = res.data.count
         let array = res.data.data
         this.loading = false
-
         if (this.page == 1) {
           this.list = array
         } else {
@@ -153,13 +151,13 @@ export default {
       let data = ''
       if (this.commentId) {
         data = {
-          post_id: this.item[this.cid],
+          post_id: this.$route.query.id,
           contents: this.message,
           reply_comment_id: this.commentId
         }
       } else {
         data = {
-          post_id: this.item[this.cid],
+          post_id: this.$route.query.id,
           contents: this.message
         }
       }
@@ -196,6 +194,16 @@ export default {
       this.$nextTick(() => {
         this.$refs.field.focus()
       })
+    },
+    getAvatar(img) {
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
     }
   }
 }

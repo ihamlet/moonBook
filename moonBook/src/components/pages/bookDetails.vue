@@ -32,8 +32,8 @@
       <lazy-component class="module" v-if='freshList.length > 0'>
         <freshList :list='freshList' cid="child_id" avatar="child_avatar" routerName="baby-home" name="child_name" />
       </lazy-component>
-      <lazy-component class="module">
-        <comment :item='details' cid='post_id'/>
+      <lazy-component>
+        <comment :item='details'/>
       </lazy-component>
     </div>
   </div>

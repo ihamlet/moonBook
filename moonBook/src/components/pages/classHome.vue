@@ -2,7 +2,7 @@
   <div class="class-home page-padding" v-if='hackReset'>
     <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?pageTitle:classInfo.title}} <i class="iconfont" v-if="managerList.length">&#xe608;</i>
+        {{fixedHeaderBar?pageTitle:classInfo.title}} <i class="iconfont" v-if="managerList.length > 0">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -227,7 +227,7 @@ export default {
       location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
     },
     cutover() {
-      if (this.managerList.length) {
+      if (this.managerList.length > 0) {
         this.actionsheetShow = true
       }
     },

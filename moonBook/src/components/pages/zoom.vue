@@ -126,7 +126,11 @@ export default {
     onClickLeft() {
       if(this.$route.query.back){
         this.$router.push({
-          name: this.$route.query.back
+          name: this.$route.query.back,
+          query:{
+            id: this.$route.query.post_id,
+            user_id: this.$route.query.user_id
+          }
         })
       }else{
         this.$router.push({

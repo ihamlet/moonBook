@@ -79,10 +79,6 @@
       <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item"/>
     </van-popup>
 
-    <van-popup v-model="videoShow" class="video-box-popup" get-container='#app'>
-      <video-box @close="videoShow = false" :item="videoItem"/>
-    </van-popup>
-
     <van-actionsheet v-model="shareShow" title="分享" get-container='#app'>
       <share @show='imageShow = true' />
     </van-actionsheet>
@@ -101,7 +97,7 @@ import vipLevel from './../animate/svg/vipLevel'
 import share from './../mold/share'
 import taskCard from './taskCard'
 import articleShare from './../../module/mold/articleShare'
-import videoBox from './../mold/videoBox'
+// import videoBox from './../mold/videoBox'
 import { timeago } from './../../lib/js/util'
 
 export default {
@@ -113,7 +109,7 @@ export default {
     articleShare,
     taskCard,
     vipLevel,
-    videoBox
+    // videoBox
   },
   computed: {
     winH(){
@@ -124,13 +120,13 @@ export default {
     return {
       imgIndex: 0,
       pictureShow: false,
-      videoShow:false,
+      // videoShow:false,
       articleShow: false,
       shareShow:false,
       imageShow:false,
       qrImage:'',
       link:'',
-      videoItem:''
+      // videoItem:''
     }
   },
   methods: {
@@ -187,8 +183,14 @@ export default {
       }
     },
     toVideoPage(videoItem){
-      this.videoItem = videoItem
-      this.videoShow = true
+      this.$router.push({
+        name:'video-page',
+        query:{
+          id: videoItem.post_id,
+          user_id: this.item.user_id,
+          back: this.$route.name
+        }
+      })
     },
     getTimeAgo(time){
       return timeago(time*1000)

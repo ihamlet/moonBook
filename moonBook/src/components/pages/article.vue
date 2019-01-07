@@ -22,7 +22,7 @@
     <div class="container page-padding">
       <div class="user-card flex flex-align" ref="userCard" v-if='item.user'>
         <div class="avatar">
-          <img :src="item.user.avatar" :alt="item.user.username">
+          <img :src="getAvatar(item.user.avatar)" :alt="item.user.username">
         </div>
         <div class="info">
           <div class="name">
@@ -43,8 +43,8 @@
       <lazy-component class="module">
         <article-content :item='item'/>
       </lazy-component>
-      <lazy-component class="module">
-        <comment :item='item' cid='post_id'/>
+      <lazy-component>
+        <comment :item='item'/>
       </lazy-component>
     </div>
 
@@ -138,6 +138,16 @@ export default {
       axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res=>{
         this.$toast.success(res.data.msg)
       })
+    },
+    getAvatar(img) {
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
     }
   }
 }

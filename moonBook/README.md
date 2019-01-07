@@ -1,6 +1,7 @@
 # moonbook
 
-> A Vue.js project 修改若干bug
+> A Vue.js project 
+> 
 
 ## Build Setup
 
