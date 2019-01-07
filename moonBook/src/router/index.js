@@ -35,6 +35,8 @@ import AppsSchool from '@/components/pages/apps/schoolHome'
 
 import Ranking from '@/components/pages/ranking'
 
+import VideoPlayer from '@/components/pages/video/ckplayer'
+
 
 Vue.use(Router)
 
@@ -256,6 +258,14 @@ export default new Router({
         component: Ranking,
         meta: {
           title:'阅读榜',
+          scrollToTop: true,
+          isFooterBar: false
+        }
+      },{
+        path: '/video-page',
+        name: 'video-page',
+        component: VideoPlayer,
+        meta: {
           scrollToTop: true,
           isFooterBar: false
         }
