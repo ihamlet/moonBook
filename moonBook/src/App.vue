@@ -258,6 +258,7 @@ body.theme .head-bar-text,
 
 .module {
   margin-bottom: 0.625rem /* 10/16 */;
+  background: #fff;
 }
 
 .punch,
@@ -431,11 +432,6 @@ img.lazy[lazy='error'],
 }
 
 /* 模块 */
-
-.module {
-  background: #fff;
-}
-
 .card {
   padding: 0 0.3125rem /* 5/16 */;
 }
@@ -936,5 +932,18 @@ i.iconfont.vip-1 {
   font-size: 0.75rem;
   box-shadow: 0 5px 20px -9px rgba(0, 0, 0, 0.5);
   margin-top: 1.25rem;
+}
+
+.thumb{
+  position: relative;
+}
+
+.thumb .iconfont{
+  font-size: 3.125rem /* 50/16 */;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: #fff;
+  transform: translate3d(-50%, -50%, 0);
 }
 </style>

@@ -28,7 +28,7 @@
             </div>
             <div class="user-data">
               <span class="user-name">{{item.username}}</span>
-              <span class="date">{{item.createDate}}</span>
+              <span class="date">{{timeAago(item.create_time)}}</span>
             </div>
           </div>
           <div class="contents">
@@ -72,9 +72,11 @@
     <div class="comment">
       <div class="footer-bar">
         <div class="bar-padding flex flex-align">
-          <div class="input-box" @click="showField()">
-            <i class="iconfont">&#xe9ce;</i>
-            写评论
+          <div class="input-box flex flex-align" @click="showField()">
+            <div class="input-box-avatar avatar">
+              <img :src="getAvatar(userDataState.avatar)"/>
+            </div>
+            <span>写评论</span>
           </div>
           <div class="btn-icon flex flex-align">
             <div class="btn" @click="addPraise(item)">
@@ -108,12 +110,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from './../lib/js/api'
+import { timeago } from './../lib/js/util'
 
 export default {
   name: 'comment',
   props: ['item'],
   computed: {
-    ...mapGetters(['userToken'])
+    ...mapGetters(['userToken','userDataState'])
   },
   data() {
     return {
@@ -204,6 +207,9 @@ export default {
          result = img
       }
       return result
+    },
+    timeAago(time) {
+      return timeago(time * 1000)
     }
   }
 }
@@ -309,7 +315,7 @@ export default {
 .input-box {
   background: #ebeef5;
   line-height: 2.375rem /* 38/16 */;
-  border-radius: 0.375rem /* 6/16 */;
+  border-radius: 2.375rem /* 38/16 */;
 }
 
 .input-box i.iconfont {
@@ -338,6 +344,12 @@ export default {
 
 .theme-btn {
   height:2.75rem /* 44/16 */;
+}
+
+.input-box-avatar{
+  width: 2rem /* 32/16 */;
+  height: 2rem /* 32/16 */;
+  margin-left: .3125rem /* 5/16 */;
 }
 </style>
 

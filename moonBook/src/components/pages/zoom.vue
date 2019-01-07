@@ -168,7 +168,7 @@ export default {
         this.postId = item.post_id
     },
     onSelect(item) {
-      if (item.type = 'delete') {
+      if (item.type == 'delete') {
         axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
           let key 
           this.list.forEach((element,i) => {

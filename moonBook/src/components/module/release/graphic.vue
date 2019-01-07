@@ -47,7 +47,7 @@
             <div class="topic theme-color" @click="toTopicPage">
               #选择分类
             </div>
-            <div class="text-length" :class="[grapicData.text.length > 800?'danger':'']" v-if='grapicData.text.length>0'>{{grapicData.text.length}}</div>
+            <div class="text-length" :class="[grapicData.text.length > 12000?'danger':'']" v-if='grapicData.text.length>0'>{{grapicData.text.length}}</div>
           </div>
         </van-cell>
         <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
@@ -281,7 +281,7 @@ export default {
     onClickRight() {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
         this.$emit('close')
-      } else if (this.grapicData.text.length < 800) {
+      } else if (this.grapicData.text.length < 12000) {
         let data = {
           details: this.grapicData.text,
           template_id: 1,

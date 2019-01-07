@@ -274,19 +274,6 @@ export default {
   z-index: 2;
 }
 
-.thumb{
-  position: relative;
-}
-
-.thumb .iconfont{
-  font-size: 3.125rem /* 50/16 */;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  color: #fff;
-  transform: translate3d(-50%, -50%, 0);
-}
-
 .photo-tag{
   position: absolute;
   right: .3125rem /* 5/16 */;

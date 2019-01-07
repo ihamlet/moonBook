@@ -33,7 +33,7 @@
                 <news-list :newsList='newsList'/>
             </lazy-component>
             <lazy-component class="module">
-                <video-list :videoList='videoList'/>
+                <video-list title='视频精选' type='home'/>
             </lazy-component>
             <lazy-component class="module">
                 <course-list/> 

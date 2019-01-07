@@ -6,7 +6,7 @@
         <span class="text">{{$route.query.back?'返回':'首页'}}</span>
       </div>
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerSchool.is_confirm == 1">&#xe608;</i>
+        {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerList.length > 0">&#xe608;</i>
       </div>
     </van-nav-bar>
     <div class="container">
@@ -40,6 +40,8 @@
         </van-tabs>
       </lazy-component>
     </div>
+
+    <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" />
   </div>
 </template>
 <script>
@@ -59,14 +61,32 @@ export default {
     dryingList
   },
   computed: {
-    ...mapGetters(['userDataState'])
+    ...mapGetters(['userDataState']),
+    actions() {
+      let array = []
+      if(this.managerList){
+        this.managerList.forEach(element => {
+          let data = {
+            name: element.name,
+            subname: `${element.duty}-${element.desc}`,
+            id: element.id,
+            type: element.item_type
+          }
+
+          array.push(data)
+        })
+      }
+
+      return array
+    }
   },
   data() {
     return {
       schoolInfo: '',
-      managerSchool:'',
+      managerList:[],
       domHeight:'',
       fixedHeaderBar:true,
+      actionsheetShow:false,
       appsList: [
         {
           name: '简介',
@@ -131,15 +151,12 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     request() {
-      axios.get('/book/SchoolTeacher/getMine?is_master=1').then(res => {
-        this.managerSchool = res.data.data
+      axios.get('/book/MemberBanji/getList').then(res=>{
+        this.managerList = res.data.data
       })
 
       axios.get(`/book/school/getInfo?school_id=${this.$route.query.id}`).then(res => {
         this.schoolInfo = res.data.data
-        if(!sessionStorage.getItem('childSchool')){
-          sessionStorage.setItem('childSchool', JSON.stringify(res.data.data))
-        }
       })
     },
     handleScroll(){
@@ -172,7 +189,33 @@ export default {
       }
     },
     cutover(){
-
+      this.actionsheetShow = true
+    },
+    onSelect(item) {
+      this.hackReset = false
+      this.actionsheetShow = false
+      if(item.type == 'banji'){
+        this.$router.push({
+          name: 'class-home',
+          query: {
+            id: item.id,
+            back: this.$route.name
+          }
+        })
+        this.$nextTick(() => {
+          this.hackReset = true
+          this.request()
+        })
+      }else if(item.type == 'school'){
+        this.$router.push({
+          name:'apps-school',
+          query:{
+            id: item.id,
+            back: this.$route.name,
+            banji_id: this.$route.query.id
+          }
+        })
+      }
     }
   }
 }

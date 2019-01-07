@@ -3,10 +3,9 @@
     <article>
       <div class="title" v-if='item.template_id!=1'>{{item.title}}</div>
       <div class="main">
-        <div class="text" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
-        <!-- 媒体  -->
         <div class="media-content">
-          <div class="media img" v-if='item.template_id == 1'>
+          <!-- 图片 -->
+          <div class="media img" v-if='item.template_id == 1 && item.hasvideo == 0 && item.hasaudio == 0'>
             <van-row gutter="4">
               <van-col :span="8" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
                 <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']"
@@ -14,19 +13,21 @@
               </van-col>
             </van-row>
           </div>
-          <!-- 媒体视频 -->
+          <!-- 视频 -->
           <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
-            <video controls="controls" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
-              <source :src="videoItem.photo">
-            </video>
+            <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
+              <i class="iconfont" @click="toVideoPage(videoItem)">&#xe602;</i>
+              <img :src="`${videoItem.photo}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`" alt="视频封面" />
+            </div>
           </div>
-          <!-- 媒体音频 -->
+          <!-- 音频 -->
           <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
             <audio controls="controls" v-for='(audioItem,audioIndex) in item.photos' :key="audioIndex">
               <source :src="audioItem.photo">
             </audio>
           </div>
         </div>
+        <div class="text" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
       </div>
     </article>
 
@@ -54,6 +55,16 @@ export default {
     mediaLamp(item, photoIndex) {
       this.pictureShow = true
       this.imgIndex = photoIndex
+    },
+    toVideoPage(videoItem){
+      this.$router.push({
+        name:'video-page',
+        query:{
+          id: videoItem.post_id,
+          user_id: this.item.user_id,
+          back: this.$route.name
+        }
+      })
     }
   }
 }
@@ -61,12 +72,12 @@ export default {
 <style scoped>
 .text {
   line-height: 1.8;
-  text-align: justify;
   overflow: hidden;
+  color: #303133;
 }
 
-.media {
-  margin-top: 1.25rem /* 20/16 */;
+.media-content{
+  margin-bottom: .625rem /* 10/16 */;
 }
 
 .title {
@@ -77,8 +88,6 @@ export default {
 
 .article-content.img-content {
   padding: 0.625rem /* 10/16 */ 1.25rem /* 20/16 */;
-  height: 18.75rem /* 300/16 */;
-  border: 0.0625rem /* 1/16 */ solid #ebeef5;
   overflow: hidden;
   position: relative;
   border-radius: 0.5rem /* 8/16 */;

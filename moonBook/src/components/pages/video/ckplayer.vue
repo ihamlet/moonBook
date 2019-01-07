@@ -1,29 +1,32 @@
 <template>
-  <div class="video-page">
+  <div class="video-page page-padding" v-if='hackReset'>
     <van-nav-bar :zIndex='100' left-arrow left-text="返回" @click-left="onClickLeft" />
     <div class="video-box" ref='videoDom'>
       <div id="video"></div>
     </div>
     <div class="container">
       <lazy-component class="module">
-          <van-cell-group>
-            <van-cell is-link center :value="item.user.username" @click="toZoom(item)">
-              <div class="user-info-bar" slot="title">
-                <div class="info flex flex-align" v-if='item.user'>
-                  <div class="avatar">
-                    <img :src="getAvatar(item.user.avatar)" />
-                  </div>
-                  <div class="promulgator flex flex-align">
-                    <div class="name">{{item.views}}次播放</div>
-                    <div class="time">{{timeAago(item.create_time)}}</div>
-                  </div>
-                </div> 
+        <van-cell-group>
+          <van-cell is-link center :value="item.user?item.user.username:''" @click="toZoom(item)">
+            <div class="user-info-bar" slot="title">
+              <div class="info flex flex-align" v-if='item.user'>
+                <div class="avatar">
+                  <img :src="getAvatar(item.user.avatar)" />
+                </div>
+                <div class="promulgator flex flex-align">
+                  <div class="time">{{timeAago(item.create_time)}}</div>
+                  <div class="play-num">{{item.views}}次播放</div>
+                </div>
               </div>
-            </van-cell>
-          </van-cell-group>
+            </div>
+          </van-cell>
+        </van-cell-group>
+      </lazy-component>
+      <lazy-component class="module">
+        <video-list title="相关视频" type='video' @refresh='refresh' />
       </lazy-component>
       <lazy-component>
-        <video-list title="相关视频"/>
+        <comment :item='item'/>
       </lazy-component>
     </div>
   </div>
@@ -32,12 +35,14 @@
 import axios from './../../lib/js/api'
 import { timeago } from './../../lib/js/util'
 import videoList from './../../module/video'
+import comment from './../../module/comment'
 import './../../../../static/ckplayer/ckplayer/ckplayer'
 
 export default {
   name: 'ckplayer',
   components: {
-    videoList
+    videoList,
+    comment
   },
   computed: {
     player() {
@@ -57,7 +62,8 @@ export default {
         seek: 0,
         video: []
       },
-      item:''
+      item: '',
+      hackReset: true
     }
   },
   created() {
@@ -85,43 +91,46 @@ export default {
         }
       })
     },
-    onClickLeft(){
-      if(this.$route.query.back){
+    onClickLeft() {
+      if (this.$route.query.back) {
         this.$router.push({
-          name:this.$route.query.back,
-          query:{
+          name: this.$route.query.back,
+          query: {
             id: this.$route.query.id
           }
         })
-      }else{
+      } else {
         this.$router.push({
-          name:'find'
+          name: 'find'
         })
       }
     },
-    getAvatar(img){
+    getAvatar(img) {
       let pos = img.indexOf('http://')
       let result
-      if(pos === 0) {
-         result = img.replace('http:', 'https:')
+      if (pos === 0) {
+        result = img.replace('http:', 'https:')
       } else {
-         result = img
+        result = img
       }
       return result
     },
-    timeAago(time){
-      return timeago(time*1000)
+    timeAago(time) {
+      return timeago(time * 1000)
     },
-    toZoom(item){
+    toZoom(item) {
       this.$router.push({
-        name:'zoom',
-        query:{
-          id:item.user_id,
+        name: 'zoom',
+        query: {
+          id: item.user_id,
           back: this.$route.name,
           post_id: item.post_id,
           user_id: item.user_id
         }
       })
+    },
+    refresh() {
+      location.reload()
     }
   }
 }
@@ -132,29 +141,23 @@ export default {
   margin: 0px auto;
 }
 
-.video-box{
+.video-box {
   overflow: hidden;
   height: 13.4375rem /* 215/16 */;
 }
 
-.avatar{
+.avatar {
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
-  margin-right: .3125rem /* 5/16 */;
+  margin-right: 0.3125rem /* 5/16 */;
 }
 
-.avatar img{
+.avatar img {
   border-radius: 50%;
 }
 
-.promulgator .name{
-  font-weight: 500;
-  color: #323233;
-  font-size: 1rem /* 16/16 */;
+.time {
+  font-size: 0.75rem /* 12/16 */;
   margin-right: .3125rem /* 5/16 */;
-}
-
-.time{
-  font-size: .75rem /* 12/16 */;
 }
 </style>

@@ -8,11 +8,12 @@
     <lazy-component class="module">
       <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template'/>
     </lazy-component>
-    <lazy-component class="module">
+    <lazy-component>
       <van-nav-bar title="班级动态" />
-      <van-list v-model="loading" :finished="finished" @load="onLoad">
+      <van-list v-model="loading" :finished="finished" @load="onLoad"  :finished-text="$store.state.slogan">
         <div class="list" v-if='list.length > 0'>
           <div class="item" v-for="(item,index) in list" :key="index">
+            <van-cell title="" is-link arrow-direction="down"  v-if='managerList.length > 1' @click="operation(item)"/>
             <van-cell>
               <graphic-crad :item="item" type="classHome"/>
             </van-cell>
@@ -25,6 +26,8 @@
     <van-popup v-model="releasePageShow" class="page-popup" position="bottom">
       <graphic @close='releasePageShow = false' />
     </van-popup>
+
+     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
   </div>
 </template>
 <script>
@@ -44,13 +47,29 @@ export default {
   },
   data() {
     return {
+      show:false,
+      managerList:[],
       freshList: [],
       list: [],
+      cardItem:'',
       listLength: "",
       releasePageShow: false,
       loading: false,
       finished: false,
       page:1,
+      actions: [{
+        name: '置顶',
+        type: 'top'
+      },{
+        name: '推荐',
+        type: 'recommend'
+      },{
+        name: '屏蔽',
+        type: 'shield'
+      },{
+        name: '删除',
+        type: 'delete'  
+      }]
     }
   },
   created() {
@@ -67,19 +86,57 @@ export default {
       this.releasePageShow = true
     },
     fetchData() {
+      axios.get('/book/MemberBanji/getList').then(res=>{
+        this.managerList = res.data.data
+      })
+
       axios.get(`/book/baby/getList?banji_id=${this.$route.query.id}`).then(res => {
         this.freshList = res.data.data
       })
     },
     onLoad() {
-      axios.get(`/book/SchoolArticle/getList?page=${this.page}&limit=10&banji_id=${this.$route.query.id}`).then(res => {
-        this.list = this.list.concat(res.data.data)
+      return axios.get(`/book/SchoolArticle/getList?page=${this.page}&limit=10&banji_id=${this.$route.query.id}&sort=top`).then(res => {
+        if(this.page == 1){
+          this.list = res.data.data
+        }else{
+          this.list = this.list.concat(res.data.data)
+        }
+      
         this.loading = false
         this.page++
         if (this.list.length >= res.data.count) {
           this.finished = true
         }
       })
+    },
+    operation(item){
+      this.show = true
+      this.cardItem = item
+    },
+    onSelect(item){
+      // if (item.type == 'delete') {
+      // //   axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
+      // //     let key 
+      // //     this.list.forEach((element,i) => {
+      // //       if(element.post_id == this.postId){
+      // //         key = i
+      // //       }
+      // //     })
+      // //     this.list.splice(key,1)
+      // //   })
+      // //   this.show = false
+
+      // //   this.$toast.success('删除成功')
+      // }
+
+      if(item.type == 'delete'){
+        axios.get(`/book/SchoolArticle/del?id=${this.cardItem.post_id}`).then(res=>{
+           this.show = false
+           this.$toast.success('删除成功')
+           this.page = 1
+           this.onLoad()
+        })
+      }
     }
   }
 };
@@ -91,5 +148,9 @@ export default {
 
 .class-zoom.no-padding{
   padding-top: 0;
+}
+
+.item{
+  margin-bottom: .625rem /* 10/16 */;
 }
 </style>

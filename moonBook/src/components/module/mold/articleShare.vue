@@ -28,9 +28,8 @@
         <img :src='dataURL' v-else>
       </transition>
     </div>
-    <div class="popup-btn">
-      <van-button class="theme-btn" :loading='isLoading' size="large" square :disabled='isDisabled' type="primary"
-        @click="toImage">
+    <div class="punch">
+      <van-button class="theme-btn" round size="normal" type="primary" :loading='isLoading' :disabled='isDisabled' @click="toImage">
         {{dataURL?'长按上图保存分享':'生成图片'}}
       </van-button>
     </div>
@@ -80,8 +79,9 @@ export default {
 </script>
 <style scoped>
 .screenshot {
-  overflow: hidden;
-  padding: .625rem /* 10/16 */;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100vh;
 }
 
 .image-wrapper {
@@ -96,6 +96,7 @@ export default {
 
 .screenshot .user {
   margin-bottom: 0.625rem /* 10/16 */;
+  padding: .625rem /* 10/16 */ 1.25rem /* 20/16 */;
 }
 
 .screenshot .user .avatar {
@@ -129,4 +130,14 @@ export default {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
+
+.popup-btn{
+  position: fixed;
+  bottom: 4.875rem /* 78/16 */;
+  left: 50%;
+  -webkit-transform: translate3d(-50%, 0, 0);
+  transform: translate3d(-50%, 0, 0);
+}
+
+
 </style>
