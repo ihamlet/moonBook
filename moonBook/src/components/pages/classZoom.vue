@@ -13,7 +13,7 @@
       <van-list v-model="loading" :finished="finished" @load="onLoad"  :finished-text="$store.state.slogan">
         <div class="list" v-if='list.length > 0'>
           <div class="item" v-for="(item,index) in list" :key="index">
-            <van-cell title="" is-link arrow-direction="down"  v-if='managerList.length > 1' @click="operation(item)"/>
+            <van-cell title="" is-link arrow-direction="down"  v-if='manage(item)' @click="operation(item)"/>
             <van-cell>
               <graphic-crad :item="item" type="classHome"/>
             </van-cell>
@@ -137,6 +137,15 @@ export default {
            this.onLoad()
         })
       }
+    },
+    manage(item){
+      let boolean = false
+      this.managerList.forEach(element => {
+        if(element.id == item.class_id || element.id == item.school_id){
+          boolean = true
+        }
+      })
+      return boolean
     }
   }
 };

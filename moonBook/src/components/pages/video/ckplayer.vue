@@ -1,20 +1,20 @@
 <template>
   <div class="video-page page-padding" v-if='hackReset'>
-    <van-nav-bar :zIndex='100' left-arrow left-text="返回" @click-left="onClickLeft" />
+    <van-nav-bar ref='headBar' :zIndex='100' left-arrow left-text="返回" @click-left="onClickLeft" />
     <div class="video-box" ref='videoDom'>
-      <div id="video"></div>
+      <div id="video" :class="!fixedHeaderBar?'fixed':''" :style="!fixedHeaderBar&&styleObject"></div>
     </div>
     <div class="container">
       <lazy-component class="module">
         <van-cell-group>
-          <van-cell is-link center :value="item.user?item.user.username:''" @click="toZoom(item)">
+          <van-cell center @click="toZoom(item)" :value='timeAago(item.create_time)'>
             <div class="user-info-bar" slot="title">
               <div class="info flex flex-align" v-if='item.user'>
                 <div class="avatar">
                   <img :src="getAvatar(item.user.avatar)" />
                 </div>
                 <div class="promulgator flex flex-align">
-                  <div class="time">{{timeAago(item.create_time)}}</div>
+                  <div class="name">{{item.user.username||''}}</div>
                   <div class="play-num">{{item.views}}次播放</div>
                 </div>
               </div>
@@ -62,9 +62,21 @@ export default {
         seek: 0,
         video: []
       },
+      styleObject:{
+        position:'fixed',
+        top:'0',
+        zIndex:10
+      },
       item: '',
-      hackReset: true
+      fixedHeaderBar:true,
+      domTop: 0,
+      hackReset: true,
+      scrollTop:0
     }
+  },
+  mounted() {
+    this.getDomTop()
+    window.addEventListener('scroll', this.handleScroll)
   },
   created() {
     this.fetchData().then(() => {
@@ -91,12 +103,24 @@ export default {
         }
       })
     },
+    handleScroll() {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      this.scrollTop = scrollTop
+      if ( this.domTop < this.scrollTop) {
+        this.fixedHeaderBar = false
+      } else {
+        this.fixedHeaderBar = true
+      }
+    },
+    getDomTop(){
+      this.domTop = this.$refs.videoDom.offsetTop
+    },
     onClickLeft() {
       if (this.$route.query.back) {
         this.$router.push({
           name: this.$route.query.back,
           query: {
-            id: this.$route.query.id
+            id: this.$route.query.page_id
           }
         })
       } else {
@@ -141,9 +165,10 @@ export default {
   margin: 0px auto;
 }
 
+#video,
 .video-box {
   overflow: hidden;
-  height: 13.4375rem /* 215/16 */;
+  height: 15rem /* 240/16 */;
 }
 
 .avatar {
@@ -156,8 +181,10 @@ export default {
   border-radius: 50%;
 }
 
-.time {
-  font-size: 0.75rem /* 12/16 */;
+.name{
+  font-size: 1rem /* 16/16 */;
+  color: #303133;
+  font-weight: 500;
   margin-right: .3125rem /* 5/16 */;
 }
 </style>

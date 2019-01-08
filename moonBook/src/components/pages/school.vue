@@ -5,7 +5,6 @@
       <search-bar :prompt='prompt' @show='isListShow = true' />
     </div>
     <div class="container" v-if='!isListShow'>
-
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <van-cell v-for="(item,index) in list" :key="index" is-link center @click="selectSchool(item)">
           <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>

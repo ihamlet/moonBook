@@ -1,5 +1,5 @@
 <template>
-  <div class="video">
+  <div class="video" v-if="videoList.length > 0">
     <van-cell title-class='cell-title' :title="title">
       <div class="icon" slot="icon">
         <i class="iconfont">&#xe68a;</i>
@@ -13,17 +13,13 @@
               <img :src="item.cover" :alt="`视频封面-${index}`">
             </div>
             <div class="video-info">
-              <div class="info flex flex-align" v-if='type=="video"'>
-                <div class="play-num">{{item.views}}次播放</div>
-                <div class="time">{{timeAago(item.create_time)}}</div>
-              </div>
-              <div class="user-info flex flex-align" v-if='type=="home"'>
+              <div class="user-info flex flex-align">
                 <div class="user-data flex flex-align">
                   <div class="avatar">
-                    <img :src="item.avatar" />
+                    <img :src="getAvatar(item.avatar || item.user.avatar)" />
                   </div>
                   <div class="name">
-                    {{item.nickname}}
+                    {{item.nickname || item.user.name}}
                   </div>
                 </div>
                 <div class="views">
@@ -101,6 +97,16 @@ export default {
     },
     timeAago(time) {
       return timeago(time * 1000)
+    },
+    getAvatar(img) {
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
     }
   }
 }
@@ -121,10 +127,6 @@ export default {
   overflow: hidden;
   border-radius: 0.3125rem /* 5/16 */;
   margin-bottom: 0.3125rem /* 5/16 */;
-}
-
-.video-info .info {
-  justify-content: space-between;
 }
 
 .icon .iconfont {

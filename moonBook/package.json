@@ -25,6 +25,7 @@
     "vue-amap": "^0.5.8",
     "vue-cropper": "^0.4.5",
     "vue-line-clamp": "^1.2.3",
+    "vue-photo-preview": "^1.1.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },

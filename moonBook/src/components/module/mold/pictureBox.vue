@@ -1,6 +1,6 @@
 <template>
   <div class="picture-box">
-    <div class="header-bar flex flex-align flex-justify" v-show="isFold">
+    <!-- <div class="header-bar flex flex-align flex-justify" v-show="isFold">
       <div class="avatar">
         <img :src="getAvatar(item.user.avatar)" :alt="item.user.name">
       </div>
@@ -11,8 +11,8 @@
     </div>
     <van-swipe :initial-swipe="imgIndex" :loop="false" @change="onChange">
       <van-swipe-item v-for="(list,index) in item.photos" :key="index" class="flex flex-align">
-        <div class="scroll-view" v-iscroll :class="[list.height > winH?'scroll':'']" @click="closePopup">
-          <img ref='imgHeight' class="img lazy" v-lazy="list.photo" :class="[list.height > winH?'scroll-img':'']" />
+        <div class="scroll-view" :class="[list.height/list.width > 18/9?'scroll':'']" @click="closePopup">
+          <img ref='imgHeight' class="img lazy" v-lazy="list.photo" :class="[list.height/list.width > 18/9?'scroll-img':'']" />
           <van-loading class="picture-loading" />
         </div>
       </van-swipe-item>
@@ -43,7 +43,9 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
+
+    <preview />
   </div>
 </template>
 <script>
@@ -59,11 +61,6 @@ export default {
   },
   components: {
     vipLevel
-  },
-  computed: {
-    winH() {
-      return window.innerHeight
-    }
   },
   data() {
     return {
@@ -144,6 +141,7 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 10
 }
 
 .picture-info,

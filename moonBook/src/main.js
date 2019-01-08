@@ -7,13 +7,27 @@ import App from './App'
 import router from './router'
 import store from './store/index'
 
+// 高德地图vue组件
 import VueAMap from 'vue-amap'
 
+//vant框架
 import Vant from 'vant'
 import 'vant/lib/index.css'
+
+// 懒加载
 import { Lazyload } from 'vant'
 
+// 文字溢出
 import lineClamp from 'vue-line-clamp'
+
+// 图片灯箱
+import preview from 'vue-photo-preview'
+import 'vue-photo-preview/dist/skin.css'
+let options = {
+  fullscreenEl: false
+}
+
+Vue.use(preview,options)
 
 Vue.use(Vuex)
 Vue.use(Vant)

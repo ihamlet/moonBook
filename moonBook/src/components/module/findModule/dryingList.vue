@@ -3,7 +3,6 @@
     <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
       <van-pull-refresh v-model="loading" @refresh="onRefresh">
         <div class="item" v-for="(item,index) in list" :key="index">
-          <div class="card-top-bg" v-if='item.isMe'></div>
           <van-cell>
             <div class="content">
               <graphic-crad :item="item" @follow="follow"/>
@@ -101,17 +100,5 @@ export default {
 .item {
   margin-bottom: 0.3125rem /* 5/16 */;
   position: relative;
-}
-
-.card-top-bg{
-  background: url('./../../../assets/img/card-top-bg.png');
-  background-size: cover;
-  background-position: bottom;
-  width: 10rem /* 160/16 */;
-  height: 4.375rem /* 70/16 */;
-  right: 0;
-  top: 0;
-  position: absolute;
-  z-index: 1;
 }
 </style>

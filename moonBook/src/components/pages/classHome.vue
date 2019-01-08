@@ -2,7 +2,7 @@
   <div class="class-home page-padding" v-if='hackReset'>
     <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?pageTitle:classInfo.title}} <i class="iconfont" v-if="managerList.length > 0">&#xe608;</i>
+        {{fixedHeaderBar?pageTitle:classInfo.title}} <i class="iconfont" v-if="managerList.length > 1 && actions != null">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -81,14 +81,17 @@ export default {
     actions() {
       let array = []
       this.managerList.forEach(element => {
-        let data = {
-          name: element.name,
-          subname: `${element.duty}-${element.desc}`,
-          id: element.id,
-          type: element.item_type
+        if(element.id = this.$route.query.id){
+          array = null
+        }else{
+          let data = {
+            name: element.name,
+            subname: `${element.duty}-${element.desc}`,
+            id: element.id,
+            type: element.item_type
+          }
+          array.push(data)
         }
-
-        array.push(data)
       })
 
       return array
@@ -169,9 +172,9 @@ export default {
           })
         }
       })
-      axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${to.query.id}`).then(res => {
-        vm.lateBook = res.data.data
-      })
+      // axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${to.query.id}`).then(res => {
+      //   vm.lateBook = res.data.data
+      // })
     })
   },
   mounted() {
@@ -227,7 +230,7 @@ export default {
       location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
     },
     cutover() {
-      if (this.managerList.length > 0) {
+      if (this.managerList.length > 1 && this.actions != null) {
         this.actionsheetShow = true
       }
     },

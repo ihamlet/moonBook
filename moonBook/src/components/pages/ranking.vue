@@ -318,7 +318,7 @@ export default {
         this.$router.push({
           name: 'apps-school',
           query: {
-            id: content.banji_id,
+            id: content.school_id,
             back: this.$route.name
           }
         })

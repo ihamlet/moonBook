@@ -153,8 +153,8 @@ function ckplayerConfig() {
 			variable: 'ckplayer', //播放函数(变量)名称
 			volume: 0.8, //默认音量，范围0-1
 			poster: '', //封面图片地址
-			autoplay: false, //是否自动播放
-			loop: false, //是否需要循环播放
+			autoplay: true, //是否自动播放
+			loop: true, //是否需要循环播放
 			live: false, //是否是直播
 			duration: 0, //指定总时间
 			seek: 0, //默认需要跳转的秒数

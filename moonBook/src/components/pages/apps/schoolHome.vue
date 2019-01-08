@@ -6,14 +6,14 @@
         <span class="text">{{$route.query.back?'返回':'首页'}}</span>
       </div>
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerList.length > 0">&#xe608;</i>
+        {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerList.length > 1">&#xe608;</i>
       </div>
     </van-nav-bar>
     <div class="container">
       <div class="header-card flex flex-align theme-school-background" ref="head">
         <div class="school-info">
           <div class="school-logo" v-if='schoolInfo.logo'>
-            <img :src="schoolInfo.logo" :alt="schoolInfo.title">
+            <img :src="schoolInfo.logo" :alt="schoolInfo.title" />
           </div>
           <div class="school-name" v-line-clamp:20="1">{{schoolInfo.title}}</div>
         </div>
@@ -97,19 +97,10 @@ export default {
         }, {
           name: '讲故事',
           iconClass: 'icon-jianggushi'
-        }, {
-          name: '书架',
-          iconClass: 'icon-shujia'
         }],
       tab: [{
-        title: '全部',
+        title: '学校动态',
         content: '',
-      }, {
-        title: '风采',
-        content: '',
-      }, {
-        title: '动态',
-        content: ''
       }]
     }
   },

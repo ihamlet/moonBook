@@ -29,7 +29,8 @@
           <van-row :gutter="4">
             <van-col :span="item.photos.length == 4?'12':'8'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
               <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']" @click="mediaLamp(item,photoIndex)">
-                <van-tag class="photo-tag" type="danger" v-if='photo.height > winH'>长图</van-tag>
+                
+                <van-tag class="photo-tag" type="danger" v-if='photo.height/photo.width > 18/9'>长图</van-tag>
               </div>
             </van-col>
           </van-row>
@@ -188,6 +189,7 @@ export default {
         query:{
           id: videoItem.post_id,
           user_id: this.item.user_id,
+          page_id: this.$route.query.id,
           back: this.$route.name
         }
       })

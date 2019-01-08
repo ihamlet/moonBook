@@ -83,22 +83,29 @@
             <i class="iconfont">&#xe72c;</i>发布
           </div>
         </van-nav-bar>
-        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-          <div class="no-list" v-if='list.length == 0'>
-            没有记录
-          </div>
-          <div class="list">
-            <div class="item" v-for="(item,index) in list" :key="index">
-              <van-cell>
-                <graphic-crad :item="item" type="babyHome" :avatar='childInfo.avatar' />
-              </van-cell>
-            </div>
-          </div>
-        </van-list>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated>
+          <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
+              <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+
+              </van-pull-refresh>
+            <!-- <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+              <div class="no-list" v-if='list.length == 0'>
+                没有记录
+              </div>
+              <div class="list">
+                <div class="item" v-for="(item,index) in list" :key="index">
+                  <van-cell>
+                    <graphic-crad :item="item" type="babyHome" :avatar='childInfo.avatar' />
+                  </van-cell>
+                </div>
+              </div>
+            </van-list> -->
+          </van-tab>
+        </van-tabs>
       </lazy-component>
     </div>
 
-    <slogan v-if="!childInfo.is_mine"/>
+    <slogan v-if="!childInfo.is_mine" />
 
     <van-popup v-model="showQrcode" class="card-popup">
       <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
@@ -174,7 +181,33 @@ export default {
       loading: false,
       finished: false,
       releasePageShow: false,
-      page: 1
+      isLoading: false,
+      page: 1,
+      tab: [{
+        title: '全部',
+        content: ''
+      }, {
+        title: '风采',
+        content: ''
+      }, {
+        title: '育儿',
+        content: ''
+      }, {
+        title: '才艺',
+        content: ''
+      }, {
+        title: '阅读',
+        content: ''
+      }, {
+        title: '国学',
+        content: ''
+      }, {
+        title: '讲故事',
+        content: ''
+      }, {
+        title: '荣誉',
+        content: ''
+      }]
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -214,16 +247,16 @@ export default {
       })
     },
     onClickLeft() {
-      if(this.$route.query.back){
+      if (this.$route.query.back) {
         this.$router.push({
-          name:this.$route.query.back,
-          query:{
-            id:this.$route.query.banji_id?this.$route.query.banji_id:this.$route.query.id,
+          name: this.$route.query.back,
+          query: {
+            id: this.$route.query.banji_id ? this.$route.query.banji_id : this.$route.query.id,
             back: this.$route.name,
             child_id: this.$route.query.id
           }
         })
-      }else{
+      } else {
         this.$router.push({
           name: "home"
         })
@@ -252,7 +285,16 @@ export default {
       }
     },
     onLoad() {
-      axios.get(`/book/SchoolArticle/getList?page=${this.page}&sort=new&child_id=${this.$route.query.id}`).then(res => {
+      let data = {
+        params: {
+          page: this.page,
+          sort: 'new',
+          child_id: this.$route.query.id
+        }
+      }
+      
+
+      axios.get('/book/SchoolArticle/getList', data).then(res => {
         this.page++
 
         this.list = this.list.concat(res.data.data)
@@ -262,6 +304,10 @@ export default {
           this.finished = true
         }
       })
+    },
+    onRefresh(){
+      this.page = 1
+      
     },
     toClassHome(childInfo) {
       if (childInfo.banji_id > 0) {
@@ -346,7 +392,6 @@ export default {
 .school {
   width: 10rem /* 160/16 */;
   text-align: left;
-  margin-top: 0.3125rem /* 5/16 */;
   color: #fff;
 }
 
@@ -419,8 +464,12 @@ export default {
   display: block;
 }
 
-.name{
-  margin-right: .625rem /* 10/16 */;
+.name {
+  margin-right: 0.625rem /* 10/16 */;
+}
+
+.item {
+  margin-bottom: 0.625rem /* 10/16 */;
 }
 </style>
 <style>

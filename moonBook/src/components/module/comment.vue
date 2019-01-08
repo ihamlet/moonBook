@@ -28,7 +28,6 @@
             </div>
             <div class="user-data">
               <span class="user-name">{{item.username}}</span>
-              <span class="date">{{timeAago(item.create_time)}}</span>
             </div>
           </div>
           <div class="contents">
@@ -62,7 +61,10 @@
                 </div>
               </div>
             </div>
-            <div class="theme-color" @click="showField(item)">回复</div>
+            <div class="comment-bar flex flex-align">
+              <div class="date">{{timeAago(item.create_time)}}</div>
+              <div class="theme-color" @click="showField(item)">回复</div>
+            </div>
           </div>
         </van-cell>
       </van-list>
@@ -238,8 +240,8 @@ export default {
 }
 
 .avatar {
-  width: 2.875rem /* 46/16 */;
-  height: 2.875rem /* 46/16 */;
+  width: 2rem /* 32/16 */;
+  height: 2rem /* 32/16 */;
   border-radius: 50%;
   overflow: hidden;
   margin-right: 0.625rem /* 10/16 */;
@@ -257,10 +259,11 @@ export default {
 .date {
   font-size: 0.75rem /* 12/16 */;
   color: #909399;
+  margin-right: .625rem /* 10/16 */;
 }
 
 .contents {
-  padding: 0.625rem /* 10/16 */ 0 0.625rem /* 10/16 */ 3.4375rem /* 55/16 */;
+  padding: 0.625rem /* 10/16 */ 0 0.625rem /* 10/16 */ 2.625rem /* 42/16 */;
   font-size: 1rem /* 16/16 */;
 }
 
@@ -269,7 +272,7 @@ export default {
 }
 
 .reply {
-  margin-left: 3.4375rem /* 55/16 */;
+  margin-left: 2.625rem /* 42/16 */;
 }
 
 .footer-bar {
