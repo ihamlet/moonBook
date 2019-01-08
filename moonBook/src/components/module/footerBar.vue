@@ -1,7 +1,7 @@
 <template>
   <div class="footer-bar flex flex-align">
     <van-tabbar :zIndex='100' v-model="active" fixed>
-      <van-tabbar-item v-for='(item,index) in userTabBtn' :key="index" :to='goPage(item.path)' @click="onClick(index)">
+      <van-tabbar-item v-for='(item,index) in userTabBtn' :key="index" :to='goPage(item)' @click="onClick(index)">
         <i class="iconfont" :class="[props.active?`${item.iconClass}fill bounceIn animated`: item.iconClass]" slot='icon'
           slot-scope="props"></i>
         <span>{{item.name}}</span>
@@ -10,65 +10,9 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
 export default {
   name: 'footer-bar',
-  computed: {
-    ...mapGetters(['userDataState']),
-    userTabBtn() {
-      let array = []
-
-      if (this.$route.name == 'baby-home') {
-        array = [
-          {
-            iconClass: 'icon-banji',
-            name: '班级',
-            path: 'class-home'
-          },
-          {
-            iconClass: 'icon-release',
-            name: '发布',
-            path: ''
-          },
-          {
-            iconClass: 'icon-crown',
-            name: '宝贝',
-            path: 'baby-home'
-          }
-        ]
-      } else {
-        array = [
-          {
-            iconClass: 'icon-home',
-            name: '首页',
-            path: '/'
-          },
-          {
-            iconClass: 'icon-faxian',
-            name: '发现',
-            path: 'find'
-          },
-          {
-            iconClass: 'icon-release',
-            name: '发布',
-            path: ''
-          },
-          {
-            iconClass: 'icon-banji',
-            name: '班级',
-            path: 'class-home'
-          },
-          {
-            iconClass: 'icon-people',
-            name: '我的',
-            path: 'my'
-          }
-        ]
-      }
-
-      return array
-    }
-  },
+  props: ['userTabBtn'],
   data() {
     return {
       active: 0
@@ -83,24 +27,20 @@ export default {
     }
   },
   methods: {
-    goPage(router) {
-      if (router == 'class-home') {
-        return `${router}?id=${this.userDataState.banji_id}`
-      } else if (router == 'baby-home') {
-        return `${router}?id=${this.userDataState.id}`
-      } else {
-        return router
+    goPage(item) {
+      let path = ''
+      if(item.id){
+        path = `${item.path}?id=${item.id}`
+      }else{
+        path = item.path
       }
+
+      return path
     },
     onClick(index) {
-      if (this.$route.name == 'baby-home') {
-        if (index == 1) {
-          this.$emit('release')
-        }
-      } else {
-        if (index == 2) {
-          this.$emit('release')
-        }
+
+      if (index == 2) {
+        this.$emit('release')
       }
 
       this.active = this.$route.meta.tabActive
@@ -128,7 +68,10 @@ export default {
   font-size: 1.3125rem /* 21/16 */;
 }
 
-.footer-bar .van-tabbar-item.van-tabbar-item--active .van-tabbar-item__icon i.iconfont,
+.footer-bar
+  .van-tabbar-item.van-tabbar-item--active
+  .van-tabbar-item__icon
+  i.iconfont,
 .footer-bar .van-tabbar-item.van-tabbar-item--active .van-tabbar-item__text {
   background: linear-gradient(135deg, #00bcd4, #409eff);
   -webkit-background-clip: text;
@@ -174,6 +117,14 @@ export default {
 }
 .icon-faxianfill:before {
   content: '\e621';
+}
+
+.icon-school::before {
+  content: '\e68c';
+}
+
+.icon-schoolfill::before {
+  content: '\e63a';
 }
 
 /* 书架 */

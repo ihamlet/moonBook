@@ -62,7 +62,6 @@
 import axios from './../lib/js/api'
 
 import QRCode from "qrcode"
-import pictureBox from "./../module/mold/pictureBox"
 import share from './../module/mold/share'
 import articleShare from './../module/mold/articleShare'
 import comment from './../module/comment'
@@ -72,7 +71,6 @@ import vipLevel from './../module/animate/svg/vipLevel'
 export default {
   name: 'detailsArticle',
   components: {
-    pictureBox,
     articleContent,
     comment,
     share,
@@ -86,7 +84,6 @@ export default {
       themeBarSearch: false,
       imageShow: false,
       headBar: false,
-      pictureShow: false,
       shareShow: false,
       imgIndex: '',
       qrImage:'',
@@ -123,7 +120,7 @@ export default {
     },
     onClickLeft() {
       this.$router.push({
-        name: 'find'
+        name: 'apps-find'
       })
     },
     qrcode() {

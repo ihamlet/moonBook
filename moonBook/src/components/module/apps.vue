@@ -28,14 +28,9 @@ export default {
         pathName: '',
         id: ''
       }, {
-        iconClass: 'icon-zoom',
-        name: '爸妈专区',
-        pathName: '',
-        id: ''
-      }, {
-        iconClass: 'icon-article',
-        name: '教育头条',
-        pathName: '',
+        iconClass: 'icon-find',
+        name: '发现',
+        pathName: 'apps-find',
         id: ''
       }]
 
@@ -62,10 +57,10 @@ export default {
 <style scoped>
 .icon-school::before {
   content: '\e636';
-  background: linear-gradient(127deg, #ffeb3b, #ff9800);
+    background: linear-gradient(127deg, #cddc39, #00BCD4);
   -webkit-background-clip: text;
   color: transparent;
-  text-shadow: 0 0.0625rem /* 1/16 */ 0.375rem /* 6/16 */ rgba(255, 152, 0, 0.3);
+  text-shadow: 0 0.0625rem /* 1/16 */ 0.375rem /* 6/16 */ rgba(0, 188, 212, 0.3);
 }
 
 .icon-story::before {
@@ -74,6 +69,14 @@ export default {
   -webkit-background-clip: text;
   color: transparent;
   text-shadow: 0 0.0625rem /* 1/16 */ 0.375rem /* 6/16 */ rgba(233, 30, 99, 0.3);
+}
+
+.icon-find::before{
+  content: '\e64b';
+  background: linear-gradient(127deg, #ffeb3b, #ff9800);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 0.0625rem /* 1/16 */ 0.375rem /* 6/16 */ rgba(255, 152, 0, 0.3);
 }
 
 .icon-zoom::before {

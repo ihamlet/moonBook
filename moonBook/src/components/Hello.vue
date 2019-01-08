@@ -8,7 +8,7 @@
       <div class="refresh" v-if='hackReset'>
         <router-view />
       </div>
-      <footer-bar v-if='$route.meta.isFooterBar' @release="isGraphicShow = true"/>
+      <footer-bar v-if='$route.meta.isFooterBar' @release="isGraphicShow = true" :userTabBtn='userTabBtn'/>
     </div>
 
     <van-popup v-model="isGraphicShow" class="page-popup" position="bottom" get-container='#app'>
@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from './lib/js/api'
 import 'animate.css'
 import startPage from './module/startPage'
 import graphic from './module/release/graphic'
-import { mapActions } from 'vuex'
+import { mapActions,mapGetters } from 'vuex'
 import footerBar from './../components/module/footerBar'
 
 export default {
@@ -31,6 +31,42 @@ export default {
     startPage,
     footerBar,
     graphic
+  },
+  computed: {
+    ...mapGetters(['userDataState']),
+    userTabBtn(){
+      let array = [
+        {
+          iconClass: 'icon-home',
+          name: '首页',
+          path: '/'
+        },
+        {
+          iconClass: 'icon-banji',
+          name: '班级',
+          path: 'class-home',
+          id: this.userDataState.banji_id,
+        },
+        {
+          iconClass: 'icon-release',
+          name: '发布',
+          path: ''
+        },
+        {
+          iconClass: 'icon-crown',
+          name: '宝贝',
+          path: 'baby-home',
+          id: this.userDataState.child_id
+        },
+        {
+          iconClass: 'icon-people',
+          name: '我的',
+          path: 'my'
+        }
+      ]
+
+      return array
+    }
   },
   data () {
     const self = this

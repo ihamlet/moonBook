@@ -1,6 +1,6 @@
 <template>
   <div class="find page-padding">
-    <van-nav-bar :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title" />
+    <van-nav-bar :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title" left-text="首页" left-arrow @click-left="onClickLeft"/>
     <lazy-component class="module">
        <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname"/>
     </lazy-component>
@@ -18,9 +18,9 @@
   </div>
 </template>
 <script>
-import axios from './../lib/js/api'
-import freshList from './../module/findModule/freshList'
-import dryingList from './../module/findModule/dryingList'
+import axios from './../../lib/js/api'
+import freshList from './../../module/findModule/freshList'
+import dryingList from './../../module/findModule/dryingList'
 
 export default {
   name: 'find',
@@ -63,7 +63,6 @@ export default {
   },
   methods: {
     fetchData() {
-
       let data = {
         params:{
           tid: this.$route.query.tid
@@ -72,6 +71,11 @@ export default {
 
       axios.get('/book/SchoolArticle/recommendUsers',data).then(res => {
         this.freshList = res.data
+      })
+    },
+    onClickLeft(){
+      this.$router.push({
+        name:'home'
       })
     }
   }

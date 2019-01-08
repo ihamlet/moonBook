@@ -4,68 +4,20 @@
       <div class="title" v-if='item.template_id!=1'>{{item.title}}</div>
       <div class="main">
         <div class="media-content">
-          <!-- 图片 -->
-          <div class="media img" v-if='item.template_id == 1 && item.hasvideo == 0 && item.hasaudio == 0'>
-            <van-row gutter="4">
-              <van-col :span="8" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-                <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']"
-                  @click="mediaLamp(item,photoIndex)"></div>
-              </van-col>
-            </van-row>
-          </div>
-          <!-- 视频 -->
-          <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
-            <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
-              <i class="iconfont" @click="toVideoPage(videoItem)">&#xe602;</i>
-              <img :src="`${videoItem.photo}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`" alt="视频封面" />
-            </div>
-          </div>
-          <!-- 音频 -->
-          <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
-            <audio controls="controls" v-for='(audioItem,audioIndex) in item.photos' :key="audioIndex">
-              <source :src="audioItem.photo">
-            </audio>
-          </div>
+          <media :item='item'/>
         </div>
-        <div class="text" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
       </div>
     </article>
-
-    <van-popup v-model="pictureShow" class="picture-box-popup" get-container='#app'>
-      <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item" />
-    </van-popup>
   </div>
 </template>
 <script>
-import pictureBox from './../module/mold/pictureBox'
+import media from './../module/mold/media'
 
 export default {
   name: 'article-content',
   props: ['item', 'type'],
   components: {
-    pictureBox
-  },
-  data() {
-    return {
-      imgIndex: '',
-      pictureShow: false
-    }
-  },
-  methods: {
-    mediaLamp(item, photoIndex) {
-      this.pictureShow = true
-      this.imgIndex = photoIndex
-    },
-    toVideoPage(videoItem){
-      this.$router.push({
-        name:'video-page',
-        query:{
-          id: videoItem.post_id,
-          user_id: this.item.user_id,
-          back: this.$route.name
-        }
-      })
-    }
+    media
   }
 }
 </script>

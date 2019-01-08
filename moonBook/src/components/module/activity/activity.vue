@@ -21,7 +21,7 @@ export default {
     methods: {
         toFind(){
             this.$router.push({
-                name:'find',
+                name:'apps-find',
                 query:{
                     tid: 5,
                     pageTitle:'亲子任务'

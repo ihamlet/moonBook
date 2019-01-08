@@ -134,7 +134,7 @@ export default {
         })
       }else{
         this.$router.push({
-          name: 'find'
+          name: 'apps-find'
         })
       }
     },

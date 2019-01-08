@@ -22,33 +22,8 @@
           <van-button class="theme-btn" type="primary" size='mini' plain v-if='item.isSubscribe == 0' @click="follow(item)"> + 关注</van-button>
         </div>
       </div>
-      <div class="text" v-line-clamp:20="2" v-html="item.details" @click="toArticle(item)"></div>
-      <!-- 图片  -->
-      <div class="media img" v-if='item.hasvideo!=1&&item.hasaudio!=1'>
-        <div :class="item.photos.length == 4 ? 'layout-4':'layout-9'">
-          <van-row :gutter="4">
-            <van-col :span="item.photos.length == 4?'12':'8'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-              <div class="img-grid" v-lazy:background-image="photo.thumb" :class="[photo.thumb?'transparent':'']" @click="mediaLamp(item,photoIndex)">
-                
-                <van-tag class="photo-tag" type="danger" v-if='photo.height/photo.width > 18/9'>长图</van-tag>
-              </div>
-            </van-col>
-          </van-row>
-        </div>
-      </div>
-      <!-- 视频 -->
-      <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
-        <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
-            <i class="iconfont" @click="toVideoPage(videoItem)">&#xe602;</i>
-            <img :src="`${videoItem.photo}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`" alt="视频封面"/>
-        </div>
-      </div>
-      <!-- 音频 -->
-      <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
-        <audio controls="controls" v-for='(audioItem,audioIndex) in item.photos' :key="audioIndex">
-          <source :src="audioItem.photo">
-        </audio>
-      </div>
+
+      <media :item='item' type='crad'/>
 
       <div class="temp-type">
         <van-tag type="primary" plain v-if='item.school_id > 0'>
@@ -76,10 +51,6 @@
       </div>
     </div>
 
-    <van-popup v-model="pictureShow" class="picture-box-popup" get-container='#app'>
-      <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item"/>
-    </van-popup>
-
     <van-actionsheet v-model="shareShow" title="分享" get-container='#app'>
       <share @show='imageShow = true' />
     </van-actionsheet>
@@ -93,24 +64,22 @@
 <script>
 import axios from "./../../lib/js/api"
 import QRCode from "qrcode"
-import pictureBox from "./../mold/pictureBox"
 import vipLevel from './../animate/svg/vipLevel'
 import share from './../mold/share'
 import taskCard from './taskCard'
-import articleShare from './../../module/mold/articleShare'
-// import videoBox from './../mold/videoBox'
+import articleShare from './../mold/articleShare'
+import media from './../mold/media'
 import { timeago } from './../../lib/js/util'
 
 export default {
   name: "graphic-crad",
   props: ["item", "type",'avatar'],
   components: {
-    pictureBox,
     share,
     articleShare,
     taskCard,
     vipLevel,
-    // videoBox
+    media
   },
   computed: {
     winH(){
@@ -120,14 +89,11 @@ export default {
   data() {
     return {
       imgIndex: 0,
-      pictureShow: false,
-      // videoShow:false,
       articleShow: false,
       shareShow:false,
       imageShow:false,
       qrImage:'',
-      link:'',
-      // videoItem:''
+      link:''
     }
   },
   methods: {
@@ -136,11 +102,6 @@ export default {
       axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
         item.zan_num = res.data.data.like
       })
-    },
-    mediaLamp(item, photoIndex) {
-      this.pictureShow = true
-      this.imgIndex = photoIndex
-      this.item = item
     },
     toArticle(item,point){
       this.$router.push({
@@ -245,8 +206,8 @@ export default {
 }
 
 .avatar img {
-  width: 3.125rem /* 50/16 */;
-  height: 3.125rem /* 50/16 */;
+  width: 2.625rem /* 42/16 */;
+  height: 2.625rem /* 42/16 */;
   border-radius: 50%;
 }
 
@@ -263,10 +224,6 @@ export default {
   margin-left: 0.625rem /* 10/16 */;
 }
 
-.layout-4{
-  width: 70%;
-}
-
 .task{
   margin-top: .625rem /* 10/16 */;
 }
@@ -274,11 +231,5 @@ export default {
 .user-card{
   position: relative;
   z-index: 2;
-}
-
-.photo-tag{
-  position: absolute;
-  right: .3125rem /* 5/16 */;
-  bottom: .3125rem /* 5/16 */;
 }
 </style>

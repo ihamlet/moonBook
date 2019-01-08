@@ -177,7 +177,7 @@ export default {
 
       array.push({
         title: '发现',
-        name: 'find'
+        name: 'apps-find'
       })
 
       if (this.userDataState.child_id > 0) {
@@ -290,7 +290,7 @@ export default {
         }
 
         this.result.forEach(e => {
-          if (e == 'find') {
+          if (e == 'apps-find') {
             data.to_school = 1
           }
 
