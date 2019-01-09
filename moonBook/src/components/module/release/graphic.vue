@@ -1,10 +1,9 @@
 <template>
   <div class="graphic">
-    <van-progress :percentage="process" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
     <van-nav-bar left-text="取消" @click-left="onClickLeft" :border='false' @click-right="onClickRight">
       <div class="user-info" slot='title'>
         <div class="avatar">
-          <img :src="userDataState.avatar" />
+          <img :src="getAvatar(userDataState.avatar)" />
         </div>
       </div>
       <div class="head-bar-btn theme-color" slot="right">
@@ -16,68 +15,42 @@
     </van-nav-bar>
     <div class="textarea-module">
       <van-cell-group>
-        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！"
-          rows="4" autosize />
+        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4"
+          autosize />
         <van-tag class="tag" type="primary" v-if='cateName'> #{{cateName}}</van-tag>
-        <div class="media flex flex-column">
-          <div class="theme-color" v-for='(list,index) in mediaContent' :key="index">
-            <div class="file-name flex flex-align">
-              <i class="iconfont">&#xe61f;</i>
-              {{list.name}}
-              <i class="iconfont clear-file" @click="deletePhoto(index)">&#xe683;</i>
-            </div>
-          </div>
-        </div>
         <van-cell>
           <div class="flex flex-align">
-            <div class="upload-media flex flex-align">
-              <div class="btn-video" @click="fileVideo">
-                <i class="iconfont">&#xe611;</i>
-              </div>
-              <div class="btn-audio" @click="fileAudio">
-                <i class="iconfont">&#xe613;</i>
-              </div>
-              <div class="btn-video" @click="uploadVideo">
-                <i class="iconfont">&#xe625;</i>
-              </div>
-              <div class="btn-audio" @click="uploadAudio">
-                <i class="iconfont">&#xe627;</i>
-              </div>
-            </div>
             <div class="topic theme-color" @click="toTopicPage">
               #选择分类
             </div>
             <div class="text-length" :class="[grapicData.text.length > 12000?'danger':'']" v-if='grapicData.text.length>0'>{{grapicData.text.length}}</div>
           </div>
         </van-cell>
-        <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
-        <input type="file" accept="audio/*" ref='selectFileAudio' data-type='audio' hidden @change='doUpload'>
-        <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
-        <input type="file" accept="audio/*" capture="microphone" ref='fileAudio' data-type='audio' hidden @change='doUpload'>
+        <van-progress :percentage="process" v-if='process > 0' :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
       </van-cell-group>
       <van-cell-group>
-        <van-cell title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true"/>
+        <van-cell title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
       </van-cell-group>
     </div>
     <div class="upload-module flex wrap">
       <van-cell>
         <van-row gutter="4">
           <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
-            <div class="preview img-grid" v-lazy:background-image='item.thumb' v-if="!item.media" :class="[item.thumb?'transparent':'']">
+            <div class="preview img-grid" v-lazy:background-image='item.thumb' :class="[item.thumb?'transparent':'']">
               <i class="iconfont" @click="deletePhoto(index)">&#xe683;</i>
             </div>
           </van-col>
           <van-col :span="8" v-if='9 > imagesLength'>
-            <van-uploader class="img-grid" :after-read="onRead" multiple>
+            <div class="img-grid" @click="UploadTypeShow = true">
               <div class="photo-upload">
-                <i class="iconfont">&#xe607;</i>
+                <i class="iconfont">&#xe664;</i>
+                <span class="directions">照片/视频</span>
               </div>
-            </van-uploader>
+            </div>
           </van-col>
         </van-row>
       </van-cell>
     </div>
-
     <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
       <van-checkbox-group v-model="result">
         <div class="form-title">同步到</div>
@@ -89,11 +62,19 @@
       </van-checkbox-group>
     </van-popup>
 
+    <div style="padding:10px" class="theme-color" @click="toPublishing">测试入口发布长文</div>
+
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
-      <topic-list @close='show = false' @select='selectTag'/>
+      <topic-list @close='show = false' @select='selectTag' />
     </van-popup>
 
-    <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect"  @cancel="actionShow = false"/>
+    <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="actionShow = false" />
+    <van-actionsheet v-model="UploadTypeShow" :actions="uploadType" cancel-text="取消" @select="onUploadTypeSelect"
+      @cancel="UploadTypeShow = false" />
+
+    <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
+    <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
+    <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
   </div>
 </template>
 <script>
@@ -112,11 +93,11 @@ export default {
     imagesLength() {
       return this.grapicData.photos.length
     },
-    synchronous(){
+    synchronous() {
       let array = []
-      this.resultList.forEach(element =>{
+      this.resultList.forEach(element => {
         this.result.forEach(e => {
-          if(e == element.name){
+          if (e == element.name) {
             array.push(element.title)
           }
         })
@@ -128,10 +109,11 @@ export default {
     let self = this
     return {
       result: [],
-      isResultShow:false,
+      isResultShow: false,
       resultList: '',
       show: false,
       actionShow: false,
+      UploadTypeShow: false,
       grapicData: {
         text: '',
         photos: []
@@ -140,14 +122,27 @@ export default {
       mediaContent: [],
       process: 0,
       photoLength: 0,
-      cateId:'',
-      cateName:'',
-      actions:[{
+      cateId: '',
+      cateName: '',
+      actions: [{
         name: '保存草稿',
         type: 'save'
-      },{
+      }, {
         name: '不保存',
         type: 'noSave'
+      }],
+      uploadType: [{
+        name: '从手机选择图片',
+        type: 'photo',
+        index: 0,
+      }, {
+        name: '上传视频',
+        type: 'fileVideo',
+        index: 1,
+      }, {
+        name: '拍摄视频',
+        type: 'uploadVideo',
+        index: 2,
       }]
     }
   },
@@ -167,83 +162,49 @@ export default {
   },
   methods: {
     fetchData() {
-
       // 从本地存储获取发布数据
-      if(localStorage.getItem('grapicData')){
+      if (localStorage.getItem('grapicData')) {
         this.grapicData = JSON.parse(localStorage.getItem('grapicData'))
       }
-
       let array = []
-
       array.push({
         title: '发现',
         name: 'apps-find'
       })
-
       if (this.userDataState.child_id > 0) {
         array.push({
           title: `${this.userDataState.child_name}@主页`,
           name: 'baby-home'
         })
       }
-
       if (this.userDataState.banji_id > 0) {
         array.push({
           title: `${this.userDataState.child_name}@班级`,
           name: 'class-zoom'
         })
       }
-
       this.resultList = array
-
       array.forEach(e => {
         this.result.push(e.name)
       })
-
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
       })
     },
     onRead(file) {
-      console.log(file)
-
-      let config = {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      }
-
       let array = []
-
       if (file.length) {
         array = file
       } else {
         array.push(file)
       }
-
       array.forEach(element => {
-        
-        let img = new Image()
-        img.src = element.content
-
         if (this.photoLength < 9) {
           this.photoLength++
           this.grapicData.photos.isLoading = true
-          compress(element.content, 600, 0.618, 'blob').then(val => {
+          compress(element.content, 1200, 0.8, 'blob').then(val => {
             val.toBlob((blob) => {
-              let fd = new FormData()
-              fd.append('file', blob, element.file.name)
-              axios.post('/book/file/upload', fd, config).then((res) => {
-                if (res.data.status === 1) {
-                  this.grapicData.photos.push({
-                    photo: res.data.data.path,
-                    thumb: res.data.data.thumb,
-                    height: img.height || 0,
-                    width: img.width || 0,
-                    isLoading: false
-                  })
-                } else {
-                  this.$toast.fail('上传失败,请重新上传')
-                }
-              })
+              this.upOssPhoto(blob, element.file, element.content)
             })
           })
         } else {
@@ -254,22 +215,22 @@ export default {
       })
     },
     onClickLeft() {
-      if(!this.grapicData.text.length && !this.grapicData.photos.length){
+      if (!this.grapicData.text.length && !this.grapicData.photos.length) {
         this.$emit('close')
         this.cateName = ''
         this.cateId = ''
-      }else{
+      } else {
         this.actionShow = true
       }
     },
-    onSelect(item){
-      if(item.type == 'save'){
+    onSelect(item) {
+      if (item.type == 'save') {
         localStorage.setItem('grapicData', JSON.stringify(this.grapicData))
         this.$emit('close')
         this.actionShow = false
-      }else{
+      } else {
         this.$emit('close')
-        localStorage.setItem('grapicData','')
+        localStorage.setItem('grapicData', '')
         this.actionShow = false
 
         this.grapicData = {
@@ -312,7 +273,6 @@ export default {
     },
     deletePhoto(index) {
       this.grapicData.photos.splice(index, 1)
-      this.mediaContent.splice(index, 1)
       this.photoLength--
     },
     toTopicPage() {
@@ -321,21 +281,27 @@ export default {
     toggle(index) {
       this.$refs.checkboxes[index].toggle()
     },
-    uploadVideo() {
-      this.$refs.fileVideo.click()
-    },
-    uploadAudio() {
-      this.$refs.fileAudio.click()
-    },
-    fileVideo(){
-      this.$refs.selectFileVideo.click()
-    },
-    fileAudio(){
-      this.$refs.selectFileAudio.click()
+    onUploadTypeSelect(item) {
+      switch (item.index) {
+        case 0:
+          this.$refs.selectPhoto.$refs.input.click()
+        break;
+        case 1:
+          this.$refs.selectFileVideo.click()
+        break;
+        case 2:
+          this.$refs.fileVideo.click()
+        break;
+      }
+
+      this.UploadTypeShow = false
     },
     doUpload(e) {
       let file = e.target.files[0]
       let type = e.target.dataset.type
+      this.upOssMedia(type, file)
+    },
+    upOssMedia(type, file) {
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
@@ -367,18 +333,63 @@ export default {
           is_audio: type === 'audio' ? 1 : 0,
           is_video: type === 'video' ? 1 : 0,
           photo: path,
-          thumb: ''
+          thumb: `${path}?x-oss-process=video/snapshot,t_13000,f_jpg,w_0,h_0,m_fast`
         })
-        this.mediaContent.push({
-          name: file.name,
-          type: type
-        })
-
       })
     },
-    selectTag(tag){
+    upOssPhoto(blob, file, base64) {
+      let img = new Image()
+      img.src = base64
+
+      let fd = new FormData()
+      let url = this.ossSign.host.replace('http:', 'https:')
+      let key = this.ossSign.dir + '/' + Date.now() + file.name
+      let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
+
+      fd.append('key', key)
+      fd.append('OSSAccessKeyId', this.ossSign.accessid)
+      fd.append('policy', this.ossSign.policy)
+      fd.append('success_action_status', 200)
+      fd.append('signature', this.ossSign.signature)
+      fd.append('file', blob, file.name)
+
+      axios({
+        url: url,
+        data: fd,
+        method: 'post',
+        onUploadProgress: p => {
+          let percent = 100 * (p.loaded / p.total)
+          this.process = percent
+        }
+      }).then((res) => {
+        this.process = 0
+        this.grapicData.photos.push({
+          photo: path,
+          thumb: `${path}?x-oss-process=image/resize,m_fill,h_200,w_200`,
+          height: img.height || 0,
+          width: img.width || 0,
+          isLoading: false
+        })
+      })
+    },
+    selectTag(tag) {
       this.cateName = tag.cate_name
       this.cateId = tag.cate_id
+    },
+    getAvatar(img) {
+      let pos = img.indexOf('http://')
+      let result
+      if (pos === 0) {
+        result = img.replace('http:', 'https:')
+      } else {
+        result = img
+      }
+      return result
+    },
+    toPublishing(){
+      this.$router.push({
+        name:'publishing'
+      })
     }
   }
 }
@@ -395,14 +406,21 @@ export default {
 
 .photo-upload {
   position: absolute;
-  top: 50%;
+  top: 56%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
+  display: grid;
+  text-align: center;
+  color: #9e9e9e;
 }
 
 .photo-upload i.iconfont {
-  font-size: 1.5rem /* 24/16 */;
-  color: #c0c4cc;
+  font-size: 2.1875rem /* 35/16 */;
+}
+
+.photo-upload .directions {
+  font-size: 0.8125rem /* 13/16 */;
+  margin-top: 0.625rem /* 10/16 */;
 }
 
 .preview {
@@ -414,8 +432,7 @@ export default {
   right: 0.3125rem /* 5/16 */;
   top: 0.3125rem /* 5/16 */;
   font-size: 1.5rem /* 24/16 */;
-  color: #000;
-  opacity: 0.72;
+  color: red;
 }
 
 .btn-video,
@@ -459,32 +476,12 @@ export default {
   text-align: center;
 }
 
-.media {
-  font-size: 0.75rem /* 12/16 */;
-  padding: 0.625rem /* 10/16 */ 1.25rem /* 20/16 */;
-  position: relative;
-}
-
-.media div {
-  height: 2.375rem /* 38/16 */;
-  line-height: 2.375rem /* 38/16 */;
-}
-
-.file-name {
-  position: relative;
-  justify-content: space-between;
-}
-
-.file-name .clear-file {
-  color: #f44336;
-}
-
 .progress {
   padding: 0.625rem /* 10/16 */;
 }
 
 .user-info .avatar {
-  padding: .3125rem /* 5/16 */ 0;
+  padding: 0.3125rem /* 5/16 */ 0;
 }
 
 .user-info .avatar img {
@@ -493,14 +490,14 @@ export default {
   border-radius: 50%;
 }
 
-.tag{
-  margin-left: .9375rem /* 15/16 */;
-  margin-top: .3125rem /* 5/16 */;
+.tag {
+  margin-left: 0.9375rem /* 15/16 */;
+  margin-top: 0.3125rem /* 5/16 */;
 }
 </style>
 <style>
-.cell-value.van-cell__value{
-  flex:5;
+.cell-value.van-cell__value {
+  flex: 5;
 }
 </style>
 

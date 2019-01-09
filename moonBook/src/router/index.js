@@ -43,6 +43,8 @@ import AppsSchool from '@/components/apps/school/schoolHome'
 import Register from '@/components/pages/register'
 import Login from '@/components/pages/login'
 
+import Publishing from '@/components/Publishing'
+
 
 Vue.use(Router)
 
@@ -68,7 +70,6 @@ export default new Router({
           component: Register,
           meta: {
             title: '注册',
-
             tabActive: 0,
             isFooterBar: false
           }
@@ -79,7 +80,6 @@ export default new Router({
           component: Login,
           meta: {
             title: '登录',
-
             tabActive: 4,
             isFooterBar: false
           }
@@ -90,7 +90,6 @@ export default new Router({
           component: Article,
           meta: {
             title: '正文',
-
             tabActive: 1,
             isFooterBar: false
           }
@@ -101,7 +100,6 @@ export default new Router({
           component: Notice,
           meta: {
             title: '消息中心',
-
             tabActive: 4,
             isFooterBar: true
           }
@@ -112,7 +110,6 @@ export default new Router({
           component: My,
           meta: {
             title: '我的',
-
             tabActive: 4,
             isFooterBar: true
           }
@@ -123,7 +120,6 @@ export default new Router({
           component: Zoom,
           meta: {
             title: 'BookZoom',
-
             tabActive: 1,
             isFooterBar: true
           }
@@ -134,7 +130,6 @@ export default new Router({
           component: ClassHome,
           meta: {
             title: '宝贝的班级',
-
             tabActive: 1,
             isFooterBar: true
           }
@@ -145,7 +140,6 @@ export default new Router({
           component: ClassZoom,
           meta: {
             title: '班级风采',
-
             tabActive: 4,
             isFooterBar: true
           }
@@ -156,7 +150,6 @@ export default new Router({
           component: cardList,
           meta: {
             title: '我的卡包',
-
             isFooterBar: false
           }
         },
@@ -201,12 +194,19 @@ export default new Router({
           }
         },
         {
+          path: '/edit/publishing',
+          name: 'publishing',
+          component: Publishing,
+          meta: {
+            isFooterBar: false
+          }
+        },
+        {
           path: '/book/details',
           name: 'book-details',
           component: BookDetails,
           meta: {
             title: '图书详情',
-
             isFooterBar: false
           }
         },
@@ -216,7 +216,6 @@ export default new Router({
           component: AddFamily,
           meta: {
             title: '加入家庭',
-
             isFooterBar: false
           }
         },
@@ -226,7 +225,6 @@ export default new Router({
           component: VerifyFamily,
           meta: {
             title: '成员审核',
-
             isFooterBar: false
           }
         },

@@ -81,11 +81,6 @@ export default {
     vipLevel,
     media
   },
-  computed: {
-    winH(){
-      return window.innerHeight
-    }
-  },
   data() {
     return {
       imgIndex: 0,

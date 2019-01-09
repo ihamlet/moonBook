@@ -6,7 +6,7 @@
         <van-row :gutter="4">
           <van-col :span="item.photos.length == 4?'12':'8'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
             <div class="img-grid" :class="[photo.height/photo.width > 18/9&&type!='crad'?'long':'']">
-              <img class="img-preview" :class="[photo.height/photo.width > 18/9?'long':'']" :src="photo.photo" preview />
+              <img class="img-preview" :class="[photo.height/photo.width > 18/9?'long':'']" :src="photo.thumb" :large="photo.photo" :preview='photo.post_id' />
               <van-tag class="photo-tag" type="danger" v-if='photo.height/photo.width > 18/9'>长图</van-tag>
             </div>
           </van-col>
@@ -36,6 +36,9 @@ export default {
       return {
 
       }
+  },
+  computed: {
+    
   },
   methods: {
     toArticle() {

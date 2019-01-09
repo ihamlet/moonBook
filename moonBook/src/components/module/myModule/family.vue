@@ -6,8 +6,8 @@
       </div>
       <div class="family-list" slot="title">
         <div class="flex flex-align">
-          <div class="avatar" v-for='(item,index) in list' :key="index" v-if='index < 5'>
-            <img :src="item.avatar" />
+          <div class="avatar" v-for='(item,index) in list' :key="index">
+            <img :src="getAvatar(item.avatar)" v-if='index < 5'/>
           </div>
         </div>
       </div>
@@ -69,6 +69,16 @@ export default {
           }
         })
       }
+    },
+    getAvatar(img){
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
     }
   }
 }

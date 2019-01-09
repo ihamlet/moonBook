@@ -16,7 +16,7 @@
     <div class="user-info flex flex-justify">
       <div class="info">
         <div class="avatar">
-          <img :src="userInfo.avatar" :alt="userInfo.name">
+          <img :src="getAvatar(userInfo.avatar)" :alt="userInfo.name">
         </div>
         <div class="name">{{userInfo.name}}</div>
       </div>
@@ -147,6 +147,20 @@ export default {
       this.$router.push({
         name:'notice'
       })
+    },
+    getAvatar(img) {
+      if(!img){
+        return img
+      }
+
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
     }
   }
 }

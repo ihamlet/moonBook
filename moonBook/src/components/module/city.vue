@@ -164,8 +164,9 @@ export default {
 </script>
 <style scoped>
 .fixed{
-    position: sticky;
+    position: absolute;
     top: 0;
+    left: 0;
     z-index: 1001;
     width: 100%;
 }
@@ -345,7 +346,8 @@ i.bubble.show{
 }
 
 .new-city{
-    background: #f2f2f2;   
+    background: #f2f2f2;
+    padding-top: 2.8125rem /* 45/16 */;
 }
 
 ul.recent li:first-child{

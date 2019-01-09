@@ -1,12 +1,75 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-    <title>阅亮书架</title>
-  </head>
-  <body class="theme">
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui" />
+  <!-- touch icon -->
+  <meta name="full-screen" content="yes">
+  <meta name="browsermode" content="application">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta id='status-bar' name="apple-mobile-web-app-status-bar-style" content="white">
+  <link rel="apple-touch-icon" href="/Public/lib/bookshelf/img/logo.png">
+  <meta name="apple-mobile-web-app-title" content="阅亮书架">
+  <!-- For Web App Manifest -->
+
+  <meta name="description" content="读书、加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。">
+  <meta name="keywords" content="阅亮书架">
+
+  <!-- Schema.org markup for Google+ -->
+  <meta itemprop="name" content="阅亮书架">
+  <meta itemprop="description" content="读书/加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。">
+  <meta itemprop="image" content="/Public/lib/bookshelf/img/logo.png">
+  <!-- Twitter meta -->
+  <meta name="twitter:card" content="summary" />
+  <!-- Open Graph meta -->
+  <meta property="og:title" content="阅亮书架" />
+  <meta property="og:description" content="读书、加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。" />
+  <meta property="og:site_name" content="阅亮书架(手机版)" />
+  <meta property="og:url" content="https://wwww.wmlife.net/" />
+  <meta property="og:image" content="/Public/lib/bookshelf/img/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="300" />
+  <meta property="og:image:height" content="300" />
+  <meta property="og:type" content="article" />
+  <!-- Wechat meta -->
+  <meta property="weixin:timeline_title" content="阅亮书架" />
+  <meta property="weixin:chat_title" content="阅亮书架" />
+  <meta property="weixin:description" content="读书、加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。" />
+  <meta property="weixin:image" content="/Public/lib/bookshelf/img/logo.png" />
+
+  <title>阅亮书架</title>
+
+  <script>
+    ;(function () {
+        window.setMeta = function (name, val) {
+          var meta = document.querySelectorAll('meta[property="' + name + '"], meta[name="' + name + '"]')
+          if (!meta.length) {
+            meta = document.createElement('meta')
+            meta.name = name
+            document.head.appendChild(meta)
+            meta = [meta]
+          }
+         meta[0].content = val || ''
+        }
+        window.getMeta = function (name) {
+          var meta = document.querySelectorAll('meta[property="' + name + '"], meta[name="' + name + '"]')
+          if (!meta.length) {
+            return ''
+          } else {
+            return meta[0].content
+          }
+        }
+        !getMeta('weixin:chat_title') && setMeta('weixin:chat_title', document.title)
+        !getMeta('weixin:timeline_title') && setMeta('weixin:timeline_title', document.title)
+        !getMeta('weixin:description') && setMeta('weixin:description', getMeta('og:description'))
+    })();
+    </script>
+</head>
+
+<body class="theme">
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>
