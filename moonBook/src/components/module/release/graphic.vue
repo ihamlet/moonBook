@@ -390,6 +390,7 @@ export default {
       this.$router.push({
         name:'publishing'
       })
+      this.$emit('close')
     }
   }
 }
