@@ -11,7 +11,6 @@
 <script>
 import axios from './lib/js/api'
 import 'animate.css'
-import graphic from './module/release/graphic'
 import { mapActions, mapGetters } from 'vuex'
 import footerBar from './../components/module/footerBar'
 
@@ -19,7 +18,6 @@ export default {
   name: 'apps-router-view',
   components: {
     footerBar,
-    graphic
   },
   computed: {
     ...mapGetters(['userDataState']),

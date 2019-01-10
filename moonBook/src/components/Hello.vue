@@ -17,7 +17,6 @@
 import axios from './lib/js/api'
 import 'animate.css'
 import startPage from './module/startPage'
-import graphic from './module/release/graphic'
 import { mapActions,mapGetters } from 'vuex'
 import footerBar from './../components/module/footerBar'
 
@@ -25,8 +24,7 @@ export default {
   name: 'Hello',
   components: {
     startPage,
-    footerBar,
-    graphic
+    footerBar
   },
   computed: {
     ...mapGetters(['userDataState']),
