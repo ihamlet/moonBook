@@ -2,8 +2,7 @@
   <div class="footer-bar flex flex-align">
     <van-tabbar :zIndex='100' v-model="active" fixed>
       <van-tabbar-item v-for='(item,index) in userTabBtn' :key="index" :to='goPage(item)' @click="onClick(index)">
-        <i class="iconfont" :class="[props.active?`${item.iconClass}fill bounceIn animated`: item.iconClass]" slot='icon'
-          slot-scope="props"></i>
+        <i class="iconfont" :class="[props.active?`${item.iconClass}fill bounceIn animated`: item.iconClass]" slot='icon' slot-scope="props"></i>
         <span>{{item.name}}</span>
       </van-tabbar-item>
     </van-tabbar>
@@ -29,9 +28,9 @@ export default {
   methods: {
     goPage(item) {
       let path = ''
-      if(item.id){
+      if (item.id) {
         path = `${item.path}?id=${item.id}`
-      }else{
+      } else {
         path = item.path
       }
 
@@ -40,7 +39,7 @@ export default {
     onClick(index) {
 
       if (index == 2) {
-        this.$emit('release')
+
       }
 
       this.active = this.$route.meta.tabActive
@@ -51,7 +50,6 @@ export default {
 <style scoped>
 .footer-bar {
   width: 100%;
-  overflow: hidden;
 }
 
 .footer-bar .van-tabbar {

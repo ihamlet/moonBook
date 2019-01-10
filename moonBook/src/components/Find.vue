@@ -26,7 +26,7 @@ export default {
         {
           iconClass: 'icon-faxian',
           name: '发现',
-          path: '/find'
+          path: '/apps-find'
         },
         {
           iconClass: 'icon-banji',

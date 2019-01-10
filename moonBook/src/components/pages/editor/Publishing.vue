@@ -1,6 +1,6 @@
 <template>
   <div class="publishing">
-    <van-nav-bar title="发布长文" left-text="返回" left-arrow @click-left="onClickLeft">
+    <van-nav-bar title="发布长文" left-text="取消" @click-left="actionShow = true">
       <div class="head-bar-btn theme-color" slot="right" @click="release">
         <i class="iconfont">
           &#xe72c;
@@ -18,16 +18,26 @@
       <div class="edit-content" :class="[fixedHeaderBar?'':'fixed']">
         <quill-editor ref='myQuillEditor' v-model="grapicData.content" :options="editorOption" />
       </div>
-      <van-cell title-class='theme-color' title="#选择分类" is-link arrow-direction="down" @click="show = true"/>
     </div>
     <div class="media-input" v-show="false">
       <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
     </div>
 
+    <div class="classify">
+      <van-cell title-class='theme-color' title="#选择分类" is-link arrow-direction="down" @click="show = true" />
+      <van-cell v-if='cateName'>
+        <div class="flex flex-align" slot="title">
+          <van-tag type="primary">{{cateName}}</van-tag>
+        </div>
+      </van-cell>
+    </div>
+
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
       <topic-list @close='show = false' @select='selectTag' />
     </van-popup>
+
+    <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="actionShow = false" />
   </div>
 </template>
 <script>
@@ -48,10 +58,11 @@ export default {
   },
   data() {
     return {
-      show:false,
+      actionShow:false,
+      show: false,
       ossSign: '',
       percent: 0,
-      cateName:'',
+      cateName: '',
       cateId: 0,
       UploadTypeShow: false,
       grapicData: {
@@ -74,7 +85,14 @@ export default {
             ['blockquote']
           ]
         }
-      }
+      },
+      actions: [{
+        name: '保存文章',
+        type: 'save'
+      }, {
+        name: '清空内容',
+        type: 'noSave'
+      }]
     }
   },
   mounted() {
@@ -90,32 +108,64 @@ export default {
   },
   methods: {
     fetchData() {
+      if (localStorage.getItem('articleData')) {
+        this.grapicData = JSON.parse(localStorage.getItem('articleData'))
+      }
+
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
       })
     },
-    onClickLeft() {
-      this.$router.push({
-        name: 'home'
-      })
+    onSelect(item) {
+      if (item.type == 'save') {
+        localStorage.setItem('articleData', JSON.stringify(this.grapicData))
+        if (this.$route.query.back) {
+          this.$router.push({
+            name: this.$route.query.back
+          })
+        } else {
+          this.$router.push({
+            name: 'home'
+          })
+        }
+        this.actionShow = false
+      } else {
+        if (this.$route.query.back) {
+          this.$router.push({
+            name: this.$route.query.back
+          })
+        } else {
+          this.$router.push({
+            name: 'home'
+          }) 
+        }
+        localStorage.setItem('articleData', '')
+        this.actionShow = false
+        this.grapicData = {
+          text: '',
+          photos: []
+        }
+      }
     },
-    release(){
-      if(this.grapicData.title.length == 0){
+    release() {
+      if (this.grapicData.title.length == 0) {
         this.$toast('请输入标题')
-      }else if(this.grapicData.content.length == 0){
+      } else if (this.grapicData.content.length == 0) {
         this.$toast('请输入正文')
-      }else if(this.cateId == 0){
+      } else if (this.cateId == 0) {
         this.$toast('请选择分类')
-      }else {
+      } else {
         let data = {
+          title: this.grapicData.title,
           details: this.grapicData.content,
           template_id: 2,
-          cate_id: this.cateId
+          cate_id: this.cateId,
+          to_school: 1
         }
 
         axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
-          if(res.data.data.status == 1){
-          
+          if (res.data.status == 1) {
+
           }
         })
       }
@@ -123,13 +173,13 @@ export default {
     imgHandler() {
       this.$refs.selectPhoto.$refs.input.click()
     },
-    videoHandler(){
+    videoHandler() {
       this.$refs.selectFileVideo.click()
     },
     handleScroll() {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       this.scrollTop = scrollTop
-      if ( 88 < this.scrollTop) {
+      if (88 < this.scrollTop) {
         this.fixedHeaderBar = false
       } else {
         this.fixedHeaderBar = true
@@ -151,9 +201,9 @@ export default {
       })
     },
     addImage(path) {
-        let addRange = this.$refs.myQuillEditor.quill.getSelection()
-        this.$refs.myQuillEditor.quill.insertEmbed(addRange !== null ? addRange.index : 0, 'image', path)
-        this.$refs.myQuillEditor.quill.setSelection(addRange.index + 1)
+      let addRange = this.$refs.myQuillEditor.quill.getSelection()
+      this.$refs.myQuillEditor.quill.insertEmbed(addRange !== null ? addRange.index : 0, 'image', path)
+      this.$refs.myQuillEditor.quill.setSelection(addRange.index + 1)
     },
     doUpload(e) {
       let file = e.target.files[0]
@@ -214,7 +264,7 @@ export default {
         this.addImage(path)
       })
     },
-    selectTag(tag){
+    selectTag(tag) {
       this.cateName = tag.cate_name
       this.cateId = tag.cate_id
     }
@@ -263,11 +313,17 @@ export default {
   border: none;
   height: auto;
 }
+
+.classify {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
 </style>
 <style>
-.edit-content.fixed .ql-toolbar.ql-snow{
+.edit-content.fixed .ql-toolbar.ql-snow {
   position: fixed;
-  top:0;
+  top: 0;
 }
 
 .edit-title .van-field__control {
@@ -275,7 +331,7 @@ export default {
   font-weight: 500;
 }
 
-.publishing .ql-toolbar.ql-snow{
+.publishing .ql-toolbar.ql-snow {
   width: 100%;
   background: #f2f2f2;
   z-index: 10;

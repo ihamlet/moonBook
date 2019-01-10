@@ -1,13 +1,14 @@
 <template>
     <div class="home page-padding">
+         <van-progress v-if='percentVal!=0&&percentVal!=100' :percentage="percentVal" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
         <div class="head-bar flex flex-align" :class="[themeBarSearch?'theme-background':'default-head-bar-background']">
             <div class="left-btn" v-line-clamp:20="1" @click="cityListShow=true">
                 <span v-if='userPointState'>{{userPointState.city}}</span>
                 <span v-else>定位中</span>
             </div>
             <div class="search-bar"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
-            <div class="right-btn" @click="releasePageShow = true">
-                <i class="iconfont">&#xe612;</i>
+            <div class="right-btn" @click="toTips">
+                <i class="iconfont">&#xe664;</i>
                 <span>发布</span>
             </div>
         </div>
@@ -47,11 +48,6 @@
             </van-button>
         </div>
 
-        <!-- 发布 -->
-        <van-popup v-model="releasePageShow" class="page-popup" position="bottom" get-container='#app'>
-            <graphic @close='releasePageShow = false'/>
-        </van-popup>
-
         <!-- 借阅卡办理页面 -->
         <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
             <accept @close='applyShow = false' v-model='active'/>
@@ -65,6 +61,10 @@
         <!-- 城市列表搜索 -->
         <van-popup v-model="searchShow" class="page-popup" get-container='#app'>
             <city-list :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
+        </van-popup>
+
+        <van-popup class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' v-model="tipsShow" get-container='#app'>
+            <tips position='top' @percent='percent'/>
         </van-popup>
     </div>
 </template>
@@ -81,10 +81,10 @@ import courseList from './../module/course'
 
 import accept from './../module/accept'
 
-import graphic from './../module/release/graphic'
-
 import city from './../module/city'
 import cityList from './../module/search/cityList'
+
+import tips from './../module/release/tips'
 
 export default {
     name:'home',
@@ -97,17 +97,16 @@ export default {
         city,
         cityList,
         accept,
-        graphic
+        tips
     },
     computed: {
         ...mapGetters(['userPointState','userDataState'])
     },
     data () {
         return {
-            // 发布
-            Param:'',
+            percentVal:0,
+            tipsShow:false,
             cityListShow:false,
-            releasePageShow:false,
             searchShow:false,
             prompt:'搜索城市名/拼音',
             active:0,
@@ -175,6 +174,13 @@ export default {
         toAccept(){
             this.applyShow = true
             this.active = 0
+        },
+        toTips(){
+           this.tipsShow = !this.tipsShow
+           localStorage.setItem('grapicData', '')
+        },
+        percent(val){
+            this.percentVal = val
         }
     }
 }

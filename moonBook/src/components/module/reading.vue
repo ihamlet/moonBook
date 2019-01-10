@@ -27,16 +27,30 @@
       </div>
     </div>
     <div class="not-content" v-else>
-      尚无记录, <span class="theme-color">阅读是与心灵沟通</span>
+      尚无记录, <span class="theme-color" @click="toAccept">办理阅亮书架借阅卡</span>
     </div>
+
+
+    <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
+      <accept @close='applyShow = false' v-model='active'/>
+    </van-popup>
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
+import accept from './../module/accept'
 
 export default {
   name: 'reading',
   props: ['list', 'moduleTitle', 'type', 'babyId'],
+  computed: {
+    accept
+  },
+  data () {
+    return {
+      active: 0  
+    }
+  },
   methods: {
     toBabyHome() {
       this.$router.push({
@@ -97,6 +111,10 @@ export default {
       } else {
         location.href = url
       }
+    },
+    toAccept(){
+        this.applyShow = true
+        this.active = 0
     }
   }
 }

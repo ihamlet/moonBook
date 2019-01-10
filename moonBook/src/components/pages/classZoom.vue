@@ -1,9 +1,7 @@
 <template>
   <div class="class-zoom" :class="[type!='template'?'page-padding':'no-padding']">
-    <van-nav-bar v-if='type!="template"' title="班级风采" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft" @click-right='onClickRight'>
-      <div slot="right" class="theme-color">
-        <i class="iconfont">&#xe612;</i>
-      </div>
+    <van-nav-bar v-if='type!="template"' title="班级风采" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft">
+
     </van-nav-bar>
     <lazy-component class="module">
       <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template'/>
@@ -34,7 +32,6 @@
 import axios from './../lib/js/api'
 import freshList from './../module/findModule/freshList'
 import graphicCrad from './../module/card/graphicCrad'
-import graphic from './../module/release/graphic'
 import qrCode from "./../module/mold/qrCode"
 
 export default {
@@ -42,8 +39,7 @@ export default {
   props: ['type','banji_id'],
   components: {
     freshList,
-    graphicCrad,
-    graphic
+    graphicCrad
   },
   data() {
     return {
@@ -81,9 +77,6 @@ export default {
   methods: {
     onClickLeft() {
       this.$router.go(-1)
-    },
-    onClickRight() {
-      this.releasePageShow = true
     },
     fetchData() {
       axios.get('/book/MemberBanji/getList').then(res=>{

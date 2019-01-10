@@ -3,6 +3,7 @@
     <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
       <van-pull-refresh v-model="loading" @refresh="onRefresh">
         <div class="item" v-for="(item,index) in list" :key="index">
+          <van-cell v-if='item.isMe' title='' is-link arrow-direction="down" @click="actionsheet(item)"/>
           <van-cell>
             <div class="content">
               <graphic-crad :item="item" @follow="follow"/>
@@ -11,6 +12,8 @@
         </div>
       </van-pull-refresh>
     </van-list>
+
+    <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
   </div>
 </template>
 <script>
@@ -31,6 +34,8 @@ export default {
   },
   data() {
     return {
+      postId:'',
+      show:false,
       DetailsId: 0,
       pictureShow: false,
       praiseShow: false,
@@ -38,7 +43,11 @@ export default {
       item: '',
       loading: false,
       finished: false,
-      page: 1
+      page: 1,
+      actions: [{
+        name: '删除',
+        type: 'delete'
+      }]
     }
   },
   methods: {
@@ -92,6 +101,26 @@ export default {
           this.$toast.fail(res.data.msg)
         }
       })
+    },
+    onSelect(item) {
+      if (item.type == 'delete') {
+        axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
+          let key 
+          this.list.forEach((element,i) => {
+            if(element.post_id == this.postId){
+              key = i
+            }
+          })
+          this.list.splice(key,1)
+        })
+        this.show = false
+
+        this.$toast.success('删除成功')
+      }
+    },
+    actionsheet(item){
+        this.show = true
+        this.postId = item.post_id
     }
   }
 }

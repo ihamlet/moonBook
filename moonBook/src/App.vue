@@ -28,12 +28,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_zanr9butoci.eot');
-  src: url('//at.alicdn.com/t/font_893274_zanr9butoci.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_zanr9butoci.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_zanr9butoci.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_zanr9butoci.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_zanr9butoci.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_qq9fvfplcx.eot');
+  src: url('//at.alicdn.com/t/font_893274_qq9fvfplcx.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_qq9fvfplcx.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_qq9fvfplcx.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_qq9fvfplcx.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_qq9fvfplcx.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -511,6 +511,15 @@ img.lazy[lazy='error'],
 .card-popup {
   width: 18.75rem /* 300/16 */;
   height: 34.25rem /* 548/16 */;
+}
+
+.tips-popup.van-popup{
+  transform:none;
+  background-color: transparent;
+  top: 3.75rem /* 60/16 */;
+  right: .3125rem /* 5/16 */;
+  left: auto;
+  overflow-y: initial; 
 }
 
 .page-popup-layer {

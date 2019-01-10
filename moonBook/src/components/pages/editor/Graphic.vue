@@ -19,7 +19,7 @@
         <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4"
           autosize />
         <van-tag class="tag" type="primary" v-if='cateName'> #{{cateName}}</van-tag>
-        <van-cell title-class='theme-color' title="#选择分类" :value="grapicData.text.length" is-link arrow-direction="down"
+        <van-cell title-class='theme-color' title="#选择分类" :value="grapicData.text.length>0?grapicData.text.length:''" is-link arrow-direction="down"
           @click="show = true" />
       </van-cell-group>
       <van-cell-group>
@@ -30,7 +30,8 @@
       <van-cell>
         <van-row gutter="4">
           <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
-            <div class="preview img-grid" v-lazy:background-image='item.thumb' :class="[item.thumb?'transparent':'']">
+            <div class="preview img-grid" :class="[item.thumb?'transparent':'']">
+                <img class="thumb" :src="item.thumb" :large="item.photo" preview />
               <div class="close-btn" @click="deletePhoto(index)">
                 <i class="iconfont">&#xe647;</i>
               </div>
@@ -75,7 +76,7 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapGetters } from 'vuex'
+import { mapActions,mapGetters } from 'vuex'
 import topicList from './../../module/release/topicList'
 import { compress } from './../../lib/js/util'
 
@@ -157,6 +158,7 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
+      ...mapActions(['getUserData']),
     fetchData() {
       // 从本地存储获取发布数据
       if (localStorage.getItem('grapicData')) {
@@ -186,6 +188,8 @@ export default {
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
       })
+
+      this.getUserData()
     },
     onRead(file) {
       let array = []
@@ -246,7 +250,8 @@ export default {
         } else {
           this.$router.push({
             name: 'home'
-          })        }
+          }) 
+        }
         localStorage.setItem('grapicData', '')
         this.actionShow = false
         this.grapicData = {
@@ -402,6 +407,10 @@ export default {
       this.cateId = tag.cate_id
     },
     getAvatar(img) {
+        if(!img){
+            return img
+        }
+
       let pos = img.indexOf('http://')
       let result
       if (pos === 0) {
@@ -524,6 +533,12 @@ export default {
 .tag {
   margin-left: 0.9375rem /* 15/16 */;
   margin-top: 0.3125rem /* 5/16 */;
+}
+
+.img-grid img.thumb{
+    position: absolute;
+    top: 50%;
+    transform: translate3d(0, -50%, 0);
 }
 </style>
 <style>

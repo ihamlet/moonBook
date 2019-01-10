@@ -7,23 +7,23 @@
         <span class="name">{{title}}</span>
       </div>
       <van-row v-if='count > 0'>
-        <van-col span="8" class="flex flex-justify" v-if='index < 4'  v-for='(item,index) in rankList' :key="index">
-          <div class="item flex flex-align" v-if='item.rank < 4'>
+        <div class="ranking-list scroll-x">
+          <div class="item flex flex-align" v-for='(item,index) in rankList' :key="index">
             <div class="ranking">
               <svg-ranking :ranking="item.rank" type="module" />
             </div>
-            <div class="name"  v-if='type == "school"' @click="toBanjiHome(item)">
-                {{item[field]}}
+            <div class="name" v-if='type == "school"' @click="toBanjiHome(item)">
+              {{item[field]}}
             </div>
             <div class="avatar" v-else @click="toBabyHome(item)">
-              <img :src="item[field]"/>
+              <img :src="item[field]" />
             </div>
           </div>
-        </van-col>
+        </div>
       </van-row>
       <van-row span="24" class="flex flex-justify" v-else>
-        <van-col  class="no-ranking">
-            <i class="iconfont">&#xeab0;</i> 即将揭晓
+        <van-col class="no-ranking">
+          <i class="iconfont">&#xeab0;</i> 即将揭晓
         </van-col>
       </van-row>
     </van-cell>
@@ -41,7 +41,7 @@ export default {
   },
   data() {
     return {
-      count:0,
+      count: 0,
       rankList: []
     }
   },
@@ -53,52 +53,52 @@ export default {
   },
   methods: {
     fetchData() {
-      if(this.type == 'school'){
-        axios.get(`/book/SchoolTushuBorrow/getRank?school_id=${this.$route.query.id}&group=banji&region=school`).then(res=>{
+      if (this.type == 'school') {
+        axios.get(`/book/SchoolTushuBorrow/getRank?school_id=${this.$route.query.id}&group=banji&region=school`).then(res => {
           let data = []
           let array = res.data.data.list
           array.forEach(element => {
             let obj = {
               name: element.babyInfo.name,
               rank: element.rank,
-              banji_id:element.banji_id
+              banji_id: element.banji_id
             }
             data.push(obj)
           })
           this.count = data.length
           this.rankList = data
         })
-      }else{
+      } else {
         axios.get(`/book/babySign/rank?banji_id=${this.$route.query.id}&time=week`).then(res => {
           this.count = res.data.count
           this.rankList = res.data.data
         })
       }
     },
-    toBanjiHome(item){
+    toBanjiHome(item) {
       this.$router.push({
-        name:'class-home',
-        query:{
-          id:item.banji_id,
+        name: 'class-home',
+        query: {
+          id: item.banji_id,
           back: this.$route.name,
           school_id: this.$route.query.id
         }
       })
     },
-    toBabyHome(item){
+    toBabyHome(item) {
       this.$router.push({
-        name:'baby-home',
-        query:{
-          id:item.id,
+        name: 'baby-home',
+        query: {
+          id: item.id,
           back: this.$route.name,
           banji_id: this.$route.query.id
         }
       })
     },
-    toRanking(){
+    toRanking() {
       this.$router.push({
-        name:'ranking',
-        query:{
+        name: 'ranking',
+        query: {
           back: this.$route.name,
           id: this.$route.query.id
         }
@@ -150,5 +150,13 @@ export default {
   background: linear-gradient(127deg, #ffeb3b, #ffc107);
   -webkit-background-clip: text;
   color: transparent;
+}
+
+.ranking-list {
+  padding-left: 0.625rem /* 10/16 */;
+}
+
+.ranking-list .item{
+  margin-right: .625rem /* 10/16 */;
 }
 </style>

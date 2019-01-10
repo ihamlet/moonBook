@@ -111,11 +111,6 @@
       <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
     </van-popup>
 
-    <!-- 发布 -->
-    <van-popup v-model="releasePageShow" class="page-popup" position="bottom" get-container='#app'>
-      <graphic @close='releasePageShow = false' />
-    </van-popup>
-
     <van-popup v-model="zanShow" class="add-count-popup" :overlay="false" :lock-scroll='false' get-container='#app'>
       <i class="iconfont" :class="[zanShow?'rotateInDownLeft animated':'']">&#xe6e3;</i>
     </van-popup>
@@ -131,7 +126,6 @@ import qrCode from "./../module/mold/qrCode"
 import avatar from "./../module/avatar"
 import reading from "./../module/reading"
 import graphicCrad from "./../module/card/graphicCrad"
-import graphic from './../module/release/graphic'
 import classShow from './../module/classModule/classShow'
 import family from './../module/myModule/family'
 import activity from './../module/activity/activity'
@@ -145,7 +139,6 @@ export default {
     reading,
     avatar,
     graphicCrad,
-    graphic,
     classShow,
     family,
     slogan,

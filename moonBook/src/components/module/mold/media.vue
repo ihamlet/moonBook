@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="text" :class="item.template_id == 0?'content':''" v-html='item.details' @click="toArticle"></div>
+    <div class="text" ref='textContent' :class="item.template_id == 0?'content':''" v-html='item.details' @click="toArticle"></div>
     <div class="media img" v-if='item.template_id == 1 && item.hasvideo == 0 && item.hasaudio == 0'>
       <div :class="[item.photos.length == 4?'layout-4':'']">
         <van-row :gutter="4">
@@ -36,9 +36,6 @@ export default {
       return {
 
       }
-  },
-  computed: {
-    
   },
   methods: {
     toArticle() {
@@ -99,5 +96,10 @@ export default {
 
 .layout-4 {
   width: 70%;
+}
+
+.text{
+  font-size: 1.125rem /* 18/16 */;
+  line-height: 1.8
 }
 </style>

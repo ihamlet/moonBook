@@ -1,10 +1,6 @@
 <template>
   <div class="zoom page-padding">
-    <van-nav-bar :zIndex='99' :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed left-text="返回" left-arrow @click-left="onClickLeft"
-      @click-right="releasePageShow = true">
-      <div slot="right" class="theme-color">
-        <i class="iconfont">&#xe612;</i>
-      </div>
+    <van-nav-bar :zIndex='99' :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed left-text="返回" left-arrow @click-left="onClickLeft">
     </van-nav-bar>
     <div class="container">
       <lazy-component class="module">
@@ -49,9 +45,7 @@
               暂无内容
             </div>
             <div class="item" v-for="(item,index) in list" :key="index">
-              <div class="more" v-if='item.isMe' @click="actionsheet(item)">
-                <i class="iconfont">&#xe6c4;</i>
-              </div>
+              <van-cell title="" v-if='item.isMe' @click="actionsheet(item)" is-link arrow-direction='down'/>
               <van-cell>
                 <graphic-crad :item='item' />
               </van-cell>
@@ -61,25 +55,18 @@
       </lazy-component>
     </div>
 
-    <!-- 发布 -->
-    <van-popup v-model="releasePageShow" class="page-popup" position="bottom" :overlay="false">
-      <graphic @close='releasePageShow = false' />
-    </van-popup>
-
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
 import { sum } from './../lib/js/util.js'
-import graphic from './../module/release/graphic'
 import graphicCrad from './../module/card/graphicCrad'
 import reading from './../module/reading'
 
 export default {
   name: 'zoom',
   components: {
-    graphic,
     graphicCrad,
     reading
   },
@@ -250,16 +237,6 @@ export default {
   position: relative;
   overflow: hidden;
   background: #fff;
-}
-
-.item .more {
-  text-align: right;
-}
-
-.item .more i.iconfont {
-  font-size: 1.75rem /* 28/16 */;
-  color: #c0c4cc;
-  margin-right: 0.625rem /* 10/16 */;
 }
 
 .title .avatar {
