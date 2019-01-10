@@ -16,9 +16,11 @@
     <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
     <div class="textarea-module">
       <van-cell-group>
-        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4" autosize />
+        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4"
+          autosize />
         <van-tag class="tag" type="primary" v-if='cateName'> #{{cateName}}</van-tag>
-        <van-cell title-class='theme-color' title="#选择分类" :value="grapicData.text.length" is-link arrow-direction="bottom" @click="show = true"/>
+        <van-cell title-class='theme-color' title="#选择分类" :value="grapicData.text.length" is-link arrow-direction="down"
+          @click="show = true" />
       </van-cell-group>
       <van-cell-group>
         <van-cell title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
@@ -29,7 +31,9 @@
         <van-row gutter="4">
           <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
             <div class="preview img-grid" v-lazy:background-image='item.thumb' :class="[item.thumb?'transparent':'']">
-              <i class="iconfont" @click="deletePhoto(index)">&#xe683;</i>
+              <div class="close-btn" @click="deletePhoto(index)">
+                <i class="iconfont">&#xe647;</i>
+              </div>
             </div>
           </van-col>
           <van-col :span="8" v-if='9 > imagesLength'>
@@ -54,8 +58,6 @@
       </van-checkbox-group>
     </van-popup>
 
-    <div style="padding:10px" class="theme-color" @click="toPublishing">测试入口发布长文</div>
-
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
       <topic-list @close='show = false' @select='selectTag' />
     </van-popup>
@@ -74,8 +76,8 @@
 <script>
 import axios from './../../lib/js/api'
 import { mapGetters } from 'vuex'
-import topicList from './topicList'
-import { compress } from './../../lib/js/util.js'
+import topicList from './../../module/release/topicList'
+import { compress } from './../../lib/js/util'
 
 export default {
   name: 'graphic',
@@ -210,9 +212,15 @@ export default {
     },
     onClickLeft() {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
-        this.$emit('close')
-        this.cateName = ''
-        this.cateId = ''
+        if (this.$route.query.back) {
+          this.$router.push({
+            name: this.$route.query.back
+          })
+        } else {
+          this.$router.push({
+            name: 'home'
+          })
+        }
       } else {
         this.actionShow = true
       }
@@ -220,13 +228,27 @@ export default {
     onSelect(item) {
       if (item.type == 'save') {
         localStorage.setItem('grapicData', JSON.stringify(this.grapicData))
-        this.$emit('close')
+        if (this.$route.query.back) {
+          this.$router.push({
+            name: this.$route.query.back
+          })
+        } else {
+          this.$router.push({
+            name: 'home'
+          })
+        }
         this.actionShow = false
       } else {
-        this.$emit('close')
+        if (this.$route.query.back) {
+          this.$router.push({
+            name: this.$route.query.back
+          })
+        } else {
+          this.$router.push({
+            name: 'home'
+          })        }
         localStorage.setItem('grapicData', '')
         this.actionShow = false
-
         this.grapicData = {
           text: '',
           photos: []
@@ -235,7 +257,15 @@ export default {
     },
     onClickRight() {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
-        this.$emit('close')
+        if (this.$route.query.back) {
+          this.$router.push({            
+            name: this.$route.query.back
+          })
+        } else {
+          this.$router.push({ 
+              name: 'home'
+          })
+        }
       } else if (this.grapicData.text.length < 12000) {
         let data = {
           details: this.grapicData.text,
@@ -259,9 +289,15 @@ export default {
         })
 
         axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
-          this.$emit('close')
-          this.$emit('refresh')
-          this.$router.push({ name: this.result[0] })
+          if (this.$route.query.back) {
+            this.$router.push({
+              name: this.$route.query.back
+            })
+          } else {
+            this.$router.push({
+              name: 'home'
+            })
+          }
         })
       }
     },
@@ -374,16 +410,6 @@ export default {
         result = img
       }
       return result
-    },
-    toPublishing() {
-      this.$router.push({
-        name: 'publishing',
-        query:{
-          back: this.$route.name,
-          id: this.$route.query.id || this.$route.query.banji_id || this.$route.query.school_id
-        }
-      })
-      this.$emit('close')
     }
   }
 }
@@ -426,12 +452,18 @@ export default {
   position: relative;
 }
 
-.preview i.iconfont {
+.preview .close-btn {
+  width: 1.25rem /* 20/16 */;
+  height: 1.25rem /* 20/16 */;
+  line-height: 1.25rem /* 20/16 */;
   position: absolute;
-  right: 0.3125rem /* 5/16 */;
-  top: 0.3125rem /* 5/16 */;
-  font-size: 1.5rem /* 24/16 */;
-  color: red;
+  right: 0 /* 5/16 */;
+  top: 0 /* 5/16 */;
+  text-align: center;
+  line-height: 1.25rem /* 20/16 */;
+  background: #000;
+  color: #fff;
+  opacity: 0.5;
 }
 
 .btn-video,

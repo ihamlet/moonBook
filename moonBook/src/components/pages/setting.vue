@@ -71,8 +71,7 @@ export default {
           query: {
             id: this.$route.query.id,
             type: this.$route.query.type,
-            pageTitle: '添加宝贝',
-            back: 'my'
+            pageTitle: this.$route.query.pageTitle,
           }
         })
       } else {
@@ -84,8 +83,10 @@ export default {
               registerType: this.$route.query.registerType
             }
           })
-        } else {
-          this.$router.go(-1)
+        }else{
+          this.$router.push({
+            name:'my'
+          })
         }
       }
     },
@@ -94,7 +95,7 @@ export default {
         name: 'edit-school',
         query: {
           id: this.child_id,
-          back: this.$route.query.back,
+          back: this.$route.name,
           type: this.$route.query.type,
           pageTitle: this.$route.query.pageTitle,
           registerType: this.$route.query.registerType
@@ -106,8 +107,8 @@ export default {
         name: 'edit-class',
         query: {
           id: this.child_id,
-          schoolId: this.userDataState.school_id,
-          back: this.$route.query.back,
+          school_id: this.userDataState.school_id,
+          back: this.$route.name,
           type: this.$route.query.type,
           pageTitle: this.$route.query.pageTitle,
           registerType: this.$route.query.registerType

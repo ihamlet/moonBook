@@ -43,8 +43,9 @@ import AppsSchool from '@/components/apps/school/schoolHome'
 import Register from '@/components/pages/register'
 import Login from '@/components/pages/login'
 
-import Publishing from '@/components/Publishing'
-
+import Editor from '@/components/Editor'
+import Publishing from '@/components/pages/editor/Publishing'
+import Graphic from '@/components/pages/editor/Graphic'
 
 Vue.use(Router)
 
@@ -194,14 +195,6 @@ export default new Router({
           }
         },
         {
-          path: '/edit/publishing',
-          name: 'publishing',
-          component: Publishing,
-          meta: {
-            isFooterBar: false
-          }
-        },
-        {
           path: '/book/details',
           name: 'book-details',
           component: BookDetails,
@@ -298,6 +291,28 @@ export default new Router({
           title: '我的宝贝',
           tabActive: 0,
           isFooterBar: true
+        }
+      }]
+    },{
+      path: '/editor',
+      name: 'editor',
+      component: Editor,
+      children:[{
+        path: '/editor/publishing',
+        name: 'publishing',
+        component: Publishing,
+        meta: {
+          title: '发布长文',
+          type:'long'
+        }
+      },
+      {
+        path: '/editor/graphic',
+        name: 'graphic',
+        component: Graphic,
+        meta: {
+          title: '发布长文',
+          type:'webo'
         }
       }]
     },

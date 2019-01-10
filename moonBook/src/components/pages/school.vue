@@ -96,7 +96,7 @@ export default {
               name: 'edit-class',
               query: {
                 id: this.$route.query.id,
-                schoolId: res.data.data.school_id,
+                school_id: res.data.data.school_id,
                 pageTitle: this.$route.query.pageTitle,
                 registerType: this.$route.query.registerType,
                 back: this.$route.query.back,
@@ -122,7 +122,7 @@ export default {
               name: 'edit-class',
               query: {
                 id: this.$route.query.id,
-                schoolId: res.data.data.school_id,
+                school_id: res.data.data.school_id,
                 back: this.$route.query.back,
                 type: this.$route.query.type,
               }

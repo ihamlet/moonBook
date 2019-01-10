@@ -81,7 +81,8 @@ export default {
         query:{
           id: list.id,
           pageTitle:'编辑宝贝',
-          type:'edit'
+          type:'edit',
+          back: this.$route.name
         }
       })
     },

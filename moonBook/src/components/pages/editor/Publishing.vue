@@ -1,82 +1,76 @@
 <template>
   <div class="publishing">
-    <van-progress v-if='process > 0' :percentage="process" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
-    <van-nav-bar title="发布长文" left-text="返回" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar title="发布长文" left-text="返回" left-arrow @click-left="onClickLeft">
+      <div class="head-bar-btn theme-color" slot="right" @click="release">
+        <i class="iconfont">
+          &#xe72c;
+        </i>
+        发布
+      </div>
+    </van-nav-bar>
+    <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
     <div class="container">
       <div class="edit-title">
         <van-cell-group>
           <van-field v-model="grapicData.title" placeholder="文章标题" rows="1" />
         </van-cell-group>
       </div>
-      <div class="edit-content">
+      <div class="edit-content" :class="[fixedHeaderBar?'':'fixed']">
         <quill-editor ref='myQuillEditor' v-model="grapicData.content" :options="editorOption" />
       </div>
+      <van-cell title-class='theme-color' title="#选择分类" is-link arrow-direction="down" @click="show = true"/>
+    </div>
+    <div class="media-input" v-show="false">
+      <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
+      <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
     </div>
 
-    <div class="file-manager">
-      <div class="scroll-x">
-        <div class="file-list flex">
-          <div class="file-img scroll-item" v-for='(item,index) in grapicData.photos' :key="index">
-            <div class="preview img-grid" :class="[item.thumb?'transparent':'']" @click="select(item,index)">
-              <img :src="item.thumb" />
-            </div>
-            <i class="iconfont" @click="deletePhoto(index)">&#xe683;</i>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <van-actionsheet v-model="UploadTypeShow" :actions="uploadType" cancel-text="取消" @select="onUploadTypeSelect"
-      @cancel="UploadTypeShow = false" />
-
-    <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
-    <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
-    <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
+    <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
+      <topic-list @close='show = false' @select='selectTag' />
+    </van-popup>
   </div>
 </template>
 <script>
-import axios from './lib/js/api'
-
+import axios from './../../lib/js/api'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
-import { compress } from './lib/js/util'
+import { compress } from './../../lib/js/util'
+import topicList from './../../module/release/topicList'
+
 
 export default {
   name: 'publishing',
   components: {
-    quillEditor
+    quillEditor,
+    topicList
   },
   data() {
     return {
+      show:false,
       ossSign: '',
-      process: 0,
+      percent: 0,
+      cateName:'',
+      cateId: 0,
       UploadTypeShow: false,
       grapicData: {
         title: '',
-        content: '',
-        photos: []
+        content: ''
       },
-      uploadType: [{
-        name: '从手机选择图片',
-        type: 'photo',
-        index: 0,
-      }, {
-        name: '上传视频',
-        type: 'fileVideo',
-        index: 1,
-      }, {
-        name: '拍摄视频',
-        type: 'uploadVideo',
-        index: 2,
-      }],
+      fixedHeaderBar: true,
+      history: {
+        delay: 1000,
+        maxStack: 50,
+        userOnly: false
+      },
       editorOption: {
         placeholder: '输入正文',
         modules: {
           toolbar: [
-            ['bold', 'italic', 'image', 'video'],
+            ['bold', 'italic', 'image', 'video', 'link'],
             [{ list: 'ordered' }, { list: "bullet" }],
+            [{ 'color': [] }, { 'background': [] }],
             ['blockquote']
           ]
         }
@@ -84,6 +78,7 @@ export default {
     }
   },
   mounted() {
+    window.addEventListener('scroll', this.handleScroll)
     this.$refs.myQuillEditor.quill.getModule('toolbar').addHandler('image', this.imgHandler)
     this.$refs.myQuillEditor.quill.getModule('toolbar').addHandler('video', this.videoHandler)
   },
@@ -104,32 +99,43 @@ export default {
         name: 'home'
       })
     },
-    deletePhoto(index) {
-      this.grapicData.photos.splice(index, 1)
+    release(){
+      if(this.grapicData.title.length == 0){
+        this.$toast('请输入标题')
+      }else if(this.grapicData.content.length == 0){
+        this.$toast('请输入正文')
+      }else if(this.cateId == 0){
+        this.$toast('请选择分类')
+      }else {
+        let data = {
+          details: this.grapicData.content,
+          template_id: 2,
+          cate_id: this.cateId
+        }
+
+        axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
+          if(res.data.data.status == 1){
+          
+          }
+        })
+      }
     },
     imgHandler() {
-      this.UploadTypeShow = true
+      this.$refs.selectPhoto.$refs.input.click()
     },
-    videoHandler() {
-      this.UploadTypeShow = true
+    videoHandler(){
+      this.$refs.selectFileVideo.click()
     },
-    onUploadTypeSelect(item) {
-      switch (item.index) {
-        case 0:
-          this.$refs.selectPhoto.$refs.input.click()
-          break;
-        case 1:
-          this.$refs.selectFileVideo.click()
-          break;
-        case 2:
-          this.$refs.fileVideo.click()
-          break;
+    handleScroll() {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      this.scrollTop = scrollTop
+      if ( 88 < this.scrollTop) {
+        this.fixedHeaderBar = false
+      } else {
+        this.fixedHeaderBar = true
       }
-
-      this.UploadTypeShow = false
     },
     onRead(file) {
-      console.log(file)
       let array = []
       if (file.length) {
         array = file
@@ -137,7 +143,6 @@ export default {
         array.push(file)
       }
       array.forEach(element => {
-        this.grapicData.photos.isLoading = true
         compress(element.content, 1200, 0.8, 'blob').then(val => {
           val.toBlob((blob) => {
             this.upOssPhoto(blob, element.file, element.content)
@@ -145,10 +150,10 @@ export default {
         })
       })
     },
-    select(item, index) {
-      let addRange = this.$refs.myQuillEditor.quill.getSelection()
-      this.$refs.myQuillEditor.quill.insertEmbed(addRange !== null ? addRange.index : 0, 'image', item.photo)
-      this.$refs.myQuillEditor.quill.setSelection(addRange.index + 1)
+    addImage(path) {
+        let addRange = this.$refs.myQuillEditor.quill.getSelection()
+        this.$refs.myQuillEditor.quill.insertEmbed(addRange !== null ? addRange.index : 0, 'image', path)
+        this.$refs.myQuillEditor.quill.setSelection(addRange.index + 1)
     },
     doUpload(e) {
       let file = e.target.files[0]
@@ -176,18 +181,10 @@ export default {
         data: data,
         method: 'post',
         onUploadProgress: p => {
-          let percent = 100 * (p.loaded / p.total)
-          this.process = percent
+          this.percent = Math.floor(100 * (p.loaded / p.total))
         }
       }).then((res) => {
-        this.process = 0
-        this.grapicData.photos.push({
-          media: true,
-          is_audio: type === 'audio' ? 1 : 0,
-          is_video: type === 'video' ? 1 : 0,
-          photo: path,
-          thumb: `${path}?x-oss-process=video/snapshot,t_13000,f_jpg,w_0,h_0,m_fast`
-        })
+        this.addImage(`${path}?x-oss-percent=video/snapshot,t_13000,f_jpg,w_0,h_0,m_fast`)
       })
     },
     upOssPhoto(blob, file, base64) {
@@ -211,19 +208,15 @@ export default {
         data: fd,
         method: 'post',
         onUploadProgress: p => {
-          let percent = 100 * (p.loaded / p.total)
-          this.process = percent
+          this.percent = Math.floor(100 * (p.loaded / p.total))
         }
       }).then((res) => {
-        this.process = 0
-        this.grapicData.photos.push({
-          photo: path,
-          thumb: `${path}?x-oss-process=image/resize,m_fill,h_200,w_200`,
-          height: img.height || 0,
-          width: img.width || 0,
-          isLoading: false
-        })
+        this.addImage(path)
       })
+    },
+    selectTag(tag){
+      this.cateName = tag.cate_name
+      this.cateId = tag.cate_id
     }
   }
 }
@@ -231,7 +224,6 @@ export default {
 <style scoped>
 .publishing {
   background: #fff;
-  min-height: 100vh;
 }
 
 .file-list {
@@ -261,32 +253,43 @@ export default {
 .file-img i.iconfont {
   position: absolute;
   right: 0;
-  top: -.3125rem /* 5/16 */;
+  top: -0.3125rem /* 5/16 */;
   font-size: 1.5rem /* 24/16 */;
   color: red;
   z-index: 9;
 }
+
+.quill-code {
+  border: none;
+  height: auto;
+}
 </style>
 <style>
+.edit-content.fixed .ql-toolbar.ql-snow{
+  position: fixed;
+  top:0;
+}
+
 .edit-title .van-field__control {
   font-size: 1.25rem /* 20/16 */;
   font-weight: 500;
 }
 
-.ql-toolbar.ql-snow {
-  position: fixed;
-  bottom: 0;
+.publishing .ql-toolbar.ql-snow{
   width: 100%;
-  background: #fff;
-  border-top: 0.0625rem /* 1/16 */ solid #ebeef5;
-  border-left: none;
-  border-right: none;
-  border-bottom: none;
+  background: #f2f2f2;
   z-index: 10;
 }
 
+.publishing .ql-toolbar.ql-snow,
 .publishing .ql-container.ql-snow {
   border: none;
+}
+
+.ql-editor {
+  min-height: 50vh;
+  padding-bottom: 50vh;
+  font-size: 1rem /* 16/16 */;
 }
 </style>
 

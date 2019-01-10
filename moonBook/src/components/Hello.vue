@@ -5,15 +5,11 @@
       <start-page @listenStartPage='onStartPage' v-if='startPageShow' />
     </transition>
     <div class="root-dom" v-if='!startPageShow'>
-      <div class="refresh" v-if='hackReset'>
+      <div class="refresh">
         <router-view />
       </div>
-      <footer-bar v-if='$route.meta.isFooterBar' @release="isGraphicShow = true" :userTabBtn='userTabBtn'/>
+      <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='userTabBtn'/>
     </div>
-
-    <van-popup v-model="isGraphicShow" class="page-popup" position="bottom" get-container='#app'>
-      <graphic @close='isGraphicShow = false' @refresh='refresh'/>
-    </van-popup>
   </div>
 </template>
 
@@ -122,12 +118,6 @@ export default {
     },
     borrow(){
       this.show = true
-    },
-    refresh(){
-      this.hackReset = false
-      this.$nextTick(() => {
-        this.hackReset = true
-      })
     }
   }
 }

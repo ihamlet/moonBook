@@ -315,8 +315,9 @@ export default {
           name: 'edit-setting',
           query: {
             id: res,
-            back: 'edit-setting',
-            type: this.$route.query.type
+            back: this.$route.name,
+            type: this.$route.query.type,
+            pageTitle: this.$route.query.pageTitle
           }
         })
       })

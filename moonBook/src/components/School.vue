@@ -1,15 +1,11 @@
 <template>
   <div class="page">
     <div class="root-dom">
-      <div class="refresh" v-if='hackReset'>
+      <div class="refresh">
         <router-view />
       </div>
       <footer-bar v-if='$route.meta.isFooterBar' @release="isGraphicShow = true" :userTabBtn='userTabBtn' />
     </div>
-
-    <van-popup v-model="isGraphicShow" class="page-popup" position="bottom" get-container='#app'>
-      <graphic @close='isGraphicShow = false' @refresh='refresh' />
-    </van-popup>
   </div>
 </template>
 <script>
@@ -65,14 +61,6 @@ export default {
     return {
       hackReset: true,
       isGraphicShow:false,
-    }
-  },
-  methods: {
-    refresh(){
-      this.hackReset = false
-      this.$nextTick(() => {
-        this.hackReset = true
-      })
     }
   }
 }

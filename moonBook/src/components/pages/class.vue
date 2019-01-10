@@ -68,7 +68,21 @@ export default {
       }
     },
     onClickLeft() {
-      this.$router.go(-1)
+      if(this.$route.query.back){
+        this.$router.push({
+          name: this.$route.query.back,
+          query:{
+            id: this.$route.query.id,
+            school_id: this.$route.query.school_id,
+            pageTitle: this.$route.query.pageTitle,
+            type: this.$route.query.type
+          }
+        })
+      }else{
+        this.$router.push({
+          name:'my'
+        })
+      }
     },
     select(item, itemIndex) {
       if (this.$route.query.registerType == 'teacher') {
@@ -113,7 +127,7 @@ export default {
       }
     },
     onLoad() {
-      axios.get(`/book/SchoolBanji/getList?page=${this.page}&limit=20&school_id=${this.$route.query.schoolId}`).then(res => {
+      axios.get(`/book/SchoolBanji/getList?page=${this.page}&limit=20&school_id=${this.$route.query.school_id}`).then(res => {
         this.page++
         this.list = this.list.concat(res.data.data)
         this.loading = false

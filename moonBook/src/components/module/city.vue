@@ -168,7 +168,6 @@ export default {
     top: 0;
     left: 0;
     z-index: 1001;
-    width: 100%;
 }
 
 .city-list{
