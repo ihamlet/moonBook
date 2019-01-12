@@ -6,15 +6,25 @@
         <span>{{item.name}}</span>
       </van-tabbar-item>
     </van-tabbar>
+
+    <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar'>
+      <tips :isShow='show' position='bottom' @percent='percent' @close='show = false'/>
+    </van-popup>
   </div>
 </template>
 <script>
+import tips from './../module/release/tips'
+
 export default {
   name: 'footer-bar',
   props: ['userTabBtn'],
+  components: {
+    tips
+  },
   data() {
     return {
-      active: 0
+      active: 0,
+      show: false
     }
   },
   created() {
@@ -39,10 +49,19 @@ export default {
     onClick(index) {
 
       if (index == 2) {
-
+        this.show = true
       }
 
       this.active = this.$route.meta.tabActive
+    },
+    percent(){
+        this.$toast.loading({
+            mask: false
+        })
+
+        if(val == 100){
+            this.$toast.clear()
+        }
     }
   }
 }
@@ -147,5 +166,17 @@ export default {
 }
 .icon-releasefill::before {
   content: '\e728';
+}
+
+
+</style>
+<style>
+.footer-bar .tips-popup.van-popup{
+  transform: none;
+  background-color: transparent;
+  bottom: 0;
+  left: 0;
+  overflow-y: initial;
+  width: 100%;
 }
 </style>

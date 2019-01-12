@@ -513,15 +513,6 @@ img.lazy[lazy='error'],
   height: 34.25rem /* 548/16 */;
 }
 
-.tips-popup.van-popup{
-  transform:none;
-  background-color: transparent;
-  top: 3.75rem /* 60/16 */;
-  right: .3125rem /* 5/16 */;
-  left: auto;
-  overflow-y: initial; 
-}
-
 .page-popup-layer {
   width: 100%;
 }

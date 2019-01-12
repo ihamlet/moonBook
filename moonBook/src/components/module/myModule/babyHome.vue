@@ -18,7 +18,7 @@
           </div>
           <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
             <div class="volume">
-              周阅读量
+              阅读量
               <span class="number">{{list.week_read_count}}</span>
             </div>
             <div class="content">
@@ -30,7 +30,7 @@
               <div class="school" v-if='list.school_id > 0' v-line-clamp:20="1">{{list.school_name}}</div>
             </div>
             <div class="volume">
-              总获赞量
+              获赞量
               <span class="number">{{list.zan_count}}</span>
             </div>
           </div>

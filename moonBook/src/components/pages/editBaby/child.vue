@@ -67,6 +67,9 @@
       <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="edit">提交修改</van-button>
     </div>
 
+    <van-popup v-model="show">
+      
+    </van-popup>
   </div>
 </template>
 <script>
@@ -88,7 +91,8 @@ export default {
   data() {
     return {
       info: '',
-      fileName: '',
+      show:false,
+      fileName: '',  
       cropperLoading: false,
       radio: '1',
       submitLoading: false,

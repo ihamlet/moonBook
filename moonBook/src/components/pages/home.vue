@@ -37,7 +37,7 @@
                 <video-list title='视频精选' type='home'/>
             </lazy-component>
             <lazy-component class="module">
-                <course-list/> 
+                <article-list/> 
             </lazy-component>
         </div>
 
@@ -63,7 +63,7 @@
             <city-list :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
         </van-popup>
 
-        <van-popup class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' v-model="tipsShow" get-container='#app'>
+        <van-popup class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' v-model="tipsShow" get-container='.home'>
             <tips position='top' @percent='percent'/>
         </van-popup>
     </div>
@@ -77,7 +77,7 @@ import appsList from './../module/apps'
 import investmentAd from './../module/investment'
 import newsList from './../module/news'
 import videoList from './../module/video'
-import courseList from './../module/course'
+import articleList from './../module/articleList'
 
 import accept from './../module/accept'
 
@@ -93,7 +93,7 @@ export default {
         investmentAd,
         newsList,
         videoList,
-        courseList,
+        articleList,
         city,
         cityList,
         accept,
@@ -198,5 +198,15 @@ export default {
     margin-top: -.625rem /* 10/16 */;
     position: relative;
     box-shadow: 0 .125rem /* 2/16 */ 1.25rem /* 20/16 */ rgba(0, 0, 0, .1)
+}
+</style>
+<style>
+.home .tips-popup.van-popup{
+  transform:none;
+  background-color: transparent;
+  top: 3.75rem /* 60/16 */;
+  right: .3125rem /* 5/16 */;
+  left: auto;
+  overflow-y: initial; 
 }
 </style>

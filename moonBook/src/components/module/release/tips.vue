@@ -1,7 +1,7 @@
 <template>
-  <div class="tips flex flex-column">
-    <div class="tips-list">
-      <div class="btn flex flex-align" v-for='(list,index) in relaseList' :key="index" @click="toRelease(index)">
+  <div class="tips flex" :class="[position == 'top'?'flex-column top':'flex-align bottom']">
+    <div class="tips-list" :class="[position == 'bottom'?'flex-align flex':'',isShow?'':'pulse animated']">
+      <div class="btn" :class="[position == 'top'?'flex-align flex':'']" v-for='(list,index) in relaseList' :key="index" @click="toRelease(index)">
         <div class="iconfont" :class="list.icon"></div>
         <div class="name">{{list.name}}</div>
       </div>
@@ -11,16 +11,17 @@
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
       <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
     </div>
+    <div class="close-btn" @click="close" v-if='position != "top"' :class="[isShow?'':'rotateIn animated']">
+      <i class="iconfont">&#xe647;</i>
+    </div>
   </div>
 </template>
 <script>
 import axios from './../../lib/js/api'
 import { compress } from './../../lib/js/util'
-
-
 export default {
   name: 'tips',
-  props: ['position'],
+  props: ['position','isShow'],
   data() {
     return {
       percent:0,
@@ -43,7 +44,7 @@ export default {
         type: 'video',
         icon: 'icon-shipin'
       }, {
-        name: '头条文章',
+        name: '文章',
         type: 'article',
         icon: 'icon-wenzhang'
       }, {
@@ -214,6 +215,9 @@ export default {
           width: img.width || 0
         })
       })
+    },
+    close(){
+      this.$emit('close')
     }
   }
 }
@@ -239,7 +243,28 @@ export default {
   content: '\e62c';
 }
 
-.tips {
+.tips.bottom .icon-weibo::before {
+  color: #7197E7;
+}
+
+.tips.bottom .icon-wenzhang::before {
+  color: #35c7da;
+}
+
+.tips.bottom .icon-paishipin::before {
+  color: #EC736E;
+}
+
+.tips.bottom .icon-shipin::before {
+  color: #6DDEA7;
+}
+
+.tips.bottom .icon-tiwen::before {
+  color: #F5C944;
+}
+
+
+.tips.top {
   width: 6.25rem /* 100/16 */;
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
@@ -249,7 +274,7 @@ export default {
   position: relative;
 }
 
-.tips::before {
+.tips.top::before {
   content: '';
   right: 0.625rem /* 10/16 */;
   width: 0;
@@ -261,21 +286,68 @@ export default {
   top: -0.75rem /* 12/16 */;
 }
 
-.tips .btn {
+.tips.top .btn {
   height: 2.25rem /* 36/16 */;
   border-bottom: 0.0625rem /* 1/16 */ solid rgba(255, 255, 255, 0.3);
 }
 
-.tips .btn:last-child {
+.tips.top .btn:last-child {
   border-bottom: none;
 }
 
-.tips .btn .iconfont {
+.tips.top .btn .iconfont {
   margin-right: 0.9375rem /* 15/16 */;
   font-size: 1.375rem /* 22/16 */;
 }
 
-.tips .btn .name {
+.tips.top .btn .name {
   font-size: 0.8125rem /* 13/16 */;
+}
+
+.tips.bottom{
+  width: 100%;
+  background: linear-gradient(rgba(255,255,255,0), #fff);
+  padding: 1.25rem /* 20/16 */ 0 3.75rem /* 60/16 */ 0;
+
+  position: absolute;
+  bottom: 0;
+}
+
+.tips.bottom .tips-list{
+  width: 18.75rem /* 300/16 */;
+  margin: 0 auto;
+  padding:1.25rem /* 20/16 */ 1.5625rem /* 25/16 */;
+  background: #fff;
+  border-radius: 1.25rem /* 20/16 */;
+  box-shadow: 0 .3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.1);
+}
+
+.tips.bottom .btn{
+ flex: 1;
+ text-align: center;
+}
+
+.tips.bottom .btn .iconfont{
+  font-size: 2.125rem /* 34/16 */;
+}
+
+.tips.bottom .btn .name{
+  font-size: .75rem /* 12/16 */;
+  margin-top: .3125rem /* 5/16 */;
+  font-weight: 500;
+}
+
+.close-btn{
+  position: absolute;
+  bottom: .9375rem /* 15/16 */;
+  left: 50%;
+  width: 2rem /* 32/16 */;
+  height: 2rem /* 32/16 */;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 2rem /* 32/16 */;
+  background: #fff;
+  box-shadow: 0 .3125rem /* 5/16 */ .9375rem /* 15/16 */ rgba(0, 0, 0, 0.1);
+  margin-left: -1rem /* 16/16 */;
 }
 </style>
