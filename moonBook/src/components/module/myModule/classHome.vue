@@ -22,21 +22,21 @@ export default {
   name: "class-home",
   props: ['children'],
   computed: {
-    selectPrompt(){
-      if(this.children.school_id == 0){
+    selectPrompt() {
+      if (this.children.school_id == 0) {
         return {
-          prompt:'请选择学校班级',
-          type:0
+          prompt: '请选择学校班级',
+          type: 0
         }
-      }else if(this.children.banji_id == 0){
+      } else if (this.children.banji_id == 0) {
         return {
-          prompt:'请选择班级',
-          type:1
+          prompt: '请选择班级',
+          type: 1
         }
-      }else{
+      } else {
         return {
           prompt: this.children.banji_name,
-          type:2
+          type: 2
         }
       }
     }
@@ -45,33 +45,37 @@ export default {
     return {
       showSchool: false,
       showClass: false,
-      school:''
+      school: ''
     }
   },
   methods: {
     toClassHome() {
-      if(this.selectPrompt.type == 0){
-        this.$router.push({
-          name:'edit-school',
-          query:{
-            id: this.children.id
-          }
-        })
-      }else if(this.selectPrompt.type == 1){
-        this.$router.push({
-          name:'edit-class',
-          query:{
-            id: this.children.id,
-            schoolId: this.children.school_id
-          }
-        })
-      }else if(this.selectPrompt.type == 2){
-        this.$router.push({
-          name: "class-home",
-          query: {
-            id: this.children.banji_id
-          }
-        })
+      switch (this.selectPrompt.type) {
+        case 0:
+          this.$router.push({
+            name: 'edit-school',
+            query: {
+              id: this.children.id
+            }
+          })
+          break
+        case 1:
+          this.$router.push({
+            name: 'edit-class',
+            query: {
+              id: this.children.id,
+              schoolId: this.children.school_id
+            }
+          })
+          break
+        case 2:
+          this.$router.push({
+            name: "class-home",
+            query: {
+              id: this.children.banji_id
+            }
+          })
+          break
       }
     }
   }
@@ -93,11 +97,11 @@ export default {
   color: transparent;
 }
 
-.avatar img{
+.avatar img {
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
   overflow: hidden;
   border-radius: 50%;
-  margin-right: .3125rem /* 5/16 */;
+  margin-right: 0.3125rem /* 5/16 */;
 }
 </style>

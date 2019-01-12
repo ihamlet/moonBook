@@ -524,7 +524,6 @@ img.lazy[lazy='error'],
 
 .page-popup-layer {
   width: 100%;
-  border-radius: 1.25rem /* 20/16 */ 1.25rem /* 20/16 */ 0 0;
 }
 
 .cropper-popup {
@@ -837,6 +836,7 @@ video {
 .article-content {
   background: #fff;
   padding: 1.25rem /* 20/16 */;
+  position: relative;
 }
 
 .article-content .content img {
@@ -847,6 +847,21 @@ video {
 .article-content .content p {
   font-size: 1rem /* 16/16 */ !important;
   margin: 0.625rem /* 10/16 */ 0;
+}
+
+.long-article-thumb{
+  width: 100%;
+  height: 9.375rem /* 150/16 */;
+  overflow: hidden;
+  margin-bottom: .625rem /* 10/16 */;
+  position: relative;
+}
+
+.long-article-thumb img{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
 }
 
 .close {

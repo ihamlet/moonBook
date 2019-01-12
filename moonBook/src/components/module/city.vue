@@ -149,7 +149,7 @@ export default {
         silde(){
             if(this.userPointState){
                 let products = {
-                    city:this.userPointState.city
+                    city: this.userPointState.city
                 }
                 this.getCityDistrict(products).then(res=>{
                     if(res.districts){

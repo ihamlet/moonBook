@@ -43,7 +43,7 @@ export default {
         type: 'video',
         icon: 'icon-shipin'
       }, {
-        name: '发文章',
+        name: '头条文章',
         type: 'article',
         icon: 'icon-wenzhang'
       }, {

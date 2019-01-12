@@ -366,7 +366,7 @@ export default {
           is_audio: type === 'audio' ? 1 : 0,
           is_video: type === 'video' ? 1 : 0,
           photo: path,
-          thumb: `${path}?x-oss-percent=video/snapshot,t_13000,f_jpg,w_0,h_0,m_fast`
+          thumb: `${path}?x-oss-percent=video/snapshot,t_2000,f_jpg,w_0,h_0,m_fast`
         })
       })
     },

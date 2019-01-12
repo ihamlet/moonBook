@@ -23,7 +23,7 @@
         </div>
       </div>
 
-      <media :item='item' type='crad'/>
+      <media :item='item' type='card'/>
 
       <div class="temp-type">
         <van-tag type="primary" plain v-if='item.school_id > 0'>
@@ -72,7 +72,7 @@ import media from './../mold/media'
 import { timeago } from './../../lib/js/util'
 
 export default {
-  name: "graphic-crad",
+  name: "graphic-card",
   props: ["item", "type",'avatar'],
   components: {
     share,
@@ -103,7 +103,9 @@ export default {
         name:'article',
         query:{
           id: item.post_id,
-          type: item.template_id
+          type: item.template_id,
+          back: this.$route.name,
+          back_id: this.$route.query.id
         }
       })
     },

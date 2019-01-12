@@ -1,11 +1,12 @@
 <template>
-  <div class="container">
-    <div class="text" ref='textContent' :class="item.template_id == 0?'content':''" v-html='item.details' @click="toArticle"></div>
+  <div class="container" id='media'>
+    <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?4:0" :class="item.template_id == 0?'content':''" v-html='item.details' @click="toArticle"></div>
+
     <div class="media img" v-if='item.template_id == 1 && item.hasvideo == 0 && item.hasaudio == 0'>
       <div :class="[item.photos.length == 4?'layout-4':'']">
         <van-row :gutter="4">
           <van-col :span="item.photos.length == 4?'12':'8'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-            <div class="img-grid" :class="[photo.height/photo.width > 18/9&&type!='crad'?'long':'']">
+            <div class="img-grid" :class="[photo.height/photo.width > 18/9&&type!='card'?'long':'']">
               <img class="img-preview" :class="[photo.height/photo.width > 18/9?'long':'']" :src="photo.thumb" :large="photo.photo" :preview='photo.post_id' />
               <van-tag class="photo-tag" type="danger" v-if='photo.height/photo.width > 18/9'>长图</van-tag>
             </div>
@@ -13,6 +14,12 @@
         </van-row>
       </div>
     </div>
+
+    <div class="media img long-article-thumb" v-if='item.template_id == 0&&type == "card"&&item.photos[0]'>
+      <img :src="item.cover || item.photos[0].thumb" :preview='item.post_id'/>
+      <van-tag class="photo-tag" type="danger">长文</van-tag>
+    </div>
+
     <!-- 视频 -->
     <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
       <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
@@ -39,7 +46,7 @@ export default {
   },
   methods: {
     toArticle() {
-      if (this.type == 'crad') {
+      if (this.type == 'card') {
         this.$router.push({
           name: 'article',
           query: {
@@ -55,7 +62,8 @@ export default {
         query: {
           id: videoItem.post_id,
           user_id: this.item.user_id,
-          back: this.$route.name
+          back: this.$route.name,
+          back_id: this.$route.query.id
         }
       })
     }
@@ -72,7 +80,7 @@ export default {
 }
 
 .img-grid.long{
-    padding-bottom: 150%;
+  padding-bottom: 150%;
 }
 
 .img-preview.long {
@@ -99,7 +107,14 @@ export default {
 }
 
 .text{
-  font-size: 1.125rem /* 18/16 */;
-  line-height: 1.8
+  font-size: 1.0625rem /* 17/16 */;
+  line-height: 1.8;
+  margin-bottom: .625rem /* 10/16 */;
+}
+</style>
+<style>
+#media .text img,
+#media .text p{
+  margin: .625rem /* 10/16 */ 0;
 }
 </style>

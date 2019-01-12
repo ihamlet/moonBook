@@ -1,6 +1,7 @@
 <template>
   <div class="school-home page-padding">
-    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" left-arrow @click-left="onClickLeft" :border='false' fixed>
+    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" left-arrow @click-left="onClickLeft" :border='false'
+      fixed>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'首页'}}</span>
@@ -25,7 +26,7 @@
         </div>
       </lazy-component>
       <lazy-component class="module">
-          <notice type='school'/>
+        <notice type='school' />
       </lazy-component>
       <lazy-component class="module">
         <read-list type='school' title='流动红旗' field='name' />
@@ -34,7 +35,7 @@
         <van-tabs color='#409eff' :line-width='20' :line-height='4' animated swipeable>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
-              <drying-list :schoolId='$route.query.id' />
+              <drying-list :schoolId='$route.query.id' portal_name='学校主页'/>
             </div>
           </van-tab>
         </van-tabs>
@@ -64,7 +65,7 @@ export default {
     ...mapGetters(['userDataState']),
     actions() {
       let array = []
-      if(this.managerList){
+      if (this.managerList) {
         this.managerList.forEach(element => {
           let data = {
             name: element.name,
@@ -83,10 +84,10 @@ export default {
   data() {
     return {
       schoolInfo: '',
-      managerList:[],
-      domHeight:'',
-      fixedHeaderBar:true,
-      actionsheetShow:false,
+      managerList: [],
+      domHeight: '',
+      fixedHeaderBar: true,
+      actionsheetShow: false,
       appsList: [
         {
           name: '简介',
@@ -142,7 +143,7 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     request() {
-      axios.get('/book/MemberBanji/getList').then(res=>{
+      axios.get('/book/MemberBanji/getList').then(res => {
         this.managerList = res.data.data
       })
 
@@ -150,7 +151,7 @@ export default {
         this.schoolInfo = res.data.data
       })
     },
-    handleScroll(){
+    handleScroll() {
       this.getDomHeight()
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       this.scrollTop = scrollTop
@@ -166,26 +167,26 @@ export default {
       }
     },
     onClickLeft() {
-      if(this.$route.query.back){
+      if (this.$route.query.back) {
         this.$router.push({
           name: this.$route.query.back,
-          query:{
+          query: {
             id: this.$route.query.banji_id
           }
-        }) 
-      }else{
+        })
+      } else {
         this.$router.push({
           name: 'home'
         })
       }
     },
-    cutover(){
+    cutover() {
       this.actionsheetShow = true
     },
     onSelect(item) {
       this.hackReset = false
       this.actionsheetShow = false
-      if(item.type == 'banji'){
+      if (item.type == 'banji') {
         this.$router.push({
           name: 'class-home',
           query: {
@@ -197,10 +198,10 @@ export default {
           this.hackReset = true
           this.request()
         })
-      }else if(item.type == 'school'){
+      } else if (item.type == 'school') {
         this.$router.push({
-          name:'apps-school',
-          query:{
+          name: 'apps-school',
+          query: {
             id: item.id,
             back: this.$route.name,
             banji_id: this.$route.query.id

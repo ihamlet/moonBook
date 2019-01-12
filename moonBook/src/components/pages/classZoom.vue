@@ -4,16 +4,16 @@
 
     </van-nav-bar>
     <lazy-component class="module">
-      <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template'/>
+      <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template' />
     </lazy-component>
     <lazy-component>
       <van-nav-bar title="班级动态" />
-      <van-list v-model="loading" :finished="finished" @load="onLoad"  :finished-text="$store.state.slogan">
+      <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
         <div class="list" v-if='list.length > 0'>
           <div class="item" v-for="(item,index) in list" :key="index">
-            <van-cell title="" is-link arrow-direction="down"  v-if='manage(item)' @click="operation(item)"/>
+            <van-cell title="" is-link arrow-direction="down" v-if='manage(item)' @click="operation(item)" />
             <van-cell>
-              <graphic-crad :item="item" type="classHome"/>
+              <graphic-card :item="item" type="classHome" />
             </van-cell>
           </div>
         </div>
@@ -25,46 +25,50 @@
       <graphic @close='releasePageShow = false' />
     </van-popup>
 
-     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
+    <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
 import freshList from './../module/findModule/freshList'
-import graphicCrad from './../module/card/graphicCrad'
+import graphicCard from './../module/card/graphicCard'
 import qrCode from "./../module/mold/qrCode"
 
 export default {
   name: "class-zoom",
-  props: ['type','banji_id'],
+  props: ['type', 'banji_id'],
   components: {
     freshList,
-    graphicCrad
+    graphicCard
   },
   data() {
     return {
-      show:false,
-      managerList:[],
+      show: false,
+      managerList: [],
       freshList: [],
       list: [],
-      cardItem:'',
+      cardItem: '',
       listLength: "",
       releasePageShow: false,
       loading: false,
       finished: false,
-      page:1,
+      page: 1,
       actions: [{
         name: '置顶',
-        type: 'top'
-      },{
+        type: 'top',
+        index: 0
+      }, {
         name: '推荐',
-        type: 'recommend'
-      },{
+        type: 'recommend',
+        index: 1
+      }, {
         name: '屏蔽',
-        type: 'shield'
-      },{
+        type: 'shield',
+        index: 2
+      }, {
         name: '删除',
-        type: 'delete'  
+        type: 'delete',
+        index: 3
       }]
     }
   },
@@ -79,7 +83,7 @@ export default {
       this.$router.go(-1)
     },
     fetchData() {
-      axios.get('/book/MemberBanji/getList').then(res=>{
+      axios.get('/book/MemberBanji/getList').then(res => {
         this.managerList = res.data.data
       })
 
@@ -88,13 +92,22 @@ export default {
       })
     },
     onLoad() {
-      return axios.get(`/book/SchoolArticle/getList?page=${this.page}&limit=10&banji_id=${this.$route.query.id}&sort=top`).then(res => {
-        if(this.page == 1){
+      let data = {
+        params: {
+          page: this.page,
+          sort: 'top',
+          banji_id: this.$route.query.id,
+          portal_name: '班级主页'
+        }
+      }
+
+      return axios.get('/book/SchoolArticle/getList', data).then(res => {
+        if (this.page == 1) {
           this.list = res.data.data
-        }else{
+        } else {
           this.list = this.list.concat(res.data.data)
         }
-      
+
         this.loading = false
         this.page++
         if (this.list.length >= res.data.count) {
@@ -102,39 +115,61 @@ export default {
         }
       })
     },
-    operation(item){
+    operation(item) {
       this.show = true
       this.cardItem = item
     },
-    onSelect(item){
-      // if (item.type == 'delete') {
-      // //   axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
-      // //     let key 
-      // //     this.list.forEach((element,i) => {
-      // //       if(element.post_id == this.postId){
-      // //         key = i
-      // //       }
-      // //     })
-      // //     this.list.splice(key,1)
-      // //   })
-      // //   this.show = false
+    onSelect(item) {
+      switch (item.index) {
+        case 0:
+          axios.get(`/book/SchoolArticle/top?id=${this.cardItem.post_id}`).then(res => {
+            if(res.data.status == 1){
+              this.show = false
+              this.page = 1
+              this.onLoad()
+              this.$toast.success('置顶成功')
+            }else{
+              this.$toast.fail('置顶失败')
+            }
+          })
+          break
+        case 1:
 
-      // //   this.$toast.success('删除成功')
-      // }
+          break
+        case 2:
+          axios.get(`/book/SchoolArticle/top?id=${this.cardItem.user_id}`).then(res => {
+            if(res.data.status == 1){
+              this.show = false
+              this.page = 1
+              this.onLoad()
+              this.$toast.success('屏蔽成功')
+            }else{
+              this.$toast.fail('屏蔽失败')
+            }
 
-      if(item.type == 'delete'){
-        axios.get(`/book/SchoolArticle/del?id=${this.cardItem.post_id}`).then(res=>{
-           this.show = false
-           this.$toast.success('删除成功')
-           this.page = 1
-           this.onLoad()
-        })
+            console.log(res.data.msg,this.cardItem.user_id)
+          })   
+          break
+        case 3:
+          axios.get(`/book/SchoolArticle/del?id=${this.cardItem.post_id}`).then(res => {
+            if(res.data.status == 1){
+              this.show = false
+              this.page = 1
+              this.onLoad()
+              this.$toast.success('删除成功')
+            }else{
+              this.$toast.fail('删除失败')
+            }
+          })
+          break
       }
+
+
     },
-    manage(item){
+    manage(item) {
       let boolean = false
       this.managerList.forEach(element => {
-        if(element.id == item.class_id || element.id == item.school_id){
+        if (element.id == item.class_id || element.id == item.school_id) {
           boolean = true
         }
       })
@@ -148,11 +183,11 @@ export default {
   padding-top: 2.8125rem /* 45/16 */;
 }
 
-.class-zoom.no-padding{
+.class-zoom.no-padding {
   padding-top: 0;
 }
 
-.item{
-  margin-bottom: .625rem /* 10/16 */;
+.item {
+  margin-bottom: 0.625rem /* 10/16 */;
 }
 </style>

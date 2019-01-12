@@ -78,28 +78,24 @@
         <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
       </lazy-component>
       <lazy-component v-if="childInfo.is_mine">
-        <van-nav-bar title="成长日记" @click-right="releasePageShow = true">
-          <div class="head-bar-btn theme-color" slot="right">
-            <i class="iconfont">&#xe72c;</i>发布
-          </div>
-        </van-nav-bar>
-        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated>
+        <van-nav-bar title="成长日记"/>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab">
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-              <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-
-              </van-pull-refresh>
-            <!-- <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-              <div class="no-list" v-if='list.length == 0'>
-                没有记录
-              </div>
-              <div class="list">
-                <div class="item" v-for="(item,index) in list" :key="index">
-                  <van-cell>
-                    <graphic-crad :item="item" type="babyHome" :avatar='childInfo.avatar' />
-                  </van-cell>
+            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+              <van-pull-refresh v-model="loading" @refresh="onRefresh">
+                <div class="tab-content" v-if='list.content.length'>
+                  <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
+                    <van-cell>
+                      <graphic-card :item="item" type="babyHome" :avatar='childInfo.avatar' />
+                    </van-cell>
+                  </div>
                 </div>
-              </div>
-            </van-list> -->
+                <div class="no-content" v-else>
+                  <img src="./../../assets/img/noData.png" />
+                  暂无记录
+                </div>
+              </van-pull-refresh>
+            </van-list>
           </van-tab>
         </van-tabs>
       </lazy-component>
@@ -125,7 +121,7 @@ import wave from "./../module/animate/anWave"
 import qrCode from "./../module/mold/qrCode"
 import avatar from "./../module/avatar"
 import reading from "./../module/reading"
-import graphicCrad from "./../module/card/graphicCrad"
+import graphicCard from "./../module/card/graphicCard"
 import classShow from './../module/classModule/classShow'
 import family from './../module/myModule/family'
 import activity from './../module/activity/activity'
@@ -138,7 +134,7 @@ export default {
     qrCode,
     reading,
     avatar,
-    graphicCrad,
+    graphicCard,
     classShow,
     family,
     slogan,
@@ -174,31 +170,11 @@ export default {
       loading: false,
       finished: false,
       releasePageShow: false,
-      isLoading: false,
+      loading: false,
       page: 1,
+      tabIndex: 0,
       tab: [{
         title: '全部',
-        content: ''
-      }, {
-        title: '风采',
-        content: ''
-      }, {
-        title: '育儿',
-        content: ''
-      }, {
-        title: '才艺',
-        content: ''
-      }, {
-        title: '阅读',
-        content: ''
-      }, {
-        title: '国学',
-        content: ''
-      }, {
-        title: '讲故事',
-        content: ''
-      }, {
-        title: '荣誉',
         content: ''
       }]
     }
@@ -235,6 +211,19 @@ export default {
   methods: {
     ...mapActions(["getUserData"]),
     fetchData() {
+      axios.get('/book/schoolArticleCate/getList?portal_name=宝贝主页').then(res => {
+        if (res.status == 200) {
+          let array = res.data
+          array.forEach(element => {
+            console.log(element)
+            this.tab.push({
+              title: element.cate_name,
+              content: ''
+            })
+          })
+        }
+      })
+
       axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
         this.lateBook = res.data.data
       })
@@ -277,30 +266,46 @@ export default {
         this.domHeight = this.$refs.head.offsetHeight / 2
       }
     },
-    onLoad() {
+    onChangeTab(index) {
+      this.tabIndex = index
+      this.page = 1
+      this.onRefresh()
+    },
+    getList() {
       let data = {
         params: {
           page: this.page,
           sort: 'new',
-          child_id: this.$route.query.id
+          child_id: this.$route.query.id,
+          portal_name: '宝贝主页'
         }
       }
-      
 
-      axios.get('/book/SchoolArticle/getList', data).then(res => {
-        this.page++
+      if (this.tabIndex > 0) {
+        data.params.cate = this.tab[this.tabIndex].title
+      }
 
-        this.list = this.list.concat(res.data.data)
+      return axios.get('/book/SchoolArticle/getList', data).then(res => {
+        if (this.page == 1) {
+          this.tab[this.tabIndex].content = res.data.data
+        } else {
+          this.tab[this.tabIndex].content = this.list.concat(res.data.data)
+        }
         this.loading = false
-
-        if (this.list.length >= res.data.count) {
+        this.page++
+        if (this.tab[this.tabIndex].content.length >= res.data.count) {
           this.finished = true
         }
       })
     },
-    onRefresh(){
+    onLoad() {
+      this.getList()
+    },
+    onRefresh() {
       this.page = 1
-      
+      this.getList().then(() => {
+        this.loading = false
+      })
     },
     toClassHome(childInfo) {
       if (childInfo.banji_id > 0) {
@@ -464,6 +469,23 @@ export default {
 .item {
   margin-bottom: 0.625rem /* 10/16 */;
 }
+
+
+.no-content{
+  background: #fff;
+  display: grid;
+  text-align: center;
+  padding-bottom: 3.125rem /* 50/16 */;
+  color: #C0C4CC;
+}
+
+
+.no-content img{
+  width: 9.375rem /* 150/16 */;
+  margin: 1.25rem /* 20/16 */ auto;
+  opacity: .7;
+}
+
 </style>
 <style>
 .add-count-popup.van-popup {

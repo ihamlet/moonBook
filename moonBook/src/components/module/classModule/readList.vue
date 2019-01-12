@@ -158,5 +158,6 @@ export default {
 
 .ranking-list .item{
   margin-right: .625rem /* 10/16 */;
+  white-space: nowrap 
 }
 </style>

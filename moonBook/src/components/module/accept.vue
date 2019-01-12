@@ -214,27 +214,8 @@ export default {
       this.$emit('stepActiveChange', val)
     }
   },
-  // mounted() {
-  //   window.paySuccess = (res) => {
-  //     this.onPay(res)
-  //   }
-  // },
   methods: {
     ...mapActions(['getUserData', 'getMsgLength']),
-    // onPay(res) {
-    //   if (res.status == 1) {
-    //     this.payLoading = false
-    //     this.iconSuccessShow = true
-    //     setTimeout(() => {
-    //       this.$router.push({ name: 'card-list' })
-    //       this.$emit('close')
-    //     }, 2000)
-    //   } else {
-    //     this.toast.fail('支付失败');
-    //     this.$router.push({name:'home'})
-    //     this.$emit('close')
-    //   }
-    // },
     onLoad() {
       let data = {
         lat: this.lat,
@@ -444,7 +425,6 @@ background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
 
 .background-grey {
   background: #f2f2f2;
-  height: 100vh;
 }
 
 .col-box {

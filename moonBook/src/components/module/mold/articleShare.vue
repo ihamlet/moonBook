@@ -6,14 +6,19 @@
     <div class="image-wrapper" ref="imageWrapper">
       <transition name="fade" mode="out-in">
         <div class="screenshot" v-if='!dataURL'>
-          <div class="user flex flex-align" v-if='item.user'>
-            <div class="avatar">
-              <img :src="getAvatar(item.user.avatar)" :alt="item.user.username" />
-            </div>
-            <div class="name">{{userName}}</div>
-          </div>
           <div class="content">
-            <article-content :item='item' type='screenshot' />
+          <div class="logo flex flex-align">
+            <img src="/Public/lib/bookshelf/img/logo.png" alt="logo" />
+            <span class="name">阅亮书架</span>
+          </div>
+            <div class="article-container">
+              <div class="user flex flex-align" v-if='item.user'>
+                <div class="name">{{userName}}</div>
+              </div>    
+                <div class="title">{{item.title}}</div>
+                <div class="views">{{item.views}}人读过</div>
+                <div class="details" v-line-clamp:20="4" v-html="item.details.replace(/<img.*?>/, '')"></div>
+            </div>
           </div>
           <div class="press flex flex-align">
             <div class="text">
@@ -79,9 +84,8 @@ export default {
 </script>
 <style scoped>
 .screenshot {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  height: 100vh;
+  height: 31.25rem /* 500/16 */;
+  border-radius: .625rem /* 10/16 */;
 }
 
 .image-wrapper {
@@ -96,7 +100,6 @@ export default {
 
 .screenshot .user {
   margin-bottom: 0.625rem /* 10/16 */;
-  padding: .625rem /* 10/16 */ 1.25rem /* 20/16 */;
 }
 
 .screenshot .user .avatar {
@@ -139,5 +142,37 @@ export default {
   transform: translate3d(-50%, 0, 0);
 }
 
+.logo img{
+  width: 3.125rem /* 50/16 */;
+  height: 3.125rem /* 50/16 */;
+  margin-right: .625rem /* 10/16 */;
+}
 
+.logo .name{
+  font-size: 1.125rem /* 18/16 */;
+  font-weight: 500;
+}
+
+.content{
+  padding: 1.25rem /* 20/16 */;
+}
+
+.content .title{
+  font-size: 1.25rem /* 20/16 */;
+  margin-bottom: .625rem /* 10/16 */;
+}
+
+.article-container{
+  padding: 1.25rem /* 20/16 */ 0;
+}
+
+.details{
+  width: 100%;
+  height: 5rem /* 80/16 */;
+  margin-top: 1.875rem /* 30/16 */;
+}
+
+.punch{
+  bottom: 1.25rem /* 20/16 */;
+}
 </style>

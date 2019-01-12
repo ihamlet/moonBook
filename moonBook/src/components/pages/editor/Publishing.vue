@@ -1,6 +1,6 @@
 <template>
   <div class="publishing">
-    <van-nav-bar title="发布长文" left-text="取消" @click-left="actionShow = true">
+    <van-nav-bar title="文章发布" left-text="取消" @click-left="actionShow = true" fixed>
       <div class="head-bar-btn theme-color" slot="right" @click="release">
         <i class="iconfont">
           &#xe72c;
@@ -8,29 +8,23 @@
         发布
       </div>
     </van-nav-bar>
-    <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
     <div class="container">
       <div class="edit-title">
         <van-cell-group>
           <van-field v-model="grapicData.title" placeholder="文章标题" rows="1" />
         </van-cell-group>
       </div>
-      <div class="edit-content" :class="[fixedHeaderBar?'':'fixed']">
-        <quill-editor ref='myQuillEditor' v-model="grapicData.content" :options="editorOption" />
+      <div class="classify">
+        <van-cell title-class='theme-color' title="#选择分类" :value="cateName" is-link arrow-direction="down" @click="show = true" />
+      </div>   
+      <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
+      <div class="edit-content" :class="[isQlToolbarShow?'bar-show':'']">
+        <quill-editor ref='myQuillEditor' v-model="grapicData.content" :options="editorOption" @focus="onEditorFocus($event)" @blur="onEditorBlur($event)"/>
       </div>
     </div>
     <div class="media-input" v-show="false">
       <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
-    </div>
-
-    <div class="classify">
-      <van-cell title-class='theme-color' title="#选择分类" is-link arrow-direction="down" @click="show = true" />
-      <van-cell v-if='cateName'>
-        <div class="flex flex-align" slot="title">
-          <van-tag type="primary">{{cateName}}</van-tag>
-        </div>
-      </van-cell>
     </div>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
@@ -58,6 +52,7 @@ export default {
   },
   data() {
     return {
+      isQlToolbarShow: false,
       actionShow:false,
       show: false,
       ossSign: '',
@@ -67,7 +62,8 @@ export default {
       UploadTypeShow: false,
       grapicData: {
         title: '',
-        content: ''
+        content: '',
+        photos:[]
       },
       fixedHeaderBar: true,
       history: {
@@ -116,6 +112,12 @@ export default {
         this.ossSign = res.data.data
       })
     },
+    onEditorFocus(e){
+      this.isQlToolbarShow = true
+    },
+    onEditorBlur(e){
+      this.isQlToolbarShow = false
+    },
     onSelect(item) {
       if (item.type == 'save') {
         localStorage.setItem('articleData', JSON.stringify(this.grapicData))
@@ -150,22 +152,24 @@ export default {
     release() {
       if (this.grapicData.title.length == 0) {
         this.$toast('请输入标题')
-      } else if (this.grapicData.content.length == 0) {
-        this.$toast('请输入正文')
-      } else if (this.cateId == 0) {
+      } else if ( this.cateId == 0 ) {
         this.$toast('请选择分类')
+      } else if ( this.grapicData.content.length == 0 ) {
+        this.$toast('请输入正文')
       } else {
         let data = {
           title: this.grapicData.title,
           details: this.grapicData.content,
-          template_id: 2,
+          photos: this.grapicData.photos,
           cate_id: this.cateId,
           to_school: 1
         }
 
         axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
           if (res.data.status == 1) {
-
+            this.$router.push({
+              name:'apps-find'
+            })
           }
         })
       }
@@ -234,7 +238,15 @@ export default {
           this.percent = Math.floor(100 * (p.loaded / p.total))
         }
       }).then((res) => {
-        this.addImage(`${path}?x-oss-percent=video/snapshot,t_13000,f_jpg,w_0,h_0,m_fast`)
+        this.grapicData.photos.push({
+          media: true,
+          is_audio: type === 'audio' ? 1 : 0,
+          is_video: type === 'video' ? 1 : 0,
+          photo: path,
+          thumb: `${path}?x-oss-percent=video/snapshot,t_2000,f_jpg,w_0,h_0,m_fast`
+        })
+
+        this.addImage(`${path}?x-oss-percent=video/snapshot,t_2000,f_jpg,w_0,h_0,m_fast`)
       })
     },
     upOssPhoto(blob, file, base64) {
@@ -258,6 +270,13 @@ export default {
         data: fd,
         method: 'post',
         onUploadProgress: p => {
+          this.grapicData.photos.push({
+            photo: path,
+            thumb: `${path}?x-oss-percent=image/resize,m_fill,h_200,w_200`,
+            height: img.height || 0,
+            width: img.width || 0
+          })
+
           this.percent = Math.floor(100 * (p.loaded / p.total))
         }
       }).then((res) => {
@@ -272,6 +291,11 @@ export default {
 }
 </script>
 <style scoped>
+.container{
+  padding-top: 2.8125rem /* 45/16 */;
+  background: #fff;
+}
+
 .publishing {
   background: #fff;
 }
@@ -313,17 +337,11 @@ export default {
   border: none;
   height: auto;
 }
-
-.classify {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-}
 </style>
 <style>
 .edit-content.fixed .ql-toolbar.ql-snow {
   position: fixed;
-  top: 0;
+  bottom: 0;
 }
 
 .edit-title .van-field__control {
@@ -337,15 +355,27 @@ export default {
   z-index: 10;
 }
 
+
+.publishing .edit-content.bar-show .ql-toolbar.ql-snow{
+  display: block;
+}
+
+.publishing .ql-toolbar.ql-snow{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: none;
+}
+
 .publishing .ql-toolbar.ql-snow,
 .publishing .ql-container.ql-snow {
   border: none;
 }
 
 .ql-editor {
-  min-height: 50vh;
-  padding-bottom: 50vh;
+  min-height: 100vh;
   font-size: 1rem /* 16/16 */;
+  padding-bottom: 5rem /* 80/16 */;
 }
 </style>
 

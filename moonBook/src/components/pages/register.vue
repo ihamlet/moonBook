@@ -110,7 +110,7 @@ export default {
 }
 </script>
 <style scoped>
-.container {
+.container{
   padding-top: 2.8125rem /* 45/16 */;
 }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="topic-list">
-    <van-nav-bar title="选择分类" />
+    <van-nav-bar title="选择分类" fixed right-text='关闭' @click-right='close' />
     <div class="list">
       <van-cell-group>
         <div class="item" v-for='(item,index) in topicList' :key="index">
@@ -40,6 +40,9 @@ export default {
     },
     select(item){
       this.$emit('select',item)
+      this.$emit('close')
+    },
+    close(){
       this.$emit('close')
     }
   }

@@ -119,9 +119,19 @@ export default {
       })
     },
     onClickLeft() {
-      this.$router.push({
-        name: 'apps-find'
-      })
+      if(this.$route.query.back){
+        this.$router.push({
+          name: this.$route.query.back,
+          query: {
+            id: this.$route.query.back_id
+          }
+        })
+      }else{
+        this.$router.push({
+          name:'apps-find'
+        })
+      }
+
     },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {

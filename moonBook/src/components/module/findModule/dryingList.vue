@@ -6,7 +6,7 @@
           <van-cell v-if='item.isMe' title='' is-link arrow-direction="down" @click="actionsheet(item)"/>
           <van-cell>
             <div class="content">
-              <graphic-crad :item="item" @follow="follow"/>
+              <graphic-card :item="item" @follow="follow"/>
             </div>
           </van-cell>
         </div>
@@ -20,15 +20,15 @@
 import axios from 'axios'
 import { mapGetters } from 'vuex'
 import slogan from './../slogan'
-import graphicCrad from './../card/graphicCrad'
+import graphicCard from './../card/graphicCard'
 
 export default {
   name: 'drying-list',
   components: {
     slogan,
-    graphicCrad
+    graphicCard
   },
-  props: ['sort','tid','schoolId','type'],
+  props: ['sort','tid','schoolId','type','portal_name'],
   computed: {
     ...mapGetters(['userToken'])
   },
@@ -46,7 +46,8 @@ export default {
       page: 1,
       actions: [{
         name: '删除',
-        type: 'delete'
+        type: 'delete',
+        index: 0
       }]
     }
   },
@@ -65,6 +66,10 @@ export default {
         data.params.school_id = this.schoolId
       }
 
+      if(this.portal_name){
+        data.params.portal_name = this.portal_name
+      }
+
       return axios.get('/book/SchoolArticle/getList',data).then(res => {
         if(this.page == 1){
           this.list = res.data.data
@@ -74,6 +79,7 @@ export default {
         
         this.loading = false
         this.page++
+        
         if (this.list.length >= res.data.count) {
           this.finished = true
         }
@@ -103,19 +109,19 @@ export default {
       })
     },
     onSelect(item) {
-      if (item.type == 'delete') {
-        axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
-          let key 
-          this.list.forEach((element,i) => {
-            if(element.post_id == this.postId){
-              key = i
+      switch(item.index){
+        case 0:
+          axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
+            if(res.data.status == 1){
+              this.page = 1
+              this.onLoad()
+              this.$toast.success('删除成功')
+              this.show = false
+            }else{
+              this.$toast.fail('删除失败')
             }
           })
-          this.list.splice(key,1)
-        })
-        this.show = false
-
-        this.$toast.success('删除成功')
+        break
       }
     },
     actionsheet(item){

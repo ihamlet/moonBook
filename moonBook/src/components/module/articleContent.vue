@@ -1,7 +1,13 @@
 <template>
   <div class="article-content" :class="[type=='screenshot'?'img-content':'',item.template_id!=0?'flex flex-align':'']">
-    <article>
-      <div class="title" v-if='item.template_id!=1'>{{item.title}}</div>
+    <div class="article-header" v-if='item.template_id==0'>
+        <div class="media img long-article-thumb">
+          <img :src="item.cover || item.photos[0].thumb" :preview='item.post_id'/>
+          <van-tag class="photo-tag" type="danger" color="#03A9F4">封面</van-tag>
+        </div>
+        <div class="title" v-line-clamp:20="2">{{item.title}}</div>
+    </div>
+    <article :class="[item.template_id==0?'long-article':'']" >
       <div class="main">
         <div class="media-content">
           <media :item='item'/>
@@ -34,7 +40,6 @@ export default {
 
 .title {
   font-size: 1.125rem /* 18/16 */;
-  margin-bottom: 1.875rem /* 30/16 */;
   font-weight: 700;
 }
 
@@ -62,5 +67,28 @@ export default {
 
 article {
   width: -webkit-fill-available;
+}
+
+.article-header{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.article-header .title{
+  padding-left: 1.25rem /* 20/16 */;
+  padding-right: 1.25rem /* 20/16 */;
+}
+
+.photo-tag{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.long-article{
+  padding-top: 11.25rem /* 180/16 */;
 }
 </style>

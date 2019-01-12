@@ -1,6 +1,6 @@
 <template>
     <div class="home page-padding">
-         <van-progress v-if='percentVal!=0&&percentVal!=100' :percentage="percentVal" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
+        <van-progress v-if='percentVal!=0&&percentVal!=100' :percentage="percentVal" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
         <div class="head-bar flex flex-align" :class="[themeBarSearch?'theme-background':'default-head-bar-background']">
             <div class="left-btn" v-line-clamp:20="1" @click="cityListShow=true">
                 <span v-if='userPointState'>{{userPointState.city}}</span>
@@ -181,6 +181,13 @@ export default {
         },
         percent(val){
             this.percentVal = val
+            this.$toast.loading({
+                mask: false
+            })
+
+            if(val == 100){
+                this.$toast.clear()
+            }
         }
     }
 }

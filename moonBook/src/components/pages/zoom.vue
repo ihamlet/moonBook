@@ -7,7 +7,7 @@
         <div class="user-card flex flex-align" ref='userCrad'>
           <div class="info">
             <div class="avatar">
-              <img :src="getAvatar(userInfo.avatar)" :alt="userInfo.name" />
+              <img :src="getAvatar(userInfo.avatar)" :alt="userInfo.name" @error='imgError'/>
             </div>
             <div class="name" v-line-clamp:20="1">
               {{userInfo.name}}
@@ -47,7 +47,7 @@
             <div class="item" v-for="(item,index) in list" :key="index">
               <van-cell title="" v-if='item.isMe' @click="actionsheet(item)" is-link arrow-direction='down'/>
               <van-cell>
-                <graphic-crad :item='item' />
+                <graphic-card :item='item' />
               </van-cell>
             </div>
           </div>
@@ -61,13 +61,13 @@
 <script>
 import axios from './../lib/js/api'
 import { sum } from './../lib/js/util.js'
-import graphicCrad from './../module/card/graphicCrad'
+import graphicCard from './../module/card/graphicCard'
 import reading from './../module/reading'
 
 export default {
   name: 'zoom',
   components: {
-    graphicCrad,
+    graphicCard,
     reading
   },
   data() {
@@ -183,6 +183,9 @@ export default {
          result = img
       }
       return result
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     }
   }
 }

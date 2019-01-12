@@ -1,5 +1,5 @@
 <template>
-  <div class="comment-list" id='comment'>
+  <div class="comment-list" id='comment' ref='comment'>
     <van-nav-bar  title="评论" :zIndex='0' @click-right="showField()">
       <van-button round size="small" type="danger" slot="right"> {{listLength}}评论</van-button>
     </van-nav-bar>
@@ -63,7 +63,9 @@
             </div>
             <div class="comment-bar flex flex-align">
               <div class="date">{{timeAago(item.create_time)}}</div>
-              <div class="theme-color" @click="showField(item)">回复</div>
+              <div class="theme-color" @click="showField(item)">
+                <van-tag round size="medium" type="primary">{{item.replyList.length>0?`${item.replyList.length}条`:''}}回复</van-tag>
+               </div>
             </div>
           </div>
         </van-cell>
@@ -81,12 +83,17 @@
             <span>写评论</span>
           </div>
           <div class="btn-icon flex flex-align">
+            <div class="btn" @click="toScroll">
+              <van-tag class="num-tag" v-if='list.length > 0' round type="danger">{{list.length > 1000?'999+':list.length}}</van-tag>
+              <i class="iconfont">&#xe731;</i>
+            </div>
             <div class="btn" @click="addPraise(item)">
+              <van-tag class="num-tag" v-if='item.zan_num > 0' round type="danger">{{item.zan_num > 1000?'999+':item.zan_num}}</van-tag>
               <i class="iconfont" v-if="!item.isZan">&#xe644;</i>
               <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
             </div>
             <div class="btn" @click="addCollect(item)">
-              <i class="iconfont" v-if="!item.isShoucang">&#xe64c;</i>
+              <i class="iconfont" v-if="!item.isCollect">&#xe64c;</i>
               <i class="iconfont star highlight swing animated" v-else>&#xe64b;</i>
             </div>
           </div>
@@ -97,8 +104,7 @@
         <div class="comment-content flex">
           <div class="field-box">
             <van-cell-group>
-              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1"
-                autosize />
+              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
             </van-cell-group>
           </div>
           <div class="submit-btn theme-color">
@@ -123,6 +129,7 @@ export default {
   data() {
     return {
       list: [],
+      toTopAndComment: false,
       listLength: '',
       loading: false,
       finished: false,
@@ -181,9 +188,9 @@ export default {
       })
     },
     addCollect(item){
-      item.isShoucang = !item.isShoucang
+      item.isCollect = !item.isCollect
       axios.get(`/book/SchoolArticleCollect/add?post_id=${this.item.post_id}`).then(res=>{
-        console.log(res)
+        item.collect_num = res.data.data.collect_num
       })
     },
     showField(item) {
@@ -201,6 +208,10 @@ export default {
       })
     },
     getAvatar(img) {
+      if(!img){
+        return img
+      }
+
       let pos = img.indexOf('http://')
       let result
       if(pos === 0) {
@@ -212,6 +223,15 @@ export default {
     },
     timeAago(time) {
       return timeago(time * 1000)
+    },
+    toScroll(){
+      this.toTopAndComment = !this.toTopAndComment
+      let domScrollTop =  this.$refs.comment.offsetTop 
+      if(this.toTopAndComment){
+        window.scrollTo(0,domScrollTop)
+      }else{
+        window.scrollTo(0,0)
+      }
     }
   }
 }
@@ -299,7 +319,7 @@ export default {
 
 .input-box {
   height: 2.375rem /* 38/16 */;
-  flex: 3;
+  flex: 2;
 }
 
 .btn-icon {
@@ -309,6 +329,7 @@ export default {
 .btn {
   flex: 1;
   text-align: center;
+  position: relative;
 }
 
 .btn i.iconfont {
@@ -353,6 +374,13 @@ export default {
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
   margin-left: .3125rem /* 5/16 */;
+}
+
+.num-tag{
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  top: -.3125rem /* 5/16 */;
 }
 </style>
 

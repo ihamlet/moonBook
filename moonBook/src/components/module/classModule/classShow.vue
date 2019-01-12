@@ -31,7 +31,8 @@ export default {
   data() {
     return {
       drying: '',
-      show: false
+      show: false,
+      page:1
     }
   },
   created() {
