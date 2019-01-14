@@ -218,7 +218,10 @@ export default {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
         if (this.$route.query.back) {
           this.$router.push({
-            name: this.$route.query.back
+            name: this.$route.query.back,
+            query:{
+              id:this.$route.query.id
+            }
           })
         } else {
           this.$router.push({
@@ -234,7 +237,10 @@ export default {
         localStorage.setItem('grapicData', JSON.stringify(this.grapicData))
         if (this.$route.query.back) {
           this.$router.push({
-            name: this.$route.query.back
+            name: this.$route.query.back,
+            query:{
+              id:this.$route.query.id
+            }
           })
         } else {
           this.$router.push({
@@ -245,7 +251,10 @@ export default {
       } else {
         if (this.$route.query.back) {
           this.$router.push({
-            name: this.$route.query.back
+            name: this.$route.query.back,
+            query:{
+              id:this.$route.query.id
+            }
           })
         } else {
           this.$router.push({
@@ -296,7 +305,10 @@ export default {
         axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
           if (this.$route.query.back) {
             this.$router.push({
-              name: this.$route.query.back
+              name: this.$route.query.back,
+              query:{
+                id: this.$route.query.id
+              }
             })
           } else {
             this.$router.push({

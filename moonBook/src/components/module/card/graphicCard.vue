@@ -15,7 +15,7 @@
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
-            {{getTimeAgo(item.create_time)}}
+            {{getTimeAgo(item.create_time)}} <span>{{item.relation_name?relation_name:'家长'}}</span>
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0'>

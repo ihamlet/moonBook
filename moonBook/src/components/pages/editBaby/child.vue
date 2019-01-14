@@ -67,8 +67,8 @@
       <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="edit">提交修改</van-button>
     </div>
 
-    <van-popup v-model="show">
-      
+    <van-popup class="card-routing-popup" v-model="show" get-container='#app'>
+      <card-routing/>
     </van-popup>
   </div>
 </template>
@@ -78,12 +78,14 @@ import { mapActions, mapGetters } from 'vuex'
 import { VueCropper } from 'vue-cropper'
 import { format } from './../../lib/js/util'
 import avatar from './../../module/avatar'
+import cardRouting from './../../module/cardRouting'
 
 export default {
   name: 'child',
   components: {
     VueCropper,
-    avatar
+    avatar,
+    cardRouting
   },
   computed: {
     ...mapGetters(['userDataState'])
@@ -258,16 +260,19 @@ export default {
         }, 2000)
       } else {
         this.operationApi().then(res => {
+          
+          if(this.$route.query.back == 'register'){
+            this.show = true
+          }else{
+            this.$router.push({
+              name:'home'
+            })
+          }
 
-          this.$router.push({
-            name: 'my'
-          })
 
           this.submitLoading = false
 
-          if (res) {
-            this.$toast.success('创建成功')
-          } else {
+          if (!res) {
             this.$toast.fail('创建失败')
           }
         })

@@ -245,7 +245,6 @@ export default {
         this.searchListShow = false
 
         axios.get(`/book/MemberCard/getMemberRegPayConfig?shelf_id=${item.shelf_id}`).then(res => {
-          console.log(res)
           this.levels = res.data.data.levels
           this.tips = res.data.data.tips
           this.fees = res.data.data.fees

@@ -114,7 +114,7 @@ export default {
     },
     fetchData() {
       this.qrcode()
-      axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id}`).then(res => {
+      axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id||this.$route.query.back_id}`).then(res => {
         this.item = res.data.data.post
       })
     },
@@ -131,7 +131,6 @@ export default {
           name:'apps-find'
         })
       }
-
     },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {

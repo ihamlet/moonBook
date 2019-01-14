@@ -75,33 +75,6 @@ export default {
   margin: 0.625rem /* 10/16 */ 0;
 }
 
-.img-grid {
-  background: transparent;
-}
-
-.img-grid.long{
-  padding-bottom: 150%;
-}
-
-.img-preview.long {
-  top: 0;
-  transform: translate3d(-50%, 0, 0);
-}
-
-.img-preview {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 100%;
-  transform: translate3d(-50%, -50%, 0);
-}
-
-.photo-tag {
-  position: absolute;
-  right: 0.3125rem /* 5/16 */;
-  bottom: 0.3125rem /* 5/16 */;
-}
-
 .layout-4 {
   width: 70%;
 }

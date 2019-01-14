@@ -1,6 +1,6 @@
 <template>
     <div class="activity" @click="toFind">
-        <van-cell title="亲子任务" is-link>
+        <van-cell title="亲子活动" is-link>
             <div class="icon" slot="icon">
                 <i class="iconfont">&#xed8f;</i>
             </div>

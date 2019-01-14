@@ -8,7 +8,7 @@
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
       <div class="baby-info flex flex-align">
-        <div class="avatar" v-if="childInfo.avatar">
+        <div class="avatar" v-if="childInfo.avatar" @click="toEgg">
           <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">
         </div>
         <avatar :gender="childInfo.sex" v-else />
@@ -37,7 +37,7 @@
     </div>
     <div class="container">
       <div class="bar flex flex-align">
-        <div class="bar-item totalReading">
+        <div class="bar-item totalReading" @click="toRradStat">
           <span class="number">{{childInfo.read_count}}</span>
           <span class="bar-title">阅读量</span>
         </div>
@@ -46,54 +46,39 @@
           <span class="bar-title">赞</span>
         </div>
         <div class="bar-item diary">
-          <span class="number">{{childInfo.post_count}}</span>
-          <span class="bar-title">日记</span>
-        </div>
-        <div class="bar-item task">
-          <span class="number">0</span>
-          <span class="bar-title">亲子任务</span>
+          <span class="number">{{childInfo.insist_days}}</span>
+          <span class="bar-title">坚持天数</span>
         </div>
       </div>
-      <lazy-component class="module" v-if="childInfo.is_mine">
+      <lazy-component class="module" v-if="isMine">
         <family />
       </lazy-component>
-
-      <lazy-component class="module">
-        <activity />
-      </lazy-component>
-
-      <div class="baby-class" v-if='childInfo.is_mine'>
-        <lazy-component>
-          <class-show :banji_name='childInfo.banji_name' :banji_id='childInfo.banji_id' />
-        </lazy-component>
-        <van-cell-group>
-          <van-cell :title="childInfo.banji_name" is-link center @click="toClassHome(childInfo)">
-            <div class="icon" slot="icon">
-              <i class="iconfont">&#xe802;</i>
-            </div>
-          </van-cell>
-        </van-cell-group>
-      </div>
-      <lazy-component class="module">
-        <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
-      </lazy-component>
-      <lazy-component v-if="childInfo.is_mine">
-        <van-nav-bar title="成长日记"/>
-        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab">
+      <lazy-component v-if="isMine">
+        <van-nav-bar title="成长日记">
+          <div class="" slot="right">
+            {{childInfo.post_count}}日记
+          </div>
+        </van-nav-bar>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='38'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
-                <div class="tab-content" v-if='list.content.length'>
-                  <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
-                    <van-cell>
-                      <graphic-card :item="item" type="babyHome" :avatar='childInfo.avatar' />
-                    </van-cell>
+                  <div class="tab-content" v-if='list.content.length'>
+                    <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
+                      <div class="time-line flex flex-align" v-if='isTimeLine(item,itemIndex)'>
+                        <div class="time">
+                          {{timeAgo(item.create_time)}}
+                        </div>
+                      </div>
+                      <van-cell>
+                        <graphic-card :item="item" type="babyHome" :avatar='childInfo.avatar' />
+                      </van-cell>
+                    </div>
                   </div>
-                </div>
-                <div class="no-content" v-else>
-                  <img src="./../../assets/img/noData.png" />
-                  暂无记录
-                </div>
+                  <div class="no-content" v-else>
+                    <img src="./../../assets/img/noData.png" />
+                    暂无记录
+                  </div>
               </van-pull-refresh>
             </van-list>
           </van-tab>
@@ -101,7 +86,7 @@
       </lazy-component>
     </div>
 
-    <slogan v-if="!childInfo.is_mine" />
+    <slogan v-if="!isMine" />
 
     <van-popup v-model="showQrcode" class="card-popup">
       <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
@@ -115,7 +100,7 @@
 <script>
 import axios from "./../lib/js/api"
 import { mapActions } from 'vuex'
-import { format } from "./../lib/js/util.js"
+import { format,timeago } from "./../lib/js/util.js"
 import QRCode from "qrcode"
 import wave from "./../module/animate/anWave"
 import qrCode from "./../module/mold/qrCode"
@@ -155,6 +140,11 @@ export default {
       }
 
       return name
+    },
+    isMine(){
+      if(this.childInfo.is_mine){
+        return true
+      }
     }
   },
   data() {
@@ -215,7 +205,6 @@ export default {
         if (res.status == 200) {
           let array = res.data
           array.forEach(element => {
-            console.log(element)
             this.tab.push({
               title: element.cate_name,
               content: ''
@@ -341,6 +330,41 @@ export default {
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    timeAgo(time){
+      return timeago(time*1000)
+    },
+    toEgg(){
+      this.$router.push({
+        name:'egg',
+        query:{
+          id: this.childInfo.id,
+          back: this.$route.name,
+          banji_id: this.childInfo.banji_id
+        }
+      })
+    },
+    isTimeLine(item,itemIndex){  
+      let timeHistory
+
+      if(itemIndex > 0){
+        timeHistory = timeago(this.tab[this.tabIndex].content[itemIndex-1].create_time*1000) 
+      }
+
+      if(timeHistory == timeago(item.create_time*1000)){
+        return false
+      }else{
+        return true
+      }
+    },
+    toRradStat(){
+      this.$router.push({
+        name:'readStat',
+        query:{
+          id: this.$route.query.id,
+          back: this.$route.name
+        }
+      })
     }
   }
 }
@@ -443,17 +467,6 @@ export default {
   color: #fff;
 }
 
-.baby-class .icon {
-  margin-right: 0.625rem /* 10/16 */;
-}
-
-.baby-class .icon i.iconfont {
-  font-size: 1.5rem /* 24/16 */;
-  background-image: linear-gradient(135deg, #795548 10%, #000 100%);
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
 .add-count-popup .iconfont {
   font-size: 2.25rem /* 36/16 */;
   background: linear-gradient(90deg, #ff2a00, #ff00af);
@@ -465,11 +478,6 @@ export default {
 .name {
   margin-right: 0.625rem /* 10/16 */;
 }
-
-.item {
-  margin-bottom: 0.625rem /* 10/16 */;
-}
-
 
 .no-content{
   background: #fff;
@@ -486,6 +494,27 @@ export default {
   opacity: .7;
 }
 
+.time-line{
+  width: 100%;
+  height: 3.125rem /* 50/16 */;
+  position: relative;
+}
+
+.time-line::before{
+  position: absolute;
+  left: 1.5625rem /* 25/16 */;
+  top: 0;
+  width: .625rem /* 10/16 */;
+  height: 100%;
+  content: "";
+  background: #FFC107;
+}
+
+.time{
+  margin-left: 3.125rem /* 50/16 */;
+  font-size: 1.125rem /* 18/16 */;
+  font-weight: 500;
+}
 </style>
 <style>
 .add-count-popup.van-popup {

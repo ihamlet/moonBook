@@ -3,7 +3,7 @@
     <van-nav-bar v-if='type!="template"' title="班级风采" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft">
 
     </van-nav-bar>
-    <lazy-component class="module">
+    <lazy-component class="module" v-if="type != 'template'">
       <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template' />
     </lazy-component>
     <lazy-component>

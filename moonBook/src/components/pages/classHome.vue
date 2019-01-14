@@ -31,9 +31,6 @@
       <lazy-component class="module">
         <read-list title='周阅读榜' type='banji' field='avatar' />
       </lazy-component>
-      <!-- <lazy-component class="module">
-        <reading :list="lateBook" moduleTitle="老师推荐的书" />
-      </lazy-component> -->
       <lazy-component>
         <class-zoom type='template' :banji_id='classInfo.banji_id' />
       </lazy-component>
@@ -172,9 +169,6 @@ export default {
           })
         }
       })
-      // axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${to.query.id}`).then(res => {
-      //   vm.lateBook = res.data.data
-      // })
     })
   },
   mounted() {

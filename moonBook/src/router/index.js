@@ -19,6 +19,8 @@ import EditClass from '@/components/pages/class'
 import EditStting from '@/components/pages/setting'
 import EditManager from '@/components/pages/editManager/manager'
 
+import Egg from '@/components/pages/Egg'
+
 import AddFamily from '@/components/pages/invite/addFamily'
 import VerifyFamily from '@/components/pages/invite/verifyList'
 
@@ -46,6 +48,8 @@ import Login from '@/components/pages/login'
 import Editor from '@/components/Editor'
 import Publishing from '@/components/pages/editor/Publishing'
 import Graphic from '@/components/pages/editor/Graphic'
+
+import ReadStat from '@/components/pages/readStat'
 
 Vue.use(Router)
 
@@ -116,6 +120,24 @@ export default new Router({
           }
         },
         {
+          path: '/readStat',
+          name: 'readStat',
+          component: ReadStat,
+          meta: {
+            title: '阅读统计',
+            isFooterBar: false
+          }
+        },
+        {
+          path: '/egg',
+          name: 'egg',
+          component: Egg,
+          meta: {
+            title: '彩蛋',
+            isFooterBar: false
+          }
+        },
+        {
           path: '/zoom',
           name: 'zoom',
           component: Zoom,
@@ -141,7 +163,7 @@ export default new Router({
           component: ClassZoom,
           meta: {
             title: '班级风采',
-            tabActive: 4,
+            tabActive: 1,
             isFooterBar: true
           }
         },
@@ -227,7 +249,6 @@ export default new Router({
           component: BorrowList,
           meta: {
             title: '借阅记录',
-
             isFooterBar: false
           }
         },

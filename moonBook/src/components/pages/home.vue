@@ -1,6 +1,5 @@
 <template>
     <div class="home page-padding">
-        <van-progress v-if='percentVal!=0&&percentVal!=100' :percentage="percentVal" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
         <div class="head-bar flex flex-align" :class="[themeBarSearch?'theme-background':'default-head-bar-background']">
             <div class="left-btn" v-line-clamp:20="1" @click="cityListShow=true">
                 <span v-if='userPointState'>{{userPointState.city}}</span>
@@ -36,7 +35,7 @@
             <lazy-component class="module">
                 <video-list title='视频精选' type='home'/>
             </lazy-component>
-            <lazy-component class="module">
+            <lazy-component>
                 <article-list/> 
             </lazy-component>
         </div>
@@ -50,7 +49,7 @@
 
         <!-- 借阅卡办理页面 -->
         <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
-            <accept @close='applyShow = false' v-model='active'/>
+            <accept @close='applyShow = false' v-model='active' @stepActiveChange='active = 0'/>
         </van-popup>
 
         <!-- 城市列表 -->
@@ -64,7 +63,7 @@
         </van-popup>
 
         <van-popup class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' v-model="tipsShow" get-container='.home'>
-            <tips position='top' @percent='percent'/>
+            <tips position='top'/>
         </van-popup>
     </div>
 </template>
@@ -143,7 +142,6 @@ export default {
 
             axios.get('/book/index/home_v2').then(res=>{
                 this.banner = res.data.homeData.banner
-                // this.appsList = res.data.homeData.apps
                 this.investmentAd = res.data.homeData.investmentAd
                 this.newsList = res.data.homeData.newsList
                 this.videoList = res.data.homeData.videoList
@@ -178,16 +176,6 @@ export default {
         toTips(){
            this.tipsShow = !this.tipsShow
            localStorage.setItem('grapicData', '')
-        },
-        percent(val){
-            this.percentVal = val
-            this.$toast.loading({
-                mask: false
-            })
-
-            if(val == 100){
-                this.$toast.clear()
-            }
         }
     }
 }

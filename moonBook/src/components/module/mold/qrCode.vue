@@ -175,7 +175,7 @@ export default {
 .bg,
 .bg .welt {
   width: 100%;
-  height: 31.25rem /* 500/16 */;
+  height: 28.125rem /* 450/16 */;
 }
 
 .bg .welt {

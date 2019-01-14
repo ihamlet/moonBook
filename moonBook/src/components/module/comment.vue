@@ -1,7 +1,8 @@
 <template>
   <div class="comment-list" id='comment' ref='comment'>
-    <van-nav-bar  title="评论" :zIndex='0' @click-right="showField()">
-      <van-button round size="small" type="danger" slot="right"> {{listLength}}评论</van-button>
+    <van-nav-bar :zIndex='0' @click-right="showField">
+      <div class="views" slot="left">{{item.views}}浏览</div>
+      <div class="comment" slot="right">{{listLength}}评论</div>
     </van-nav-bar>
     <div class="no-centent" v-if='listLength == 0'>
       <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
@@ -23,7 +24,7 @@
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <van-cell v-for="(item,index) in list" :key="index">
           <div class="user-card flex flex-align">
-            <div class="avatar">
+            <div class="avatar" @click="toZoom(item)">
               <img :src="getAvatar(item.avatar)" :alt="item.username" />
             </div>
             <div class="user-data">
@@ -64,7 +65,7 @@
             <div class="comment-bar flex flex-align">
               <div class="date">{{timeAago(item.create_time)}}</div>
               <div class="theme-color" @click="showField(item)">
-                <van-tag round size="medium" type="primary">{{item.replyList.length>0?`${item.replyList.length}条`:''}}回复</van-tag>
+                <van-tag round size="medium" type="primary">{{item.replyList.length?item.replyList.length:''}}回复</van-tag>
                </div>
             </div>
           </div>
@@ -84,7 +85,7 @@
           </div>
           <div class="btn-icon flex flex-align">
             <div class="btn" @click="toScroll">
-              <van-tag class="num-tag" v-if='list.length > 0' round type="danger">{{list.length > 1000?'999+':list.length}}</van-tag>
+              <van-tag class="num-tag" v-if='listLength > 0' round type="danger">{{listLength > 1000?'999+':listLength}}</van-tag>
               <i class="iconfont">&#xe731;</i>
             </div>
             <div class="btn" @click="addPraise(item)">
@@ -143,7 +144,7 @@ export default {
   },
   methods: {
     onLoad() {
-      axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.$route.query.id}&page=${this.page}&limit=10&sort=new`).then(res => {
+      axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.$route.query.id||this.$route.query.back_id}&page=${this.page}&limit=10&sort=new`).then(res => {
         this.listLength = res.data.count
         let array = res.data.data
         this.loading = false
@@ -232,6 +233,16 @@ export default {
       }else{
         window.scrollTo(0,0)
       }
+    },
+    toZoom(item){
+      this.$router.push({
+        name:'zoom',
+        query:{
+          id:item.user_id,
+          back:this.$route.name,
+          back_id:this.$route.query.id || this.$route.query.back_id
+        }
+      })
     }
   }
 }

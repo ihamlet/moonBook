@@ -1,7 +1,8 @@
 <template>
   <div class="tips flex" :class="[position == 'top'?'flex-column top':'flex-align bottom']">
-    <div class="tips-list" :class="[position == 'bottom'?'flex-align flex':'',isShow?'':'pulse animated']">
-      <div class="btn" :class="[position == 'top'?'flex-align flex':'']" v-for='(list,index) in relaseList' :key="index" @click="toRelease(index)">
+    <div class="tips-list" :class="[position == 'bottom'?'flex-align flex':'',isShow?'pulse animated':'']">
+      <div class="btn" :class="[position == 'top'?'flex-align flex':'']" v-for='(list,index) in relaseList' :key="index"
+        @click="toRelease(index)">
         <div class="iconfont" :class="list.icon"></div>
         <div class="name">{{list.name}}</div>
       </div>
@@ -11,7 +12,7 @@
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
       <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
     </div>
-    <div class="close-btn" @click="close" v-if='position != "top"' :class="[isShow?'':'rotateIn animated']">
+    <div class="close-btn" @click="close" v-if='position != "top"' :class="[isShow?'rotateIn animated':'']">
       <i class="iconfont">&#xe647;</i>
     </div>
   </div>
@@ -21,10 +22,10 @@ import axios from './../../lib/js/api'
 import { compress } from './../../lib/js/util'
 export default {
   name: 'tips',
-  props: ['position','isShow'],
+  props: ['position', 'isShow'],
   data() {
     return {
-      percent:0,
+      percent: 0,
       photoLength: 0,
       ossSign: '',
       grapicData: {
@@ -128,24 +129,25 @@ export default {
 
       f().then(() => {
         this.$router.push({
-            name:'graphic',
-            query:{
-                back: this.$route.name
-            }
+          name: 'graphic',
+          query: {
+            back: this.$route.name,
+            id: this.$route.query.id
+          }
         })
       })
-
     },
     doUpload(e) {
       let file = e.target.files[0]
       let type = e.target.dataset.type
-      this.upOssMedia(type, file).then(()=>{
-          this.$router.push({
-              name:'graphic',
-              query:{
-                  back: this.$route.name
-              }
-          })
+      this.upOssMedia(type, file).then(() => {
+        this.$router.push({
+          name: 'graphic',
+          query: {
+            back: this.$route.name,
+            id: this.$route.query.id
+          }
+        })
       })
     },
     upOssMedia(type, file) {
@@ -165,13 +167,18 @@ export default {
       data.append('signature', this.ossSign.signature)
       data.append('file', file)
 
-     return axios({
+      return axios({
         url: url,
         data: data,
         method: 'post',
         onUploadProgress: p => {
           this.percent = Math.floor(100 * (p.loaded / p.total))
-          this.$emit('percent',this.percent)
+          this.$toast.loading({
+            mask: false
+          })
+          if (this.percent == 100) {
+            this.$toast.clear()
+          }
         }
       }).then((res) => {
         this.grapicData.photos.push({
@@ -205,7 +212,12 @@ export default {
         method: 'post',
         onUploadProgress: p => {
           this.percent = Math.floor(100 * (p.loaded / p.total))
-          this.$emit('percent',this.percent)
+          this.$toast.loading({
+            mask: false
+          })
+          if (this.percent == 100) {
+            this.$toast.clear()
+          }
         }
       }).then((res) => {
         this.grapicData.photos.push({
@@ -216,7 +228,7 @@ export default {
         })
       })
     },
-    close(){
+    close() {
       this.$emit('close')
     }
   }
@@ -244,7 +256,7 @@ export default {
 }
 
 .tips.bottom .icon-weibo::before {
-  color: #7197E7;
+  color: #7197e7;
 }
 
 .tips.bottom .icon-wenzhang::before {
@@ -252,17 +264,16 @@ export default {
 }
 
 .tips.bottom .icon-paishipin::before {
-  color: #EC736E;
+  color: #ec736e;
 }
 
 .tips.bottom .icon-shipin::before {
-  color: #6DDEA7;
+  color: #6ddea7;
 }
 
 .tips.bottom .icon-tiwen::before {
-  color: #F5C944;
+  color: #f5c944;
 }
-
 
 .tips.top {
   width: 6.25rem /* 100/16 */;
@@ -304,42 +315,42 @@ export default {
   font-size: 0.8125rem /* 13/16 */;
 }
 
-.tips.bottom{
+.tips.bottom {
   width: 100%;
-  background: linear-gradient(rgba(255,255,255,0), #fff);
+  background: linear-gradient(rgba(255, 255, 255, 0), #fff);
   padding: 1.25rem /* 20/16 */ 0 3.75rem /* 60/16 */ 0;
 
   position: absolute;
   bottom: 0;
 }
 
-.tips.bottom .tips-list{
+.tips.bottom .tips-list {
   width: 18.75rem /* 300/16 */;
   margin: 0 auto;
-  padding:1.25rem /* 20/16 */ 1.5625rem /* 25/16 */;
+  padding: 1.25rem /* 20/16 */ 1.5625rem /* 25/16 */;
   background: #fff;
   border-radius: 1.25rem /* 20/16 */;
-  box-shadow: 0 .3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.1);
 }
 
-.tips.bottom .btn{
- flex: 1;
- text-align: center;
+.tips.bottom .btn {
+  flex: 1;
+  text-align: center;
 }
 
-.tips.bottom .btn .iconfont{
+.tips.bottom .btn .iconfont {
   font-size: 2.125rem /* 34/16 */;
 }
 
-.tips.bottom .btn .name{
-  font-size: .75rem /* 12/16 */;
-  margin-top: .3125rem /* 5/16 */;
+.tips.bottom .btn .name {
+  font-size: 0.75rem /* 12/16 */;
+  margin-top: 0.3125rem /* 5/16 */;
   font-weight: 500;
 }
 
-.close-btn{
+.close-btn {
   position: absolute;
-  bottom: .9375rem /* 15/16 */;
+  bottom: 0.9375rem /* 15/16 */;
   left: 50%;
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
@@ -347,7 +358,7 @@ export default {
   text-align: center;
   line-height: 2rem /* 32/16 */;
   background: #fff;
-  box-shadow: 0 .3125rem /* 5/16 */ .9375rem /* 15/16 */ rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.3125rem /* 5/16 */ 0.9375rem /* 15/16 */ rgba(0, 0, 0, 0.1);
   margin-left: -1rem /* 16/16 */;
 }
 </style>

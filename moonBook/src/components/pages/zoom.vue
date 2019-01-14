@@ -116,7 +116,8 @@ export default {
           name: this.$route.query.back,
           query:{
             id: this.$route.query.post_id,
-            user_id: this.$route.query.user_id
+            user_id: this.$route.query.user_id,
+            back_id: this.$route.query.back_id
           }
         })
       }else{

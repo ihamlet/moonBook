@@ -10,7 +10,7 @@
         <div class="video-item scroll-item" v-for='(item,index) in videoList' :key="index" @click="toVideoPage(item)">
           <div class="video">
             <div class="video-cover">
-              <img :src="item.cover" :alt="`视频封面-${index}`">
+              <img :src="`${item.photos[0].photo}?x-oss-process=video/snapshot,t_8000,f_jpg,w_0,h_0,m_fast`" :alt="`视频封面-${index}`">
             </div>
             <div class="video-info">
               <div class="user-info flex flex-align">
@@ -63,11 +63,20 @@ export default {
                 arr.push(element)
             })
           }
+
           this.videoList = arr
         })
       } else {
-        axios.get(`/book/index/home_v2`).then(res => {
-          this.videoList = res.data.homeData.videoList
+        axios.get(`/book/SchoolArticle/getList?sort=tuijian`).then(res => {
+          let arr = []
+          let array = res.data.data
+          array.forEach(element => {
+            if(element.hasvideo == 1 ){
+              arr.push(element)
+            }
+          })
+
+          this.videoList = arr
         })
       }
     },
@@ -82,7 +91,7 @@ export default {
         }
       } else {
         data = {
-          id: item.id,
+          id: item.post_id,
           user_id: item.user_id,
           back: this.$route.name,
         }
