@@ -183,8 +183,8 @@ export default {
       }).then((res) => {
         this.grapicData.photos.push({
           media: true,
-          is_audio: type === 'audio' ? 1 : 0,
-          is_video: type === 'video' ? 1 : 0,
+          is_audio: type == 'audio' ? 1 : 0,
+          is_video: type == 'video' ? 1 : 0,
           photo: path,
           thumb: `${path}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`
         })
@@ -330,7 +330,7 @@ export default {
   padding: 1.25rem /* 20/16 */ 1.5625rem /* 25/16 */;
   background: #fff;
   border-radius: 1.25rem /* 20/16 */;
-  box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.2);
 }
 
 .tips.bottom .btn {

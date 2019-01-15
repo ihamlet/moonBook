@@ -39,6 +39,11 @@ export default {
 .icon-canpu::before { content: '\e729'}
 .icon-paihangbang::before { content: '\e61d'}
 
+.icon-fengcai::before{ content: '\e62f'}
+.icon-yuedu::before{ content: '\e62e'}
+.icon-caiyi::before{ content: '\e650'}
+.icon-rongyu::before{ content: '\e63b'}
+
 .apps{
     padding: .625rem /* 10/16 */ 0;
     background: #fff;

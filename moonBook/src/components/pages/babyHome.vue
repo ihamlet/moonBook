@@ -36,8 +36,8 @@
       <wave />
     </div>
     <div class="container">
-      <div class="bar flex flex-align">
-        <div class="bar-item totalReading" @click="toRradStat">
+      <div class="bar flex flex-align" @click="toRradStat">
+        <div class="bar-item totalReading">
           <span class="number">{{childInfo.read_count}}</span>
           <span class="bar-title">阅读量</span>
         </div>
@@ -55,21 +55,16 @@
       </lazy-component>
       <lazy-component v-if="isMine">
         <van-nav-bar title="成长日记">
-          <div class="" slot="right">
+          <div class="post-count" slot="left">
             {{childInfo.post_count}}日记
           </div>
         </van-nav-bar>
-        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='38'>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
                   <div class="tab-content" v-if='list.content.length'>
                     <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
-                      <div class="time-line flex flex-align" v-if='isTimeLine(item,itemIndex)'>
-                        <div class="time">
-                          {{timeAgo(item.create_time)}}
-                        </div>
-                      </div>
                       <van-cell>
                         <graphic-card :item="item" type="babyHome" :avatar='childInfo.avatar' />
                       </van-cell>
@@ -344,19 +339,6 @@ export default {
         }
       })
     },
-    isTimeLine(item,itemIndex){  
-      let timeHistory
-
-      if(itemIndex > 0){
-        timeHistory = timeago(this.tab[this.tabIndex].content[itemIndex-1].create_time*1000) 
-      }
-
-      if(timeHistory == timeago(item.create_time*1000)){
-        return false
-      }else{
-        return true
-      }
-    },
     toRradStat(){
       this.$router.push({
         name:'readStat',
@@ -514,6 +496,10 @@ export default {
   margin-left: 3.125rem /* 50/16 */;
   font-size: 1.125rem /* 18/16 */;
   font-weight: 500;
+}
+
+.item{
+  margin-bottom: .625rem /* 10/16 */;
 }
 </style>
 <style>

@@ -35,7 +35,7 @@
       </lazy-component>
       
       <lazy-component class="module">
-        <reading :list="lateBook" moduleTitle="他的宝贝最近在读" />
+        <reading :list="lateBook" moduleTitle="宝贝最近在读" />
       </lazy-component>
 
       <lazy-component>

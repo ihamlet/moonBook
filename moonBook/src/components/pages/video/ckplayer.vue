@@ -94,9 +94,9 @@ export default {
           let array = res.data.data.post.photos
           let videoArray = []
           array.forEach((element, index) => {
-            videoArray.push([element.photo])
-            if (index == 0) {
-              this.videoObject.poster = `${element.photo}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`
+            if(element.is_video == 1){
+               videoArray.push([element.photo])
+               this.videoObject.poster = `${element.photo}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`
             }
           })
           this.videoObject.video = videoArray

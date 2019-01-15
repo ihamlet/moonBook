@@ -167,9 +167,9 @@ export default {
 
     },
     manage(item) {
-      let boolean = false
+      let boolean
       this.managerList.forEach(element => {
-        if (element.id == item.class_id || element.id == item.school_id) {
+        if (this.$route.query.id == element.id && element.item_relation != 'parent'){
           boolean = true
         }
       })

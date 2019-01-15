@@ -24,13 +24,23 @@ export default {
         id: this.userDataState.school_id
       }, {
         iconClass: 'icon-story',
-        name: '讲故事',
-        pathName: '',
+        name: '听故事',
+        pathName: '404',
+        id: ''
+      }, {
+        iconClass: 'icon-yuer',
+        name: '育儿专栏',
+        pathName: '404',
         id: ''
       }, {
         iconClass: 'icon-find',
         name: '发现',
         pathName: 'apps-find',
+        id: ''
+      }, {
+        iconClass: 'icon-jiaoyu',
+        name: '教育',
+        pathName: '404',
         id: ''
       }]
 
@@ -87,13 +97,21 @@ export default {
   text-shadow: 0 0.0625rem /* 1/16 */ 0.375rem /* 6/16 */ rgba(76, 175, 80, 0.3);
 }
 
-.icon-article::before {
-  content: '\e63f';
-  background: linear-gradient(127deg, #03a9f4, #673ab7);
+.icon-yuer::before{
+  content: '\e603';
+    background: linear-gradient(127deg, #03a9f4, #673ab7);
   -webkit-background-clip: text;
   color: transparent;
   text-shadow: 0 0.0625rem /* 1/16 */ 0.375rem /* 6/16 */
     rgba(103, 58, 183, 0.3);
+}
+
+.icon-jiaoyu::before {
+  content: '\e63f';
+  background: linear-gradient(127deg, #cddc39, #4caf50);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 0.0625rem /* 1/16 */ 0.375rem /* 6/16 */ rgba(76, 175, 80, 0.3);
 }
 
 .app-item {

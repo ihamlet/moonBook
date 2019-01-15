@@ -28,12 +28,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_elmji5zfa1g.eot');
-  src: url('//at.alicdn.com/t/font_893274_elmji5zfa1g.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_elmji5zfa1g.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_elmji5zfa1g.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_elmji5zfa1g.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_elmji5zfa1g.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_eih2hyoiyi.eot');
+  src: url('//at.alicdn.com/t/font_893274_eih2hyoiyi.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_eih2hyoiyi.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_eih2hyoiyi.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_eih2hyoiyi.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_eih2hyoiyi.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -296,7 +296,7 @@ body.theme .head-bar-text,
   padding-bottom: 100%;
   position: relative;
   overflow: hidden;
-  background: #dcdfe6;
+  background: transparent;
   margin-top: .3125rem /* 5/16 */;
   background-size: cover;
   background-position: 50%;
@@ -960,11 +960,6 @@ i.iconfont.vip-1 {
   top: 50%;
   color: #fff;
   transform: translate3d(-50%, -50%, 0);
-}
-
-
-.img-grid {
-  background: transparent;
 }
 
 .img-grid.long{

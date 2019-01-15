@@ -77,28 +77,27 @@ export default {
     ...mapGetters(['userDataState']),
     actions() {
       let array = []
-      this.managerList.forEach(element => {
-        if(element.id = this.$route.query.id){
-          array = null
-        }else{
+      if (this.managerList) {
+        this.managerList.forEach(element => {
           let data = {
             name: element.name,
             subname: `${element.duty}-${element.desc}`,
             id: element.id,
             type: element.item_type
           }
+
           array.push(data)
-        }
-      })
+        })
+      }
 
       return array
     },
     pageTitle(){
       let str = ''
       if(this.classInfo.is_my_baby_banji){
-        str = '我的班级'
-      }else{
         str = '班级'
+      }else{
+        str = '我的班级'
       }
 
       return str
@@ -115,18 +114,25 @@ export default {
       actionsheetShow: false,
       managerList:[],
       appsList: [{
-        name: '讲故事',
-        iconClass: 'icon-jianggushi'
+        name: '风采',
+        iconClass: 'icon-fengcai',
+        path:'404'
       }, {
-        name: '每日国学',
-        iconClass: 'icon-guoxue'
+        name: '阅读',
+        iconClass: 'icon-yuedu',
+        path:'404'
       }, {
-        name: '排行榜',
-        iconClass: 'icon-paihangbang',
-        path:'ranking'
+        name: '才艺',
+        iconClass: 'icon-caiyi',
+        path:'404'
       }, {
-        name: '交流',
-        iconClass: 'icon-jiaoliu'
+        name: '荣誉',
+        iconClass: 'icon-rongyu',
+        path:'404'
+      }, {
+        name: '班级交流',
+        iconClass: 'icon-jiaoliu',
+        path:'404'
       }]
     }
   },

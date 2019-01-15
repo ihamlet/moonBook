@@ -10,16 +10,16 @@
         <div class="video-item scroll-item" v-for='(item,index) in videoList' :key="index" @click="toVideoPage(item)">
           <div class="video">
             <div class="video-cover">
-              <img :src="`${item.photos[0].photo}?x-oss-process=video/snapshot,t_8000,f_jpg,w_0,h_0,m_fast`" :alt="`视频封面-${index}`">
+              <img :src="`${item.photo[0].photo}?x-oss-process=video/snapshot,t_8000,f_jpg,w_0,h_0,m_fast`" :alt="`视频封面-${index}`">
             </div>
             <div class="video-info">
               <div class="user-info flex flex-align">
                 <div class="user-data flex flex-align">
                   <div class="avatar">
-                    <img :src="getAvatar(item.avatar || item.user.avatar)" />
+                    <img :src="getAvatar(item.avatar)" />
                   </div>
                   <div class="name">
-                    {{item.nickname || item.user.name}}
+                    {{item.name}}
                   </div>
                 </div>
                 <div class="views">
@@ -53,32 +53,51 @@ export default {
   },
   methods: {
     fetchData() {
+      let data = {}
       if (this.$route.query.user_id) {
-        axios.get(`/book/SchoolArticle/getList?sort=post&user_id=${this.$route.query.user_id}`).then(res => {
-          let arr = []
-          if (res.data.status == 1) {
-            let array = res.data.data
-            array.forEach(element => {
-              if (element.hasvideo == 1)
-                arr.push(element)
-            })
+        data = {
+          params: {
+            portal_name: '首页',
+            sort: 'post',
+            user_id: this.$route.query.user_id
           }
-
-          this.videoList = arr
-        })
+        }
       } else {
-        axios.get(`/book/SchoolArticle/getList?sort=tuijian`).then(res => {
-          let arr = []
+        data = {
+          params: {
+            portal_name: '首页',
+            sort: 'tuijian'
+          }
+        }
+      }
+
+      axios.get('/book/SchoolArticle/getList?sort=post', data).then(res => {
+        let arr = []
+        if (res.data.status == 1) {
           let array = res.data.data
           array.forEach(element => {
-            if(element.hasvideo == 1 ){
-              arr.push(element)
+            if (element.hasvideo == 1) {
+              let photo = []
+              element.photos.forEach(e => {
+                if (e.is_video == 1) {
+                  photo.push(e)
+                }
+              })
+
+              arr.push({
+                avatar: element.user.avatar,
+                name: element.user.name,
+                views: element.views,
+                photo: photo,
+                post_id: element.post_id
+              })
             }
           })
+        }
 
-          this.videoList = arr
-        })
-      }
+        this.videoList = arr
+      })
+
     },
     toVideoPage(item) {
       let data = {}
@@ -110,10 +129,10 @@ export default {
     getAvatar(img) {
       let pos = img.indexOf('http://')
       let result
-      if(pos === 0) {
-         result = img.replace('http:', 'https:')
+      if (pos === 0) {
+        result = img.replace('http:', 'https:')
       } else {
-         result = img
+        result = img
       }
       return result
     }
@@ -159,9 +178,9 @@ export default {
   border-radius: 50%;
 }
 
-.user-info{
+.user-info {
   justify-content: space-between;
-  font-size: .8125rem /* 13/16 */;
+  font-size: 0.8125rem /* 13/16 */;
 }
 </style>
 <style>

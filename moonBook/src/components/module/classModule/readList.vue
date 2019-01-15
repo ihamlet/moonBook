@@ -15,8 +15,8 @@
             <div class="name" v-if='type == "school"' @click="toBanjiHome(item)">
               {{item[field]}}
             </div>
-            <div class="avatar" v-else @click="toBabyHome(item)">
-              <img :src="item[field]" />
+            <div class="avatar" v-else-if='item[field]' @click="toBabyHome(item)">
+              <img :src="getAvatar(item[field])" @error='imgError'/>
             </div>
           </div>
         </div>
@@ -103,6 +103,23 @@ export default {
           id: this.$route.query.id
         }
       })
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    getAvatar(img) {
+      if(!img){
+        return img
+      }
+
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
     }
   }
 }

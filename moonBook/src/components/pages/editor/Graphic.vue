@@ -16,11 +16,9 @@
     <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
     <div class="textarea-module">
       <van-cell-group>
-        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4"
-          autosize />
+        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4" autosize />
         <van-tag class="tag" type="primary" v-if='cateName'> #{{cateName}}</van-tag>
-        <van-cell title-class='theme-color' title="#选择分类" :value="grapicData.text.length>0?grapicData.text.length:''" is-link arrow-direction="down"
-          @click="show = true" />
+        <van-cell title-class='theme-color' title="#选择分类" :value="grapicData.text.length>0?grapicData.text.length:''" is-link arrow-direction="down" @click="show = true" />
       </van-cell-group>
       <van-cell-group>
         <van-cell title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
@@ -31,10 +29,11 @@
         <van-row gutter="4">
           <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
             <div class="preview img-grid" :class="[item.thumb?'transparent':'']">
-                <img class="thumb" :src="item.thumb" :large="item.photo" preview />
+                <img class="thumb" :src="item.thumb" :large="item.is_video==1?'':item.photo" preview />
               <div class="close-btn" @click="deletePhoto(index)">
                 <i class="iconfont">&#xe647;</i>
               </div>
+              <van-tag class="type-tag" color="#7232dd" v-if='item.is_video == 1'>视频</van-tag>
             </div>
           </van-col>
           <van-col :span="8" v-if='9 > imagesLength'>
@@ -64,8 +63,7 @@
     </van-popup>
 
     <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="actionShow = false" />
-    <van-actionsheet v-model="UploadTypeShow" :actions="uploadType" cancel-text="取消" @select="onUploadTypeSelect"
-      @cancel="UploadTypeShow = false" />
+    <van-actionsheet v-model="UploadTypeShow" :actions="uploadType" cancel-text="取消" @select="onUploadTypeSelect" @cancel="UploadTypeShow = false" />
 
     <div class="media-input" v-show="false">
       <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
@@ -165,10 +163,6 @@ export default {
         this.grapicData = JSON.parse(localStorage.getItem('grapicData'))
       }
       let array = []
-      array.push({
-        title: '发现',
-        name: 'apps-find'
-      })
       if (this.userDataState.child_id > 0) {
         array.push({
           title: `${this.userDataState.child_name}@主页`,
@@ -181,6 +175,10 @@ export default {
           name: 'class-zoom'
         })
       }
+      array.push({
+        title: '发现',
+        name: 'apps-find'
+      })
       this.resultList = array
       array.forEach(e => {
         this.result.push(e.name)
@@ -303,19 +301,15 @@ export default {
         })
 
         axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
-          if (this.$route.query.back) {
-            this.$router.push({
-              name: this.$route.query.back,
-              query:{
-                id: this.$route.query.id
-              }
-            })
-          } else {
-            this.$router.push({
-              name: 'home'
-            })
-          }
+          this.$router.push({
+            name: this.result[0],
+            query:{
+              id: this.result[0] == 'class-zoom'?this.userDataState.banji_id:this.userDataState.child_id
+            }
+          })
         })
+
+        console.log('接口404','/book/SchoolArticle/edit?ajax=1','图片视频无法同时上传')
       }
     },
     deletePhoto(index) {
@@ -374,11 +368,12 @@ export default {
         }
       }).then((res) => {
         this.grapicData.photos.push({
-          media: true,
-          is_audio: type === 'audio' ? 1 : 0,
-          is_video: type === 'video' ? 1 : 0,
+          is_audio: type == 'audio' ? 1 : 0,
+          is_video: type == 'video' ? 1 : 0,
           photo: path,
-          thumb: `${path}?x-oss-percent=video/snapshot,t_2000,f_jpg,w_0,h_0,m_fast`
+          thumb: `${path}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`,
+          height: 0,
+          width: 0
         })
       })
     },
@@ -408,6 +403,8 @@ export default {
       }).then((res) => {
         this.grapicData.photos.push({
           photo: path,
+          is_audio: 0,
+          is_video: 0,
           thumb: `${path}?x-oss-percent=image/resize,m_fill,h_200,w_200`,
           height: img.height || 0,
           width: img.width || 0
@@ -551,6 +548,12 @@ export default {
     position: absolute;
     top: 50%;
     transform: translate3d(0, -50%, 0);
+}
+
+.type-tag{
+  position: absolute;
+  bottom: .3125rem /* 5/16 */;
+  right: .3125rem /* 5/16 */;
 }
 </style>
 <style>
