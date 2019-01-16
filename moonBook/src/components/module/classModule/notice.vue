@@ -61,7 +61,6 @@ export default {
       }
 
       axios.get('/book/SchoolArticle/getList', data).then(res => {
-        console.log(res)
         this.count = res.data.count
         this.notice = res.data.data
       })

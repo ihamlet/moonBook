@@ -47,16 +47,20 @@ export default {
       isHeaderTeacher: 0,
       appsList: [{
         name: '代借还',
-        iconClass: 'icon-huanshu'
+        iconClass: 'icon-huanshu',
+        routeLink:'/book/manage/borrow',
       }, {
         name: '定位码',
-        iconClass: 'icon-saomadingwei'
+        iconClass: 'icon-saomadingwei',
+        routeLink:'/book/shelf/location_qrcode'
       }, {
         name: '数据',
-        iconClass: 'icon-shuju'
+        iconClass: 'icon-shuju',
+        routeLink:'/book/SchoolMemberCard'
       }, {
         name: '权限管理',
-        iconClass: 'icon-quanxian'
+        iconClass: 'icon-quanxian',
+        routeLink:'/book/schoolManage'
       }]
     }
   },

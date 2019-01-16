@@ -11,6 +11,10 @@
           <div class="video">
             <div class="video-cover">
               <img :src="`${item.photo[0].photo}?x-oss-process=video/snapshot,t_8000,f_jpg,w_0,h_0,m_fast`" :alt="`视频封面-${index}`">
+              <div class="playing flex flex-align" v-if='item.post_id == $route.query.id'>
+                <i class="iconfont">&#xe639;</i>
+                <span class="text">正在播放</span>
+              </div>
             </div>
             <div class="video-info">
               <div class="user-info flex flex-align">
@@ -89,7 +93,8 @@ export default {
                 name: element.user.name,
                 views: element.views,
                 photo: photo,
-                post_id: element.post_id
+                post_id: element.post_id,
+                user_id: element.user_id
               })
             }
           })
@@ -100,6 +105,7 @@ export default {
 
     },
     toVideoPage(item) {
+      console.log(item)
       let data = {}
 
       if (this.$route.query.user_id) {
@@ -155,6 +161,19 @@ export default {
   overflow: hidden;
   border-radius: 0.3125rem /* 5/16 */;
   margin-bottom: 0.3125rem /* 5/16 */;
+  position: relative;
+}
+
+.playing{
+  position: absolute;
+  left: .3125rem /* 5/16 */;
+  bottom: .3125rem /* 5/16 */;
+  color: #fff;
+}
+
+.playing .text{
+  font-size: .8125rem /* 13/16 */;
+  margin-left: .3125rem /* 5/16 */;
 }
 
 .icon .iconfont {

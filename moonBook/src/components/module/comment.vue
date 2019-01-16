@@ -393,5 +393,11 @@ export default {
   right: 0;
   top: -.3125rem /* 5/16 */;
 }
+
+.reply-content{
+  background: #EBEEF5;
+  padding: .625rem /* 10/16 */;
+  margin-bottom: .625rem /* 10/16 */;
+}
 </style>
 

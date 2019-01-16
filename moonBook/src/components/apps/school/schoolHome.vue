@@ -90,14 +90,21 @@ export default {
       actionsheetShow: false,
       appsList: [
         {
-          name: '简介',
-          iconClass: 'icon-jianjie'
-        }, {
-          name: '每日餐谱',
-          iconClass: 'icon-canpu'
+          name: '风采',
+          iconClass: 'icon-fengcai',
+          path:'404'
         }, {
           name: '讲故事',
-          iconClass: 'icon-jianggushi'
+          iconClass: 'icon-jianggushi',
+          path:'404'
+        }, {
+          name: '荣誉',
+          iconClass: 'icon-rongyu',
+          path:'404'
+        }, {
+          name: '才艺',
+          iconClass: 'icon-caiyi',
+          path:'404'
         }],
       tab: [{
         title: '学校动态',

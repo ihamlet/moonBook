@@ -22,6 +22,10 @@ module.exports = {
       '/attachs': {
         target: 'https://hu.wmlife.net/',
         changeOrigin: true
+      },
+      '/peixun':{
+        target: 'https://hu.wmlife.net/',
+        changeOrigin: true
       }
     },
 
@@ -62,7 +66,7 @@ module.exports = {
      * Source Maps
      */
 
-    productionSourceMap: true,
+    productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 

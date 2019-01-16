@@ -75,8 +75,4 @@ export default {
 .text {
   text-align: right;
 }
-
-.class-show .img-preview{
-  position: absolute;
-}
 </style>

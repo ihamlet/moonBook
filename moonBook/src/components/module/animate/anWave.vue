@@ -21,7 +21,7 @@ export default {
 .wave2{
   height: 1.875rem /* 30/16 */;
   position: absolute;
-  width: 100.0625rem /* 1601/16 */;
+  width: 1601PX;
   z-index: 12;
   left: 0;
   bottom: -.0625rem /* 1/16 */;
@@ -42,7 +42,7 @@ export default {
     background-position: 0 0;
   }
   100% {
-    background-position: 100.0625rem /* 1601/16 */ 0;
+    background-position: 1601PX 0;
   }
 }
 </style>

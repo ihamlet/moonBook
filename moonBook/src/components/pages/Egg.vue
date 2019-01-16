@@ -19,6 +19,7 @@
     <lazy-component class="module">
       <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
     </lazy-component>
+    <slogan/>
   </div>
 </template>
 <script>
@@ -27,13 +28,15 @@ import axios from './../lib/js/api'
 import activity from './../module/activity/activity'
 import reading from "./../module/reading"
 import classShow from './../../components/module/classModule/classShow'
+import slogan from './../module/slogan'
 
 export default {
   name: 'egg',
   components: {
     activity,
     reading,
-    classShow
+    classShow,
+    slogan
   },
   data() {
     return {

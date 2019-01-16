@@ -77,8 +77,4 @@ export default {
 .media-content svg.icon{
   font-size: 1.625rem /* 26/16 */;
 }
-
-.zone .img-preview{
-  position: absolute;
-}
 </style>

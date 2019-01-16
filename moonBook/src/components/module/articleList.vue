@@ -154,7 +154,7 @@ export default {
 }
 
 .article-data .info{
-  color: #909399;
+  font-size: .8125rem /* 13/16 */;
 }
 
 .views,

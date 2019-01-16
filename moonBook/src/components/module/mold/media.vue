@@ -1,6 +1,6 @@
 <template>
-  <div class="container" id='media'>
-    <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?4:0" :class="item.template_id == 0?'content':''" v-html='item.details' @click="toArticle"></div>
+  <div class="container" id='media' @click="toArticle">
+    <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?4:0" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
 
     <div class="media img" v-if='item.template_id == 1'>
       <div :class="[item.photos.length == 4?'layout-4':'']">
@@ -41,14 +41,9 @@
 export default {
   name: 'media',
   props: ['item', 'type'],
-  data () {
-      return {
-
-      }
-  },
   methods: {
-    toArticle() {
-      if (this.type == 'card') {
+    toArticle(e) {
+      if (this.type == 'card' && e.target.tagName!='IMG') {
         this.$router.push({
           name: 'article',
           query: {

@@ -51,6 +51,9 @@ import Graphic from '@/components/pages/editor/Graphic'
 
 import ReadStat from '@/components/pages/readStat'
 
+import Train from '@/components/train'
+import AppsTrain from '@/components/apps/train/trainHome'
+
 Vue.use(Router)
 
 export default new Router({
@@ -271,6 +274,21 @@ export default new Router({
           }
         }
       ]
+    },
+    {
+      path:'/train',
+      name:'train',
+      component: Train,
+      children:[{
+        path:'/apps-train',
+        name:'apps-train',
+        component: AppsTrain,
+        meta:{
+          title: '教育',
+          tabActive:0,
+          isFooterBar: true
+        }
+      }]
     },
     {
       path:'/school',

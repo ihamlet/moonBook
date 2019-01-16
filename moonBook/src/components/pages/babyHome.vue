@@ -12,7 +12,7 @@
           <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">
         </div>
         <avatar :gender="childInfo.sex" v-else />
-        <div class="baby-data">
+        <div class="baby-data" @click="toEditorBaby">
           <div class="list flex flex-align">
             <div class="item name">{{childInfo.name}}</div>
             <div class="item detail">
@@ -53,10 +53,16 @@
       <lazy-component class="module" v-if="isMine">
         <family />
       </lazy-component>
+      <lazy-component class="module" v-if="!isMine">
+        <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
+      </lazy-component>
       <lazy-component v-if="isMine">
         <van-nav-bar title="成长日记">
           <div class="post-count" slot="left">
             {{childInfo.post_count}}日记
+          </div>
+          <div class="task" slot="right">
+            活动<van-tag class="tag-task" round type="danger">4</van-tag>
           </div>
         </van-nav-bar>
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
@@ -347,6 +353,19 @@ export default {
           back: this.$route.name
         }
       })
+    },
+    toEditorBaby(){
+      if(this.childInfo.is_mine){
+        this.$router.push({
+          name:'edit-child',
+          query:{
+            id:this.$route.query.id,
+            pageTitle:'编辑宝贝',
+            type:'edit',
+            back: this.$route.name
+          }
+        })
+      }
     }
   }
 }
@@ -501,6 +520,17 @@ export default {
 .item{
   margin-bottom: .625rem /* 10/16 */;
 }
+
+.task{
+  position: relative;
+}
+
+.task .tag-task{
+  position: absolute;
+  top: .3125rem /* 5/16 */;
+  right: -.625rem /* 10/16 */;
+}
+
 </style>
 <style>
 .add-count-popup.van-popup {

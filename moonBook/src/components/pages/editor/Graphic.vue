@@ -16,9 +16,11 @@
     <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
     <div class="textarea-module">
       <van-cell-group>
-        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4" autosize />
+        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4"
+          autosize />
         <van-tag class="tag" type="primary" v-if='cateName'> #{{cateName}}</van-tag>
-        <van-cell title-class='theme-color' title="#选择分类" :value="grapicData.text.length>0?grapicData.text.length:''" is-link arrow-direction="down" @click="show = true" />
+        <van-cell title-class='theme-color' title="#选择分类" :value="grapicData.text.length>0?grapicData.text.length:''"
+          is-link arrow-direction="down" @click="show = true" />
       </van-cell-group>
       <van-cell-group>
         <van-cell title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
@@ -29,7 +31,7 @@
         <van-row gutter="4">
           <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
             <div class="preview img-grid" :class="[item.thumb?'transparent':'']">
-                <img class="thumb" :src="item.thumb" :large="item.is_video==1?'':item.photo" preview />
+              <img class="thumb" :src="item.thumb" :large="item.is_video==1?'':item.photo" preview />
               <div class="close-btn" @click="deletePhoto(index)">
                 <i class="iconfont">&#xe647;</i>
               </div>
@@ -63,7 +65,8 @@
     </van-popup>
 
     <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="actionShow = false" />
-    <van-actionsheet v-model="UploadTypeShow" :actions="uploadType" cancel-text="取消" @select="onUploadTypeSelect" @cancel="UploadTypeShow = false" />
+    <van-actionsheet v-model="UploadTypeShow" :actions="uploadType" cancel-text="取消" @select="onUploadTypeSelect"
+      @cancel="UploadTypeShow = false" />
 
     <div class="media-input" v-show="false">
       <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
@@ -74,7 +77,7 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapActions,mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import topicList from './../../module/release/topicList'
 import { compress } from './../../lib/js/util'
 
@@ -156,7 +159,7 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
-      ...mapActions(['getUserData']),
+    ...mapActions(['getUserData']),
     fetchData() {
       // 从本地存储获取发布数据
       if (localStorage.getItem('grapicData')) {
@@ -217,8 +220,8 @@ export default {
         if (this.$route.query.back) {
           this.$router.push({
             name: this.$route.query.back,
-            query:{
-              id:this.$route.query.id
+            query: {
+              id: this.$route.query.id
             }
           })
         } else {
@@ -236,8 +239,8 @@ export default {
         if (this.$route.query.back) {
           this.$router.push({
             name: this.$route.query.back,
-            query:{
-              id:this.$route.query.id
+            query: {
+              id: this.$route.query.id
             }
           })
         } else {
@@ -250,14 +253,14 @@ export default {
         if (this.$route.query.back) {
           this.$router.push({
             name: this.$route.query.back,
-            query:{
-              id:this.$route.query.id
+            query: {
+              id: this.$route.query.id
             }
           })
         } else {
           this.$router.push({
             name: 'home'
-          }) 
+          })
         }
         localStorage.setItem('grapicData', '')
         this.actionShow = false
@@ -270,12 +273,12 @@ export default {
     onClickRight() {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
         if (this.$route.query.back) {
-          this.$router.push({            
+          this.$router.push({
             name: this.$route.query.back
           })
         } else {
-          this.$router.push({ 
-              name: 'home'
+          this.$router.push({
+            name: 'home'
           })
         }
       } else if (this.grapicData.text.length < 12000) {
@@ -303,13 +306,11 @@ export default {
         axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
           this.$router.push({
             name: this.result[0],
-            query:{
-              id: this.result[0] == 'class-zoom'?this.userDataState.banji_id:this.userDataState.child_id
+            query: {
+              id: this.result[0] == 'class-zoom' ? this.userDataState.banji_id : this.userDataState.child_id
             }
           })
         })
-
-        console.log('接口404','/book/SchoolArticle/edit?ajax=1','图片视频无法同时上传')
       }
     },
     deletePhoto(index) {
@@ -416,9 +417,9 @@ export default {
       this.cateId = tag.cate_id
     },
     getAvatar(img) {
-        if(!img){
-            return img
-        }
+      if (!img) {
+        return img
+      }
 
       let pos = img.indexOf('http://')
       let result
@@ -544,16 +545,21 @@ export default {
   margin-top: 0.3125rem /* 5/16 */;
 }
 
-.img-grid img.thumb{
-    position: absolute;
-    top: 50%;
-    transform: translate3d(0, -50%, 0);
+.img-grid img.thumb {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  vertical-align: top;
 }
 
-.type-tag{
+.type-tag {
   position: absolute;
-  bottom: .3125rem /* 5/16 */;
-  right: .3125rem /* 5/16 */;
+  bottom: 0.3125rem /* 5/16 */;
+  right: 0.3125rem /* 5/16 */;
 }
 </style>
 <style>

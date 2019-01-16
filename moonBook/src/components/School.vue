@@ -10,7 +10,6 @@
 </template>
 <script>
 import axios from './lib/js/api'
-import 'animate.css'
 import { mapActions, mapGetters } from 'vuex'
 import footerBar from './../components/module/footerBar'
 

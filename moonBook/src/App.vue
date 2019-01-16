@@ -6,6 +6,8 @@
 
 <script>
 import './../src/components/lib/css/neat.css'
+import 'animate.css'
+
 export default {
   name: 'App'
 }
@@ -28,12 +30,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_eih2hyoiyi.eot');
-  src: url('//at.alicdn.com/t/font_893274_eih2hyoiyi.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_eih2hyoiyi.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_eih2hyoiyi.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_eih2hyoiyi.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_eih2hyoiyi.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_54ha0m1tzc4.eot');
+  src: url('//at.alicdn.com/t/font_893274_54ha0m1tzc4.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_54ha0m1tzc4.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_54ha0m1tzc4.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_54ha0m1tzc4.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_54ha0m1tzc4.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -597,7 +599,7 @@ img.lazy[lazy='error'],
 }
 
 .explain {
-  font-size: x-small;
+  font-size: .8125rem /* 13/16 */;
   margin-top: 1.25rem /* 20/16 */;
   color: #909399;
 }
@@ -966,17 +968,12 @@ i.iconfont.vip-1 {
   padding-bottom: 150%;
 }
 
-.img-preview.long {
-  top: 0;
-  transform: translate3d(-50%, 0, 0);
-}
-
 .img-preview {
   position: absolute;
-  left: 50%;
-  top: 50%;
   width: 100%;
-  transform: translate3d(-50%, -50%, 0);
+  height: 100%;
+  object-fit: cover;
+  vertical-align: top;
 }
 
 .photo-tag {

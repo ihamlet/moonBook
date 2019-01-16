@@ -23,7 +23,7 @@
                 <span class="book-number">{{childInfo.read_count}}本</span>
               </div>
               <div class="code-img flex flex-justify">
-                <img :src="qrImage" alt="二维码">
+                <img src="./../../../assets/img/code.png" alt="二维码">
               </div>
               <div class="explain">
                 <span> — 长按识别二维码进入 — </span>
@@ -105,7 +105,6 @@ export default {
     toImage() {
       this.isLoading = true
       domtoimage.toSvg(this.$refs.imageWrapper).then(dataUrl => {
-        console.log(dataUrl)
         this.dataURL = dataUrl
         this.isLoading = false
         this.isDisabled = true
@@ -167,8 +166,8 @@ export default {
 }
 
 .code-img img {
-  width: 6.25rem /* 100/16 */;
-  height: 6.25rem /* 100/16 */;
+  width: 7.5rem /* 120/16 */;
+  height: 7.5rem /* 120/16 */;
   margin:  0 auto;
 }
 

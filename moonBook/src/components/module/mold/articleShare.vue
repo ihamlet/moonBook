@@ -12,12 +12,13 @@
             <span class="name">阅亮书架</span>
           </div>
             <div class="article-container">
-              <div class="user flex flex-align" v-if='item.user'>
-                <div class="name">{{userName}}</div>
-              </div>    
                 <div class="title">{{item.title}}</div>
-                <div class="views">{{item.views}}人读过</div>
-                <div class="details" v-line-clamp:20="4" v-html="item.details.replace(/<img.*?>/, '')"></div>
+                <div class="flex flex-align">
+                  <div class="name">{{userName}}</div>
+                  <div class="views">{{item.views}}人读过</div>
+                </div>
+                <!-- v-html="item.details.replace(/<img.*?>/, '')" -->
+                <div class="details" ref='details' v-line-clamp:20="4" v-html='item.details'></div>
             </div>
           </div>
           <div class="press flex flex-align">
@@ -42,6 +43,7 @@
 </template>
 <script>
 import domtoimage  from 'dom-to-image'
+// import image2base64 from 'image-to-base64'
 import articleContent from './../articleContent'
 
 export default {
@@ -57,6 +59,9 @@ export default {
       isDisabled: false
     }
   },
+  mounted () {
+    this.imgToBase64()
+  },
   methods: {
     toImage() {
       this.isLoading = true
@@ -68,6 +73,9 @@ export default {
     },
     close() {
       this.$emit('close')
+    },
+    imgToBase64(){
+      console.log(this.$refs.details)
     },
     getAvatar(img) {
       let pos = img.indexOf('http://')
@@ -174,5 +182,9 @@ export default {
 
 .punch{
   bottom: 1.25rem /* 20/16 */;
+}
+
+.name{
+  margin-right: .625rem /* 10/16 */;
 }
 </style>

@@ -1,12 +1,15 @@
 <template>
-  <div class="readstat">
-    <van-nav-bar class="theme-nav" :title="$route.meta.title" fixed left-text="返回" @click-left="onClickLeft">
+  <div class="readstat page-padding">
+    <van-nav-bar :zIndex='99' :class="fixedHeaderBar?'theme-nav':''" :title="fixedHeaderBar?$route.meta.title:childInfo.name" fixed left-text="返回" @click-left="onClickLeft" @click-right="show = true">
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'我的'}}</span>
       </div>
+      <div class="head-bar-right" slot="right">
+        <i class="iconfont">&#xe635;</i>
+      </div>
     </van-nav-bar>
-    <div class="head">
+    <div class="head" ref="head">
       <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
         <div class="volume flex flex-justify">
           阅读量
@@ -16,13 +19,13 @@
           </div>
         </div>
         <div class="content">
-          <div class="avatar" v-if="childInfo.avatar" :class="childInfo.sex">
-            <img :src="childInfo.avatar" alt="宝贝头像">
+          <div class="avatar" v-if="childInfo.avatar">
+            <img :src="childInfo.avatar" alt="宝贝头像"  @error="imgError">
           </div>
           <avatar :gender="childInfo.sex" v-else />
-          <div class="name">
+          <div class="name flex flex-align">
             {{childInfo.name}}
-            <van-tag color="#FFC107" round type="danger">{{childInfo.read_level}}级</van-tag>
+            <van-tag class="tag" color="#FFC107" round type="danger" size='medium'>{{childInfo.read_level}}级</van-tag>
           </div>
         </div>
         <div class="volume flex flex-justify">
@@ -52,11 +55,11 @@
         <div class="ranking">
           <div class="ranking-content flex flex-align">
             <div class="circle flex flex-justify" v-for='(list,index) in ranking' :key="index">
-              <div class="number" :class="list.type">{{list.myInfo.rank}}</div>
+              <div class="number" :class="list.type"><b>{{list.myInfo.rank}}</b></div>
               <div class="name">{{list.name}}</div>
               <div class="diff">
                 {{list.rankDiff}}名
-                <i class="iconfont rise" v-if='list.rankDiff>0'>&#xe63e;</i>
+                <i class="iconfont rise" v-if='list.rankDiff > 0'>&#xe63e;</i>
                 <i class="iconfont drop" v-else>&#xe64f;</i>
               </div>
             </div>
@@ -64,9 +67,32 @@
         </div>
       </lazy-component>
       <lazy-component class="gutter gap">
-        <van-cell title="单元格" value="内容" />
+        <van-cell-group>
+          <van-cell size='large'>
+            <div class="text flex flex-justify">本月比上月阅读<span class="data">增长了24本</span></div>
+          </van-cell>
+          <van-cell size='large'>
+            <div class="text flex flex-justify">
+              <div class="content l">本月上传内容<span class="data">{{childInfo.month_post_count}}篇</span></div>
+              <div class="content r"><span class="data">349人</span>点赞</div>
+            </div>
+          </van-cell>
+          <van-cell size='large'>
+            <div class="text flex flex-justify">影响<span class="data">3人</span> 阅读了<span class="data">140 本</span>图书</div>
+          </van-cell>
+        </van-cell-group>
       </lazy-component>
     </div>
+
+    <div class="gutter gap">
+      <van-button class="theme-btn" round size="large" type="primary" @click="show = true">分享</van-button>
+    </div>
+    
+    <van-popup v-model="show" class="rank-share-popup" get-container='#app'>
+      <rank-share :childInfo='childInfo' @close='show = false'/>
+    </van-popup>
+
+    <slogan />
   </div>
 </template>
 <script>
@@ -74,19 +100,29 @@ import axios from './../lib/js/api'
 import babyHome from './../module/myModule/babyHome'
 import avatar from './../module/avatar'
 import numberGrow from './../module/animate/numberGrow'
+import rankShare from './../module/mold/rankShare'
+import slogan from './../module/slogan'
 
 export default {
   name: 'readstat',
   components: {
     babyHome,
     numberGrow,
-    avatar
+    avatar,
+    slogan,
+    rankShare
   },
   data() {
     return {
       childInfo: '',
-      ranking: []
+      ranking: [],
+      fixedHeaderBar: true,
+      domHeight: "",
+      show: false
     }
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll)
   },
   created() {
     this.fetchData()
@@ -99,9 +135,23 @@ export default {
       axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
         this.childInfo = res.data.data
 
-        console.log(res.data.data)
+        let banjiData = {
+          params: {
+            group: 'baby',
+            child_id: this.$route.query.id,
+            region: 'banji'
+          }
+        }
 
-        axios.get(`/book/SchoolTushuBorrow/getRank?group=baby&region=banji&banji_id=${res.data.data.banji_id}`).then(res => {
+        let schoolData = {
+          params: {
+            group: 'baby',
+            child_id: this.$route.query.id,
+            region: 'school'
+          }
+        }
+
+        axios.get('/book/SchoolTushuBorrow/getRank', banjiData).then(res => {
           this.ranking.push({
             myInfo: res.data.data.myInfo,
             type: 'banji',
@@ -110,7 +160,7 @@ export default {
           })
         })
 
-        axios.get(`/book/SchoolTushuBorrow/getRank?group=baby&region=school&banji_id=${res.data.data.banji_id}`).then(res => {
+        axios.get('/book/SchoolTushuBorrow/getRank', schoolData).then(res => {
           this.ranking.push({
             myInfo: res.data.data.myInfo,
             type: 'school',
@@ -119,6 +169,21 @@ export default {
           })
         })
       })
+    },
+    handleScroll() {
+      this.getDomHeight()
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      this.scrollTop = scrollTop
+      if (this.domHeight < this.scrollTop) {
+        this.fixedHeaderBar = false
+      } else {
+        this.fixedHeaderBar = true
+      }
+    },
+    getDomHeight() {
+      if (this.$refs.head) {
+        this.domHeight = this.$refs.head.offsetHeight / 2
+      }
     },
     onClickLeft() {
       if (this.$route.query.back) {
@@ -142,6 +207,9 @@ export default {
           back: this.$route.name
         }
       })
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     }
   }
 }
@@ -150,7 +218,7 @@ export default {
 .head {
   width: 100%;
   overflow: hidden;
-  background: linear-gradient(-135deg, #2196f3, #03a9f4);
+  background: linear-gradient(-135deg, #2196f3, #00bcd4);
 }
 
 .avatar {
@@ -163,12 +231,16 @@ export default {
 }
 
 .baby-info {
-  padding: 3.75rem /* 60/16 */ 1.875rem /* 30/16 */;
+  padding: 5rem /* 80/16 */ 1.875rem /* 30/16 */;
   color: #fff;
+  justify-content: space-between;
 }
 
 .baby-info .content {
   text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
 }
 
 .baby-info .content,
@@ -223,7 +295,7 @@ export default {
 
 .honor {
   width: 100%;
-  height: 4.375rem /* 70/16 */;
+  height: 3.75rem /* 60/16 */;
   background: #fff;
   box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.1);
   border-radius: 0.625rem /* 10/16 */;
@@ -255,27 +327,49 @@ export default {
 }
 
 .ranking-content {
-  padding: 0 1.25rem /* 20/16 */ 1.875rem /* 30/16 */ 0;
+  padding: 0.625rem /* 10/16 */ 0 1.875rem /* 30/16 */ 0;
   height: 7.5rem /* 120/16 */;
 }
 
 .ranking-content .number {
-  border: 0.3125rem /* 5/16 */ solid #000;
-  width: 5rem /* 80/16 */;
-  height: 5rem /* 80/16 */;
+  width: 6.25rem /* 100/16 */;
+  height: 6.25rem /* 100/16 */;
   text-align: center;
-  line-height: 5rem /* 80/16 */;
+  line-height: 6.25rem /* 100/16 */;
   border-radius: 50%;
 }
 
+.ranking-content .number b {
+  position: relative;
+}
+
 .ranking-content .number.banji {
-  border-color: #2196f3;
+  background: linear-gradient(90deg, #00bcd4, #2196f3);
   color: #2196f3;
 }
 
 .ranking-content .number.school {
+  background: linear-gradient(90deg, #ff5722, #f44336);
   border-color: #ff5722;
   color: #ff5722;
+}
+
+.ranking-content .number.banji,
+.ranking-content .number.school {
+  position: relative;
+}
+
+.ranking-content .number.banji::before,
+.ranking-content .number.school::before {
+  content: '';
+  position: absolute;
+  width: 5.75rem /* 92/16 */;
+  height: 5.75rem /* 92/16 */;
+  border-radius: 50%;
+  background: #fff;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
 }
 
 .ranking-content .diff,
@@ -295,11 +389,26 @@ export default {
   border-radius: 1.625rem /* 26/16 */;
 }
 
-.rise{
-  color: #8BC34A;
+.data,
+.rise {
+  color: #8bc34a;
 }
 
-.drop{
-  color: #F44336;
+.drop {
+  color: #f44336;
+}
+
+.data {
+  font-size: 1.25rem /* 20/16 */;
+  font-weight: 500;
+  margin: 0 0.625rem /* 10/16 */;
+}
+
+.rank-share-popup{
+  width: 18.75rem /* 300/16 */;
+}
+
+.tag{
+  margin-left: .3125rem /* 5/16 */;
 }
 </style>
