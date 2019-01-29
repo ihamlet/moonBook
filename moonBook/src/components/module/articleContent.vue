@@ -1,13 +1,13 @@
 <template>
   <div class="article-content" :class="[type=='screenshot'?'img-content':'',item.template_id!=0?'flex flex-align':'']">
-    <div class="article-header" v-if='item.template_id==0'>
-        <div class="media img long-article-thumb">
+    <div class="article-header" v-if='item.template_id==0' :class="[!item.cover || item.photos[0]?'no-thumb':'']">
+        <div class="media img long-article-thumb" v-if='item.cover || item.photos[0]'>
           <img :src="item.cover || item.photos[0].thumb" :preview='item.post_id'/>
           <van-tag class="photo-tag" type="danger" color="#03A9F4">封面</van-tag>
         </div>
         <div class="title" v-line-clamp:20="2">{{item.title}}</div>
     </div>
-    <article :class="[item.template_id==0?'long-article':'']" >
+    <article :class="[item.template_id==0 ?'long-article':'',!item.cover || item.photos[0]?'no-thumb-long-article':'']" >
       <div class="main">
         <div class="media-content">
           <media :item='item'/>
@@ -18,6 +18,7 @@
 </template>
 <script>
 import media from './../module/mold/media'
+
 
 export default {
   name: 'article-content',
@@ -90,5 +91,14 @@ article {
 
 .long-article{
   padding-top: 11.25rem /* 180/16 */;
+}
+
+.no-thumb .title{
+  position: static;
+  padding-top: 20px;
+}
+
+.no-thumb-long-article{
+  padding-top: 50px;
 }
 </style>
