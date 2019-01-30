@@ -10,7 +10,10 @@
         <div class="video-item scroll-item" v-for='(item,index) in videoList' :key="index" @click="toVideoPage(item)">
           <div class="video">
             <div class="video-cover">
-              <img :src="`${item.photo[0].photo}?x-oss-process=video/snapshot,t_8000,f_jpg,w_0,h_0,m_fast`" :alt="`视频封面-${index}`">
+              <div v-if="item.photo.length">
+<img :src="`${item.photo[0].photo}?x-oss-process=video/snapshot,t_8000,f_jpg,w_0,h_0,m_fast`" :alt="`视频封面-${index}`">
+              </div>
+              
               <div class="playing flex flex-align" v-if='item.post_id == $route.query.id'>
                 <i class="iconfont">&#xe639;</i>
                 <span class="text">正在播放</span>
@@ -63,14 +66,16 @@ export default {
           params: {
             portal_name: '首页',
             sort: 'post',
-            user_id: this.$route.query.user_id
+            user_id: this.$route.query.user_id,
+            hasvideo: 1
           }
         }
       } else {
         data = {
           params: {
             portal_name: '首页',
-            sort: 'tuijian'
+            sort: 'tuijian',
+            hasvideo: 1
           }
         }
       }
@@ -99,7 +104,6 @@ export default {
             }
           })
         }
-
         this.videoList = arr
       })
 

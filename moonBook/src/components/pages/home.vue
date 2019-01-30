@@ -145,11 +145,11 @@ export default {
                 this.investmentAd = res.data.homeData.investmentAd
                 this.newsList = res.data.homeData.newsList
                 this.videoList = res.data.homeData.videoList
-            })
-
-            axios.get('/book/memberUser/getInfo').then(res => {
-                this.isVip = res.data.isVip
-            })
+            }).then(()=>{
+                axios.get('/book/memberUser/getInfo').then(res => {
+                    this.isVip = res.data.isVip
+                })
+            })            
         },
         handleScroll(){
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop

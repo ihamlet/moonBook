@@ -97,7 +97,7 @@ export default {
         }
       }
 
-      return axios.get('/book/SchoolArticle/getList', data).then(res => {
+      return axios.get('/book/SchoolArticle/getList', data).then(res => {       
         if (this.page == 1) {
           this.list = res.data.data
         } else {
