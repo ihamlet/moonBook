@@ -1,7 +1,10 @@
 <template>
-  <div class="comment-list">
-    <div class="module-title">评论</div>
-    <div class="no-centent" v-if='list.length == 0'>
+  <div class="comment-list" id='comment' ref='comment'>
+    <van-nav-bar :zIndex='0' @click-right="showField">
+      <div class="views" slot="left">{{item.views}}浏览</div>
+      <div class="comment" slot="right">{{listLength}}评论</div>
+    </van-nav-bar>
+    <div class="no-centent" v-if='listLength == 0'>
       <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
         viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15655">
         <path d="M169.5 541.6V318.8c0-98.3 66.3-178.7 147.4-178.7h400c81.1 0 147.4 80.4 147.4 178.7v222.8" fill="#D9DFFF"
@@ -15,18 +18,17 @@
         <path d="M462.7 228.5h-0.5l-19.6-0.7c-8.3-0.3-14.8-7.2-14.5-15.5 0.3-8.3 7.2-14.8 15.5-14.5l19.6 0.7c8.3 0.3 14.8 7.2 14.5 15.5-0.3 8.2-6.9 14.5-15 14.5zM796.2 344.9l-28.9-8s0 0.1-0.1 0.3c0-0.2 3.5-15.7-0.4-64.4-3-38.3-66.5-44.5-71.7-44.9H521.6c-8.3 0-15-6.7-15-15s6.7-15 15-15h174.9c0.9 0.1 23 1.5 45.9 10.1 42 15.9 52.7 42.7 54.3 62.4 4.3 53.8 0.3 71.5-0.5 74.5z"
           fill="#FFFFFF" p-id="15660"></path>
       </svg>
-      <span>快来抢沙发</span>
+      <div class="prompt">快来抢沙发</div>
     </div>
     <div class="container">
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <van-cell v-for="(item,index) in list" :key="index">
           <div class="user-card flex flex-align">
-            <div class="avatar">
-              <img :src="item.avatar" :alt="item.username" />
+            <div class="avatar" @click="toZoom(item)">
+              <img :src="getAvatar(item.avatar)" :alt="item.username" />
             </div>
             <div class="user-data">
               <span class="user-name">{{item.username}}</span>
-              <span class="date">{{item.createDate}}</span>
             </div>
           </div>
           <div class="contents">
@@ -38,15 +40,34 @@
               <div class="list" v-for='(reply,replyIndex) in  item.replyList' :key='replyIndex'>
                 <div class="item">
                   <span class="reply-title">
-                    <i class="iconfont">&#xe631;</i> {{reply.username}}回复{{item.username}}
+                    <i class="iconfont">&#xe6ea;</i>
+                    {{reply.username}}回复{{item.username}}
                   </span>
-                  <span>
+                  <span class="reply-contents">
                     {{reply.contents}}
                   </span>
                 </div>
               </div>
             </div>
-            <div class="theme-color" @click="showField(item)">回复</div>
+            <div v-if='item.quote' class="reply-content">
+              <div class="list">
+                <div class="item">
+                  <span class="reply-title">
+                    <i class="iconfont">&#xe60d;</i>
+                    {{item.quote.username}}的评论
+                  </span>
+                  <span class="reply-contents">
+                    {{item.quote.contents}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="comment-bar flex flex-align">
+              <div class="date">{{timeAago(item.create_time)}}</div>
+              <div class="theme-color" @click="showField(item)">
+                <van-tag round size="medium" type="primary">{{item.replyList.length?item.replyList.length:''}}回复</van-tag>
+               </div>
+            </div>
           </div>
         </van-cell>
       </van-list>
@@ -56,31 +77,39 @@
     <div class="comment">
       <div class="footer-bar">
         <div class="bar-padding flex flex-align">
-          <div class="input-box" @click="showField()">
-            <i class="iconfont">&#xe9ce;</i>
-            写评论
+          <div class="input-box flex flex-align" @click="showField()">
+            <div class="input-box-avatar avatar">
+              <img :src="getAvatar(userDataState.avatar)"/>
+            </div>
+            <span>写评论</span>
           </div>
           <div class="btn-icon flex flex-align">
-            <div class="btn" @click="addPraise">
+            <div class="btn" @click="toScroll">
+              <van-tag class="num-tag" v-if='listLength > 0' round type="danger">{{listLength > 1000?'999+':listLength}}</van-tag>
+              <i class="iconfont">&#xe731;</i>
+            </div>
+            <div class="btn" @click="addPraise(item)">
+              <van-tag class="num-tag" v-if='item.zan_num > 0' round type="danger">{{item.zan_num > 1000?'999+':item.zan_num}}</van-tag>
               <i class="iconfont" v-if="!item.isZan">&#xe644;</i>
               <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
             </div>
-            <div class="btn">
-              <i class="iconfont">&#xe64c;</i>
+            <div class="btn" @click="addCollect(item)">
+              <i class="iconfont" v-if="!item.isCollect">&#xe64c;</i>
+              <i class="iconfont star highlight swing animated" v-else>&#xe64b;</i>
             </div>
           </div>
         </div>
       </div>
 
-      <van-popup v-model="show" class="comment-popup" position="bottom">
+      <van-popup v-model="show" class="comment-popup" position="bottom" get-container='#app'>
         <div class="comment-content flex">
           <div class="field-box">
             <van-cell-group>
-              <van-field v-model="message" minHeight='50px' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
+              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
             </van-cell-group>
           </div>
           <div class="submit-btn theme-color">
-            <van-button class="theme-btn" :loading="isLoading"  size="large" type="primary" @click="submit">发送</van-button>
+            <van-button class="theme-btn" :loading="isLoading" size="large" type="primary" @click="submit">发送</van-button>
           </div>
         </div>
       </van-popup>
@@ -90,22 +119,24 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from './../lib/js/api'
+import { timeago } from './../lib/js/util'
 
 export default {
-  name: 'comment-card',
+  name: 'comment',
   props: ['item'],
   computed: {
-    ...mapGetters(['userToken'])
+    ...mapGetters(['userToken','userDataState'])
   },
   data() {
     return {
       list: [],
+      toTopAndComment: false,
+      listLength: '',
       loading: false,
       finished: false,
       prompt: '写评论',
       page: 1,
       commentId: '',
-
       show: false,
       isLoading: false,
       message: ''
@@ -113,8 +144,8 @@ export default {
   },
   methods: {
     onLoad() {
-      axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.$route.query.id}&page=${this.page}&limit=10&sort=new`).then(res => {
-        console.log(res)
+      axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.$route.query.id||this.$route.query.back_id}&page=${this.page}&limit=10&sort=new`).then(res => {
+        this.listLength = res.data.count
         let array = res.data.data
         this.loading = false
         if (this.page == 1) {
@@ -153,9 +184,14 @@ export default {
     },
     addPraise(item) {
       item.isZan = !item.isZan
-      console.log(item.isZan)
       axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
         item.zan_num = res.data.data.like
+      })
+    },
+    addCollect(item){
+      item.isCollect = !item.isCollect
+      axios.get(`/book/SchoolArticleCollect/add?post_id=${this.item.post_id}`).then(res=>{
+        item.collect_num = res.data.data.collect_num
       })
     },
     showField(item) {
@@ -164,26 +200,63 @@ export default {
         this.prompt = `回复：${item.username}`
         this.commentId = item.comment_id
       } else {
+        this.commentId = ''
         this.prompt = '写评论'
       }
       this.show = true
       this.$nextTick(() => {
         this.$refs.field.focus()
       })
+    },
+    getAvatar(img) {
+      if(!img){
+        return img
+      }
+
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
+    },
+    timeAago(time) {
+      return timeago(time * 1000)
+    },
+    toScroll(){
+      this.toTopAndComment = !this.toTopAndComment
+      let domScrollTop =  this.$refs.comment.offsetTop 
+      if(this.toTopAndComment){
+        window.scrollTo(0,domScrollTop)
+      }else{
+        window.scrollTo(0,0)
+      }
+    },
+    toZoom(item){
+      this.$router.push({
+        name:'zoom',
+        query:{
+          id:item.user_id,
+          back:this.$route.name,
+          back_id:this.$route.query.id || this.$route.query.back_id
+        }
+      })
     }
   }
 }
 </script>
 <style scoped>
-.comment-list {
-  margin-top: 0.625rem; /* 10/16 */
-}
-
 .no-centent {
-  display: grid;
   text-align: center;
   background: #fff;
   padding-bottom: 1.25rem /* 20/16 */;
+}
+
+.no-centent .prompt{
+  color: #C0C4CC;
+  font-size: .875rem /* 14/16 */;
 }
 
 .no-centent svg {
@@ -198,8 +271,8 @@ export default {
 }
 
 .avatar {
-  width: 2.875rem /* 46/16 */;
-  height: 2.875rem /* 46/16 */;
+  width: 2rem /* 32/16 */;
+  height: 2rem /* 32/16 */;
   border-radius: 50%;
   overflow: hidden;
   margin-right: 0.625rem /* 10/16 */;
@@ -217,16 +290,12 @@ export default {
 .date {
   font-size: 0.75rem /* 12/16 */;
   color: #909399;
+  margin-right: .625rem /* 10/16 */;
 }
 
 .contents {
-  padding: 0.625rem /* 10/16 */ 0 0.625rem /* 10/16 */ 3.4375rem /* 55/16 */;
+  padding: 0.625rem /* 10/16 */ 0 0.625rem /* 10/16 */ 2.625rem /* 42/16 */;
   font-size: 1rem /* 16/16 */;
-  text-align: justify;
-}
-
-.reply .reply-content {
-  text-align: justify;
 }
 
 .reply .reply-content .theme-color {
@@ -234,7 +303,7 @@ export default {
 }
 
 .reply {
-  margin-left: 3.4375rem /* 55/16 */;
+  margin-left: 2.625rem /* 42/16 */;
 }
 
 .footer-bar {
@@ -243,7 +312,7 @@ export default {
   width: 100%;
   height: 3rem /* 48/16 */;
   background: #fff;
-  border-top: 0.0625rem /* 1/16 */ solid #ededed;
+  border-top: 0.0625rem /* 1/16 */ solid #EBEEF5;
 }
 
 .comment-popup {
@@ -261,7 +330,7 @@ export default {
 
 .input-box {
   height: 2.375rem /* 38/16 */;
-  flex: 3;
+  flex: 2;
 }
 
 .btn-icon {
@@ -271,6 +340,7 @@ export default {
 .btn {
   flex: 1;
   text-align: center;
+  position: relative;
 }
 
 .btn i.iconfont {
@@ -280,7 +350,7 @@ export default {
 .input-box {
   background: #ebeef5;
   line-height: 2.375rem /* 38/16 */;
-  border-radius: 0.375rem /* 6/16 */;
+  border-radius: 2.375rem /* 38/16 */;
 }
 
 .input-box i.iconfont {
@@ -288,9 +358,6 @@ export default {
 }
 
 .field-box {
-  border: 0.0625rem /* 1/16 */ solid #dcdfe6;
-  border-radius: 0.25rem /* 4/16 */;
-  overflow: hidden;
   flex: 4;
 }
 
@@ -300,8 +367,37 @@ export default {
   margin-left: 0.3125rem /* 5/16 */;
 }
 
-span.reply-title {
+.reply-title {
   color: #909399;
+  margin-top: .3125rem /* 5/16 */;
+  margin-bottom: .3125rem /* 5/16 */;
+}
+
+.reply-contents{
+  color: #606266;
+}
+
+.theme-btn {
+  height:2.75rem /* 44/16 */;
+}
+
+.input-box-avatar{
+  width: 2rem /* 32/16 */;
+  height: 2rem /* 32/16 */;
+  margin-left: .3125rem /* 5/16 */;
+}
+
+.num-tag{
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  top: -.3125rem /* 5/16 */;
+}
+
+.reply-content{
+  background: #EBEEF5;
+  padding: .625rem /* 10/16 */;
+  margin-bottom: .625rem /* 10/16 */;
 }
 </style>
 

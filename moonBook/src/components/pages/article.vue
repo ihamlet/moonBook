@@ -3,15 +3,15 @@
     <van-nav-bar left-text="发现" left-arrow fixed :zIndex='100' @click-left="onClickLeft" @click-right="shareShow = true">
       <div class="head-bar-title" slot="title">
         <transition name="slide-fade" mode="out-in">
-          <div class="head-bar-title-conent" :key="1" v-if='!themeBarSearch'>
+          <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
             {{$route.meta.title}}
           </div>
-          <div class="head-bar-title-conent flex flex-align flex-justify" :key="2" v-else>
-            <div class="avatar">
-              <img :src="item.user.avatar" :alt="item.user.username">
+          <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else>
+            <div class="avatar" v-if='item.user'>
+              <img :src="getAvatar(item.user.avatar)" :alt="item.user.username">
             </div>
-            <div class="name">{{item.user.username}}</div>
-            <vip-level v-if='item.card_level' :animate='true' :level='item.card_level.level'/>
+            <div class="name" v-if='item.user'>{{item.user.username}}</div>
+            <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
         </transition>
       </div>
@@ -22,7 +22,7 @@
     <div class="container page-padding">
       <div class="user-card flex flex-align" ref="userCard" v-if='item.user'>
         <div class="avatar">
-          <img :src="item.user.avatar" :alt="item.user.username">
+          <img :src="getAvatar(item.user.avatar)" :alt="item.user.username">
         </div>
         <div class="info">
           <div class="name">
@@ -35,34 +35,33 @@
             <span>{{item.createDate}}</span>
           </div>
         </div>
-        <div class="follow-ben">
-          <van-button size="small" round>+ 关注</van-button>
+        <div class="follow-ben"  v-if='item.isSubscribe!=3'>
+          <van-button size="small" v-if='item.isSubscribe' round @click="follow(item)">已关注</van-button>
+          <van-button size="small" v-else class="theme-btn" type="primary" round @click="follow(item)">+ 关注</van-button>
         </div>
       </div>
-      <article-content :item='item' />
-      <comment :item='item'/>
+      <lazy-component class="module">
+        <article-content :item='item'/>
+      </lazy-component>
+      <lazy-component>
+        <comment :item='item'/>
+      </lazy-component>
     </div>
 
-    <van-popup v-model="pictureShow" class="picture-box-popup" get-container='#app'>
-      <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item" />
-    </van-popup>
-
-    <van-popup v-model="shareShow" class="share-popup" position="bottom" get-container='#app'>
-      <share @close='shareShow = false' @show='imageShow = true' />
-    </van-popup>
+    <van-actionsheet v-model="shareShow" title="分享">
+      <share @show='imageShow = true' />
+    </van-actionsheet>
 
     <!-- 生成图片 -->
     <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
-      <article-share :item='item' :qrImage='qrImage' @close='imageShow = false'/>
+      <article-share :item='item' :userName='item.user?item.user.username:""' :qrImage='qrImage' @close='imageShow = false'/>
     </van-popup>
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
 
-import html2canvas from 'html2canvas'
 import QRCode from "qrcode"
-import pictureBox from "./../module/mold/pictureBox"
 import share from './../module/mold/share'
 import articleShare from './../module/mold/articleShare'
 import comment from './../module/comment'
@@ -72,7 +71,6 @@ import vipLevel from './../module/animate/svg/vipLevel'
 export default {
   name: 'detailsArticle',
   components: {
-    pictureBox,
     articleContent,
     comment,
     share,
@@ -86,7 +84,6 @@ export default {
       themeBarSearch: false,
       imageShow: false,
       headBar: false,
-      pictureShow: false,
       shareShow: false,
       imgIndex: '',
       qrImage:'',
@@ -117,19 +114,23 @@ export default {
     },
     fetchData() {
       this.qrcode()
-      axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id}`).then(res => {
+      axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id||this.$route.query.back_id}`).then(res => {
         this.item = res.data.data.post
       })
     },
     onClickLeft() {
-      this.$router.push({
-        name: 'find'
-      })
-    },
-    mediaLamp(item, photoIndex) {
-      this.pictureShow = true
-      this.imgIndex = photoIndex
-      this.item = item
+      if(this.$route.query.back){
+        this.$router.push({
+          name: this.$route.query.back,
+          query: {
+            id: this.$route.query.back_id
+          }
+        })
+      }else{
+        this.$router.push({
+          name:'apps-find'
+        })
+      }
     },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {
@@ -137,6 +138,22 @@ export default {
       }).catch(err => {
         console.error(err)
       })
+    },
+    follow(item){
+      item.isSubscribe = !item.isSubscribe
+      axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res=>{
+        this.$toast.success(res.data.msg)
+      })
+    },
+    getAvatar(img) {
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
     }
   }
 }
@@ -200,14 +217,13 @@ export default {
   right: 0.625rem /* 10/16 */;
 }
 
-.screenshot-popup {
+.share-box{
+  width: 100%;
   overflow: hidden;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .18s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
+
+.screenshot-popup {
+  overflow: hidden;
 }
 </style>

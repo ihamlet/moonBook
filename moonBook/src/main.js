@@ -1,6 +1,5 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-// 使用mock模拟数据交互
 
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -8,15 +7,27 @@ import App from './App'
 import router from './router'
 import store from './store/index'
 
+// 高德地图vue组件
 import VueAMap from 'vue-amap'
 
+//vant框架
 import Vant from 'vant'
 import 'vant/lib/index.css'
+
+// 懒加载
 import { Lazyload } from 'vant'
 
+// 文字溢出
 import lineClamp from 'vue-line-clamp'
 
-import './mock' //模拟数据
+// 图片灯箱
+import preview from 'vue-photo-preview'
+import 'vue-photo-preview/dist/skin.css'
+let options = {
+  fullscreenEl: false
+}
+
+Vue.use(preview,options)
 
 Vue.use(Vuex)
 Vue.use(Vant)
@@ -38,24 +49,6 @@ VueAMap.initAMapApiLoader({
 })
 
 Vue.config.productionTip = false
-
-
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.LoginRequire)) {
-//     if (!store.getters.userToken) {
-//       next({
-//         name: 'login',
-//         query:{
-//           link: to.name
-//         }
-//       })
-//     } else {
-//       next()
-//     }
-//   } else {
-//     next()
-//   }
-// })
 
 /* eslint-disable no-new */
 new Vue({

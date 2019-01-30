@@ -73,7 +73,6 @@ export default {
   z-index: 2;
   top: 1.5625rem /* 25/16 */;
   left: 0.625rem /* 10/16 */;
-  color: #000;
 }
 
 .close i.iconfont {

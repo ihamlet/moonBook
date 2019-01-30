@@ -4,43 +4,45 @@
       <i class="iconfont">&#xe683;</i>
     </div>
     <transition name="fade" mode="out-in">
-      <img :src="dataURL" v-if="dataURL">
-      <slot v-else>
+     
+      <slot v-if="!dataURL">
         <div class="container" ref="imageWrapper" v-if="type=='babyHome'">
           <div class="bg">
-            <round />
-            <div class="flex-justify">
+            <div class="card flex-justify">
               <div class="baby-info">
                 <div class="avatar" v-if='childInfo.avatar'>
-                  <img class="avatar-img" :src="childInfo.avatar" :alt="childInfo.name" />
+                  <img crossOrigin="anonymous" class="avatar-img" :src="avatar(childInfo.avatar)" :alt="childInfo.name" />
                 </div>
                 <avatar :gender='childInfo.gender' v-else />
                 <div class="name">{{childInfo.name}}</div>
+                <div class="school">{{schoolEllipsis}}</div>               
                 <div class="label">{{label}}</div>
-                <div class="school">{{schoolEllipsis}}</div>
               </div>
-              <div class="text" v-if='dataStatistics.totalReading!=0'>
+              <div class="text" v-if='childInfo.read_count!=0'>
                 <span>{{childInfo.name}}宝贝在阅亮书架一共阅读了图书</span>
-                <span class="book-number">{{dataStatistics.totalReading}}本</span>
+                <span class="book-number">{{childInfo.read_count}}本</span>
               </div>
-              <div class="code-img">
-                <img :src="qrImage" alt="二维码">
+              <div class="code-img flex flex-justify">
+                <img src="./../../../assets/img/code.png" alt="二维码">
               </div>
               <div class="explain">
                 <span> — 长按识别二维码进入 — </span>
                 <span> © 阅亮书架 </span>
               </div>
             </div>
+            <round />
           </div>
         </div>
 
         <div class="container" ref="imageWrapper" :class="[type=='classHome'?'plate':'']" v-if="type=='classHome'">
-          <div class="img-bg"></div>
+          <div class="img-bg">
+            <img src="./../../../assets/img/qc-bg-img.png" alt="" srcset="" />
+          </div>
           <div class="card flex flex-align">
             <div class="class-card">
               <div class="name">
-                <span>{{classInfo.name}}</span>
-                <span class="people">{{classInfo.people}}人</span>
+                <span>{{classInfo.title}}</span>
+                <span class="people">{{classInfo.student_count}}人</span>
               </div>
               <div class="school">{{schoolEllipsis}}</div>
             </div>
@@ -54,6 +56,7 @@
           </div>
         </div>
       </slot>
+      <img :src="dataURL" v-else>
     </transition>
     <div class="popup-btn">
       <van-button class="theme-btn" :loading='isLoading' size="large" square :disabled='isDisabled' type="primary"
@@ -65,22 +68,29 @@
 </template>
 <script>
 import round from './../animate/round'
-import html2canvas from 'html2canvas'
+import domtoimage  from 'dom-to-image'
 import avatar from './../../module/avatar'
 
 export default {
   name: 'qr-code',
-  props: ['childInfo', 'classInfo', 'qrImage', 'dataStatistics', 'label', 'school', 'type'],
+  props: ['childInfo', 'classInfo', 'qrImage', 'label', 'type'],
   components: {
     round,
     avatar
   },
   computed: {
     schoolEllipsis() {
-      if (this.school.length > 10) {
-        return this.school.substr(0, 9) + '...'
+      let data = ''
+      if(this.childInfo){
+        data = this.childInfo
+      }else{
+        data = this.classInfo
+      }
+
+      if (data.school_name.length > 10) {
+        return data.school_name.substr(0, 9) + '...'
       } else {
-        return this.school
+        return data.school_name
       }
     }
   },
@@ -94,22 +104,22 @@ export default {
   methods: {
     toImage() {
       this.isLoading = true
-      html2canvas(this.$refs.imageWrapper, {
-        logging: false,
-        useCORS: true,
-        timeout: 1000,
-        backgroundColor: '#fff',
-        windowWidth: this.$refs.imageWrapper.clientWidth,
-        windowHeight: this.$refs.imageWrapper.clientHeight,
-      }).then(canvas => {
-        let dataURL = canvas.toDataURL("image/png")
-        this.dataURL = dataURL
+      domtoimage.toSvg(this.$refs.imageWrapper).then(dataUrl => {
+        this.dataURL = dataUrl
         this.isLoading = false
         this.isDisabled = true
       })
-    },
+    },  
     closeQrcode() {
       this.$emit('close')
+    },
+    avatar(img){
+      let hostMatch = img.match(/https?:\/\/(.+?)\//)
+      if(hostMatch) {
+        return `/book/api/remotePic?url=${img}`
+      } else {
+        return img
+      }
     }
   }
 }
@@ -141,7 +151,6 @@ export default {
 
 .school {
   margin: 0.3125rem /* 5/16 */ auto 0;
-  width: 80%;
 }
 
 .name {
@@ -157,18 +166,21 @@ export default {
 }
 
 .code-img img {
-  width: 6.25rem /* 100/16 */;
+  width: 7.5rem /* 120/16 */;
+  height: 7.5rem /* 120/16 */;
+  margin:  0 auto;
 }
 
 .bg,
 .bg .welt {
   width: 100%;
-  height: 31.25rem /* 500/16 */;
+  height: 28.125rem /* 450/16 */;
 }
 
 .bg .welt {
   position: absolute;
-  z-index: -10;
+  top: 0;
+  background: #fff;
 }
 
 .explain {
@@ -190,6 +202,7 @@ export default {
   overflow: hidden;
   width: 100%;
   height: 100%;
+  background: #fff;
 }
 
 .close.plate i.iconfont {
@@ -211,19 +224,16 @@ export default {
   color: #000;
 }
 
-.img-bg {
-  width: 100%;
-  height: 21.25rem /* 340/16 */;
-  background: url('/Public/images/qc-bg-img.png');
-  background-size: cover;
-  background-position: bottom;
-  background-repeat: no-repeat;
-}
-
 .card {
   width: 16.25rem /* 260/16 */;
   padding: 0.3125rem /* 5/16 */ 1.25rem; /* 20/16 */;
   justify-content: space-between;
+  z-index: 1;
+  position: relative;
+}
+
+.container.plate{
+  background: #fff;
 }
 
 .plate .class-card {
@@ -257,6 +267,11 @@ span.people {
 .plate .code-img {
   flex: 1;
   padding: 0;
+}
+
+.plate .code-img img{
+  width: 100%;
+  height: 100%;
 }
 
 .fade-enter-active,

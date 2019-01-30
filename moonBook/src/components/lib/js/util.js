@@ -1,11 +1,17 @@
 // 计算经纬度
 function GetDistance(lat1, lng1, lat2, lng2) {
-  var radLat1 = lat1 * Math.PI / 180.0
-  var radLat2 = lat2 * Math.PI / 180.0
-  var a = radLat1 - radLat2
-  var b = lng1 * Math.PI / 180.0 - lng2 * Math.PI / 180.0
-  var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
-    Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)))
+  let radLat1 = (lat1 * Math.PI) / 180.0
+  let radLat2 = (lat2 * Math.PI) / 180.0
+  let a = radLat1 - radLat2
+  let b = (lng1 * Math.PI) / 180.0 - (lng2 * Math.PI) / 180.0
+  let s =
+    2 *
+    Math.asin(
+      Math.sqrt(
+        Math.pow(Math.sin(a / 2), 2) +
+          Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)
+      )
+    )
   s = s * 6378.137 // EARTH_RADIUS;
   s = Math.round(s * 10000) / 10000
   return s
@@ -13,11 +19,11 @@ function GetDistance(lat1, lng1, lat2, lng2) {
 
 //日期转换
 function format(time, format) {
-  var t = new Date(time)
-  var tf = function (i) {
+  let t = new Date(time)
+  let tf = function(i) {
     return (i < 10 ? '0' : '') + i
   }
-  return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function (a) {
+  return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function(a) {
     switch (a) {
       case 'yyyy':
         return tf(t.getFullYear())
@@ -43,7 +49,7 @@ function format(time, format) {
 
 //字段排序
 function createComparison(propertyName) {
-  return function (object1, object2) {
+  return function(object1, object2) {
     let value1 = parseFloat(object1[propertyName])
     let value2 = parseFloat(object2[propertyName])
     if (value1 < value2) {
@@ -58,92 +64,163 @@ function createComparison(propertyName) {
 
 //数组求和
 function sum(arr) {
-  return eval(arr.join("+"))
+  return eval(arr.join('+'))
 }
 
 // 图片压缩
-function compress(base64String, w, quality) {
-  var getMimeType = function (urlData) {
-      var arr = urlData.split(',')
-      var mime = arr[0].match(/:(.*?);/)[1]
-      return mime;
+function compress(base64String, w, quality, type) {
+  type = type || 'base64'
+  let getMimeType = function(urlData) {
+    let arr = urlData.split(',')
+    let mime = arr[0].match(/:(.*?);/)[1]
+    return mime
   }
-  var newImage = new Image()
-  var imgWidth, imgHeight
+  let newImage = new Image()
+  let imgWidth, imgHeight
 
-  var promise = new Promise(resolve => newImage.onload = resolve)
+  let promise = new Promise(resolve => (newImage.onload = resolve))
   newImage.src = base64String
   return promise.then(() => {
-      imgWidth = newImage.width
-      imgHeight = newImage.height
-      var canvas = document.createElement("canvas")
-      var ctx = canvas.getContext("2d")
-      if (Math.max(imgWidth, imgHeight) > w) {
-          if (imgWidth > imgHeight) {
-              canvas.width = w
-              canvas.height = w * imgHeight / imgWidth
-          } else {
-              canvas.height = w;
-              canvas.width = w * imgWidth / imgHeight
-          }
+    imgWidth = newImage.width
+    imgHeight = newImage.height
+    let canvas = document.createElement('canvas')
+    let ctx = canvas.getContext('2d')
+    if (Math.max(imgWidth, imgHeight) > w) {
+      if (imgWidth > imgHeight) {
+        canvas.width = w
+        canvas.height = (w * imgHeight) / imgWidth
       } else {
-          canvas.width = imgWidth
-          canvas.height = imgHeight
+        canvas.height = w
+        canvas.width = (w * imgWidth) / imgHeight
       }
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      ctx.drawImage(newImage, 0, 0, canvas.width, canvas.height)
-      var base64 = canvas.toDataURL(getMimeType(base64String), quality)
+    } else {
+      canvas.width = imgWidth
+      canvas.height = imgHeight
+    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.drawImage(newImage, 0, 0, canvas.width, canvas.height)
+    if (type === 'base64') {
+      let base64 = canvas.toDataURL(getMimeType(base64String), quality)
       return base64
+    } else {
+      return canvas
+    }
   })
 }
 
 // 数组随机抽取
 function getRandomArrayElements(arr, count) {
-  let shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index
+  let shuffled = arr.slice(0),
+    i = arr.length,
+    min = i - count,
+    temp,
+    index
   while (i-- > min) {
-  index = Math.floor((i + 1) * Math.random())
-  temp = shuffled[index]
-  shuffled[index] = shuffled[i]
-  shuffled[i] = temp
+    index = Math.floor((i + 1) * Math.random())
+    temp = shuffled[index]
+    shuffled[index] = shuffled[i]
+    shuffled[i] = temp
   }
   return shuffled.slice(min)
 }
 
+// 计算时间为刚刚、几分钟前、几小时前、几天前
+//dateTimeStamp是一个时间毫秒
 
-// 排名
-function rankArray(arr, key) {
-  let currentRank = 0 // 当前排名
-  let currentNum = 0 // 当前数量
-  arr.sort((a, b) => a[key] > b[key] ? -1 : 1)
-  arr.forEach( item => {
-    if(currentNum != item[key]) {    
-      ++currentRank
-      currentNum = item[key]
-    }
-    item.rank = currentRank
-  })
-  return arr
+function timeago(dateTimeStamp) {
+  let minute = 1000 * 60
+  let hour = minute * 60
+  let day = hour * 24
+  let week = day * 7
+  let halfamonth = day * 15
+  let month = day * 30
+  let now = new Date().getTime()
+  let diffValue = now - dateTimeStamp
+
+  if (diffValue < 0) {
+    return
+  }
+
+  let result
+
+  let minC = diffValue / minute
+  let hourC = diffValue / hour
+  let dayC = diffValue / day
+  let weekC = diffValue / week
+  let monthC = diffValue / month
+  if (monthC >= 1 && monthC <= 3) {
+    result = ' ' + parseInt(monthC) + '月前'
+  } else if (weekC >= 1 && weekC <= 3) {
+    result = ' ' + parseInt(weekC) + '周前'
+  } else if (dayC >= 1 && dayC <= 6) {
+    result = ' ' + parseInt(dayC) + '天前'
+  } else if (hourC >= 1 && hourC <= 23) {
+    result = ' ' + parseInt(hourC) + '小时前'
+  } else if (minC >= 1 && minC <= 59) {
+    result = ' ' + parseInt(minC) + '分钟前'
+  } else if (diffValue >= 0 && diffValue <= minute) {
+    result = '刚刚'
+  } else {
+    let datetime = new Date()
+    datetime.setTime(dateTimeStamp)
+    let Nyear = datetime.getFullYear()
+    let Nmonth =
+      datetime.getMonth() + 1 < 10
+        ? '0' + (datetime.getMonth() + 1)
+        : datetime.getMonth() + 1
+    let Ndate =
+      datetime.getDate() < 10 ? '0' + datetime.getDate() : datetime.getDate()
+    let Nhour =
+      datetime.getHours() < 10 ? '0' + datetime.getHours() : datetime.getHours()
+    let Nminute =
+      datetime.getMinutes() < 10
+        ? '0' + datetime.getMinutes()
+        : datetime.getMinutes()
+    let Nsecond =
+      datetime.getSeconds() < 10
+        ? '0' + datetime.getSeconds()
+        : datetime.getSeconds()
+    result = Nyear + '-' + Nmonth + '-' + Ndate
+  }
+  return result
 }
 
-//数组指定元素置顶
-
-function arrayKeyTop(arr,key){
-  arr.forEach((element,i) => {
-    if(element[key]){
-      arr.splice(i, 1)
-      arr.unshift(element)
+// 视频时长
+function formatTime(a) {
+  let h = 0,
+    i = 0,
+    s = parseInt(a)
+  if (s > 60) {
+    i = parseInt(s / 60)
+    s = parseInt(s % 60)
+    if (i > 60) {
+      h = parseInt(i / 60)
+      i = parseInt(i % 60)
     }
-  })  
-  return arr
+  }
+  // 补零
+  let zero = function(v) {
+    return v >> 0 < 10 ? '0' + v : v
+  }
+  let h2 = zero(h)
+  let i2 = zero(i)
+  let s2 = zero(s)
+  let ok = ''
+  if (h2 <= 0) {
+    ok = [i2, s2].join(':')
+  } else {
+    ok = [h2, i2, s2].join(':')
+  }
+  return ok
 }
 
 export {
   GetDistance,
   format,
   createComparison,
-  arrayKeyTop,
-  rankArray,
   sum,
   compress,
-  getRandomArrayElements
+  getRandomArrayElements,
+  timeago,
+  formatTime
 }

@@ -1,23 +1,26 @@
 <template>
   <div class="topic-list">
-    <van-nav-bar title="选择话题" />
+    <van-nav-bar title="选择分类" fixed right-text='关闭' @click-right='close' />
     <div class="list">
       <van-cell-group>
         <div class="item" v-for='(item,index) in topicList' :key="index">
-          <van-cell is-link>
-            <div class="theme-color">#{{item}}</div>
+          <van-cell is-link @click="select(item)">
+            <div class="theme-color">#{{item.cate_name}}</div>
           </van-cell>
-
         </div>
       </van-cell-group>
     </div>
   </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from './../../lib/js/api'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'topic-list',
+  computed: {
+    ...mapGetters(['userDataState'])
+  },
   data() {
     return {
       topicList: ''
@@ -31,9 +34,16 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get('/api/topicList').then(res => {
-        this.topicList = res.data.topicList
+      axios.get('/book/schoolArticleCate/getList').then(res => {
+        this.topicList = res.data
       })
+    },
+    select(item){
+      this.$emit('select',item)
+      this.$emit('close')
+    },
+    close(){
+      this.$emit('close')
     }
   }
 }

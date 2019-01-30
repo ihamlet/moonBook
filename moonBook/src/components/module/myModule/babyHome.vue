@@ -1,7 +1,7 @@
 <template>
   <div class="baby-home">
     <div class="module-card">
-      <div class="add-baby flipInX animated" v-if="userDataState.childInfo == false" @click="toAddChild">
+      <div class="add-baby flipInX animated" v-if="childrenList.length == 0" @click="toAddChild">
         <i class="iconfont hot">&#xe750;</i>
         <div class="container">
           <i class="iconfont baby-hd">&#xe603;</i>
@@ -10,28 +10,28 @@
         </div>
       </div>
       <div class="list" v-else>
-        <div class="module-title">宝贝阅读档案</div>
-        <div class="item module" v-for="(list,index) in userDataState.childInfo" :key="index">
+        <div class="module-title">我的宝贝</div>
+        <div class="item module" v-for="(list,index) in childrenList" :key="index">
           <div class="card-top-bar">
-            <van-nav-bar :title="`${list.data.name}`" right-text="编辑" :left-text="list.school?'班级':''" @click-left="onClickLeft(list)"
+            <van-nav-bar :title="`${list.name}`" right-text="编辑" :left-text="list.banji_name?list.banji_name:'班级'" @click-left="onClickLeft(list)"
               @click-right="onClickRight(list)" />
           </div>
           <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
             <div class="volume">
-              周阅读量
-              <span class="number">{{list.dataStatistics.readings}}</span>
+              阅读量
+              <span class="number">{{list.week_read_count}}</span>
             </div>
             <div class="content">
-              <div class="avatar" v-if="list.data.avatar">
-                <img :src="list.data.avatar" alt="宝贝头像">
+              <div class="avatar" v-if="list.avatar" :class="list.sex">
+                <img :src="list.avatar" alt="宝贝头像">
               </div>
-              <avatar :gender="list.data.gende" v-else />
-              <div class="age">{{age[index]}}岁</div>
-              <div class="school" v-line-clamp:20="1">{{list.school}}</div>
+              <avatar :gender="list.sex" v-else />
+              <div class="age">{{list.age}}岁</div>
+              <div class="school" v-if='list.school_id > 0' v-line-clamp:20="1">{{list.school_name}}</div>
             </div>
             <div class="volume">
-              总获赞量
-              <span class="number">{{list.dataStatistics.praise}}</span>
+              获赞量
+              <span class="number">{{list.zan_count}}</span>
             </div>
           </div>
         </div>
@@ -39,92 +39,85 @@
         <van-button class="theme-btn" plain round type="primary" @click="toAddChild">添加宝贝</van-button>
       </div>
     </div>
-
-    <!-- 添加孩子页面 -->
-    <van-popup v-model="addChildShow" class="page-popup" position="right">
-      <add-child @close="addChildShow = false" :dataId="dataId" :listenData="listenData" :pageTitle="pageTitle" />
-    </van-popup>
-
-    <!-- 添加班级页面 -->
-    <van-popup v-model="addClassShow" class="page-popup" position="right">
-      <add-class :school="schoolState" :babyId="babyId" @close="addClassShow = false" />
-    </van-popup>
   </div>
 </template>
 <script>
-import axios from "axios"
-import { mapGetters } from "vuex"
-import { format } from "./../../lib/js/util.js"
-import addChild from "./../addChild"
-import addClass from "./../addClass"
+import axios from "./../../lib/js/api"
 import numberGrow from "./../../module/animate/numberGrow"
 import avatar from "./../../module/avatar"
 
 export default {
   name: "baby-home",
+  props: ['childrenList'],
   components: {
     numberGrow,
-    addChild,
-    addClass,
+    // addClass,
     avatar
-  },
-  computed: {
-    ...mapGetters(["userDataState", "schoolState"]),
-    age() {
-      let data = []
-      this.userDataState.childInfo.forEach(e => {
-        let year = format(new Date(), "yyyy") - e.data.birthday.split("-")[0]
-        data.push(year)
-      })
-      return data
-    }
   },
   data() {
     return {
       babyId: "",
       listenData: "",
-      dataId: "",
-      addChildShow: false,
-      addClassShow: false,
-      pageTitle: "addBaby"
+      childId: "",
+      pageTitle: "addBaby",
+      schoolName:'',
+      child:''
     }
   },
   methods: {
     toAddChild() {
-      this.pageTitle = "addBaby"
-      this.addChildShow = true
+        this.$router.push({
+        name:'edit-child',
+        query:{
+          pageTitle:'添加宝贝',
+          type:'add'
+        }
+      })
     },
     onClickRight(list) {
-      this.addChildShow = true
       this.pageTitle = "editBaby"
-      this.dataId = list.id
-
-      axios
-        .put("/api/ChildInfo", {
-          id: list.id
-        })
-        .then(res => {
-          this.listenData = res.data.child.data
-        })
+      this.$router.push({
+        name:'edit-child',
+        query:{
+          id: list.id,
+          pageTitle:'编辑宝贝',
+          type:'edit',
+          back: this.$route.name
+        }
+      })
     },
     onClickLeft(list) {
-      if (list.class) {
+      if(list.school_id == 0){
         this.$router.push({
-          name: "class-home",
-          query: {
+          name:'edit-school',
+          query:{
             id: list.id
           }
         })
-      } else {
-        this.babyId = list.id
-        this.addClassShow = true
+      }else if(list.banji_id == 0){
+        this.$router.push({
+          name:'edit-class',
+          query:{
+            id: list.id,
+            schoolId:list.school_id
+          }
+        })
+      }else{
+        this.$router.push({
+          name: "class-home",
+          query: {
+            id: list.banji_id,
+            back: this.$route.name
+          }
+        })
       }
     },
     toPageBabyHome(list) {
       this.$router.push({
         name: "baby-home",
         query: {
-          id: list.id
+          id: list.id,
+          back: this.$route.name
         }
       })
     }
@@ -203,7 +196,13 @@ i.iconfont.hot {
   border: 0.25rem /* 4/16 */ solid #f8d800;
 }
 
+.avatar.girl{
+  border-color: #ff76a4;
+}
+
 .avatar img {
+  width: 4.375rem /* 70/16 */;
+  height: 4.375rem /* 70/16 */;
   border-radius: 50%;
 }
 

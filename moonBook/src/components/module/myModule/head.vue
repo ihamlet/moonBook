@@ -1,53 +1,57 @@
 <template>
   <div class="head head-background" ref='head'>
-    <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userDataState.userInfo.name"
-      @click-left="onClickLeft" @click-right="onClickRight">
+    <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userInfo.name"
+      @click-left="onClickLeft">
       <div class="head-bar-icon" slot='left'>
         <i class="iconfont">&#xe60e;</i>
       </div>
-      <div class="head-bar-icon" slot='right'>
-        <i class="iconfont">&#xe609;</i>
+      <div class="head-bar-icon bar-right" slot='right'>
+        <span class="notice-badge">
+          <i class="iconfont" @click="toNotice">{{msg>0?'&#xe623;':'&#xe798;'}}</i>
+          <b class="read-dot" v-if='msg > 0'></b>
+        </span>
+        <i class="iconfont" @click="signIn">&#xe609;</i>
       </div>
     </van-nav-bar>
     <div class="user-info flex flex-justify">
       <div class="info">
         <div class="avatar">
-          <img :src="avatar" :alt="name">
+          <img :src="getAvatar(userInfo.avatar)" :alt="userInfo.name">
         </div>
-        <div class="name">{{name}}</div>
+        <div class="name">{{userInfo.name}}</div>
       </div>
     </div>
     <div class="card">
       <div class="borrow-card flex flex-align">
-        <div class="service flex flex-align" v-if='isVip'>
-          <div class="data-flow">
-            <i class="iconfont" :class="`vip-${userDataState.vipInfo.card.level.name}`">&#xe604;</i>
-            <b class="card-name">
-              {{userDataState.vipInfo.card.type}}
+        <div class="service flex flex-align" v-if='userInfo.isVip'>
+          <div class="data-flow" @click="$router.push({name:'card-list'})">
+            <i class="iconfont" :class="`vip-${userInfo.card_level}`">&#xe604;</i>
+            <b class="card-name" v-line-clamp:20="1">
+              {{userInfo.card_name}}
             </b>
           </div>
-          <div class="data-flow read">
+          <div class="data-flow read" @click="toBorrowList(0)">
             <span class="data-name">读过</span>
             <span class="number">
-              <number-grow :value='userDataState.readInfo.read.number' :time='.2' />
+              <number-grow :value="userInfo.borrow_count" :time='.2' />
             </span>
           </div>
-          <div class="data-flow reading">
+          <div class="data-flow reading" @click="toBorrowList(1)">
             <span class="data-name">在读</span>
             <span class="number">
-              <number-grow :value='userDataState.readInfo.reading.number' :time='.2' />
+              <number-grow :value="userInfo.borrowing_count" :time='.2' />
             </span>
           </div>
-          <div class="data-flow collection">
+          <div class="data-flow collection" @click="toBorrowList(2)">
             <span class="data-name">收藏</span>
             <span class="number">
-              <number-grow :value='userDataState.readInfo.collection.number' :time='.2' />
+              <number-grow :value="userInfo.collect_count" :time='.2' />
             </span>
           </div>
-          <div class="data-flow abrasion">
-            <span class="data-name">磨损</span>
+          <div class="data-flow abrasion" @click="toBorrowList(3)">
+            <span class="data-name">破损</span>
             <span class="number">
-              <number-grow :value='userDataState.readInfo.abrasion.number' :time='.2' />
+              <number-grow :value="userInfo.broken_count" :time='.2' />
             </span>
           </div>
         </div>
@@ -71,7 +75,6 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapGetters } from 'vuex'
 import numberGrow from './../../module/animate/numberGrow'
 import punch from './../../module/punch'
 import accept from './../accept'
@@ -83,9 +86,7 @@ export default {
     accept,
     punch
   },
-  computed: {
-    ...mapGetters(['userDataState', 'userToken'])
-  },
+  props: ['userInfo','msg'],
   data() {
     return {
       domHeight: 0,
@@ -94,28 +95,12 @@ export default {
       active: 0,
       punchShow: false,
       applyShow: false,
-      avatar: '',
-      name: '',
-      isVip: ''
     }
-  },
-  created() {
-    this.fetchData()
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
   },
-  watch: {
-    '$router': 'fetchData'
-  },
   methods: {
-    fetchData() {
-      axios.get(`/book/memberUser/getInfo?token=${this.userToken}`).then(res => {
-        this.avatar = res.data.avatar
-        this.name = res.data.name
-        this.isVip = res.data.isVip
-      })
-    },
     handleScroll() {
       this.getDomHeight()
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
@@ -132,9 +117,9 @@ export default {
       }
     },
     onClickLeft() {
-
+      this.$router.push({name:'card-list'})
     },
-    onClickRight() {
+    signIn() {
       this.punchShow = true
     },
     toAccept() {
@@ -149,6 +134,33 @@ export default {
     },
     closePunch() {
       this.punchShow = false
+    },
+    toBorrowList(num){
+      this.$router.push({
+        name:'borrow-list',
+        query:{
+          tabActive:num
+        }
+      })
+    },
+    toNotice(){
+      this.$router.push({
+        name:'notice'
+      })
+    },
+    getAvatar(img) {
+      if(!img){
+        return img
+      }
+
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
     }
   }
 }
@@ -196,7 +208,7 @@ export default {
 }
 
 .user-info {
-  padding-top: 3.75rem /* 60/16 */;
+  padding-top: 3.125rem /* 50/16 */;
   padding-bottom: 1.875rem /* 30/16 */;
 }
 
@@ -259,5 +271,20 @@ export default {
 
 .page-punch {
   background: #de4313;
+}
+
+span.notice-badge{
+  margin-right: .9375rem /* 15/16 */;
+  position: relative;
+}
+
+b.read-dot{
+  position: absolute;
+  width: .625rem /* 10/16 */;
+  height: .625rem /* 10/16 */;
+  background: #f44;
+  border-radius: .625rem /* 10/16 */;
+  bottom: .9375rem /* 15/16 */;
+  right: 0;
 }
 </style>

@@ -3,7 +3,7 @@
         <div class="fixed">
             <div class="search-nav-bar">
                 <form class="form-search flex flex-align" action="#">
-                    <div class="close" @click="closeList">
+                    <div class="search-close" @click="closeList">
                         <i class="iconfont">&#xe657;</i>
                     </div>
                     <input type="text" class="search-input" v-model="searchContent" :placeholder="prompt">
@@ -43,7 +43,7 @@ export default {
         searchContent(val){
             let products = {
                 keywords: val,
-                type: 141204,
+                type: '141204|141203',
                 location: this.userPointState.location,
                 city: this.userPointState.city,
                 datatype:'poi',
@@ -88,13 +88,13 @@ export default {
     background: #fff;
 }
 
-.close,
+.search-close,
 .search-btn{
     flex: 1;
     text-align: center;
 }
 
-.close{
+.search-close{
     color: #909399;
 }
 
