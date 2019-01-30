@@ -2,6 +2,7 @@
 
 > A Vue.js project 
 > 修复了长文没有图片且没有封面的情况下 不显示的问题
+> 解决 长文发布工具栏 遮挡问题  ul ol 无法渲染dom
 
 ## Build Setup
 
