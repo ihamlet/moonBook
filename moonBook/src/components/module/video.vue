@@ -11,7 +11,7 @@
           <div class="video">
             <div class="video-cover">
               <div v-if="item.photo.length">
-<img :src="`${item.photo[0].photo}?x-oss-process=video/snapshot,t_8000,f_jpg,w_0,h_0,m_fast`" :alt="`视频封面-${index}`">
+                <img :src="`${item.photo[0].photo}?x-oss-process=video/snapshot,t_8000,f_jpg,w_0,h_0,m_fast`" :alt="`视频封面-${index}`">
               </div>
               
               <div class="playing flex flex-align" v-if='item.post_id == $route.query.id'>
