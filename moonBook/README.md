@@ -1,6 +1,7 @@
 # moonbook
 
-> A Vue.js project 修改若干bug
+> A Vue.js project 
+> 修复了长文没有图片且没有封面的情况下 不显示的问题
 
 ## Build Setup
 

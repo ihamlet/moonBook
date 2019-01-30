@@ -1,74 +1,86 @@
 <template>
   <div class="message">
-    <van-tabs color='#409eff' :line-width='20' sticky>
-      <van-tab v-for="(list,index) in tab" :key="index" :disabled="index==1&&tabDisabled">
+    <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky @change='onChange'>
+      <van-tab v-for="(list,index) in tab" :key="index">
         <div class="tab-title" slot="title">
           {{list.title}}
-          <div class="unread badge" v-if="index==0">
-            {{list.content.length}}
+          <div class="unread badge" v-if="index==0 && MsgLengthState > 0">
+            {{MsgLengthState}}
           </div>
         </div>
-
-        <div class="list">
-          <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
-            <van-swipe-cell :right-width="index==0?150:0">
-              <van-cell-group>
-                <van-cell>
-                  <div class="flex flex-align">
-                    <div class="icon" :class="[item.content.type=='moonBook'?'moon-book':'system']">
-                      <i class="iconfont moon-book" v-if="item.content.type=='moonBook'">&#xe605;</i>
-                      <i class="iconfont system" v-else>&#xe600;</i>
-                    </div>
-                    <div class="msg-content">
-                      <div class="type">
-                        <div class="name">{{item.content.type=='moonBook'?'阅亮书架':'系统消息'}}</div>
-                        <div class="date">
-                          <span>{{item.date}}</span>
-                          <span>{{item.time}}</span>
+        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+          <van-pull-refresh v-model="loading" @refresh="onRefresh">
+            <div class="list" v-if="list.content.length > 0">
+              <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex" @click="toMsgDetails(item)">
+                <van-swipe-cell :right-width="index==0?78:0">
+                  <van-cell-group>
+                    <van-cell>
+                      <div class="flex flex-align">
+                        <div class="icon" :class="[item.msg_type=='bookshelf'?'moon-book':'system']">
+                          <i class="iconfont moon-book" v-if="item.msg_type=='bookshelf'">&#xe605;</i>
+                          <i class="iconfont system" v-else>&#xe600;</i>
+                        </div>
+                        <div class="msg-content">
+                          <div class="type flex flex-align">
+                            <div class="name">{{item.msg_type=='bookshelf'?'阅亮书架':'系统消息'}}</div>
+                            <div class="date">
+                              {{item.create_date_friendly}}
+                            </div>
+                          </div>
+                          <div class="text" v-line-clamp:20="1"><span class="title">【{{item.title}}】</span>{{item.intro}}</div>
                         </div>
                       </div>
-                      <div class="text" v-line-clamp:20="1">{{item.content.text}}</div>
-                    </div>
+                    </van-cell>
+                  </van-cell-group>
+                  <div slot="right" class="slot" :style="{width:'78px'}">
+                    <span class="topping" @click="topping(item)" :class="item.is_top == 1?'cancel':''">{{item.is_top ==
+                      1?'取消置顶':'置顶'}}</span>
                   </div>
-                </van-cell>
-              </van-cell-group>
-              <div slot="right" class="slot flex" :style="{width:150+'px'}">
-                <span class="add-read" @click="addRead(item)">标记已读</span>
-                <span class="topping" @click="topping(item)">置顶</span>
+                </van-swipe-cell>
               </div>
-            </van-swipe-cell>
-          </div>
-        </div>
+            </div>
+            <div class="no-content" v-else>暂无{{list.title}}</div>
+          </van-pull-refresh>
+        </van-list>
       </van-tab>
     </van-tabs>
-    <slogan />
+
+    <van-popup v-model="show" class="page-popup" position="right">
+      <msg-details :details='details' @close='show = false' />
+    </van-popup>
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from "vuex";
-import slogan from "./../module/slogan";
-import axios from "@/fetch/api";
+import { mapActions, mapGetters } from 'vuex'
+import axios from './../lib/js/api'
+import msgDetails from './../module/msgDetails'
 
 export default {
   name: 'message',
-  props: ['readList'],
   components: {
-    slogan
+    msgDetails
+  },
+  computed: {
+    ...mapGetters(['MsgLengthState'])
   },
   data() {
     return {
-      tabDisabled: true,
       tab: [{
         title: '未读消息',
+        isRead: 0,
         content: []
       }, {
         title: '已读消息',
+        isRead: 1,
         content: []
-      }]
+      }],
+      page: 1,
+      loading: false,
+      finished: false,
+      tabIndex: 0,
+      show: false,
+      details: ''
     }
-  },
-  created() {
-    this.fetchData()
   },
   watch: {
     tab: {
@@ -79,33 +91,54 @@ export default {
       },
       deep: true
     },
-    '$router': 'fetchData'
   },
   methods: {
-    ...mapActions(['getMsgLength']),
-    fetchData() {
-      axios.get('/api/messageList').then(res => {
-        this.tab[0].content = res.data.messageData.messageList
-      })
-      axios.get('/api/readList').then(res => {
-        this.tab[1].content = res.data
-      })
-    },
-    addRead(item) {
-      axios.put('/api/addRead', {
-        id: item.id
-      }).then(res => {
-        this.getMsgLength()
-        this.tab[0].content = res.data.messageData.messageList
-        this.tab[1].content = res.data.readList
-      })
-    },
+    ...mapActions(['getMsg']),
     topping(item) {
-      axios.put('/api/topping', {
-        id: item.id
-      }).then(res => {
-        this.tab[0].content = res.data.messageData.messageList
+      axios.get(`/book/MemberMsg/top?msg_id=${item.msg_id}`).then(res => {
+        this.isLoading = false
+        this.page = 1
+        this.onLoad()
       })
+    },
+    toMsgDetails(item) {
+      axios.get(`/book/MemberMsg/getInfo?msg_id=${item.msg_id}`).then(res => {
+        this.details = res.data.data
+        this.isLoading = false
+        this.page = 1
+        this.onLoad()
+        this.getMsg()
+      })
+      this.show = true
+    },
+    onLoad() {
+      this.getMsgList()
+    },
+    getMsgList() {
+      return axios.get(`/book/MemberMsg/getList?page=${this.page}&is_read=${this.tab[this.tabIndex].isRead}&sort=top`).then(res => {
+        let array = res.data.data
+        this.loading = false
+        if (this.page == 1) {
+          this.tab[this.tabIndex].content = array
+        } else {
+          this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(array)
+        }
+        this.page++
+        if (this.tab[this.tabIndex].content.length >= res.data.count) {
+          this.finished = true
+        }
+      })
+    },
+    onRefresh() {
+      this.page = 1
+      this.getMsgList().then(res => {
+        this.loading = false
+      })
+    },
+    onChange(index, title) {
+      this.tabIndex = index
+      this.page = 1
+      this.onRefresh()
     }
   }
 }
@@ -115,10 +148,12 @@ export default {
   font-size: 1rem /* 16/16 */;
   color: #303133;
   position: relative;
+  justify-content: space-between;
 }
 
 .text {
   color: #606266;
+  text-align: justify;
 }
 
 .icon {
@@ -160,17 +195,18 @@ export default {
 }
 
 .date {
-  position: absolute;
-  top: 0;
-  right: 0;
   color: #c0c4cc;
   font-size: 0.75rem /* 12/16 */;
   line-height: normal;
 }
 
-.add-read,
 .topping {
-  width: 50%;
+  background: #03a9f4;
+  display: block;
+}
+
+.topping.cancel {
+  background: #f56c6c;
 }
 
 .list .slot {
@@ -180,11 +216,17 @@ export default {
   color: #fff;
 }
 
-.add-read {
-  background: #c0c4cc;
+.title {
+  font-size: 0.875rem /* 14/16 */;
+  color: #409eff;
 }
 
-.topping {
-  background: #03a9f4;
+.no-content {
+  width: 100%;
+  height: 18.75rem /* 300/16 */;
+  line-height: 18.75rem /* 300/16 */;
+  text-align: center;
+  background: #fff;
+  color: #c0c4cc;
 }
 </style>

@@ -1,390 +1,540 @@
 <template>
   <div class="baby-home page-padding">
-    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" :title="fixedHeaderBar?$route.meta.title:childInfo.name"
-      @click-left="onClickLeft" @click-right="onClickRight">
+    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" :title="pageTitle" @click-left="onClickLeft">
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
-        <span class="text">个人中心</span>
-      </div>
-      <div class="head-bar-icon" slot="right" v-if="childInfo">
-        <i class="iconfont">&#xe60c;</i>
+        <span class="text">{{$route.query.back?'返回':'首页'}}</span>
       </div>
     </van-nav-bar>
-    <div class="header" ref="head" :class="[childInfo.gender=='boy'?'theme-background':'background']">
+    <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
       <div class="baby-info flex flex-align">
-        <div class="avatar" v-if="childInfo.avatar">
-          <img class="avatar-img" :src="childInfo.avatar" :alt="childInfo.name">
+        <div class="avatar" v-if="childInfo.avatar" @click="toEgg">
+          <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">
         </div>
-        <avatar :gender="childInfo.gender" v-else />
-        <div class="baby-data">
+        <avatar :gender="childInfo.sex" v-else />
+        <div class="baby-data" @click="toEditorBaby">
           <div class="list flex flex-align">
             <div class="item name">{{childInfo.name}}</div>
             <div class="item detail">
               <span class="gender">
-                <i class="iconfont" v-if="childInfo.gender=='boy'">&#xe646;</i>
+                <i class="iconfont" v-if="childInfo.sex=='boy'">&#xe646;</i>
                 <i class="iconfont" v-else>&#xe645;</i>
               </span>
-              <span class="age">{{age}}岁</span>
+              <span class="age">{{childInfo.age}}岁</span>
             </div>
           </div>
-          <div class="label">{{label}}</div>
-          <div class="school" v-line-clamp:20="1" v-if="school">{{school}}</div>
+          <div class="label">{{childInfo.title}}</div>
+          <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
+        </div>
+        <div class="add-praise" @click="babyPraise(childInfo)">
+          <i class="iconfont">&#xe6e3;</i>
         </div>
         <div class="qr-code" @click="showQrcode=true">
-          <van-icon name="qr" />
+          <i class="iconfont">&#xe622;</i>
         </div>
       </div>
       <wave />
     </div>
     <div class="container">
-      <div class="bar flex flex-align">
-        <div class="bar-item totalReading">总阅读量 {{dataStatistics.totalReading}}</div>
-        <div class="bar-item praise">赞 {{dataStatistics.praise}}</div>
+      <div class="bar flex flex-align" @click="toRradStat">
+        <div class="bar-item totalReading">
+          <span class="number">{{childInfo.read_count}}</span>
+          <span class="bar-title">阅读量</span>
+        </div>
+        <div class="bar-item praise">
+          <span class="number">{{childInfo.zan_count}}</span>
+          <span class="bar-title">赞</span>
+        </div>
+        <div class="bar-item diary">
+          <span class="number">{{childInfo.insist_days}}</span>
+          <span class="bar-title">坚持天数</span>
+        </div>
       </div>
-      <div class="baby-class" v-if="classInfo">
-        <van-cell-group>
-          <van-cell :title="classInfo.name" is-link center @click="toClassHome">
-            <div class="icon" slot="icon">
-              <i class="iconfont">&#xe802;</i>
-            </div>
-          </van-cell>
-        </van-cell-group>
-      </div>
-      <lazy-component class="module">
+      <lazy-component class="module" v-if="isMine">
+        <family />
+      </lazy-component>
+      <lazy-component class="module" v-if="!isMine">
         <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
       </lazy-component>
-      <lazy-component class="module">
-        <div class="module-title">成长日记</div>
-        <div class="not-content" v-if="!listLength">尚无记录</div>
-        <van-list v-model="loading" :finished="finished" @load="onLoad" v-else>
-          <div class="list">
-            <div class="item" v-for="(item,index) in list" :key="index">
-              <van-cell>
-                <graphic-crad :item="item" type="babyHome" :familyTitle="childInfo.familyTitle" :babyName="childInfo.name" />
-              </van-cell>
-            </div>
+      <lazy-component v-if="isMine">
+        <van-nav-bar title="成长日记">
+          <div class="post-count" slot="left">
+            {{childInfo.post_count}}日记
           </div>
-        </van-list>
+          <div class="task" slot="right">
+            活动<van-tag class="tag-task" round type="danger">4</van-tag>
+          </div>
+        </van-nav-bar>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
+          <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
+            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+              <van-pull-refresh v-model="loading" @refresh="onRefresh">
+                  <div class="tab-content" v-if='list.content.length'>
+                    <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
+                      <van-cell>
+                        <graphic-card :item="item" type="babyHome" :avatar='childInfo.avatar' />
+                      </van-cell>
+                    </div>
+                  </div>
+                  <div class="no-content" v-else>
+                    <img src="./../../assets/img/noData.png" />
+                    暂无记录
+                  </div>
+              </van-pull-refresh>
+            </van-list>
+          </van-tab>
+        </van-tabs>
       </lazy-component>
     </div>
 
-    <slogan v-if="finished||!listLength" />
+    <slogan v-if="!isMine" />
 
     <van-popup v-model="showQrcode" class="card-popup">
-      <qr-code :qrImage="qrImage" type="babyHome" :dataStatistics="dataStatistics" :school="school" :label="label" @close="showQrcode = false" :childInfo="childInfo" />
+      <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
     </van-popup>
 
-    <van-popup v-model="showSetting" class="page-popup" position="right">
-      <baby-setting @close="showSetting = false" @setting="babySetting" />
+    <van-popup v-model="zanShow" class="add-count-popup" :overlay="false" :lock-scroll='false' get-container='#app'>
+      <i class="iconfont" :class="[zanShow?'rotateInDownLeft animated':'']">&#xe6e3;</i>
     </van-popup>
   </div>
 </template>
 <script>
-  import axios from "axios"
-  import { mapGetters } from "vuex"
-  import { format } from "./../lib/js/util.js"
-  import QRCode from "qrcode"
-  import wave from "./../module/animate/anWave"
-  import qrCode from "./../module/mold/qrCode"
-  import avatar from "./../module/avatar"
-  import reading from "./../module/reading"
-  import graphicCrad from "./../module/card/graphicCrad"
-  import babySetting from "./../module/setting/babySetting"
-  import slogan from "./../module/slogan"
+import axios from "./../lib/js/api"
+import { mapActions } from 'vuex'
+import { format,timeago } from "./../lib/js/util.js"
+import QRCode from "qrcode"
+import wave from "./../module/animate/anWave"
+import qrCode from "./../module/mold/qrCode"
+import avatar from "./../module/avatar"
+import reading from "./../module/reading"
+import graphicCard from "./../module/card/graphicCard"
+import classShow from './../module/classModule/classShow'
+import family from './../module/myModule/family'
+import activity from './../module/activity/activity'
+import slogan from './../module/slogan'
 
-  export default {
-    name: "baby-home",
-    components: {
-      wave,
-      qrCode,
-      reading,
-      avatar,
-      graphicCrad,
-      babySetting,
-      slogan
-    },
-    computed: {
-      ...mapGetters(["userDataState", "dryingListLengthState"]),
-      age() {
-        if (this.childInfo) {
-          let year =
-            format(new Date(), "yyyy") - this.childInfo.birthday.split("-")[0]
-          return year;
+export default {
+  name: "baby-home",
+  components: {
+    wave,
+    qrCode,
+    reading,
+    avatar,
+    graphicCard,
+    classShow,
+    family,
+    slogan,
+    activity
+  },
+  computed: {
+    pageTitle() {
+      let name = ''
+
+      if (this.childInfo.is_mine) {
+        if (this.fixedHeaderBar) {
+          name = this.$route.meta.title
         } else {
-          return 0;
+          name = this.childInfo.name
         }
-      },
-      label() {
-        return this.dataStatistics.totalReading > 50 ? "阅读小明星" : "阅读新秀"
+      } else {
+        name = `${this.childInfo ? this.childInfo.name : ''}小朋友`
       }
+
+      return name
     },
-    data() {
-      return {
-        fixedHeaderBar: true,
-        domHeight: "",
-        childInfo: "",
-        school: "",
-        classInfo: "",
-        qrImage: "",
-        showQrcode: false,
-        dataStatistics: "",
-        lateBook: [],
-        readBook: [],
-        list: [],
-        listLength: "",
-        loading: false,
-        finished: false,
-        showSetting: false
+    isMine(){
+      if(this.childInfo.is_mine){
+        return true
       }
-    },
-    beforeRouteEnter(to, from, next) {
-      axios.put("/api/ChildInfo", {
-        id: to.query.id
-      }).then(res => {
-        next(vm => {
-          vm.qrcode()
-          if (res.data.child) {
-            vm.lateBook = res.data.child.lateBook
-            vm.dataStatistics = res.data.child.dataStatistics
-            vm.school = res.data.child.school
-            vm.classInfo = res.data.child.class
-            vm.childInfo = res.data.child.data
-          } else {
-            vm.$dialog.alert({
-              message: `<div class='text-center'>注册阅亮书架 宝贝会爱上阅读</div>`,
-              showConfirmButton: true,
-              showCancelButton: true,
-              confirmButtonText: "注册",
-              cancelButtonText: "稍后"
-            }).then(() => {
-              vm.$router.push({
-                name: "register"
-              })
-            }).catch(() => {
-              vm.$router.push({
-                name: "my"
-              })
+    }
+  },
+  data() {
+    return {
+      zanShow: false,
+      fixedHeaderBar: true,
+      domHeight: "",
+      childInfo: "",
+      qrImage: "",
+      showQrcode: false,
+      lateBook: [],
+      list: [],
+      loading: false,
+      finished: false,
+      releasePageShow: false,
+      loading: false,
+      page: 1,
+      tabIndex: 0,
+      tab: [{
+        title: '全部',
+        content: ''
+      }]
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.qrcode()
+      vm.getUserData().then(res => {
+        if (res.child_id > 0) {
+          axios.get(`/book/baby/getInfo?child_id=${to.query.id}`).then(res => {
+            vm.childInfo = res.data.data
+          })
+        } else {
+          vm.$router.push({
+            name: 'edit-child',
+            query: {
+              type: 'add',
+              pageTitle: '添加宝贝'
+            }
+          })
+        }
+      })
+    })
+  },
+  created() {
+    this.fetchData();
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll)
+  },
+  watch: {
+    $router: "fetchData"
+  },
+  methods: {
+    ...mapActions(["getUserData"]),
+    fetchData() {
+      axios.get('/book/schoolArticleCate/getList?portal_name=宝贝主页').then(res => {
+        if (res.status == 200) {
+          let array = res.data
+          array.forEach(element => {
+            this.tab.push({
+              title: element.cate_name,
+              content: ''
             })
-          }
-        })
+          })
+        }
+      })
+
+      axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
+        this.lateBook = res.data.data
       })
     },
-    created() {
-      this.fetchData();
-    },
-    mounted() {
-      window.addEventListener("scroll", this.handleScroll)
-    },
-    watch: {
-      $router: "fetchData"
-    },
-    methods: {
-      fetchData() {
-        axios.get("/api/childAticleList").then(res => {
-          this.listLength = res.data.length
-        });
-      },
-      onClickLeft() {
+    onClickLeft() {
+      if (this.$route.query.back) {
         this.$router.push({
-          name: "my"
+          name: this.$route.query.back,
+          query: {
+            id: this.$route.query.banji_id ? this.$route.query.banji_id : this.$route.query.id,
+            back: this.$route.name,
+            child_id: this.$route.query.id
+          }
         })
-      },
-      qrcode() {
-        QRCode.toDataURL(window.location.href).then(url => {
-          this.qrImage = url
-        }).catch(err => {
-          console.error(err)
+      } else {
+        this.$router.push({
+          name: "home"
         })
-      },
-      handleScroll() {
-        this.getDomHeight();
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-        this.scrollTop = scrollTop
-        if (this.domHeight < this.scrollTop) {
-          this.fixedHeaderBar = false
+      }
+    },
+    qrcode() {
+      QRCode.toDataURL(window.location.href).then(url => {
+        this.qrImage = url
+      }).catch(err => {
+        console.error(err)
+      })
+    },
+    handleScroll() {
+      this.getDomHeight()
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      this.scrollTop = scrollTop
+      if (this.domHeight < this.scrollTop) {
+        this.fixedHeaderBar = false
+      } else {
+        this.fixedHeaderBar = true
+      }
+    },
+    getDomHeight() {
+      if (this.$refs.head) {
+        this.domHeight = this.$refs.head.offsetHeight / 2
+      }
+    },
+    onChangeTab(index) {
+      this.tabIndex = index
+      this.page = 1
+      this.onRefresh()
+    },
+    getList() {
+      let data = {
+        params: {
+          page: this.page,
+          sort: 'new',
+          child_id: this.$route.query.id,
+          portal_name: '宝贝主页'
+        }
+      }
+
+      if (this.tabIndex > 0) {
+        data.params.cate = this.tab[this.tabIndex].title
+      }
+
+      return axios.get('/book/SchoolArticle/getList', data).then(res => {
+        if (this.page == 1) {
+          this.tab[this.tabIndex].content = res.data.data
         } else {
-          this.fixedHeaderBar = true
+          this.tab[this.tabIndex].content = this.list.concat(res.data.data)
         }
-      },
-      getDomHeight() {
-        if (this.$refs.head) {
-          this.domHeight = this.$refs.head.offsetHeight / 2
+        this.loading = false
+        this.page++
+        if (this.tab[this.tabIndex].content.length >= res.data.count) {
+          this.finished = true
         }
-      },
-      onLoad() {
-        axios.get("/api/childAticleList").then(res => {
-          setTimeout(() => {
-            let array = res.data.childAticleList
-            let length = this.dryingListLengthState < 10 ? 1 : 5
-            for (let i = 0; i < length; i++) {
-              this.list.push(array[this.list.length])
-            }
-            this.loading = false
-            if (this.list.length >= res.data.length) {
-              this.finished = true
-            }
-          }, 500)
-        })
-      },
-      onClickRight() {
-        this.showSetting = true
-      },
-      babySetting(data) {
-        this.school = data.school
-      },
-      toClassHome() {
+      })
+    },
+    onLoad() {
+      this.getList()
+    },
+    onRefresh() {
+      this.page = 1
+      this.getList().then(() => {
+        this.loading = false
+      })
+    },
+    toClassHome(childInfo) {
+      if (childInfo.banji_id > 0) {
         this.$router.push({
           name: "class-home",
           query: {
-            id: this.$route.query.id
+            id: childInfo.banji_id
           }
-        });
+        })
+      } else {
+        this.$router.push({
+          name: "class-home",
+          query: {
+            id: childInfo.child_id,
+            schoolId: childInfo.school_id
+          }
+        })
+      }
+    },
+    babyPraise(childInfo) {
+      axios.get(`/book/baby/zan?child_id=${this.$route.query.id}`).then(res => {
+        if (res.data.status == 1) {
+          this.zanShow = true
+          childInfo.zan_count = res.data.data.zan_count
+        } else {
+          this.$toast(res.data.msg)
+        }
+
+        setTimeout(() => {
+          this.zanShow = false
+        }, 2000)
+      })
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    timeAgo(time){
+      return timeago(time*1000)
+    },
+    toEgg(){
+      this.$router.push({
+        name:'egg',
+        query:{
+          id: this.childInfo.id,
+          back: this.$route.name,
+          banji_id: this.childInfo.banji_id
+        }
+      })
+    },
+    toRradStat(){
+      this.$router.push({
+        name:'readStat',
+        query:{
+          id: this.$route.query.id,
+          back: this.$route.name
+        }
+      })
+    },
+    toEditorBaby(){
+      if(this.childInfo.is_mine){
+        this.$router.push({
+          name:'edit-child',
+          query:{
+            id:this.$route.query.id,
+            pageTitle:'编辑宝贝',
+            type:'edit',
+            back: this.$route.name
+          }
+        })
       }
     }
-  };
+  }
+}
 
 </script>
 <style scoped>
-  .header {
-    width: 100%;
-    height: 11.25rem
-      /* 180/16 */
-    ;
-    position: relative;
-  }
+.header {
+  width: 100%;
+  position: relative;
+}
 
-  .background {
-    background: linear-gradient(-135deg, #ff765c, #ff23b3);
-  }
+.background {
+  background: linear-gradient(-135deg, #ff765c, #ff23b3);
+}
 
-  .baby-info .avatar {
-    margin-right: 0.625rem
-      /* 10/16 */
-    ;
-    width: 3.75rem
-      /* 60/16 */
-    ;
-    height: 3.75rem
-      /* 60/16 */
-    ;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 0.3125rem
-      /* 5/16 */
-      1.25rem
-      /* 20/16 */
-      rgba(0, 0, 0, 0.2);
-    border: 0.1875rem
-      /* 3/16 */
-      solid #fff;
-  }
+.baby-info .avatar {
+  margin-right: 0.625rem /* 10/16 */;
+  width: 3.75rem /* 60/16 */;
+  height: 3.75rem /* 60/16 */;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0.3125rem /* 5/16 */ 1.25rem /* 20/16 */ rgba(0, 0, 0, 0.2);
+  border: 0.1875rem /* 3/16 */ solid #fff;
+}
 
-  .baby-info {
-    padding: 3.5rem
-      /* 56/16 */
-      1.25rem
-      /* 20/16 */
-    ;
-  }
+.baby-info .avatar img {
+  width: 3.75rem /* 60/16 */;
+  height: 3.75rem /* 60/16 */;
+  border-radius: 50%;
+}
 
-  .list {
-    color: #fff;
-  }
+.baby-info {
+  padding: 3.5rem /* 56/16 */ 1.25rem /* 20/16 */ 0 1.25rem /* 20/16 */;
+  position: relative;
+  z-index: 1;
+}
 
-  .list .item {
-    margin-right: 0.625rem
-      /* 10/16 */
-    ;
-  }
+.list {
+  color: #fff;
+}
 
-  .detail,
-  .school {
-    font-size: 0.875rem
-      /* 14/16 */
-    ;
-  }
+.detail,
+.school {
+  font-size: 0.875rem /* 14/16 */;
+}
 
-  .school {
-    width: 10rem
-      /* 160/16 */
-    ;
-    text-align: left;
-    margin-top: 0.3125rem
-      /* 5/16 */
-    ;
-    color: #fff;
-  }
+.school {
+  width: 10rem /* 160/16 */;
+  text-align: left;
+  color: #fff;
+}
 
-  .qr-code {
-    position: absolute;
-    right: 1.25rem
-      /* 20/16 */
-    ;
-  }
+.add-praise,
+.qr-code {
+  position: absolute;
+}
 
-  .qr-code i.van-icon {
-    font-size: 1.5rem
-      /* 24/16 */
-    ;
-    color: #fff;
-  }
+.qr-code {
+  right: 1.25rem /* 20/16 */;
+}
 
-  .follow .theme-btn {
-    border-color: #fff;
-    color: #fff;
-  }
+.add-praise {
+  right: 4.375rem /* 70/16 */;
+}
 
-  .bar {
-    height: 2.875rem
-      /* 46/16 */
-    ;
-    line-height: 2.875rem
-      /* 46/16 */
-    ;
-    background: #fff;
-    position: relative;
-  }
+.add-praise i.iconfont,
+.qr-code i.iconfont {
+  font-size: 1.5rem /* 24/16 */;
+  color: #fff;
+  text-shadow: 0 0.125rem /* 2/16 */ 0.375rem /* 6/16 */ rgba(0, 0, 0, 0.1);
+}
 
-  .bar::before {
-    content: "";
-    position: absolute;
-    width: 0.0625rem
-      /* 1/16 */
-    ;
-    height: 1.25rem
-      /* 20/16 */
-    ;
-    background: #dcdfe6;
-    left: 50%;
-    top: 50%;
-    transform: translate3d(0, -50%, 0);
-  }
+.follow .theme-btn {
+  border-color: #fff;
+  color: #fff;
+}
 
-  .bar-item {
-    flex: 1;
-    text-align: center;
-  }
+.bar {
+  background: #fff;
+  padding: 0.625rem /* 10/16 */ 0;
+}
 
-  .label {
-    font-size: 0.8125rem
-      /* 13/16 */
-    ;
-    color: #fff;
-  }
+.bar-item {
+  flex: 1;
+  text-align: center;
+  display: grid;
+}
 
-  .baby-class .icon {
-    margin-right: 0.625rem
-      /* 10/16 */
-    ;
-  }
+.bar-item .number {
+  font-size: 1.375rem /* 22/16 */;
+  font-weight: 500;
+}
 
-  .baby-class .icon i.iconfont {
-    font-size: 1.5rem
-      /* 24/16 */
-    ;
-    background-image: linear-gradient(135deg, #795548 10%, #000 100%);
-    -webkit-background-clip: text;
-    color: transparent;
-  }
+.bar-item .bar-title {
+  font-size: 0.875rem /* 14/16 */;
+}
+
+.label {
+  font-size: 0.8125rem /* 13/16 */;
+  color: #fff;
+}
+
+.add-count-popup .iconfont {
+  font-size: 2.25rem /* 36/16 */;
+  background: linear-gradient(90deg, #ff2a00, #ff00af);
+  -webkit-background-clip: text;
+  color: transparent;
+  display: block;
+}
+
+.name {
+  margin-right: 0.625rem /* 10/16 */;
+}
+
+.no-content{
+  background: #fff;
+  display: grid;
+  text-align: center;
+  padding-bottom: 3.125rem /* 50/16 */;
+  color: #C0C4CC;
+}
+
+
+.no-content img{
+  width: 9.375rem /* 150/16 */;
+  margin: 1.25rem /* 20/16 */ auto;
+  opacity: .7;
+}
+
+.time-line{
+  width: 100%;
+  height: 3.125rem /* 50/16 */;
+  position: relative;
+}
+
+.time-line::before{
+  position: absolute;
+  left: 1.5625rem /* 25/16 */;
+  top: 0;
+  width: .625rem /* 10/16 */;
+  height: 100%;
+  content: "";
+  background: #FFC107;
+}
+
+.time{
+  margin-left: 3.125rem /* 50/16 */;
+  font-size: 1.125rem /* 18/16 */;
+  font-weight: 500;
+}
+
+.item{
+  margin-bottom: .625rem /* 10/16 */;
+}
+
+.task{
+  position: relative;
+}
+
+.task .tag-task{
+  position: absolute;
+  top: .3125rem /* 5/16 */;
+  right: -.625rem /* 10/16 */;
+}
 
 </style>
+<style>
+.add-count-popup.van-popup {
+  background: transparent;
+}
+</style>
+

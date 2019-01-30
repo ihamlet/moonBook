@@ -1,12 +1,32 @@
+/*
+2018年12月10日08:08:01
+直接使用cookies
+*/
+
 import axios from 'axios'
 import router from '@/router/index'
+import Cookies from 'js-cookie'
 
-axios.defaults.timeout = 5000;
+// axios.defaults.timeout = 5000
+
+axios.interceptors.request.use(
+    config => {
+        let token = Cookies.get('WWW_TOKEN')
+        if (token) {
+            config.headers.Authorization = `token ${token}`
+        }
+        return config
+    },
+    err => {
+        return Promise.reject(err)
+    }
+)
+
 
 // http request 拦截器
 axios.interceptors.response.use(
     response => {
-        return response;
+        return response
     },
     error => {
         switch (error.response.status) {
@@ -19,7 +39,8 @@ axios.interceptors.response.use(
                 })
                 return Promise.reject('need login')
         }
-        return Promise.reject(error.response);
-    })
+        return Promise.reject(error.response)
+    }
+)
 
 export default axios

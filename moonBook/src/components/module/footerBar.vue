@@ -1,55 +1,80 @@
 <template>
   <div class="footer-bar flex flex-align">
-    <van-tabbar v-model="active" fixed>
-      <van-tabbar-item
-        v-for="(item,index) in userTabBtn"
-        :key="index"
-        :to="item.path"
-        :info="index==2&&MsgLengthState>0?MsgLengthState:''"
-      >
-        <i
-          class="iconfont"
-          :class="[props.active?`${item.iconClass}fill bounceIn animated`: item.iconClass]"
-          slot="icon"
-          slot-scope="props"
-        ></i>
+    <van-tabbar :zIndex='100' v-model="active" fixed>
+      <van-tabbar-item v-for='(item,index) in userTabBtn' :key="index" :to='goPage(item)' @click="onClick(index)">
+        <i class="iconfont" :class="[props.active?`${item.iconClass}fill bounceIn animated`: item.iconClass]" slot='icon' slot-scope="props"></i>
         <span>{{item.name}}</span>
       </van-tabbar-item>
     </van-tabbar>
+
+    <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar'>
+      <tips :isShow='show' position='bottom' @percent='percent' @close='show = false'/>
+    </van-popup>
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import tips from './../module/release/tips'
+
 export default {
-  name: "footer-bar",
-  computed: {
-    ...mapGetters(["MsgLengthState", "userTabBtn"])
+  name: 'footer-bar',
+  props: ['userTabBtn'],
+  components: {
+    tips
   },
   data() {
     return {
-      active: 0
-    };
+      active: 0,
+      show: false
+    }
   },
   created() {
-    this.active = this.$route.meta.tabActive;
+    this.active = this.$route.meta.tabActive
   },
   watch: {
     $route(to, from) {
-      this.active = to.meta.tabActive;
+      this.active = to.meta.tabActive
+    }
+  },
+  methods: {
+    goPage(item) {
+      let path = ''
+      if (item.id) {
+        path = `${item.path}?id=${item.id}`
+      } else {
+        path = item.path
+      }
+
+      return path
+    },
+    onClick(index) {
+
+      if (index == 2) {
+        this.show = true
+      }
+
+      this.active = this.$route.meta.tabActive
+    },
+    percent(){
+        this.$toast.loading({
+            mask: false
+        })
+
+        if(val == 100){
+            this.$toast.clear()
+        }
     }
   }
-};
+}
 </script>
 <style scoped>
-.footer-bar{
-    overflow: hidden;
-    height: 3rem /* 48/16 */;
+.footer-bar {
+  width: 100%;
 }
 
-.footer-bar .van-tabbar{
-    background: rgba(255, 255, 255, 0.9);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    box-shadow: 0 0 10px 0 hsla(0,6%,58%,.6);
+.footer-bar .van-tabbar {
+  background: rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 0 10px 0 hsla(0, 6%, 58%, 0.6);
 }
 
 .footer-bar .van-info {
@@ -73,49 +98,85 @@ export default {
 
 /* 首页 */
 .icon-home:before {
-  content: "\e6b8";
+  content: '\e6b8';
 }
 .icon-homefill:before {
-  content: "\e6bb";
+  content: '\e6bb';
 }
 
 /* 消息 */
 .icon-communityfill:before {
-  content: "\e740";
+  content: '\e740';
 }
 .icon-community:before {
-  content: "\e741";
+  content: '\e741';
 }
 
 /* 个人中心 */
 .icon-peoplefill:before {
-  content: "\e735";
+  content: '\e735';
 }
 .icon-people:before {
-  content: "\e736";
+  content: '\e736';
 }
 
 /* 宝贝主页 */
 .icon-crownfill:before {
-  content: "\e776";
+  content: '\e776';
 }
 .icon-crown:before {
-  content: "\e777";
+  content: '\e777';
 }
 
 /* 发现 */
 .icon-faxian:before {
-  content: "\e692";
+  content: '\e692';
 }
 .icon-faxianfill:before {
-  content: "\e621";
+  content: '\e621';
+}
+
+.icon-school::before {
+  content: '\e68c';
+}
+
+.icon-schoolfill::before {
+  content: '\e63a';
 }
 
 /* 书架 */
 .icon-tushuguan:before {
-  content: "\e6a2";
+  content: '\e6a2';
 }
 .icon-tushuguanfill:before {
-  content: "\e619";
+  content: '\e619';
+}
+
+/* 班级 */
+.icon-banji::before {
+  content: '\e746';
+}
+.icon-banjifill:before {
+  content: '\e745';
+}
+
+/* 发布 */
+.icon-release::before {
+  content: '\e727';
+}
+.icon-releasefill::before {
+  content: '\e728';
+}
+
+
+</style>
+<style>
+.footer-bar .tips-popup.van-popup{
+  transform: none;
+  background-color: transparent;
+  bottom: 0;
+  left: 0;
+  overflow-y: initial;
+  width: 100%;
 }
 </style>

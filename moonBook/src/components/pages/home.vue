@@ -6,8 +6,8 @@
                 <span v-else>定位中</span>
             </div>
             <div class="search-bar"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
-            <div class="right-btn" @click="releasePageShow = true">
-                <i class="iconfont">&#xe612;</i>
+            <div class="right-btn" @click="toTips">
+                <i class="iconfont">&#xe664;</i>
                 <span>发布</span>
             </div>
         </div>
@@ -33,28 +33,23 @@
                 <news-list :newsList='newsList'/>
             </lazy-component>
             <lazy-component class="module">
-                <video-list :videoList='videoList'/>
+                <video-list title='视频精选' type='home'/>
             </lazy-component>
-            <lazy-component class="module">
-                <course-list/> 
+            <lazy-component>
+                <article-list/> 
             </lazy-component>
         </div>
 
-        <div class="apply" v-if='!$store.state.userData.vipInfo'>
+        <div class="apply" v-if='userDataState.isVip == 0'>
             <van-button class="theme-btn" :class="[btnPulse?'rubberBand animated second':'']" round size="normal" type="primary" @click="toAccept"> 
                 <i class="iconfont">&#xe619;</i>  
                 办理借阅卡
             </van-button>
         </div>
 
-        <!-- 发布 -->
-        <van-popup v-model="releasePageShow" class="page-popup" position="bottom" get-container='#app'>
-            <graphic @close='releasePageShow = false'/>
-        </van-popup>
-
         <!-- 借阅卡办理页面 -->
         <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
-            <accept @close='applyShow = false' v-model='active'/>
+            <accept @close='applyShow = false' v-model='active' @stepActiveChange='active = 0'/>
         </van-popup>
 
         <!-- 城市列表 -->
@@ -66,25 +61,29 @@
         <van-popup v-model="searchShow" class="page-popup" get-container='#app'>
             <city-list :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
         </van-popup>
+
+        <van-popup class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' v-model="tipsShow" get-container='.home'>
+            <tips position='top'/>
+        </van-popup>
     </div>
 </template>
 <script>
 
 import { mapGetters, mapActions } from 'vuex'
-import axios from 'axios'
+import axios from './../lib/js/api'
 
 import appsList from './../module/apps'
 import investmentAd from './../module/investment'
 import newsList from './../module/news'
 import videoList from './../module/video'
-import courseList from './../module/course'
+import articleList from './../module/articleList'
 
 import accept from './../module/accept'
 
-import graphic from './../module/release/graphic'
-
 import city from './../module/city'
 import cityList from './../module/search/cityList'
+
+import tips from './../module/release/tips'
 
 export default {
     name:'home',
@@ -93,21 +92,20 @@ export default {
         investmentAd,
         newsList,
         videoList,
-        courseList,
+        articleList,
         city,
         cityList,
         accept,
-        graphic
+        tips
     },
     computed: {
-        ...mapGetters(['userPointState'])
+        ...mapGetters(['userPointState','userDataState'])
     },
     data () {
         return {
-            // 发布
-            Param:'',
+            percentVal:0,
+            tipsShow:false,
             cityListShow:false,
-            releasePageShow:false,
             searchShow:false,
             prompt:'搜索城市名/拼音',
             active:0,
@@ -144,10 +142,13 @@ export default {
 
             axios.get('/book/index/home_v2').then(res=>{
                 this.banner = res.data.homeData.banner
-                this.appsList = res.data.homeData.apps
                 this.investmentAd = res.data.homeData.investmentAd
                 this.newsList = res.data.homeData.newsList
                 this.videoList = res.data.homeData.videoList
+            })
+
+            axios.get('/book/memberUser/getInfo').then(res => {
+                this.isVip = res.data.isVip
             })
         },
         handleScroll(){
@@ -168,12 +169,13 @@ export default {
         onStepActiveChange(val){
             this.active = val
         },
-        weChatShare(){
-            console.log('调用微信分享接口')
-        },
         toAccept(){
             this.applyShow = true
             this.active = 0
+        },
+        toTips(){
+           this.tipsShow = !this.tipsShow
+           localStorage.setItem('grapicData', '')
         }
     }
 }
@@ -184,5 +186,15 @@ export default {
     margin-top: -.625rem /* 10/16 */;
     position: relative;
     box-shadow: 0 .125rem /* 2/16 */ 1.25rem /* 20/16 */ rgba(0, 0, 0, .1)
+}
+</style>
+<style>
+.home .tips-popup.van-popup{
+  transform:none;
+  background-color: transparent;
+  top: 3.75rem /* 60/16 */;
+  right: .3125rem /* 5/16 */;
+  left: auto;
+  overflow-y: initial; 
 }
 </style>

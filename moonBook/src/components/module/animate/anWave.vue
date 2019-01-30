@@ -1,63 +1,48 @@
 <template>
-    <div class="container">
-        <div class="wave">
-            <div class="raised-1"></div>
-            <div class="raised-2"></div>
-        </div>
-    </div>
+  <div class="container">
+    <div class="wave1"></div>
+    <div class="wave2"></div>
+  </div>
 </template>
 <script>
 export default {
-    name:'wave'
+  name: 'wave'
 }
 </script>
 <style scoped>
 .container {
-    position: absolute;
-    width: 100%;
-    height:3.125rem /* 50/16 */;
-    bottom: 0;
-    left: 50%;
-    transform: translate(-50%, 0);
-    user-select: none;
+  width: 100%;
+  height: 1.875rem /* 30/16 */;
+  position: relative;
+  overflow: hidden;
 }
 
-.wave {
-    position: relative;
-    width: 100%;
-    height: 3.125rem /* 50/16 */;
-    background: transparent;
-    user-select: none;
-    overflow: hidden;
-} 
-
-.raised-1,
-.raised-2{
-    position: absolute;
-    width: 100rem /* 1600/16 */;
-    height: 100rem /* 1600/16 */;
-    top: 2380%;
-    left: 50%;
-    background: rgba(255, 255, 255, .4);
-    border-radius: 45%;
-    transform: translate(-50%, -70%) rotate(0);
-    animation: rotate 6s linear infinite;
-    z-index: 10;
+.wave1,
+.wave2{
+  height: 1.875rem /* 30/16 */;
+  position: absolute;
+  width: 1601PX;
+  z-index: 12;
+  left: 0;
+  bottom: -.0625rem /* 1/16 */;
+  background: url('./../../../assets/img/wave1.png') 0 0 repeat-x;
 }
 
-.raised-2{
-    border-radius: 47%;
-    background: #fff;
-    transform: translate(-50%, -70%) rotate(0);
-    animation: rotate 10s linear -5s infinite;
-    z-index: 20;
+.wave1{
+  animation: wave-animation 8.7s infinite linear;
 }
 
-@keyframes rotate {
-    50% {
-        transform: translate(-50%, -73%) rotate(180deg);
-    } 100% {
-        transform: translate(-50%, -70%) rotate(360deg);
-    }
+.wave2{
+  animation: wave-animation 5.2s infinite linear;
+  opacity: 0.5;
+}
+
+@keyframes wave-animation {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 1601PX 0;
+  }
 }
 </style>

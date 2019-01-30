@@ -1,32 +1,50 @@
 <template>
-  <div class="fresh-list scroll-x">
-    <div class="scroll-item" v-for="(item,index) in list" :key="index" :class="type=='classShow'&&item.teacher?'teacher':''"
-      @click="toBabyHome(item)">
-      <div class="avatar">
-        <img v-if="item.avatar" :src="item.avatar" :alt="item.nickname">
+  <div class="fresh-list">
+    <div class="content scroll-x" :class="type" v-if='list.length > 0'>
+      <div class="scroll-item" v-for="(item,index) in list" :key="index" @click="toZoom(item)">
+        <div class="avatar">
+          <img v-if="item[avatar]" @error='imgError' :src="getAvatar(item[avatar])" :alt="item[name]">
+        </div>
+        <div class="name" v-line-clamp:20="2">
+          {{item[name]}}
+        </div>
       </div>
-      <div class="name" v-line-clamp:20="1">{{item.nickname}}</div>
     </div>
   </div>
 </template>
 <script>
 export default {
   name: 'fresh-list',
-  props: ['list', 'type'],
+  props: ['list', 'type', 'avatar', 'name', 'cid', 'routerName'],
   methods: {
-    toBabyHome(item) {
+    toZoom(item) {
       this.$router.push({
-        name: 'baby-home',
+        name: this.routerName,
         query: {
-          id: item.id
+          id: item[this.cid],
+          back: this.$route.name,
+          banji_id: item.banji_id
         }
       })
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    getAvatar(img) {
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
     }
   }
 }
 </script>
 <style scoped>
-.fresh-list {
+.content {
   padding-left: 0.625rem /* 10/16 */;
 }
 
@@ -36,6 +54,7 @@ export default {
   padding: 0.1875rem /* 3/16 */;
   border: 0.0625rem /* 1/16 */ solid #dcdfe6;
   border-radius: 50%;
+  margin: 0 auto;
 }
 
 .avatar img {
@@ -45,13 +64,12 @@ export default {
 }
 
 .scroll-item {
+  width: 3.75rem /* 60/16 */;
   padding-right: 0.625rem /* 10/16 */;
-  width: 3.5rem /* 56/16 */;
   display: inline-grid;
 }
 
 .name {
-  width: 3.5rem /* 56/16 */;
   font-size: 0.875rem /* 14/16 */;
   text-align: center;
   margin-top: 0.3125rem /* 5/16 */;
@@ -67,5 +85,11 @@ export default {
 
 .teacher .name {
   color: #303133;
+  font-size: 0.75rem /* 12/16 */;
+  font-weight: 500;
+}
+
+.template .scroll-item:first-child .avatar{
+  border: .125rem /* 2/16 */ solid #ffc107;
 }
 </style>

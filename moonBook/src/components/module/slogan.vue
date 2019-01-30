@@ -16,7 +16,7 @@ export default {
     text-align: center;
     color: #909399;
     font-size: .8125rem /* 13/16 */;
-    background: #F2F6FC;
-    margin-top: 1.875rem /* 30/16 */;
+    background: transparent;
+    margin-top: 1.25rem /* 20/16 */;
 }
 </style>

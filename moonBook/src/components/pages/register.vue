@@ -1,135 +1,116 @@
 <template>
-    <div class="register">
-        <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' :left-text="active==0?'返回':'上一步'" left-arrow @click-left="onClickLeft">
-            <div class="icon-right" slot="right">
-                <i class="iconfont">&#xe618;</i>
+  <div class="register">
+    <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft">
+      <div class="icon-right" slot="right">
+        <i class="iconfont">&#xe618;</i>
+      </div>
+    </van-nav-bar>
+    <div class="container" ref='listContainer'>
+      <div class="identity">
+        <van-cell-group>
+          <van-cell class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role'
+            :key='index' @click="selectRole(item)">
+            <div class="icon iconfont" :class="item.iconClass" slot="icon"></div>
+          </van-cell>
+        </van-cell-group>
+
+        <van-cell-group>
+          <div class="form-title">办卡</div>
+          <van-cell is-link center title='办理借书卡' label="放学借上学还" @click="toAccept">
+            <div class="icon-accept" slot="icon">
+              <i class="iconfont accept-card">&#xe620;</i>
             </div>
-        </van-nav-bar>        
-        <div class="container" ref='listContainer'>
-            <div :class="[active==0?'steps':'']">
-                <van-steps active-color='#409eff' :active="active">
-                    <van-step>选择学校</van-step>
-                    <van-step>选择角色</van-step>
-                    <van-step>添加信息</van-step>
-                </van-steps>
-            </div>
-            <div class="school" v-if='active==0'>
-                <add-school :prompt='prompt' @select='selectSchool' pageType='register' @showSearchList='listShow = true'/>
-            </div>
-            <div class="identity" v-if='active==1'>
-                <van-cell-group>
-                    <div class="form-title">您的角色？</div>
-                    <van-cell class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role' :key='index' @click="selectRole(item)"/>
-                </van-cell-group>
-            </div>
-            <div class="form"  v-if='active==2'>
-                <form-parent v-if="formType=='parent'" :regInfo='regInfo' @close="toPageMy"/>
-                <form-teacher v-if="formType=='teacher'" :regInfo='regInfo' @close="toPageMy"/>
-            </div>
-        </div>
+          </van-cell>
+        </van-cell-group>
+      </div>
     </div>
+
+    <slogan />
+    <!-- 借阅卡办理页面 -->
+    <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
+      <accept @close='applyShow = false' v-model='active' />
+    </van-popup>
+  </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
-import searchBar from './../module/search/searchBar'
-import addSchool from './../module/addSchool'
-
-// 表单
-import formParent from './../module/form/parent'
-import formTeacher from './../module/form/teacher'
+import accept from './../module/accept'
+import slogan from './../module/slogan'
 
 export default {
   name: 'register',
   components: {
-    searchBar,
-    addSchool,
-    formParent,
-    formTeacher
-  },
-  computed: {
-    ...mapGetters(['userPointState'])
+    accept,
+    slogan
   },
   data() {
     return {
       show: false,
-      active: 0,
       list: [],
       takeUp: false,
       startX: '',
       startY: '',
       location: '',
+      applyShow: false,
+      active:0,
       prompt: '输入幼儿园名称/拼音',
       role: [
         {
           name: '家长',
           subtitle: '亲子阅读 在线交流 分享阅读',
-          type: 'parent'
+          type: 'parent',
+          iconClass: 'icon-parent'
         },
         {
           name: '老师',
           subtitle: '阅读课教学 阅读方法 育儿交流',
-          type: 'teacher'
+          type: 'teacher',
+          iconClass: 'icon-teacher'
         },
         {
           name: '园长/校长',
           subtitle: '学校风采 掌握教育动态',
-          type: 'headmaster'
+          type: 'headmaster',
+          iconClass: 'icon-principal'
         }
-      ],
-      regInfo: {
-        school: '',
-        role: ''
-      },
-      formType: ''
+      ]
     }
   },
   methods: {
-    ...mapActions(['getSchoolList']),
-    onLoad() {
-      this.page++
-      let products = {
-        page: this.page,
-        location: this.userPointState.location
-      }
-      this.getSchoolList(products).then(res => {
-        this.list = this.list.concat(res.pois)
-        this.loading = false
-        if (this.list.length >= res.count) {
-          this.finished = true
-        }
+    onClickLeft() {
+      this.$router.push({
+        name:'home'
       })
     },
-    onClickLeft() {
-      switch (this.active) {
-        case 0:
-          this.$router.go(-1)
-          break
-        case 1:
-          this.active = 0
-          break
-        case 2:
-          this.active = 1
-          break
+    selectRole(role) {
+      if (role.type == 'parent') {
+        this.$router.push({
+          name: 'edit-child',
+          query: {
+            pageTitle: '添加宝贝',
+            type: 'add',
+            back: this.$route.name
+          }
+        })
+      }else{
+        this.$router.push({
+          name: 'edit-manager',
+          query: {
+            pageTitle: `${role.name}注册`,
+            registerType: role.type,
+            type: 'add'
+          }
+        })
       }
     },
-    selectSchool(school) {
-      this.regInfo.school = school.name
-      this.active = 1
-    },
-    selectRole(role) {
-      this.regInfo.role = role.name
-      this.formType = role.type
-      this.active = 2
-    },
-    toPageMy() {
-      this.$router.push({ name: 'my' })
+    toAccept() {
+      this.applyShow = true
+      this.active = 0
     }
   }
 }
 </script>
 <style scoped>
-.container,
-.steps {
+.container{
   padding-top: 2.8125rem /* 45/16 */;
 }
 
@@ -140,5 +121,51 @@ export default {
 .search-module {
   width: 100%;
   height: 2.875rem /* 46/16 */;
+}
+
+.icon-parent::before {
+  content: '\e624';
+  background: linear-gradient(127deg, #ff9800, #f44336);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.icon-teacher::before {
+  content: '\e626';
+  background: linear-gradient(127deg, #00c2ab, #3e94ff);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.icon-principal::before {
+  content: '\e628';
+  background: linear-gradient(127deg, #2ad396, #85bb1f);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.icon {
+  margin-right: 1.25rem /* 20/16 */;
+}
+
+.accept-card,
+.icon.iconfont {
+  font-size: 1.75rem /* 28/16 */;
+}
+
+.add-school-btn{
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+.icon-accept{
+  margin-right: .625rem /* 10/16 */;
+}
+
+.iconfont.accept-card{
+    background: linear-gradient(90deg, #D400FF,#FF320A);
+    -webkit-background-clip: text;
+    color: transparent;
 }
 </style>

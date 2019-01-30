@@ -1,55 +1,88 @@
 <template>
-  <div class="class module-card">
-    <van-cell-group v-for="(list,index) in userDataState.childInfo" :key="index">
-      <van-cell :title="list.data.name" v-if="index==0" :value="list.class?list.class.name:'选择班级'" is-link center
-        @click="toClassHome(list)">
+  <div class="module-card">
+    <van-cell-group>
+      <van-cell :value="selectPrompt.prompt" is-link center @click="toClassHome">
         <div class="icon" slot="icon">
           <i class="iconfont">&#xe802;</i>
         </div>
+        <div class="title flex flex-align" slot="title">
+          <div class="avatar">
+            <img :src="children.avatar" :alt="children.child_name" />
+          </div>
+          {{children.name}}
+        </div>
       </van-cell>
     </van-cell-group>
-
-    <!-- 选择班级 -->
-    <van-popup v-model="show" class="page-popup" position="right">
-      <add-class :school="schoolState" :babyId="userDataState.childInfo[0].id" @close="show = false" />
-    </van-popup>
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex"
-import addClass from "./../addClass"
+import axios from './../../lib/js/api'
 
 export default {
   name: "class-home",
-  components: {
-    addClass
-  },
+  props: ['children'],
   computed: {
-    ...mapGetters(["userDataState", "schoolState"])
+    selectPrompt() {
+      if (this.children.school_id == 0) {
+        return {
+          prompt: '请选择学校班级',
+          type: 0
+        }
+      } else if (this.children.banji_id == 0) {
+        return {
+          prompt: '请选择班级',
+          type: 1
+        }
+      } else {
+        return {
+          prompt: this.children.banji_name,
+          type: 2
+        }
+      }
+    }
   },
   data() {
     return {
-      show: false
+      showSchool: false,
+      showClass: false,
+      school: ''
     }
   },
   methods: {
-    toClassHome(list) {
-      if (list.class) {
-        this.$router.push({
-          name: "class-home",
-          query: {
-            id: list.id
-          }
-        });
-      } else {
-        this.show = true
+    toClassHome() {
+      switch (this.selectPrompt.type) {
+        case 0:
+          this.$router.push({
+            name: 'edit-school',
+            query: {
+              id: this.children.id
+            }
+          })
+          break
+        case 1:
+          this.$router.push({
+            name: 'edit-class',
+            query: {
+              id: this.children.id,
+              schoolId: this.children.school_id
+            }
+          })
+          break
+        case 2:
+          this.$router.push({
+            name: "class-home",
+            query: {
+              id: this.children.banji_id
+            }
+          })
+          break
       }
     }
   }
 }
 </script>
 <style scoped>
-.class {
+.module-card {
   overflow: hidden;
 }
 
@@ -62,5 +95,13 @@ export default {
   background-image: linear-gradient(135deg, #795548 10%, #000 100%);
   -webkit-background-clip: text;
   color: transparent;
+}
+
+.avatar img {
+  width: 2rem /* 32/16 */;
+  height: 2rem /* 32/16 */;
+  overflow: hidden;
+  border-radius: 50%;
+  margin-right: 0.3125rem /* 5/16 */;
 }
 </style>

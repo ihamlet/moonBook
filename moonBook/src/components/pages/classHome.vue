@@ -1,68 +1,106 @@
 <template>
-  <div class="class-home page-padding">
-    <van-nav-bar :title="fixedHeaderBar?$route.meta.title:babyData.class.name" :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']"
-      fixed @click-left="onClickLeft" @click-right="show = true">
+  <div class="class-home page-padding" v-if='hackReset'>
+    <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
+      <div class="head-bar-title" slot="title" @click="cutover">
+        {{fixedHeaderBar?pageTitle:classInfo.title}} <i class="iconfont" v-if="managerList.length > 1 && actions != null">&#xe608;</i>
+      </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
-        <span class="text">个人中心</span>
+        <span class="text">{{$route.query.back?'返回':'我的'}}</span>
       </div>
       <div class="btn-right-qrcode" slot='right'>
         <i class="iconfont">&#xe7a3;</i>
       </div>
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
-      <div class="class-avatar">
-        <img src="https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/avatar-class.jpg" alt="班级头像" />
-      </div>
       <div class="class-info">
-        <div class="class-name">{{classInfo.name}}</div>
-        <div class="class-people">{{classInfo.sort}}（{{classInfo.people}}人）</div>
-        <div class="school" v-line-clamp:20="1">{{babyData.school}}</div>
+        <div class="class-name">{{classInfo.title}}</div>
+        <div class="class-people">{{classInfo.grade_name}}（{{classInfo.student_count}}人）</div>
+        <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
       </div>
     </div>
     <div class="container">
       <lazy-component class="module">
-        <class-show :className='classInfo.name' />
+        <div class="apps">
+          <apps :appsList='appsList' type='classHome' />
+        </div>
       </lazy-component>
       <lazy-component class="module">
-        <week-list />
+        <notice type='banji' />
+      </lazy-component>
+      <lazy-component class="module">
+        <read-list title='周阅读榜' type='banji' field='avatar' />
+      </lazy-component>
+      <lazy-component>
+        <class-zoom type='template' :banji_id='classInfo.banji_id' />
       </lazy-component>
     </div>
 
     <van-popup v-model="show" class="plate-card">
-      <qr-code :classInfo="classData" :school='classData.school' :qrImage="qrImage" type='classHome' @close='show = false' />
+      <qr-code :classInfo="classInfo" :qrImage="qrImage" type='classHome' @close='show = false' />
     </van-popup>
 
-    <slogan />
+    <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" />
+
+    <div class="punch" v-if='classInfo.is_my_baby_banji'>
+      <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
+        <i class="iconfont">&#xe60a;</i>
+        阅读打卡
+      </van-button>
+    </div>
   </div>
 </template>
 <script>
-import axios from 'axios'
-import { mapGetters } from "vuex"
+import axios from './../lib/js/api'
+import Cookies from 'js-cookie'
+
+import { mapGetters, mapActions } from 'vuex'
 import QRCode from 'qrcode'
-import weekList from './../module/classModule/weekList'
-import classShow from './../module/classModule/classShow'
+import classZoom from './../pages/classZoom'
+import readList from './../module/classModule/readList'
+import reading from './../module/reading'
 import qrCode from './../module/mold/qrCode'
-import slogan from './../module/slogan'
+import apps from './../module/myModule/apps'
+import notice from './../module/classModule/notice'
 
 export default {
   name: "class-home",
   components: {
-    classShow,
-    weekList,
-    slogan,
-    qrCode
+    classZoom,
+    reading,
+    qrCode,
+    readList,
+    notice,
+    apps
   },
   computed: {
-    ...mapGetters(["userDataState"]),
-    classData() {
-      let data = {
-        name: this.classInfo.name,
-        sort: this.classInfo.sort,
-        people: this.classInfo.people,
-        school: this.babyData.school
+    ...mapGetters(['userDataState']),
+    actions() {
+      let array = []
+      if (this.managerList) {
+        this.managerList.forEach(element => {
+          let data = {
+            name: element.name,
+            subname: `${element.duty}-${element.desc}`,
+            id: element.id,
+            type: element.item_type
+          }
+
+          array.push(data)
+        })
       }
-      return data
+
+      return array
+    },
+    pageTitle(){
+      let str = ''
+      if(this.classInfo.is_my_baby_banji){
+        str = '班级'
+      }else{
+        str = '我的班级'
+      }
+
+      return str
     }
   },
   data() {
@@ -70,53 +108,107 @@ export default {
       show: false,
       fixedHeaderBar: true,
       qrImage: '',
-      babyData: '',
       classInfo: '',
+      lateBook: '',
+      hackReset: true,
+      actionsheetShow: false,
+      managerList:[],
+      appsList: [{
+        name: '风采',
+        iconClass: 'icon-fengcai',
+        path:'404'
+      }, {
+        name: '阅读',
+        iconClass: 'icon-yuedu',
+        path:'404'
+      }, {
+        name: '才艺',
+        iconClass: 'icon-caiyi',
+        path:'404'
+      }, {
+        name: '荣誉',
+        iconClass: 'icon-rongyu',
+        path:'404'
+      }, {
+        name: '班级交流',
+        iconClass: 'icon-jiaoliu',
+        path:'404'
+      }]
     }
   },
-  created() {
-    this.fetchData()
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.qrcode()
+      vm.getUserData().then(res => {
+        if (res.child_id > 0) {
+          if (res.school_id > 0) {
+            if (res.banji_id > 0) {
+              vm.request()
+            } else {
+              vm.$router.push({
+                name: 'edit-class',
+                query: {
+                  id: res.child_id,
+                  back: 'class-home',
+                  schoolId: res.school_id,
+                  type: 'add'
+                }
+              })
+            }
+          } else {
+            vm.$router.push({
+              name: 'edit-school',
+              query: {
+                type: 'add',
+                enter: 'my',
+                id: res.child_id,
+              }
+            })
+          }
+        } else {
+          vm.$router.push({
+            name: 'edit-child',
+            query: {
+              type: 'add',
+              pageTitle: '添加宝贝'
+            }
+          })
+        }
+      })
+    })
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
   },
-  watch: {
-    '$router': 'fetchData'
-  },
   methods: {
-    fetchData() {
-      axios.put('/api/ChildInfo', {
-        id: this.$route.query.id
-      }).then(res => {
-        this.qrcode()
-        if (res.data.child) {
-          this.babyData = res.data.child
-          this.classInfo = res.data.child.class
-        } else {
-          this.$dialog.alert({
-            message: `<div class='text-center'>您还未注册阅亮书架</div>`,
-            showConfirmButton: true,
-            showCancelButton: true,
-            confirmButtonText: '注册',
-            cancelButtonText: '稍后'
-          }).then(() => {
-            this.$router.push({ name: 'register' })
-          }).catch(() => {
-            this.$router.push({ name: 'my' })
-          })
-        }
+    ...mapActions(['getUserData']),
+    request() {
+      axios.get('/book/MemberBanji/getList').then(res=>{
+        this.managerList = res.data.data
+      })
+
+      axios.get(`/book/SchoolBanji/getInfo?banji_id=${this.$route.query.id}`).then(res => {
+        this.classInfo = res.data.data
       })
     },
     onClickLeft() {
-      this.$router.push({ name: 'my' })
+      if(this.$route.query.back){
+        this.$router.push({
+          name: this.$route.query.back,
+          query:{
+            id:this.$route.query.child_id?this.$route.query.child_id:this.$route.query.school_id
+          }
+        })
+      }else{
+        this.$router.push({ name: 'my' })
+      }
     },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {
         this.qrImage = url
+      }).catch(err => {
+        console.error(err)
       })
-        .catch(err => {
-          console.error(err)
-        })
     },
     handleScroll() {
       this.getDomHeight()
@@ -132,9 +224,44 @@ export default {
       if (this.$refs.head) {
         this.domHeight = this.$refs.head.offsetHeight / 2
       }
+    },
+    punch() {
+      Cookies.set('punckLink', location.href)
+      location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
+    },
+    cutover() {
+      if (this.managerList.length > 1 && this.actions != null) {
+        this.actionsheetShow = true
+      }
+    },
+    onSelect(item) {
+      this.hackReset = false
+      this.actionsheetShow = false
+      if(item.type == 'banji'){
+        this.$router.push({
+          name: 'class-home',
+          query: {
+            id: item.id,
+            back: this.$route.name
+          }
+        })
+        this.$nextTick(() => {
+          this.hackReset = true
+          this.request()
+        })
+      }else if(item.type == 'school'){
+        this.$router.push({
+          name:'apps-school',
+          query:{
+            id: item.id,
+            back: this.$route.name,
+            banji_id: this.$route.query.id
+          }
+        })
+      }
     }
   }
-};
+}
 </script>
 <style scoped>
 .school {
@@ -148,11 +275,11 @@ export default {
 }
 
 .header {
-  padding: 1.25rem /* 20/16 */;
+  padding: 2.8125rem /* 45/16 */ 1.25rem /* 20/16 */ 0.625rem /* 10/16 */;
   background: url('https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/header-bg.jpg');
   background-size: cover;
   background-position: 68%;
-  height: 9.375rem /* 150/16 */;
+  height: 5rem /* 80/16 */;
 }
 
 .class-name {
@@ -187,5 +314,9 @@ export default {
 .plate-card {
   width: 18.75rem /* 300/16 */;
   overflow: hidden;
+}
+
+.punch {
+  z-index: 101;
 }
 </style>

@@ -3,14 +3,15 @@
     <van-nav-bar left-text="发现" left-arrow fixed :zIndex='100' @click-left="onClickLeft" @click-right="shareShow = true">
       <div class="head-bar-title" slot="title">
         <transition name="slide-fade" mode="out-in">
-          <div class="head-bar-title-conent" :key="1" v-if='!themeBarSearch'>
+          <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
             {{$route.meta.title}}
           </div>
-          <div class="head-bar-title-conent flex flex-align flex-justify" :key="2" v-else>
-            <div class="avatar">
-              <img :src="item.user.avatar" :alt="item.user.username">
+          <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else>
+            <div class="avatar" v-if='item.user'>
+              <img :src="getAvatar(item.user.avatar)" :alt="item.user.username">
             </div>
-            <div class="name">{{item.user.username}}</div>
+            <div class="name" v-if='item.user'>{{item.user.username}}</div>
+            <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
         </transition>
       </div>
@@ -21,91 +22,60 @@
     <div class="container page-padding">
       <div class="user-card flex flex-align" ref="userCard" v-if='item.user'>
         <div class="avatar">
-          <img :src="item.user.avatar" :alt="item.user.username">
+          <img :src="getAvatar(item.user.avatar)" :alt="item.user.username">
         </div>
         <div class="info">
           <div class="name">
             <div class="flex flex-align">
               <span>{{item.user.username}}</span>
-              <div class="memberships" v-if='item.card_level&&item.card_level.type == 1'>
-                <i class="iconfont vip-masonry" v-if="item.card_level.level == 3">&#xe611;</i>
-                <i class="iconfont vip-gold" v-if="item.card_level.level == 2">&#xe611;</i>
-                <i class="iconfont vip-ordinary" v-if="item.card_level.level == 1">&#xe611;</i>
-              </div>
+              <vip-level v-if='item.card_level' :animate='true' :level='item.card_level.level'/>
             </div>
           </div>
           <div class="date">
             <span>{{item.createDate}}</span>
           </div>
         </div>
-        <div class="follow-ben">
-          <van-button size="small" round>+ 关注</van-button>
+        <div class="follow-ben"  v-if='item.isSubscribe!=3'>
+          <van-button size="small" v-if='item.isSubscribe' round @click="follow(item)">已关注</van-button>
+          <van-button size="small" v-else class="theme-btn" type="primary" round @click="follow(item)">+ 关注</van-button>
         </div>
       </div>
-     
-      <article-content :item='item'/>
-
-
-      <div class="comment">
-        <div class="comment-list">
-          <div class="user-card flex flex-align">
-
-          </div>
-        </div>
-      </div>
+      <lazy-component class="module">
+        <article-content :item='item'/>
+      </lazy-component>
+      <lazy-component>
+        <comment :item='item'/>
+      </lazy-component>
     </div>
 
-    <comment :item='item' />
-
-    <van-popup v-model="pictureShow" class="picture-box-popup" get-container='#app'>
-      <picture-box @close="pictureShow = false" v-model="imgIndex" :item="item" />
-    </van-popup>
-
-    <van-popup v-model="shareShow" class="share-popup" position="bottom" get-container='#app'>
-      <share @close='shareShow = false' @generateImg='toImage'/>
-    </van-popup>
+    <van-actionsheet v-model="shareShow" title="分享">
+      <share @show='imageShow = true' />
+    </van-actionsheet>
 
     <!-- 生成图片 -->
-    <van-popup v-model="imageShow" get-container='#app'>
-      <div class="screenshot" ref="imageWrapper" v-if='!dataURL'>
-        <div class="user flex flex-justify" v-if='item.user'>
-          <div class="avatar">
-            <img :src="item.user.avatar" :alt="item.user.username"/>
-          </div>
-          <div class="name">{{item.user.username}}</div>
-        </div>
-
-        <div class="content">
-          <article-content :item='item' type='screenshot'/>
-        </div>
-
-        <div class="press">
-          <span>长按二维码识别</span>
-          <span>查看更多</span>
-        </div>
-      </div>
-      <img :src='dataURL' v-else>
+    <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
+      <article-share :item='item' :userName='item.user?item.user.username:""' :qrImage='qrImage' @close='imageShow = false'/>
     </van-popup>
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
 
-import html2canvas from 'html2canvas'
-
-import pictureBox from "./../module/mold/pictureBox"
+import QRCode from "qrcode"
 import share from './../module/mold/share'
-import comment from './../module/mold/comment'
+import articleShare from './../module/mold/articleShare'
+import comment from './../module/comment'
 import articleContent from './../module/articleContent'
-
+import vipLevel from './../module/animate/svg/vipLevel'
 
 export default {
   name: 'detailsArticle',
   components: {
-    pictureBox,
-    comment,
     articleContent,
-    share
+    comment,
+    share,
+    articleShare,
+    vipLevel
   },
   data() {
     return {
@@ -114,11 +84,10 @@ export default {
       themeBarSearch: false,
       imageShow: false,
       headBar: false,
-      pictureShow: false,
       shareShow: false,
       imgIndex: '',
-      item: '',
-      dataURL: ''
+      qrImage:'',
+      item: ''
     }
   },
   created() {
@@ -144,64 +113,47 @@ export default {
       }
     },
     fetchData() {
-      axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id}`).then(res => {
+      this.qrcode()
+      axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id||this.$route.query.back_id}`).then(res => {
         this.item = res.data.data.post
       })
     },
     onClickLeft() {
-      this.$router.push({
-        name: 'find'
-      })
-    },
-    mediaLamp(item, photoIndex) {
-      this.pictureShow = true
-      this.imgIndex = photoIndex
-      this.item = item
-    },
-    toProxy(element) {
-      return new Promise((resolve, reject) => {
-        let imgs = element.querySelectorAll('img')
-        imgs.forEach((img) => {
-          let host = img.src.indexOf(location.host)
-          if(host === -1) {           
-            img.setAttribute('crossOrigin', 'anonymous')
-            img.src = '/book/api/remotePic?url=' + encodeURIComponent(img.src)
+      if(this.$route.query.back){
+        this.$router.push({
+          name: this.$route.query.back,
+          query: {
+            id: this.$route.query.back_id
           }
-          resolve()
         })
+      }else{
+        this.$router.push({
+          name:'apps-find'
+        })
+      }
+    },
+    qrcode() {
+      QRCode.toDataURL(window.location.href).then(url => {
+        this.qrImage = url
+      }).catch(err => {
+        console.error(err)
       })
     },
-    toImage() {
-      this.imageShow = true
-      this.toProxy(this.$refs.imageWrapper).then(()=>{
-        html2canvas(this.$refs.imageWrapper, {
-          logging: false,
-          useCORS: true,
-          timeout: 1000,
-          backgroundColor: '#fff',
-          windowWidth: this.$refs.imageWrapper.clientWidth,
-          windowHeight: this.$refs.imageWrapper.clientHeight,
-        }).then(canvas => {
-          // this.shareShow = false
-        
-          let dataURL = canvas.toDataURL("image/png")
-          this.dataURL = dataURL
-        })
+    follow(item){
+      item.isSubscribe = !item.isSubscribe
+      axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res=>{
+        this.$toast.success(res.data.msg)
       })
     },
-    toImage() {
-      this.toProxy(this.$refs.imageWrapper).then(() => {       
-        html2canvas(this.$refs.imageWrapper, {
-          logging: true,
-          timeout: 1000,
-          backgroundColor: '#fff',
-          windowWidth: this.$refs.imageWrapper.clientWidth,
-          windowHeight: this.$refs.imageWrapper.clientHeight,
-        }).then(canvas => {
-          let dataURL = canvas.toDataURL("image/png")
-          this.dataURL = dataURL
-        })
-      })      
+    getAvatar(img) {
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
     }
   }
 }
@@ -223,7 +175,7 @@ export default {
 .user-card {
   padding: 0.625rem /* 10/16 */;
   background: #fff;
-  margin-bottom: .3125rem /* 5/16 */;
+  margin-bottom: 0.3125rem /* 5/16 */;
 }
 
 .user-card .avatar {
@@ -265,30 +217,13 @@ export default {
   right: 0.625rem /* 10/16 */;
 }
 
-.screenshot{
-  width: 17.5rem /* 280/16 */;
-  height: 37.5rem /* 600/16 */;
-  background: #f2f6fc;
-  padding: .625rem /* 10/16 */ 1.25rem /* 20/16 */;
-}
-
-.screenshot .user{
-  display: grid;
-  margin-bottom: 1.25rem /* 20/16 */;
-}
-
-.screenshot .user .avatar{
-  width: 3.75rem /* 60/16 */;
-  height: 3.75rem /* 60/16 */;
-  border-radius: 50%;
+.share-box{
+  width: 100%;
   overflow: hidden;
-  margin: .625rem /* 10/16 */ auto;
 }
 
-.press{
-  display: grid;
-  text-align: center;
-  margin: .625rem /* 10/16 */ 0;
-  font-size: .75rem /* 12/16 */;
+
+.screenshot-popup {
+  overflow: hidden;
 }
 </style>

@@ -5,17 +5,18 @@
       <start-page @listenStartPage='onStartPage' v-if='startPageShow' />
     </transition>
     <div class="root-dom" v-if='!startPageShow'>
-      <router-view />
-      <footer-bar v-if='$route.meta.isFooterBar'/>
+      <div class="refresh">
+        <router-view />
+      </div>
+      <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='userTabBtn'/>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import 'animate.css'
+import axios from './lib/js/api'
 import startPage from './module/startPage'
-import { mapActions } from 'vuex'
+import { mapActions,mapGetters } from 'vuex'
 import footerBar from './../components/module/footerBar'
 
 export default {
@@ -24,9 +25,47 @@ export default {
     startPage,
     footerBar
   },
+  computed: {
+    ...mapGetters(['userDataState']),
+    userTabBtn(){
+      let array = [
+        {
+          iconClass: 'icon-home',
+          name: '首页',
+          path: '/'
+        },
+        {
+          iconClass: 'icon-banji',
+          name: '班级',
+          path: 'class-home',
+          id: this.userDataState.banji_id,
+        },
+        {
+          iconClass: 'icon-release',
+          name: '发布',
+          path: ''
+        },
+        {
+          iconClass: 'icon-crown',
+          name: '宝贝',
+          path: 'baby-home',
+          id: this.userDataState.child_id
+        },
+        {
+          iconClass: 'icon-people',
+          name: '我的',
+          path: 'my'
+        }
+      ]
+
+      return array
+    }
+  },
   data () {
     const self = this
     return {
+      hackReset: true,
+      isGraphicShow:false,
       show:false,
       startPageShow:true,
       center: '114.085947,22.547',
@@ -38,7 +77,6 @@ export default {
                   map.getCurrentPosition( (status, result) => {
                   if (result && result.position) {
                         self.center = `${result.position.lng},${result.position.lat}`
-                        self.$nextTick()
                       }
                   })
               }
@@ -47,7 +85,6 @@ export default {
     }
   },
   created () {
-    console.log('%c我们招新啦！369774533@qq.com','font-size:25px;color:#409eff;')
     this.fetchData()
     if(localStorage.getItem('access')){
       this.startPageShow = !localStorage.getItem('access')
@@ -55,19 +92,23 @@ export default {
     localStorage.setItem('access',true)
   },
   watch: {
-      center(val){
-          let products = {
-            location:val
-          }
-          this.getUserLocation(products)
-      },
-      '$route': 'fetchData'
+    center(val){
+        let products = {
+          location:val
+        }
+        this.getUserLocation(products)
+    },
+    '$route': 'fetchData'
   },       
   methods: {
-    ...mapActions(['getUserData','getMsgLength','getUserLocation']),
+    ...mapActions(['getUserData','getMsg','getUserLocation']),
     fetchData(){
+      let products = {
+        page: 1,
+        isRead: 0
+      }
       this.getUserData()
-      this.getMsgLength()
+      this.getMsg(products)
     },
     onStartPage(){
       this.startPageShow = false
