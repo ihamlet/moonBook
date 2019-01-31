@@ -21,27 +21,32 @@ export default {
         iconClass: 'icon-school',
         name: '学校主页',
         pathName: 'apps-school',
-        id: this.userDataState.school_id
+        id: this.userDataState.school_id,
+        href: false
       }, {
         iconClass: 'icon-story',
         name: '听故事',
         pathName: '404',
-        id: ''
+        id: '',
+        href: '/book/story/jlf'
       }, {
         iconClass: 'icon-yuer',
         name: '育儿专栏',
         pathName: '404',
-        id: ''
+        id: '',
+        href: false
       }, {
         iconClass: 'icon-find',
         name: '发现',
         pathName: 'apps-find',
-        id: ''
+        id: '',
+        href: false
       }, {
         iconClass: 'icon-jiaoyu',
         name: '教育',
         pathName: '404',
-        id: ''
+        id: '',
+        href: false
       }]
 
       return array
@@ -54,12 +59,16 @@ export default {
   },
   methods: {
     toPath(item) {
-      this.$router.push({
-        name: item.pathName,
-        query: {
-          id: item.id
-        }
-      })
+      if(item.href) {
+        location.href = item.href
+      } else {
+        this.$router.push({
+          name: item.pathName,
+          query: {
+            id: item.id
+          }
+        })
+      }      
     }
   }
 }

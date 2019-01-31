@@ -48,11 +48,11 @@ export default {
       appsList: [{
         name: '代借还',
         iconClass: 'icon-huanshu',
-        routeLink:'/book/manage/borrow',
+        routeLink:'/book/ManageBorrow/borrow',
       }, {
         name: '定位码',
         iconClass: 'icon-saomadingwei',
-        routeLink:'/book/shelf/location_qrcode'
+        routeLink:'/book/ManageShelf/location'
       }, {
         name: '数据',
         iconClass: 'icon-shuju',

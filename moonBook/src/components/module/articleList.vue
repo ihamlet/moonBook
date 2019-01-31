@@ -2,7 +2,7 @@
   <div class="article-list">
     <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
       <van-cell-group>
-        <van-cell v-for='(item,index) in listArray' :key="index" @click="toArticle(item)">
+        <van-cell v-for='(item,index) in list' :key="index" @click="toArticle(item)">
           <div class="cell-content">
             <van-row :gutter='4'>
               <van-col :span='item.photos.length > 3?"24":"16"'>
@@ -22,7 +22,7 @@
                 <van-row :gutter="4" class="article-cover" v-else>
                   <van-col :span='24'>
                     <div class="img-grid">
-                      <img class="img-preview" :src="item.photos[0].thumb" />
+                      <img class="img-preview" :src="item.cover" />
                     </div>
                   </van-col>
                 </van-row>
@@ -57,7 +57,7 @@ export default {
     listArray() {
       let array = []
       this.list.forEach(element => {
-        if (element.template_id == 0 && element.photos.length > 0) {
+        if (element.template_id == 0) {
 
           let datas = {
             title: element.title,
@@ -117,7 +117,7 @@ export default {
       this.$router.push({
         name:'article',
         query:{
-          id:item.id,
+          id:item.post_id,
           back: this.$route.name
         }
       })

@@ -10,8 +10,8 @@
         <div class="video-item scroll-item" v-for='(item,index) in videoList' :key="index" @click="toVideoPage(item)">
           <div class="video">
             <div class="video-cover">
-              <div v-if="item.photo.length">
-                <img :src="`${item.photo[0].photo}?x-oss-process=video/snapshot,t_8000,f_jpg,w_0,h_0,m_fast`" :alt="`视频封面-${index}`">
+              <div>
+                <img :src="item.cover" :alt="`视频封面-${index}`">
               </div>
               
               <div class="playing flex flex-align" v-if='item.post_id == $route.query.id'>
@@ -23,10 +23,10 @@
               <div class="user-info flex flex-align">
                 <div class="user-data flex flex-align">
                   <div class="avatar">
-                    <img :src="getAvatar(item.avatar)" />
+                    <img :src="getAvatar(item.user.avatar)" />
                   </div>
                   <div class="name">
-                    {{item.name}}
+                    {{item.user.name}}
                   </div>
                 </div>
                 <div class="views">
@@ -81,30 +81,7 @@ export default {
       }
 
       axios.get('/book/SchoolArticle/getList?sort=post', data).then(res => {
-        let arr = []
-        if (res.data.status == 1) {
-          let array = res.data.data
-          array.forEach(element => {
-            if (element.hasvideo == 1) {
-              let photo = []
-              element.photos.forEach(e => {
-                if (e.is_video == 1) {
-                  photo.push(e)
-                }
-              })
-
-              arr.push({
-                avatar: element.user.avatar,
-                name: element.user.name,
-                views: element.views,
-                photo: photo,
-                post_id: element.post_id,
-                user_id: element.user_id
-              })
-            }
-          })
-        }
-        this.videoList = arr
+        this.videoList = res.data.data
       })
 
     },
@@ -137,6 +114,7 @@ export default {
       return timeago(time * 1000)
     },
     getAvatar(img) {
+      if(!img) return img
       let pos = img.indexOf('http://')
       let result
       if (pos === 0) {
@@ -166,6 +144,7 @@ export default {
   border-radius: 0.3125rem /* 5/16 */;
   margin-bottom: 0.3125rem /* 5/16 */;
   position: relative;
+  background-color: #eee;
 }
 
 .playing{

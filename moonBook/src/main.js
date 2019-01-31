@@ -6,7 +6,6 @@ import Vuex from 'vuex'
 import App from './App'
 import router from './router'
 import store from './store/index'
-import fetch from './fetch/api'
 import axios from './fetch/api'
 
 // 高德地图vue组件
