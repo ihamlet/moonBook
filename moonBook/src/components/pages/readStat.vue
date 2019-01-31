@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'我的'}}</span>
       </div>
-      <div class="head-bar-right" slot="right">
+      <div class="head-bar-icon" slot="right">
         <i class="iconfont">&#xe635;</i>
       </div>
     </van-nav-bar>

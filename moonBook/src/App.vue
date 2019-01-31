@@ -230,14 +230,19 @@ body.theme .head-bar-text,
   margin-right: 0.3125rem /* 5/16 */;
 }
 
-.theme-nav.van-nav-bar {
+.theme-nav.van-nav-bar{
   background: transparent;
+}
+
+.theme-nav.van-nav-bar .van-nav-bar__title{
   color: #fff;
 }
 
 .theme-nav.van-nav-bar::after {
   display: none;
 }
+
+
 
 .theme-nav.van-nav-bar .btn-right .van-icon {
   color: #fff;
@@ -247,6 +252,11 @@ body.theme .head-bar-text,
 .head-bar-icon i.iconfont {
   font-size: 1.25rem /* 20/16 */;
 }
+
+.theme-nav .head-bar-icon i.iconfont{
+  color: #fff;
+}
+
 
 .theme-nav .head-bar-text .text,
 .theme-nav .head-bar-text .van-icon-arrow-left {
