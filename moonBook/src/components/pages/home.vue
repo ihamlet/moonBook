@@ -141,9 +141,9 @@ export default {
             },3000)
 
             axios.get('/book/index/home_v2').then(res=>{
-                this.banner = res.data.homeData.banner
+                this.banner = res.data.homeData.banner                
                 this.investmentAd = res.data.homeData.investmentAd
-                this.newsList = res.data.homeData.newsList
+                this.newsList = this.formatNews(res.data.homeData.newsList)
                 this.videoList = res.data.homeData.videoList
             }).then(()=>{
                 axios.get('/book/memberUser/getInfo').then(res => {
@@ -176,6 +176,12 @@ export default {
         toTips(){
            this.tipsShow = !this.tipsShow
            localStorage.setItem('grapicData', '')
+        },
+        formatNews(news){
+            news.forEach((item,key)=>{
+                item.watch = item.views
+            })
+            return news
         }
     }
 }

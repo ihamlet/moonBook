@@ -1,7 +1,7 @@
 <template>
     <div class="news">
         <div class="list">
-            <div class="item" v-for='(item,index) in newsList' :key="index">
+            <div class="item" v-for='(item,index) in newsList' :key="index" @click="toArticle(item)">
                 <van-cell-group>
                     <van-cell>
                         <van-row gutter="10">
@@ -12,28 +12,22 @@
                             </van-col>
                             <van-col span="14">
                                 <div v-line-clamp:20="2" class="title">{{item.title}}</div>
-                                <div class="info" v-if='item.releaseInfo'>
+                                <div class="info">
                                     <div class="flex flex-align">
-                                        <div v-line-clamp:20="1" class="name">发布:{{item.releaseInfo.name}}</div>
-                                        <div v-line-clamp:20="1"  class="school">{{item.releaseInfo.school}}</div>
+                                        <div v-line-clamp:20="1" class="name">发布:{{item.name}}</div>
+                                        <div v-line-clamp:20="1"  class="school">{{item.cate_name}}</div>
                                     </div>
                                     <div class="foot-bar-left">
-                                        <div class="time">{{item.releaseInfo.time}}</div>
+                                        <div class="time">{{item.time}}</div>
                                     </div>
                                     <div class="foot-bar-right watch">
                                         <i class="iconfont">&#xe610;</i>
-                                        {{item.releaseInfo.watch>1000?'999+':item.releaseInfo.watch}}
+                                        {{item.views>1000?'999+':item.views}}
                                     </div>
                                 </div>
-                                <div class="info" v-if='item.adInfo'>
-                                    <div class="foot-bar-left type">广告</div>
-                                    <div class="foot-bar-right">
-                                        <div v-line-clamp:20="1" class="school">{{item.adInfo.school}}</div>
-                                    </div>
-                                </div>
-                                <div class="info" v-if='item.directInfo'>
-                                    <div class="category">{{item.directInfo.category}}</div>
-                                    <div class="foot-bar-left address">{{item.directInfo.address}}</div>
+                                <div class="info" v-if='item.address'>
+                                    <div class="category">{{item.cate_name}}</div>
+                                    <div class="foot-bar-left address">{{item.address}}</div>
                                 </div>     
                             </van-col>
                         </van-row>
@@ -46,7 +40,19 @@
 <script>
 export default {
     name:'news',
-    props: ['newsList']
+    props: ['newsList'],
+    methods: {
+        toArticle(article){
+            console.log('to article')
+            this.$router.push({
+                name:'article',
+                query:{
+                    id: article.id,
+                    back: this.$route.name
+                }
+            })
+        }
+    }
 }
 </script>
 <style scoped>
