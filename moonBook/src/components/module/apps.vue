@@ -21,31 +21,39 @@ export default {
         iconClass: 'icon-school',
         name: '学校主页',
         pathName: 'apps-school',
-        id: this.userDataState.school_id,
+        params: {
+          id: this.userDataState.school_id,
+        },        
         href: false
       }, {
         iconClass: 'icon-story',
         name: '听故事',
         pathName: '404',
-        id: '',
+        params: '',
         href: '/book/story/jlf'
       }, {
         iconClass: 'icon-yuer',
         name: '育儿专栏',
-        pathName: '404',
-        id: '',
+        pathName: 'apps-find',
+        params: {
+          cid: 37,
+          pageTitle: '育儿专栏'
+        },
         href: false
       }, {
         iconClass: 'icon-find',
         name: '发现',
         pathName: 'apps-find',
-        id: '',
+        params: '',
         href: false
       }, {
         iconClass: 'icon-jiaoyu',
         name: '教育',
-        pathName: '404',
-        id: '',
+        pathName: 'apps-find',
+        params: {
+          cid: 134,
+          pageTitle: '教育'
+        },
         href: false
       }]
 
@@ -64,9 +72,7 @@ export default {
       } else {
         this.$router.push({
           name: item.pathName,
-          query: {
-            id: item.id
-          }
+          query: item.params
         })
       }      
     }
