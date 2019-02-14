@@ -29,7 +29,7 @@
         <notice type='banji' />
       </lazy-component>
       <lazy-component class="module">
-        <read-list title='周阅读榜' type='banji' field='avatar' />
+        <read-list title='阅读榜' type='banji' field='avatar' />
       </lazy-component>
       <lazy-component>
         <class-zoom type='template' :banji_id='classInfo.banji_id' />
@@ -299,6 +299,10 @@ export default {
   border: 0.1875rem /* 3/16 */ solid #fff;
   box-shadow: 0 0.125rem /* 2/16 */ 1.25rem /* 20/16 */ rgba(0, 0, 0, 0.3);
   margin-right: 0.625rem /* 10/16 */;
+}
+
+.theme-nav .btn-right-qrcode {
+  color: #fff;
 }
 
 .btn-right-qrcode {

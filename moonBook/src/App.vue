@@ -46,41 +46,6 @@ textarea {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ipone 5 */
-@media only screen and (max-width: 360px) and (min-width: 320px) {
-  html {
-    font-size: 13.65px;
-  }
-}
-/* ipone 6 */
-@media only screen and (max-width: 375px) and (min-width: 360px) {
-  html {
-    font-size: 15.36px;
-  }
-}
-@media only screen and (min-width: 390px) and (max-width: 375px) {
-  html {
-    font-size: 16px;
-  }
-}
-/* ipone 6p */
-@media only screen and (max-width: 414px) and (min-width: 390px) {
-  html {
-    font-size: 16.64px;
-  }
-}
-@media only screen and (min-width: 640px) and (max-width: 414px) {
-  html {
-    font-size: 17.664px;
-  }
-}
-/* ipad */
-@media screen and (min-width: 640px) {
-  html {
-    font-size: 27.31px;
-  }
-}
-
 .wrap {
   flex-wrap: wrap;
 }
@@ -256,7 +221,6 @@ body.theme .head-bar-text,
 .theme-nav .head-bar-icon i.iconfont{
   color: #fff;
 }
-
 
 .theme-nav .head-bar-text .text,
 .theme-nav .head-bar-text .van-icon-arrow-left {

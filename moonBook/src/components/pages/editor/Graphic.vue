@@ -561,6 +561,10 @@ export default {
   bottom: 0.3125rem /* 5/16 */;
   right: 0.3125rem /* 5/16 */;
 }
+
+.img-grid{
+  background: #f8f8f8;
+}
 </style>
 <style>
 .cell-value.van-cell__value {

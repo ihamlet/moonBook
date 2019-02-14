@@ -1,8 +1,7 @@
 <template>
   <div class="tips flex" :class="[position == 'top'?'flex-column top':'flex-align bottom']">
     <div class="tips-list" :class="[position == 'bottom'?'flex-align flex':'',isShow?'pulse animated':'']">
-      <div class="btn" :class="[position == 'top'?'flex-align flex':'']" v-for='(list,index) in relaseList' :key="index"
-        @click="toRelease(index)">
+      <div class="btn" :class="[position == 'top'?'flex-align flex':'']" v-for='(list,index) in relaseList' :key="index" @click="toRelease(index)">
         <div class="iconfont" :class="list.icon"></div>
         <div class="name">{{list.name}}</div>
       </div>
@@ -12,7 +11,7 @@
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
       <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
     </div>
-    <div class="close-btn" @click="close" v-if='position != "top"' :class="[isShow?'rotateIn animated':'']">
+    <div class="close-btn" @click="$emit('close')" v-if='position != "top"' :class="[isShow?'rotateIn animated':'']">
       <i class="iconfont">&#xe647;</i>
     </div>
   </div>
@@ -76,7 +75,13 @@ export default {
     toRelease(index) {
       switch (index) {
         case 0:
-          this.$refs.selectPhoto.$refs.input.click()
+          this.$router.push({
+            name: 'graphic',
+            query: {
+              back: this.$route.name,
+              id: this.$route.query.id
+            }
+          })
           break
         case 1:
           this.$refs.fileVideo.click()
@@ -105,37 +110,40 @@ export default {
         array.push(file)
       }
 
-      let f = () => {
-        return new Promise((resolve, reject) => {
-          array.forEach((element, index) => {
-            if (this.photoLength < 9) {
-              this.photoLength++
-              this.grapicData.photos.isLoading = true
-              compress(element.content, 1200, 0.8, 'blob').then(val => {
-                val.toBlob((blob) => {
-                  this.upOssPhoto(blob, element.file, element.content).then(() => {
-                    index === array.length - 1 && resolve()
-                  })
-                })
-              })
-            } else {
-              this.$dialog.alert({
-                message: '最多只能上传9张图片'
-              })
-            }
-          })
-        })
-      }
 
-      f().then(() => {
-        this.$router.push({
-          name: 'graphic',
-          query: {
-            back: this.$route.name,
-            id: this.$route.query.id
-          }
-        })
-      })
+      // 先发布图片 @王伟
+      // 
+      // let f = () => {
+      //   return new Promise((resolve, reject) => {
+      //     array.forEach((element, index) => {
+      //       if (this.photoLength < 9) {
+      //         this.photoLength++
+      //         this.grapicData.photos.isLoading = true
+      //         compress(element.content, 1200, 0.8, 'blob').then(val => {
+      //           val.toBlob((blob) => {
+      //             this.upOssPhoto(blob, element.file, element.content).then(() => {
+      //               index === array.length - 1 && resolve()
+      //             })
+      //           })
+      //         })
+      //       } else {
+      //         this.$dialog.alert({
+      //           message: '最多只能上传9张图片'
+      //         })
+      //       }
+      //     })
+      //   })
+      // }
+
+      // f().then(() => {
+      //   this.$router.push({
+      //     name: 'graphic',
+      //     query: {
+      //       back: this.$route.name,
+      //       id: this.$route.query.id
+      //     }
+      //   })
+      // })
     },
     doUpload(e) {
       let file = e.target.files[0]
@@ -227,9 +235,6 @@ export default {
           width: img.width || 0
         })
       })
-    },
-    close() {
-      this.$emit('close')
     }
   }
 }
