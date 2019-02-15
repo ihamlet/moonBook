@@ -68,6 +68,7 @@ export default {
 
 article {
   width: -webkit-fill-available;
+  color: #303133;
 }
 
 .article-header{

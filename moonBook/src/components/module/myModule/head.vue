@@ -1,57 +1,62 @@
 <template>
-  <div class="head head-background" ref='head'>
-    <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex='100' fixed :title="fixedHeaderBar?$route.meta.title:userInfo.name" @click-left="onClickLeft">
-      <div class="head-bar-icon" slot='left'>
+  <div class="head head-background" ref="head">
+    <van-nav-bar
+      :class="[fixedHeaderBar?'theme-nav':'']"
+      :zIndex="100"
+      fixed
+      :title="fixedHeaderBar?$route.meta.title:userInfo.name"
+      @click-left="onClickLeft"
+    >
+      <div class="head-bar-icon" slot="left">
         <i class="iconfont">&#xe60e;</i>
       </div>
-      <div class="head-bar-icon bar-right" slot='right'>
+      <div class="head-bar-icon bar-right" slot="right">
         <i class="iconfont" @click="signIn">&#xe609;</i>
       </div>
     </van-nav-bar>
     <div class="user-info flex flex-justify">
       <div class="info">
+        <i class="iconfont">&#xe668;</i>
         <div class="avatar">
           <img :src="getAvatar(userInfo.avatar)" :alt="userInfo.name">
         </div>
+        <img class="children-avatar" :src="children.avatar" :alt="children.name">
         <div class="name">{{userInfo.name}}</div>
       </div>
     </div>
     <div class="card">
       <div class="borrow-card flex flex-align">
-        <div class="service flex flex-align" v-if='userInfo.isVip'>
+        <div class="service flex flex-align" v-if="userInfo.isVip">
           <div class="data-flow" @click="$router.push({name:'card-list'})">
             <i class="iconfont" :class="`vip-${userInfo.card_level}`">&#xe604;</i>
-            <b class="card-name" v-line-clamp:20="1">
-              {{userInfo.card_name}}
-            </b>
+            <b class="card-name" v-line-clamp:20="1">{{userInfo.card_name}}</b>
           </div>
           <div class="data-flow read" @click="toBorrowList(0)">
             <span class="data-name">读过</span>
             <span class="number">
-              <number-grow :value="userInfo.borrow_count" :time='.2' />
+              <number-grow :value="userInfo.borrow_count" :time=".2"/>
             </span>
           </div>
           <div class="data-flow reading" @click="toBorrowList(1)">
             <span class="data-name">在读</span>
             <span class="number">
-              <number-grow :value="userInfo.borrowing_count" :time='.2' />
+              <number-grow :value="userInfo.borrowing_count" :time=".2"/>
             </span>
           </div>
           <div class="data-flow collection" @click="toBorrowList(2)">
             <span class="data-name">收藏</span>
             <span class="number">
-              <number-grow :value="userInfo.collect_count" :time='.2' />
+              <number-grow :value="userInfo.collect_count" :time=".2"/>
             </span>
           </div>
           <div class="data-flow abrasion" @click="toBorrowList(3)">
             <span class="data-name">破损</span>
             <span class="number">
-              <number-grow :value="userInfo.broken_count" :time='.2' />
+              <number-grow :value="userInfo.broken_count" :time=".2"/>
             </span>
           </div>
         </div>
-        <div class="no-service flex flex-align flex-justify" v-else @click="toAccept">
-          您还没有办理借阅卡?
+        <div class="no-service flex flex-align flex-justify" v-else @click="toAccept">您还没有办理借阅卡?
           <div class="theme-color">前往办卡</div>
           <i class="iconfont">&#xe61b;</i>
         </div>
@@ -60,28 +65,28 @@
 
     <!-- 借阅卡办理页面 -->
     <van-popup v-model="applyShow" class="page-popup" position="bottom" :overlay="false">
-      <accept @close='onAccpetPage' v-model='active' />
+      <accept @close="onAccpetPage" v-model="active"/>
     </van-popup>
 
     <van-popup v-model="punchShow" class="page-popup page-punch" position="right">
-      <punch @close='closePunch' />
+      <punch @close="closePunch"/>
     </van-popup>
   </div>
 </template>
 <script>
-import axios from './../../lib/js/api'
-import numberGrow from './../../module/animate/numberGrow'
-import punch from './../../module/punch'
-import accept from './../accept'
+import axios from "./../../lib/js/api";
+import numberGrow from "./../../module/animate/numberGrow";
+import punch from "./../../module/punch";
+import accept from "./../accept";
 
 export default {
-  name: 'cardHead',
+  name: "cardHead",
   components: {
     numberGrow,
     accept,
     punch
   },
-  props: ['userInfo'],
+  props: ["userInfo", "children"],
   data() {
     return {
       domHeight: 0,
@@ -89,71 +94,74 @@ export default {
       fixedHeaderBar: true,
       active: 0,
       punchShow: false,
-      applyShow: false,
-    }
+      applyShow: false
+    };
   },
   mounted() {
-    window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener("scroll", this.handleScroll);
   },
   methods: {
     handleScroll() {
-      this.getDomHeight()
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
+      this.getDomHeight();
+      let scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      this.scrollTop = scrollTop;
       if (this.domHeight < this.scrollTop) {
-        this.fixedHeaderBar = false
+        this.fixedHeaderBar = false;
       } else {
-        this.fixedHeaderBar = true
+        this.fixedHeaderBar = true;
       }
     },
     getDomHeight() {
       if (this.$refs.head) {
-        this.domHeight = this.$refs.head.offsetHeight / 2
+        this.domHeight = this.$refs.head.offsetHeight / 2;
       }
     },
     onClickLeft() {
-      this.$router.push({name:'card-list'})
+      this.$router.push({ name: "card-list" });
     },
     signIn() {
-      this.punchShow = true
+      this.punchShow = true;
     },
     toAccept() {
-      this.applyShow = true
-      this.active = 0
+      this.applyShow = true;
+      this.active = 0;
     },
     onAccpetPage() {
-      this.applyShow = false
+      this.applyShow = false;
     },
     onStepActiveChange(val) {
-      this.active = val
+      this.active = val;
     },
     closePunch() {
-      this.punchShow = false
+      this.punchShow = false;
     },
-    toBorrowList(num){
+    toBorrowList(num) {
       this.$router.push({
-        name:'borrow-list',
-        query:{
-          tabActive:num
+        name: "borrow-list",
+        query: {
+          tabActive: num
         }
-      })
+      });
     },
     getAvatar(img) {
-      if(!img){
-        return img
+      if (!img) {
+        return img;
       }
 
-      let pos = img.indexOf('http://')
-      let result
-      if(pos === 0) {
-         result = img.replace('http:', 'https:')
+      let pos = img.indexOf("http://");
+      let result;
+      if (pos === 0) {
+        result = img.replace("http:", "https:");
       } else {
-         result = img
+        result = img;
       }
-      return result
+      return result;
     }
   }
-}
+};
 </script>
 <style scoped>
 .head {
@@ -189,12 +197,25 @@ export default {
 .avatar img {
   width: 4.5rem /* 72/16 */;
   height: 4.5rem /* 72/16 */;
-  border-radius: 50%;
-  border: 0.1875rem /* 3/16 */ solid #fff;
 }
 
 .avatar {
   margin: 0 auto;
+}
+
+.avatar img,
+.children-avatar {
+  border-radius: 50%;
+  border: 0.1875rem /* 3/16 */ solid #fff;
+}
+
+.children-avatar {
+  position: absolute;
+  width: 2rem /* 32/16 */;
+  height: 2rem /* 32/16 */;
+  right: -1.25rem /* 20/16 */;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
 }
 
 .user-info {
@@ -205,6 +226,18 @@ export default {
 .info {
   color: #fff;
   display: grid;
+  position: relative;
+}
+
+.info .iconfont {
+  position: absolute;
+  left: 70%;
+  top: 50%;
+  font-size: 1.25rem /* 20/16 */;
+  z-index: 1;
+  background: linear-gradient(135deg, #f44, #e60000);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .info .name {

@@ -1,7 +1,6 @@
 <template>
   <div class="comment-list" id='comment' ref='comment'>
     <van-nav-bar :zIndex='0' @click-right="showField">
-      <div class="views" slot="left">{{item.views}}浏览</div>
       <div class="comment" slot="right">{{listLength}}评论</div>
     </van-nav-bar>
     <div class="no-centent" v-if='listLength == 0'>

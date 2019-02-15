@@ -1,6 +1,6 @@
 <template>
   <div class="my page-padding">
-    <card-head :userInfo='userDataState' />
+    <card-head :userInfo='userDataState' :children='children[0]'/>
     <lazy-component class="gutter gap-top">
       <apps :appsList='appsList' v-if='isTeacher == 1 || isHeaderTeacher == 1' />
     </lazy-component>

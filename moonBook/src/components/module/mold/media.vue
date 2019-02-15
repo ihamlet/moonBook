@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <div class="media img long-article-thumb" v-if='item.template_id == 0&&type == "card"&&item.photos[0]'>
+    <div class="media img long-article-thumb" v-if='item.template_id == 0&&type == "card"&&item.cover'>
       <img :src="item.cover || item.photos[0].thumb" :preview='item.post_id'/>
       <van-tag class="photo-tag" type="danger">长文</van-tag>
     </div>
@@ -29,6 +29,7 @@
         </div>
       </div>
     </div>
+    
     <!-- 音频 -->
     <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
       <audio controls="controls" v-for='(audioItem,audioIndex) in item.photos' :key="audioIndex">

@@ -328,11 +328,6 @@ img.lazy[lazy='error'],
   font-size: 0.8125rem /* 13/16 */;
 }
 
-.right-btn {
-  transform: scale(0.9);
-  display: inline-grid;
-}
-
 .right-btn span {
   font-size: 0.75rem /* 12/16 */;
   color: #fff;
@@ -380,7 +375,6 @@ img.lazy[lazy='error'],
 
 .swipe-content {
   width: 100%;
-  height: 11.5rem /* 184/16 */;
   overflow: hidden;
 }
 
@@ -388,7 +382,6 @@ img.lazy[lazy='error'],
   color: #fff;
   font-size: 1.5rem /* 24/16 */;
   text-align: center;
-  line-height: 11.5rem /* 184/16 */;
 }
 
 .swipe-content .van-swipe__indicator {
@@ -574,7 +567,6 @@ img.lazy[lazy='error'],
 
 .explain {
   font-size: .8125rem /* 13/16 */;
-  margin-top: 1.25rem /* 20/16 */;
   color: #909399;
 }
 
