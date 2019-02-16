@@ -68,6 +68,7 @@ export default {
 
 article {
   width: -webkit-fill-available;
+  color: #303133;
 }
 
 .article-header{
@@ -90,15 +91,11 @@ article {
 }
 
 .long-article{
-  padding-top: 11.25rem /* 180/16 */;
+  padding-top: 12.5rem /* 200/16 */;
 }
 
 .no-thumb .title{
   position: static;
   padding-top: 20px;
-}
-
-.no-thumb-long-article{
-  padding-top: 50px;
 }
 </style>

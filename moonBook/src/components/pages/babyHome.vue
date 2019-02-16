@@ -71,6 +71,7 @@
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
                   <div class="tab-content" v-if='list.content.length'>
                     <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
+                      <van-cell title="" v-if='item.isMe' @click="actionsheet(item)" is-link arrow-direction='down'/>
                       <van-cell>
                         <graphic-card :item="item" type="babyHome" :avatar='childInfo.avatar' />
                       </van-cell>
@@ -96,6 +97,8 @@
     <van-popup v-model="zanShow" class="add-count-popup" :overlay="false" :lock-scroll='false' get-container='#app'>
       <i class="iconfont" :class="[zanShow?'rotateInDownLeft animated':'']">&#xe6e3;</i>
     </van-popup>
+
+    <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
   </div>
 </template>
 <script>
@@ -150,6 +153,7 @@ export default {
   },
   data() {
     return {
+      show:false,
       zanShow: false,
       fixedHeaderBar: true,
       domHeight: "",
@@ -167,7 +171,12 @@ export default {
       tab: [{
         title: '全部',
         content: ''
-      }]
+      }],
+      actions: [{
+        name: '删除',
+        type: 'delete'
+      }],
+      postId:''
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -365,6 +374,22 @@ export default {
             back: this.$route.name
           }
         })
+      }
+    },
+    actionsheet(item){
+      this.show = true
+      this.postId = item.post_id
+    },
+    onSelect(item) {
+      if (item.type == 'delete') {
+        axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
+          if(res.data.status){
+            this.onRefresh()
+          }
+        })
+        this.show = false
+
+        this.$toast.success('删除成功')
       }
     }
   }

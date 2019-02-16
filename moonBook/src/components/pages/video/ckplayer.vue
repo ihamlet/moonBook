@@ -7,15 +7,15 @@
     <div class="container">
       <lazy-component class="module">
         <van-cell-group>
-          <van-cell center @click="toZoom(item)" :value='timeAago(item.create_time)'>
+          <van-cell center @click="toZoom(item)" :value='`${item.views}次播放`'>
             <div class="user-info-bar" slot="title">
               <div class="info flex flex-align" v-if='item.user'>
                 <div class="avatar">
                   <img :src="getAvatar(item.user.avatar)" />
                 </div>
                 <div class="promulgator flex flex-align">
-                  <div class="name">{{item.user.username||''}}</div>
-                  <div class="play-num">{{item.views}}次播放</div>
+                  <div class="name" v-line-clamp:20="1">{{item.user.username||''}}</div>
+                  <div class="upload-date"> {{timeAago(item.create_time)}} </div>
                 </div>
               </div>
             </div>
@@ -186,5 +186,7 @@ export default {
   color: #303133;
   font-weight: 500;
   margin-right: .3125rem /* 5/16 */;
+  max-width: 5rem /* 80/16 */;
 }
+
 </style>

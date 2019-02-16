@@ -21,6 +21,10 @@
         <div class="follow" v-if='!item.isMe&&item.user_id>0'>
           <van-button class="theme-btn" type="primary" size='mini' plain v-if='item.isSubscribe == 0' @click="follow(item)"> + 关注</van-button>
         </div>
+        <div class="views" v-if='item.isMe'>
+          <span>{{item.views}}</span>
+          <span>阅读</span>
+        </div>
       </div>
 
       <media :item='item' type='card'/>
@@ -208,9 +212,23 @@ export default {
   border-radius: 50%;
 }
 
-.follow {
+.follow,
+.views{
   position: absolute;
   right: 0;
+}
+
+.views{
+  text-align: center;
+  border: 1px solid #E4E7ED;
+  font-size: .8125rem /* 13/16 */;
+  padding: 0 .3125rem /* 5/16 */;
+}
+
+.views span{
+  display: block;
+  height: 1.25rem /* 20/16 */;
+  color: #909399;
 }
 
 .school {

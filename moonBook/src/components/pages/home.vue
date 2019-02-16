@@ -6,9 +6,13 @@
                 <span v-else>定位中</span>
             </div>
             <div class="search-bar"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
-            <div class="right-btn" @click="toTips">
-                <i class="iconfont">&#xe664;</i>
-                <span>发布</span>
+            <div class="right-btn">
+                <span class="notice-badge">
+                    <i class="iconfont" @click="this.$router.push({name:'notice'})">{{MsgLengthState>0?'&#xe623;':'&#xe798;'}}</i>
+                    <b class="read-dot" v-if='MsgLengthState > 0'></b>
+                </span>
+                <!-- <i class="iconfont">{{msg>0?'&#xe623;':'&#xe798;'}}</i> -->
+                <!-- <span>发布</span> -->
             </div>
         </div>
         <div class="container">
@@ -62,9 +66,11 @@
             <city-list :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
         </van-popup>
 
-        <van-popup class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' v-model="tipsShow" get-container='.home'>
+        <!-- 节日活动 中间的发布可能会改为活动页面 保留一下 -->
+
+        <!-- <van-popup class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' v-model="tipsShow" get-container='.home'>
             <tips position='top'/>
-        </van-popup>
+        </van-popup> -->
     </div>
 </template>
 <script>
@@ -99,7 +105,7 @@ export default {
         tips
     },
     computed: {
-        ...mapGetters(['userPointState','userDataState'])
+        ...mapGetters(['userPointState','userDataState','MsgLengthState'])
     },
     data () {
         return {
@@ -186,6 +192,20 @@ export default {
     margin-top: -.625rem /* 10/16 */;
     position: relative;
     box-shadow: 0 .125rem /* 2/16 */ 1.25rem /* 20/16 */ rgba(0, 0, 0, .1)
+}
+
+span.notice-badge{
+  position: relative;
+}
+
+b.read-dot{
+  position: absolute;
+  width: .625rem /* 10/16 */;
+  height: .625rem /* 10/16 */;
+  background: #f44;
+  border-radius: .625rem /* 10/16 */;
+  bottom: .9375rem /* 15/16 */;
+  right: 0;
 }
 </style>
 <style>

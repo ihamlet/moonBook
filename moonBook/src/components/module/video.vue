@@ -76,11 +76,14 @@ export default {
       }
 
       axios.get('/book/SchoolArticle/getList?sort=post', data).then(res => {
+     
+
         let arr = []
         if (res.data.status == 1) {
           let array = res.data.data
           array.forEach(element => {
             if (element.hasvideo == 1) {
+         
               let photo = []
               element.photos.forEach(e => {
                 if (e.is_video == 1) {
@@ -88,14 +91,17 @@ export default {
                 }
               })
 
-              arr.push({
-                avatar: element.user.avatar,
-                name: element.user.name,
-                views: element.views,
-                photo: photo,
-                post_id: element.post_id,
-                user_id: element.user_id
-              })
+              if(photo.length > 0){
+                arr.push({
+                  avatar: element.user.avatar,
+                  name: element.user.name,
+                  views: element.views,
+                  photo: photo||null,
+                  post_id: element.post_id,
+                  user_id: element.user_id
+                })
+              }
+
             }
           })
         }

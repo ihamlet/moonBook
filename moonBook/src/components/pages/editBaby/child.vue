@@ -158,10 +158,11 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     fetchData() {
-      if (localStorage['childInfo'] != undefined) {
+
+      if (localStorage['childInfo'] != undefined&&this.$route.query.type != 'add') {
         this.childInfo = JSON.parse(localStorage['childInfo'])
       }
-
+      
       if (localStorage['radio'] != undefined) {
         this.radio = localStorage['radio']
       }
