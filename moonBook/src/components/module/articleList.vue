@@ -161,4 +161,9 @@ export default {
 .time-ago{
   margin-left: .625rem /* 10/16 */;
 }
+
+.img-grid{
+  margin-top: auto;
+  padding-bottom: 72%;
+}
 </style>

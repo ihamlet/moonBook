@@ -18,8 +18,8 @@
         <van-cell title-class='theme-color' title="#选择分类" :value="cateName" is-link arrow-direction="down" @click="show = true" />
       </div>   
       <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
-      <div class="edit-content" :class="[isQlToolbarShow?'bar-show':'']">
-        <quill-editor ref='myQuillEditor' v-model="grapicData.content" :options="editorOption" @focus="onEditorFocus($event)" @blur="onEditorBlur($event)"/>
+      <div class="edit-content" :class="[editBarShow?'bar-show':'']">
+        <quill-editor ref='myQuillEditor' v-model="grapicData.content" :options="editorOption"/>
       </div>
     </div>
     <div class="media-input" v-show="false">
@@ -52,7 +52,8 @@ export default {
   },
   data() {
     return {
-      isQlToolbarShow: false,
+      scrollTop:0,
+      editBarShow:false,
       actionShow:false,
       show: false,
       ossSign: '',
@@ -76,7 +77,7 @@ export default {
         modules: {
           toolbar: [
             ['bold', 'italic', 'image', 'video', 'link'],
-            [{ list: 'ordered' }, { list: "bullet" }],
+            // [{ list: 'ordered' }, { list: "bullet" }],
             [{ 'color': [] }, { 'background': [] }],
             ['blockquote']
           ]
@@ -112,11 +113,14 @@ export default {
         this.ossSign = res.data.data
       })
     },
-    onEditorFocus(e){
-      this.isQlToolbarShow = true
-    },
-    onEditorBlur(e){
-      this.isQlToolbarShow = false
+    handleScroll(){
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      this.scrollTop = scrollTop
+      if(this.scrollTop > 82){
+          this.editBarShow = true
+      }else{
+          this.editBarShow = false
+      }
     },
     onSelect(item) {
       if (item.type == 'save') {
@@ -179,15 +183,6 @@ export default {
     },
     videoHandler() {
       this.$refs.selectFileVideo.click()
-    },
-    handleScroll() {
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (88 < this.scrollTop) {
-        this.fixedHeaderBar = false
-      } else {
-        this.fixedHeaderBar = true
-      }
     },
     onRead(file) {
       let array = []
@@ -339,10 +334,10 @@ export default {
 }
 </style>
 <style>
-.edit-content.fixed .ql-toolbar.ql-snow {
+/* .edit-content.fixed .ql-toolbar.ql-snow {
   position: fixed;
   bottom: 0;
-}
+} */
 
 .edit-title .van-field__control {
   font-size: 1.25rem /* 20/16 */;
@@ -357,14 +352,12 @@ export default {
 
 
 .publishing .edit-content.bar-show .ql-toolbar.ql-snow{
-  display: block;
+  position: fixed;
+  top: 45px;
 }
 
 .publishing .ql-toolbar.ql-snow{
-  position: fixed;
-  bottom: 0;
   width: 100%;
-  display: none;
 }
 
 .publishing .ql-toolbar.ql-snow,

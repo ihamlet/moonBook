@@ -46,41 +46,6 @@ textarea {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ipone 5 */
-@media only screen and (max-width: 360px) and (min-width: 320px) {
-  html {
-    font-size: 13.65px;
-  }
-}
-/* ipone 6 */
-@media only screen and (max-width: 375px) and (min-width: 360px) {
-  html {
-    font-size: 15.36px;
-  }
-}
-@media only screen and (min-width: 390px) and (max-width: 375px) {
-  html {
-    font-size: 16px;
-  }
-}
-/* ipone 6p */
-@media only screen and (max-width: 414px) and (min-width: 390px) {
-  html {
-    font-size: 16.64px;
-  }
-}
-@media only screen and (min-width: 640px) and (max-width: 414px) {
-  html {
-    font-size: 17.664px;
-  }
-}
-/* ipad */
-@media screen and (min-width: 640px) {
-  html {
-    font-size: 27.31px;
-  }
-}
-
 .wrap {
   flex-wrap: wrap;
 }
@@ -230,14 +195,19 @@ body.theme .head-bar-text,
   margin-right: 0.3125rem /* 5/16 */;
 }
 
-.theme-nav.van-nav-bar {
+.theme-nav.van-nav-bar{
   background: transparent;
+}
+
+.theme-nav.van-nav-bar .van-nav-bar__title{
   color: #fff;
 }
 
 .theme-nav.van-nav-bar::after {
   display: none;
 }
+
+
 
 .theme-nav.van-nav-bar .btn-right .van-icon {
   color: #fff;
@@ -246,6 +216,10 @@ body.theme .head-bar-text,
 
 .head-bar-icon i.iconfont {
   font-size: 1.25rem /* 20/16 */;
+}
+
+.theme-nav .head-bar-icon i.iconfont{
+  color: #fff;
 }
 
 .theme-nav .head-bar-text .text,
@@ -354,11 +328,6 @@ img.lazy[lazy='error'],
   font-size: 0.8125rem /* 13/16 */;
 }
 
-.right-btn {
-  transform: scale(0.9);
-  display: inline-grid;
-}
-
 .right-btn span {
   font-size: 0.75rem /* 12/16 */;
   color: #fff;
@@ -406,7 +375,6 @@ img.lazy[lazy='error'],
 
 .swipe-content {
   width: 100%;
-  height: 11.5rem /* 184/16 */;
   overflow: hidden;
 }
 
@@ -414,7 +382,6 @@ img.lazy[lazy='error'],
   color: #fff;
   font-size: 1.5rem /* 24/16 */;
   text-align: center;
-  line-height: 11.5rem /* 184/16 */;
 }
 
 .swipe-content .van-swipe__indicator {
@@ -600,7 +567,6 @@ img.lazy[lazy='error'],
 
 .explain {
   font-size: .8125rem /* 13/16 */;
-  margin-top: 1.25rem /* 20/16 */;
   color: #909399;
 }
 
