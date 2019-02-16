@@ -6,10 +6,6 @@
                 <span v-else>定位中</span>
             </div>
             <div class="search-bar"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
-            <div class="right-btn" @click="toTips">
-                <i class="iconfont">&#xe664;</i>
-                <span>发布</span>
-            </div>
         </div>
         <div class="container">
             <div class="swipe-content" ref='swipe'>
@@ -60,10 +56,6 @@
         <!-- 城市列表搜索 -->
         <van-popup v-model="searchShow" class="page-popup" get-container='#app'>
             <city-list :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
-        </van-popup>
-
-        <van-popup class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' v-model="tipsShow" get-container='.home'>
-            <tips position='top'/>
         </van-popup>
     </div>
 </template>
@@ -172,10 +164,6 @@ export default {
         toAccept(){
             this.applyShow = true
             this.active = 0
-        },
-        toTips(){
-           this.tipsShow = !this.tipsShow
-           localStorage.setItem('grapicData', '')
         },
         formatNews(news){
             news.forEach((item,key)=>{

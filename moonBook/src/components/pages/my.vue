@@ -61,6 +61,10 @@ export default {
         name: '权限管理',
         iconClass: 'icon-quanxian',
         routeLink:'/book/schoolManage'
+      }, {
+        name: '捐书',
+        iconClass: 'icon-shujia',
+        routeLink: '/book/TushuDonation/entry'
       }]
     }
   },
