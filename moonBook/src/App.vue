@@ -796,6 +796,7 @@ video {
   background: #fff;
   padding: 1.25rem /* 20/16 */;
   position: relative;
+  overflow: hidden;
 }
 
 .article-content .content img {
