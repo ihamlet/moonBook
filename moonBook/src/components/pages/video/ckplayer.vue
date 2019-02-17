@@ -179,6 +179,9 @@ export default {
 
 .avatar img {
   border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
 }
 
 .name{

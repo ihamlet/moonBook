@@ -175,9 +175,10 @@ export default {
   height: 2rem /* 32/16 */;
   margin-right: 0.3125rem /* 5/16 */;
 }
-
 .avatar img {
   border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
 }
 
 .user-info {
