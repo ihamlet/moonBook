@@ -1,16 +1,19 @@
 <template>
   <div class="graphic">
-    <van-nav-bar left-text="取消" @click-left="onClickLeft" :border='false' @click-right="onClickRight">
+    <van-nav-bar left-text="取消" @click-left="onClickLeft" :border='false'>
       <div class="user-info" slot='title'>
         <div class="avatar">
           <img :src="getAvatar(userDataState.avatar)" />
         </div>
       </div>
       <div class="head-bar-btn theme-color" slot="right">
-        <i class="iconfont">
-          &#xe72c;
-        </i>
-        发布
+        <van-loading color="#409eff" v-if='percent!=0'/>
+        <div class="release-btn"  @click="onClickRelease" v-else>
+          <i class="iconfont">
+            &#xe72c;
+          </i>
+          发布
+        </div>
       </div>
     </van-nav-bar>
     <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
@@ -270,7 +273,7 @@ export default {
         }
       }
     },
-    onClickRight() {
+    onClickRelease() {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
         if (this.$route.query.back) {
           this.$router.push({
@@ -376,6 +379,8 @@ export default {
           height: 0,
           width: 0
         })
+
+        this.percent = 0
       })
     },
     upOssPhoto(blob, file, base64) {
@@ -410,6 +415,7 @@ export default {
           height: img.height || 0,
           width: img.width || 0
         })
+        this.percent = 0
       })
     },
     selectTag(tag) {
