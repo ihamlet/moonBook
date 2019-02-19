@@ -50,6 +50,15 @@
           <span class="bar-title">坚持天数</span>
         </div>
       </div>
+      <div class="progress-wrap">
+        <div class="progress-label">阅读进度</div>
+        <div class="progress-bar">
+          <div class="progress" :style="{width: `${childInfo.read_progress + 2}%`}">
+            <div class="progress-tip">254</div>
+          </div>
+          <div class="progress-tip">348</div>
+        </div>
+      </div>
       <lazy-component class="module" v-if="isMine">
         <family />
       </lazy-component>
@@ -435,7 +444,7 @@ export default {
       } else {
           return `0${time}`
       }
-    },
+    }
   }
 }
 
@@ -599,7 +608,40 @@ export default {
   top: .3125rem /* 5/16 */;
   right: -.625rem /* 10/16 */;
 }
+.progress-wrap {
+  display: flex;
+  font-size: .725rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  align-items:center;
+  justify-content: space-between;
+  background-color: #fff;
+}
+.progress-bar {
+  width: 100%;
+  height: 1rem;
+  background-color: #ddd;
+  border-radius: .3rem;
+  position: relative;
+}
 
+.progress-label {
+  width: 4rem;
+}
+
+.progress {
+  background-color: #3299ff;
+  height: 100%;
+  border-radius: .3rem;
+  position: relative;  
+  overflow:hidden;
+}
+.progress-tip {
+  position: absolute;
+  right: 1rem;
+  top: 0;
+  color: #fff;
+}
 </style>
 <style>
 .add-count-popup.van-popup {
