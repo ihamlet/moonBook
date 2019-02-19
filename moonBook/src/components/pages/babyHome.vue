@@ -176,7 +176,13 @@ export default {
         name: '删除',
         type: 'delete'
       }],
-      postId:''
+      postId:'',
+
+      // 倒计时
+      keepTime: '倒计时',
+      limittime: 100,
+      endTime: '2019-12-30 22:22:22',
+      flag: false
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -200,7 +206,8 @@ export default {
     })
   },
   created() {
-    this.fetchData();
+    this.fetchData()
+    this.StartCountDown() //倒计时
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll)
@@ -391,7 +398,44 @@ export default {
 
         this.$toast.success('删除成功')
       }
-    }
+    },
+    // 倒计时开始
+    StartCountDown() {
+        let mydate = new Date()
+        mydate.setMinutes(mydate.getMinutes() + this.limittime)
+        this.settime=mydate
+
+        let time = setInterval(() => {
+            if (this.flag == true) {
+                clearInterval(time)
+            }
+            this.timeDown()
+        }, 100)
+    },
+    // 进行倒计时
+    timeDown() {
+      const endTime = new Date(this.endTime)
+      const nowTime = new Date()
+      let leftTime = parseInt((endTime.getTime() - nowTime.getTime()) / 1000)
+      let d = parseInt(leftTime / (24 * 60 * 60))
+      let h = this.formate(parseInt(leftTime / (60 * 60) % 24))
+      let m = this.formate(parseInt(leftTime / 60 % 60))
+      let s = this.formate(parseInt(leftTime % 60))
+      if (leftTime <= 0) {
+          this.flag = true
+          console.log("时间到")
+      }
+      this.keepTime = `${h}:${m}:${s}`
+
+      console.log(this.keepTime)
+    },
+    formate(time) {
+      if (time >= 10) {
+          return time
+      } else {
+          return `0${time}`
+      }
+    },
   }
 }
 

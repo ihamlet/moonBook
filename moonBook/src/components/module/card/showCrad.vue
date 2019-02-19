@@ -1,6 +1,8 @@
 <template>
   <div class="img-preview flex flex-justify" v-if="imgList.length > 0">
-    <div class="grid" v-for="(item,index) in imgArray" :key="index" v-lazy:background-image="item.thumb"></div>
+    <div class="grid" v-for="(item,index) in imgArray" :key="index">
+      <img :src="item.thumb" />
+    </div>
     
     <div class="badge" v-if="imgList.length > 4">{{imgList.length}}</div>
   </div>
@@ -17,14 +19,16 @@ export default {
   },
   computed: {
     imgArray(){
-      let array = []
-      if(this.imgList.length > 4){
-        array = this.imgList.slice(0,4)
-      }else{
-        array = this.imgList
-      }
+      let array = this.imgList
+      let arr = []
 
-      return array
+      array.forEach((element,i) => {
+        if(element != null){
+          arr.push(element)
+        }
+      })
+
+      return arr.slice(0,4)
     }
   }
 }
@@ -43,14 +47,13 @@ export default {
 }
 
 .robe,
-.img-preview .grid {
+.img-preview .grid img{
   width: 3.375rem /* 54/16 */;
   height: 3.375rem /* 54/16 */;
   border-radius: 0.25rem /* 4/16 */;
   margin-right: 0.3125rem /* 5/16 */;
-  background-size: cover;
-  background-position: 50%;
   z-index: 2;
+  object-fit: cover;
 }
 
 .robe {
@@ -60,7 +63,7 @@ export default {
   z-index: 1;
 }
 
-.img-preview .grid:last-child {
+.img-preview .grid:last-child img{
   box-shadow: 0 0.125rem /* 2/16 */ 0.625rem /* 10/16 */ rgba(0, 0, 0, 0.3);
 }
 </style>

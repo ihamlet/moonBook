@@ -170,7 +170,7 @@ export default {
   margin-right: 0.625rem /* 10/16 */;
 }
 
-.avatar {
+.avatar img{
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
   margin-right: 0.3125rem /* 5/16 */;

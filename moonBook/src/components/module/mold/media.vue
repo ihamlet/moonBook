@@ -6,7 +6,7 @@
       <div :class="[item.photos.length == 4?'layout-4':'']">
         <van-row :gutter="4">
           <van-col :span="item.photos.length == 4?'12':'8'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-            <div class="img-grid" :class="[photo.height/photo.width > 18/9&&type!='card'?'long':'']" v-if='photo.is_video==0 && photo.is_audio == 0'>
+            <div class="img-grid" :class="[photo.height/photo.width > 18/9&&type!='card'?'long':'']" v-if='photo&&photo.is_video==0 && photo.is_audio == 0'>
               <img class="img-preview" :class="[photo.height/photo.width > 18/9?'long':'']" :src="photo.thumb" :large="photo.photo" :preview='photo.post_id' />
               <van-tag class="photo-tag" type="danger" v-if='photo.height/photo.width > 18/9'>长图</van-tag>
             </div>
@@ -23,7 +23,7 @@
     <!-- 视频 -->
     <div class="media" :class="item.hasvideo==1?'video-cover':''" v-if='item.hasvideo==1'>
       <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
-        <div class="video-thumb"  v-if='videoItem.is_video == 1' @click="toVideoPage(videoItem)">
+        <div class="video-thumb"  v-if='videoItem&&videoItem.is_video == 1' @click="toVideoPage(videoItem)">
           <i class="iconfont">&#xe602;</i>
           <img :src="`${videoItem.photo}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`" alt="视频封面"/>
         </div>
