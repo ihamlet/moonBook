@@ -175,7 +175,7 @@ export default {
                 query: {
                   id: res.child_id,
                   back: 'class-home',
-                  schoolId: res.school_id,
+                  school_id: res.school_id,
                   type: 'add'
                 }
               })

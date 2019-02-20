@@ -64,7 +64,7 @@ export default {
             name: 'edit-class',
             query: {
               id: this.children.id,
-              schoolId: this.children.school_id
+              school_id: this.children.school_id
             }
           })
           break

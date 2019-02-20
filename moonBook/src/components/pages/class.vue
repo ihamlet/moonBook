@@ -44,7 +44,7 @@ export default {
       page: 1,
       childInfo: '',
       schoolName: '',
-      school_id: this.$route.query.schoolId
+      school_id: this.$route.query.school_id || 0
     }
   },
   created() {
