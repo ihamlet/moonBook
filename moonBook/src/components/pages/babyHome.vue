@@ -54,9 +54,9 @@
         <div class="progress-label">阅读进度</div>
         <div class="progress-bar">
           <div class="progress" :style="{width: `${childInfo.read_progress + 2}%`}">
-            <div class="progress-tip">254</div>
+            <div class="progress-tip">{{childInfo.read_count}}</div>
           </div>
-          <div class="progress-tip">348</div>
+          <div class="progress-tip">{{childInfo.shelf_tushu_kinds}}</div>
         </div>
       </div>
       <lazy-component class="module" v-if="isMine">
@@ -632,9 +632,11 @@ export default {
 .progress {
   background-color: #3299ff;
   height: 100%;
+  width: 2%;
   border-radius: .3rem;
   position: relative;  
   overflow:hidden;
+  transition: all 1s easy;
 }
 .progress-tip {
   position: absolute;

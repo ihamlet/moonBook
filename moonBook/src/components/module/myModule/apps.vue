@@ -17,10 +17,7 @@ export default {
       } else {
         this.$router.push({
           name: list.path,
-          query: {
-            back: this.$route.name,
-            id: this.$route.query.id
-          }
+          query: list.params
         })
       }
     }

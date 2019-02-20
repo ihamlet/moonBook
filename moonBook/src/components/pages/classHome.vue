@@ -116,23 +116,48 @@ export default {
       appsList: [{
         name: '风采',
         iconClass: 'icon-fengcai',
-        path:'404'
+        path:'apps-find',      
+        params: {
+          cid: 138,
+          pageTitle: '风采',
+          banji_id: this.$route.query.id
+        }
       }, {
         name: '阅读',
         iconClass: 'icon-yuedu',
-        path:'404'
+        path:'apps-find',      
+        params: {
+          cid: 137,
+          pageTitle: '阅读',
+          banji_id: this.$route.query.id
+        }
       }, {
         name: '才艺',
         iconClass: 'icon-caiyi',
-        path:'404'
+         path:'apps-find',      
+        params: {
+          cid: 119,
+          pageTitle: '才艺',
+          banji_id: this.$route.query.id
+        }
       }, {
         name: '荣誉',
         iconClass: 'icon-rongyu',
-        path:'404'
+         path:'apps-find',      
+        params: {
+          cid: 140,
+          pageTitle: '荣誉',
+          banji_id: this.$route.query.id
+        }
       }, {
         name: '班级交流',
         iconClass: 'icon-jiaoliu',
-        path:'404'
+         path:'apps-find',      
+        params: {
+          cid: 141,
+          pageTitle: '班级交流',
+          banji_id: this.$route.query.id
+        }
       }]
     }
   },
@@ -170,7 +195,7 @@ export default {
             name: 'edit-child',
             query: {
               type: 'add',
-              pageTitle: '添加宝贝'
+              pageTitle: '添加宝贝',
             }
           })
         }

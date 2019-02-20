@@ -28,7 +28,7 @@ export default {
     slogan,
     graphicCard
   },
-  props: ['sort','tid','schoolId','type','portal_name','cid'],
+  props: ['sort','tid','schoolId','type','portal_name','cid', 'banji_id'],
   computed: {
     ...mapGetters(['userToken'])
   },
@@ -59,7 +59,8 @@ export default {
           sort:this.sort,
           tid: this.tid,
           route: this.type,
-          cate_id: this.cid
+          cate_id: this.cid,
+          banji_id: this.banji_id
         }    
       }
 
