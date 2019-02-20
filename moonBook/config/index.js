@@ -5,6 +5,8 @@
 const path = require('path')
 console.log('path', path)
 
+// const server_host = 'https://hu.wmlife.net/'
+const server_host = 'http://book.wmdev.com/'
 module.exports = {
   dev: {
 
@@ -13,19 +15,19 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/book':{
-        target:'https://hu.wmlife.net/',
+        target: server_host,
         changeOrigin: true
       },
       '/Public': {
-        target: 'https://hu.wmlife.net/',
+        target: server_host,
         changeOrigin: true
       },
       '/attachs': {
-        target: 'https://hu.wmlife.net/',
+        target: server_host,
         changeOrigin: true
       },
       '/peixun':{
-        target: 'https://hu.wmlife.net/',
+        target: server_host,
         changeOrigin: true
       }
     },

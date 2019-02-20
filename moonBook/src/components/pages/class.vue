@@ -43,7 +43,8 @@ export default {
       finished: false,
       page: 1,
       childInfo: '',
-      schoolName: ''
+      schoolName: '',
+      school_id: this.$route.query.schoolId
     }
   },
   created() {
@@ -63,6 +64,7 @@ export default {
         axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
           if (res.data.status == 1) {
             this.childInfo = res.data.data
+            this.school_id = this.childInfo.school_id > 0 ? this.childInfo.school_id : this.school_id
           }
         })
       }
@@ -127,7 +129,14 @@ export default {
       }
     },
     onLoad() {
-      axios.get(`/book/SchoolBanji/getList?page=${this.page}&limit=20&school_id=${this.$route.query.school_id}`).then(res => {
+      let data = {
+        params: {
+          page: this.page,
+          limit: 20,
+          school_id: this.school_id
+        }
+      }
+      axios.get(`/book/SchoolBanji/getList`, data).then(res => {
         this.page++
         this.list = this.list.concat(res.data.data)
         this.loading = false
