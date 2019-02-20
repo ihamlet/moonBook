@@ -29,6 +29,10 @@ module.exports = {
       '/peixun':{
         target: server_host,
         changeOrigin: true
+      },
+      '/SchoolManage': {
+        target: server_host,
+        changeOrigin: true
       }
     },
 

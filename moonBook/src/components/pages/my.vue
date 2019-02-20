@@ -56,11 +56,11 @@ export default {
       }, {
         name: '数据',
         iconClass: 'icon-shuju',
-        routeLink:'/book/SchoolMemberCard'
+        routeLink:'/SchoolManage/MemberCard'
       }, {
         name: '权限管理',
         iconClass: 'icon-quanxian',
-        routeLink:'/book/schoolManage'
+        routeLink:'/SchoolManage'
       }, {
         name: '捐书',
         iconClass: 'icon-shujia',
