@@ -1,6 +1,6 @@
 <template>
   <div class="read-amount">
-    <van-nav-bar :title="$route.meta.title" left-text="返回" left-arrow/>
+    <van-nav-bar :title="$route.meta.title" left-text="返回" left-arrow @click-left="onClickLeft"/>
     <div class="amount-list flex flex-align">
       <div class="amount-item" v-for="(item,index) in amountList" :key="index">
         <div class="amount-type">{{item.type}}</div>
@@ -92,11 +92,25 @@ export default {
     }
   },
   methods:{
+      onClickLeft(){
+          if(this.$route.query.back){
+              this.$router.push({
+                  name:this.$route.query.back,
+                  query:{
+                      id: this.$route.query.id
+                  }
+              })
+          }else{
+              this.$router.push({
+                  name:'my'
+              })
+          }
+      },
       onRefresh(){
 
       },
       onLoad(){
-          
+
       }
   }
 }

@@ -44,7 +44,7 @@
           <span class="number">{{childInfo.read_count}}</span>
           <span class="bar-title">阅读量</span>
         </div>
-        <div class="bar-item praise">
+        <div class="bar-item praise" @click="toInformation">
           <span class="number">{{childInfo.zan_count}}</span>
           <span class="bar-title">赞</span>
         </div>
@@ -410,6 +410,15 @@ export default {
           id: this.$route.query.id,
           back: this.$route.name
         }
+      })
+    },
+    toInformation(){
+      this.$router.push({
+        name:'information',
+        query:{
+          id: this.$route.query.id,
+          back: this.$route.name
+        } 
       })
     },
     toEditorBaby(){

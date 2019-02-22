@@ -24,6 +24,8 @@ import Egg from '@/components/pages/Egg'
 import AddFamily from '@/components/pages/invite/addFamily'
 import VerifyFamily from '@/components/pages/invite/verifyList'
 
+import Information from '@/components/pages/invite/information'
+
 import BorrowList from '@/components/pages/borrowList'
 
 import Article from '@/components/pages/article'
@@ -244,6 +246,15 @@ export default new Router({
           component: AddFamily,
           meta: {
             title: '加入家庭',
+            isFooterBar: false
+          }
+        },
+        {
+          path:'/invite/information',
+          name:'information',
+          component: Information,
+          meta: {
+            title:'消息',
             isFooterBar: false
           }
         },
