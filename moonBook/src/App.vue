@@ -948,4 +948,8 @@ i.iconfont.vip-1 {
   right: 0.3125rem /* 5/16 */;
   bottom: 0.3125rem /* 5/16 */;
 }
+
+.head-bar-title i.iconfont{
+  font-size: .75rem /* 12/16 */;
+}
 </style>

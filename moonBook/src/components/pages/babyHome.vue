@@ -1,7 +1,7 @@
 <template>
-  <div class="baby-home page-padding">
+  <div class="baby-home page-padding" v-if='hackReset'>
     <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft">
-      <div class="head-bar-title" slot="title">
+      <div class="head-bar-title" slot="title" @click="isSelectBabyShow = true">
           {{pageTitle}} <i class="iconfont">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
@@ -100,8 +100,10 @@
     <van-popup v-model="zanShow" class="add-count-popup" :overlay="false" :lock-scroll='false' get-container='#app'>
       <i class="iconfont" :class="[zanShow?'rotateInDownLeft animated':'']">&#xe6e3;</i>
     </van-popup>
-
+    <!-- 文章操作 -->
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
+    <!-- 切换孩子 -->
+    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby" @cancel="isSelectBabyShow = false" />
   </div>
 </template>
 <script>
@@ -152,11 +154,27 @@ export default {
       if(this.childInfo.is_mine){
         return true
       }
+    },
+    SelectBabyActions(){
+      let array = this.babyList
+      let arr = []
+      if(this.babyList.length > 0){
+        array.forEach(e => {
+          arr.push({
+            name: e.name,
+            id: e.id,
+            subname: this.$route.query.id == e.id?'当前宝贝':''
+          })
+        })
+      }
+      return arr
     }
   },
   data() {
     return {
+      hackReset:true,
       show:false,
+      isSelectBabyShow:false,
       zanShow: false,
       fixedHeaderBar: true,
       domHeight: "",
@@ -165,6 +183,7 @@ export default {
       showQrcode: false,
       lateBook: [],
       list: [],
+      babyList: [],
       loading: false,
       finished: false,
       releasePageShow: false,
@@ -191,21 +210,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.qrcode()
-      vm.getUserData().then(res => {
-        if (res.child_id > 0) {
-          axios.get(`/book/baby/getInfo?child_id=${to.query.id}`).then(res => {
-            vm.childInfo = res.data.data
-          })
-        } else {
-          vm.$router.push({
-            name: 'edit-child',
-            query: {
-              type: 'add',
-              pageTitle: '添加宝贝'
-            }
-          })
-        }
-      })
+      vm.request()
     })
   },
   created() {
@@ -235,6 +240,31 @@ export default {
 
       axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
         this.lateBook = res.data.data
+      })
+
+        this.getUserData().then(res => {
+          axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
+            if(res.data.status){
+              this.babyList = res.data.data
+            }
+          })
+        })
+    },
+    request(){
+      this.getUserData().then(res => {
+        if (res.child_id > '0') {
+          axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
+            this.childInfo = res.data.data
+          })
+        } else {
+          this.$router.push({
+            name: 'edit-child',
+            query: {
+              type: 'add',
+              pageTitle: '添加宝贝'
+            }
+          })
+        }
       })
     },
     onClickLeft() {
@@ -402,6 +432,24 @@ export default {
         this.$toast.success('删除成功')
       }
     },
+    onSelectBaby(item){
+      this.hackReset = false
+      this.isSelectBabyShow = false
+
+      this.$router.push({
+        name:'baby-home',
+        query:{
+          id: item.id,
+          back: this.$route.name
+        }
+      })
+
+      this.$nextTick(() => {
+          this.hackReset = true
+          this.request()
+          this.onRefresh()
+        })
+    }
     // 倒计时开始
     // StartCountDown() {
     //     let mydate = new Date()
@@ -453,7 +501,7 @@ export default {
   background: linear-gradient(-135deg, #ff765c, #ff23b3);
 }
 
-.baby-info .avatar {
+.baby-info .avatar img{
   margin-right: 0.625rem /* 10/16 */;
   width: 3.75rem /* 60/16 */;
   height: 3.75rem /* 60/16 */;

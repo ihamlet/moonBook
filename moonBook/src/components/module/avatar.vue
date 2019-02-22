@@ -17,8 +17,8 @@ export default {
     border-radius: 50%;
 }
 .avatar img{
-    width: 5rem /* 80/16 */;
-    height: 5rem /* 80/16 */;
+    width: 3.75rem /* 60/16 */;
+    height: 3.75rem /* 60/16 */;
 }
 
 .avatar.big img{

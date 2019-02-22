@@ -29,7 +29,7 @@
                 <div class="text">获赞</div>
               </div>
             </div>
-            <van-button v-if='userDataState.user_id != userInfo.user_id' :plain="userInfo.subscribe_num == '0'" class="theme-btn" type="primary" size="large" @click="follow(userInfo)">{{userInfo.subscribe_num == '0'?'加关注':'已关注'}}</van-button>
+            <van-button v-if='userDataState.user_id != userInfo.user_id' :plain="userInfo.subscribe_num == '1'" class="theme-btn" type="primary" size="large" @click="follow(userInfo)">{{userInfo.subscribe_num == '0'?'加关注':'已关注'}}</van-button>
           </div>
         </div>
       </lazy-component>
