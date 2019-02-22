@@ -2,7 +2,7 @@
   <div class="class-home page-padding" v-if='hackReset'>
     <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?pageTitle:classInfo.title}} <i class="iconfont" v-if="managerList.length > 1 && actions != null">&#xe608;</i>
+        {{fixedHeaderBar?pageTitle:`${classInfo.title}班`}} <i class="iconfont" v-if="managerList.length > 1 && actions != null">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -14,8 +14,8 @@
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">
-        <div class="class-name">{{classInfo.title}}</div>
-        <div class="class-people">{{classInfo.grade_name}}（{{classInfo.student_count}}人）</div>
+        <div class="class-name">{{`${classInfo.title}班`}}</div>
+        <div class="class-people">{{`${classInfo.grade_name}班`}}（{{classInfo.student_count}}人）</div>
         <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
       </div>
     </div>
@@ -80,7 +80,7 @@ export default {
       if (this.managerList) {
         this.managerList.forEach(element => {
           let data = {
-            name: element.name,
+            name: `${element.name}班`,
             subname: `${element.duty}-${element.desc}`,
             id: element.id,
             type: element.item_type
@@ -140,9 +140,10 @@ export default {
     next(vm => {
       vm.qrcode()
       vm.getUserData().then(res => {
-        if (res.child_id > 0) {
-          if (res.school_id > 0) {
-            if (res.banji_id > 0) {
+        console.log(res)
+        if (res.child_id > '0') {
+          if (res.school_id > '0') {
+            if (res.banji_id > '0') {
               vm.request()
             } else {
               vm.$router.push({
@@ -150,7 +151,7 @@ export default {
                 query: {
                   id: res.child_id,
                   back: 'class-home',
-                  schoolId: res.school_id,
+                  school_id: res.school_id,
                   type: 'add'
                 }
               })

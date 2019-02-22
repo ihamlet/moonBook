@@ -1,12 +1,12 @@
 <template>
   <div class="add-child  page-padding">
-    <van-nav-bar :title="$route.query.pageTitle" left-arrow :left-text="$route.query.back?'返回':'我的'" :right-text="$route.query.type=='edit'?'删除':''"
+    <van-nav-bar :title="$route.query.type=='add'?'添加宝贝':'编辑宝贝'" left-arrow :left-text="$route.query.back?'返回':'我的'" :right-text="$route.query.type=='edit'?'删除':''"
       @click-left="onClickLeft" @click-right="onClickRight('delete')" />
     <div class="avatar-uploader">
       <i class="iconfont" v-if='userDataState.isVip' :class="`vip-${userDataState.card_level}`">&#xe776;</i>
       <van-uploader :after-read="onRead">
         <div class="prompt" v-if='!childInfo.avatar'>
-          <avatar :gender='childInfo.gender' />
+          <avatar :gender='childInfo.gender'/>
           <div class="text">请上传头像</div>
         </div>
         <div class="avatar-preview" v-else>
@@ -37,8 +37,7 @@
     <van-radio-group>
       <div class="form-title">学校设置</div>
       <van-cell-group>
-        <van-cell value='设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center
-          is-link @click="toSetting(info)" />
+        <van-cell value='设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="submit('setSchool')" />
       </van-cell-group>
     </van-radio-group>
 
@@ -117,6 +116,7 @@ export default {
       },
       pickerShow: false,
       cropperShow: false,
+      isSetSchoolLink:false,
       option: {
         img: '',
         full: false,
@@ -247,7 +247,7 @@ export default {
         })
       })
     },
-    submit() {
+    submit(set) {
       if (!this.childInfo.avatar) {
         this.$toast.fail('请上传头像')
       }
@@ -264,15 +264,24 @@ export default {
         }, 2000)
       } else {
         this.operationApi().then(res => {
-          
-          if(this.$route.query.back == 'register'){
-            this.show = true
-          }else{
+          console.log(res)
+          if(set == 'setSchool'&&this.$route.query.back != 'register'){
             this.$router.push({
-              name:'home'
+              name: 'edit-setting',
+              query: {
+                id: res,
+                back: this.$route.name,
+                type: this.$route.query.type
+              }
+            })
+          }else{
+            this.$route.query.back == 'register'?this.show = true:this.$router.push({
+              name:'baby-home',
+              query:{
+                id:res
+              }
             })
           }
-
 
           this.submitLoading = false
 
@@ -322,19 +331,19 @@ export default {
         })
       }
     },
-    toSetting(info) {
-      this.operationApi().then(res => {
-        this.$router.push({
-          name: 'edit-setting',
-          query: {
-            id: res,
-            back: this.$route.name,
-            type: this.$route.query.type,
-            pageTitle: this.$route.query.pageTitle
-          }
-        })
-      })
-    },
+    // toSetting(info) {
+    //   this.operationApi().then(res => {
+    //     this.$router.push({
+    //       name: 'edit-setting',
+    //       query: {
+    //         id: res,
+    //         back: this.$route.name,
+    //         type: this.$route.query.type,
+    //         pageTitle: this.$route.query.pageTitle
+    //       }
+    //     })
+    //   })
+    // },
     onInput(checked) {
       if (checked) {
         axios.get(`/book/MemberChild/top?child_id=${this.$route.query.id}`).then(res => {

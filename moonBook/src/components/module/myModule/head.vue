@@ -20,8 +20,10 @@
         <div class="avatar">
           <img :src="getAvatar(userInfo.avatar)" :alt="userInfo.name">
         </div>
-        <img class="children-avatar" :src="children.avatar" :alt="children.name">
-        <div class="name">{{userInfo.name}}</div>
+        <div class="children-info" v-if='children'>
+          <img class="children-avatar" :src="getAvatar(children.avatar)" :alt="children.name">
+          <div class="name">{{userInfo.name}}</div>
+        </div>
       </div>
     </div>
     <div class="card">

@@ -4,18 +4,17 @@
       left-arrow @click-left="onClickLeft" />
     <div class="container">
       <div class="baby-info flex flex-justify" v-if='$route.query.registerType!="teacher"'>
-        <div class="avatar" v-if='childInfo'>
+        <div class="avatar flex" v-if='childInfo'>
           <img :src="childInfo.avatar" :alt="childInfo.name">
         </div>
-        <avatar class="avatar" v-else />
+        <avatar v-else />
         <div class="name">{{childInfo.name}}（{{childInfo.age}}岁）</div>
         <round class="bg-round" />
       </div>
       <div class="title">请选择班级</div>
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="item.title" :value='`${item.student_count}人已加入`'
-            @click='select(item)' />
+          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="`${list.length == 1?item.title:item.title+'班'}`" :value='`${item.student_count}人已加入`' @click='select(item)' />
         </van-list>
       </div>
     </div>
@@ -97,6 +96,7 @@ export default {
         })
       } else {
         axios.get(`/book/babyBanji/bind?banji_name=${item.title}&child_id=${this.$route.query.id}`).then(res => {
+          console.log(res.data.status)
           if (res.data.status) {
             if (this.$route.query.back) {
               this.$router.push({
@@ -128,6 +128,7 @@ export default {
     },
     onLoad() {
       axios.get(`/book/SchoolBanji/getList?page=${this.page}&limit=20&school_id=${this.$route.query.school_id}`).then(res => {
+        console.log(res)
         this.page++
         this.list = this.list.concat(res.data.data)
         this.loading = false
@@ -165,7 +166,7 @@ export default {
   position: relative;
 }
 
-.baby-info .avatar {
+.baby-info .avatar img{
   width: 5rem /* 80/16 */;
   height: 5rem /* 80/16 */;
   margin: 1.25rem /* 20/16 */ auto 0 auto;
