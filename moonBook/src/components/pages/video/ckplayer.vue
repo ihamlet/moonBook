@@ -7,7 +7,7 @@
     <div class="container">
       <lazy-component class="module">
         <van-cell-group>
-          <van-cell center @click="toZoom(item)" :value='`${item.views}次播放`'>
+          <van-cell center @click="toZoom(item)" :value='`${item.views}次播放`' title-class='video-user-info'>
             <div class="user-info-bar" slot="title">
               <div class="info flex flex-align" v-if='item.user'>
                 <div class="avatar">
@@ -183,7 +183,11 @@ export default {
   color: #303133;
   font-weight: 500;
   margin-right: .3125rem /* 5/16 */;
-  max-width: 5rem /* 80/16 */;
+  max-width: 6.25rem /* 100/16 */;
 }
-
+</style>
+<style>
+.van-cell__title.video-user-info{
+  flex:2
+}
 </style>

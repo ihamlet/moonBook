@@ -50,6 +50,7 @@ import Publishing from '@/components/pages/editor/Publishing'
 import Graphic from '@/components/pages/editor/Graphic'
 
 import ReadStat from '@/components/pages/readStat'
+import ReadAmount from '@/components/pages/readAmount'
 
 import Train from '@/components/train'
 import AppsTrain from '@/components/apps/train/trainHome'
@@ -128,6 +129,15 @@ export default new Router({
           component: ReadStat,
           meta: {
             title: '阅读统计',
+            isFooterBar: false
+          }
+        },
+        {
+          path: '/readAmount',
+          name: 'readAmount',
+          component: ReadAmount,
+          meta: {
+            title: '我读的书',
             isFooterBar: false
           }
         },

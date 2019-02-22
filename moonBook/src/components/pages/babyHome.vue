@@ -6,7 +6,7 @@
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
-        <span class="text">{{$route.query.back?'返回':'首页'}}</span>
+        <span class="text">{{$route.query.back||$route.query.backGo?'返回':'首页'}}</span>
       </div>
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
@@ -40,7 +40,7 @@
     </div>
     <div class="container">
       <div class="bar flex flex-align">
-        <div class="bar-item totalReading">
+        <div class="bar-item totalReading" @click="toReadAmount">
           <span class="number">{{childInfo.read_count}}</span>
           <span class="bar-title">阅读量</span>
         </div>
@@ -48,7 +48,7 @@
           <span class="number">{{childInfo.zan_count}}</span>
           <span class="bar-title">赞</span>
         </div>
-        <div class="bar-item diary" @click="toRradStat">
+        <div class="bar-item diary" @click="toReadStat">
           <span class="number">{{childInfo.insist_days}}</span>
           <span class="bar-title">坚持天数</span>
         </div>
@@ -394,9 +394,18 @@ export default {
         }
       })
     },
-    toRradStat(){
+    toReadStat(){
       this.$router.push({
         name:'readStat',
+        query:{
+          id: this.$route.query.id,
+          back: this.$route.name
+        }
+      })
+    },
+    toReadAmount(){
+      this.$router.push({
+        name:'readAmount',
         query:{
           id: this.$route.query.id,
           back: this.$route.name
@@ -436,6 +445,12 @@ export default {
       this.hackReset = false
       this.isSelectBabyShow = false
 
+      this.$nextTick(() => {
+          this.hackReset = true
+          this.request()
+          this.onRefresh()
+        })
+
       this.$router.push({
         name:'baby-home',
         query:{
@@ -443,12 +458,6 @@ export default {
           back: this.$route.name
         }
       })
-
-      this.$nextTick(() => {
-          this.hackReset = true
-          this.request()
-          this.onRefresh()
-        })
     }
     // 倒计时开始
     // StartCountDown() {
