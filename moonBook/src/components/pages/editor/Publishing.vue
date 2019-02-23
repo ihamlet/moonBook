@@ -1,11 +1,14 @@
 <template>
   <div class="publishing">
-    <van-nav-bar title="文章发布" left-text="取消" @click-left="actionShow = true" fixed>
+    <van-nav-bar title="文章发布" left-text="取消" @click-left="onClickLeft" fixed>
       <div class="head-bar-btn theme-color" slot="right" @click="release">
-        <i class="iconfont">
-          &#xe72c;
-        </i>
-        发布
+        <van-loading color="#409eff" v-if='percent!=0'/>
+        <div class="release-btn"  @click="release" v-else>
+          <i class="iconfont">
+            &#xe72c;
+          </i>
+          发布
+        </div>
       </div>
     </van-nav-bar>
     <div class="container">
@@ -122,23 +125,47 @@ export default {
           this.editBarShow = false
       }
     },
-    onSelect(item) {
-      if (item.type == 'save') {
-        localStorage.setItem('articleData', JSON.stringify(this.grapicData))
-        if (this.$route.query.back) {
+    onClickLeft(){
+      if(!this.grapicData.content.length && !this.grapicData.title.length){
+        if(this.$route.query.back){
           this.$router.push({
-            name: this.$route.query.back
+            name:this.$route.query.back,
+            query: {
+              id:this.$route.query.id
+            }
           })
-        } else {
+        }else{
           this.$router.push({
             name: 'home'
           })
         }
+      }else{
+        this.actionShow = true
+      }
+    },
+    onSelect(item) {
+      if (item.type == 'save') {
+        localStorage.setItem('articleData', JSON.stringify(this.grapicData))
+          if(this.$route.query.back){
+            this.$router.push({
+              name:this.$route.query.back,
+              query: {
+                id:this.$route.query.id
+              }
+            })
+          }else{
+            this.$router.push({
+              name: 'home'
+            })
+          }
         this.actionShow = false
       } else {
         if (this.$route.query.back) {
           this.$router.push({
-            name: this.$route.query.back
+            name: this.$route.query.back,
+            query:{
+              id:this.$route.query.id
+            }
           })
         } else {
           this.$router.push({
@@ -242,8 +269,8 @@ export default {
           photo: path,
           thumb: `${path}?x-oss-percent=video/snapshot,t_2000,f_jpg,w_0,h_0,m_fast`
         })
-
         this.addImage(`${path}?x-oss-percent=video/snapshot,t_2000,f_jpg,w_0,h_0,m_fast`)
+        this.percent = 0
       })
     },
     upOssPhoto(blob, file, base64) {
@@ -278,6 +305,7 @@ export default {
         }
       }).then((res) => {
         this.addImage(path)
+        this.percent = 0
       })
     },
     selectTag(tag) {

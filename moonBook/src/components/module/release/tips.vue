@@ -93,7 +93,8 @@ export default {
           this.$router.push({
             name: 'publishing',
             query: {
-              back: this.$route.name
+              back: this.$route.name,
+              id: this.$route.query.id
             }
           })
           break
