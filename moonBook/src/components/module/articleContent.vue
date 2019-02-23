@@ -19,7 +19,6 @@
 <script>
 import media from './../module/mold/media'
 
-
 export default {
   name: 'article-content',
   props: ['item', 'type'],

@@ -6,7 +6,7 @@
       <i class="iconfont" v-if='userDataState.isVip' :class="`vip-${userDataState.card_level}`">&#xe776;</i>
       <van-uploader :after-read="onRead">
         <div class="prompt" v-if='!childInfo.avatar'>
-          <avatar :gender='childInfo.gender'/>
+          <avatar :gender='childInfo.gender' size='big'/>
           <div class="text">请上传头像</div>
         </div>
         <div class="avatar-preview" v-else>

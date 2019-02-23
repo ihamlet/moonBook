@@ -22,7 +22,7 @@
           <div class="avatar" v-if="childInfo.avatar">
             <img :src="childInfo.avatar" alt="宝贝头像"  @error="imgError">
           </div>
-          <avatar :gender="childInfo.sex" v-else />
+          <avatar :gender="childInfo.sex" size='small' v-else />
           <div class="name flex flex-align">
             {{childInfo.name}}
             <van-tag class="tag" color="#FFC107" round type="danger" size='medium'>{{childInfo.read_level}}级</van-tag>
@@ -221,7 +221,7 @@ export default {
   background: linear-gradient(-135deg, #2196f3, #00bcd4);
 }
 
-.avatar {
+.avatar img{
   width: 3.75rem /* 60/16 */;
   height: 3.75rem /* 60/16 */;
   border-radius: 50%;

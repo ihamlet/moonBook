@@ -14,7 +14,7 @@
         <div class="avatar" v-if="childInfo.avatar" @click="toEgg">
           <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">
         </div>
-        <avatar :gender="childInfo.sex" v-else />
+        <avatar :gender="childInfo.sex" size='small' avatarClass='border' v-else />
         <div class="baby-data" @click="toEditorBaby">
           <div class="list flex flex-align">
             <div class="item name">{{childInfo.name}}</div>
