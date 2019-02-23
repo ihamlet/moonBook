@@ -2,7 +2,7 @@
   <div class="class-home page-padding" v-if='hackReset'>
     <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?pageTitle:`${classInfo.title}班`}} <i class="iconfont" v-if="managerState.length > 1 && actions != null">&#xe608;</i>
+        {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="managerState.length > 1 && actions != null">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -14,7 +14,7 @@
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">
-        <div class="class-name">{{classInfo.title.replace('班','') +  '班'}}</div>
+        <div class="class-name">{{formatBanjiTitle(classInfo.title)}}</div>
         <div class="class-people">{{`${classInfo.grade_name}班`}}（{{classInfo.student_count}}人）</div>
         <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
       </div>
@@ -80,7 +80,7 @@ export default {
       if (this.managerState) {
         this.managerState.forEach(element => {
           let data = {
-            name: `${element.name}班`,
+            name: this.formatBanjiTitle(element.name),
             subname: `${element.duty}-${element.desc}`,
             id: element.id,
             type: element.item_type
@@ -254,6 +254,13 @@ export default {
             banji_id: this.$route.query.id
           }
         })
+      }
+    },
+    formatBanjiTitle(text){
+      if(text&&text.indexOf('班') == -1){
+        return text + '班'
+      }else{
+        return text 
       }
     }
   }

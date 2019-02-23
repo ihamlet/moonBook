@@ -1,8 +1,6 @@
 <template>
   <div class="class-zoom" :class="[type!='template'?'page-padding':'no-padding']">
-    <van-nav-bar v-if='type!="template"' title="班级风采" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft">
-
-    </van-nav-bar>
+    <van-nav-bar v-if='type!="template"' title="班级风采" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft"/>
     <lazy-component class="module" v-if="type != 'template'">
       <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template' />
     </lazy-component>
@@ -33,6 +31,7 @@ import axios from './../lib/js/api'
 import freshList from './../module/findModule/freshList'
 import graphicCard from './../module/card/graphicCard'
 import qrCode from "./../module/mold/qrCode"
+import { mapGetters } from 'vuex'
 
 export default {
   name: "class-zoom",
@@ -41,10 +40,12 @@ export default {
     freshList,
     graphicCard
   },
+  computed:{
+    ...mapGetters(['managerState'])
+  },
   data() {
     return {
       show: false,
-      managerList: [],
       freshList: [],
       list: [],
       cardItem: '',
@@ -79,10 +80,6 @@ export default {
       this.$router.go(-1)
     },
     fetchData() {
-      axios.get('/book/MemberBanji/getList').then(res => {
-        this.managerList = res.data.data
-      })
-
       axios.get(`/book/baby/getList?banji_id=${this.$route.query.id}`).then(res => {
         this.freshList = res.data.data
       })
@@ -148,7 +145,7 @@ export default {
     },
     manage(item) {
       let boolean
-      this.managerList.forEach(element => {
+      this.managerState.forEach(element => {
         if (this.$route.query.id == element.id && element.item_relation != 'parent'){
           boolean = true
         }

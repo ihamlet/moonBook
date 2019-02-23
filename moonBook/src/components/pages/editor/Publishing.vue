@@ -154,12 +154,14 @@ export default {
       }
     },
     release() {
-      if (this.grapicData.title.length == 0) {
+      if (!this.grapicData.title.length) {
         this.$toast('请输入标题')
-      } else if ( this.cateId == 0 ) {
+      } else if ( !this.cateId ) {
         this.$toast('请选择分类')
-      } else if ( this.grapicData.content.length == 0 ) {
+      } else if ( !this.grapicData.content.length ) {
         this.$toast('请输入正文')
+      } else if( !this.grapicData.photos.length ) {
+        this.$toast('请至少上传一张图片做为文章封面')
       } else {
         let data = {
           title: this.grapicData.title,

@@ -149,7 +149,7 @@ export default {
             axios.get('/book/index/home_v2').then(res=>{
                 this.banner = res.data.homeData.banner
                 this.investmentAd = res.data.homeData.investmentAd
-                this.newsList = res.data.homeData.newsList
+                this.newsList = this.formatNews(res.data.homeData.newsList)
                 this.videoList = res.data.homeData.videoList
             })
 
@@ -190,6 +190,12 @@ export default {
                     back: this.$route.name
                 }
             })
+        },
+        formatNews(news){
+            news.forEach((item,key)=>{
+                item.watch = item.views
+            })
+            return news
         }
     }
 }
