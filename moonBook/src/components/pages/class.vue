@@ -1,7 +1,6 @@
 <template>
   <div class="edit-class page-padding">
-    <van-nav-bar :border='false' fixed :title="$route.query.registerType=='teacher'?schoolName:childInfo.school_name"
-      left-arrow @click-left="onClickLeft" />
+    <van-nav-bar :border='false' fixed :title="$route.query.registerType=='teacher'?schoolName:childInfo.school_name" left-arrow @click-left="onClickLeft" />
     <div class="container">
       <div class="baby-info flex flex-justify" v-if='$route.query.registerType!="teacher"'>
         <div class="avatar flex" v-if='childInfo'>
@@ -14,7 +13,7 @@
       <div class="title">请选择班级</div>
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="`${list.length == 1?item.title:item.title+'班'}`" :value='`${item.student_count}人已加入`' @click='select(item)' />
+          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="item.title.replace('班','') +  '班'" :value='`${item.student_count}人已加入`' @click='select(item)' />
         </van-list>
       </div>
     </div>
@@ -96,7 +95,6 @@ export default {
         })
       } else {
         axios.get(`/book/babyBanji/bind?banji_name=${item.title}&child_id=${this.$route.query.id}`).then(res => {
-          console.log(res.data.status)
           if (res.data.status) {
             if (this.$route.query.back) {
               this.$router.push({
@@ -128,7 +126,6 @@ export default {
     },
     onLoad() {
       axios.get(`/book/SchoolBanji/getList?page=${this.page}&limit=20&school_id=${this.$route.query.school_id}`).then(res => {
-        console.log(res)
         this.page++
         this.list = this.list.concat(res.data.data)
         this.loading = false

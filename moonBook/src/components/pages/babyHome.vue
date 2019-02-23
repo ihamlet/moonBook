@@ -53,13 +53,10 @@
           <span class="bar-title">坚持天数</span>
         </div>
       </div>
-      <lazy-component class="module" v-if="isMine">
+      <lazy-component class="module" v-if="childInfo.is_mine">
         <family />
       </lazy-component>
-      <lazy-component class="module" v-if="!isMine">
-        <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
-      </lazy-component>
-      <lazy-component v-if="isMine">
+      <lazy-component v-if="childInfo.is_mine">
         <van-nav-bar title="成长日记">
           <div class="post-count" slot="left">
             {{childInfo.post_count}}日记
@@ -89,9 +86,13 @@
           </van-tab>
         </van-tabs>
       </lazy-component>
+      <lazy-component class="module" v-else>
+        <reading :list="lateBook" v-show='!childInfo.is_mine' moduleTitle="宝贝最近在读的书" />
+      </lazy-component>
+
     </div>
 
-    <slogan v-if="!isMine" />
+    <slogan v-if="!childInfo.is_mine" />
 
     <van-popup v-model="showQrcode" class="card-popup">
       <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
@@ -150,11 +151,6 @@ export default {
 
       return name
     },
-    isMine(){
-      if(this.childInfo.is_mine){
-        return true
-      }
-    },
     SelectBabyActions(){
       let array = this.babyList
       let arr = []
@@ -195,6 +191,9 @@ export default {
         content: ''
       }],
       actions: [{
+        name:'编辑',
+        type:'edit'
+      },{
         name: '删除',
         type: 'delete'
       }],
@@ -238,10 +237,6 @@ export default {
         }
       })
 
-      axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
-        this.lateBook = res.data.data
-      })
-
         this.getUserData().then(res => {
           axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
             if(res.data.status){
@@ -256,6 +251,11 @@ export default {
           axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
             this.childInfo = res.data.data
           })
+
+          axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
+            this.lateBook = res.data.data
+          })
+
         } else {
           this.$router.push({
             name: 'edit-child',

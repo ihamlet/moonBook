@@ -99,7 +99,7 @@ export default {
           name:'edit-class',
           query:{
             id: list.id,
-            schoolId:list.school_id
+            school_id: list.school_id
           }
         })
       }else{

@@ -2,7 +2,7 @@
   <div class="class-home page-padding" v-if='hackReset'>
     <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?pageTitle:`${classInfo.title}班`}} <i class="iconfont" v-if="managerList.length > 1 && actions != null">&#xe608;</i>
+        {{fixedHeaderBar?pageTitle:`${classInfo.title}班`}} <i class="iconfont" v-if="managerState.length > 1 && actions != null">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -14,7 +14,7 @@
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">
-        <div class="class-name">{{`${classInfo.title}班`}}</div>
+        <div class="class-name">{{classInfo.title.replace('班','') +  '班'}}</div>
         <div class="class-people">{{`${classInfo.grade_name}班`}}（{{classInfo.student_count}}人）</div>
         <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
       </div>
@@ -74,11 +74,11 @@ export default {
     apps
   },
   computed: {
-    ...mapGetters(['userDataState']),
+    ...mapGetters(['userDataState','managerState']),
     actions() {
       let array = []
-      if (this.managerList) {
-        this.managerList.forEach(element => {
+      if (this.managerState) {
+        this.managerState.forEach(element => {
           let data = {
             name: `${element.name}班`,
             subname: `${element.duty}-${element.desc}`,
@@ -112,7 +112,6 @@ export default {
       lateBook: '',
       hackReset: true,
       actionsheetShow: false,
-      managerList:[],
       appsList: [{
         name: '风采',
         iconClass: 'icon-fengcai',
@@ -184,10 +183,6 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     request() {
-      axios.get('/book/MemberBanji/getList').then(res=>{
-        this.managerList = res.data.data
-      })
-
       axios.get(`/book/SchoolBanji/getInfo?banji_id=${this.$route.query.id}`).then(res => {
         this.classInfo = res.data.data
       })
@@ -231,7 +226,7 @@ export default {
       location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
     },
     cutover() {
-      if (this.managerList.length > 1 && this.actions != null) {
+      if (this.managerState.length > 1 && this.actions != null) {
         this.actionsheetShow = true
       }
     },

@@ -61,14 +61,10 @@ export default {
         name: '推荐',
         type: 'recommend',
         index: 1
-      }, {
-        name: '屏蔽',
-        type: 'shield',
-        index: 2
-      }, {
+      },  {
         name: '删除',
         type: 'delete',
-        index: 3
+        index: 2
       }]
     }
   },
@@ -137,20 +133,6 @@ export default {
 
           break
         case 2:
-          axios.get(`/book/SchoolArticle/top?id=${this.cardItem.user_id}`).then(res => {
-            if(res.data.status == 1){
-              this.show = false
-              this.page = 1
-              this.onLoad()
-              this.$toast.success('屏蔽成功')
-            }else{
-              this.$toast.fail('屏蔽失败')
-            }
-
-            console.log(res.data.msg,this.cardItem.user_id)
-          })   
-          break
-        case 3:
           axios.get(`/book/SchoolArticle/del?id=${this.cardItem.post_id}`).then(res => {
             if(res.data.status == 1){
               this.show = false
@@ -163,8 +145,6 @@ export default {
           })
           break
       }
-
-
     },
     manage(item) {
       let boolean
