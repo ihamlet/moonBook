@@ -109,7 +109,7 @@
 </template>
 <script>
 import axios from "./../lib/js/api"
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { format,timeago } from "./../lib/js/util.js"
 import QRCode from "qrcode"
 import wave from "./../module/animate/anWave"
@@ -136,6 +136,7 @@ export default {
     activity
   },
   computed: {
+    ...mapGetters(['managerState']),
     pageTitle() {
       let name = ''
 
@@ -165,6 +166,11 @@ export default {
       }
       return arr
     }
+    // actions(){
+    //   if(this.managerState.length > ){
+
+    //   }
+    // }
   },
   data() {
     return {
@@ -192,13 +198,15 @@ export default {
       }],
       actions: [{
         name:'编辑',
-        type:'edit'
+        type:'edit',
+        index: 0
       },{
         name: '删除',
-        type: 'delete'
+        type: 'delete',
+        index: 1
       }],
       postId:'',
-
+      templateId:''
       // 倒计时
       // keepTime: '倒计时',
       // limittime: 100,
@@ -347,7 +355,7 @@ export default {
       })
     },
     toClassHome(childInfo) {
-      if (childInfo.banji_id > 0) {
+      if (childInfo.banji_id > '0') {
         this.$router.push({
           name: "class-home",
           query: {
@@ -366,7 +374,7 @@ export default {
     },
     babyPraise(childInfo) {
       axios.get(`/book/baby/zan?child_id=${this.$route.query.id}`).then(res => {
-        if (res.data.status == 1) {
+        if (res.data.status) {
           this.zanShow = true
           childInfo.zan_count = res.data.data.zan_count
         } else {
@@ -437,17 +445,47 @@ export default {
     actionsheet(item){
       this.show = true
       this.postId = item.post_id
+      this.templateId = item.template_id
     },
     onSelect(item) {
-      if (item.type == 'delete') {
-        axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
-          if(res.data.status){
-            this.onRefresh()
+      switch (item.index) {
+        case 0:
+          switch (this.templateId){
+            case '0':
+              this.$router.push({
+                name:''
+              })
+            break
+            case '1':
+              this.$router.push({
+                name:'graphic',
+                query:{
+                  post_id: this.postId,
+                  template_id: this.templateId,
+                  back: this.$route.name,
+                  id: this.$route.query.id,
+                  type: 'edit'
+                }
+              })
+            break
           }
-        })
-        this.show = false
-
-        this.$toast.success('删除成功')
+        break
+        case 1:
+          axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
+            if(res.data.status){
+              this.$dialog.confirm({
+                title: '删除',
+                message: '您确认要删除吗'
+                }).then(() => {
+                    this.onRefresh()
+                    this.$toast.success('删除成功')
+                }).catch(() => {
+                  // on cancel
+                })
+              this.show = false
+            }
+          })
+        break
       }
     },
     onSelectBaby(item){

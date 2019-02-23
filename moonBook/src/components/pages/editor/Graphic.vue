@@ -165,9 +165,16 @@ export default {
     ...mapActions(['getUserData']),
     fetchData() {
       // 从本地存储获取发布数据
-      if (localStorage.getItem('grapicData')) {
-        this.grapicData = JSON.parse(localStorage.getItem('grapicData'))
+      if(this.$route.query.type == 'edit'){
+          axios.get(`/book/SchoolArticle/getList?post_id=${this.$route.query.post_id}`).then(res => {
+            console.log(res,'获取这篇文字')
+          })
+      }else{
+        if (localStorage.getItem('grapicData')) {
+          this.grapicData = JSON.parse(localStorage.getItem('grapicData'))
+        }
       }
+
       let array = []
       if (this.userDataState.child_id > 0) {
         array.push({

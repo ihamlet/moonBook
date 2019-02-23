@@ -112,13 +112,24 @@ export default {
       switch(item.index){
         case 0:
           axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
-            if(res.data.status == 1){
-              this.page = 1
-              this.onLoad()
-              this.$toast.success('删除成功')
+            if(res.data.status){
+
+
+          axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
+            if(res.data.status){
+              this.$dialog.confirm({
+                title: '删除',
+                message: '您确认要删除吗'
+                }).then(() => {
+                    this.onRefresh()
+                    this.$toast.success('删除成功')
+                }).catch(() => {
+                  // on cancel
+                })
               this.show = false
-            }else{
-              this.$toast.fail('删除失败')
+            }
+          })
+
             }
           })
         break

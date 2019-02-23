@@ -7,7 +7,7 @@
         <span class="text">{{$route.query.back?'返回':'首页'}}</span>
       </div>
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerList.length > 1">&#xe608;</i>
+        {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerState.length > 1">&#xe608;</i>
       </div>
     </van-nav-bar>
     <div class="container">
@@ -62,11 +62,11 @@ export default {
     dryingList
   },
   computed: {
-    ...mapGetters(['userDataState']),
+    ...mapGetters(['userDataState','managerState']),
     actions() {
       let array = []
-      if (this.managerList) {
-        this.managerList.forEach(element => {
+      if (this.managerState) {
+        this.managerState.forEach(element => {
           let data = {
             name: element.name,
             subname: `${element.duty}-${element.desc}`,
@@ -84,7 +84,6 @@ export default {
   data() {
     return {
       schoolInfo: '',
-      managerList: [],
       domHeight: '',
       fixedHeaderBar: true,
       actionsheetShow: false,
@@ -150,10 +149,6 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     request() {
-      axios.get('/book/MemberBanji/getList').then(res => {
-        this.managerList = res.data.data
-      })
-
       axios.get(`/book/school/getInfo?school_id=${this.$route.query.id}`).then(res => {
         this.schoolInfo = res.data.data
       })

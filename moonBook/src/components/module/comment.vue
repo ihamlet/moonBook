@@ -84,11 +84,11 @@
           </div>
           <div class="btn-icon flex flex-align">
             <div class="btn" @click="toScroll">
-              <van-tag class="num-tag" v-if='listLength > 0' round type="danger">{{listLength > 1000?'999+':listLength}}</van-tag>
+              <van-tag class="num-tag" v-if='listLength > 1' round type="danger">{{listLength > 1000?'999+':listLength}}</van-tag>
               <i class="iconfont">&#xe731;</i>
             </div>
             <div class="btn" @click="addPraise(item)">
-              <van-tag class="num-tag" v-if='item.zan_num > 0' round type="danger">{{item.zan_num > 1000?'999+':item.zan_num}}</van-tag>
+              <van-tag class="num-tag" v-if='item.zan_num > 1' round type="danger">{{item.zan_num > 1000?'999+':item.zan_num}}</van-tag>
               <i class="iconfont" v-if="!item.isZan">&#xe644;</i>
               <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
             </div>

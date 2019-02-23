@@ -128,6 +128,7 @@ export default {
 .icon {
   text-align: center;
   display: grid;
+  padding-right: .625rem /* 10/16 */;
 }
 
 .icon .iconfont {

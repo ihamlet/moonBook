@@ -52,8 +52,7 @@
 
     <!-- 日期选择器 -->
     <van-popup class="picker-popup" position="bottom" v-model="pickerShow" get-container='#app'>
-      <van-datetime-picker title='日期选择' v-model="currentDate" type="date" :min-date="minDate" :max-date="maxDate"
-        @confirm="pickerShow = false" @cancel='cancelPicker' />
+      <van-datetime-picker title='日期选择' v-model="currentDate" type="date" :min-date="minDate" :max-date="maxDate" @confirm="pickerShow = false" @cancel='cancelPicker' />
     </van-popup>
 
     <!-- 添加宝贝 -->
