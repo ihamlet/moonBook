@@ -1,8 +1,8 @@
 <template>
   <div class="baby-home page-padding" v-if='hackReset'>
     <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft">
-      <div class="head-bar-title" slot="title" @click="isSelectBabyShow = true">
-          {{pageTitle}} <i class="iconfont">&#xe608;</i>
+      <div class="head-bar-title" slot="title" @click="selectBaby">
+        {{pageTitle}} <i class="iconfont" v-if='babyList.length > 1'>&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -53,41 +53,35 @@
           <span class="bar-title">坚持天数</span>
         </div>
       </div>
-      <div class="kings flex flex-algin">
-        <div class="name">阅读进度</div>
-        <div class="kings-line">
-          <div class="progress-bar"></div>
-          <div class="bar"></div>
-        </div>
-      </div>
       <lazy-component class="module" v-if="childInfo.is_mine">
         <family />
       </lazy-component>
       <lazy-component v-if="childInfo.is_mine">
-        <van-nav-bar title="成长日记">
+        <van-nav-bar title="成长日记" @click-right="toTaskLinkPage">
           <div class="post-count" slot="left">
             {{childInfo.post_count}}日记
           </div>
           <div class="task" slot="right">
-            活动<van-tag class="tag-task" round type="danger">4</van-tag>
+            捐书活动<van-tag class="tag-task" round type="danger">new</van-tag>
           </div>
         </van-nav-bar>
-        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab"
+          :offsetTop='45'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
-                  <div class="tab-content" v-if='list.content.length'>
-                    <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
-                      <van-cell title="" v-if='item.isMe' @click="actionsheet(item)" is-link arrow-direction='down'/>
-                      <van-cell>
-                        <graphic-card :item="item" type="babyHome" :avatar='childInfo.avatar' />
-                      </van-cell>
-                    </div>
+                <div class="tab-content" v-if='list.content.length'>
+                  <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
+                    <van-cell title="" v-if='item.isMe' @click="actionsheet(item)" is-link arrow-direction='down' />
+                    <van-cell>
+                      <graphic-card :item="item" type="babyHome" :avatar='childInfo.avatar' />
+                    </van-cell>
                   </div>
-                  <div class="no-content" v-else>
-                    <img src="./../../assets/img/noData.png" />
-                    暂无记录
-                  </div>
+                </div>
+                <div class="no-content" v-else>
+                  <img src="./../../assets/img/noData.png" />
+                  暂无记录
+                </div>
               </van-pull-refresh>
             </van-list>
           </van-tab>
@@ -111,13 +105,14 @@
     <!-- 文章操作 -->
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
     <!-- 切换孩子 -->
-    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby" @cancel="isSelectBabyShow = false" />
+    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby"
+      @cancel="isSelectBabyShow = false" />
   </div>
 </template>
 <script>
 import axios from "./../lib/js/api"
 import { mapActions, mapGetters } from 'vuex'
-import { format,timeago } from "./../lib/js/util.js"
+import { format, timeago } from "./../lib/js/util.js"
 import QRCode from "qrcode"
 import wave from "./../module/animate/anWave"
 import qrCode from "./../module/mold/qrCode"
@@ -159,15 +154,15 @@ export default {
 
       return name
     },
-    SelectBabyActions(){
+    SelectBabyActions() {
       let array = this.babyList
       let arr = []
-      if(this.babyList.length > 0){
+      if (this.babyList.length > 0) {
         array.forEach(e => {
           arr.push({
             name: e.name,
             id: e.id,
-            subname: this.$route.query.id == e.id?'当前宝贝':''
+            subname: this.$route.query.id == e.id ? '当前宝贝' : ''
           })
         })
       }
@@ -181,9 +176,9 @@ export default {
   },
   data() {
     return {
-      hackReset:true,
-      show:false,
-      isSelectBabyShow:false,
+      hackReset: true,
+      show: false,
+      isSelectBabyShow: false,
       zanShow: false,
       fixedHeaderBar: true,
       domHeight: "",
@@ -204,16 +199,16 @@ export default {
         content: ''
       }],
       actions: [{
-        name:'编辑',
-        type:'edit',
+        name: '编辑',
+        type: 'edit',
         index: 0
-      },{
+      }, {
         name: '删除',
         type: 'delete',
         index: 1
       }],
-      postId:'',
-      templateId:''
+      postId: '',
+      templateId: ''
       // 倒计时
       // keepTime: '倒计时',
       // limittime: 100,
@@ -252,15 +247,15 @@ export default {
         }
       })
 
-        this.getUserData().then(res => {
-          axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
-            if(res.data.status){
-              this.babyList = res.data.data
-            }
-          })
+      this.getUserData().then(res => {
+        axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
+          if (res.data.status) {
+            this.babyList = res.data.data
+          }
         })
+      })
     },
-    request(){
+    request() {
       this.getUserData().then(res => {
         if (res.child_id > '0') {
           axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
@@ -396,60 +391,60 @@ export default {
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
-    timeAgo(time){
-      return timeago(time*1000)
+    timeAgo(time) {
+      return timeago(time * 1000)
     },
-    toEgg(){
+    toEgg() {
       this.$router.push({
-        name:'egg',
-        query:{
+        name: 'egg',
+        query: {
           id: this.childInfo.id,
           back: this.$route.name,
           banji_id: this.childInfo.banji_id
         }
       })
     },
-    toReadStat(){
+    toReadStat() {
       this.$router.push({
-        name:'readStat',
-        query:{
+        name: 'readStat',
+        query: {
           id: this.$route.query.id,
           back: this.$route.name
         }
       })
     },
-    toReadAmount(){
+    toReadAmount() {
       this.$router.push({
-        name:'readAmount',
-        query:{
+        name: 'readAmount',
+        query: {
           id: this.$route.query.id,
           back: this.$route.name
         }
       })
     },
-    toInformation(){
+    toInformation() {
       this.$router.push({
-        name:'information',
-        query:{
+        name: 'information',
+        query: {
           id: this.$route.query.id,
           back: this.$route.name
-        } 
+        }
       })
     },
-    toEditorBaby(){
-      if(this.childInfo.is_mine){
+    toEditorBaby() {
+      if (this.childInfo.is_mine) {
         this.$router.push({
-          name:'edit-child',
-          query:{
-            id:this.$route.query.id,
-            pageTitle:'编辑宝贝',
-            type:'edit',
+          name: 'edit-child',
+          query: {
+            id: this.$route.query.id,
+            pageTitle: '编辑宝贝',
+            type: 'edit',
             back: this.$route.name
           }
         })
       }
     },
-    actionsheet(item){
+    actionsheet(item) {
       this.show = true
       this.postId = item.post_id
       this.templateId = item.template_id
@@ -457,16 +452,11 @@ export default {
     onSelect(item) {
       switch (item.index) {
         case 0:
-          switch (this.templateId){
+          switch (this.templateId) {
             case '0':
               this.$router.push({
-                name:''
-              })
-            break
-            case '1':
-              this.$router.push({
-                name:'graphic',
-                query:{
+                name: 'publishing',
+                query: {
                   post_id: this.postId,
                   template_id: this.templateId,
                   back: this.$route.name,
@@ -474,44 +464,65 @@ export default {
                   type: 'edit'
                 }
               })
-            break
+              break
+            case '1':
+              this.$router.push({
+                name: 'graphic',
+                query: {
+                  post_id: this.postId,
+                  template_id: this.templateId,
+                  back: this.$route.name,
+                  id: this.$route.query.id,
+                  type: 'edit'
+                }
+              })
+              break
           }
-        break
+          break
         case 1:
-          axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
-            if(res.data.status){
-              this.$dialog.confirm({
-                title: '删除',
-                message: '您确认要删除吗'
-                }).then(() => {
-                    this.onRefresh()
-                    this.$toast.success('删除成功')
-                }).catch(() => {
-                  // on cancel
-                })
-              this.show = false
-            }
+          this.$dialog.confirm({
+            title: '删除',
+            message: '您确认要删除吗'
+          }).then(() => {
+            axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
+              if (res.data.status) {
+                this.onRefresh()
+                this.$toast.success('删除成功')
+              }
+            })
+          }).catch(() => {
+            // on cancel
           })
-        break
+          this.show = false
+
+          break
       }
     },
-    onSelectBaby(item){
+    onSelectBaby(item) {
       this.hackReset = false
       this.isSelectBabyShow = false
 
       this.$nextTick(() => {
-          this.hackReset = true
-          this.request()
-          this.onRefresh()
-        })
+        this.hackReset = true
+        this.request()
+        this.onRefresh()
+      })
 
       this.$router.push({
-        name:'baby-home',
-        query:{
+        name: 'baby-home',
+        query: {
           id: item.id,
           back: this.$route.name
         }
       })
+    },
+    selectBaby() {
+      if (this.babyList.length > 1) {
+        this.isSelectBabyShow = true
+      }
+    },
+    toTaskLinkPage() {
+      window.location.href = '/book/TushuDonation/intro'
     }
     // 倒计时开始
     // StartCountDown() {
@@ -564,8 +575,7 @@ export default {
   background: linear-gradient(-135deg, #ff765c, #ff23b3);
 }
 
-.baby-info .avatar img{
-  margin-right: 0.625rem /* 10/16 */;
+.baby-info .avatar img {
   width: 3.75rem /* 60/16 */;
   height: 3.75rem /* 60/16 */;
   border-radius: 50%;
@@ -586,6 +596,10 @@ export default {
   z-index: 1;
 }
 
+.baby-data {
+  margin-left: 0.625rem /* 10/16 */;
+}
+
 .list {
   color: #fff;
 }
@@ -596,7 +610,7 @@ export default {
 }
 
 .school {
-  width: 10rem /* 160/16 */;
+  width: 8.125rem /* 130/16 */;
   text-align: left;
   color: #fff;
 }
@@ -611,7 +625,7 @@ export default {
 }
 
 .add-praise {
-  right: 4.375rem /* 70/16 */;
+  right: 3.75rem /* 60/16 */;
 }
 
 .add-praise i.iconfont,
@@ -642,7 +656,7 @@ export default {
   font-weight: 500;
 }
 
-.bar-item .bar-title {
+.bar-title {
   font-size: 0.875rem /* 14/16 */;
 }
 
@@ -663,57 +677,55 @@ export default {
   margin-right: 0.625rem /* 10/16 */;
 }
 
-.no-content{
+.no-content {
   background: #fff;
   display: grid;
   text-align: center;
   padding-bottom: 3.125rem /* 50/16 */;
-  color: #C0C4CC;
+  color: #c0c4cc;
 }
 
-
-.no-content img{
+.no-content img {
   width: 9.375rem /* 150/16 */;
   margin: 1.25rem /* 20/16 */ auto;
-  opacity: .7;
+  opacity: 0.7;
 }
 
-.time-line{
+.time-line {
   width: 100%;
   height: 3.125rem /* 50/16 */;
   position: relative;
 }
 
-.time-line::before{
+.time-line::before {
   position: absolute;
   left: 1.5625rem /* 25/16 */;
   top: 0;
-  width: .625rem /* 10/16 */;
+  width: 0.625rem /* 10/16 */;
   height: 100%;
-  content: "";
-  background: #FFC107;
+  content: '';
+  background: #ffc107;
 }
 
-.time{
+.time {
   margin-left: 3.125rem /* 50/16 */;
   font-size: 1.125rem /* 18/16 */;
   font-weight: 500;
 }
 
-.item{
-  margin-bottom: .625rem /* 10/16 */;
+.item {
+  margin-bottom: 0.625rem /* 10/16 */;
 }
 
-.task{
+.task {
   position: relative;
 }
 
-.task .tag-task{
+.task .tag-task {
   position: absolute;
-  top: .3125rem /* 5/16 */;
-  right: -.625rem /* 10/16 */;
+  top: 0.3125rem /* 5/16 */;
+  right: -0.625rem /* 10/16 */;
 }
-
 </style>
 <style>
 .add-count-popup.van-popup {

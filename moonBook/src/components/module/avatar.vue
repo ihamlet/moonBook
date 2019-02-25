@@ -7,10 +7,7 @@
 <script>
 export default {
     name:'avatar',
-    props: ['gender','size','avatarClass'],
-    created(){
-        console.log(this.avatarClass)
-    }
+    props: ['gender','size','avatarClass']
 }
 </script>
 <style scoped>

@@ -188,11 +188,11 @@ export default {
 }
 
 .listening{
-  width: 1.75rem /* 28/16 */;
-  height: 1.75rem /* 28/16 */;
   position: absolute;
   bottom: 0;
-  right: 0;
+  left: 0;
+  background: #fff;
+  border-radius: .3125rem /* 5/16 */;
 }
 
 .listening i.iconfont{

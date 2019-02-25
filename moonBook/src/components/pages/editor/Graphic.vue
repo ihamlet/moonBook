@@ -82,7 +82,7 @@
 import axios from './../../lib/js/api'
 import { mapActions, mapGetters } from 'vuex'
 import topicList from './../../module/release/topicList'
-import { compress } from './../../lib/js/util'
+import { compress,checkHtml } from './../../lib/js/util'
 
 export default {
   name: 'graphic',
@@ -166,8 +166,15 @@ export default {
     fetchData() {
       // 从本地存储获取发布数据
       if(this.$route.query.type == 'edit'){
-          axios.get(`/book/SchoolArticle/getList?post_id=${this.$route.query.post_id}`).then(res => {
-            console.log(res,'获取这篇文字')
+          axios.get(`/book/SchoolArticle/getEdit?post_id=${this.$route.query.post_id}`).then(res => {
+            if(res.data.status == 1){
+              this.grapicData.photos = res.data.data.photos
+              if(checkHtml(res.data.data.details)){
+                this.grapicData.text = ''
+              }else{
+                this.grapicData.text = res.data.data.details
+              }
+            }
           })
       }else{
         if (localStorage.getItem('grapicData')) {
@@ -296,7 +303,8 @@ export default {
           details: this.grapicData.text,
           template_id: 1,
           photos: this.grapicData.photos,
-          cate_id: this.cateId
+          cate_id: this.cateId,
+          post_id: this.$route.query.post_id || ''
         }
 
         this.result.forEach(e => {

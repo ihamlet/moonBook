@@ -158,7 +158,7 @@ export default new Router({
           component: Zoom,
           meta: {
             title: 'BookZoom',
-            tabActive: 1,
+            tabActive: 4,
             isFooterBar: true
           }
         },

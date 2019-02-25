@@ -48,8 +48,8 @@ export default {
 
 .robe,
 .img-preview .grid img{
-  width: 3.375rem /* 54/16 */;
-  height: 3.375rem /* 54/16 */;
+  width: 2.8125rem /* 45/16 */;
+  height: 2.8125rem /* 45/16 */;
   border-radius: 0.25rem /* 4/16 */;
   margin-right: 0.3125rem /* 5/16 */;
   z-index: 2;

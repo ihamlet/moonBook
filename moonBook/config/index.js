@@ -26,6 +26,10 @@ module.exports = {
       '/peixun':{
         target: 'https://hu.wmlife.net/',
         changeOrigin: true
+      },
+      '/SchoolManage': {
+        target: 'https://hu.wmlife.net/',
+        changeOrigin: true
       }
     },
 

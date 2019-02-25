@@ -80,7 +80,7 @@ export default {
       if (this.managerState) {
         this.managerState.forEach(element => {
           let data = {
-            name: this.formatBanjiTitle(element.name),
+            name: element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name),
             subname: `${element.duty}-${element.desc}`,
             id: element.id,
             type: element.item_type
@@ -139,7 +139,6 @@ export default {
     next(vm => {
       vm.qrcode()
       vm.getUserData().then(res => {
-        console.log(res)
         if (res.child_id > '0') {
           if (res.school_id > '0') {
             if (res.banji_id > '0') {
@@ -192,7 +191,7 @@ export default {
         this.$router.push({
           name: this.$route.query.back,
           query:{
-            id:this.$route.query.child_id?this.$route.query.child_id:this.$route.query.school_id
+            id: this.$route.query.child_id || this.$route.query.school_id
           }
         })
       }else{
