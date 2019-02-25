@@ -1,7 +1,7 @@
 # moonbook
 
 > A Vue.js project 
-> ftp服务器 550 Can't remove directory: Permission denied
+> 项目推送
 
 ## Build Setup
 
