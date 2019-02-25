@@ -53,6 +53,13 @@
           <span class="bar-title">坚持天数</span>
         </div>
       </div>
+      <div class="kings flex flex-algin">
+        <div class="name">阅读进度</div>
+        <div class="kings-line">
+          <div class="progress-bar"></div>
+          <div class="bar"></div>
+        </div>
+      </div>
       <lazy-component class="module" v-if="childInfo.is_mine">
         <family />
       </lazy-component>
