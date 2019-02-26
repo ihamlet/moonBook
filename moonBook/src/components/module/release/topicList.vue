@@ -1,11 +1,22 @@
 <template>
   <div class="topic-list">
-    <van-nav-bar title="选择分类" fixed right-text='关闭' @click-right='close' />
+    <van-nav-bar title="选择分类" right-text='关闭' @click-right='close' />
     <div class="list">
       <van-cell-group>
         <div class="item" v-for='(item,index) in topicList' :key="index">
+          <!-- <van-cell is-link @click="select(item)" label='流口水的肌肤了开始觉得杀了肯德基'>
+            <div class="theme-color" sort='title'</div>
+          </van-cell> -->
+
           <van-cell is-link @click="select(item)">
-            <div class="theme-color">#{{item.cate_name}}</div>
+            <div class="cell-title" slot='title'>
+             <div class="cate-name theme-color">
+                #{{item.cate_name}}
+              </div>
+              <div class="explain" v-if='item.access_level == 1'>
+                发布通知到所管理的{{$route.query.back == 'class-home'?'班级':'学校'}}
+              </div>
+            </div>
           </van-cell>
         </div>
       </van-cell-group>
@@ -19,7 +30,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'topic-list',
   computed: {
-    ...mapGetters(['userDataState'])
+    ...mapGetters(['managerState'])
   },
   data() {
     return {
@@ -35,7 +46,42 @@ export default {
   methods: {
     fetchData() {
       axios.get('/book/schoolArticleCate/getList').then(res => {
-        this.topicList = res.data
+        if(res.status == 200){
+          let array = res.data
+          let datas = []
+          array.forEach(element => {
+            if(element.portal_name == '宝贝主页'&&(this.$route.query.back == 'home'||this.$route.query.back == 'baby-home')){
+              datas.push(element)
+            }
+
+            if(element.portal_name == '班级主页'&&this.$route.query.back == 'class-home'){
+              if(element.access_level == 0){
+                datas.push(element)
+              }else{
+                this.managerState.forEach(e=>{
+                  if(this.$route.query.id == e.banji_id && e.item_relation != 'parent'){
+                    datas.push(element)
+                  }
+                })
+              }
+            }
+
+            if(element.portal_name == '学校主页'&&this.$route.query.back == 'apps-school'){
+              if(element.access_level == 0){
+                datas.push(element)
+              }else{
+                this.managerState.forEach(e=>{
+                  if(this.$route.query.id == e.school_id && e.item_relation != 'parent'){
+                    datas.push(element)
+                  }
+                })
+              }
+            }
+          })
+        
+          this.topicList = datas
+          console.log(datas)
+        }
       })
     },
     select(item){

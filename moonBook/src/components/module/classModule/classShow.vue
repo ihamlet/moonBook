@@ -18,14 +18,13 @@
 <script>
 import axios from './../../lib/js/api'
 import windmill from './../animate/svg/windmill'
-import photoStack from './../animate/photoStack'
 import showCrad from './../card/showCrad'
+
 export default {
   name: 'class-show',
   props: ['banji_name','banji_id'],
   components: {
     windmill,
-    photoStack,
     showCrad
   },
   data() {

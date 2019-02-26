@@ -96,6 +96,9 @@
               <i class="iconfont" v-if="!item.isCollect">&#xe64c;</i>
               <i class="iconfont star highlight swing animated" v-else>&#xe64b;</i>
             </div>
+            <div class="btn" v-if='type == "article"'>
+              <i class="iconfont" v-if="!item.isCollect">&#xe614;</i>
+            </div>
           </div>
         </div>
       </div>
@@ -122,7 +125,7 @@ import { timeago } from './../lib/js/util'
 
 export default {
   name: 'comment',
-  props: ['item'],
+  props: ['item','type'],
   computed: {
     ...mapGetters(['userToken','userDataState'])
   },
@@ -329,7 +332,7 @@ export default {
 
 .input-box {
   height: 2.375rem /* 38/16 */;
-  flex: 2;
+  flex: 1;
 }
 
 .btn-icon {

@@ -157,9 +157,9 @@ export default {
   font-size: .8125rem /* 13/16 */;
 }
 
-.views,
-.time-ago{
-  margin-left: .625rem /* 10/16 */;
+.school,
+.views{
+  margin-right: .625rem /* 10/16 */;
 }
 
 .img-grid{

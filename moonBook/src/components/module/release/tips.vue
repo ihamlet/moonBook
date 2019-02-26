@@ -19,9 +19,14 @@
 <script>
 import axios from './../../lib/js/api'
 import { compress } from './../../lib/js/util'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'tips',
   props: ['position', 'isShow'],
+  computed: {
+    ...mapGetters(['managerState'])
+  },
   data() {
     return {
       percent: 0,

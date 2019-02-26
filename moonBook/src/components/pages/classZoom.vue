@@ -144,13 +144,15 @@ export default {
       }
     },
     manage() {
-      let boolean
-      this.managerState.forEach(element => {
-        if (this.$route.query.id == element.id && element.item_relation != 'parent'){
-          boolean = true
-        }
-      })
-      return boolean
+      if(this.managerState){
+        let boolean
+        this.managerState.forEach(element => {
+          if (this.$route.query.id == element.id && element.item_relation != 'parent'){
+            boolean = true
+          }
+        })
+        return boolean
+      }
     },
     toManger(){
       console.log('管理页面')

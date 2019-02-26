@@ -1,6 +1,6 @@
 <template>
   <div class="school-home page-padding">
-    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" left-arrow @click-left="onClickLeft" :border='false' fixed>
+    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" left-arrow @click-left="onClickLeft" fixed>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'首页'}}</span>
@@ -86,8 +86,11 @@ export default {
       domHeight: '',
       fixedHeaderBar: true,
       actionsheetShow: false,
-      appsList: [
-        {
+      appsList: [ {
+          name: '每日餐谱',
+          iconClass: 'icon-canpu',
+          path:'404'
+        }, {
           name: '风采',
           iconClass: 'icon-fengcai',
           path:'404'
@@ -212,13 +215,15 @@ export default {
       })
     },
     manage() {
-      let boolean
-      this.managerState.forEach(element => {
-        if (this.$route.query.id == element.id && element.item_relation != 'parent'){
-          boolean = true
-        }
-      })
-      return boolean
+      if(this.managerState){
+        let boolean
+        this.managerState.forEach(element => {
+          if (this.$route.query.id == element.id && element.item_relation != 'parent'){
+            boolean = true
+          }
+        })
+        return boolean
+      }
     }
   }
 }

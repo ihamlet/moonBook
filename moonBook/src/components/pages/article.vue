@@ -44,7 +44,7 @@
         <article-content :item='item'/>
       </lazy-component>
       <lazy-component>
-        <comment :item='item'/>
+        <comment :item='item' type='article'/>
       </lazy-component>
     </div>
 

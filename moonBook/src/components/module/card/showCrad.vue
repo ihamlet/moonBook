@@ -3,20 +3,15 @@
     <div class="grid" v-for="(item,index) in imgArray" :key="index">
       <img :src="item.thumb" />
     </div>
-    
-    <div class="badge" v-if="imgList.length > 4">{{imgList.length}}</div>
   </div>
   <div class="text-preview" v-line-clamp:20="2" v-else>{{text}}</div>
 </template>
 <script>
 import axios from './../../lib/js/api'
-import photoStack from "./../animate/photoStack"
+
 export default {
   name: "show-card",
   props: ["imgList", 'text'],
-  components: {
-    photoStack
-  },
   computed: {
     imgArray(){
       let array = this.imgList
