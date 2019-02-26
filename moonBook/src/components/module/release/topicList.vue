@@ -4,10 +4,6 @@
     <div class="list">
       <van-cell-group>
         <div class="item" v-for='(item,index) in topicList' :key="index">
-          <!-- <van-cell is-link @click="select(item)" label='流口水的肌肤了开始觉得杀了肯德基'>
-            <div class="theme-color" sort='title'</div>
-          </van-cell> -->
-
           <van-cell is-link @click="select(item)">
             <div class="cell-title" slot='title'>
              <div class="cate-name theme-color">
@@ -80,7 +76,6 @@ export default {
           })
         
           this.topicList = datas
-          console.log(datas)
         }
       })
     },

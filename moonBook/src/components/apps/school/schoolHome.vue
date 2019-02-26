@@ -70,7 +70,7 @@ export default {
       if (this.managerState) {
         this.managerState.forEach(element => {
           let data = {
-            name: element.name,
+            name: `${element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name)}${element.child_name?'('+element.child_name+')':'(管理员)'}`,
             subname: `${element.duty}-${element.desc}`,
             id: element.id,
             type: element.item_type
@@ -227,6 +227,13 @@ export default {
         this.hackReset = true
         this.request()
       })
+    },
+    formatBanjiTitle(text){
+      if(text&&text.indexOf('班') == -1){
+        return text + '班'
+      }else{
+        return text 
+      }
     }
   }
 }
