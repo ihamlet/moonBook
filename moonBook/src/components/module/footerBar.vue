@@ -14,6 +14,7 @@
 </template>
 <script>
 import tips from './../module/release/tips'
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'footer-bar',

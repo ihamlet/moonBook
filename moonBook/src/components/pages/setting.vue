@@ -1,6 +1,6 @@
 <template>
   <div class="baby-setting">
-    <van-nav-bar title="设置" :left-text="$route.query.registerType ?'注册':childName" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar title="设置学校" :left-text="$route.query.registerType ?'注册':childName" left-arrow @click-left="onClickLeft" />
 
     <van-cell-group>
       <div class="form-title">学校设置</div>
@@ -70,8 +70,7 @@ export default {
           name: 'edit-child',
           query: {
             id: this.$route.query.id,
-            type: this.$route.query.type,
-            pageTitle: this.$route.query.pageTitle,
+            type: this.$route.query.type
           }
         })
       } else {

@@ -54,10 +54,22 @@ export default {
       return array
     }
   },
+  created () {
+    this.fetchData()
+  },
   data() {
     return {
       hackReset: true,
       isGraphicShow:false,
+    }
+  },
+  watch: {
+    '$route': 'fetchData'
+  },
+  methods: {
+    ...mapActions(['getManager']),
+    fetchData(){
+      this.getManager()
     }
   }
 }

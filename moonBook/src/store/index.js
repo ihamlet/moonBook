@@ -13,7 +13,8 @@ const state = {
   tabBtn: [],
   amapApiKey: '0522f462288e296eac959dbde42718ab',
   token: '',
-  userPoint: ''
+  userPoint: '',
+  manager:''
 }
 
 const getters = {
@@ -29,6 +30,9 @@ const getters = {
   },
   MsgLengthState: state => {
     return state.msgLength
+  },
+  managerState: state => {
+    return state.manager
   },
   userPraiseState: state => {
     let praise = []
@@ -67,7 +71,9 @@ const mutations = {
     localStorage.setItem('userData', JSON.stringify(params.data))
     state.userData = params.data
   },
-
+  setManager(state, params){
+    state.manager = params.data
+  },
   setMsgLength(state, params) {
     state.msgLength = params.data
   },
@@ -88,6 +94,13 @@ const actions = {
         context.commit('setUserData', {
           data: res.data
         })
+      })
+    })
+  },
+  getManager(context){
+    axios.get('/book/MemberBanji/getList').then(res=>{
+      context.commit('setManager', {
+        data: res.data.data
       })
     })
   },

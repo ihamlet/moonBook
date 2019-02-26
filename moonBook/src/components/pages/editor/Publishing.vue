@@ -1,11 +1,14 @@
 <template>
   <div class="publishing">
-    <van-nav-bar title="文章发布" left-text="取消" @click-left="actionShow = true" fixed>
-      <div class="head-bar-btn theme-color" slot="right" @click="release">
-        <i class="iconfont">
-          &#xe72c;
-        </i>
-        发布
+    <van-nav-bar title="文章发布" left-text="取消" @click-left="onClickLeft" fixed>
+      <div class="head-bar-btn theme-color" slot="right">
+        <van-loading color="#409eff" v-if='percent != 0' />
+        <div class="release-btn" @click="release"  v-else>
+          <i class="iconfont">
+            &#xe72c;
+          </i>
+          发布
+        </div>
       </div>
     </van-nav-bar>
     <div class="container">
@@ -16,10 +19,10 @@
       </div>
       <div class="classify">
         <van-cell title-class='theme-color' title="#选择分类" :value="cateName" is-link arrow-direction="down" @click="show = true" />
-      </div>   
+      </div>
       <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
       <div class="edit-content" :class="[editBarShow?'bar-show':'']">
-        <quill-editor ref='myQuillEditor' v-model="grapicData.content" :options="editorOption"/>
+        <quill-editor ref='myQuillEditor' v-model="grapicData.content" :options="editorOption" />
       </div>
     </div>
     <div class="media-input" v-show="false">
@@ -52,9 +55,9 @@ export default {
   },
   data() {
     return {
-      scrollTop:0,
-      editBarShow:false,
-      actionShow:false,
+      scrollTop: 0,
+      editBarShow: false,
+      actionShow: false,
       show: false,
       ossSign: '',
       percent: 0,
@@ -64,7 +67,7 @@ export default {
       grapicData: {
         title: '',
         content: '',
-        photos:[]
+        photos: []
       },
       fixedHeaderBar: true,
       history: {
@@ -105,21 +108,49 @@ export default {
   },
   methods: {
     fetchData() {
-      if (localStorage.getItem('articleData')) {
-        this.grapicData = JSON.parse(localStorage.getItem('articleData'))
+      if(this.$route.query.type == 'edit'){
+          axios.get(`/book/SchoolArticle/getEdit?post_id=${this.$route.query.post_id}`).then(res => {
+            if(res.data.status == 1){
+              this.grapicData.title = res.data.data.title
+              this.grapicData.content = res.data.data.details
+              this.grapicData.photos = res.data.data.photos
+            }
+          })
+      }else{
+        if (localStorage.getItem('articleData')) {
+          this.grapicData = JSON.parse(localStorage.getItem('articleData'))
+        }
       }
 
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
       })
     },
-    handleScroll(){
+    handleScroll() {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       this.scrollTop = scrollTop
-      if(this.scrollTop > 82){
-          this.editBarShow = true
-      }else{
-          this.editBarShow = false
+      if (this.scrollTop > 82) {
+        this.editBarShow = true
+      } else {
+        this.editBarShow = false
+      }
+    },
+    onClickLeft() {
+      if (!this.grapicData.content.length && !this.grapicData.title.length) {
+        if (this.$route.query.back) {
+          this.$router.push({
+            name: this.$route.query.back,
+            query: {
+              id: this.$route.query.id
+            }
+          })
+        } else {
+          this.$router.push({
+            name: 'home'
+          })
+        }
+      } else {
+        this.actionShow = true
       }
     },
     onSelect(item) {
@@ -127,7 +158,10 @@ export default {
         localStorage.setItem('articleData', JSON.stringify(this.grapicData))
         if (this.$route.query.back) {
           this.$router.push({
-            name: this.$route.query.back
+            name: this.$route.query.back,
+            query: {
+              id: this.$route.query.id
+            }
           })
         } else {
           this.$router.push({
@@ -138,12 +172,15 @@ export default {
       } else {
         if (this.$route.query.back) {
           this.$router.push({
-            name: this.$route.query.back
+            name: this.$route.query.back,
+            query: {
+              id: this.$route.query.id
+            }
           })
         } else {
           this.$router.push({
             name: 'home'
-          }) 
+          })
         }
         localStorage.setItem('articleData', '')
         this.actionShow = false
@@ -154,25 +191,28 @@ export default {
       }
     },
     release() {
-      if (this.grapicData.title.length == 0) {
+      if (!this.grapicData.title.length) {
         this.$toast('请输入标题')
-      } else if ( this.cateId == 0 ) {
+      } else if (!this.cateId) {
         this.$toast('请选择分类')
-      } else if ( this.grapicData.content.length == 0 ) {
+      } else if (!this.grapicData.content.length) {
         this.$toast('请输入正文')
+      } else if (!this.grapicData.photos.length) {
+        this.$toast('请至少上传一张图片做为文章封面')
       } else {
         let data = {
           title: this.grapicData.title,
           details: this.grapicData.content,
           photos: this.grapicData.photos,
           cate_id: this.cateId,
-          to_school: 1
+          to_school: 1,
+          post_id: this.$route.query.post_id || ''
         }
 
         axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
           if (res.data.status == 1) {
             this.$router.push({
-              name:'apps-find'
+              name: 'apps-find'
             })
           }
         })
@@ -240,8 +280,8 @@ export default {
           photo: path,
           thumb: `${path}?x-oss-percent=video/snapshot,t_2000,f_jpg,w_0,h_0,m_fast`
         })
-
         this.addImage(`${path}?x-oss-percent=video/snapshot,t_2000,f_jpg,w_0,h_0,m_fast`)
+        this.percent = 0
       })
     },
     upOssPhoto(blob, file, base64) {
@@ -265,17 +305,17 @@ export default {
         data: fd,
         method: 'post',
         onUploadProgress: p => {
-          this.grapicData.photos.push({
-            photo: path,
-            thumb: `${path}?x-oss-percent=image/resize,m_fill,h_200,w_200`,
-            height: img.height || 0,
-            width: img.width || 0
-          })
-
           this.percent = Math.floor(100 * (p.loaded / p.total))
         }
       }).then((res) => {
+        this.grapicData.photos.push({
+          photo: path,
+          thumb: `${path}?x-oss-percent=image/resize,m_fill,h_200,w_200`,
+          height: img.height || 0,
+          width: img.width || 0
+        })
         this.addImage(path)
+        this.percent = 0
       })
     },
     selectTag(tag) {
@@ -286,7 +326,7 @@ export default {
 }
 </script>
 <style scoped>
-.container{
+.container {
   padding-top: 2.8125rem /* 45/16 */;
   background: #fff;
 }
@@ -350,13 +390,12 @@ export default {
   z-index: 10;
 }
 
-
-.publishing .edit-content.bar-show .ql-toolbar.ql-snow{
+.publishing .edit-content.bar-show .ql-toolbar.ql-snow {
   position: fixed;
   top: 45px;
 }
 
-.publishing .ql-toolbar.ql-snow{
+.publishing .ql-toolbar.ql-snow {
   width: 100%;
 }
 

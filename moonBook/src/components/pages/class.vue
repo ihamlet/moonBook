@@ -1,21 +1,19 @@
 <template>
   <div class="edit-class page-padding">
-    <van-nav-bar :border='false' fixed :title="$route.query.registerType=='teacher'?schoolName:childInfo.school_name"
-      left-arrow @click-left="onClickLeft" />
+    <van-nav-bar :border='false' fixed :title="$route.query.registerType=='teacher'?schoolName:childInfo.school_name" left-arrow @click-left="onClickLeft" />
     <div class="container">
       <div class="baby-info flex flex-justify" v-if='$route.query.registerType!="teacher"'>
-        <div class="avatar" v-if='childInfo'>
+        <div class="avatar flex" v-if='childInfo'>
           <img :src="childInfo.avatar" :alt="childInfo.name">
         </div>
-        <avatar class="avatar" v-else />
+        <avatar v-else />
         <div class="name">{{childInfo.name}}（{{childInfo.age}}岁）</div>
         <round class="bg-round" />
       </div>
       <div class="title">请选择班级</div>
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="item.title" :value='`${item.student_count}人已加入`'
-            @click='select(item)' />
+          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="formatBanjiTitle(item.title)" :value='`${item.student_count}人已加入`' @click='select(item)' />
         </van-list>
       </div>
     </div>
@@ -144,6 +142,13 @@ export default {
           this.finished = true
         }
       })
+    },
+    formatBanjiTitle(text){
+      if(text&&text.indexOf('班') == -1){
+        return text + '班'
+      }else{
+        return text 
+      }
     }
   }
 }
@@ -174,7 +179,7 @@ export default {
   position: relative;
 }
 
-.baby-info .avatar {
+.baby-info .avatar img{
   width: 5rem /* 80/16 */;
   height: 5rem /* 80/16 */;
   margin: 1.25rem /* 20/16 */ auto 0 auto;

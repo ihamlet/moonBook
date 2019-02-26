@@ -1,17 +1,15 @@
 <template>
   <div class="class-zoom" :class="[type!='template'?'page-padding':'no-padding']">
-    <van-nav-bar v-if='type!="template"' title="班级风采" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft">
-
-    </van-nav-bar>
+    <van-nav-bar v-if='type!="template"' title="班级风采" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft"/>
     <lazy-component class="module" v-if="type != 'template'">
       <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template' />
     </lazy-component>
     <lazy-component>
-      <van-nav-bar title="班级动态" />
+      <van-nav-bar title="班级动态"/>
       <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
         <div class="list" v-if='list.length > 0'>
           <div class="item" v-for="(item,index) in list" :key="index">
-            <van-cell title="" is-link arrow-direction="down" v-if='manage(item)' @click="operation(item)" />
+            <van-cell title="" is-link arrow-direction="down" v-if='manage' @click="operation(item)" />
             <van-cell>
               <graphic-card :item="item" type="classHome" />
             </van-cell>
@@ -33,6 +31,7 @@ import axios from './../lib/js/api'
 import freshList from './../module/findModule/freshList'
 import graphicCard from './../module/card/graphicCard'
 import qrCode from "./../module/mold/qrCode"
+import { mapGetters } from 'vuex'
 
 export default {
   name: "class-zoom",
@@ -41,10 +40,23 @@ export default {
     freshList,
     graphicCard
   },
+  computed:{
+    ...mapGetters(['managerState']),
+        manage() {
+      if(this.managerState){
+        let boolean
+        this.managerState.forEach(element => {
+          if (this.$route.query.id == element.id && element.item_relation != 'parent'){
+            boolean = true
+          }
+        })
+        return boolean
+      }
+    }
+  },
   data() {
     return {
       show: false,
-      managerList: [],
       freshList: [],
       list: [],
       cardItem: '',
@@ -61,14 +73,10 @@ export default {
         name: '推荐',
         type: 'recommend',
         index: 1
-      }, {
-        name: '屏蔽',
-        type: 'shield',
-        index: 2
-      }, {
+      },  {
         name: '删除',
         type: 'delete',
-        index: 3
+        index: 2
       }]
     }
   },
@@ -83,10 +91,6 @@ export default {
       this.$router.go(-1)
     },
     fetchData() {
-      axios.get('/book/MemberBanji/getList').then(res => {
-        this.managerList = res.data.data
-      })
-
       axios.get(`/book/baby/getList?banji_id=${this.$route.query.id}`).then(res => {
         this.freshList = res.data.data
       })
@@ -137,20 +141,6 @@ export default {
 
           break
         case 2:
-          axios.get(`/book/SchoolArticle/top?id=${this.cardItem.user_id}`).then(res => {
-            if(res.data.status == 1){
-              this.show = false
-              this.page = 1
-              this.onLoad()
-              this.$toast.success('屏蔽成功')
-            }else{
-              this.$toast.fail('屏蔽失败')
-            }
-
-            console.log(res.data.msg,this.cardItem.user_id)
-          })   
-          break
-        case 3:
           axios.get(`/book/SchoolArticle/del?id=${this.cardItem.post_id}`).then(res => {
             if(res.data.status == 1){
               this.show = false
@@ -163,17 +153,9 @@ export default {
           })
           break
       }
-
-
     },
-    manage(item) {
-      let boolean
-      this.managerList.forEach(element => {
-        if (this.$route.query.id == element.id && element.item_relation != 'parent'){
-          boolean = true
-        }
-      })
-      return boolean
+    toManger(){
+      console.log('管理页面')
     }
   }
 };

@@ -5,8 +5,8 @@
 const path = require('path')
 console.log('path', path)
 
-// const server_host = 'https://hu.wmlife.net/'
-const server_host = 'http://book.wmdev.com/'
+const server_host = 'https://hu.wmlife.net/'
+// const server_host = 'http://book.wmdev.com/'
 module.exports = {
   dev: {
 
@@ -32,6 +32,10 @@ module.exports = {
       },
       '/SchoolManage': {
         target: server_host,
+        changeOrigin: true
+      },
+      '/SchoolManage': {
+        target: 'https://hu.wmlife.net/',
         changeOrigin: true
       }
     },

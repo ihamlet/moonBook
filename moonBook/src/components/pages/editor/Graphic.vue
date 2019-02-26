@@ -1,16 +1,19 @@
 <template>
   <div class="graphic">
-    <van-nav-bar left-text="取消" @click-left="onClickLeft" :border='false' @click-right="onClickRight">
+    <van-nav-bar left-text="取消" @click-left="onClickLeft" :border='false'>
       <div class="user-info" slot='title'>
         <div class="avatar">
           <img :src="getAvatar(userDataState.avatar)" />
         </div>
       </div>
       <div class="head-bar-btn theme-color" slot="right">
-        <i class="iconfont">
-          &#xe72c;
-        </i>
-        发布
+        <van-loading color="#409eff" v-if='percent!=0'/>
+        <div class="release-btn"  @click="onClickRelease" v-else>
+          <i class="iconfont">
+            &#xe72c;
+          </i>
+          发布
+        </div>
       </div>
     </van-nav-bar>
     <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
@@ -73,13 +76,14 @@
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
       <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
     </div>
+
   </div>
 </template>
 <script>
 import axios from './../../lib/js/api'
 import { mapActions, mapGetters } from 'vuex'
 import topicList from './../../module/release/topicList'
-import { compress } from './../../lib/js/util'
+import { compress,checkHtml } from './../../lib/js/util'
 
 export default {
   name: 'graphic',
@@ -162,9 +166,23 @@ export default {
     ...mapActions(['getUserData']),
     fetchData() {
       // 从本地存储获取发布数据
-      if (localStorage.getItem('grapicData')) {
-        this.grapicData = JSON.parse(localStorage.getItem('grapicData'))
+      if(this.$route.query.type == 'edit'){
+          axios.get(`/book/SchoolArticle/getEdit?post_id=${this.$route.query.post_id}`).then(res => {
+            if(res.data.status == 1){
+              this.grapicData.photos = res.data.data.photos
+              if(checkHtml(res.data.data.details)){
+                this.grapicData.text = ''
+              }else{
+                this.grapicData.text = res.data.data.details
+              }
+            }
+          })
+      }else{
+        if (localStorage.getItem('grapicData')) {
+          this.grapicData = JSON.parse(localStorage.getItem('grapicData'))
+        }
       }
+
       let array = []
       if (this.userDataState.child_id > 0) {
         array.push({
@@ -270,7 +288,7 @@ export default {
         }
       }
     },
-    onClickRight() {
+    onClickRelease() {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
         if (this.$route.query.back) {
           this.$router.push({
@@ -286,7 +304,8 @@ export default {
           details: this.grapicData.text,
           template_id: 1,
           photos: this.grapicData.photos,
-          cate_id: this.cateId
+          cate_id: this.cateId,
+          post_id: this.$route.query.post_id || ''
         }
 
         this.result.forEach(e => {
@@ -376,6 +395,8 @@ export default {
           height: 0,
           width: 0
         })
+
+        this.percent = 0
       })
     },
     upOssPhoto(blob, file, base64) {
@@ -410,6 +431,7 @@ export default {
           height: img.height || 0,
           width: img.width || 0
         })
+        this.percent = 0
       })
     },
     selectTag(tag) {

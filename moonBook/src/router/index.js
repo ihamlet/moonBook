@@ -25,6 +25,8 @@ import Egg from '@/components/pages/Egg'
 import AddFamily from '@/components/pages/invite/addFamily'
 import VerifyFamily from '@/components/pages/invite/verifyList'
 
+import Information from '@/components/pages/invite/information'
+
 import BorrowList from '@/components/pages/borrowList'
 
 import Article from '@/components/pages/article'
@@ -50,6 +52,7 @@ import Publishing from '@/components/pages/editor/Publishing'
 import Graphic from '@/components/pages/editor/Graphic'
 
 import ReadStat from '@/components/pages/readStat'
+import ReadAmount from '@/components/pages/readAmount'
 
 import Train from '@/components/train'
 import AppsTrain from '@/components/apps/train/trainHome'
@@ -132,6 +135,15 @@ export default new Router({
           }
         },
         {
+          path: '/readAmount',
+          name: 'readAmount',
+          component: ReadAmount,
+          meta: {
+            title: '我读的书',
+            isFooterBar: false
+          }
+        },
+        {
           path: '/egg',
           name: 'egg',
           component: Egg,
@@ -146,7 +158,7 @@ export default new Router({
           component: Zoom,
           meta: {
             title: 'BookZoom',
-            tabActive: 1,
+            tabActive: 4,
             isFooterBar: true
           }
         },
@@ -234,6 +246,15 @@ export default new Router({
           component: AddFamily,
           meta: {
             title: '加入家庭',
+            isFooterBar: false
+          }
+        },
+        {
+          path:'/invite/information',
+          name:'information',
+          component: Information,
+          meta: {
+            title:'消息',
             isFooterBar: false
           }
         },

@@ -71,7 +71,14 @@ export default {
       } else {
         axios.get(`/book/babySign/rank?banji_id=${this.$route.query.id}&time=week`).then(res => {
           this.count = res.data.count
-          this.rankList = res.data.data
+          let array = res.data.data
+          let data = [] 
+          array.forEach(e => {
+            if(!(e instanceof Array)){
+                data.push(e)
+            }
+          })
+          this.rankList = data
         })
       }
     },
@@ -128,6 +135,7 @@ export default {
 .icon {
   text-align: center;
   display: grid;
+  padding-right: .625rem /* 10/16 */;
 }
 
 .icon .iconfont {

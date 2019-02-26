@@ -1,6 +1,7 @@
 <template>
   <div class="zoom page-padding">
-    <van-nav-bar :zIndex="99" :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed left-text="返回" left-arrow @click-left="onClickLeft"/>
+    <van-nav-bar :zIndex="99" :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed left-text="返回"
+      left-arrow @click-left="onClickLeft" />
     <div class="container">
       <lazy-component class="module">
         <div class="user-card flex flex-align" ref="userCrad">
@@ -29,13 +30,14 @@
                 <div class="text">获赞</div>
               </div>
             </div>
-            <van-button v-if='userDataState.user_id != userInfo.user_id' :plain="userInfo.subscribe_num == '0'" class="theme-btn" type="primary" size="large" @click="follow(userInfo)">{{userInfo.subscribe_num == '0'?'加关注':'已关注'}}</van-button>
+            <van-button v-if='userDataState.user_id != userInfo.user_id' :plain="userInfo.subscribe_num == '1'" class="theme-btn"
+              type="primary" size="large" @click="follow(userInfo)">{{userInfo.subscribe_num == '0'?'加关注':'已关注'}}</van-button>
           </div>
         </div>
       </lazy-component>
 
       <lazy-component class="module">
-        <reading :list="lateBook" moduleTitle="宝贝最近在读"/>
+        <reading :list="lateBook" moduleTitle="宝贝最近在读" />
       </lazy-component>
 
       <lazy-component>
@@ -43,9 +45,9 @@
           <div class="list">
             <div class="no-list" v-if="list.length == 0">暂无内容</div>
             <div class="item" v-for="(item,index) in list" :key="index">
-              <van-cell title v-if="item.isMe" @click="actionsheet(item)" is-link arrow-direction="down"/>
+              <van-cell title v-if="item.isMe" @click="actionsheet(item)" is-link arrow-direction="down" />
               <van-cell>
-                <graphic-card :item="item"/>
+                <graphic-card :item="item" />
               </van-cell>
             </div>
           </div>
@@ -87,14 +89,19 @@ export default {
       childInfo: "",
       page: 1,
       show: false,
-      actions: [
-        {
-          name: "删除",
-          type: "delete"
-        }
+      actions: [{
+        name: '编辑',
+        type: "edit",
+        index: 0
+      }, {
+        name: "删除",
+        type: "delete",
+        index: 1
+      }
       ],
-      postId: ""
-    };
+      postId: '',
+      templateId:''
+    }
   },
   created() {
     this.fetaData();
@@ -114,7 +121,7 @@ export default {
           axios
             .get(
               `/book/BabyBorrow/getList?page=1&limit=20&child_id=${
-                res.data.child_id
+              res.data.child_id
               }`
             )
             .then(res => {
@@ -157,40 +164,68 @@ export default {
       }
     },
     onLoad() {
-      axios
-        .get(
-          `/book/SchoolArticle/getList?page=${this.page}&sort=post&user_id=${
-            this.$route.query.id
-          }`
-        )
-        .then(res => {
-          this.page++;
-          this.list = this.list.concat(res.data.data);
+      axios.get(`/book/SchoolArticle/getList?page=${this.page}&sort=post&user_id=${this.$route.query.id}`).then(res => {
+          this.page++
+          this.list = this.list.concat(res.data.data)
           this.loading = false;
           if (this.list.length >= res.data.count) {
             this.finished = true;
           }
-        });
+        })
     },
     actionsheet(item) {
-      this.show = true;
-      this.postId = item.post_id;
+      this.show = true
+      this.postId = item.post_id
+      this.templateId = item.template_id
     },
     onSelect(item) {
-      if (item.type == "delete") {
-        axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
-          let key;
-          this.list.forEach((element, i) => {
-            if (element.post_id == this.postId) {
-              key = i;
-            }
-          });
-          this.list.splice(key, 1);
-        });
-        this.show = false;
 
-        this.$toast.success("删除成功");
-      }
+        switch(item.index){
+          case 0:
+              switch (this.templateId){
+                case '0':
+                  this.$router.push({
+                    name:'publishing',
+                    query:{
+                      post_id: this.postId,
+                      template_id: this.templateId,
+                      back: this.$route.name,
+                      id: this.$route.query.id,
+                      type: 'edit'
+                    }
+                  })
+                break
+                case '1':
+                  this.$router.push({
+                    name:'graphic',
+                    query:{
+                      post_id: this.postId,
+                      template_id: this.templateId,
+                      back: this.$route.name,
+                      id: this.$route.query.id,
+                      type: 'edit'
+                    }
+                  })
+                break
+              }
+          break
+          case 1:
+            this.$dialog.confirm({
+              title: '删除',
+              message: '您确认要删除吗'
+            }).then(() => {
+              axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
+                if (res.data.status == 1) {
+                  this.onRefresh()
+                  this.$toast.success('删除成功')
+                }
+              })
+            }).catch(() => {
+              // on cancel
+            })
+            this.show = false
+          break
+        }
     },
     getAvatar(img) {
       if (!img) {
@@ -210,9 +245,9 @@ export default {
       e.target.src =
         "https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0";
     },
-    follow(userInfo){
-      userInfo.subscribe_num == '1'?userInfo.subscribe_num = '0':userInfo.subscribe_num = '1'
-      axios.get(`/book/MemberFollow/subscribe?user_id=${userInfo.user_id}`).then(res=>{
+    follow(userInfo) {
+      userInfo.subscribe_num == '1' ? userInfo.subscribe_num = '0' : userInfo.subscribe_num = '1'
+      axios.get(`/book/MemberFollow/subscribe?user_id=${userInfo.user_id}`).then(res => {
         this.$toast.success(res.data.msg)
       })
     },
@@ -281,13 +316,13 @@ export default {
   border-radius: 50%;
 }
 
-.theme-btn.van-button--large{
+.theme-btn.van-button--large {
   height: 2.25rem /* 36/16 */;
   line-height: 2.125rem /* 34/16 */;
-  margin-top: .625rem /* 10/16 */;
+  margin-top: 0.625rem /* 10/16 */;
 }
 
-.user-card{
-  padding: .625rem /* 10/16 */ 0;
+.user-card {
+  padding: 0.625rem /* 10/16 */ 0;
 }
 </style>

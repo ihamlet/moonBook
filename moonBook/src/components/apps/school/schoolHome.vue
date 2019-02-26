@@ -1,13 +1,15 @@
 <template>
   <div class="school-home page-padding">
-    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" left-arrow @click-left="onClickLeft" :border='false'
-      fixed>
+    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" left-arrow @click-left="onClickLeft" fixed>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'首页'}}</span>
       </div>
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerList.length > 1">&#xe608;</i>
+        {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerState.length > 1">&#xe608;</i>
+      </div>
+      <div class="head-bar-text" slot='right' v-if='manage'>
+        <span class="text">管理学校</span>
       </div>
     </van-nav-bar>
     <div class="container">
@@ -62,13 +64,13 @@ export default {
     dryingList
   },
   computed: {
-    ...mapGetters(['userDataState']),
+    ...mapGetters(['userDataState','managerState']),
     actions() {
       let array = []
-      if (this.managerList) {
-        this.managerList.forEach(element => {
+      if (this.managerState) {
+        this.managerState.forEach(element => {
           let data = {
-            name: element.name,
+            name: `${element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name)}${element.child_name?'('+element.child_name+')':'(管理员)'}`,
             subname: `${element.duty}-${element.desc}`,
             id: element.id,
             type: element.item_type
@@ -79,17 +81,30 @@ export default {
       }
 
       return array
+    },
+    manage() {
+      if(this.managerState){
+        let boolean
+        this.managerState.forEach(element => {
+          if (this.$route.query.id == element.id && element.item_relation != 'parent'){
+            boolean = true
+          }
+        })
+        return boolean
+      }
     }
   },
   data() {
     return {
       schoolInfo: '',
-      managerList: [],
       domHeight: '',
       fixedHeaderBar: true,
       actionsheetShow: false,
-      appsList: [
-        {
+      appsList: [ {
+          name: '每日餐谱',
+          iconClass: 'icon-canpu',
+          path:'404'
+        }, {
           name: '风采',
           iconClass: 'icon-fengcai',
           path:'404'
@@ -150,10 +165,6 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     request() {
-      axios.get('/book/MemberBanji/getList').then(res => {
-        this.managerList = res.data.data
-      })
-
       axios.get(`/book/school/getInfo?school_id=${this.$route.query.id}`).then(res => {
         this.schoolInfo = res.data.data
       })
@@ -201,10 +212,6 @@ export default {
             back: this.$route.name
           }
         })
-        this.$nextTick(() => {
-          this.hackReset = true
-          this.request()
-        })
       } else if (item.type == 'school') {
         this.$router.push({
           name: 'apps-school',
@@ -214,6 +221,18 @@ export default {
             banji_id: this.$route.query.id
           }
         })
+      }
+
+      this.$nextTick(() => {
+        this.hackReset = true
+        this.request()
+      })
+    },
+    formatBanjiTitle(text){
+      if(text&&text.indexOf('班') == -1){
+        return text + '班'
+      }else{
+        return text 
       }
     }
   }

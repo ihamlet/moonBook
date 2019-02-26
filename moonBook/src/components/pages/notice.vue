@@ -1,6 +1,6 @@
 <template>
     <div class="notice page-padding">
-        <van-nav-bar  @click-left="onClickLeft" left-text="我的"  left-arrow :title="$route.meta.title" />
+        <van-nav-bar  @click-left="onClickLeft" :left-text="$route.query.back?'返回':'我的'"  left-arrow :title="$route.meta.title" />
         <div class="container">
             <message-list :readList='readList'/>
         </div>
@@ -21,9 +21,9 @@ export default {
         }
     },
     methods: {
-        onClickLeft(){
+        onClickLeft(){        
             this.$router.push({
-                name:'my'
+                name:this.$route.query.back?this.$route.query.back:'my'
             })
         }
     }

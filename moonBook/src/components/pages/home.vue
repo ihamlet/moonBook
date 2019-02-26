@@ -8,7 +8,7 @@
             <div class="search-bar"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
             <div class="right-btn">
                 <span class="notice-badge">
-                    <i class="iconfont" @click="$router.push({name:'notice'})">{{MsgLengthState>0?'&#xe623;':'&#xe798;'}}</i>
+                    <i class="iconfont" @click="toNotice">{{MsgLengthState>0?'&#xe623;':'&#xe798;'}}</i>
                     <b class="read-dot" v-if='MsgLengthState > 0'></b>
                 </span>
                 <!-- <i class="iconfont">{{msg>0?'&#xe623;':'&#xe798;'}}</i> -->
@@ -178,6 +178,18 @@ export default {
         toAccept(){
             this.applyShow = true
             this.active = 0
+        },
+        toTips(){
+           this.tipsShow = !this.tipsShow
+           localStorage.setItem('grapicData', '')
+        },
+        toNotice(){
+            this.$router.push({
+                name:'notice',
+                query:{
+                    back: this.$route.name
+                }
+            })
         },
         formatNews(news){
             news.forEach((item,key)=>{

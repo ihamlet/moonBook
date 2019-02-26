@@ -1,22 +1,25 @@
 <template>
   <div class="class-home page-padding" v-if='hackReset'>
-    <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft" @click-right="show = true">
+    <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft">
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?pageTitle:classInfo.title}} <i class="iconfont" v-if="managerList.length > 1 && actions != null">&#xe608;</i>
+        {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="managerState.length > 1 && actions != null">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'我的'}}</span>
       </div>
-      <div class="btn-right-qrcode" slot='right'>
-        <i class="iconfont">&#xe7a3;</i>
+      <div class="head-bar-text" slot='right' v-if='manage'>
+        <span class="text">管理班级</span>
       </div>
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">
-        <div class="class-name">{{classInfo.title}}</div>
-        <div class="class-people">{{classInfo.grade_name}}（{{classInfo.student_count}}人）</div>
+        <div class="class-name">{{formatBanjiTitle(classInfo.title)}}</div>
+        <div class="class-people">{{`${classInfo.grade_name}班`}}（{{classInfo.student_count}}人）</div>
         <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
+      </div>
+      <div class="qrcode" @click="show = true">
+        <i class="iconfont">&#xe622;</i> 
       </div>
     </div>
     <div class="container">
@@ -74,13 +77,13 @@ export default {
     apps
   },
   computed: {
-    ...mapGetters(['userDataState']),
+    ...mapGetters(['userDataState','managerState']),
     actions() {
       let array = []
-      if (this.managerList) {
-        this.managerList.forEach(element => {
+      if (this.managerState) {
+        this.managerState.forEach(element => {
           let data = {
-            name: element.name,
+            name: `${element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name)}${element.child_name?'('+element.child_name+')':'(管理员)'}`,
             subname: `${element.duty}-${element.desc}`,
             id: element.id,
             type: element.item_type
@@ -101,6 +104,17 @@ export default {
       }
 
       return str
+    },
+    manage() {
+      if(this.managerState){
+        let boolean
+        this.managerState.forEach(element => {
+          if (this.$route.query.id == element.id && element.item_relation != 'parent'){
+            boolean = true
+          }
+        })
+        return boolean
+      }
     }
   },
   data() {
@@ -112,7 +126,6 @@ export default {
       lateBook: '',
       hackReset: true,
       actionsheetShow: false,
-      managerList:[],
       appsList: [{
         name: '风采',
         iconClass: 'icon-fengcai',
@@ -165,9 +178,9 @@ export default {
     next(vm => {
       vm.qrcode()
       vm.getUserData().then(res => {
-        if (res.child_id > 0) {
-          if (res.school_id > 0) {
-            if (res.banji_id > 0) {
+        if (res.child_id > '0') {
+          if (res.school_id > '0') {
+            if (res.banji_id > '0') {
               vm.request()
             } else {
               vm.$router.push({
@@ -208,10 +221,6 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     request() {
-      axios.get('/book/MemberBanji/getList').then(res=>{
-        this.managerList = res.data.data
-      })
-
       axios.get(`/book/SchoolBanji/getInfo?banji_id=${this.$route.query.id}`).then(res => {
         this.classInfo = res.data.data
       })
@@ -221,7 +230,7 @@ export default {
         this.$router.push({
           name: this.$route.query.back,
           query:{
-            id:this.$route.query.child_id?this.$route.query.child_id:this.$route.query.school_id
+            id: this.$route.query.child_id || this.$route.query.school_id
           }
         })
       }else{
@@ -255,7 +264,7 @@ export default {
       location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
     },
     cutover() {
-      if (this.managerList.length > 1 && this.actions != null) {
+      if (this.managerState.length > 1 && this.actions != null) {
         this.actionsheetShow = true
       }
     },
@@ -284,6 +293,13 @@ export default {
           }
         })
       }
+    },
+    formatBanjiTitle(text){
+      if(text&&text.indexOf('班') == -1){
+        return text + '班'
+      }else{
+        return text 
+      }
     }
   }
 }
@@ -301,10 +317,8 @@ export default {
 
 .header {
   padding: 2.8125rem /* 45/16 */ 1.25rem /* 20/16 */ 0.625rem /* 10/16 */;
-  background: url('https://oss-hys.oss-cn-hangzhou.aliyuncs.com/moonBook/header-bg.jpg');
-  background-size: cover;
-  background-position: 68%;
   height: 5rem /* 80/16 */;
+  justify-content: space-between;
 }
 
 .class-name {
@@ -347,5 +361,13 @@ export default {
 
 .punch {
   z-index: 101;
+}
+
+.qrcode{
+  color: #fff;
+}
+
+.qrcode i.iconfont{
+  font-size: 1.625rem /* 26/16 */;
 }
 </style>

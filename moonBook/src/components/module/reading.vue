@@ -1,7 +1,7 @@
 <template>
   <div class="reading">
     <van-cell :title="moduleTitle" :is-link="type =='rank'" @click="toBabyHome" />
-    <div class="book-list scroll-x" v-if='list.length > 0'>
+    <div class="book-list scroll-x" v-if="list">
       <div class="book-item scroll-item" v-for='(item,index) in list' :key="index">
         <div class="book-cover">
           <img :src="thumb(item.book_thumb)" @error="outThumb($event,item)" :alt="item.book_name" @click="toBookDetails(item)">
@@ -188,17 +188,16 @@ export default {
 }
 
 .listening{
-  width: 1.75rem /* 28/16 */;
-  height: 1.75rem /* 28/16 */;
   position: absolute;
   bottom: 0;
-  right: 0;
+  left: 0;
+  background: #fff;
+  border-radius: .3125rem /* 5/16 */;
 }
 
 .listening i.iconfont{
   font-size: 1.75rem /* 28/16 */;
   color: #f02b2b;
-  background: #fff;
   display: block;
 }
 </style>

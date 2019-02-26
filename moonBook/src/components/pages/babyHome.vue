@@ -1,9 +1,12 @@
 <template>
-  <div class="baby-home page-padding">
-    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" :title="pageTitle" @click-left="onClickLeft">
+  <div class="baby-home page-padding" v-if='hackReset'>
+    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft">
+      <div class="head-bar-title" slot="title" @click="selectBaby">
+        {{pageTitle}} <i class="iconfont" v-if='babyList.length > 1'>&#xe608;</i>
+      </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
-        <span class="text">{{$route.query.back?'返回':'首页'}}</span>
+        <span class="text">{{$route.query.back||$route.query.backGo?'返回':'首页'}}</span>
       </div>
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
@@ -11,7 +14,7 @@
         <div class="avatar" v-if="childInfo.avatar" @click="toEgg">
           <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">
         </div>
-        <avatar :gender="childInfo.sex" v-else />
+        <avatar :gender="childInfo.sex" size='small' avatarClass='border' v-else />
         <div class="baby-data" @click="toEditorBaby">
           <div class="list flex flex-align">
             <div class="item name">{{childInfo.name}}</div>
@@ -36,68 +39,60 @@
       <wave />
     </div>
     <div class="container">
-      <div class="bar flex flex-align" @click="toRradStat">
-        <div class="bar-item totalReading">
+      <div class="bar flex flex-align">
+        <div class="bar-item totalReading" @click="toReadAmount">
           <span class="number">{{childInfo.read_count}}</span>
           <span class="bar-title">阅读量</span>
         </div>
-        <div class="bar-item praise">
+        <div class="bar-item praise" @click="toInformation">
           <span class="number">{{childInfo.zan_count}}</span>
           <span class="bar-title">赞</span>
         </div>
-        <div class="bar-item diary">
+        <div class="bar-item diary" @click="toReadStat">
           <span class="number">{{childInfo.insist_days}}</span>
           <span class="bar-title">坚持天数</span>
         </div>
       </div>
-      <div class="progress-wrap">
-        <div class="progress-label">阅读进度</div>
-        <div class="progress-bar">
-          <div class="progress" :style="{width: `${childInfo.read_progress + 2}%`}">
-            <div class="progress-tip">{{childInfo.read_count}}</div>
-          </div>
-          <div class="progress-tip">{{childInfo.shelf_tushu_kinds}}</div>
-        </div>
-      </div>
-      <lazy-component class="module" v-if="isMine">
+      <lazy-component class="module" v-if="childInfo.is_mine">
         <family />
       </lazy-component>
-      <lazy-component class="module" v-if="!isMine">
-        <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
-      </lazy-component>
-      <lazy-component v-if="isMine">
-        <van-nav-bar title="成长日记">
+      <lazy-component v-if="childInfo.is_mine">
+        <van-nav-bar title="成长日记" @click-right="toTask">
           <div class="post-count" slot="left">
             {{childInfo.post_count}}日记
           </div>
           <div class="task" slot="right">
-            活动<van-tag class="tag-task" round type="danger">4</van-tag>
+            任务<van-tag class="tag-task" round type="danger">4</van-tag>
           </div>
         </van-nav-bar>
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
-                  <div class="tab-content" v-if='list.content.length'>
-                    <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
-                      <van-cell title="" v-if='item.isMe' @click="actionsheet(item)" is-link arrow-direction='down'/>
-                      <van-cell>
-                        <graphic-card :item="item" type="babyHome" :avatar='childInfo.avatar' />
-                      </van-cell>
-                    </div>
+                <div class="tab-content" v-if='list.content.length'>
+                  <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
+                    <van-cell title="" v-if='item.isMe' @click="actionsheet(item)" is-link arrow-direction='down' />
+                    <van-cell>
+                      <graphic-card :item="item" type="babyHome" :avatar='childInfo.avatar' />
+                    </van-cell>
                   </div>
-                  <div class="no-content" v-else>
-                    <img src="./../../assets/img/noData.png" />
-                    暂无记录
-                  </div>
+                </div>
+                <div class="no-content" v-else>
+                  <img src="./../../assets/img/noData.png" />
+                  暂无记录
+                </div>
               </van-pull-refresh>
             </van-list>
           </van-tab>
         </van-tabs>
       </lazy-component>
+      <lazy-component class="module" v-else>
+        <reading :list="lateBook" v-show='!childInfo.is_mine' moduleTitle="宝贝最近在读的书" />
+      </lazy-component>
+
     </div>
 
-    <slogan v-if="!isMine" />
+    <slogan v-if="!childInfo.is_mine" />
 
     <van-popup v-model="showQrcode" class="card-popup">
       <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
@@ -106,14 +101,17 @@
     <van-popup v-model="zanShow" class="add-count-popup" :overlay="false" :lock-scroll='false' get-container='#app'>
       <i class="iconfont" :class="[zanShow?'rotateInDownLeft animated':'']">&#xe6e3;</i>
     </van-popup>
-
+    <!-- 文章操作 -->
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
+    <!-- 切换孩子 -->
+    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby"
+      @cancel="isSelectBabyShow = false" />
   </div>
 </template>
 <script>
 import axios from "./../lib/js/api"
-import { mapActions } from 'vuex'
-import { format,timeago } from "./../lib/js/util.js"
+import { mapActions, mapGetters } from 'vuex'
+import { format, timeago } from "./../lib/js/util.js"
 import QRCode from "qrcode"
 import wave from "./../module/animate/anWave"
 import qrCode from "./../module/mold/qrCode"
@@ -139,6 +137,7 @@ export default {
     activity
   },
   computed: {
+    ...mapGetters(['managerState']),
     pageTitle() {
       let name = ''
 
@@ -154,15 +153,32 @@ export default {
 
       return name
     },
-    isMine(){
-      if(this.childInfo.is_mine){
-        return true
+    SelectBabyActions() {
+      let array = this.babyList
+      let arr = []
+      if (this.babyList) {
+        array.forEach(e => {
+          arr.push({
+            name: e.name,
+            id: e.id,
+            subname: this.$route.query.id == e.id ? '当前宝贝' : ''
+          })
+        })
       }
+      // 添加宝贝
+      arr.push({
+        name:'添加宝贝',
+        id:0
+      })
+
+      return arr
     }
   },
   data() {
     return {
-      show:false,
+      hackReset: true,
+      show: false,
+      isSelectBabyShow: false,
       zanShow: false,
       fixedHeaderBar: true,
       domHeight: "",
@@ -171,6 +187,7 @@ export default {
       showQrcode: false,
       lateBook: [],
       list: [],
+      babyList: [],
       loading: false,
       finished: false,
       releasePageShow: false,
@@ -182,41 +199,32 @@ export default {
         content: ''
       }],
       actions: [{
+        name: '编辑',
+        type: 'edit',
+        index: 0
+      }, {
         name: '删除',
-        type: 'delete'
+        type: 'delete',
+        index: 1
       }],
-      postId:'',
-
+      postId: '',
+      templateId: ''
       // 倒计时
-      keepTime: '倒计时',
-      limittime: 100,
-      endTime: '2019-12-30 22:22:22',
-      flag: false
+      // keepTime: '倒计时',
+      // limittime: 100,
+      // endTime: '2019-12-30 22:22:22',
+      // flag: false
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.qrcode()
-      vm.getUserData().then(res => {
-        if (res.child_id > 0) {
-          axios.get(`/book/baby/getInfo?child_id=${to.query.id}`).then(res => {
-            vm.childInfo = res.data.data
-          })
-        } else {
-          vm.$router.push({
-            name: 'edit-child',
-            query: {
-              type: 'add',
-              pageTitle: '添加宝贝'
-            }
-          })
-        }
-      })
+      vm.request()
     })
   },
   created() {
     this.fetchData()
-    this.StartCountDown() //倒计时
+    // this.StartCountDown() //倒计时
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll)
@@ -239,8 +247,34 @@ export default {
         }
       })
 
-      axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
-        this.lateBook = res.data.data
+      this.getUserData().then(res => {
+        axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
+          if (res.data.status) {
+            this.babyList = res.data.data
+          }
+        })
+      })
+    },
+    request() {
+      this.getUserData().then(res => {
+        if (res.child_id > '0') {
+          axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
+            this.childInfo = res.data.data
+          })
+
+          axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
+            this.lateBook = res.data.data
+          })
+
+        } else {
+          this.$router.push({
+            name: 'edit-child',
+            query: {
+              type: 'add',
+              pageTitle: '添加宝贝'
+            }
+          })
+        }
       })
     },
     onClickLeft() {
@@ -258,6 +292,9 @@ export default {
           name: "home"
         })
       }
+    },
+    toTask(){
+      console.log('任务')
     },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {
@@ -323,7 +360,7 @@ export default {
       })
     },
     toClassHome(childInfo) {
-      if (childInfo.banji_id > 0) {
+      if (childInfo.banji_id > '0') {
         this.$router.push({
           name: "class-home",
           query: {
@@ -342,7 +379,7 @@ export default {
     },
     babyPraise(childInfo) {
       axios.get(`/book/baby/zan?child_id=${this.$route.query.id}`).then(res => {
-        if (res.data.status == 1) {
+        if (res.data.status) {
           this.zanShow = true
           childInfo.zan_count = res.data.data.zan_count
         } else {
@@ -357,94 +394,188 @@ export default {
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
-    timeAgo(time){
-      return timeago(time*1000)
+    timeAgo(time) {
+      return timeago(time * 1000)
     },
-    toEgg(){
+    toEgg() {
       this.$router.push({
-        name:'egg',
-        query:{
+        name: 'egg',
+        query: {
           id: this.childInfo.id,
           back: this.$route.name,
           banji_id: this.childInfo.banji_id
         }
       })
     },
-    toRradStat(){
+    toReadStat() {
       this.$router.push({
-        name:'readStat',
-        query:{
+        name: 'readStat',
+        query: {
           id: this.$route.query.id,
           back: this.$route.name
         }
       })
     },
-    toEditorBaby(){
-      if(this.childInfo.is_mine){
+    toReadAmount() {
+      this.$router.push({
+        name: 'readAmount',
+        query: {
+          id: this.$route.query.id,
+          back: this.$route.name
+        }
+      })
+    },
+    toInformation() {
+      this.$router.push({
+        name: 'information',
+        query: {
+          id: this.$route.query.id,
+          back: this.$route.name
+        }
+      })
+    },
+    toEditorBaby() {
+      if (this.childInfo.is_mine) {
         this.$router.push({
-          name:'edit-child',
-          query:{
-            id:this.$route.query.id,
-            pageTitle:'编辑宝贝',
-            type:'edit',
+          name: 'edit-child',
+          query: {
+            id: this.$route.query.id,
+            pageTitle: '编辑宝贝',
+            type: 'edit',
             back: this.$route.name
           }
         })
       }
     },
-    actionsheet(item){
+    actionsheet(item) {
       this.show = true
       this.postId = item.post_id
+      this.templateId = item.template_id
     },
     onSelect(item) {
-      if (item.type == 'delete') {
-        axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res=>{
-          if(res.data.status){
-            this.onRefresh()
+      switch (item.index) {
+        case 0:
+          switch (this.templateId) {
+            case '0':
+              this.$router.push({
+                name: 'publishing',
+                query: {
+                  post_id: this.postId,
+                  template_id: this.templateId,
+                  back: this.$route.name,
+                  id: this.$route.query.id,
+                  type: 'edit'
+                }
+              })
+              break
+            case '1':
+              this.$router.push({
+                name: 'graphic',
+                query: {
+                  post_id: this.postId,
+                  template_id: this.templateId,
+                  back: this.$route.name,
+                  id: this.$route.query.id,
+                  type: 'edit'
+                }
+              })
+              break
+          }
+          break
+        case 1:
+          this.$dialog.confirm({
+            title: '删除',
+            message: '您确认要删除吗'
+          }).then(() => {
+            axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
+              if (res.data.status) {
+                this.onRefresh()
+                this.$toast.success('删除成功')
+              }
+            })
+          }).catch(() => {
+            // on cancel
+          })
+          this.show = false
+
+          break
+      }
+    },
+    onSelectBaby(item) {
+      if(item.id == 0){
+        this.$router.push({
+          name:'edit-child',
+          query:{
+            pageTitle:'添加宝贝',
+            type: 'add',
+            back: this.$route.name,
+            id: this.$route.query.id
           }
         })
-        this.show = false
-
-        this.$toast.success('删除成功')
-      }
-    },
-    // 倒计时开始
-    StartCountDown() {
-        let mydate = new Date()
-        mydate.setMinutes(mydate.getMinutes() + this.limittime)
-        this.settime=mydate
-
-        let time = setInterval(() => {
-            if (this.flag == true) {
-                clearInterval(time)
-            }
-            this.timeDown()
-        }, 100)
-    },
-    // 进行倒计时
-    timeDown() {
-      const endTime = new Date(this.endTime)
-      const nowTime = new Date()
-      let leftTime = parseInt((endTime.getTime() - nowTime.getTime()) / 1000)
-      let d = parseInt(leftTime / (24 * 60 * 60))
-      let h = this.formate(parseInt(leftTime / (60 * 60) % 24))
-      let m = this.formate(parseInt(leftTime / 60 % 60))
-      let s = this.formate(parseInt(leftTime % 60))
-      if (leftTime <= 0) {
-          this.flag = true
-          console.log("时间到")
-      }
-      this.keepTime = `${h}:${m}:${s}`
-
-      console.log(this.keepTime)
-    },
-    formate(time) {
-      if (time >= 10) {
-          return time
       } else {
-          return `0${time}`
+        this.hackReset = false
+        this.isSelectBabyShow = false
+
+        this.$nextTick(() => {
+          this.hackReset = true
+          this.request()
+          this.onRefresh()
+        })
+
+        this.$router.push({
+          name: 'baby-home',
+          query: {
+            id: item.id,
+            back: this.$route.name
+          }
+        })
       }
-    }
+    },
+    selectBaby() {
+      if (this.babyList.length > 1) {
+        this.isSelectBabyShow = true
+      }
+    },
+    // toTaskLinkPage() {
+    //   window.location.href = '/book/TushuDonation/intro'
+    // }
+    // 倒计时开始
+    // StartCountDown() {
+    //     let mydate = new Date()
+    //     mydate.setMinutes(mydate.getMinutes() + this.limittime)
+    //     this.settime=mydate
+
+    //     let time = setInterval(() => {
+    //         if (this.flag == true) {
+    //             clearInterval(time)
+    //         }
+    //         this.timeDown()
+    //     }, 100)
+    // },
+    // 进行倒计时
+    // timeDown() {
+    //   const endTime = new Date(this.endTime)
+    //   const nowTime = new Date()
+    //   let leftTime = parseInt((endTime.getTime() - nowTime.getTime()) / 1000)
+    //   let d = parseInt(leftTime / (24 * 60 * 60))
+    //   let h = this.formate(parseInt(leftTime / (60 * 60) % 24))
+    //   let m = this.formate(parseInt(leftTime / 60 % 60))
+    //   let s = this.formate(parseInt(leftTime % 60))
+    //   if (leftTime <= 0) {
+    //       this.flag = true
+    //       console.log("时间到")
+    //   }
+    //   this.keepTime = `${h}:${m}:${s}`
+
+    //   console.log(this.keepTime)
+    // },
+    // formate(time) {
+    //   if (time >= 10) {
+    //       return time
+    //   } else {
+    //       return `0${time}`
+    //   }
+    // }
   }
 }
 
@@ -459,8 +590,7 @@ export default {
   background: linear-gradient(-135deg, #ff765c, #ff23b3);
 }
 
-.baby-info .avatar {
-  margin-right: 0.625rem /* 10/16 */;
+.baby-info .avatar img {
   width: 3.75rem /* 60/16 */;
   height: 3.75rem /* 60/16 */;
   border-radius: 50%;
@@ -481,6 +611,10 @@ export default {
   z-index: 1;
 }
 
+.baby-data {
+  margin-left: 0.625rem /* 10/16 */;
+}
+
 .list {
   color: #fff;
 }
@@ -491,7 +625,7 @@ export default {
 }
 
 .school {
-  width: 10rem /* 160/16 */;
+  width: 8.125rem /* 130/16 */;
   text-align: left;
   color: #fff;
 }
@@ -506,7 +640,7 @@ export default {
 }
 
 .add-praise {
-  right: 4.375rem /* 70/16 */;
+  right: 3.75rem /* 60/16 */;
 }
 
 .add-praise i.iconfont,
@@ -537,7 +671,7 @@ export default {
   font-weight: 500;
 }
 
-.bar-item .bar-title {
+.bar-title {
   font-size: 0.875rem /* 14/16 */;
 }
 
@@ -558,91 +692,54 @@ export default {
   margin-right: 0.625rem /* 10/16 */;
 }
 
-.no-content{
+.no-content {
   background: #fff;
   display: grid;
   text-align: center;
   padding-bottom: 3.125rem /* 50/16 */;
-  color: #C0C4CC;
+  color: #c0c4cc;
 }
 
-
-.no-content img{
+.no-content img {
   width: 9.375rem /* 150/16 */;
   margin: 1.25rem /* 20/16 */ auto;
-  opacity: .7;
+  opacity: 0.7;
 }
 
-.time-line{
+.time-line {
   width: 100%;
   height: 3.125rem /* 50/16 */;
   position: relative;
 }
 
-.time-line::before{
+.time-line::before {
   position: absolute;
   left: 1.5625rem /* 25/16 */;
   top: 0;
-  width: .625rem /* 10/16 */;
+  width: 0.625rem /* 10/16 */;
   height: 100%;
-  content: "";
-  background: #FFC107;
+  content: '';
+  background: #ffc107;
 }
 
-.time{
+.time {
   margin-left: 3.125rem /* 50/16 */;
   font-size: 1.125rem /* 18/16 */;
   font-weight: 500;
 }
 
-.item{
-  margin-bottom: .625rem /* 10/16 */;
+.item {
+  margin-bottom: 0.625rem /* 10/16 */;
 }
 
-.task{
+.task {
   position: relative;
 }
 
-.task .tag-task{
+.task .tag-task {
   position: absolute;
-  top: .3125rem /* 5/16 */;
-  right: -.625rem /* 10/16 */;
-}
-.progress-wrap {
-  display: flex;
-  font-size: .725rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  align-items:center;
-  justify-content: space-between;
-  background-color: #fff;
-}
-.progress-bar {
-  width: 100%;
-  height: 1rem;
-  background-color: #ddd;
-  border-radius: .3rem;
-  position: relative;
-}
-
-.progress-label {
-  width: 4rem;
-}
-
-.progress {
-  background-color: #3299ff;
-  height: 100%;
-  width: 2%;
-  border-radius: .3rem;
-  position: relative;  
-  overflow:hidden;
-  transition: all 1s easy;
-}
-.progress-tip {
-  position: absolute;
-  right: 1rem;
-  top: 0;
-  color: #fff;
+  top: 0.3125rem /* 5/16 */;
+  right: -0.625rem /* 10/16 */;
 }
 </style>
 <style>

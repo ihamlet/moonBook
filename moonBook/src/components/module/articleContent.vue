@@ -19,7 +19,6 @@
 <script>
 import media from './../module/mold/media'
 
-
 export default {
   name: 'article-content',
   props: ['item', 'type'],
@@ -40,7 +39,7 @@ export default {
 }
 
 .title {
-  font-size: 1.125rem /* 18/16 */;
+  font-size: 1.5rem /* 24/16 */;
   font-weight: 700;
 }
 
@@ -91,7 +90,7 @@ article {
 }
 
 .long-article{
-  padding-top: 12.5rem /* 200/16 */;
+  padding-top: 13.75rem /* 220/16 */;
 }
 
 .no-thumb .title{
