@@ -1,6 +1,6 @@
 <template>
   <div class="read-amount">
-    <van-nav-bar :title="$route.meta.title" left-text="返回" left-arrow @click-left="onClickLeft"/>
+    <van-nav-bar :title="$route.meta.title" left-text="返回" right-text='捐赠图书' left-arrow @click-left="onClickLeft" @click-right="onClickRight"/>
     <div class="amount-list flex flex-align">
       <div class="amount-item" v-for="(item,index) in amountList" :key="index">
         <div class="amount-type">{{item.type}}</div>
@@ -132,6 +132,9 @@ export default {
                   name:'my'
               })
           }
+      },
+      onClickRight(){
+        window.location.href = '/book/TushuDonation/intro'
       },
       onRefresh(){
 

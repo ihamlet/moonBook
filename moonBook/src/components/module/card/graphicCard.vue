@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0'>
-          <van-button class="theme-btn" type="primary" size='mini' plain v-if='item.isSubscribe == 0' @click="follow(item)"> + 关注</van-button>
+          <van-button class="theme-btn" type="primary" round size='small' plain v-if='item.isSubscribe == 0' @click="follow(item)"> 关注</van-button>
         </div>
         <div class="views" v-if='item.isMe'>
           <span>{{item.views}}</span>
@@ -30,10 +30,10 @@
       <media :item='item' type='card'/>
 
       <div class="temp-type">
-        <van-tag type="primary" plain v-if='item.school_id > 0'>
+        <van-tag type="primary" size="medium" plain v-if='item.school_id > 0'>
           <span @click="toSchoolHome(item.school_id)">{{item.schoolName}}</span>
         </van-tag>
-         <van-tag type="primary" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
+         <van-tag type="primary" size="medium" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
       </div>
 
       <div class="task" v-if='$route.query.tid == 5'>

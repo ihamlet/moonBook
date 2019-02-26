@@ -8,6 +8,9 @@
       <div class="head-bar-title" slot="title" @click="cutover">
         {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerState.length > 1">&#xe608;</i>
       </div>
+      <div class="head-bar-text" slot='right' v-if='manage'>
+        <span class="text">管理学校</span>
+      </div>
     </van-nav-bar>
     <div class="container">
       <div class="header-card flex flex-align theme-school-background" ref="head">
@@ -78,6 +81,17 @@ export default {
       }
 
       return array
+    },
+    manage() {
+      if(this.managerState){
+        let boolean
+        this.managerState.forEach(element => {
+          if (this.$route.query.id == element.id && element.item_relation != 'parent'){
+            boolean = true
+          }
+        })
+        return boolean
+      }
     }
   },
   data() {
@@ -213,17 +227,6 @@ export default {
         this.hackReset = true
         this.request()
       })
-    },
-    manage() {
-      if(this.managerState){
-        let boolean
-        this.managerState.forEach(element => {
-          if (this.$route.query.id == element.id && element.item_relation != 'parent'){
-            boolean = true
-          }
-        })
-        return boolean
-      }
     }
   }
 }

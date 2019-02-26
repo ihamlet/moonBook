@@ -57,16 +57,15 @@
         <family />
       </lazy-component>
       <lazy-component v-if="childInfo.is_mine">
-        <van-nav-bar title="成长日记" @click-right="toTaskLinkPage">
+        <van-nav-bar title="成长日记" @click-right="toTask">
           <div class="post-count" slot="left">
             {{childInfo.post_count}}日记
           </div>
           <div class="task" slot="right">
-            捐书活动<van-tag class="tag-task" round type="danger">new</van-tag>
+            任务<van-tag class="tag-task" round type="danger">4</van-tag>
           </div>
         </van-nav-bar>
-        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab"
-          :offsetTop='45'>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
@@ -157,7 +156,7 @@ export default {
     SelectBabyActions() {
       let array = this.babyList
       let arr = []
-      if (this.babyList.length > 0) {
+      if (this.babyList) {
         array.forEach(e => {
           arr.push({
             name: e.name,
@@ -166,13 +165,14 @@ export default {
           })
         })
       }
+      // 添加宝贝
+      arr.push({
+        name:'添加宝贝',
+        id:0
+      })
+
       return arr
     }
-    // actions(){
-    //   if(this.managerState.length > ){
-
-    //   }
-    // }
   },
   data() {
     return {
@@ -292,6 +292,9 @@ export default {
           name: "home"
         })
       }
+    },
+    toTask(){
+      console.log('任务')
     },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {
@@ -499,31 +502,43 @@ export default {
       }
     },
     onSelectBaby(item) {
-      this.hackReset = false
-      this.isSelectBabyShow = false
+      if(item.id == 0){
+        this.$router.push({
+          name:'edit-child',
+          query:{
+            pageTitle:'添加宝贝',
+            type: 'add',
+            back: this.$route.name,
+            id: this.$route.query.id
+          }
+        })
+      } else {
+        this.hackReset = false
+        this.isSelectBabyShow = false
 
-      this.$nextTick(() => {
-        this.hackReset = true
-        this.request()
-        this.onRefresh()
-      })
+        this.$nextTick(() => {
+          this.hackReset = true
+          this.request()
+          this.onRefresh()
+        })
 
-      this.$router.push({
-        name: 'baby-home',
-        query: {
-          id: item.id,
-          back: this.$route.name
-        }
-      })
+        this.$router.push({
+          name: 'baby-home',
+          query: {
+            id: item.id,
+            back: this.$route.name
+          }
+        })
+      }
     },
     selectBaby() {
       if (this.babyList.length > 1) {
         this.isSelectBabyShow = true
       }
     },
-    toTaskLinkPage() {
-      window.location.href = '/book/TushuDonation/intro'
-    }
+    // toTaskLinkPage() {
+    //   window.location.href = '/book/TushuDonation/intro'
+    // }
     // 倒计时开始
     // StartCountDown() {
     //     let mydate = new Date()

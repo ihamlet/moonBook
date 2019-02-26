@@ -166,7 +166,7 @@ export default {
         this.radio = localStorage['radio']
       }
 
-      if (this.$route.query.id) {
+      if (this.$route.query.id && this.$route.query.type == 'edit') {
         axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
           let date = new Date(res.data.data.birthday * 1000)
           this.childInfo.name = res.data.data.name
@@ -263,7 +263,6 @@ export default {
         }, 2000)
       } else {
         this.operationApi().then(res => {
-          console.log(res)
           if(set == 'setSchool'&&this.$route.query.back != 'register'){
             this.$router.push({
               name: 'edit-setting',

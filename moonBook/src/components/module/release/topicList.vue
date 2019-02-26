@@ -14,7 +14,7 @@
                 #{{item.cate_name}}
               </div>
               <div class="explain" v-if='item.access_level == 1'>
-                发布通知到所管理的{{$route.query.back == 'class-home'?'班级':'学校'}}
+                发布通知到管理的{{$route.query.back == 'class-home'?'班级':'学校'}}
               </div>
             </div>
           </van-cell>

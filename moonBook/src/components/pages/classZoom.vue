@@ -5,11 +5,11 @@
       <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template' />
     </lazy-component>
     <lazy-component>
-      <van-nav-bar title="班级动态" :right-text="`${manage()?'管理班级':''}`"  @click-right="toManger"/>
+      <van-nav-bar title="班级动态"/>
       <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
         <div class="list" v-if='list.length > 0'>
           <div class="item" v-for="(item,index) in list" :key="index">
-            <van-cell title="" is-link arrow-direction="down" v-if='manage()' @click="operation(item)" />
+            <van-cell title="" is-link arrow-direction="down" v-if='manage' @click="operation(item)" />
             <van-cell>
               <graphic-card :item="item" type="classHome" />
             </van-cell>
@@ -41,7 +41,18 @@ export default {
     graphicCard
   },
   computed:{
-    ...mapGetters(['managerState'])
+    ...mapGetters(['managerState']),
+        manage() {
+      if(this.managerState){
+        let boolean
+        this.managerState.forEach(element => {
+          if (this.$route.query.id == element.id && element.item_relation != 'parent'){
+            boolean = true
+          }
+        })
+        return boolean
+      }
+    }
   },
   data() {
     return {
@@ -141,17 +152,6 @@ export default {
             }
           })
           break
-      }
-    },
-    manage() {
-      if(this.managerState){
-        let boolean
-        this.managerState.forEach(element => {
-          if (this.$route.query.id == element.id && element.item_relation != 'parent'){
-            boolean = true
-          }
-        })
-        return boolean
       }
     },
     toManger(){
