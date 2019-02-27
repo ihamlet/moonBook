@@ -256,4 +256,14 @@ export default {
   -webkit-background-clip: text;
   color: transparent;
 }
+
+.book-cover img{
+  margin: 0 auto;
+  display: block;
+}
+
+.title{
+  margin-bottom: .625rem /* 10/16 */;
+  font-weight: 500;
+}
 </style>

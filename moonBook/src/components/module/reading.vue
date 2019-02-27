@@ -1,7 +1,7 @@
 <template>
   <div class="reading">
     <van-cell :title="moduleTitle" :is-link="type =='rank'" @click="toBabyHome" />
-    <div class="book-list scroll-x" v-if="list">
+    <div class="book-list scroll-x" v-if="list.length > 0">
       <div class="book-item scroll-item" v-for='(item,index) in list' :key="index">
         <div class="book-cover">
           <img :src="thumb(item.book_thumb)" @error="outThumb($event,item)" :alt="item.book_name" @click="toBookDetails(item)">
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="not-content" v-else>
-      尚无记录, <span class="theme-color" v-if='userDataState.isVip == 0' @click="toAccept">办理阅亮书架借阅卡</span>
+      尚无记录 <span class="theme-color" v-if='userDataState.isVip == 0' @click="toAccept"> 办理阅亮书架借阅卡</span>
     </div>
 
     <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>

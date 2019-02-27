@@ -726,10 +726,10 @@ i.iconfont.rotate {
 /* 尚无记录 */
 .not-content {
   width: 100%;
-  height: 12.5rem /* 200/16 */;
+  height: 6.25rem /* 100/16 */;
+  line-height: 6.25rem /* 100/16 */;
   background: #fff;
   text-align: center;
-  line-height: 12.5rem /* 200/16 */;
   color: #c0c4cc;
 }
 

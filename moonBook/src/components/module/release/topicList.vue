@@ -41,42 +41,37 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get('/book/schoolArticleCate/getList').then(res => {
+
+      let data = {
+        params:{
+          portal_name:'宝贝主页'
+        }
+      }
+
+      if(this.$route.query.back == 'class-home'){
+        data.params.portal_name = '班级主页'
+      }    
+
+      if(this.$route.query.back == 'apps-school'){
+        data.params.portal_name = '学校主页'
+      }
+
+      axios.get('/book/schoolArticleCate/getList',data).then(res => {
         if(res.status == 200){
           let array = res.data
-          let datas = []
+          let data = []
           array.forEach(element => {
-            if(element.portal_name == '宝贝主页'&&this.$route.query.back){
-              datas.push(element)
+            if(element.access_level == 0){
+              data.push(element)
+            }else{
+              this.managerState.forEach(e =>{
+                if((this.$route.query.id == e.banji_id||this.$route.query.id == e.school_id)&& e.item_relation != 'parent'){
+                  data.push(element)
+                }
+              })
             }
-
-            if(element.portal_name == '班级主页'&&this.$route.query.back == 'class-home'){
-              if(element.access_level == 0){
-                datas.push(element)
-              }else{
-                this.managerState.forEach(e=>{
-                  if(this.$route.query.id == e.banji_id && e.item_relation != 'parent'){
-                    datas.push(element)
-                  }
-                })
-              }
-            }
-
-            if(element.portal_name == '学校主页'&&this.$route.query.back == 'apps-school'){
-              if(element.access_level == 0){
-                datas.push(element)
-              }else{
-                this.managerState.forEach(e=>{
-                  if(this.$route.query.id == e.school_id && e.item_relation != 'parent'){
-                    datas.push(element)
-                  }
-                })
-              }
-            }
-
           })
-        
-          this.topicList = datas
+          this.topicList = data
         }
       })
     },

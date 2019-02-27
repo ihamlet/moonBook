@@ -71,7 +71,7 @@ export default {
       }
 
       axios.get('/book/SchoolArticle/recommendUsers',data).then(res => {
-        if(res.data.status == 1){
+        if(res.status == 200){
           this.freshList = res.data
         }
       })

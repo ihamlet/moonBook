@@ -186,20 +186,19 @@ export default {
       if (this.userDataState.child_id > 0) {
         array.push({
           title: `${this.userDataState.child_name}@主页`,
-          name: 'baby-home'
+          name: 'to_baby',
+          to: 1
         })
       }
       if (this.userDataState.banji_id > 0) {
         array.push({
           title: `${this.userDataState.child_name}@班级`,
-          name: 'class-zoom'
+          name: 'to_banji',
+          to: 1
         })
       }
-      array.push({
-        title: '发现',
-        name: 'apps-find'
-      })
-      
+
+
       this.resultList = array
       
       array.forEach(e => {
@@ -293,7 +292,10 @@ export default {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
         if (this.$route.query.back) {
           this.$router.push({
-            name: this.$route.query.back
+            name: this.$route.query.back,
+            query: {
+              id:  this.$route.query.id || ''
+            }
           })
         } else {
           this.$router.push({
@@ -309,27 +311,31 @@ export default {
           post_id: this.$route.query.post_id || ''
         }
 
-        this.result.forEach(e => {
-          if (e == 'apps-find') {
-            data.to_school = 1
-          }
-
-          if (e == 'class-zoom') {
+        this.result.forEach(e=>{
+          if(e == 'to_banji'){
             data.to_banji = 1
           }
 
-          if (e == 'baby-home') {
-            data.to_baby = 1
+          if( e == 'to_baby'){
+            data.to_baby  = 1
           }
         })
 
+
         axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
-          this.$router.push({
-            name: this.result[0],
-            query: {
-              id: this.result[0] == 'class-zoom' ? this.userDataState.banji_id : this.userDataState.child_id
-            }
-          })
+          if(this.$route.query.back){
+            this.$router.push({
+              name: this.$route.query.back,
+              query: {
+                id:  this.$route.query.id || '',
+                cate_id: this.cate_id || ''
+              }
+            })
+          }else{
+            this.$router.push({
+              name:'apps-find'
+            })
+          }
         })
       }
     },
