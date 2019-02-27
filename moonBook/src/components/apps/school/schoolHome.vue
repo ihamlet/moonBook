@@ -166,7 +166,9 @@ export default {
     ...mapActions(['getUserData']),
     request() {
       axios.get(`/book/school/getInfo?school_id=${this.$route.query.id}`).then(res => {
-        this.schoolInfo = res.data.data
+        if(res.data.status == 1){
+          this.schoolInfo = res.data.data
+        }
       })
     },
     handleScroll() {

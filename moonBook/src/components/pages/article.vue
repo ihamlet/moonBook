@@ -6,9 +6,9 @@
           <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
             {{$route.meta.title}}
           </div>
-          <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else>
+          <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else @click="toZoom">
             <div class="avatar" v-if='item.user'>
-              <img :src="getAvatar(item.user.avatar)" :alt="item.user.username">
+              <img :src="getAvatar(item.user.avatar)" :alt="item.user.username" @error='imgError'>
             </div>
             <div class="name" v-if='item.user'>{{item.user.username}}</div>
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
@@ -22,7 +22,7 @@
     <div class="container page-padding">
       <div class="user-card flex flex-align" ref="userCard" v-if='item.user'>
         <div class="avatar">
-          <img :src="getAvatar(item.user.avatar)" :alt="item.user.username">
+          <img :src="getAvatar(item.user.avatar)" :alt="item.user.username" @error='imgError'>
         </div>
         <div class="info">
           <div class="name">
@@ -49,9 +49,9 @@
     </div>
 
     <!-- 生成图片 -->
-    <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
+    <!-- <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
       <article-share :item='item' :userName='item.user?item.user.username:""' :qrImage='qrImage' @close='imageShow = false'/>
-    </van-popup>
+    </van-popup> -->
   </div>
 </template>
 <script>
@@ -108,7 +108,9 @@ export default {
     fetchData() {
       this.qrcode()
       axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id||this.$route.query.back_id}`).then(res => {
-        this.item = res.data.data.post
+        if(res.data.status == 1){
+          this.item = res.data.data.post
+        }
       })
     },
     onClickLeft() {
@@ -147,6 +149,12 @@ export default {
          result = img
       }
       return result
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    toZoom(){
+
     }
   }
 }

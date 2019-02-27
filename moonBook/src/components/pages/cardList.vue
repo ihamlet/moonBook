@@ -76,16 +76,17 @@ export default {
   methods: {
     fetchData() {
       axios.get('/book/memberCard/getList').then(res => {
-        console.log(res)
-        let data = []
-        let array = res.data.data
-        array.forEach(element => {
-          if(element.level_id > 0){
-            data.push(element)
-          }
-        })
+        if(res.data.status == 1){
+          let data = []
+          let array = res.data.data
+          array.forEach(element => {
+            if(element.level_id > 0){
+              data.push(element)
+            }
+          })
 
-        this.cardList = data
+          this.cardList = data
+        }
       })
     },
     onClickLeft() {

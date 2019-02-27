@@ -371,7 +371,7 @@ export default new Router({
         name: 'graphic',
         component: Graphic,
         meta: {
-          title: '发布长文',
+          title: '发布',
           type:'webo'
         }
       }]

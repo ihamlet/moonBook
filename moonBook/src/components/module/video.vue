@@ -75,8 +75,6 @@ export default {
       }
 
       axios.get('/book/SchoolArticle/getList?sort=post', data).then(res => {
-     
-
         let arr = []
         if (res.data.status == 1) {
           let array = res.data.data

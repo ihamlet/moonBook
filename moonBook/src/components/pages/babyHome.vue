@@ -249,7 +249,7 @@ export default {
 
       this.getUserData().then(res => {
         axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
-          if (res.data.status) {
+          if (res.data.status == 1) {
             this.babyList = res.data.data
           }
         })
@@ -259,11 +259,16 @@ export default {
       this.getUserData().then(res => {
         if (res.child_id > '0') {
           axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
-            this.childInfo = res.data.data
+            if( res.data.status == 1 ){
+              this.childInfo = res.data.data
+            }
+            
           })
 
           axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
-            this.lateBook = res.data.data
+            if(res.data.status == 1){
+              this.lateBook = res.data.data
+            }
           })
 
         } else {
@@ -338,15 +343,17 @@ export default {
       }
 
       return axios.get('/book/SchoolArticle/getList', data).then(res => {
-        if (this.page == 1) {
-          this.tab[this.tabIndex].content = res.data.data
-        } else {
-          this.tab[this.tabIndex].content = this.list.concat(res.data.data)
-        }
-        this.loading = false
-        this.page++
-        if (this.tab[this.tabIndex].content.length >= res.data.count) {
-          this.finished = true
+        if(res.data.status == 1){
+          if (this.page == 1) {
+            this.tab[this.tabIndex].content = res.data.data
+          } else {
+            this.tab[this.tabIndex].content = this.list.concat(res.data.data)
+          }
+          this.loading = false
+          this.page++
+          if (this.tab[this.tabIndex].content.length >= res.data.count) {
+            this.finished = true
+          }
         }
       })
     },
@@ -379,7 +386,7 @@ export default {
     },
     babyPraise(childInfo) {
       axios.get(`/book/baby/zan?child_id=${this.$route.query.id}`).then(res => {
-        if (res.data.status) {
+        if (res.data.status == 1) {
           this.zanShow = true
           childInfo.zan_count = res.data.data.zan_count
         } else {
@@ -488,7 +495,7 @@ export default {
             message: '您确认要删除吗'
           }).then(() => {
             axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
-              if (res.data.status) {
+              if (res.data.status == 1) {
                 this.onRefresh()
                 this.$toast.success('删除成功')
               }

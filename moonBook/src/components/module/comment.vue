@@ -1,7 +1,8 @@
 <template>
   <div class="comment-list" id='comment' ref='comment'>
     <van-nav-bar :zIndex='0' @click-right="showField">
-      <div class="comment" slot="right">{{listLength}}评论</div>
+      <div class="zan" slot="right">赞 {{item.zan_num}}</div>
+      <div class="comment" slot="left">评论 {{listLength}}</div>
     </van-nav-bar>
     <div class="no-centent" v-if='listLength == 0'>
       <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
@@ -156,18 +157,21 @@ export default {
   methods: {
     onLoad() {
       axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.$route.query.id||this.$route.query.back_id}&page=${this.page}&limit=10&sort=new`).then(res => {
-        this.listLength = res.data.count
-        let array = res.data.data
-        this.loading = false
-        if (this.page == 1) {
-          this.list = array
-        } else {
-          this.list = this.list.concat(array)
+        if(res.data.status == 1){
+          this.listLength = res.data.count
+          let array = res.data.data
+          this.loading = false
+          if (this.page == 1) {
+            this.list = array
+          } else {
+            this.list = this.list.concat(array)
+          }
+          this.page++
+          if (this.list.length >= res.data.count) {
+            this.finished = true
+          }
         }
-        this.page++
-        if (this.list.length >= res.data.count) {
-          this.finished = true
-        }
+
       })
     },
     submit() {

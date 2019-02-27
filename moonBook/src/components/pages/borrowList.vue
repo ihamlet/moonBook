@@ -92,50 +92,57 @@ export default {
     },
     getReadList() {
       return axios.get(`/book/MemberBorrow/getList?page=${this.page}&is_return=${this.tab[this.tabIndex].type}`).then(res => {
-        if (res.data.count > 0) {
-          if (this.page == 1) {
-            this.tab[this.tabIndex].content = res.data.data
-          } else {
-            this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
-          }
-          this.page++
-          this.loading = false
-          if (this.tab[this.tabIndex].content.length >= res.data.count) {
-            this.finished = true
+        if(res.data.status == 1){
+          if (res.data.count > 0) {
+            if (this.page == 1) {
+              this.tab[this.tabIndex].content = res.data.data
+            } else {
+              this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
+            }
+            this.page++
+            this.loading = false
+            if (this.tab[this.tabIndex].content.length >= res.data.count) {
+              this.finished = true
+            }
           }
         }
       })
     },
     getCollectList() {
       return axios.get(`/book/SchoolArticleCollect/getList?page=${this.page}&type=book`).then(res => {
-        if (res.data.count > 0) {
-          if (this.page == 1) {
-            this.tab[this.tabIndex].content = res.data.data
-          } else {
-            this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
-          }
-          this.page++
-          this.loading = false
-          if (this.tab[this.tabIndex].content.length >= res.data.count) {
-            this.finished = true
+        if(res.data.status == 1){
+          if (res.data.count > 0) {
+            if (this.page == 1) {
+              this.tab[this.tabIndex].content = res.data.data
+            } else {
+              this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
+            }
+            this.page++
+            this.loading = false
+            if (this.tab[this.tabIndex].content.length >= res.data.count) {
+              this.finished = true
+            }
           }
         }
       })
     },
     getBrokenList() {
       return axios.get('/book/MemberBookBroken/getList').then(res => {
-        if (res.data.count > 0) {
-          if (this.page == 1) {
-            this.tab[this.tabIndex].content = res.data.data
-          } else {
-            this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
-          }
-          this.page++
-          this.loading = false
-          if (this.tab[this.tabIndex].content.length >= res.data.count) {
-            this.finished = true
+        if(res.data.status == 1){
+          if (res.data.count > 0) {
+            if (this.page == 1) {
+              this.tab[this.tabIndex].content = res.data.data
+            } else {
+              this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
+            }
+            this.page++
+            this.loading = false
+            if (this.tab[this.tabIndex].content.length >= res.data.count) {
+              this.finished = true
+            }
           }
         }
+
       })
     },
     onChangeTab(index) {

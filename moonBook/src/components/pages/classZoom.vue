@@ -92,7 +92,9 @@ export default {
     },
     fetchData() {
       axios.get(`/book/baby/getList?banji_id=${this.$route.query.id}`).then(res => {
-        this.freshList = res.data.data
+        if(res.data.status == 1){
+          this.freshList = res.data.data
+        }
       })
     },
     onLoad() {
@@ -106,16 +108,18 @@ export default {
       }
 
       return axios.get('/book/SchoolArticle/getList', data).then(res => {
-        if (this.page == 1) {
-          this.list = res.data.data
-        } else {
-          this.list = this.list.concat(res.data.data)
-        }
+        if(res.data.status == 1){
+          if (this.page == 1) {
+            this.list = res.data.data
+          } else {
+            this.list = this.list.concat(res.data.data)
+          }
 
-        this.loading = false
-        this.page++
-        if (this.list.length >= res.data.count) {
-          this.finished = true
+          this.loading = false
+          this.page++
+          if (this.list.length >= res.data.count) {
+            this.finished = true
+          }
         }
       })
     },

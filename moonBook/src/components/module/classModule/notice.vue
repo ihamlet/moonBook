@@ -61,8 +61,10 @@ export default {
       }
 
       axios.get('/book/SchoolArticle/getList', data).then(res => {
-        this.count = res.data.count
-        this.notice = res.data.data
+        if(res.data.status == 1){
+          this.count = res.data.count
+          this.notice = res.data.data
+        }
       })
     }
   }

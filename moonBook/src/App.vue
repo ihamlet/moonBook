@@ -141,7 +141,9 @@ body {
   width: 100%;
   height: 6.25rem /* 100/16 */;
   overflow: hidden;
+  position: relative;
 }
+
 
 /* 主题色 */
 .theme-btn.van-button--primary,
@@ -823,6 +825,7 @@ video {
   top: 50%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
+  object-fit: cover;
 }
 
 .close {
@@ -945,6 +948,8 @@ i.iconfont.vip-1 {
   padding-bottom: 150%;
 }
 
+
+.cover img,
 .img-preview {
   position: absolute;
   width: 100%;

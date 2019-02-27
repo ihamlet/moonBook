@@ -1,5 +1,7 @@
 <template>
   <div class="container" id='media' @click="toArticle">
+    <div class="title" v-if='type=="card"&&item.template_id=="0"' v-line-clamp:20="2">{{item.title}}</div>
+
     <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?4:0" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
 
     <!-- 视频 目前还没有音频 -->
@@ -18,10 +20,10 @@
     <div class="media img" v-if='item.template_id == "1"'>
       <div :class="[item.photos.length == 4?'layout-4':'']">
         <van-row :gutter="4">
-          <van-col :span="item.photos.length == 4?'12':'8'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-            <div class="img-grid" :class="[item.photos.length == 1&&photo.height/photo.width > 18/9?'long':'']" v-if='photo&&photo.is_video==0 && photo.is_audio == 0'>
+          <van-col :span="grid" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
+            <div class="img-grid" :class="[item.photos.length == 1&&photo.height/photo.width > 18/9?'long':'',item.photos.length == 1&&type=='details'?'alone':'']" v-if='photo&&photo.is_video==0 && photo.is_audio == 0'>
               <img class="img-preview" :class="[photo.height/photo.width > 18/9?'long':'']" :src="photo.thumb" :large="photo.photo" :preview='photo.post_id' />
-              <van-tag class="photo-tag" type="primary" v-if='photo.height/photo.width > 18/9'>长图</van-tag>
+              <van-tag class="photo-tag" type="primary" v-if='photo.height/photo.width > 18/9&&type=="card"'>长图</van-tag>
             </div>
           </van-col>
         </van-row>
@@ -32,8 +34,6 @@
       <img :src="item.cover || item.photos[0].thumb" :preview='item.post_id'/>
       <van-tag class="photo-tag" type="primary">长文</van-tag>
     </div>
-
-
     
     <!-- 音频 -->
     <!-- <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
@@ -47,6 +47,19 @@
 export default {
   name: 'media',
   props: ['item', 'type'],
+  computed: {
+    grid(){
+      let num
+      if(this.item.photos.length == 4 && this.type == 'card'){
+        num = 12
+      }else if( this.item.photos.length == 1 && this.type == 'details'){
+        num = 24
+      }else{
+        num = 8
+      }
+      return num
+    }
+  },
   methods: {
     toArticle(e) {
       if (this.type == 'card' && e.target.tagName!='IMG') {
@@ -92,6 +105,22 @@ export default {
   position: relative;
   float: left;
   margin-bottom: .625rem /* 10/16 */;
+}
+
+.title{
+  font-size: 1.125rem /* 18/16 */;
+  margin-bottom: .625rem /* 10/16 */;
+  font-weight: 700;
+}
+
+.img-grid.long.alone{
+  padding-bottom: 0
+}
+
+.img-grid.alone .img-preview{
+  width: auto;
+  height: auto;
+  position: static;
 }
 </style>
 <style>

@@ -5,8 +5,8 @@
           <div class="no-content" v-if='list.length == 0'>
             尚无内容
           </div>
-          <transition-group leave-active-class="animated zoomOut" tag='div' v-else>
-            <div class="item" v-for="(item,index) in list" :key="index"  @click="setItem(item)" v-show="item.show?false:true">
+          <!-- <transition-group leave-active-class="animated zoomOut" tag='div' v-else> -->
+            <div class="item" v-for="(item,index) in list" :key="index"  @click="setItem(item)" v-else>
               <van-cell title='' is-link arrow-direction="down" @click="actionsheet(item)" />
               <van-cell>
                 <div class="content">
@@ -14,7 +14,7 @@
                 </div>
               </van-cell>
             </div>
-          </transition-group>
+          <!-- </transition-group> -->
       </van-pull-refresh>
     </van-list>
 
@@ -112,17 +112,19 @@ export default {
       }
 
       return axios.get('/book/SchoolArticle/getList', data).then(res => {
-        if (this.page == 1) {
-          this.list = res.data.data
-        } else {
-          this.list = this.list.concat(res.data.data)
-        }
+        if(res.data.status == 1){
+          if (this.page == 1) {
+            this.list = res.data.data
+          } else {
+            this.list = this.list.concat(res.data.data)
+          }
 
-        this.loading = false
-        this.page++
+          this.loading = false
+          this.page++
 
-        if (this.list.length >= res.data.count) {
-          this.finished = true
+          if (this.list.length >= res.data.count) {
+            this.finished = true
+          }
         }
       })
     },
@@ -219,11 +221,14 @@ export default {
         this.$toast(res.data.msg)
 
         let array = this.list
-        array.forEach(element=>{
+        let index
+        array.forEach((element,i)=>{
           if(this.item.post_id == element.post_id){
-            element.show = 1
+            index = i
           }
         })
+
+        this.list.splice(index,1)
       })
 
       this.reportShow = false

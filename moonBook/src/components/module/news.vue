@@ -1,8 +1,9 @@
 <template>
     <div class="news">
+        <van-cell-group>
         <div class="list">
-            <div class="item" v-for='(item,index) in newsList' :key="index">
-                <van-cell-group>
+            <div class="item" v-for='(item,index) in newsList' :key="index" @click="toArticle(item)">
+                
                     <van-cell>
                         <van-row gutter="10">
                             <van-col span="10">
@@ -12,41 +13,48 @@
                             </van-col>
                             <van-col span="14">
                                 <div v-line-clamp:20="2" class="title">{{item.title}}</div>
-                                <div class="info" v-if='item.releaseInfo'>
+                                <div class="info">
                                     <div class="flex flex-align">
-                                        <div v-line-clamp:20="1" class="name">发布:{{item.releaseInfo.name}}</div>
-                                        <div v-line-clamp:20="1"  class="school">{{item.releaseInfo.school}}</div>
+                                        <div v-line-clamp:20="1" class="name">发布:{{item.name}}</div>
+                                        <div v-line-clamp:20="1"  class="school" v-if='item.school_id!="0"'>{{item.school}}</div>
                                     </div>
                                     <div class="foot-bar-left">
-                                        <div class="time">{{item.releaseInfo.time}}</div>
+                                        <div class="time">{{getTimeAgo(item.create_time)}}</div>
                                     </div>
                                     <div class="foot-bar-right watch">
                                         <i class="iconfont">&#xe610;</i>
-                                        {{item.releaseInfo.watch>1000?'999+':item.releaseInfo.watch}}
+                                        {{item.watch>1000?'999+':item.watch}}
                                     </div>
-                                </div>
-                                <div class="info" v-if='item.adInfo'>
-                                    <div class="foot-bar-left type">广告</div>
-                                    <div class="foot-bar-right">
-                                        <div v-line-clamp:20="1" class="school">{{item.adInfo.school}}</div>
-                                    </div>
-                                </div>
-                                <div class="info" v-if='item.directInfo'>
-                                    <div class="category">{{item.directInfo.category}}</div>
-                                    <div class="foot-bar-left address">{{item.directInfo.address}}</div>
-                                </div>     
+                                </div> 
                             </van-col>
                         </van-row>
                     </van-cell>
-                </van-cell-group>
+               
             </div>
         </div>
+         </van-cell-group>
     </div>    
 </template>
 <script>
+import { timeago } from './../lib/js/util'
+
 export default {
     name:'news',
-    props: ['newsList']
+    props: ['newsList'],
+    methods: {
+        toArticle(article){
+            this.$router.push({
+                name:'article',
+                query:{
+                    id: article.id,
+                    back: this.$route.name
+                }
+            })
+        },
+        getTimeAgo(time){
+            return timeago(time*1000)
+        }
+    }
 }
 </script>
 <style scoped>

@@ -71,7 +71,9 @@ export default {
       }
 
       axios.get('/book/SchoolArticle/recommendUsers',data).then(res => {
-        this.freshList = res.data
+        if(res.data.status == 1){
+          this.freshList = res.data
+        }
       })
     },
     onClickLeft(){

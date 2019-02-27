@@ -10,7 +10,7 @@
     <article :class="[item.template_id==0 ?'long-article':'',!item.cover || item.photos[0]?'no-thumb-long-article':'']" >
       <div class="main">
         <div class="media-content">
-          <media :item='item'/>
+          <media :item='item' type='details'/>
         </div>
       </div>
     </article>
@@ -90,7 +90,7 @@ article {
 }
 
 .long-article{
-  padding-top: 13.75rem /* 220/16 */;
+  padding-top: 15.625rem /* 250/16 */;
 }
 
 .no-thumb .title{

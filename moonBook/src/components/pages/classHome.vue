@@ -197,7 +197,9 @@ export default {
     ...mapActions(['getUserData']),
     request() {
       axios.get(`/book/SchoolBanji/getInfo?banji_id=${this.$route.query.id}`).then(res => {
-        this.classInfo = res.data.data
+        if(res.data.status == 1){
+          this.classInfo = res.data.data
+        }
       })
     },
     onClickLeft() {

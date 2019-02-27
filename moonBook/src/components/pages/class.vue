@@ -55,7 +55,9 @@ export default {
     fetchData() {
       if (this.$route.query.registerType) {
         axios.get('/book/SchoolTeacher/getMine').then(res => {
-          this.schoolName = res.data.data.school_name
+          if(res.data.status == 1){
+            this.schoolName = res.data.data.school_name
+          }
         })
       } else {
         axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
@@ -85,17 +87,19 @@ export default {
     select(item, itemIndex) {
       if (this.$route.query.registerType == 'teacher') {
         axios.get(`/book/SchoolTeacher/bind_banji?banji_name=${item.title}`).then(res => {
-          this.$router.push({
-            name: 'edit-setting',
-            query: {
-              registerType: 'teacher',
-              pageTitle: this.$route.query.pageTitle
-            }
-          })
+          if(res.data.status == 1){
+            this.$router.push({
+              name: 'edit-setting',
+              query: {
+                registerType: 'teacher',
+                pageTitle: this.$route.query.pageTitle
+              }
+            })
+          }
         })
       } else {
         axios.get(`/book/babyBanji/bind?banji_name=${item.title}&child_id=${this.$route.query.id}`).then(res => {
-          if (res.data.status) {
+          if (res.data.status == 1) {
             if (this.$route.query.back) {
               this.$router.push({
                 name: this.$route.query.back,
@@ -126,11 +130,13 @@ export default {
     },
     onLoad() {
       axios.get(`/book/SchoolBanji/getList?page=${this.page}&limit=20&school_id=${this.$route.query.school_id}`).then(res => {
-        this.page++
-        this.list = this.list.concat(res.data.data)
-        this.loading = false
-        if (this.list.length >= res.data.count) {
-          this.finished = true
+        if(res.data.status == 1){
+          this.page++
+          this.list = this.list.concat(res.data.data)
+          this.loading = false
+          if (this.list.length >= res.data.count) {
+            this.finished = true
+          }
         }
       })
     },

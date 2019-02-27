@@ -43,7 +43,9 @@ export default {
   methods: {
     fetchData() {
       axios.get(`/book/SchoolArticle/getList?page=${this.page}&limit=1&banji_id=${this.banji_id}`).then(res => {
-        this.drying = res.data.data[0]
+        if(res.data.status == 1){
+          this.drying = res.data.data[0]
+        }
       })
     },
     toClassZoom() {
