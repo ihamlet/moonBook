@@ -2,21 +2,25 @@
   <div class="drying-list">
     <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
       <van-pull-refresh v-model="loading" @refresh="onRefresh">
-        <div class="no-content" v-if='list.length == 0'>
-          尚无内容
-        </div>
-        <div class="item" v-for="(item,index) in list" :key="index" v-else>
-          <van-cell v-if='item.isMe' title='' is-link arrow-direction="down" @click="actionsheet(item)" />
-          <van-cell>
-            <div class="content">
-              <graphic-card :item="item" @follow="follow" />
+          <div class="no-content" v-if='list.length == 0'>
+            尚无内容
+          </div>
+          <transition-group leave-active-class="animated zoomOut" tag='div' v-else>
+            <div class="item" v-for="(item,index) in list" :key="index"  @click="setItem(item)" v-show="item.show?false:true">
+              <van-cell title='' is-link arrow-direction="down" @click="actionsheet(item)" />
+              <van-cell>
+                <div class="content">
+                  <graphic-card :item="item" @follow="follow" />
+                </div>
+              </van-cell>
             </div>
-          </van-cell>
-        </div>
+          </transition-group>
       </van-pull-refresh>
     </van-list>
 
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
+    <!-- 用户文章操作 -->
+    <van-actionsheet v-model="reportShow" :actions="reportActions" cancel-text="取消" @select="onReportSelect" @cancel="reportShow = false" />
   </div>
 </template>
 <script>
@@ -33,7 +37,44 @@ export default {
   },
   props: ['sort', 'tid', 'schoolId', 'type', 'portal_name'],
   computed: {
-    ...mapGetters(['userToken', 'managerState'])
+    ...mapGetters(['userToken', 'managerState']),
+    actions(){
+      let arr = []
+      if(this.item.isMe){
+        arr.push({
+          name: '编辑',
+          type: 'edit',
+          index: 0
+        },{
+          name: '删除',
+          type: 'delete',
+          index: 1
+        })
+      }else{
+        arr.push({
+          name: '举报',
+          type: 'report',
+          index: 2
+        })
+      }
+
+      return arr
+    },
+    reportActions(){
+      let arr = []
+      arr.push({
+        name:'不感兴趣',
+        subname:'减少这类内容',
+      },{
+        name:'垃圾内容',
+        subname:'低俗，标题党等',
+      },{
+        name:'拉黑',
+        subname:`不再推送${this.item?`${this.item.user.name}`:'他'}发布的内容`,
+        is_block:1
+      })
+      return arr
+    }
   },
   data() {
     return {
@@ -44,19 +85,11 @@ export default {
       pictureShow: false,
       praiseShow: false,
       list: [],
-      item: '',
+      item:'',
       loading: false,
       finished: false,
       page: 1,
-      actions: [{
-        name: '编辑',
-        type: 'edit',
-        index: 0
-      }, {
-        name: '删除',
-        type: 'delete',
-        index: 1
-      }]
+      reportShow: false
     }
   },
   methods: {
@@ -152,7 +185,7 @@ export default {
               message: '您确认要删除吗'
             }).then(() => {
               axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
-                if (res.data.status) {
+                if (res.data.status == 1) {
                   this.onRefresh()
                   this.$toast.success('删除成功')
                 }
@@ -162,12 +195,41 @@ export default {
             })
             this.show = false
           break
+        case 2:
+          this.reportShow = true
+          this.show = false
+          break
       }
     },
     actionsheet(item) {
       this.show = true
       this.postId = item.post_id
       this.templateId = item.template_id
+    },
+    onReportSelect(item){
+      let data = {
+        params:{
+          post_id: this.postId,
+          reason: item.name,
+          is_block: item.is_block?item.is_block:''
+        }
+      }
+
+      axios.get('/book/SchoolArticle/report',data).then(res=>{
+        this.$toast(res.data.msg)
+
+        let array = this.list
+        array.forEach(element=>{
+          if(this.item.post_id == element.post_id){
+            element.show = 1
+          }
+        })
+      })
+
+      this.reportShow = false
+    },
+    setItem(item){
+      this.item = item
     }
   }
 }

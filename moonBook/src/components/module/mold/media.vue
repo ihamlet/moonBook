@@ -3,17 +3,19 @@
     <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?4:0" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
 
     <!-- 视频 目前还没有音频 -->
-    <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"'>
+    <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"&&item.template_id!="0"'>
       <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
         <div class="video-thumb"  v-if='videoItem&&videoItem.is_video == "1"&&videoIndex == 1' @click="toVideoPage(videoItem)">
-          <i class="iconfont">&#xe602;</i>
+          <div class="player">
+            <i class="iconfont">&#xe639;</i>
+          </div>
           <img :src="`${videoItem.photo}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`" alt="视频封面"/>
           <van-tag class="photo-tag" color='#7232dd'>{{videoIndex > 1?'视频专辑':'视频'}}</van-tag>
         </div>
       </div>
     </div>
 
-    <div class="media img" v-if='item.template_id == 1'>
+    <div class="media img" v-if='item.template_id == "1"'>
       <div :class="[item.photos.length == 4?'layout-4':'']">
         <van-row :gutter="4">
           <van-col :span="item.photos.length == 4?'12':'8'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
@@ -26,7 +28,7 @@
       </div>
     </div>
 
-    <div class="media img long-article-thumb" v-if='item.template_id == 0&&type == "card"&&item.cover'>
+    <div class="media img long-article-thumb" v-if='item.template_id == "0"&&type == "card"&&item.cover'>
       <img :src="item.cover || item.photos[0].thumb" :preview='item.post_id'/>
       <van-tag class="photo-tag" type="primary">长文</van-tag>
     </div>

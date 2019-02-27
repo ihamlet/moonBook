@@ -15,7 +15,7 @@
                 </div>
                 <div class="promulgator flex flex-align">
                   <div class="name" v-line-clamp:20="1">{{item.user.username||''}}</div>
-                  <div class="upload-date"> {{timeAago(item.create_time)}} </div>
+                  <div class="upload-date"> {{timeAgo(item.create_time)}} </div>
                 </div>
               </div>
             </div>
@@ -139,7 +139,7 @@ export default {
       }
       return result
     },
-    timeAago(time) {
+    timeAgo(time) {
       return timeago(time * 1000)
     },
     toZoom(item) {

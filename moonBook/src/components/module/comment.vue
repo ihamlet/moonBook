@@ -62,7 +62,7 @@
               </div>
             </div>
             <div class="comment-bar flex flex-align">
-              <div class="date">{{timeAago(item.create_time)}}</div>
+              <div class="date">{{timeAgo(item.create_time)}}</div>
               <div class="theme-color" @click="showField(item)">
                 <van-tag round size="medium" type="primary">{{item.replyList.length?item.replyList.length:''}}回复</van-tag>
                </div>
@@ -97,7 +97,7 @@
               <i class="iconfont star highlight swing animated" v-else>&#xe64b;</i>
             </div>
             <div class="btn" v-else  @click="shareShow = true">
-              <i class="iconfont" v-if="!item.isCollect">&#xe635;</i>
+              <i class="iconfont" v-if="!item.isCollect">&#xe96e;</i>
             </div>
           </div>
         </div>
@@ -233,7 +233,7 @@ export default {
       }
       return result
     },
-    timeAago(time) {
+    timeAgo(time) {
       return timeago(time * 1000)
     },
     toScroll(){
@@ -262,7 +262,7 @@ export default {
 .no-centent {
   text-align: center;
   background: #fff;
-  padding-bottom: 1.25rem /* 20/16 */;
+  padding:3.125rem /* 50/16 */ 0;
 }
 
 .no-centent .prompt{

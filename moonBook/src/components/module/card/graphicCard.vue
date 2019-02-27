@@ -30,10 +30,10 @@
       <media :item='item' type='card'/>
 
       <div class="temp-type">
-        <van-tag type="primary" size="medium" plain v-if='item.school_id > 0'>
+        <van-tag color='#ad0000' type="success" size="medium" plain v-if='item.school_id > 0'>
           <span @click="toSchoolHome(item.school_id)">{{item.schoolName}}</span>
         </van-tag>
-         <van-tag type="primary" size="medium" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
+         <van-tag color="#ffe1e1" text-color="#ad0000" size="medium" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
       </div>
 
       <div class="task" v-if='$route.query.tid == 5'>

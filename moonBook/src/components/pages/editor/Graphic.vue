@@ -199,7 +199,9 @@ export default {
         title: '发现',
         name: 'apps-find'
       })
+      
       this.resultList = array
+      
       array.forEach(e => {
         this.result.push(e.name)
       })
