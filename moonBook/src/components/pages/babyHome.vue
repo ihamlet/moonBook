@@ -11,7 +11,7 @@
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
       <div class="baby-info flex flex-align">
-        <div class="avatar" v-if="childInfo.avatar" @click="toEgg">
+        <div class="avatar" v-if="childInfo.avatar" @click="toEditorBaby">
           <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">
         </div>
         <avatar :gender="childInfo.sex" size='small' avatarClass='border' v-else />
@@ -62,7 +62,7 @@
             {{childInfo.post_count}}日记
           </div>
           <div class="task" slot="right">
-            任务<van-tag class="tag-task" round type="danger">4</van-tag>
+            任务<van-tag class="tag-task" round type="danger">2</van-tag>
           </div>
         </van-nav-bar>
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>

@@ -254,7 +254,7 @@ export default new Router({
           name:'information',
           component: Information,
           meta: {
-            title:'消息',
+            title:'收到的赞',
             isFooterBar: false
           }
         },

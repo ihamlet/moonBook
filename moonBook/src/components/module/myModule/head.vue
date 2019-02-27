@@ -227,7 +227,6 @@ export default {
 
 .info {
   color: #fff;
-  display: grid;
   position: relative;
 }
 

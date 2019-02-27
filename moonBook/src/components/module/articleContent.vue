@@ -85,8 +85,8 @@ article {
 
 .photo-tag{
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: .625rem /* 10/16 */;
+  right: .625rem /* 10/16 */;
 }
 
 .long-article{

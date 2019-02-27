@@ -1,6 +1,6 @@
 <template>
   <div class="article">
-    <van-nav-bar left-text="发现" left-arrow fixed :zIndex='100' @click-left="onClickLeft" @click-right="shareShow = true">
+    <van-nav-bar left-text="发现" left-arrow fixed :zIndex='100' @click-left="onClickLeft">
       <div class="head-bar-title" slot="title">
         <transition name="slide-fade" mode="out-in">
           <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
@@ -15,9 +15,9 @@
           </div>
         </transition>
       </div>
-      <div class="head-bar-right" slot="right">
+      <!-- <div class="head-bar-right" slot="right">
         <i class="iconfont">&#xe635;</i>
-      </div>
+      </div> -->
     </van-nav-bar>
     <div class="container page-padding">
       <div class="user-card flex flex-align" ref="userCard" v-if='item.user'>
@@ -44,13 +44,9 @@
         <article-content :item='item'/>
       </lazy-component>
       <lazy-component>
-        <comment :item='item' type='article'/>
+        <comment :item='item' include='include'/>
       </lazy-component>
     </div>
-
-    <van-actionsheet v-model="shareShow" title="分享">
-      <share @show='imageShow = true' />
-    </van-actionsheet>
 
     <!-- 生成图片 -->
     <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
@@ -62,7 +58,6 @@
 import axios from './../lib/js/api'
 
 import QRCode from "qrcode"
-import share from './../module/mold/share'
 import articleShare from './../module/mold/articleShare'
 import comment from './../module/comment'
 import articleContent from './../module/articleContent'
@@ -73,7 +68,6 @@ export default {
   components: {
     articleContent,
     comment,
-    share,
     articleShare,
     vipLevel
   },
@@ -84,7 +78,6 @@ export default {
       themeBarSearch: false,
       imageShow: false,
       headBar: false,
-      shareShow: false,
       imgIndex: '',
       qrImage:'',
       item: ''

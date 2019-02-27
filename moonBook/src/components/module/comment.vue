@@ -92,12 +92,12 @@
               <i class="iconfont" v-if="!item.isZan">&#xe644;</i>
               <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
             </div>
-            <div class="btn" @click="addCollect(item)">
+            <div class="btn" @click="addCollect(item)" v-if='include != "include"'>
               <i class="iconfont" v-if="!item.isCollect">&#xe64c;</i>
               <i class="iconfont star highlight swing animated" v-else>&#xe64b;</i>
             </div>
-            <div class="btn" v-if='type == "article"'>
-              <i class="iconfont" v-if="!item.isCollect">&#xe614;</i>
+            <div class="btn" v-else  @click="shareShow = true">
+              <i class="iconfont" v-if="!item.isCollect">&#xe635;</i>
             </div>
           </div>
         </div>
@@ -116,18 +116,26 @@
         </div>
       </van-popup>
     </div>
+
+    <van-popup v-model="shareShow" position='bottom' get-container='#app'>
+      <share @show='imageShow = true' />
+    </van-popup>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import axios from './../lib/js/api'
+import share from './../module/mold/share'
 import { timeago } from './../lib/js/util'
 
 export default {
   name: 'comment',
-  props: ['item','type'],
+  props: ['item','include'],
   computed: {
     ...mapGetters(['userToken','userDataState'])
+  },
+  components: {
+    share
   },
   data() {
     return {
@@ -141,7 +149,8 @@ export default {
       commentId: '',
       show: false,
       isLoading: false,
-      message: ''
+      message: '',
+      shareShow: false,
     }
   },
   methods: {
@@ -332,7 +341,7 @@ export default {
 
 .input-box {
   height: 2.375rem /* 38/16 */;
-  flex: 1;
+  flex: 1.8;
 }
 
 .btn-icon {

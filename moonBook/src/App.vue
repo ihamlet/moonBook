@@ -920,6 +920,7 @@ i.iconfont.vip-1 {
 
 .thumb{
   position: relative;
+  overflow: hidden;
 }
 
 .thumb .iconfont{

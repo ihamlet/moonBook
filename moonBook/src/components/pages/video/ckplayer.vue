@@ -26,7 +26,7 @@
         <video-list title="相关视频" type='video' @refresh='refresh' />
       </lazy-component>
       <lazy-component>
-        <comment :item='item'/>
+        <comment :item='item' include='include'/>
       </lazy-component>
     </div>
   </div>

@@ -38,6 +38,8 @@
   </div>
 </template>
 <script>
+import axios from './../../lib/js/api'
+
 export default {
   name: "information",
   data() {
@@ -45,9 +47,7 @@ export default {
       page:1,
       loading:false,
       finished: false,
-      list:[{
-
-      }]
+      list:[]
     }
   },
   methods:{
@@ -66,12 +66,24 @@ export default {
           }
       },
       onRefresh(){
+          this.page = 1
           this.loading = false
           this.finished = false
       },
       onLoad(){
           this.loading = false
           this.finished = true
+          let data = {
+              params:{
+                page: this.page,
+                child_id: this.$route.query.id
+              }
+          }
+
+          axios.get('/book/SchoolArticleZan/getList',data).then(res=>{
+              console.log(res)
+          })
+          
       }
   }
 }

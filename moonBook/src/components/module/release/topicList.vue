@@ -46,7 +46,7 @@ export default {
           let array = res.data
           let datas = []
           array.forEach(element => {
-            if(element.portal_name == '宝贝主页'&&(this.$route.query.back == 'home'||this.$route.query.back == 'baby-home')){
+            if(element.portal_name == '宝贝主页'&&this.$route.query.back){
               datas.push(element)
             }
 
@@ -73,6 +73,7 @@ export default {
                 })
               }
             }
+
           })
         
           this.topicList = datas

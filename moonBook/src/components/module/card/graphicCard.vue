@@ -42,27 +42,27 @@
 
       <div class="social flex flex-align">
         <div class="share" @click="share(item)">
-          <i class="iconfont">&#xe6eb;</i> {{item.share_num>1000?'999+':item.share_num}}
+          <i class="iconfont">&#xe6eb;</i> {{item.share_num>1000?'999+':item.share_num == '0'?'分享':item.share_num}}
         </div>
         <div class="message"  @click="toArticle(item)">
-          <i class="iconfont">&#xe731;</i> {{item.reply_num>1000?'999+':item.reply_num}}
+          <i class="iconfont">&#xe731;</i> {{item.reply_num>1000?'999+':item.reply_num == '0'?'评论':item.reply_num}}
         </div>
         <div class="praise flex flex-align flex-justify" @click="addPraise(item)">
           <i class="iconfont" v-if="!item.isZan">&#xe644;</i>
           <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
-          {{item.zan_num>1000?'999+':item.zan_num}}
+          {{item.zan_num>1000?'999+':item.zan_num == '0'?'赞':item.zan_num}}
         </div>
       </div>
     </div>
 
-    <van-actionsheet v-model="shareShow" title="分享" get-container='#app'>
+    <van-popup v-model="shareShow" position='bottom' get-container='#app'>
       <share @show='imageShow = true' />
-    </van-actionsheet>
+    </van-popup>
 
     <!-- 生成图片 -->
-    <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
+    <!-- <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
       <article-share :item='item' :userName='item.user.name' :qrImage='qrImage' @close='imageShow = false'/>
-    </van-popup>
+    </van-popup> -->
   </div>
 </template>
 <script>
@@ -71,7 +71,7 @@ import QRCode from "qrcode"
 import vipLevel from './../animate/svg/vipLevel'
 import share from './../mold/share'
 import taskCard from './taskCard'
-import articleShare from './../mold/articleShare'
+// import articleShare from './../mold/articleShare'
 import media from './../mold/media'
 import { timeago } from './../../lib/js/util'
 
@@ -80,7 +80,7 @@ export default {
   props: ["item", "type",'avatar'],
   components: {
     share,
-    articleShare,
+    // articleShare,
     taskCard,
     vipLevel,
     media
