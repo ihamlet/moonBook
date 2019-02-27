@@ -10,12 +10,11 @@
         </div>
         <div class="info">
           <div class="name flex flex-align">
-            <span v-if="type=='babyHome'">{{item.user.name}}的宝贝</span>
-            <span v-else>{{item.user.name}}</span>
+            <span>{{item.user.name}}</span>
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
-            {{getTimeAgo(item.create_time)}} <span>{{item.relation_name?relation_name:'家长'}}</span>
+            {{getTimeAgo(item.create_time)}} <span>{{type=='babyHome'?`${title}的家长`:title}}</span>
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0'>
@@ -77,7 +76,7 @@ import { timeago } from './../../lib/js/util'
 
 export default {
   name: "graphic-card",
-  props: ["item", "type",'avatar'],
+  props: ["item", "type",'avatar','title'],
   components: {
     share,
     // articleShare,

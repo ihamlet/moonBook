@@ -4,8 +4,8 @@
 
     <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?4:0" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
 
-    <!-- 视频 目前还没有音频 -->
-    <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"&&item.template_id!="0"'>
+    <!-- 视频  -->
+    <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"'>
       <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
         <div class="video-thumb"  v-if='videoItem&&videoItem.is_video == "1"&&videoIndex == 1' @click="toVideoPage(videoItem)">
           <div class="player">
@@ -50,7 +50,7 @@ export default {
   computed: {
     grid(){
       let num
-      if(this.item.photos.length == 4 && this.type == 'card'){
+      if(this.item.photos.length == 4){
         num = 12
       }else if( this.item.photos.length == 1 && this.type == 'details'){
         num = 24

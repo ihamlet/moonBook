@@ -2,7 +2,6 @@
   <div class="article-list">
     <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
       <van-cell-group>
-        <transition-group leave-active-class="animated zoomOut" tag='div'>
           <div class="item" v-for='(item,index) in listArray' :key="index" @click="toArticle(item)">
             <van-cell>
               <div class="cell-content">
@@ -42,7 +41,6 @@
               </div>
             </van-cell>
           </div>
-        </transition-group>
       </van-cell-group>
     </van-list>
   </div>

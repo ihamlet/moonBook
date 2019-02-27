@@ -73,7 +73,7 @@
                   <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
                     <van-cell title="" v-if='item.isMe' @click="actionsheet(item)" is-link arrow-direction='down' />
                     <van-cell>
-                      <graphic-card :item="item" type="babyHome" :avatar='childInfo.avatar' />
+                      <graphic-card :item="item" type="babyHome" :title='childInfo.name' :avatar='childInfo.avatar' />
                     </van-cell>
                   </div>
                 </div>
@@ -104,8 +104,7 @@
     <!-- 文章操作 -->
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
     <!-- 切换孩子 -->
-    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby"
-      @cancel="isSelectBabyShow = false" />
+    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby" @cancel="isSelectBabyShow = false" />
   </div>
 </template>
 <script>
@@ -264,13 +263,6 @@ export default {
             }
             
           })
-
-          axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
-            if(res.data.status == 1){
-              this.lateBook = res.data.data
-            }
-          })
-
         } else {
           this.$router.push({
             name: 'edit-child',
@@ -280,6 +272,11 @@ export default {
             }
           })
         }
+        axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
+          if(res.data.status == 1){
+            this.lateBook = res.data.data
+          }
+        })
       })
     },
     onClickLeft() {
