@@ -17,7 +17,7 @@
     </van-list>
 
     <!-- 管理员推荐操作 -->
-    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" />
+    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app'/>
 
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
     <!-- 用户文章操作 -->

@@ -13,7 +13,7 @@
       <div class="title">请选择班级</div>
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="formatBanjiTitle(item.title)" :value='`${item.student_count}人已加入`' @click='select(item)' />
+          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="`${formatBanjiTitle(item.title)}-${item.year}`" :value='`${item.student_count}人已加入`' @click='select(item)' />
         </van-list>
       </div>
     </div>

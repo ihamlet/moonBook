@@ -2,17 +2,17 @@
   <div class="article-list">
     <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
       <van-cell-group>
-          <div class="item" v-for='(item,index) in listArray' :key="index" @click="toArticle(item)">
+          <div class="item" v-for='(item,index) in list' :key="index" @click="toArticle(item)">
             <van-cell>
-              <div class="cell-content">
-                <van-row :gutter='4'>
+              <div class="cell-content" v-if='item.template_id == "0"'>
+                <van-row :gutter='5'>
                   <van-col :span='item.photos.length > 3?"24":"16"'>
-                    <div class="title" :class="[item.photos.length > 3?'layout-t-b':'layout-l-r']">
+                    <div class="title" v-line-clamp:20="3" :class="[item.photos.length > 3?'layout-t-b':'layout-l-r']">
                       {{item.title}}
                     </div>
                   </van-col>
                   <van-col :span='item.photos.length > 3?"24":"8"'>
-                    <van-row :gutter="4" v-if='item.photos.length > 3'>
+                    <van-row :gutter="5" v-if='item.photos.length > 3'>
                       <van-col :span="item.photos.length == 4?'12':'8'" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
                         <div class="img-grid" :class="[photo.height/photo.width > 18/9&&type!='card'?'long':'']" v-if='photoIndex < 3'>
                           <img class="img-preview" :class="[photo.height/photo.width > 18/9?'long':'']" :src="photo.thumb" />
@@ -20,7 +20,7 @@
                         </div>
                       </van-col>
                     </van-row>
-                    <van-row :gutter="4" class="article-cover" v-else>
+                    <van-row :gutter="5" class="article-cover" v-else>
                       <van-col :span='24'>
                         <div class="img-grid">
                           <img class="img-preview" :src="item.cover" />
@@ -29,7 +29,6 @@
                     </van-row>
                   </van-col>
                 </van-row>
-
                 <div class="article-data flex flex-align">
                   <van-tag plain type="danger" v-if='item.is_top == 1'>置顶</van-tag>
                   <div class="info flex flex-align">
@@ -48,35 +47,14 @@
 <script>
 import axios from './../lib/js/api'
 import slogan from './../module/slogan'
+import graphicCard from './../module/card/graphicCard'
 import { timeago } from './../lib/js/util'
 
 export default {
   name: 'article-list',
   components: {
-    slogan
-  },
-  computed: {
-    listArray() {
-      let array = []
-      this.list.forEach(element => {
-        if (element.template_id == 0) {
-
-          let datas = {
-            title: element.title,
-            photos: element.photos,
-            schoolName: element.schoolName,
-            views: element.views,
-            is_top: element.is_top,
-            timeAgo: timeago(element.create_time * 1000),
-            id: element.post_id
-          }
-
-          array.push(datas)
-        }
-      })
-
-      return array
-    }
+    slogan,
+    graphicCard
   },
   data() {
     return {
@@ -123,8 +101,9 @@ export default {
       this.$router.push({
         name:'article',
         query:{
-          id:item.id,
-          back: this.$route.name
+          id:item.post_id,
+          back: this.$route.name,
+          back_id: this.$route.query.id
         }
       })
     }

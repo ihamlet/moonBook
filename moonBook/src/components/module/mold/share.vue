@@ -2,7 +2,7 @@
   <div class="share-box">
     <van-row class="svg-list">
       <van-col span="12">
-        <div class='btn'>
+        <div class='btn' @click="share">
           <svg class="icon wechat" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
             viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3129">
             <path d="M1024 636.032c0-141.888-141.866667-257.429333-301.461333-257.429333-169.088 0-301.866667 115.541333-301.866667 257.429333 0 142.250667 132.778667 257.386667 301.866667 257.386667 35.370667 0 71.146667-9.024 106.496-17.642667l97.450667 53.418667-26.666667-88.789333C970.922667 786.965333 1024 715.84 1024 636.032zM624.618667 591.616c-17.642667 0-35.328-17.664-35.328-35.392 0-17.621333 17.685333-35.328 35.328-35.328 26.752 0 44.458667 17.706667 44.458667 35.328C669.077333 573.952 651.370667 591.616 624.618667 591.616zM820.010667 591.616c-17.664 0-35.306667-17.664-35.306667-35.392 0-17.621333 17.642667-35.328 35.306667-35.328 26.709333 0 44.416 17.706667 44.416 35.328C864.426667 573.952 846.293333 591.616 820.010667 591.616z"
@@ -14,7 +14,7 @@
         </div>
       </van-col>
       <van-col span="12">
-        <div class="btn">
+        <div class="btn" @click="childShow = true">
           <svg t="1551174489120" class="icon zhuanfa" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
             viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3124">
             <path d="M878.4 575.3h-68.5c-14.6 0-26.5 11.9-26.5 26.5v182.8H240V671.9c0-14.6-11.9-26.5-26.5-26.5H145c-14.6 0-26.5 11.9-26.5 26.5v207.6c0 9.1 4.6 17.1 11.5 21.8l0.1 0.1 0.6 0.3c4.1 2.6 9 4.2 14.2 4.2h733.4c0.9 0 1.8 0 2.7-0.1 3.4-0.3 6.7-1.4 9.6-2.9 0.1-0.1 0.2-0.1 0.3-0.2 0.3-0.2 0.7-0.4 1-0.6 0.4-0.2 0.8-0.5 1.2-0.7l0.1-0.1c7-4.8 11.6-12.8 11.6-21.9V601.8c0-14.6-11.8-26.5-26.4-26.5z"
@@ -22,30 +22,86 @@
             <path d="M899.1 321.7v-0.1l-0.5-0.4c-1.4-1.5-3-2.8-4.7-3.9L664.1 125.9c-4.6-5.4-11.4-8.9-19.1-8.9-13.8 0-25 11.2-25 25h-0.1v94.7C134 288.3 163.9 614 163.9 614c97.3-173.3 374.3-178.8 456-176.4v97.2h0.1c0 13.8 11.2 25 25 25 7.2 0 13.6-3 18.2-7.9l230.7-192.5c7-4.4 11.6-12.2 11.6-21.1 0-6.4-2.4-12.2-6.4-16.6z"
               fill="#ffcf10" p-id="3126" data-spm-anchor-id="a313x.7781069.0.i0"></path>
           </svg>
-          <div class="text">站内转发</div>
+          <div class="text">收录</div>
         </div>
       </van-col>
-      <!-- <van-col span="8">
-          <div class="btn" @click="generateImg">
-            <svg class="icon generate" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
-              viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3197">
-              <path d="M853.333333 938.666667H309.866667C244.778667 938.666667 192 928.554667 192 863.466667V586.666667a85.333333 85.333333 0 0 1 85.333333-85.333334h138.666667V277.333333a85.333333 85.333333 0 0 1 85.333333-85.333333H853.333333a85.333333 85.333333 0 0 1 85.333334 85.333333v576a85.333333 85.333333 0 0 1-85.333334 85.333334z"
-                fill="#A6DAFF" p-id="3198"></path>
-              <path d="M853.333333 938.666667H213.333333a128 128 0 0 1-128-128V490.666667a85.333333 85.333333 0 0 1 85.333334-85.333334h128V170.666667a85.333333 85.333333 0 0 1 85.333333-85.333334h469.333333a85.333333 85.333333 0 0 1 85.333334 85.333334v682.666666a85.333333 85.333333 0 0 1-85.333334 85.333334zM298.666667 490.666667a21.333333 21.333333 0 0 0-21.333334-21.333334H170.666667a21.333333 21.333333 0 0 0-21.333334 21.333334v309.333333a74.666667 74.666667 0 0 0 149.333334 0V490.666667zM874.666667 192a42.666667 42.666667 0 0 0-42.666667-42.666667H405.333333a42.666667 42.666667 0 0 0-42.666666 42.666667v618.666667a126.826667 126.826667 0 0 1-17.749334 64H832a42.666667 42.666667 0 0 0 42.666667-42.666667V192z m-85.333334 533.333333H448a21.333333 21.333333 0 0 1 0-42.666666h341.333333a21.333333 21.333333 0 0 1 0 42.666666z m0-128H533.333333a21.333333 21.333333 0 0 1 0-42.666666h256a21.333333 21.333333 0 0 1 0 42.666666zM533.333333 341.333333c43.242667 0 64 85.333333 64 85.333334h21.333334s19.669333-169.728 85.333333-170.666667c64.618667-0.917333 85.333333 192 85.333333 192H448s33.685333-106.666667 85.333333-106.666667z m-21.333333-42.666666a42.666667 42.666667 0 1 1 42.666667-42.666667 42.666667 42.666667 0 0 1-42.666667 42.666667z"
-                fill="#333780" p-id="3199"></path>
-            </svg>
-            <div class="text">生成长图</div>
-          </div>
-        </van-col> -->
     </van-row>
+
+    <van-popup v-model="childShow" position='bottom'  get-container='#app'>
+      <van-picker show-toolbar :columns="columns" @change="onChange" title='收录到' @confirm='inclusion'/>
+    </van-popup>
+
+    <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
+      <topic-list @close='show = false' @select='selectTag' />
+    </van-popup>
   </div>
 </template>
 <script>
+import Cookies from 'js-cookie'
+import { mapActions } from 'vuex'
+import axios from './../../lib/js/api'
+import topicList from './../../module/release/topicList'
+
 export default {
   name: 'share',
+  props: ['postId'],
+  components: {
+    topicList
+  },
+  computed: {
+    columns(){
+      let array = []
+      if(this.children){
+        this.children.forEach(element => {
+          array.push(element.name)
+        })
+      }
+      return array
+    }
+  },
+  data(){
+    return {
+      children:'',
+      childShow:false,
+      columnIndex:0,
+      cateId:'',
+      show:false,
+    }
+  },
+  created () {
+    this.fetchData()
+  },
+  watch: {
+    '$router': 'fetchData'
+  },
   methods: {
-    generateImg() {
-      this.$emit('show')
+    ...mapActions(['getUserData']),
+    fetchData(){
+      this.getUserData().then(res => {
+        axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
+          if(res.data.status == 1){
+            this.children = res.data.data
+          }
+        })
+      })
+    },
+    hide() {
+      this.$emit('hide')
+    },
+    share(){
+      Cookies.set('shareLink', location.href)
+      location.href = `/book/weixin/share?back_url=${encodeURIComponent(location.href)}&id=${this.$route.query.id}&type=文章`
+      this.hide()
+    },
+    onChange(picker, values, columnIndex){
+      this.columnIndex = columnIndex
+    },
+    inclusion(){
+      this.childShow = false
+      this.show = true
+    },
+    selectTag(tag) {
+      this.cateId = tag.cate_id
     }
   }
 }

@@ -81,7 +81,6 @@ export default {
 
 .watch{
     position: absolute;
-    right: .625rem /* 10/16 */;
 }
 </style>
 

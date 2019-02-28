@@ -55,7 +55,7 @@
     </div>
 
     <van-popup v-model="shareShow" position='bottom' get-container='#app'>
-      <share @show='imageShow = true' />
+      <share @hide='shareShow = false' :postId='item.post_id'/>
     </van-popup>
 
     <!-- 生成图片 -->
@@ -89,7 +89,7 @@ export default {
       imgIndex: 0,
       articleShow: false,
       shareShow:false,
-      imageShow:false,
+      // imageShow:false,
       qrImage:'',
       link:''
     }

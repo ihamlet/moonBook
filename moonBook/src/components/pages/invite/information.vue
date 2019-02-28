@@ -2,7 +2,7 @@
   <div class="information">
     <van-nav-bar :title="$route.meta.title" left-text="返回" left-arrow @click-left="onClickLeft" :zIndex='2021'/>
     <div class="information-list">
-      <div class="get-praise">我收到的赞</div>
+      <div class="get-praise">宝贝收到的赞</div>
       <div class="list">
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">

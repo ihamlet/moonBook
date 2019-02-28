@@ -1,7 +1,7 @@
 <template>
   <div class="reading">
     <van-cell :title="moduleTitle" :is-link="type =='rank'" @click="toBabyHome" />
-    <div class="book-list scroll-x" v-if="list">
+    <div class="book-list scroll-x" v-if="boole">
       <div class="book-item scroll-item" v-for='(item,index) in list' :key="index">
         <div class="book-cover">
           <img :src="thumb(item.book_thumb)" @error="outThumb($event,item)" :alt="item.book_name" @click="toBookDetails(item)">
@@ -44,7 +44,14 @@ export default {
   name: 'reading',
   props: ['list', 'moduleTitle', 'type', 'babyId'],
   computed: {
-    ...mapGetters(['userDataState'])
+    ...mapGetters(['userDataState']),
+    boole(){
+      let boole
+      if(this.list&&this.list.lenght > 0){
+        boole = true
+      }
+      return boole
+    }
   },
   components:{
     accept

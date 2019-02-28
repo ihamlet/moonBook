@@ -1,5 +1,5 @@
 <template>
-  <div class="topic-list">
+  <!-- <div class="topic-list">
     <van-nav-bar title="选择分类" right-text='关闭' @click-right='close' />
     <div class="list">
       <van-cell-group>
@@ -16,7 +16,9 @@
           </van-cell>
         </div>
       </van-cell-group>
-    </div>
+    </div> -->
+
+    <van-picker show-toolbar title='选择分类' :columns="column" value-key='cate_name' @change="onCateChange"/>
   </div>
 </template>
 <script>
@@ -26,11 +28,24 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'topic-list',
   computed: {
-    ...mapGetters(['managerState'])
+    ...mapGetters(['managerState']),
+    column(){
+      let column = [{
+          values: this.topicList,
+          className: 'column1'
+        },
+        {
+          values:[],
+          className: 'column2',
+          defaultIndex: 1
+        }]
+    return column
+    }
   },
   data() {
     return {
-      topicList: ''
+      topicList: '',
+      topicIndex: 0
     }
   },
   created() {
@@ -81,7 +96,33 @@ export default {
     },
     close(){
       this.$emit('close')
+    },
+    makeColumn(list) {
+      var column = [
+        {
+          values: [],
+          className: 'column1'
+        },
+        {
+          values:[],
+          className: 'column2',
+          defaultIndex: 0
+        }
+      ];
+      list.forEach((item)=>{
+        column[0].values.push(item);       
+      })
+
+       if(list[0].children) {
+          column[1].values = list[0].children
+        }
+      console.log('column', column)
+      return column
+    },
+    onCateChange(picker, cate) {
+      picker.setColumnValues(1, cate[0].children)
     }
+
   }
 }
 </script>
