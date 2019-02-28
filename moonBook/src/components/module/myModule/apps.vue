@@ -18,6 +18,7 @@ export default {
         this.$router.push({
           name: list.path,
           query: {
+            name: list.name,
             back: this.$route.name,
             id: this.$route.query.id
           }

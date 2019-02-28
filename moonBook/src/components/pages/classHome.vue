@@ -82,14 +82,16 @@ export default {
       let array = []
       if (this.managerState) {
         this.managerState.forEach(element => {
-          let data = {
-            name: `${element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name)}${element.child_name?'('+element.child_name+')':'(管理员)'}`,
-            subname: `${element.duty}-${element.desc}`,
-            id: element.id,
-            type: element.item_type
-          }
 
-          array.push(data)
+            let data = {
+              name: `${element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name)}${element.child_name?'('+element.child_name+')':'(管理员)'}`,
+              subname: `${element.duty}-${element.desc}`,
+              id: element.id,
+              type: element.item_type
+            }
+
+            array.push(data)
+          
         })
       }
 
@@ -129,23 +131,23 @@ export default {
       appsList: [{
         name: '风采',
         iconClass: 'icon-fengcai',
-        path:'404'
+        route:'class-zoom'
       }, {
         name: '阅读',
         iconClass: 'icon-yuedu',
-        path:'404'
+        path:'class-zoom'
       }, {
         name: '才艺',
         iconClass: 'icon-caiyi',
-        path:'404'
+        path:'class-zoom'
       }, {
         name: '荣誉',
         iconClass: 'icon-rongyu',
-        path:'404'
+        path:'class-zoom'
       }, {
         name: '班级交流',
         iconClass: 'icon-jiaoliu',
-        path:'404'
+        path:'class-zoom'
       }]
     }
   },

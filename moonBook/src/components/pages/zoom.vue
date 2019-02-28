@@ -131,9 +131,7 @@ export default {
         this.$router.push({
           name: this.$route.query.back,
           query: {
-            id: this.$route.query.post_id,
-            user_id: this.$route.query.user_id,
-            back_id: this.$route.query.back_id
+            id: this.$route.query.back_id
           }
         });
       } else {
@@ -214,7 +212,14 @@ export default {
             }).then(() => {
               axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
                 if (res.data.status == 1) {
-                  this.onRefresh()
+                  let index
+                  this.list.forEach((element,i) => {
+                    if(this.postId == element.post_id){
+                      index = i
+                    }
+                  })
+
+                  this.list.splice(index,1)
                   this.$toast.success('删除成功')
                 }
               })

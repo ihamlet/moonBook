@@ -1,6 +1,6 @@
 <template>
   <div class="article">
-    <van-nav-bar left-text="发现" left-arrow fixed :zIndex='100' @click-left="onClickLeft">
+    <van-nav-bar :left-text="this.$route.query.back?'返回':'发现'" left-arrow fixed :zIndex='100' @click-left="onClickLeft">
       <div class="head-bar-title" slot="title">
         <transition name="slide-fade" mode="out-in">
           <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
@@ -21,7 +21,7 @@
     </van-nav-bar>
     <div class="container page-padding">
       <div class="user-card flex flex-align" ref="userCard" v-if='item.user'>
-        <div class="avatar">
+        <div class="avatar" @click="toZoom">
           <img :src="getAvatar(item.user.avatar)" :alt="item.user.username" @error='imgError'>
         </div>
         <div class="info">
@@ -154,7 +154,14 @@ export default {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
     toZoom(){
-
+      this.$router.push({
+        name:'zoom',
+        query:{
+          id:this.item.user_id,
+          back: this.$route.name,
+          back_id: this.$route.query.id
+        }
+      })
     }
   }
 }

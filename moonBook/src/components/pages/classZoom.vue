@@ -1,11 +1,11 @@
 <template>
   <div class="class-zoom" :class="[type!='template'?'page-padding':'no-padding']">
-    <van-nav-bar v-if='type!="template"' title="班级风采" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft"/>
+    <van-nav-bar v-if='type!="template"' :title="$route.query.name?$route.query.name:'班级风采'" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft"/>
     <lazy-component class="module" v-if="type != 'template'">
       <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template' />
     </lazy-component>
     <lazy-component>
-      <van-nav-bar title="班级动态"/>
+      <van-nav-bar :title="$route.query.name?'':'班级动态'"/>
       <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
         <div class="list" v-if='list.length > 0'>
           <div class="item" v-for="(item,index) in list" :key="index">
@@ -24,7 +24,6 @@
     </van-popup>
 
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
-
     <!-- 管理员推荐操作 -->
     <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" />
   </div>
@@ -190,7 +189,27 @@ export default {
       console.log('管理页面')
     },
     onRecommendSelect(){
+      let data = {
+        params:{
+          post_id: this.postId
+        }
+      }
 
+      if(item.type == 'banji'){
+        data.params.banji_id = item.id
+      }
+
+      if(item.type == 'school'){
+        data.params.school_id = item.id
+      }
+
+      axios.get('/book/SchoolArticle/copy',data).then(res=>{
+        if(res.data.data.status == 1){
+          this.$toast.success('推荐成功')
+        }else{
+          this.$toast.fail('操作失败')
+        }
+      })
     },
     formatBanjiTitle(text) {
       if (text && text.indexOf('班') == -1) {

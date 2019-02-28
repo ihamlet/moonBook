@@ -105,21 +105,21 @@ export default {
           iconClass: 'icon-canpu',
           path:'404'
         }, {
-          name: '风采',
-          iconClass: 'icon-fengcai',
-          path:'404'
+          name: '阅读',
+          iconClass: 'icon-yuedu',
+          path:'class-zoom'
         }, {
           name: '讲故事',
           iconClass: 'icon-jianggushi',
-          path:'404'
+          path:'404',
         }, {
           name: '荣誉',
           iconClass: 'icon-rongyu',
-          path:'404'
+          path:'class-zoom'
         }, {
           name: '才艺',
           iconClass: 'icon-caiyi',
-          path:'404'
+          path:'class-zoom'
         }],
       tab: [{
         title: '学校动态',

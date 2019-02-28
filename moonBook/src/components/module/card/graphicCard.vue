@@ -14,7 +14,7 @@
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
-            {{getTimeAgo(item.create_time)}} <span>{{type=='babyHome'?`${title}的家长`:title}}</span>
+            {{getTimeAgo(item.create_time)}} <span>{{type?type=='babyHome'?`${title}的家长`:title:'家长'}}</span>
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0'>

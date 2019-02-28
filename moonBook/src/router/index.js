@@ -178,7 +178,7 @@ export default new Router({
           component: ClassZoom,
           meta: {
             title: '班级风采',
-            tabActive: 1,
+            tabActive: 0,
             isFooterBar: true
           }
         },

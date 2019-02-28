@@ -67,7 +67,9 @@ export default {
           name: 'article',
           query: {
             id: this.item.post_id,
-            type: this.item.template_id
+            type: this.item.template_id,
+            back: this.$route.name,
+            back_id: this.$route.query.id
           }
         })
       }
