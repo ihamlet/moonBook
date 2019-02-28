@@ -58,6 +58,24 @@ export default {
       hackReset: true,
       isGraphicShow:false,
     }
+  },
+  created () {
+    this.fetchData()
+  },
+  watch: {
+    '$route': 'fetchData'
+  },
+  methods: {
+     ...mapActions(['getUserData','getMsg','getUserLocation','getManager']),
+    fetchData(){
+      let products = {
+        page: 1,
+        isRead: 0
+      }
+      this.getUserData()
+      this.getManager()
+      this.getMsg(products)
+    }
   }
 }
 </script>

@@ -42,7 +42,6 @@
 </template>
 <script>
 import axios from './../lib/js/api'
-import { timeago } from './../lib/js/util'
 
 export default {
   name: 'Video',
@@ -109,9 +108,6 @@ export default {
       })
 
       this.$emit('refresh')
-    },
-    timeAago(time) {
-      return timeago(time * 1000)
     },
     getAvatar(img) {
       if(!img) return img

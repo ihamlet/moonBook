@@ -78,24 +78,28 @@ export default {
     },
     getReadList() {
       axios.get(`/book/babySign/rank?banji_id=${this.$route.query.id}`).then(res => {
-        this.loading = false
-        this.tab[this.tabIndex].content = res.data.data
-        this.finished = true
+        if(res.data.status == 1){
+          this.loading = false
+          this.tab[this.tabIndex].content = res.data.data
+          this.finished = true
+        }
       })
     },
     getBorrowList() {
       axios.get('/book/SchoolTushuBorrow/getRank?region=banji&group=baby').then(res => {
-        let myArr = [res.data.data.myInfo]
-        let list = myArr.concat(res.data.data.list)
-        list.forEach((item) => {
-          let info = item.info || item.babyInfo
-          item.name = info.name
-          item.avatar = info.avatar
-          item.title = item.read_count > 50 ? '阅读小明星' : '阅读新秀',
-            item.sign_read_count = item.read_count || 0
-        })
+        if(res.data.status == 1){
+          let myArr = [res.data.data.myInfo]
+          let list = myArr.concat(res.data.data.list)
+          list.forEach((item) => {
+            let info = item.info || item.babyInfo
+            item.name = info.name
+            item.avatar = info.avatar
+            item.title = item.read_count > 50 ? '阅读小明星' : '阅读新秀',
+              item.sign_read_count = item.read_count || 0
+          })
 
-        this.tab[this.tabIndex].content = list
+          this.tab[this.tabIndex].content = list
+        }
       })
     }
   }

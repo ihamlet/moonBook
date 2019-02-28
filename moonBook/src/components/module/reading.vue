@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="not-content" v-else>
-      尚无记录, <span class="theme-color" v-if='userDataState.isVip == 0' @click="toAccept">办理阅亮书架借阅卡</span>
+      尚无记录 <span class="theme-color" v-if='userDataState.isVip == 0' @click="toAccept"> 办理阅亮书架借阅卡</span>
     </div>
 
     <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>

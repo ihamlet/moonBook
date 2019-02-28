@@ -1,90 +1,127 @@
 <template>
   <div class="information">
-    <van-nav-bar :title="$route.meta.title" left-text="返回" left-arrow @click-left="onClickLeft"/>
+    <van-nav-bar :title="$route.meta.title" left-text="返回" left-arrow @click-left="onClickLeft" :zIndex='2021'/>
     <div class="information-list">
-        <div class="get-praise">我收到的赞</div>
+      <div class="get-praise">我收到的赞</div>
+      <div class="list">
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-            <van-cell v-for="(item,index) in list" :key="index">
+            <div class="content" v-if='count > 0'>
+              <van-cell v-for="(item,index) in list" :key="index">
                 <div class="flex flex-algin">
-                    <div class="avatar"></div>
-                    <div class="content">
-                        <div class="member">刘二龙，杜晓等6人赞同你发布的</div>
-                        <div class="article-title">少儿阅读需要知道那些技巧</div>
-                    </div>
+                  <div class="avatar">
+                      <img :src="getAvatar(item.sender_avatar)" @error='imgError' />
+                  </div>
+                  <div class="content">
+                    <div class="intro title">{{item.intro}}</div>
+                    <div class="create-date">{{item.create_date_friendly}}</div>
+                    <div class="details">{{item.details}}</div>
+                  </div>
                 </div>
-            </van-cell>
-            <van-cell v-for="(item,index) in list" :key="index">
-                <div class="flex flex-algin">
-                    <div class="avatar"></div>
-                    <div class="content">
-                        <div class="member">刘二龙，杜晓等6人赞同你发布的</div>
-                        <div class="article-title">少儿阅读需要知道那些技巧</div>
-                    </div>
-                </div>
-            </van-cell>
-            <van-cell v-for="(item,index) in list" :key="index">
-                <div class="flex flex-algin">
-                    <div class="avatar"></div>
-                    <div class="content">
-                        <div class="member">刘二龙，杜晓等6人赞同你发布的</div>
-                        <div class="article-title">少儿阅读需要知道那些技巧</div>
-                    </div>
-                </div>
-            </van-cell>            
+              </van-cell>
+            </div>
+            <div class="no-content" v-else>
+              没有收到赞，加油集赞吧　:-)
+            </div>
           </van-list>
         </van-pull-refresh>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import axios from './../../lib/js/api'
+
+
 export default {
   name: "information",
   data() {
     return {
-      page:1,
-      loading:false,
+      page: 1,
+      loading: false,
       finished: false,
-      list:[{
-
-      }]
+      list: [],
+      count: 0
     }
   },
-  methods:{
-      onClickLeft(){
-          if(this.$route.query.back){
-              this.$router.push({
-                  name:this.$route.query.back,
-                  query:{
-                      id: this.$route.query.id
-                  }
-              })
-          }else{
-              this.$router.push({
-                  name:'my'
-              })
+  methods: {
+    onClickLeft() {
+      if (this.$route.query.back) {
+        this.$router.push({
+          name: this.$route.query.back,
+          query: {
+            id: this.$route.query.id
           }
-      },
-      onRefresh(){
-          this.loading = false
-          this.finished = false
-      },
-      onLoad(){
-          this.loading = false
-          this.finished = true
+        })
+      } else {
+        this.$router.push({
+          name: 'my'
+        })
       }
+    },
+    onRefresh() {
+      this.page = 1
+      this.onLoad().then(res => {
+        this.loading = false
+      })
+    },
+    onLoad() {
+      let data = {
+        params: {
+          page: this.page,
+          child_id: this.$route.query.id,
+          type: 'zan'
+        }
+      }
+
+      return axios.get('/book/MemberMsg/getList', data).then(res => {
+        if (res.data.status == 1) {
+          this.count = res.data.count
+
+          if (this.page == 1) {
+            this.list = res.data.data
+          } else {
+            this.list = this.list.concat(res.data.data)
+          }
+
+          this.page++
+          this.loading = false
+
+          if (this.list.length >= res.data.count) {
+            this.finished = true
+          }
+        }
+      })
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    getAvatar(img) {
+      let pos = img.indexOf('http://')
+      let result
+      if(pos === 0) {
+         result = img.replace('http:', 'https:')
+      } else {
+         result = img
+      }
+      return result
+    }
   }
 }
 </script>
 <style scoped>
 .avatar{
-    width: 3.125rem /* 50/16 */;
-    height: 3.125rem /* 50/16 */;
-    border-radius: 50%;
-    overflow: hidden;
+  flex: 1;
+}
 
-    background: #ddd;
-    margin-right: .625rem /* 10/16 */;
+.avatar img{
+  width: 3.125rem /* 50/16 */;
+  height: 3.125rem /* 50/16 */;
+  border-radius: 50%;
+}
+
+.content{
+  flex: 5;
 }
 
 .amount-item {
@@ -105,11 +142,30 @@ export default {
   font-size: 0.875rem /* 14/16 */;
 }
 
-.get-praise{
-    height: 1.875rem /* 30/16 */;
-    padding: 0 1.25rem /* 20/16 */;
-    line-height: 1.875rem /* 30/16 */;
-    background: #fff;
-    box-shadow: 0 .125rem /* 2/16 */ .625rem /* 10/16 */ rgba(0, 0, 0, .1)
+.get-praise {
+  height: 1.875rem /* 30/16 */;
+  padding: 0 1.25rem /* 20/16 */;
+  line-height: 1.875rem /* 30/16 */;
+  background: #fff;
+  box-shadow: 0 0.125rem /* 2/16 */ 0.625rem /* 10/16 */ rgba(0, 0, 0, 0.1);
+  width: 100%;
+  z-index: 2020;
+  position: relative;
+}
+
+.no-content {
+  height: 18.75rem /* 300/16 */;
+  line-height: 18.75rem /* 300/16 */;
+  text-align: center;
+  background: #fff;
+  color: #c0c4cc;
+}
+
+.intro{
+    font-weight: 700;
+}
+
+.create-date{
+    color:#C0C4CC;
 }
 </style>

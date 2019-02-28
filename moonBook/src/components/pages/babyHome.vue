@@ -11,7 +11,7 @@
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
       <div class="baby-info flex flex-align">
-        <div class="avatar" v-if="childInfo.avatar" @click="toEgg">
+        <div class="avatar" v-if="childInfo.avatar" @click="toEditorBaby">
           <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">
         </div>
         <avatar :gender="childInfo.sex" size='small' avatarClass='border' v-else />
@@ -62,7 +62,7 @@
             {{childInfo.post_count}}日记
           </div>
           <div class="task" slot="right">
-            任务<van-tag class="tag-task" round type="danger">4</van-tag>
+            任务<van-tag class="tag-task" round type="danger">2</van-tag>
           </div>
         </van-nav-bar>
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
@@ -73,7 +73,7 @@
                   <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
                     <van-cell title="" v-if='item.isMe' @click="actionsheet(item)" is-link arrow-direction='down' />
                     <van-cell>
-                      <graphic-card :item="item" type="babyHome" :avatar='childInfo.avatar' />
+                      <graphic-card :item="item" type="babyHome" :title='childInfo.name' :avatar='childInfo.avatar' />
                     </van-cell>
                   </div>
                 </div>
@@ -104,8 +104,7 @@
     <!-- 文章操作 -->
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
     <!-- 切换孩子 -->
-    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby"
-      @cancel="isSelectBabyShow = false" />
+    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby" @cancel="isSelectBabyShow = false" />
   </div>
 </template>
 <script>
@@ -249,7 +248,7 @@ export default {
 
       this.getUserData().then(res => {
         axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
-          if (res.data.status) {
+          if (res.data.status == 1) {
             this.babyList = res.data.data
           }
         })
@@ -259,13 +258,11 @@ export default {
       this.getUserData().then(res => {
         if (res.child_id > '0') {
           axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
-            this.childInfo = res.data.data
+            if( res.data.status == 1 ){
+              this.childInfo = res.data.data
+            }
+            
           })
-
-          axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
-            this.lateBook = res.data.data
-          })
-
         } else {
           this.$router.push({
             name: 'edit-child',
@@ -275,6 +272,11 @@ export default {
             }
           })
         }
+        axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
+          if(res.data.status == 1){
+            this.lateBook = res.data.data
+          }
+        })
       })
     },
     onClickLeft() {
@@ -338,15 +340,17 @@ export default {
       }
 
       return axios.get('/book/SchoolArticle/getList', data).then(res => {
-        if (this.page == 1) {
-          this.tab[this.tabIndex].content = res.data.data
-        } else {
-          this.tab[this.tabIndex].content = this.list.concat(res.data.data)
-        }
-        this.loading = false
-        this.page++
-        if (this.tab[this.tabIndex].content.length >= res.data.count) {
-          this.finished = true
+        if(res.data.status == 1){
+          if (this.page == 1) {
+            this.tab[this.tabIndex].content = res.data.data
+          } else {
+            this.tab[this.tabIndex].content = this.list.concat(res.data.data)
+          }
+          this.loading = false
+          this.page++
+          if (this.tab[this.tabIndex].content.length >= res.data.count) {
+            this.finished = true
+          }
         }
       })
     },
@@ -379,7 +383,7 @@ export default {
     },
     babyPraise(childInfo) {
       axios.get(`/book/baby/zan?child_id=${this.$route.query.id}`).then(res => {
-        if (res.data.status) {
+        if (res.data.status == 1) {
           this.zanShow = true
           childInfo.zan_count = res.data.data.zan_count
         } else {
@@ -426,13 +430,17 @@ export default {
       })
     },
     toInformation() {
-      this.$router.push({
-        name: 'information',
-        query: {
-          id: this.$route.query.id,
-          back: this.$route.name
-        }
-      })
+      if(this.childInfo.is_mine){
+        this.$router.push({
+          name: 'information',
+          query: {
+            id: this.$route.query.id,
+            back: this.$route.name
+          }
+        })
+      }else{
+        this.$toast('您无法查看')
+      }
     },
     toEditorBaby() {
       if (this.childInfo.is_mine) {
@@ -488,7 +496,7 @@ export default {
             message: '您确认要删除吗'
           }).then(() => {
             axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
-              if (res.data.status) {
+              if (res.data.status == 1) {
                 this.onRefresh()
                 this.$toast.success('删除成功')
               }
@@ -590,6 +598,10 @@ export default {
   background: linear-gradient(-135deg, #ff765c, #ff23b3);
 }
 
+.baby-info .avatar{
+  flex: 2;
+}
+
 .baby-info .avatar img {
   width: 3.75rem /* 60/16 */;
   height: 3.75rem /* 60/16 */;
@@ -612,7 +624,7 @@ export default {
 }
 
 .baby-data {
-  margin-left: 0.625rem /* 10/16 */;
+  flex: 4;
 }
 
 .list {
@@ -625,22 +637,14 @@ export default {
 }
 
 .school {
-  width: 8.125rem /* 130/16 */;
   text-align: left;
   color: #fff;
 }
 
 .add-praise,
 .qr-code {
-  position: absolute;
-}
-
-.qr-code {
-  right: 1.25rem /* 20/16 */;
-}
-
-.add-praise {
-  right: 3.75rem /* 60/16 */;
+  flex: 1;
+  text-align: right;
 }
 
 .add-praise i.iconfont,

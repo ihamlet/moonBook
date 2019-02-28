@@ -1,7 +1,8 @@
 <template>
   <div class="comment-list" id='comment' ref='comment'>
     <van-nav-bar :zIndex='0' @click-right="showField">
-      <div class="comment" slot="right">{{listLength}}评论</div>
+      <div class="zan" slot="right">赞 {{item.zan_num}}</div>
+      <div class="comment" slot="left">评论 {{listLength}}</div>
     </van-nav-bar>
     <div class="no-centent" v-if='listLength == 0'>
       <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
@@ -62,7 +63,7 @@
               </div>
             </div>
             <div class="comment-bar flex flex-align">
-              <div class="date">{{timeAago(item.create_time)}}</div>
+              <div class="date">{{timeAgo(item.create_time)}}</div>
               <div class="theme-color" @click="showField(item)">
                 <van-tag round size="medium" type="primary">{{item.replyList.length?item.replyList.length:''}}回复</van-tag>
                </div>
@@ -92,12 +93,12 @@
               <i class="iconfont" v-if="!item.isZan">&#xe644;</i>
               <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
             </div>
-            <div class="btn" @click="addCollect(item)">
+            <div class="btn" @click="addCollect(item)" v-if='include != "include"'>
               <i class="iconfont" v-if="!item.isCollect">&#xe64c;</i>
               <i class="iconfont star highlight swing animated" v-else>&#xe64b;</i>
             </div>
-            <div class="btn" v-if='type == "article"'>
-              <i class="iconfont" v-if="!item.isCollect">&#xe614;</i>
+            <div class="btn" v-else  @click="shareShow = true">
+              <i class="iconfont" v-if="!item.isCollect">&#xe96e;</i>
             </div>
           </div>
         </div>
@@ -116,18 +117,26 @@
         </div>
       </van-popup>
     </div>
+
+    <van-popup v-model="shareShow" position='bottom' get-container='#app'>
+      <share @show='imageShow = true' />
+    </van-popup>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import axios from './../lib/js/api'
+import share from './../module/mold/share'
 import { timeago } from './../lib/js/util'
 
 export default {
   name: 'comment',
-  props: ['item','type'],
+  props: ['item','include'],
   computed: {
     ...mapGetters(['userToken','userDataState'])
+  },
+  components: {
+    share
   },
   data() {
     return {
@@ -141,24 +150,28 @@ export default {
       commentId: '',
       show: false,
       isLoading: false,
-      message: ''
+      message: '',
+      shareShow: false,
     }
   },
   methods: {
     onLoad() {
       axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.$route.query.id||this.$route.query.back_id}&page=${this.page}&limit=10&sort=new`).then(res => {
-        this.listLength = res.data.count
-        let array = res.data.data
-        this.loading = false
-        if (this.page == 1) {
-          this.list = array
-        } else {
-          this.list = this.list.concat(array)
+        if(res.data.status == 1){
+          this.listLength = res.data.count
+          let array = res.data.data
+          this.loading = false
+          if (this.page == 1) {
+            this.list = array
+          } else {
+            this.list = this.list.concat(array)
+          }
+          this.page++
+          if (this.list.length >= res.data.count) {
+            this.finished = true
+          }
         }
-        this.page++
-        if (this.list.length >= res.data.count) {
-          this.finished = true
-        }
+
       })
     },
     submit() {
@@ -224,7 +237,7 @@ export default {
       }
       return result
     },
-    timeAago(time) {
+    timeAgo(time) {
       return timeago(time * 1000)
     },
     toScroll(){
@@ -253,7 +266,7 @@ export default {
 .no-centent {
   text-align: center;
   background: #fff;
-  padding-bottom: 1.25rem /* 20/16 */;
+  padding:3.125rem /* 50/16 */ 0;
 }
 
 .no-centent .prompt{
@@ -332,7 +345,7 @@ export default {
 
 .input-box {
   height: 2.375rem /* 38/16 */;
-  flex: 1;
+  flex: 1.8;
 }
 
 .btn-icon {

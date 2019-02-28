@@ -1,11 +1,11 @@
 <template>
     <div class="news">
+        <van-cell-group>
         <div class="list">
             <div class="item" v-for='(item,index) in newsList' :key="index" @click="toArticle(item)">
-                <van-cell-group>
-                    <van-cell>
-                        <van-row gutter="10">
-                            <van-col span="10">
+                <van-cell>
+                     <van-row gutter="10">
+                          <van-col span="10">
                                 <div class="cover">
                                     <img class="lazy" v-lazy='item.cover' :alt="item.title" />
                                 </div>
@@ -18,7 +18,7 @@
                                         <div v-line-clamp:20="1"  class="school">{{item.cate_name}}</div>
                                     </div>
                                     <div class="foot-bar-left">
-                                        <div class="time">{{item.time}}</div>
+                                        <div class="time">{{getTimeAgo(item.create_time)}}</div>
                                     </div>
                                     <div class="foot-bar-right watch">
                                         <i class="iconfont">&#xe610;</i>
@@ -29,21 +29,23 @@
                                     <div class="category">{{item.cate_name}}</div>
                                     <div class="foot-bar-left address">{{item.address}}</div>
                                 </div>     
-                            </van-col>
-                        </van-row>
-                    </van-cell>
-                </van-cell-group>
+                            </van-col>  
+                    </van-row>
+                       
+                </van-cell> 
             </div>
         </div>
+        </van-cell-group>
     </div>    
 </template>
 <script>
+import { timeago } from './../lib/js/util'
+
 export default {
     name:'news',
     props: ['newsList'],
     methods: {
         toArticle(article){
-            console.log('to article')
             this.$router.push({
                 name:'article',
                 query:{
@@ -51,6 +53,9 @@ export default {
                     back: this.$route.name
                 }
             })
+        },
+        getTimeAgo(time){
+            return timeago(time*1000)
         }
     }
 }

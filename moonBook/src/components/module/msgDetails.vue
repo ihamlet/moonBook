@@ -5,7 +5,7 @@
       <div class="content">
         <div class="hd flex flex-align">
           <div class="title">{{details.title}}</div>
-          <div class="create-date">{{details.create_date}}</div>
+          <div class="create-date">{{timeAgo(details.create_time)}}</div>
         </div>
         <div class="details">{{details.details}}</div>
       </div>
@@ -16,6 +16,7 @@
 <script>
 import axios from './../lib/js/api'
 import slogan from './slogan'
+import { timeago } from './../lib/js/util'
 
 export default {
     name:'msg-details',
@@ -31,6 +32,9 @@ export default {
     methods: {
       onClickLeft(){
         this.$emit('close')
+      },
+      timeAgo(time) {
+        return timeago(time * 1000)
       }
     }
 }

@@ -110,7 +110,9 @@ export default {
     ...mapActions(['getCityDistrict']),
     fetchData() {
       axios.get('/book/Location/getHots').then(res => {
-        this.hotCity = res.data.data
+        if(res.data.status == 1){
+          this.hotCity = res.data.data
+        }
       })
     },
     onScroll(e) {

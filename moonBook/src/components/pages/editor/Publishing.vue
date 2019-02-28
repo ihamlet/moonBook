@@ -209,11 +209,33 @@ export default {
           post_id: this.$route.query.post_id || ''
         }
 
-        axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
+        if(this.$route.query.back == 'class-home'){
+          data.banji_id = this.$route.query.id
+        }
+        
+        if(this.$route.query.back == 'apps-school'){
+          data.school_id = this.$route.query.id
+        }
+
+        if(this.$route.query.back == 'baby-home'){
+          data.child_id = this.$route.query.id
+        }
+
+        axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {          
           if (res.data.status == 1) {
-            this.$router.push({
-              name: 'apps-find'
-            })
+            if(this.$route.query.back){
+              this.$router.push({
+                name:this.$route.query.back,
+                query:{
+                  id: this.$route.query.id ||　'',
+                  cate_id: this.cateId || ''
+                }
+              })
+            }else{
+              this.$router.push({
+                name: 'apps-find'
+              })
+            }
           }
         })
       }

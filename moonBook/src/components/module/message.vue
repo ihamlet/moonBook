@@ -96,18 +96,22 @@ export default {
     ...mapActions(['getMsg']),
     topping(item) {
       axios.get(`/book/MemberMsg/top?msg_id=${item.msg_id}`).then(res => {
-        this.isLoading = false
-        this.page = 1
-        this.onLoad()
+        if(res.data.status == 1){
+          this.isLoading = false
+          this.page = 1
+          this.onLoad()
+        }
       })
     },
     toMsgDetails(item) {
       axios.get(`/book/MemberMsg/getInfo?msg_id=${item.msg_id}`).then(res => {
-        this.details = res.data.data
-        this.isLoading = false
-        this.page = 1
-        this.onLoad()
-        this.getMsg()
+        if(res.data.status == 1){
+          this.details = res.data.data
+          this.isLoading = false
+          this.page = 1
+          this.onLoad()
+          this.getMsg()
+        }
       })
       this.show = true
     },
@@ -116,17 +120,20 @@ export default {
     },
     getMsgList() {
       return axios.get(`/book/MemberMsg/getList?page=${this.page}&is_read=${this.tab[this.tabIndex].isRead}&sort=top`).then(res => {
-        let array = res.data.data
-        this.loading = false
-        if (this.page == 1) {
-          this.tab[this.tabIndex].content = array
-        } else {
-          this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(array)
+        if(res.data.status == 1){
+          let array = res.data.data
+          this.loading = false
+          if (this.page == 1) {
+            this.tab[this.tabIndex].content = array
+          } else {
+            this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(array)
+          }
+          this.page++
+          if (this.tab[this.tabIndex].content.length >= res.data.count) {
+            this.finished = true
+          }
         }
-        this.page++
-        if (this.tab[this.tabIndex].content.length >= res.data.count) {
-          this.finished = true
-        }
+
       })
     },
     onRefresh() {

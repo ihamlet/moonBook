@@ -10,12 +10,11 @@
         </div>
         <div class="info">
           <div class="name flex flex-align">
-            <span v-if="type=='babyHome'">{{item.user.name}}的宝贝</span>
-            <span v-else>{{item.user.name}}</span>
+            <span>{{item.user.name}}</span>
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
-            {{getTimeAgo(item.create_time)}} <span>{{item.relation_name?relation_name:'家长'}}</span>
+            {{getTimeAgo(item.create_time)}} <span>{{type?type=='babyHome'?`${title}的家长`:title:'家长'}}</span>
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0'>
@@ -30,10 +29,10 @@
       <media :item='item' type='card'/>
 
       <div class="temp-type">
-        <van-tag type="primary" size="medium" plain v-if='item.school_id > 0'>
+        <van-tag color='#ad0000' type="success" size="medium" plain v-if='item.school_id > 0'>
           <span @click="toSchoolHome(item.school_id)">{{item.schoolName}}</span>
         </van-tag>
-         <van-tag type="primary" size="medium" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
+         <van-tag color="#ffe1e1" text-color="#ad0000" size="medium" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
       </div>
 
       <div class="task" v-if='$route.query.tid == 5'>
@@ -42,27 +41,27 @@
 
       <div class="social flex flex-align">
         <div class="share" @click="share(item)">
-          <i class="iconfont">&#xe6eb;</i> {{item.share_num>1000?'999+':item.share_num}}
+          <i class="iconfont">&#xe6eb;</i> {{item.share_num>1000?'999+':item.share_num == '0'?'分享':item.share_num}}
         </div>
         <div class="message"  @click="toArticle(item)">
-          <i class="iconfont">&#xe731;</i> {{item.reply_num>1000?'999+':item.reply_num}}
+          <i class="iconfont">&#xe731;</i> {{item.reply_num>1000?'999+':item.reply_num == '0'?'评论':item.reply_num}}
         </div>
         <div class="praise flex flex-align flex-justify" @click="addPraise(item)">
           <i class="iconfont" v-if="!item.isZan">&#xe644;</i>
           <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
-          {{item.zan_num>1000?'999+':item.zan_num}}
+          {{item.zan_num>1000?'999+':item.zan_num == '0'?'赞':item.zan_num}}
         </div>
       </div>
     </div>
 
-    <van-actionsheet v-model="shareShow" title="分享" get-container='#app'>
+    <van-popup v-model="shareShow" position='bottom' get-container='#app'>
       <share @show='imageShow = true' />
-    </van-actionsheet>
+    </van-popup>
 
     <!-- 生成图片 -->
-    <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
+    <!-- <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
       <article-share :item='item' :userName='item.user.name' :qrImage='qrImage' @close='imageShow = false'/>
-    </van-popup>
+    </van-popup> -->
   </div>
 </template>
 <script>
@@ -71,16 +70,16 @@ import QRCode from "qrcode"
 import vipLevel from './../animate/svg/vipLevel'
 import share from './../mold/share'
 import taskCard from './taskCard'
-import articleShare from './../mold/articleShare'
+// import articleShare from './../mold/articleShare'
 import media from './../mold/media'
 import { timeago } from './../../lib/js/util'
 
 export default {
   name: "graphic-card",
-  props: ["item", "type",'avatar'],
+  props: ["item", "type",'avatar','title'],
   components: {
     share,
-    articleShare,
+    // articleShare,
     taskCard,
     vipLevel,
     media
@@ -122,7 +121,7 @@ export default {
       QRCode.toDataURL(this.link).then(url => {
         this.qrImage = url
       }).catch(err => {
-        console.error(err)
+        console.log(err)
       })
     },
     toBookZoom(item){

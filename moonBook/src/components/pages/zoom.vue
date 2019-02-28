@@ -114,29 +114,24 @@ export default {
   },
   methods: {
     fetaData() {
-      axios
-        .get(`/book/memberUser/getInfo?user_id=${this.$route.query.id}`)
-        .then(res => {
-          this.userInfo = res.data;
-          axios
-            .get(
-              `/book/BabyBorrow/getList?page=1&limit=20&child_id=${
-              res.data.child_id
-              }`
-            )
-            .then(res => {
-              this.lateBook = res.data.data;
-            });
-        });
+      axios.get(`/book/memberUser/getInfo?user_id=${this.$route.query.id}`).then(res => {
+          console.log(res)
+          if(res.status == 200){
+            this.userInfo = res.data
+            axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${res.data.child_id}`).then(res => {
+                if(res.status == 200){
+                  this.lateBook = res.data.data
+                }
+            })
+          }
+        })
     },
     onClickLeft() {
       if (this.$route.query.back) {
         this.$router.push({
           name: this.$route.query.back,
           query: {
-            id: this.$route.query.post_id,
-            user_id: this.$route.query.user_id,
-            back_id: this.$route.query.back_id
+            id: this.$route.query.back_id
           }
         });
       } else {
@@ -165,11 +160,13 @@ export default {
     },
     onLoad() {
       axios.get(`/book/SchoolArticle/getList?page=${this.page}&sort=post&user_id=${this.$route.query.id}`).then(res => {
-          this.page++
-          this.list = this.list.concat(res.data.data)
-          this.loading = false;
-          if (this.list.length >= res.data.count) {
-            this.finished = true;
+          if(res.data.status == 1){
+            this.page++
+            this.list = this.list.concat(res.data.data)
+            this.loading = false;
+            if (this.list.length >= res.data.count) {
+              this.finished = true;
+            }
           }
         })
     },
@@ -179,7 +176,6 @@ export default {
       this.templateId = item.template_id
     },
     onSelect(item) {
-
         switch(item.index){
           case 0:
               switch (this.templateId){
@@ -216,7 +212,14 @@ export default {
             }).then(() => {
               axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
                 if (res.data.status == 1) {
-                  this.onRefresh()
+                  let index
+                  this.list.forEach((element,i) => {
+                    if(this.postId == element.post_id){
+                      index = i
+                    }
+                  })
+
+                  this.list.splice(index,1)
                   this.$toast.success('删除成功')
                 }
               })

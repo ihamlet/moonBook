@@ -6,7 +6,7 @@
     </lazy-component>
     <lazy-component>
       <div class="container">
-        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
               <drying-list :sort='list.sort' type='find' :tid='$route.query.tid' :cid='$route.query.cid' :banji_id='$route.query.banji_id'/>
@@ -52,6 +52,7 @@ export default {
   },
   data() {
     return {
+      indexTab:1,
       freshList: []
     }
   },
@@ -70,7 +71,9 @@ export default {
       }
 
       axios.get('/book/SchoolArticle/recommendUsers',data).then(res => {
-        this.freshList = res.data
+        if(res.status == 200){
+          this.freshList = res.data
+        }
       })
     },
     onClickLeft(){

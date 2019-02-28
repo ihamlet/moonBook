@@ -1,11 +1,11 @@
 <template>
   <div class="class-zoom" :class="[type!='template'?'page-padding':'no-padding']">
-    <van-nav-bar v-if='type!="template"' title="班级风采" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft"/>
+    <van-nav-bar v-if='type!="template"' :title="$route.query.name?$route.query.name:'班级风采'" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft"/>
     <lazy-component class="module" v-if="type != 'template'">
       <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template' />
     </lazy-component>
     <lazy-component>
-      <van-nav-bar title="班级动态"/>
+      <van-nav-bar :title="$route.query.name?'':'班级动态'"/>
       <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
         <div class="list" v-if='list.length > 0'>
           <div class="item" v-for="(item,index) in list" :key="index">
@@ -24,6 +24,8 @@
     </van-popup>
 
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
+    <!-- 管理员推荐操作 -->
+    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" />
   </div>
 </template>
 <script>
@@ -42,7 +44,7 @@ export default {
   },
   computed:{
     ...mapGetters(['managerState']),
-        manage() {
+    manage() {
       if(this.managerState){
         let boolean
         this.managerState.forEach(element => {
@@ -52,6 +54,25 @@ export default {
         })
         return boolean
       }
+    },
+    recommendActions() {
+      let array = []
+      if (this.managerState) {
+        this.managerState.forEach(element => {
+          if(element.item_relation == 'teacher'){
+            let data = {
+              name: `${element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name)}${element.child_name?'('+element.child_name+')':'(管理员)'}`,
+              subname: `${element.duty}-${element.desc}`,
+              id: element.id,
+              type: element.item_type
+            }
+
+            array.push(data)
+          }
+        })
+      }
+
+      return array
     }
   },
   data() {
@@ -64,6 +85,7 @@ export default {
       releasePageShow: false,
       loading: false,
       finished: false,
+      actionsheetShow:false,
       page: 1,
       actions: [{
         name: '置顶',
@@ -92,7 +114,9 @@ export default {
     },
     fetchData() {
       axios.get(`/book/baby/getList?banji_id=${this.$route.query.id}`).then(res => {
-        this.freshList = res.data.data
+        if(res.data.status == 1){
+          this.freshList = res.data.data
+        }
       })
     },
     onLoad() {
@@ -106,16 +130,18 @@ export default {
       }
 
       return axios.get('/book/SchoolArticle/getList', data).then(res => {
-        if (this.page == 1) {
-          this.list = res.data.data
-        } else {
-          this.list = this.list.concat(res.data.data)
-        }
+        if(res.data.status == 1){
+          if (this.page == 1) {
+            this.list = res.data.data
+          } else {
+            this.list = this.list.concat(res.data.data)
+          }
 
-        this.loading = false
-        this.page++
-        if (this.list.length >= res.data.count) {
-          this.finished = true
+          this.loading = false
+          this.page++
+          if (this.list.length >= res.data.count) {
+            this.finished = true
+          }
         }
       })
     },
@@ -126,7 +152,7 @@ export default {
     onSelect(item) {
       switch (item.index) {
         case 0:
-          axios.get(`/book/SchoolArticle/top?id=${this.cardItem.post_id}`).then(res => {
+          axios.get(`/book/SchoolArticle/top?post_id=${this.cardItem.post_id}`).then(res => {
             if(res.data.status == 1){
               this.show = false
               this.page = 1
@@ -136,9 +162,12 @@ export default {
               this.$toast.fail('置顶失败')
             }
           })
+
+          this.show = false
           break
         case 1:
-
+          this.actionsheetShow = true
+          this.show = false
           break
         case 2:
           axios.get(`/book/SchoolArticle/del?id=${this.cardItem.post_id}`).then(res => {
@@ -151,11 +180,43 @@ export default {
               this.$toast.fail('删除失败')
             }
           })
+
+          this.show = false
           break
       }
     },
     toManger(){
       console.log('管理页面')
+    },
+    onRecommendSelect(){
+      let data = {
+        params:{
+          post_id: this.postId
+        }
+      }
+
+      if(item.type == 'banji'){
+        data.params.banji_id = item.id
+      }
+
+      if(item.type == 'school'){
+        data.params.school_id = item.id
+      }
+
+      axios.get('/book/SchoolArticle/copy',data).then(res=>{
+        if(res.data.data.status == 1){
+          this.$toast.success('推荐成功')
+        }else{
+          this.$toast.fail('操作失败')
+        }
+      })
+    },
+    formatBanjiTitle(text) {
+      if (text && text.indexOf('班') == -1) {
+        return text + '班'
+      } else {
+        return text
+      }
     }
   }
 };

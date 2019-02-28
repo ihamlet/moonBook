@@ -30,12 +30,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_54ha0m1tzc4.eot');
-  src: url('//at.alicdn.com/t/font_893274_54ha0m1tzc4.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_54ha0m1tzc4.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_54ha0m1tzc4.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_54ha0m1tzc4.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_54ha0m1tzc4.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_nysbp9r1nk.eot');
+  src: url('//at.alicdn.com/t/font_893274_nysbp9r1nk.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_nysbp9r1nk.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_nysbp9r1nk.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_nysbp9r1nk.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_nysbp9r1nk.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -141,7 +141,9 @@ body {
   width: 100%;
   height: 6.25rem /* 100/16 */;
   overflow: hidden;
+  position: relative;
 }
+
 
 /* 主题色 */
 .theme-btn.van-button--primary,
@@ -724,10 +726,10 @@ i.iconfont.rotate {
 /* 尚无记录 */
 .not-content {
   width: 100%;
-  height: 12.5rem /* 200/16 */;
+  height: 6.25rem /* 100/16 */;
+  line-height: 6.25rem /* 100/16 */;
   background: #fff;
   text-align: center;
-  line-height: 12.5rem /* 200/16 */;
   color: #c0c4cc;
 }
 
@@ -805,7 +807,7 @@ video {
 }
 
 .article-content .content p {
-  font-size: 1.125rem /* 18/16 */ !important;
+  font-size: 1.25rem /* 20/16 */ !important;
   margin: 0.625rem /* 10/16 */ 0;
 }
 
@@ -823,6 +825,7 @@ video {
   top: 50%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
+  object-fit: cover;
 }
 
 .close {
@@ -920,21 +923,33 @@ i.iconfont.vip-1 {
 
 .thumb{
   position: relative;
+  overflow: hidden;
 }
 
-.thumb .iconfont{
-  font-size: 3.125rem /* 50/16 */;
+.player{
+  width: 3.75rem /* 60/16 */;
+  height: 3.75rem /* 60/16 */;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
   position: absolute;
+  transform: translate3d(-50%, -50%, 0);
   left: 50%;
   top: 50%;
+  text-align: center;
+  line-height: 3.75rem /* 60/16 */;
+}
+
+.thumb .player .iconfont{
+  font-size: 2.25rem /* 36/16 */;
   color: #fff;
-  transform: translate3d(-50%, -50%, 0);
 }
 
 .img-grid.long{
   padding-bottom: 150%;
 }
 
+
+.cover img,
 .img-preview {
   position: absolute;
   width: 100%;

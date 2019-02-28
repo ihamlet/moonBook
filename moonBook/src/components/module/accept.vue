@@ -223,12 +223,15 @@ export default {
         page: this.page
       }
       axios.get(`/book/school/index?ajax=1&lat=${data.lat}&lng=${data.lng}&page=${data.page}`).then(res => {
-        this.page++
-        this.list = this.list.concat(res.data.data)
-        this.loading = false
-        if (this.list.length >= res.data.count) {
-          this.finished = true
+        if(res.data.status == 1){
+          this.page++
+          this.list = this.list.concat(res.data.data)
+          this.loading = false
+          if (this.list.length >= res.data.count) {
+            this.finished = true
+          }
         }
+
       })
     },
     onClickLeft() {
@@ -245,9 +248,11 @@ export default {
         this.searchListShow = false
 
         axios.get(`/book/MemberCard/getMemberRegPayConfig?shelf_id=${item.shelf_id}`).then(res => {
-          this.levels = res.data.data.levels
-          this.tips = res.data.data.tips
-          this.fees = res.data.data.fees
+          if(res.data.status == 1){
+            this.levels = res.data.data.levels
+            this.tips = res.data.data.tips
+            this.fees = res.data.data.fees
+          }
         })
 
       } else {

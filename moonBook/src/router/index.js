@@ -139,7 +139,7 @@ export default new Router({
           name: 'readAmount',
           component: ReadAmount,
           meta: {
-            title: '我读的书',
+            title: '读的书',
             isFooterBar: false
           }
         },
@@ -178,7 +178,7 @@ export default new Router({
           component: ClassZoom,
           meta: {
             title: '班级风采',
-            tabActive: 1,
+            tabActive: 0,
             isFooterBar: true
           }
         },
@@ -254,7 +254,7 @@ export default new Router({
           name:'information',
           component: Information,
           meta: {
-            title:'消息',
+            title:'收到的赞',
             isFooterBar: false
           }
         },
@@ -371,7 +371,7 @@ export default new Router({
         name: 'graphic',
         component: Graphic,
         meta: {
-          title: '发布长文',
+          title: '发布',
           type:'webo'
         }
       }]

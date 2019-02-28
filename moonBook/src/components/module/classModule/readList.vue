@@ -55,30 +55,34 @@ export default {
     fetchData() {
       if (this.type == 'school') {
         axios.get(`/book/SchoolTushuBorrow/getRank?school_id=${this.$route.query.id}&group=banji&region=school`).then(res => {
-          let data = []
-          let array = res.data.data.list
-          array.forEach(element => {
-            let obj = {
-              name: element.babyInfo.name,
-              rank: element.rank,
-              banji_id: element.banji_id
-            }
-            data.push(obj)
-          })
-          this.count = data.length
-          this.rankList = data
+          if(res.data.status == 1){
+            let data = []
+            let array = res.data.data.list
+            array.forEach(element => {
+              let obj = {
+                name: element.babyInfo.name,
+                rank: element.rank,
+                banji_id: element.banji_id
+              }
+              data.push(obj)
+            })
+            this.count = data.length
+            this.rankList = data
+          }
         })
       } else {
         axios.get(`/book/babySign/rank?banji_id=${this.$route.query.id}&time=week`).then(res => {
-          this.count = res.data.count
-          let array = res.data.data
-          let data = [] 
-          array.forEach(e => {
-            if(!(e instanceof Array)){
-                data.push(e)
-            }
-          })
-          this.rankList = data
+          if(res.data.status == 1){
+            this.count = res.data.count
+            let array = res.data.data
+            let data = [] 
+            array.forEach(e => {
+              if(!(e instanceof Array)){
+                  data.push(e)
+              }
+            })
+            this.rankList = data
+          }
         })
       }
     },

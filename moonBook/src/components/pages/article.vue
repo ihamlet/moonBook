@@ -1,28 +1,28 @@
 <template>
   <div class="article">
-    <van-nav-bar left-text="发现" left-arrow fixed :zIndex='100' @click-left="onClickLeft" @click-right="shareShow = true">
+    <van-nav-bar :left-text="this.$route.query.back?'返回':'发现'" left-arrow fixed :zIndex='100' @click-left="onClickLeft">
       <div class="head-bar-title" slot="title">
         <transition name="slide-fade" mode="out-in">
           <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
             {{$route.meta.title}}
           </div>
-          <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else>
+          <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else @click="toZoom">
             <div class="avatar" v-if='item.user'>
-              <img :src="getAvatar(item.user.avatar)" :alt="item.user.username">
+              <img :src="getAvatar(item.user.avatar)" :alt="item.user.username" @error='imgError'>
             </div>
             <div class="name" v-if='item.user'>{{item.user.username}}</div>
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
         </transition>
       </div>
-      <div class="head-bar-right" slot="right">
+      <!-- <div class="head-bar-right" slot="right">
         <i class="iconfont">&#xe635;</i>
-      </div>
+      </div> -->
     </van-nav-bar>
     <div class="container page-padding">
       <div class="user-card flex flex-align" ref="userCard" v-if='item.user'>
-        <div class="avatar">
-          <img :src="getAvatar(item.user.avatar)" :alt="item.user.username">
+        <div class="avatar" @click="toZoom">
+          <img :src="getAvatar(item.user.avatar)" :alt="item.user.username" @error='imgError'>
         </div>
         <div class="info">
           <div class="name">
@@ -36,33 +36,28 @@
           </div>
         </div>
         <div class="follow-ben"  v-if='item.isSubscribe!=3'>
-          <van-button size="small" v-if='item.isSubscribe' round @click="follow(item)">已关注</van-button>
-          <van-button size="small" v-else class="theme-btn" type="primary" round @click="follow(item)">+ 关注</van-button>
+          <van-button size="normal" v-if='item.isSubscribe' round @click="follow(item)">已关注</van-button>
+          <van-button size="normal" v-else class="theme-btn" type="primary" round @click="follow(item)">+ 关注</van-button>
         </div>
       </div>
       <lazy-component class="module">
         <article-content :item='item'/>
       </lazy-component>
       <lazy-component>
-        <comment :item='item' type='article'/>
+        <comment :item='item' include='include'/>
       </lazy-component>
     </div>
 
-    <van-actionsheet v-model="shareShow" title="分享">
-      <share @show='imageShow = true' />
-    </van-actionsheet>
-
     <!-- 生成图片 -->
-    <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
+    <!-- <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
       <article-share :item='item' :userName='item.user?item.user.username:""' :qrImage='qrImage' @close='imageShow = false'/>
-    </van-popup>
+    </van-popup> -->
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
 
 import QRCode from "qrcode"
-import share from './../module/mold/share'
 import articleShare from './../module/mold/articleShare'
 import comment from './../module/comment'
 import articleContent from './../module/articleContent'
@@ -73,7 +68,6 @@ export default {
   components: {
     articleContent,
     comment,
-    share,
     articleShare,
     vipLevel
   },
@@ -84,7 +78,6 @@ export default {
       themeBarSearch: false,
       imageShow: false,
       headBar: false,
-      shareShow: false,
       imgIndex: '',
       qrImage:'',
       item: ''
@@ -115,7 +108,9 @@ export default {
     fetchData() {
       this.qrcode()
       axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id||this.$route.query.back_id}`).then(res => {
-        this.item = res.data.data.post
+        if(res.data.status == 1){
+          this.item = res.data.data.post
+        }
       })
     },
     onClickLeft() {
@@ -154,6 +149,19 @@ export default {
          result = img
       }
       return result
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    toZoom(){
+      this.$router.push({
+        name:'zoom',
+        query:{
+          id:this.item.user_id,
+          back: this.$route.name,
+          back_id: this.$route.query.id
+        }
+      })
     }
   }
 }

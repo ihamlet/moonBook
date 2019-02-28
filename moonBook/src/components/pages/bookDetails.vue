@@ -92,11 +92,15 @@ export default {
     },
     fetchData() {
       axios.get(`/book/ShelfBook/getInfo?book_id=${this.$route.query.id}`).then(res => {
-        this.details = res.data.data
+        if(res.data.status == 1){
+          this.details = res.data.data
+        }
       })
 
       axios.get(`/book/ShelfBookChild/getList?book_id=${this.$route.query.id}`).then(res => {
-        this.freshList = res.data.data
+        if(res.data.status == 1){
+          this.freshList = res.data.data
+        }
       })
     },
     handleScroll() {
