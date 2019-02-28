@@ -121,7 +121,7 @@ export default {
       QRCode.toDataURL(this.link).then(url => {
         this.qrImage = url
       }).catch(err => {
-        console.error(err)
+        console.log(err)
       })
     },
     toBookZoom(item){

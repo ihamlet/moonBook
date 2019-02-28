@@ -25,7 +25,7 @@
         <van-cell title-class='theme-color' title="#选择分类" :value="grapicData.text.length>0?grapicData.text.length:''"
           is-link arrow-direction="down" @click="show = true" />
       </van-cell-group>
-      <van-cell-group>
+      <van-cell-group v-if='cateId!="99"&&cateId!="124"'>
         <van-cell title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
       </van-cell-group>
     </div>
@@ -197,7 +197,6 @@ export default {
           to: 1
         })
       }
-
 
       this.resultList = array
       

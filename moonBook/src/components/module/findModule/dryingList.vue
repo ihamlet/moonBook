@@ -2,21 +2,22 @@
   <div class="drying-list">
     <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
       <van-pull-refresh v-model="loading" @refresh="onRefresh">
-          <div class="no-content" v-if='list.length == 0'>
-            尚无内容
-          </div>
-          <!-- <transition-group leave-active-class="animated zoomOut" tag='div' v-else> -->
-            <div class="item" v-for="(item,index) in list" :key="index"  @click="setItem(item)" v-else>
-              <van-cell title='' is-link arrow-direction="down" @click="actionsheet(item)" />
-              <van-cell>
-                <div class="content">
-                  <graphic-card :item="item" @follow="follow" />
-                </div>
-              </van-cell>
+        <div class="no-content" v-if='list.length == 0'>
+          尚无内容
+        </div>
+        <div class="item" v-for="(item,index) in list" :key="index" @click="setItem(item)" v-else>
+          <van-cell title='' is-link arrow-direction="down" @click="actionsheet(item)" />
+          <van-cell>
+            <div class="content">
+              <graphic-card :item="item" @follow="follow" />
             </div>
-          <!-- </transition-group> -->
+          </van-cell>
+        </div>
       </van-pull-refresh>
     </van-list>
+
+    <!-- 管理员推荐操作 -->
+    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" />
 
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
     <!-- 用户文章操作 -->
@@ -38,54 +39,97 @@ export default {
   props: ['sort', 'tid', 'schoolId', 'type', 'portal_name'],
   computed: {
     ...mapGetters(['userToken', 'managerState']),
-    actions(){
+    manage() {
+      if (this.managerState) {
+        let boolean
+        this.managerState.forEach(element => {
+          if (element.item_relation == 'teacher') {
+            boolean = true
+          }
+        })
+        return boolean
+      }
+    },
+    actions() {
       let arr = []
-      if(this.item.isMe){
+      if (this.item.isMe) {
         arr.push({
           name: '编辑',
           type: 'edit',
           index: 0
-        },{
-          name: '删除',
-          type: 'delete',
-          index: 1
-        })
-      }else{
+        }, {
+            name: '删除',
+            type: 'delete',
+            index: 1
+          })
+      } else {
+        if (this.manage) {
+          arr.push({
+            name: '推荐',
+            type: 'recommend',
+            index: 2
+          }, {
+            name: '删除',
+            type: 'delete',
+            index: 1
+          })
+        }
+
         arr.push({
           name: '举报',
           type: 'report',
-          index: 2
+          index: 3
+        })
+      }
+      return arr
+    },
+    recommendActions() {
+      let array = []
+      if (this.managerState) {
+        this.managerState.forEach(element => {
+          if(element.item_relation == 'teacher'){
+            let data = {
+              name: `${element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name)}${element.child_name?'('+element.child_name+')':'(管理员)'}`,
+              subname: `${element.duty}-${element.desc}`,
+              id: element.id,
+              type: element.item_type
+            }
+
+            array.push(data)
+          }
         })
       }
 
-      return arr
+      return array
     },
-    reportActions(){
+    reportActions() {
       let arr = []
       arr.push({
-        name:'不感兴趣',
-        subname:'减少这类内容',
-      },{
-        name:'垃圾内容',
-        subname:'低俗，标题党等',
-      },{
-        name:'拉黑',
-        subname:`不再推送${this.item?`${this.item.user.name}`:'他'}发布的内容`,
-        is_block:1
-      })
+        name: '不感兴趣',
+        subname: '减少这类内容',
+      }, {
+          name: '垃圾内容',
+          subname: '低俗，标题党等',
+        }, {
+          name: '拉黑',
+          subname: `不再推送${this.item ? `${this.item.user.name}` : '他'}发布的内容`,
+          is_block: 1
+        })
+
       return arr
     }
   },
   data() {
     return {
       postId: '',
-      templateId:'',
+      templateId: '',
       show: false,
       DetailsId: 0,
       pictureShow: false,
       praiseShow: false,
+      actionsheetShow: false,
       list: [],
-      item:'',
+      item: '',
       loading: false,
       finished: false,
       page: 1,
@@ -112,7 +156,7 @@ export default {
       }
 
       return axios.get('/book/SchoolArticle/getList', data).then(res => {
-        if(res.data.status == 1){
+        if (res.data.status == 1) {
           if (this.page == 1) {
             this.list = res.data.data
           } else {
@@ -182,22 +226,26 @@ export default {
           }
           break
         case 1:
-            this.$dialog.confirm({
-              title: '删除',
-              message: '您确认要删除吗'
-            }).then(() => {
-              axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
-                if (res.data.status == 1) {
-                  this.onRefresh()
-                  this.$toast.success('删除成功')
-                }
-              })
-            }).catch(() => {
-              // on cancel
+          this.$dialog.confirm({
+            title: '删除',
+            message: '您确认要删除吗'
+          }).then(() => {
+            axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
+              if (res.data.status == 1) {
+                this.onRefresh()
+                this.$toast.success('删除成功')
+              }
             })
-            this.show = false
+          }).catch(() => {
+            // on cancel
+          })
+          this.show = false
           break
         case 2:
+          this.actionsheetShow = true
+          this.show = false
+          break
+        case 3:
           this.reportShow = true
           this.show = false
           break
@@ -208,33 +256,66 @@ export default {
       this.postId = item.post_id
       this.templateId = item.template_id
     },
-    onReportSelect(item){
+    onReportSelect(item) {
       let data = {
-        params:{
+        params: {
           post_id: this.postId,
           reason: item.name,
-          is_block: item.is_block?item.is_block:''
+          is_block: item.is_block ? item.is_block : ''
         }
       }
 
-      axios.get('/book/SchoolArticle/report',data).then(res=>{
+      axios.get('/book/SchoolArticle/report', data).then(res => {
         this.$toast(res.data.msg)
 
         let array = this.list
         let index
-        array.forEach((element,i)=>{
-          if(this.item.post_id == element.post_id){
+        array.forEach((element, i) => {
+          if (this.item.post_id == element.post_id) {
             index = i
           }
         })
 
-        this.list.splice(index,1)
+        this.list.splice(index, 1)
       })
 
       this.reportShow = false
     },
-    setItem(item){
+    setItem(item) {
       this.item = item
+    },
+    onRecommendSelect(item){
+      let data = {
+        params:{
+          post_id: this.postId
+        }
+      }
+
+      if(item.type == 'banji'){
+        data.params.banji_id = item.id
+      }
+
+      if(item.type == 'school'){
+        data.params.school_id = item.id
+      }
+
+      axios.get('/book/SchoolArticle/copy',data).then(res=>{
+        if(res.data.data.status == 1){
+          this.$toast.success('推荐成功')
+        }else{
+          this.$toast.fail('操作失败')
+        }
+      })
+    },
+    formatBanjiTitle(text) {
+      if (text && text.indexOf('班') == -1) {
+        return text + '班'
+      } else {
+        return text
+      }
+    },
+    toggle(index) {
+      this.$refs.checkboxes[index].toggle()
     }
   }
 }
@@ -251,6 +332,14 @@ export default {
   background: #fff;
   text-align: center;
   line-height: 12.5rem /* 200/16 */;
-  color: #c0c4cc;
+  color: #dce3f0;
+}
+
+.layer-head-bar{
+  justify-content: space-between;
+}
+
+.layer-head-bar .theme-btn{
+  margin-right: .9375rem /* 15/16 */;
 }
 </style>

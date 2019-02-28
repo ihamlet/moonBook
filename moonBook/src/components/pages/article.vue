@@ -36,8 +36,8 @@
           </div>
         </div>
         <div class="follow-ben"  v-if='item.isSubscribe!=3'>
-          <van-button size="small" v-if='item.isSubscribe' round @click="follow(item)">已关注</van-button>
-          <van-button size="small" v-else class="theme-btn" type="primary" round @click="follow(item)">+ 关注</van-button>
+          <van-button size="normal" v-if='item.isSubscribe' round @click="follow(item)">已关注</van-button>
+          <van-button size="normal" v-else class="theme-btn" type="primary" round @click="follow(item)">+ 关注</van-button>
         </div>
       </div>
       <lazy-component class="module">

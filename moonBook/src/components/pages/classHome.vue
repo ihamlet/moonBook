@@ -15,7 +15,7 @@
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">
         <div class="class-name">{{formatBanjiTitle(classInfo.title)}}</div>
-        <div class="class-people">{{`${classInfo.grade_name}班`}}（{{classInfo.student_count}}人）</div>
+        <div class="class-people">{{`${classInfo.grade_name?classInfo.grade_name:''}班`}}（{{classInfo.student_count}}人）</div>
         <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
       </div>
       <div class="qrcode" @click="show = true">
@@ -29,10 +29,10 @@
         </div>
       </lazy-component>
       <lazy-component class="module">
-        <notice type='banji' />
+        <read-list title='阅读榜' type='banji' field='avatar' />
       </lazy-component>
       <lazy-component class="module">
-        <read-list title='阅读榜' type='banji' field='avatar' />
+        <notice type='banji' />
       </lazy-component>
       <lazy-component>
         <class-zoom type='template' :banji_id='classInfo.banji_id' />
@@ -304,7 +304,12 @@ export default {
 
 .class-info {
   color: #fff;
-  width: 9.375rem /* 150/16 */;
+  flex: 4
+}
+
+.qrcode{
+  flex: 1;
+  text-align: right;
 }
 
 .class-avatar {

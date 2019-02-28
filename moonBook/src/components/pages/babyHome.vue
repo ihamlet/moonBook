@@ -594,6 +594,10 @@ export default {
   background: linear-gradient(-135deg, #ff765c, #ff23b3);
 }
 
+.baby-info .avatar{
+  flex: 2;
+}
+
 .baby-info .avatar img {
   width: 3.75rem /* 60/16 */;
   height: 3.75rem /* 60/16 */;
@@ -616,7 +620,7 @@ export default {
 }
 
 .baby-data {
-  margin-left: 0.625rem /* 10/16 */;
+  flex: 4;
 }
 
 .list {
@@ -629,22 +633,14 @@ export default {
 }
 
 .school {
-  width: 8.125rem /* 130/16 */;
   text-align: left;
   color: #fff;
 }
 
 .add-praise,
 .qr-code {
-  position: absolute;
-}
-
-.qr-code {
-  right: 1.25rem /* 20/16 */;
-}
-
-.add-praise {
-  right: 3.75rem /* 60/16 */;
+  flex: 1;
+  text-align: right;
 }
 
 .add-praise i.iconfont,

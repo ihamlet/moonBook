@@ -1,5 +1,5 @@
 <template>
-  <div class="notice">
+  <div class="notice" v-if='notice.length!=0'>
     <van-nav-bar title="通知"/>
     <div class="module">
       <graphicCard :item='notice[0]' type='notice' title='老师'/>

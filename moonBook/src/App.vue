@@ -807,7 +807,7 @@ video {
 }
 
 .article-content .content p {
-  font-size: 1.125rem /* 18/16 */ !important;
+  font-size: 1.25rem /* 20/16 */ !important;
   margin: 0.625rem /* 10/16 */ 0;
 }
 

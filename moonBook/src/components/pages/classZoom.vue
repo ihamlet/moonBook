@@ -42,7 +42,7 @@ export default {
   },
   computed:{
     ...mapGetters(['managerState']),
-        manage() {
+    manage() {
       if(this.managerState){
         let boolean
         this.managerState.forEach(element => {
@@ -130,7 +130,7 @@ export default {
     onSelect(item) {
       switch (item.index) {
         case 0:
-          axios.get(`/book/SchoolArticle/top?id=${this.cardItem.post_id}`).then(res => {
+          axios.get(`/book/SchoolArticle/top?post_id=${this.cardItem.post_id}`).then(res => {
             if(res.data.status == 1){
               this.show = false
               this.page = 1
