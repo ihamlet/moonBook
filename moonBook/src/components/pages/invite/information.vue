@@ -1,6 +1,6 @@
 <template>
   <div class="information">
-    <van-nav-bar :title="$route.meta.title" left-text="返回" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar :title="$route.meta.title" left-text="返回" left-arrow @click-left="onClickLeft" :zIndex='2021'/>
     <div class="information-list">
       <div class="get-praise">我收到的赞</div>
       <div class="list">
@@ -148,9 +148,9 @@ export default {
   line-height: 1.875rem /* 30/16 */;
   background: #fff;
   box-shadow: 0 0.125rem /* 2/16 */ 0.625rem /* 10/16 */ rgba(0, 0, 0, 0.1);
-  position: fixed;
   width: 100%;
   z-index: 2020;
+  position: relative;
 }
 
 .no-content {
@@ -159,10 +159,6 @@ export default {
   text-align: center;
   background: #fff;
   color: #c0c4cc;
-}
-
-.list{
-    padding-top: 1.875rem /* 30/16 */;
 }
 
 .intro{

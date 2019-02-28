@@ -185,14 +185,14 @@ export default {
       let array = []
       if (this.userDataState.child_id > 0) {
         array.push({
-          title: `${this.userDataState.child_name}@主页`,
+          title: '宝贝主页',
           name: 'to_baby',
           to: 1
         })
       }
       if (this.userDataState.banji_id > 0) {
         array.push({
-          title: `${this.userDataState.child_name}@班级`,
+          title: '班级',
           name: 'to_banji',
           to: 1
         })
@@ -320,6 +320,17 @@ export default {
           }
         })
 
+        if(this.$route.query.back == 'class-home'){
+          data.banji_id = this.$route.query.id
+        }
+        
+        if(this.$route.query.back == 'apps-school'){
+          data.school_id = this.$route.query.id
+        }
+
+        if(this.$route.query.back == 'baby-home'){
+          data.child_id = this.$route.query.id
+        }
 
         axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
           if(this.$route.query.back){

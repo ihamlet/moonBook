@@ -209,6 +209,18 @@ export default {
           post_id: this.$route.query.post_id || ''
         }
 
+        if(this.$route.query.back == 'class-home'){
+          data.banji_id = this.$route.query.id
+        }
+        
+        if(this.$route.query.back == 'apps-school'){
+          data.school_id = this.$route.query.id
+        }
+
+        if(this.$route.query.back == 'baby-home'){
+          data.child_id = this.$route.query.id
+        }
+
         axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {          
           if (res.data.status == 1) {
             if(this.$route.query.back){

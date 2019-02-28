@@ -24,6 +24,9 @@
     </van-popup>
 
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
+
+    <!-- 管理员推荐操作 -->
+    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" />
   </div>
 </template>
 <script>
@@ -52,6 +55,25 @@ export default {
         })
         return boolean
       }
+    },
+    recommendActions() {
+      let array = []
+      if (this.managerState) {
+        this.managerState.forEach(element => {
+          if(element.item_relation == 'teacher'){
+            let data = {
+              name: `${element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name)}${element.child_name?'('+element.child_name+')':'(管理员)'}`,
+              subname: `${element.duty}-${element.desc}`,
+              id: element.id,
+              type: element.item_type
+            }
+
+            array.push(data)
+          }
+        })
+      }
+
+      return array
     }
   },
   data() {
@@ -64,6 +86,7 @@ export default {
       releasePageShow: false,
       loading: false,
       finished: false,
+      actionsheetShow:false,
       page: 1,
       actions: [{
         name: '置顶',
@@ -140,9 +163,12 @@ export default {
               this.$toast.fail('置顶失败')
             }
           })
+
+          this.show = false
           break
         case 1:
-
+          this.actionsheetShow = true
+          this.show = false
           break
         case 2:
           axios.get(`/book/SchoolArticle/del?id=${this.cardItem.post_id}`).then(res => {
@@ -155,11 +181,23 @@ export default {
               this.$toast.fail('删除失败')
             }
           })
+
+          this.show = false
           break
       }
     },
     toManger(){
       console.log('管理页面')
+    },
+    onRecommendSelect(){
+
+    },
+    formatBanjiTitle(text) {
+      if (text && text.indexOf('班') == -1) {
+        return text + '班'
+      } else {
+        return text
+      }
     }
   }
 };

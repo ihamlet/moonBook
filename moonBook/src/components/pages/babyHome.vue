@@ -430,13 +430,17 @@ export default {
       })
     },
     toInformation() {
-      this.$router.push({
-        name: 'information',
-        query: {
-          id: this.$route.query.id,
-          back: this.$route.name
-        }
-      })
+      if(this.childInfo.is_mine){
+        this.$router.push({
+          name: 'information',
+          query: {
+            id: this.$route.query.id,
+            back: this.$route.name
+          }
+        })
+      }else{
+        this.$toast('您无法查看')
+      }
     },
     toEditorBaby() {
       if (this.childInfo.is_mine) {
