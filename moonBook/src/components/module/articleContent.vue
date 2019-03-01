@@ -28,12 +28,6 @@ export default {
 }
 </script>
 <style scoped>
-.text {
-  line-height: 1.8;
-  overflow: hidden;
-  color: #303133;
-}
-
 .media-content{
   margin-bottom: .625rem /* 10/16 */;
 }
@@ -41,6 +35,11 @@ export default {
 .title {
   font-size: 1.5rem /* 24/16 */;
   font-weight: 700;
+}
+
+.media-content,
+.title{
+  text-align: justify;
 }
 
 .article-content.img-content {

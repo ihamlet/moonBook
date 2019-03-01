@@ -53,12 +53,6 @@ export default {
       return array
     }
   },
-  data() {
-    return {
-      hackReset: true,
-      isGraphicShow:false,
-    }
-  },
   created () {
     this.fetchData()
   },

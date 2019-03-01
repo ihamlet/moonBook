@@ -17,8 +17,7 @@
     </van-list>
 
     <!-- 管理员推荐操作 -->
-    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消"
-      getContainer='#app' />
+    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app' />
 
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
     <!-- 用户文章操作 -->
@@ -88,17 +87,15 @@ export default {
     recommendActions() {
       let array = []
       if (this.managerState) {
-        this.managerState.forEach(element => {
-          if (element.item_relation == 'teacher') {
-            let data = {
-              name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
-              subname: `${element.duty}-${element.desc}`,
-              id: element.id,
-              type: element.item_type
-            }
-
-            array.push(data)
+        this.managerState.forEach(element => {   
+          let data = {
+            name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
+            subname: `${element.duty}-${element.desc}`,
+            id: element.id,
+            type: element.item_type
           }
+
+          array.push(data)
         })
       }
 
@@ -242,9 +239,6 @@ export default {
                     index = i
                   }
                 })
-
-                console.log(index)
-
                 this.list.splice(index, 1)
 
                 this.$toast.success('删除成功')

@@ -11,12 +11,6 @@ export default {
   name: 'apps-router-view',
   computed: {
     ...mapGetters(['userDataState']),
-  },
-  data() {
-    return {
-      hackReset: true,
-      isGraphicShow:false,
-    }
   }
 }
 </script>

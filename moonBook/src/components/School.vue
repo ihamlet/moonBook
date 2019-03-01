@@ -57,19 +57,19 @@ export default {
   created () {
     this.fetchData()
   },
-  data() {
-    return {
-      hackReset: true,
-      isGraphicShow:false,
-    }
-  },
   watch: {
     '$route': 'fetchData'
   },
   methods: {
-    ...mapActions(['getManager']),
+     ...mapActions(['getUserData','getMsg','getUserLocation','getManager']),
     fetchData(){
+      let products = {
+        page: 1,
+        isRead: 0
+      }
+      this.getUserData()
       this.getManager()
+      this.getMsg(products)
     }
   }
 }

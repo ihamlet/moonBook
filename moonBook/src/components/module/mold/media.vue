@@ -117,6 +117,7 @@ export default {
   font-size: 1.25rem /* 20/16 */;
   margin-bottom: .625rem /* 10/16 */;
   font-weight: 700;
+  text-align: justify;
 }
 
 .img-grid.long.alone{

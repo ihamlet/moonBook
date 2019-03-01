@@ -65,7 +65,8 @@
             活动<van-tag class="tag-task" round type="danger">{{activityCount}}</van-tag>
           </div>
         </van-nav-bar>
-        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab"
+          :offsetTop='45'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
@@ -103,8 +104,12 @@
     </van-popup>
     <!-- 文章操作 -->
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
+    <!-- 推荐操作 -->
+    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消"
+      getContainer='#app' />
     <!-- 切换孩子 -->
-    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby" @cancel="isSelectBabyShow = false" />
+    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby"
+      @cancel="isSelectBabyShow = false" />
   </div>
 </template>
 <script>
@@ -136,7 +141,7 @@ export default {
     activity
   },
   computed: {
-    ...mapGetters(['managerState','userDataState']),
+    ...mapGetters(['managerState', 'userDataState']),
     pageTitle() {
       let name = ''
 
@@ -166,15 +171,33 @@ export default {
       }
       // 添加宝贝
       arr.push({
-        name:'添加宝贝',
-        id:0
+        name: '添加宝贝',
+        id: 0
       })
 
       return arr
+    },
+    recommendActions() {
+      let array = []
+      if (this.managerState) {
+        this.managerState.forEach(element => {   
+          let data = {
+            name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
+            subname: `${element.duty}-${element.desc}`,
+            id: element.id,
+            type: element.item_type
+          }
+
+          array.push(data)
+        })
+      }
+
+      return array
     }
   },
   data() {
     return {
+      actionsheetShow: false,
       hackReset: true,
       show: false,
       isSelectBabyShow: false,
@@ -205,10 +228,14 @@ export default {
         name: '删除',
         type: 'delete',
         index: 1
+      }, {
+        name: '推荐',
+        type: 'recommend',
+        index: 2
       }],
       postId: '',
       templateId: '',
-      activityCount:''
+      activityCount: ''
       // 倒计时
       // keepTime: '倒计时',
       // limittime: 100,
@@ -247,16 +274,16 @@ export default {
         }
       })
 
-      this.getUserData().then(res => {
+      // this.getUserData().then(res => {
         axios.get(`/book/baby/getList?sort=old&user_id=${this.userDataState.user_id}`).then(res => {
           if (res.data.status == 1) {
             this.babyList = res.data.data
           }
         })
-      })
+      // })
 
-      axios.get('/book/SchoolArticle/getList?tid=12').then(res=>{
-        if(res.data.status == 1){
+      axios.get('/book/SchoolArticle/getList?tid=12').then(res => {
+        if (res.data.status == 1) {
           this.activityCount = res.data.count
         }
       })
@@ -265,10 +292,10 @@ export default {
       this.getUserData().then(res => {
         if (res.child_id > '0') {
           axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
-            if( res.data.status == 1 ){
+            if (res.data.status == 1) {
               this.childInfo = res.data.data
             }
-            
+
           })
         } else {
           this.$router.push({
@@ -280,7 +307,7 @@ export default {
           })
         }
         axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
-          if(res.data.status == 1){
+          if (res.data.status == 1) {
             this.lateBook = res.data.data
           }
         })
@@ -302,7 +329,7 @@ export default {
         })
       }
     },
-    toTask(){
+    toTask() {
       console.log('任务')
     },
     qrcode() {
@@ -347,7 +374,7 @@ export default {
       }
 
       return axios.get('/book/SchoolArticle/getList', data).then(res => {
-        if(res.data.status == 1){
+        if (res.data.status == 1) {
           if (this.page == 1) {
             this.tab[this.tabIndex].content = res.data.data
           } else {
@@ -437,7 +464,7 @@ export default {
       })
     },
     toInformation() {
-      if(this.childInfo.is_mine){
+      if (this.childInfo.is_mine) {
         this.$router.push({
           name: 'information',
           query: {
@@ -445,7 +472,7 @@ export default {
             back: this.$route.name
           }
         })
-      }else{
+      } else {
         this.$toast('您无法查看')
       }
     },
@@ -505,13 +532,13 @@ export default {
             axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
               if (res.data.status == 1) {
                 let index
-                this.list.forEach((e,i)=>{
-                  if(e.post_id == this.postId){
+                this.list.forEach((e, i) => {
+                  if (e.post_id == this.postId) {
                     index = i
                   }
                 })
-                
-                this.list.splice(index,1)
+
+                this.list.splice(index, 1)
                 this.$toast.success('删除成功')
               }
             })
@@ -521,14 +548,18 @@ export default {
           this.show = false
 
           break
+        case 2:
+          this.actionsheetShow = true
+          this.show = false
+          break
       }
     },
     onSelectBaby(item) {
-      if(item.id == 0){
+      if (item.id == 0) {
         this.$router.push({
-          name:'edit-child',
-          query:{
-            pageTitle:'添加宝贝',
+          name: 'edit-child',
+          query: {
+            pageTitle: '添加宝贝',
             type: 'add',
             back: this.$route.name,
             id: this.$route.query.id
@@ -558,6 +589,38 @@ export default {
         this.isSelectBabyShow = true
       }
     },
+    onRecommendSelect(item) {
+      let data = {
+        params: {
+          post_id: this.postId
+        }
+      }
+
+      if (item.type == 'banji') {
+        data.params.banji_id = item.id
+      }
+
+      if (item.type == 'school') {
+        data.params.school_id = item.id
+      }
+
+      axios.get('/book/SchoolArticle/copy', data).then(res => {
+        if (res.data.status == 1) {
+          this.$toast.success('推荐成功')
+        } else {
+          this.$toast.fail('操作失败')
+        }
+      })
+
+      this.actionsheetShow = false
+    },
+    formatBanjiTitle(text) {
+      if (text && text.indexOf('班') == -1) {
+        return text + '班'
+      } else {
+        return text
+      }
+    }
     // toTaskLinkPage() {
     //   window.location.href = '/book/TushuDonation/intro'
     // }
@@ -612,8 +675,8 @@ export default {
   background: linear-gradient(-135deg, #ff765c, #ff23b3);
 }
 
-.baby-info .avatar{
-  margin-right: .625rem /* 10/16 */;
+.baby-info .avatar {
+  margin-right: 0.625rem /* 10/16 */;
 }
 
 .baby-info .avatar img {
@@ -657,7 +720,7 @@ export default {
 
 .add-praise,
 .qr-code {
-  flex: .8;
+  flex: 0.8;
   text-align: right;
 }
 

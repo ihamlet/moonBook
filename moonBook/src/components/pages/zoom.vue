@@ -115,7 +115,6 @@ export default {
   methods: {
     fetaData() {
       axios.get(`/book/memberUser/getInfo?user_id=${this.$route.query.id}`).then(res => {
-          console.log(res)
           if(res.status == 200){
             this.userInfo = res.data
             axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${res.data.child_id}`).then(res => {
@@ -286,6 +285,7 @@ export default {
 .name {
   color: #303133;
   margin-top: 0.3125rem /* 5/16 */;
+  padding: 0 .3125rem /* 5/16 */;
 }
 
 .data-box {

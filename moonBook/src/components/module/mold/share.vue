@@ -1,7 +1,7 @@
 <template>
   <div class="share-box">
     <van-row class="svg-list">
-      <van-col :span="isMe?'24':'12'">
+      <van-col :span="userDataState.user_id==item.user_id?'24':'12'">
         <div class='btn' @click="share">
           <svg class="icon wechat" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
             viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3129">
@@ -13,7 +13,7 @@
           <div class="text">分享到微信</div>
         </div>
       </van-col>
-      <van-col span="12" v-if="!isMe">
+      <van-col span="12" v-if="userDataState.user_id!=item.user_id">
         <div class="btn" @click="childShow = true">
           <svg t="1551174489120" class="icon zhuanfa" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
             viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3124">
@@ -44,7 +44,7 @@ import topicList from './../../module/release/topicList'
 
 export default {
   name: 'share',
-  props: ['postId','isMe'],
+  props: ['postId','item'],
   computed: {
     ...mapGetters(['userDataState'])
   },
