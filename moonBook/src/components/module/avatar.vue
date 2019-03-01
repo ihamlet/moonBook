@@ -23,8 +23,8 @@ export default {
 }
 
 .avatar-default.small img{
-    width: 3.75rem /* 60/16 */;
-    height: 3.75rem /* 60/16 */;
+    width: 3.125rem /* 50/16 */;
+    height: 3.125rem /* 50/16 */;
 }
 
 .avatar-default.big img{
