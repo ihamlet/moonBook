@@ -12,7 +12,7 @@
 </template>
 <script>
 export default {
-    name:'activity',
+    name:'activityList',
     data () {
         return {
             

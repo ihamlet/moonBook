@@ -124,7 +124,6 @@ import reading from "./../module/reading"
 import graphicCard from "./../module/card/graphicCard"
 import classShow from './../module/classModule/classShow'
 import family from './../module/myModule/family'
-import activity from './../module/activity/activity'
 import slogan from './../module/slogan'
 
 export default {
@@ -137,8 +136,7 @@ export default {
     graphicCard,
     classShow,
     family,
-    slogan,
-    activity
+    slogan
   },
   computed: {
     ...mapGetters(['managerState', 'userDataState']),

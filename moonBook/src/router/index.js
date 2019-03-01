@@ -20,7 +20,7 @@ import EditClass from '@/components/pages/class'
 import EditStting from '@/components/pages/setting'
 import EditManager from '@/components/pages/editManager/manager'
 
-import Egg from '@/components/pages/Egg'
+import Activity from '@/components/pages/activity'
 
 import AddFamily from '@/components/pages/invite/addFamily'
 import VerifyFamily from '@/components/pages/invite/verifyList'
@@ -144,11 +144,11 @@ export default new Router({
           }
         },
         {
-          path: '/egg',
-          name: 'egg',
-          component: Egg,
+          path: '/activity',
+          name: 'activity',
+          component: Activity,
           meta: {
-            title: '彩蛋',
+            title: '活动',
             isFooterBar: false
           }
         },
