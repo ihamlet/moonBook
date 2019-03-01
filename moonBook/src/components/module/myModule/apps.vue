@@ -84,6 +84,7 @@ export default {
 .apps {
   padding: 0.625rem /* 10/16 */ 0;
   background: #fff;
+  margin-top: 0;
 }
 
 .apps .icon {

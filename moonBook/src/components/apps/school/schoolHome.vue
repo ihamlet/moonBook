@@ -37,7 +37,7 @@
         <van-tabs color='#409eff' :line-width='20' :line-height='4' animated swipeable>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
-              <drying-list :schoolId='$route.query.id' portal_name='学校主页'/>
+              <drying-list :school_id='$route.query.id' portal_name='学校主页' />
             </div>
           </van-tab>
         </van-tabs>
@@ -64,13 +64,13 @@ export default {
     dryingList
   },
   computed: {
-    ...mapGetters(['userDataState','managerState']),
+    ...mapGetters(['userDataState', 'managerState']),
     actions() {
       let array = []
       if (this.managerState) {
         this.managerState.forEach(element => {
           let data = {
-            name: `${element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name)}${element.child_name?'('+element.child_name+')':'(管理员)'}`,
+            name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
             subname: `${element.duty}-${element.desc}`,
             id: element.id,
             type: element.item_type
@@ -83,10 +83,10 @@ export default {
       return array
     },
     manage() {
-      if(this.managerState){
+      if (this.managerState) {
         let boolean
         this.managerState.forEach(element => {
-          if (this.$route.query.id == element.id && element.item_relation != 'parent'){
+          if (this.$route.query.id == element.id && element.item_relation != 'parent') {
             boolean = true
           }
         })
@@ -100,27 +100,42 @@ export default {
       domHeight: '',
       fixedHeaderBar: true,
       actionsheetShow: false,
-      appsList: [ {
-          name: '每日餐谱',
-          iconClass: 'icon-canpu',
-          path:'404'
-        }, {
-          name: '阅读',
-          iconClass: 'icon-yuedu',
-          path:'class-zoom'
-        }, {
-          name: '讲故事',
-          iconClass: 'icon-jianggushi',
-          path:'404',
-        }, {
-          name: '荣誉',
-          iconClass: 'icon-rongyu',
-          path:'class-zoom'
-        }, {
-          name: '才艺',
-          iconClass: 'icon-caiyi',
-          path:'class-zoom'
-        }],
+      appsList: [{
+        name: '每日餐谱',
+        iconClass: 'icon-canpu',
+        path: '404'
+      }, {
+        name: '阅读',
+        iconClass: 'icon-yuedu',
+        path: 'apps-find',
+        params: {
+          cid: 137,
+          pageTitle: '阅读',
+          school_id: this.$route.query.id
+        }
+      }, {
+        name: '讲故事',
+        iconClass: 'icon-jianggushi',
+        path: '404',
+      }, {
+        name: '荣誉',
+        iconClass: 'icon-rongyu',
+        path: 'apps-find',
+        params: {
+          cid: 140,
+          pageTitle: '荣誉',
+          school_id: this.$route.query.id
+        }
+      }, {
+        name: '才艺',
+        iconClass: 'icon-caiyi',
+        path: 'apps-find',
+        params: {
+          cid: 119,
+          pageTitle: '才艺',
+          school_id: this.$route.query.id
+        }
+      }],
       tab: [{
         title: '学校动态',
         content: '',
@@ -166,7 +181,7 @@ export default {
     ...mapActions(['getUserData']),
     request() {
       axios.get(`/book/school/getInfo?school_id=${this.$route.query.id}`).then(res => {
-        if(res.data.status == 1){
+        if (res.data.status == 1) {
           this.schoolInfo = res.data.data
         }
       })
@@ -230,11 +245,11 @@ export default {
         this.request()
       })
     },
-    formatBanjiTitle(text){
-      if(text&&text.indexOf('班') == -1){
+    formatBanjiTitle(text) {
+      if (text && text.indexOf('班') == -1) {
         return text + '班'
-      }else{
-        return text 
+      } else {
+        return text
       }
     }
   }

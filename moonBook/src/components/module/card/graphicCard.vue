@@ -193,7 +193,11 @@ export default {
 }
 
 .avatar {
-  margin-right: 0.625rem /* 10/16 */;
+  margin-right: .625rem /* 10/16 */;
+}
+
+.info{
+  flex: 4
 }
 
 .name {
@@ -213,8 +217,7 @@ export default {
 
 .follow,
 .views{
-  position: absolute;
-  right: 0;
+  flex: .6
 }
 
 .views{

@@ -99,7 +99,6 @@ export default {
 
 .text{
   font-size: 1.125rem /* 18/16 */;
-  line-height: 1.8; 
   margin-bottom: .625rem /* 10/16 */;
 }
 
@@ -109,8 +108,13 @@ export default {
   margin-bottom: .625rem /* 10/16 */;
 }
 
+.text,
 .title{
-  font-size: 1.125rem /* 18/16 */;
+  line-height: 1.5;
+}
+
+.title{
+  font-size: 1.25rem /* 20/16 */;
   margin-bottom: .625rem /* 10/16 */;
   font-weight: 700;
 }

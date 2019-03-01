@@ -62,7 +62,7 @@
             {{childInfo.post_count}}日记
           </div>
           <div class="task" slot="right">
-            任务<van-tag class="tag-task" round type="danger">2</van-tag>
+            活动<van-tag class="tag-task" round type="danger">{{activityCount}}</van-tag>
           </div>
         </van-nav-bar>
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
@@ -136,7 +136,7 @@ export default {
     activity
   },
   computed: {
-    ...mapGetters(['managerState']),
+    ...mapGetters(['managerState','userDataState']),
     pageTitle() {
       let name = ''
 
@@ -207,7 +207,8 @@ export default {
         index: 1
       }],
       postId: '',
-      templateId: ''
+      templateId: '',
+      activityCount:''
       // 倒计时
       // keepTime: '倒计时',
       // limittime: 100,
@@ -247,11 +248,17 @@ export default {
       })
 
       this.getUserData().then(res => {
-        axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
+        axios.get(`/book/baby/getList?sort=old&user_id=${this.userDataState.user_id}`).then(res => {
           if (res.data.status == 1) {
             this.babyList = res.data.data
           }
         })
+      })
+
+      axios.get('/book/SchoolArticle/getList?tid=12').then(res=>{
+        if(res.data.status == 1){
+          this.activityCount = res.data.count
+        }
       })
     },
     request() {
@@ -606,7 +613,7 @@ export default {
 }
 
 .baby-info .avatar{
-  flex: 2;
+  margin-right: .625rem /* 10/16 */;
 }
 
 .baby-info .avatar img {
@@ -619,8 +626,8 @@ export default {
 }
 
 .baby-info .avatar img {
-  width: 3.75rem /* 60/16 */;
-  height: 3.75rem /* 60/16 */;
+  width: 3.125rem /* 50/16 */;
+  height: 3.125rem /* 50/16 */;
   border-radius: 50%;
 }
 
@@ -650,7 +657,7 @@ export default {
 
 .add-praise,
 .qr-code {
-  flex: 1;
+  flex: .8;
   text-align: right;
 }
 

@@ -149,7 +149,7 @@ export default {
       }, {
         name: '才艺',
         iconClass: 'icon-caiyi',
-         path:'apps-find',      
+        path:'apps-find',      
         params: {
           cid: 119,
           pageTitle: '才艺',
@@ -321,7 +321,7 @@ export default {
 
 .header {
   padding: 2.8125rem /* 45/16 */ 1.25rem /* 20/16 */ 0.625rem /* 10/16 */;
-  height: 5rem /* 80/16 */;
+  height: 5.625rem /* 90/16 */;
   justify-content: space-between;
 }
 
@@ -378,5 +378,9 @@ export default {
 
 .qrcode i.iconfont{
   font-size: 1.625rem /* 26/16 */;
+}
+
+.module{
+  background: transparent;
 }
 </style>

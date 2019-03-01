@@ -17,7 +17,8 @@
     </van-list>
 
     <!-- 管理员推荐操作 -->
-    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app'/>
+    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消"
+      getContainer='#app' />
 
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
     <!-- 用户文章操作 -->
@@ -36,7 +37,7 @@ export default {
     slogan,
     graphicCard
   },
-  props: ['sort','tid','schoolId','type','portal_name','cid', 'banji_id'],
+  props: ['sort', 'tid', 'school_id', 'type', 'portal_name', 'cid', 'banji_id'],
   computed: {
     ...mapGetters(['userToken', 'managerState']),
     manage() {
@@ -51,24 +52,24 @@ export default {
       }
     },
     actions() {
-      let arr = []
+      let arr = [{
+        name: '推荐',
+        type: 'recommend',
+        index: 2
+      }]
       if (this.item.isMe) {
         arr.push({
           name: '编辑',
           type: 'edit',
           index: 0
         }, {
-            name: '删除',
-            type: 'delete',
-            index: 1
-          })
+          name: '删除',
+          type: 'delete',
+          index: 1
+        })
       } else {
         if (this.manage) {
           arr.push({
-            name: '推荐',
-            type: 'recommend',
-            index: 2
-          }, {
             name: '删除',
             type: 'delete',
             index: 1
@@ -81,15 +82,16 @@ export default {
           index: 3
         })
       }
+
       return arr
     },
     recommendActions() {
       let array = []
       if (this.managerState) {
         this.managerState.forEach(element => {
-          if(element.item_relation == 'teacher'){
+          if (element.item_relation == 'teacher') {
             let data = {
-              name: `${element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name)}${element.child_name?'('+element.child_name+')':'(管理员)'}`,
+              name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
               subname: `${element.duty}-${element.desc}`,
               id: element.id,
               type: element.item_type
@@ -146,11 +148,11 @@ export default {
           route: this.type,
           cate_id: this.cid,
           banji_id: this.banji_id
-        }    
+        }
       }
 
-      if (this.schoolId) {
-        data.params.school_id = this.schoolId
+      if (this.school_id) {
+        data.params.school_id = this.school_id
       }
 
       if (this.portal_name) {
@@ -235,15 +237,19 @@ export default {
             axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
               if (res.data.status == 1) {
                 let index
-                this.list.forEach((e,i)=>{
-                  if(e.post_id == this.postId){
+                this.list.forEach((e, i) => {
+                  if (e.post_id == this.postId) {
                     index = i
                   }
                 })
 
-                this.list.splice(index,1)
+                console.log(index)
+
+                this.list.splice(index, 1)
 
                 this.$toast.success('删除成功')
+              } else {
+                this.$toast(res.data.msg)
               }
             })
           }).catch(() => {
@@ -294,25 +300,25 @@ export default {
     setItem(item) {
       this.item = item
     },
-    onRecommendSelect(item){
+    onRecommendSelect(item) {
       let data = {
-        params:{
+        params: {
           post_id: this.postId
         }
       }
 
-      if(item.type == 'banji'){
+      if (item.type == 'banji') {
         data.params.banji_id = item.id
       }
 
-      if(item.type == 'school'){
+      if (item.type == 'school') {
         data.params.school_id = item.id
       }
 
-      axios.get('/book/SchoolArticle/copy',data).then(res=>{
-        if(res.data.status == 1){
+      axios.get('/book/SchoolArticle/copy', data).then(res => {
+        if (res.data.status == 1) {
           this.$toast.success('推荐成功')
-        }else{
+        } else {
           this.$toast.fail('操作失败')
         }
       })
@@ -347,11 +353,11 @@ export default {
   color: #dce3f0;
 }
 
-.layer-head-bar{
+.layer-head-bar {
   justify-content: space-between;
 }
 
-.layer-head-bar .theme-btn{
-  margin-right: .9375rem /* 15/16 */;
+.layer-head-bar .theme-btn {
+  margin-right: 0.9375rem /* 15/16 */;
 }
 </style>

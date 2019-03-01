@@ -5,7 +5,7 @@
           <img :src="item.cover || item.photos[0].thumb" :preview='item.post_id'/>
           <van-tag class="photo-tag" type="danger" color="#03A9F4">封面</van-tag>
         </div>
-        <div class="title" v-line-clamp:20="2">{{item.title}}</div>
+        <div class="title">{{item.title}}</div>
     </div>
     <article :class="[item.template_id==0 ?'long-article':'',!item.cover || item.photos[0]?'no-thumb-long-article':'']" >
       <div class="main">

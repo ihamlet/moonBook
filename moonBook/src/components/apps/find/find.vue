@@ -9,7 +9,7 @@
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
-              <drying-list :sort='list.sort' type='find' :tid='$route.query.tid' :cid='$route.query.cid' :banji_id='$route.query.banji_id'/>
+              <drying-list :sort='list.sort' type='find' :tid='$route.query.tid' :cid='$route.query.cid' :school_id='$route.query.school_id' :banji_id='$route.query.banji_id'/>
             </div>
           </van-tab>
         </van-tabs>
