@@ -20,6 +20,7 @@
             <van-col span="15">
               <div class="content">
                 <div class="title" v-line-clamp:20="2">{{details.title}}</div>
+                <van-rate v-model="star" disabled disabled-color='#ffd21e'/>
                 <div class="book-info">
                   <div class="author" v-line-clamp:20="1"><b>作者:</b>{{details.author}}</div>
                   <div class="borrow-count"><span class="people">{{details.borrow_count}}</span>人借过</div>
@@ -48,6 +49,16 @@ export default {
   components: {
     freshList,
     comment
+  },
+  computed: {
+    star(){
+      let num = 3
+      if(this.details){
+        num = Math.ceil(this.details.star / 2) 
+      }
+
+      return num
+    }
   },
   data() {
     return {

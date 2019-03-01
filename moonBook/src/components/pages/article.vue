@@ -118,7 +118,8 @@ export default {
         this.$router.push({
           name: this.$route.query.back,
           query: {
-            id: this.$route.query.back_id
+            id: this.$route.query.back_id,
+            tid: this.$route.query.tid || ''
           }
         })
       }else{

@@ -38,12 +38,25 @@ textarea {
   url('//at.alicdn.com/t/font_893274_klbufe5j5ib.svg#iconfont') format('svg');
 }
 
+.toast-icon .van-icon.van-icon-success,
 .iconfont {
   font-family: 'iconfont' !important;
   font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.toast-icon .van-icon.van-icon-success{
+  font-size: 2.875rem /* 46/16 */;
+}
+
+.zan-icon .van-icon.van-icon-success::before{
+   content: '\e6e3'
+}
+
+.shoucang-icon .van-icon.van-icon-success::before{
+  content: '\e606'
 }
 
 .wrap {

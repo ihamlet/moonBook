@@ -1,6 +1,9 @@
 <template>
   <div class="activity page-padding">
-
+    <van-nav-bar :title="$route.meta.title" :left-text="$route.query.back?'返回':'发现'" left-arrow @click-left="onClickLeft"/>
+    <div class="container">
+      <activity-list :tid='$route.query.tid'/>
+    </div>
   </div>
 </template>
 <script>
@@ -12,43 +15,20 @@ export default {
   components: {
     activityList,
   },
-  data() {
-    return {
-      childInfo: ''
-    }
-  },
-  created() {
-    this.fetchData()
-  },
-  watch: {
-    "$router": 'fetchData'
-  },
   methods: {
-    fetchData() {
-      // axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
-      //   this.childInfo = res.data.data
-      // })
-
-      // axios.get(`/book/ShelfBook/getList?page=1&limit=20&mode=teacher&banji_id=${this.$route.query.banji_id}`).then(res => {
-      //   this.lateBook = res.data.data
-      // })
-    },
-    onClickLeft(){
-        if(this.$route.query.back){
-            this.$router.push({
-                name: this.$route.query.back,
-                query:{
-                    id: this.$route.query.id
-                }
-            })
-        }else{
-            this.$router.push({
-                name:'class-home',
-                query:{
-                    id: this.$route.query.id
-                }
-            })
-        }
+    onClickLeft() {
+      if (this.$route.query.back) {
+        this.$router.push({
+          name: this.$route.query.back,
+          query: {
+            id: this.$route.query.id
+          }
+        })
+      } else {
+        this.$router.push({
+          name: 'apps-find'
+        })
+      }
     }
   }
 }

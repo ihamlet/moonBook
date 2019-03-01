@@ -236,6 +236,6 @@ export default {
 }
 
 .item {
-  margin-bottom: 0.625rem /* 10/16 */;
+  margin-bottom: .3125rem /* 5/16 */;
 }
 </style>

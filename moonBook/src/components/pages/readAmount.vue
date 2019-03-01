@@ -26,7 +26,7 @@
     <div class="total">所在书架未读的书：{{childInfo.shelf_tushu_kinds-childInfo.read_kinds}}/{{childInfo.shelf_tushu_kinds}}</div>
     <van-tabs color="#409eff" :line-width="20" :line-height="4" sticky swipeable animated :offsetTop="45" @change="onChangeTab">
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
           <van-pull-refresh v-model="loading" @refresh="onRefresh">
             <div class="content" v-if='list.content.length > 0'>
               <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
@@ -45,9 +45,9 @@
                     </div>
                   </van-col>
                   <van-col span="3">
-                    <!-- <div class="listening" @click="listening(item)">
+                    <div class="listening" @click="listening(item)">
                       <i class="iconfont">&#xe617;</i>
-                    </div> -->
+                    </div>
                   </van-col>
                 </van-row>
               </van-cell>
@@ -133,8 +133,8 @@ export default {
         } else {
           this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
         }
-        this.loading = false
         this.page++
+        this.loading = false
         if (this.tab[this.tabIndex].content.length >= res.data.count) {
           this.finished = true
         }
@@ -197,7 +197,21 @@ export default {
           id: item.book_id
         }
       })
-    }
+    },
+    listening(item) {
+      let p = /（.+?）/
+      let pureTitle = item.book.title.replace(p, '')
+      let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
+      let isRead = localStorage.getItem('bookRead_' + item.book_id)
+      if (!isRead) {
+        axios.get('/book/story/updateRead').then(res => {
+          localStorage.setItem('bookRead_' + item.book_id, true)
+          location.href = url
+        })
+      } else {
+        location.href = url
+      }
+    }  
   }
 }
 </script>

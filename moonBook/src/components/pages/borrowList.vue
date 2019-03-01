@@ -3,9 +3,9 @@
     <van-nav-bar :title="$route.meta.title" left-text="我的" left-arrow @click-left="onClickLeft" />
     <van-tabs color='#409eff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex">
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
           <van-pull-refresh v-model="loading" @refresh="onRefresh">
-            <div class="content" v-if='list.content.length > 0'>
+            <div class="content" v-if='list.content.length'>
               <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
                 <van-row gutter="10">
                   <van-col span="9">
@@ -258,5 +258,10 @@ export default {
   background: linear-gradient(135deg, #fe8537, #f02b2b);
   -webkit-background-clip: text;
   color: transparent;
+}
+
+.book-cover img{
+  display: block;
+  margin: 0 auto;
 }
 </style>

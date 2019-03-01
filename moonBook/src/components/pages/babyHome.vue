@@ -57,7 +57,7 @@
         <family />
       </lazy-component>
       <lazy-component v-if="childInfo.is_mine">
-        <van-nav-bar title="成长日记" @click-right="toTask">
+        <van-nav-bar title="成长日记" @click-right="toActivity">
           <div class="post-count" slot="left">
             {{childInfo.post_count}}日记
           </div>
@@ -68,7 +68,7 @@
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab"
           :offsetTop='45'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
                 <div class="tab-content" v-if='list.content.length'>
                   <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
@@ -206,7 +206,6 @@ export default {
       qrImage: "",
       showQrcode: false,
       lateBook: [],
-      list: [],
       babyList: [],
       loading: false,
       finished: false,
@@ -233,7 +232,8 @@ export default {
       }],
       postId: '',
       templateId: '',
-      activityCount: ''
+      activityCount: '',
+      tid:12
       // 倒计时
       // keepTime: '倒计时',
       // limittime: 100,
@@ -272,15 +272,15 @@ export default {
         }
       })
 
-      // this.getUserData().then(res => {
-        axios.get(`/book/baby/getList?sort=old&user_id=${this.userDataState.user_id}`).then(res => {
+      this.getUserData().then(res => {
+        axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
           if (res.data.status == 1) {
             this.babyList = res.data.data
           }
         })
-      // })
+      })
 
-      axios.get('/book/SchoolArticle/getList?tid=12').then(res => {
+      axios.get(`/book/SchoolArticle/getList?tid=${this.tid}`).then(res => {
         if (res.data.status == 1) {
           this.activityCount = res.data.count
         }
@@ -327,8 +327,15 @@ export default {
         })
       }
     },
-    toTask() {
-      console.log('任务')
+    toActivity() {
+      this.$router.push({
+        name:'activity',
+        query: {
+          tid:this.tid,
+          back: this.$route.name,
+          id: this.$route.query.id
+        }
+      })
     },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {
@@ -433,16 +440,6 @@ export default {
     timeAgo(time) {
       return timeago(time * 1000)
     },
-    toEgg() {
-      this.$router.push({
-        name: 'egg',
-        query: {
-          id: this.childInfo.id,
-          back: this.$route.name,
-          banji_id: this.childInfo.banji_id
-        }
-      })
-    },
     toReadStat() {
       this.$router.push({
         name: 'readStat',
@@ -530,13 +527,13 @@ export default {
             axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
               if (res.data.status == 1) {
                 let index
-                this.list.forEach((e, i) => {
+                this.tab[this.tabIndex].content.forEach((e, i) => {
                   if (e.post_id == this.postId) {
                     index = i
                   }
                 })
-
-                this.list.splice(index, 1)
+ 
+                this.tab[this.tabIndex].content.splice(index, 1)
                 this.$toast.success('删除成功')
               }
             })

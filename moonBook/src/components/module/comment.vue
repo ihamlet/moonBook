@@ -66,7 +66,7 @@
               <div class="date">{{timeAgo(item.create_time)}}</div>
               <div class="theme-color" @click="showField(item)">
                 <van-tag round size="medium" type="primary">{{item.replyList.length?item.replyList.length:''}}回复</van-tag>
-               </div>
+              </div>
             </div>
           </div>
         </van-cell>
@@ -79,36 +79,45 @@
         <div class="bar-padding flex flex-align">
           <div class="input-box flex flex-align" @click="showField()">
             <div class="input-box-avatar avatar">
-              <img :src="getAvatar(userDataState.avatar)"/>
+              <img :src="getAvatar(userDataState.avatar)" />
             </div>
             <span>写评论</span>
           </div>
           <div class="btn-icon flex flex-align">
             <div class="btn" @click="toScroll">
-              <van-tag class="num-tag" v-if='listLength > 1' round type="danger">{{listLength > 1000?'999+':listLength}}</van-tag>
+              <van-tag class="num-tag" v-if='listLength > 1' round type="danger">{{listLength >
+                1000?'999+':listLength}}</van-tag>
               <i class="iconfont">&#xe731;</i>
             </div>
             <div class="btn" @click="addPraise(item)">
-              <van-tag class="num-tag" v-if='item.zan_num > 1' round type="danger">{{item.zan_num > 1000?'999+':item.zan_num}}</van-tag>
-              <i class="iconfont" v-if="!item.isZan">&#xe644;</i>
-              <i class="iconfont highlight rotateInDownLeft animated" v-else>&#xe6e3;</i>
+              <van-tag class="num-tag" v-if='item.zan_num > 1' round type="danger">{{item.zan_num >
+                1000?'999+':item.zan_num}}</van-tag>
+              <i class="iconfont highlight rotateInDownLeft animated" v-if="item.isZan">&#xe6e3;</i>
+              <i class="iconfont" v-else>&#xe644;</i>
             </div>
             <div class="btn" @click="addCollect(item)" v-if='include != "include"'>
-              <i class="iconfont" v-if="!item.isCollect">&#xe64c;</i>
-              <i class="iconfont star highlight swing animated" v-else>&#xe64b;</i>
+              <van-tag class="num-tag" v-if='item.collect_num > 1' round type="danger">{{item.collect_num >
+                1000?'999+':item.collect_num}}</van-tag>
+              <i class="iconfont star highlight swing animated" v-if="item.isShoucang">&#xe64b;</i>
+              <i class="iconfont" v-else> &#xe64c;</i>
             </div>
-            <div class="btn" v-else  @click="shareShow = true">
-              <i class="iconfont" v-if="!item.isCollect">&#xe96e;</i>
+            <div class="btn" v-else @click="shareShow = true">
+              <i class="iconfont">&#xe96e;</i>
             </div>
           </div>
         </div>
       </div>
 
       <van-popup v-model="show" class="comment-popup" position="bottom" get-container='#app'>
+        <div class="score flex-column" v-if='include != "include"'>
+          <div class="score-title">评分</div>
+          <van-rate class="score-rate" v-model="star" :size="25" :count="5" void-color="#ceefe8" />
+        </div>
         <div class="comment-content flex">
           <div class="field-box">
             <van-cell-group>
-              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
+              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1"
+                autosize />
             </van-cell-group>
           </div>
           <div class="submit-btn theme-color">
@@ -119,7 +128,7 @@
     </div>
 
     <van-popup v-model="shareShow" position='bottom' get-container='#app'>
-      <share @show='imageShow = true' :postId='$route.query.id' :item='item'/>
+      <share @show='imageShow = true' :postId='$route.query.id' :item='item' />
     </van-popup>
   </div>
 </template>
@@ -131,15 +140,16 @@ import { timeago } from './../lib/js/util'
 
 export default {
   name: 'comment',
-  props: ['item','include'],
+  props: ['item', 'include'],
   computed: {
-    ...mapGetters(['userToken','userDataState'])
+    ...mapGetters(['userToken', 'userDataState'])
   },
   components: {
     share
   },
   data() {
     return {
+      star:3,
       list: [],
       toTopAndComment: false,
       listLength: '',
@@ -156,8 +166,8 @@ export default {
   },
   methods: {
     onLoad() {
-      axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.$route.query.id||this.$route.query.back_id}&page=${this.page}&limit=10&sort=new`).then(res => {
-        if(res.data.status == 1){
+      axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.$route.query.id || this.$route.query.back_id}&page=${this.page}&limit=10&sort=new`).then(res => {
+        if (res.data.status == 1) {
           this.listLength = res.data.count
           let array = res.data.data
           this.loading = false
@@ -181,32 +191,54 @@ export default {
         data = {
           post_id: this.$route.query.id,
           contents: this.message,
-          reply_comment_id: this.commentId
+          reply_comment_id: this.commentId,
         }
       } else {
         data = {
           post_id: this.$route.query.id,
-          contents: this.message
+          contents: this.message,
+          star: this.star*2
         }
       }
 
-      axios.post(`/book/SchoolArticleComment/edit?ajax=1`, data).then(res => {
-        this.show = false
-        this.isLoading = false
-        this.page = 1
-        this.onLoad()
-      })
+      if(this.message.length){
+        axios.post(`/book/SchoolArticleComment/edit?ajax=1`, data).then(res => {
+          this.show = false
+          this.page = 1
+          this.onLoad()
+        })
+      }else{
+        this.$toast('请填写评论内容')
+      }
+
+      this.isLoading = false
     },
     addPraise(item) {
       item.isZan = !item.isZan
       axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
-        item.zan_num = res.data.data.like
+        console.log(res)
+        if (res.data.status == 1) {
+          item.zan_num = res.data.data.like
+          this.$toast.success({
+            className: 'zan-icon toast-icon',
+            message: '点赞成功'
+          })
+        }
       })
     },
-    addCollect(item){
-      item.isCollect = !item.isCollect
-      axios.get(`/book/SchoolArticleCollect/add?post_id=${this.item.post_id}`).then(res=>{
-        item.collect_num = res.data.data.collect_num
+    addCollect(item) {
+      item.isShoucang = !item.isShoucang
+
+      axios.get(`/book/SchoolArticleCollect/add?post_id=${this.item.post_id}`).then(res => {
+        if (res.data.status == 1) {
+          if (res.data.data) {
+            item.collect_num = res.data.data.collect_num
+            this.$toast.success({
+              className: 'shoucang-icon toast-icon',
+              message: '收藏成功'
+            })
+          }
+        }
       })
     },
     showField(item) {
@@ -224,38 +256,38 @@ export default {
       })
     },
     getAvatar(img) {
-      if(!img){
+      if (!img) {
         return img
       }
 
       let pos = img.indexOf('http://')
       let result
-      if(pos === 0) {
-         result = img.replace('http:', 'https:')
+      if (pos === 0) {
+        result = img.replace('http:', 'https:')
       } else {
-         result = img
+        result = img
       }
       return result
     },
     timeAgo(time) {
       return timeago(time * 1000)
     },
-    toScroll(){
+    toScroll() {
       this.toTopAndComment = !this.toTopAndComment
-      let domScrollTop =  this.$refs.comment.offsetTop 
-      if(this.toTopAndComment){
-        window.scrollTo(0,domScrollTop)
-      }else{
-        window.scrollTo(0,0)
+      let domScrollTop = this.$refs.comment.offsetTop
+      if (this.toTopAndComment) {
+        window.scrollTo(0, domScrollTop)
+      } else {
+        window.scrollTo(0, 0)
       }
     },
-    toZoom(item){
+    toZoom(item) {
       this.$router.push({
-        name:'zoom',
-        query:{
-          id:item.user_id,
-          back:this.$route.name,
-          back_id:this.$route.query.id || this.$route.query.back_id
+        name: 'zoom',
+        query: {
+          id: item.user_id,
+          back: this.$route.name,
+          back_id: this.$route.query.id || this.$route.query.back_id
         }
       })
     }
@@ -266,12 +298,12 @@ export default {
 .no-centent {
   text-align: center;
   background: #fff;
-  padding:3.125rem /* 50/16 */ 0;
+  padding: 3.125rem /* 50/16 */ 0;
 }
 
-.no-centent .prompt{
-  color: #C0C4CC;
-  font-size: .875rem /* 14/16 */;
+.no-centent .prompt {
+  color: #c0c4cc;
+  font-size: 0.875rem /* 14/16 */;
 }
 
 .no-centent svg {
@@ -305,7 +337,7 @@ export default {
 .date {
   font-size: 0.75rem /* 12/16 */;
   color: #909399;
-  margin-right: .625rem /* 10/16 */;
+  margin-right: 0.625rem /* 10/16 */;
 }
 
 .contents {
@@ -327,7 +359,7 @@ export default {
   width: 100%;
   height: 3rem /* 48/16 */;
   background: #fff;
-  border-top: 0.0625rem /* 1/16 */ solid #EBEEF5;
+  border-top: 0.0625rem /* 1/16 */ solid #ebeef5;
 }
 
 .comment-popup {
@@ -384,35 +416,48 @@ export default {
 
 .reply-title {
   color: #909399;
-  margin-top: .3125rem /* 5/16 */;
-  margin-bottom: .3125rem /* 5/16 */;
+  margin-top: 0.3125rem /* 5/16 */;
+  margin-bottom: 0.3125rem /* 5/16 */;
 }
 
-.reply-contents{
+.reply-contents {
   color: #606266;
 }
 
 .theme-btn {
-  height:2.75rem /* 44/16 */;
+  height: 2.75rem /* 44/16 */;
 }
 
-.input-box-avatar{
+.input-box-avatar {
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
-  margin-left: .3125rem /* 5/16 */;
+  margin-left: 0.3125rem /* 5/16 */;
 }
 
-.num-tag{
+.num-tag {
   position: absolute;
   z-index: 10;
   right: 0;
-  top: -.3125rem /* 5/16 */;
+  top: -0.3125rem /* 5/16 */;
 }
 
-.reply-content{
-  background: #EBEEF5;
-  padding: .625rem /* 10/16 */;
-  margin-bottom: .625rem /* 10/16 */;
+.reply-content {
+  background: #ebeef5;
+  padding: 0.625rem /* 10/16 */;
+  margin-bottom: 0.625rem /* 10/16 */;
+}
+
+.score {
+  padding: 1.25rem /* 20/16 */ 0;
+}
+
+.score-title{
+  text-align: center;
+  font-size: .875rem /* 14/16 */;
+  font-weight: 700;
+}
+
+.score-rate{
+  margin: .625rem /* 10/16 */ auto;
 }
 </style>
-
