@@ -119,7 +119,7 @@
     </div>
 
     <van-popup v-model="shareShow" position='bottom' get-container='#app'>
-      <share @show='imageShow = true' />
+      <share @show='imageShow = true' :postId='$route.query.id'/>
     </van-popup>
   </div>
 </template>

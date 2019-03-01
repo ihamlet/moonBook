@@ -55,7 +55,7 @@
     </div>
 
     <van-popup v-model="shareShow" position='bottom' get-container='#app'>
-      <share @hide='shareShow = false' :postId='item.post_id'/>
+      <share @hide='shareShow = false' :postId='item.post_id' :isMe='item.isMe'/>
     </van-popup>
 
     <!-- 生成图片 -->

@@ -1,24 +1,6 @@
 <template>
-  <!-- <div class="topic-list">
-    <van-nav-bar title="选择分类" right-text='关闭' @click-right='close' />
-    <div class="list">
-      <van-cell-group>
-        <div class="item" v-for='(item,index) in topicList' :key="index">
-          <van-cell is-link @click="select(item)">
-            <div class="cell-title" slot='title'>
-             <div class="cate-name theme-color">
-                #{{item.cate_name}}
-              </div>
-              <div class="explain" v-if='item.access_level == 1'>
-                发布通知到管理的{{$route.query.back == 'class-home'?'班级':'学校'}}
-              </div>
-            </div>
-          </van-cell>
-        </div>
-      </van-cell-group>
-    </div> -->
-
-    <van-picker show-toolbar title='选择分类' :columns="column" value-key='cate_name' @change="onCateChange"/>
+  <div class="topic-list">
+    <van-picker show-toolbar title='选择分类' :columns="column" value-key='cate_name' @change="onCateChange" @cancel='$emit("close")' @confirm='onConfirm'/>
   </div>
 </template>
 <script>
@@ -27,19 +9,21 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'topic-list',
+  props: ['type'],
   computed: {
     ...mapGetters(['managerState']),
     column(){
       let column = [{
-          values: this.topicList,
-          className: 'column1'
-        },
-        {
-          values:[],
-          className: 'column2',
-          defaultIndex: 1
-        }]
-    return column
+        values: this.topicList,
+        className: 'column1'
+      },
+      {
+        values:[],
+        className: 'column2',
+        defaultIndex: 1
+      }]
+      
+      return column
     }
   },
   data() {
@@ -90,39 +74,13 @@ export default {
         }
       })
     },
-    select(item){
-      this.$emit('select',item)
-      this.$emit('close')
-    },
-    close(){
-      this.$emit('close')
-    },
-    makeColumn(list) {
-      var column = [
-        {
-          values: [],
-          className: 'column1'
-        },
-        {
-          values:[],
-          className: 'column2',
-          defaultIndex: 0
-        }
-      ];
-      list.forEach((item)=>{
-        column[0].values.push(item);       
-      })
-
-       if(list[0].children) {
-          column[1].values = list[0].children
-        }
-      console.log('column', column)
-      return column
-    },
-    onCateChange(picker, cate) {
+    onCateChange(picker, cate, cid) {
       picker.setColumnValues(1, cate[0].children)
+      this.$emit('select',cate[cid])
+    },
+    onConfirm(){
+      this.type == 'edit'?this.$emit("close"):this.$emit('confirm')
     }
-
   }
 }
 </script>

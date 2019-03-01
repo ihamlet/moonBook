@@ -7,7 +7,7 @@
     <!-- 视频  -->
     <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"'>
       <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
-        <div class="video-thumb"  v-if='videoItem&&videoItem.is_video == "1"&&videoIndex == 1' @click="toVideoPage(videoItem)">
+        <div class="video-thumb"  v-if='videoItem&&videoItem.is_video == "1"' @click="toVideoPage(videoItem)">
           <div class="player">
             <i class="iconfont">&#xe639;</i>
           </div>

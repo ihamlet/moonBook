@@ -497,7 +497,14 @@ export default {
           }).then(() => {
             axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
               if (res.data.status == 1) {
-                this.onRefresh()
+                let index
+                this.list.forEach((e,i)=>{
+                  if(e.post_id == this.postId){
+                    index = i
+                  }
+                })
+                
+                this.list.splice(index,1)
                 this.$toast.success('删除成功')
               }
             })

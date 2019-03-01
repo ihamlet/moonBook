@@ -234,7 +234,15 @@ export default {
           }).then(() => {
             axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
               if (res.data.status == 1) {
-                this.onRefresh()
+                let index
+                this.list.forEach((e,i)=>{
+                  if(e.post_id == this.postId){
+                    index = i
+                  }
+                })
+
+                this.list.splice(index,1)
+
                 this.$toast.success('删除成功')
               }
             })
@@ -302,12 +310,14 @@ export default {
       }
 
       axios.get('/book/SchoolArticle/copy',data).then(res=>{
-        if(res.data.data.status == 1){
+        if(res.data.status == 1){
           this.$toast.success('推荐成功')
         }else{
           this.$toast.fail('操作失败')
         }
       })
+
+      this.actionsheetShow = false
     },
     formatBanjiTitle(text) {
       if (text && text.indexOf('班') == -1) {

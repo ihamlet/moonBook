@@ -1,7 +1,7 @@
 <template>
   <div class="share-box">
     <van-row class="svg-list">
-      <van-col span="12">
+      <van-col :span="isMe?'24':'12'">
         <div class='btn' @click="share">
           <svg class="icon wechat" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
             viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3129">
@@ -13,7 +13,7 @@
           <div class="text">分享到微信</div>
         </div>
       </van-col>
-      <van-col span="12">
+      <van-col span="12" v-if="!isMe">
         <div class="btn" @click="childShow = true">
           <svg t="1551174489120" class="icon zhuanfa" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
             viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3124">
@@ -28,44 +28,36 @@
     </van-row>
 
     <van-popup v-model="childShow" position='bottom'  get-container='#app'>
-      <van-picker show-toolbar :columns="columns" @change="onChange" title='收录到' @confirm='inclusion'/>
+      <van-picker show-toolbar :columns="children" value-key='name' @change="onChange" title='收录到' @confirm='selectChild' @cancel='childShow = false'/>
     </van-popup>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
-      <topic-list @close='show = false' @select='selectTag' />
+      <topic-list @close='show = false' @select='selectTag' @confirm='selectConfirm' type='share'/>
     </van-popup>
   </div>
 </template>
 <script>
 import Cookies from 'js-cookie'
-import { mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import axios from './../../lib/js/api'
 import topicList from './../../module/release/topicList'
 
 export default {
   name: 'share',
-  props: ['postId'],
+  props: ['postId','isMe'],
+  computed: {
+    ...mapGetters(['userDataState'])
+  },
   components: {
     topicList
   },
-  computed: {
-    columns(){
-      let array = []
-      if(this.children){
-        this.children.forEach(element => {
-          array.push(element.name)
-        })
-      }
-      return array
-    }
-  },
   data(){
     return {
-      children:'',
+      children:[],
       childShow:false,
-      columnIndex:0,
       cateId:'',
       show:false,
+      childId:''
     }
   },
   created () {
@@ -75,14 +67,11 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
-    ...mapActions(['getUserData']),
     fetchData(){
-      this.getUserData().then(res => {
-        axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
-          if(res.data.status == 1){
-            this.children = res.data.data
-          }
-        })
+      axios.get(`/book/baby/getList?sort=old&user_id=${this.userDataState.user_id}`).then(res => {
+        if(res.data.status == 1){
+          this.children = res.data.data
+        }
       })
     },
     hide() {
@@ -93,15 +82,34 @@ export default {
       location.href = `/book/weixin/share?back_url=${encodeURIComponent(location.href)}&id=${this.$route.query.id}&type=文章`
       this.hide()
     },
-    onChange(picker, values, columnIndex){
-      this.columnIndex = columnIndex
+    onChange(picker, values){
+      this.childId = values.id
     },
-    inclusion(){
+    selectChild(){
       this.childShow = false
       this.show = true
     },
     selectTag(tag) {
       this.cateId = tag.cate_id
+    },
+    selectConfirm(){
+      let data = {
+        params:{
+          post_id: this.postId,
+          child_id: this.childId || '',
+          cate_id: this.cateId || ''
+        }
+      }
+
+      axios.get('/book/SchoolArticle/copy',data).then(res=>{
+        if(res.data.status == 1){
+          this.$toast.success('收录成功')
+        }else{
+          this.$toast.fail('操作失败')
+        }
+      })
+
+      this.show = false
     }
   }
 }

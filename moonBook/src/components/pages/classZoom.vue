@@ -172,9 +172,14 @@ export default {
         case 2:
           axios.get(`/book/SchoolArticle/del?id=${this.cardItem.post_id}`).then(res => {
             if(res.data.status == 1){
-              this.show = false
-              this.page = 1
-              this.onLoad()
+                let index
+                this.list.forEach((e,i)=>{
+                  if(e.post_id == this.postId){
+                    index = i
+                  }
+                })
+                
+                this.list.splice(index,1)
               this.$toast.success('删除成功')
             }else{
               this.$toast.fail('删除失败')
@@ -204,12 +209,14 @@ export default {
       }
 
       axios.get('/book/SchoolArticle/copy',data).then(res=>{
-        if(res.data.data.status == 1){
+        if(res.data.status == 1){
           this.$toast.success('推荐成功')
         }else{
           this.$toast.fail('操作失败')
         }
       })
+
+      this.actionsheetShow = false
     },
     formatBanjiTitle(text) {
       if (text && text.indexOf('班') == -1) {
