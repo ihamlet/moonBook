@@ -31,10 +31,6 @@ module.exports = {
       '/SchoolManage': {
         target: server_host,
         changeOrigin: true
-      },
-      '/SchoolManage': {
-        target: 'https://hu.wmlife.net/',
-        changeOrigin: true
       }
     },
 
