@@ -114,12 +114,20 @@ export default {
       })
     },
     onClickLeft() {
-      if(this.$route.query.back){
+      // 活动页需要跳转tid
+      if(this.$route.query.back&&this.$route.query.back != 'activity'){
         this.$router.push({
           name: this.$route.query.back,
           query: {
             id: this.$route.query.back_id,
-            tid: this.$route.query.tid || ''
+          }
+        })
+      }else if(this.$route.query.back){
+        this.$router.push({
+          name: this.$route.query.back,
+          query: {
+            id: this.$route.query.back_id,
+            tid: this.$route.query.tid
           }
         })
       }else{

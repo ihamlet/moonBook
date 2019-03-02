@@ -88,12 +88,12 @@
         </van-tabs>
       </lazy-component>
       <lazy-component class="module" v-else>
-        <reading :list="lateBook" v-show='!childInfo.is_mine' moduleTitle="宝贝最近在读的书" />
+        <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
       </lazy-component>
 
     </div>
 
-    <slogan v-if="!childInfo.is_mine" />
+    <slogan v-if="!childInfo.is_mine"/>
 
     <van-popup v-model="showQrcode" class="card-popup">
       <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
@@ -285,6 +285,12 @@ export default {
           this.activityCount = res.data.count
         }
       })
+
+      axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
+        if (res.status == 200) {
+            this.lateBook = res.data.data
+        }
+      })
     },
     request() {
       this.getUserData().then(res => {
@@ -304,11 +310,6 @@ export default {
             }
           })
         }
-        axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
-          if (res.data.status == 1) {
-            this.lateBook = res.data.data
-          }
-        })
       })
     },
     onClickLeft() {

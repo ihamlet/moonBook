@@ -112,5 +112,7 @@ export default {
 
 .tag{
     position: absolute;
+    left: .625rem /* 10/16 */;
+    bottom: .625rem /* 10/16 */;
 }
 </style>

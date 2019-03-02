@@ -216,13 +216,14 @@ export default {
     addPraise(item) {
       item.isZan = !item.isZan
       axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
-        console.log(res)
         if (res.data.status == 1) {
-          item.zan_num = res.data.data.like
-          this.$toast.success({
-            className: 'zan-icon toast-icon',
-            message: '点赞成功'
-          })
+          if(res.data.data){
+            item.zan_num = res.data.data.like
+            this.$toast.success({
+              className: 'zan-icon toast-icon',
+              message: '点赞成功'
+            })
+          }
         }
       })
     },
