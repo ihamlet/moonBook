@@ -209,7 +209,6 @@ export default {
       loading: false,
       finished: false,
       releasePageShow: false,
-      loading: false,
       page: 1,
       tabIndex: 0,
       tab: [{
@@ -385,11 +384,14 @@ export default {
           } else {
             this.tab[this.tabIndex].content = this.list.concat(res.data.data)
           }
-          this.loading = false
           this.page++
+          this.loading = false
           if (this.tab[this.tabIndex].content.length >= res.data.count) {
             this.finished = true
           }
+        }else{
+          this.loading = false
+          this.finished = true
         }
       })
     },

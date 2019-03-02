@@ -23,7 +23,7 @@
         <div class="amount-num">{{childInfo.shelf_tushu_kinds-childInfo.read_kinds}}</div>
       </div>
     </div>
-    <div class="total">所在书架未读的书：{{childInfo.shelf_tushu_kinds-childInfo.read_kinds}}/{{childInfo.shelf_tushu_kinds}}</div>
+
     <van-tabs color="#409eff" :line-width="20" :line-height="4" sticky swipeable animated :offsetTop="45" @change="onChangeTab">
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
@@ -225,13 +225,6 @@ export default {
 
 .amount-type {
   margin-bottom: 0.3125rem /* 5/16 */;
-}
-
-.total {
-  height: 2rem /* 32/16 */;
-  line-height: 2rem /* 32/16 */;
-  padding: 0 1.25rem /* 20/16 */;
-  font-size: 0.875rem /* 14/16 */;
 }
 
 .amount-list{

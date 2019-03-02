@@ -58,19 +58,22 @@ export default {
           name: '家长',
           subtitle: '亲子阅读 在线交流 分享阅读',
           type: 'parent',
-          iconClass: 'icon-parent'
+          iconClass: 'icon-parent',
+          index:0,
         },
         {
           name: '老师',
           subtitle: '阅读课教学 阅读方法 育儿交流',
           type: 'teacher',
-          iconClass: 'icon-teacher'
+          iconClass: 'icon-teacher',
+          index:1
         },
         {
           name: '园长/校长',
           subtitle: '学校风采 掌握教育动态',
           type: 'headmaster',
-          iconClass: 'icon-principal'
+          iconClass: 'icon-principal',
+          index:1
         }
       ]
     }
@@ -82,24 +85,27 @@ export default {
       })
     },
     selectRole(role) {
-      if (role.type == 'parent') {
-        this.$router.push({
-          name: 'edit-child',
-          query: {
-            pageTitle: '添加宝贝',
-            type: 'add',
-            back: this.$route.name
-          }
-        })
-      }else{
-        this.$router.push({
-          name: 'edit-manager',
-          query: {
-            pageTitle: `${role.name}注册`,
-            registerType: role.type,
-            type: 'add'
-          }
-        })
+      switch (role.index){
+        case 0:
+          this.$router.push({
+            name: 'edit-child',
+            query: {
+              pageTitle: '添加宝贝',
+              type: 'register',
+              back: this.$route.name
+            }
+          })
+        break
+        case 1:
+          this.$router.push({
+            name: 'edit-manager',
+            query: {
+              pageTitle: `${role.name}注册`,
+              registerType: role.type,
+              type: 'add'
+            }
+          })
+        break
       }
     },
     toAccept() {

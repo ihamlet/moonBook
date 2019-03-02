@@ -104,10 +104,9 @@ export default {
           if (res.data.status == 1) {
             if (this.$route.query.back) {
               this.$router.push({
-                name: this.$route.query.back,
+                name: 'edit-child',
                 query: {
                   id: this.$route.query.id,
-                  back: this.$route.query.back,
                   type: this.$route.query.type
                 }
               })

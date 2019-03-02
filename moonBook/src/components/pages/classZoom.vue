@@ -6,16 +6,18 @@
     </div>
     <div>
       <van-nav-bar :title="$route.query.name?'':'班级动态'"/>
-      <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
-        <div class="list" v-if='list.length > 0'>
-          <div class="item" v-for="(item,index) in list" :key="index">
-            <van-cell>
-              <graphic-card :item="item" type="classHome" @more='operation'/>
-            </van-cell>
+      <van-pull-refresh v-model="loading" @refresh="onRefresh">
+        <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
+          <div class="list" v-if='list.length > 0'>
+            <div class="item" v-for="(item,index) in list" :key="index">
+              <van-cell>
+                <graphic-card :item="item" type="classHome" @more='operation'/>
+              </van-cell>
+            </div>
           </div>
-        </div>
-        <div class="not-content" v-else>尚无内容</div>
-      </van-list>
+          <div class="not-content" v-else>尚无内容</div>
+        </van-list>
+      </van-pull-refresh>
     </div>
     <!-- 发布 -->
     <van-popup v-model="releasePageShow" class="page-popup" position="bottom">
@@ -133,13 +135,21 @@ export default {
           } else {
             this.list = this.list.concat(res.data.data)
           }
-
-          this.loading = false
           this.page++
+          this.loading = false
           if (this.list.length >= res.data.count) {
             this.finished = true
           }
+        }else{
+          this.loading = false
+          this.finished = true
         }
+      })
+    },
+    onRefresh(){
+      this.page = 1
+      this.onLoad().then(res=>{
+        this.loading = false
       })
     },
     operation(item) {
@@ -151,9 +161,7 @@ export default {
         case 0:
           axios.get(`/book/SchoolArticle/top?post_id=${this.cardItem.post_id}`).then(res => {
             if(res.data.status == 1){
-              this.show = false
-              this.page = 1
-              this.onLoad()
+              this.onRefresh()
               this.$toast.success('置顶成功')
             }else{
               this.$toast.fail('置顶失败')

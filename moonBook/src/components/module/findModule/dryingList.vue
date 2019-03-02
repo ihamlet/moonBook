@@ -162,13 +162,14 @@ export default {
           } else {
             this.list = this.list.concat(res.data.data)
           }
-
-          this.loading = false
           this.page++
-
+          this.loading = false
           if (this.list.length >= res.data.count) {
             this.finished = true
           }
+        }else{
+          this.loading = false
+          this.finished = true
         }
       })
     },

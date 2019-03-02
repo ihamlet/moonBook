@@ -92,6 +92,7 @@ export default {
     },
     getReadList() {
       return axios.get(`/book/MemberBorrow/getList?page=${this.page}&is_return=${this.tab[this.tabIndex].type}`).then(res => {
+        console.log(res)
         if(res.data.status == 1){
           if (res.data.count > 0) {
             if (this.page == 1) {

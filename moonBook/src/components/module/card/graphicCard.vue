@@ -24,7 +24,7 @@
           <span>{{item.views}}</span>
           <span>阅读</span>
         </div>
-        <div class="more" @click="more(item)"><i class="iconfont">&#xe6f7;</i></div>
+        <div v-if='type!="notice"' class="more" @click="more(item)"><i class="iconfont">&#xe6f7;</i></div>
       </div>
 
       <media :item='item' type='card'/>
