@@ -9,8 +9,7 @@
   </div>
 </template>
 <script>
-import axios from './lib/js/api'
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import footerBar from './../components/module/footerBar'
 
 export default {
@@ -52,24 +51,6 @@ export default {
         }
       ]
       return array
-    }
-  },
-  created () {
-    this.fetchData()
-  },
-  watch: {
-    '$route': 'fetchData'
-  },
-  methods: {
-     ...mapActions(['getUserData','getMsg','getUserLocation','getManager']),
-    fetchData(){
-      let products = {
-        page: 1,
-        isRead: 0
-      }
-      this.getUserData()
-      this.getManager()
-      this.getMsg(products)
     }
   }
 }

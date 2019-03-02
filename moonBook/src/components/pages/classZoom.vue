@@ -9,9 +9,8 @@
       <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
         <div class="list" v-if='list.length > 0'>
           <div class="item" v-for="(item,index) in list" :key="index">
-            <van-cell title="" is-link arrow-direction="down" v-if='manage' @click="operation(item)" />
             <van-cell>
-              <graphic-card :item="item" type="classHome" />
+              <graphic-card :item="item" type="classHome" @more='operation'/>
             </van-cell>
           </div>
         </div>

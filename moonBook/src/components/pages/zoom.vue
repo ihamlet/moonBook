@@ -45,9 +45,8 @@
           <div class="list">
             <div class="no-list" v-if="list.length == 0">暂无内容</div>
             <div class="item" v-for="(item,index) in list" :key="index">
-              <van-cell title v-if="item.isMe" @click="actionsheet(item)" is-link arrow-direction="down" />
               <van-cell>
-                <graphic-card :item="item" />
+                <graphic-card :item="item" @more='actionsheet'/>
               </van-cell>
             </div>
           </div>

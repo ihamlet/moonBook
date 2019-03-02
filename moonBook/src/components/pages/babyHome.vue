@@ -72,9 +72,8 @@
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
                 <div class="tab-content" v-if='list.content.length'>
                   <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
-                    <van-cell title="" v-if='item.isMe' @click="actionsheet(item)" is-link arrow-direction='down' />
                     <van-cell>
-                      <graphic-card :item="item" type="babyHome" :title='childInfo.name' :avatar='childInfo.avatar' />
+                      <graphic-card :item="item" type="babyHome" :title='childInfo.name' :avatar='childInfo.avatar' @more="actionsheet"/>
                     </van-cell>
                   </div>
                 </div>
@@ -88,7 +87,7 @@
         </van-tabs>
       </lazy-component>
       <lazy-component class="module" v-else>
-        <reading :list="lateBook" moduleTitle="宝贝最近在读的书" />
+        <reading :list="lateBook"  moduleTitle="宝贝最近在读的书" />
       </lazy-component>
 
     </div>

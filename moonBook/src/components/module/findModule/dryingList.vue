@@ -6,10 +6,9 @@
           尚无内容
         </div>
         <div class="item" v-for="(item,index) in list" :key="index" @click="setItem(item)" v-else>
-          <van-cell title='' is-link arrow-direction="down" @click="actionsheet(item)" />
           <van-cell>
             <div class="content">
-              <graphic-card :item="item" @follow="follow" />
+              <graphic-card :item="item" @follow="follow" @more='actionsheet'/>
             </div>
           </van-cell>
         </div>
