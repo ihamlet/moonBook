@@ -6,10 +6,10 @@
                 我的
             </div>
         </van-nav-bar>
-        <lazy-component class="gap-top">
+        <div class="gap-top">
             <calendar />
-        </lazy-component>
-        <lazy-component>
+        </div>
+        <div>
             <div class="calendar-module">
                 <div class="punch-module">
                     <van-row class="flex flex-align" gutter='10'>
@@ -34,7 +34,7 @@
                     </van-row>
                 </div>
             </div>
-        </lazy-component>
+        </div>
     </div>
 </template>
 

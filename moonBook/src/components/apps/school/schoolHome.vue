@@ -22,18 +22,18 @@
         </div>
         <div class="arc"></div>
       </div>
-      <lazy-component class="module">
+      <div class="module">
         <div class="apps">
           <apps :appsList='appsList' type='schoolHome' />
         </div>
-      </lazy-component>
-      <lazy-component class="module">
+      </div>
+      <div class="module">
         <notice type='school' />
-      </lazy-component>
-      <lazy-component class="module">
+      </div>
+      <div class="module">
         <read-list type='school' title='流动红旗' field='name' />
-      </lazy-component>
-      <lazy-component>
+      </div>
+      <div>
         <van-tabs color='#409eff' :line-width='20' :line-height='4' animated swipeable>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
@@ -41,7 +41,7 @@
             </div>
           </van-tab>
         </van-tabs>
-      </lazy-component>
+      </div>
     </div>
 
     <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" />

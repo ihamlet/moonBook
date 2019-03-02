@@ -5,7 +5,7 @@
       <div id="video" :class="!fixedHeaderBar?'fixed':''" :style="!fixedHeaderBar&&styleObject"></div>
     </div>
     <div class="container">
-      <lazy-component class="module">
+      <div class="module">
         <van-cell-group>
           <van-cell center @click="toZoom(item)" :value='`${item.views}次播放`' title-class='video-user-info'>
             <div class="user-info-bar" slot="title">
@@ -21,13 +21,13 @@
             </div>
           </van-cell>
         </van-cell-group>
-      </lazy-component>
-      <lazy-component class="module">
+      </div>
+      <div class="module">
         <video-list title="相关视频" type='video' @refresh='refresh' />
-      </lazy-component>
-      <lazy-component>
+      </div>
+      <div>
         <comment :item='item' include='include'/>
-      </lazy-component>
+      </div>
     </div>
   </div>
 </template>

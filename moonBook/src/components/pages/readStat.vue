@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="container">
-      <lazy-component class="gutter">
+      <div class="gutter">
         <div class="honor flex flex-align">
           <div class="flex-box certificate flex flex-align flex-justify">
             <i class="iconfont">&#xe63c;</i>
@@ -62,8 +62,8 @@
           </div>
         </div> 
 
-      </lazy-component>
-      <lazy-component class="gutter gap">
+      </div>
+      <div class="gutter gap">
         <van-nav-bar title="阅读排名" right-text="排行榜" @click-right="toRanking" />
         <div class="ranking">
           <div class="ranking-content flex flex-align">
@@ -78,8 +78,8 @@
             </div>
           </div>
         </div>
-      </lazy-component>
-      <lazy-component class="gutter gap">
+      </div>
+      <div class="gutter gap">
         <van-cell-group>
           <van-cell size='large'>
             <div class="text flex flex-justify">本月比上月阅读<span class="data">增长了24本</span></div>
@@ -94,7 +94,7 @@
             <div class="text flex flex-justify">影响<span class="data">3人</span> 阅读了<span class="data">140 本</span>图书</div>
           </van-cell>
         </van-cell-group>
-      </lazy-component>
+      </div>
     </div>
 
     <div class="gutter gap">

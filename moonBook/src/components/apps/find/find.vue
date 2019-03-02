@@ -1,10 +1,10 @@
 <template>
   <div class="find page-padding">
     <van-nav-bar :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title" left-text="首页" left-arrow @click-left="onClickLeft"/>
-    <lazy-component class="module">
+    <div class="module">
        <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname"/>
-    </lazy-component>
-    <lazy-component>
+    </div>
+    <div>
       <div class="container">
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
@@ -14,7 +14,7 @@
           </van-tab>
         </van-tabs>
       </div>
-    </lazy-component>
+    </div>
   </div>
 </template>
 <script>

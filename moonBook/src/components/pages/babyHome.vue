@@ -2,7 +2,7 @@
   <div class="baby-home page-padding" v-if='hackReset'>
     <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft">
       <div class="head-bar-title" slot="title" @click="selectBaby">
-        {{pageTitle}} <i class="iconfont" v-if='babyList.length > 1'>&#xe608;</i>
+        {{pageTitle}} <i class="iconfont" v-if='babyList.length'>&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -53,10 +53,10 @@
           <span class="bar-title">坚持天数</span>
         </div>
       </div>
-      <lazy-component class="module" v-if="childInfo.is_mine">
+      <div class="module" v-if="childInfo.is_mine">
         <family />
-      </lazy-component>
-      <lazy-component v-if="childInfo.is_mine">
+      </div>
+      <div v-if="childInfo.is_mine">
         <van-nav-bar title="成长日记" @click-right="toActivity">
           <div class="post-count" slot="left">
             {{childInfo.post_count}}日记
@@ -85,10 +85,10 @@
             </van-list>
           </van-tab>
         </van-tabs>
-      </lazy-component>
-      <lazy-component class="module" v-else>
+      </div>
+      <div class="module" v-else>
         <reading :list="lateBook"  moduleTitle="宝贝最近在读的书" />
-      </lazy-component>
+      </div>
 
     </div>
 
@@ -580,7 +580,7 @@ export default {
       }
     },
     selectBaby() {
-      if (this.babyList.length > 1) {
+      if (this.babyList.length) {
         this.isSelectBabyShow = true
       }
     },

@@ -23,20 +23,20 @@
       </div>
     </div>
     <div class="container">
-      <lazy-component class="module">
+      <div class="module">
         <div class="apps">
           <apps :appsList='appsList' type='classHome' />
         </div>
-      </lazy-component>
-      <lazy-component class="module">
+      </div>
+      <div class="module">
         <read-list title='阅读榜' type='banji' field='avatar' />
-      </lazy-component>
-      <lazy-component class="module">
+      </div>
+      <div class="module">
         <notice type='banji' />
-      </lazy-component>
-      <lazy-component>
+      </div>
+      <div>
         <class-zoom type='template' :banji_id='classInfo.banji_id' />
-      </lazy-component>
+      </div>
     </div>
 
     <van-popup v-model="show" class="plate-card">

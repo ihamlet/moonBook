@@ -1,10 +1,10 @@
 <template>
   <div class="class-zoom" :class="[type!='template'?'page-padding':'no-padding']">
     <van-nav-bar v-if='type!="template"' :title="$route.query.name?$route.query.name:'班级风采'" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft"/>
-    <lazy-component class="module" v-if="type != 'template'">
+    <div class="module" v-if="type != 'template'">
       <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template' />
-    </lazy-component>
-    <lazy-component>
+    </div>
+    <div>
       <van-nav-bar :title="$route.query.name?'':'班级动态'"/>
       <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
         <div class="list" v-if='list.length > 0'>
@@ -16,7 +16,7 @@
         </div>
         <div class="not-content" v-else>尚无内容</div>
       </van-list>
-    </lazy-component>
+    </div>
     <!-- 发布 -->
     <van-popup v-model="releasePageShow" class="page-popup" position="bottom">
       <graphic @close='releasePageShow = false' />

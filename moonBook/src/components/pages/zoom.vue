@@ -3,7 +3,7 @@
     <van-nav-bar :zIndex="99" :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed left-text="返回"
       left-arrow @click-left="onClickLeft" />
     <div class="container">
-      <lazy-component class="module">
+      <div class="module">
         <div class="user-card flex flex-align" ref="userCrad">
           <div class="info">
             <div class="avatar">
@@ -34,13 +34,13 @@
               type="primary" size="large" @click="follow(userInfo)">{{userInfo.subscribe_num == '0'?'加关注':'已关注'}}</van-button>
           </div>
         </div>
-      </lazy-component>
+      </div>
 
-      <lazy-component class="module">
+      <div class="module">
         <reading :list="lateBook" moduleTitle="宝贝最近在读" />
-      </lazy-component>
+      </div>
 
-      <lazy-component>
+      <div>
         <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
           <div class="list">
             <div class="no-list" v-if="list.length == 0">暂无内容</div>
@@ -51,7 +51,7 @@
             </div>
           </div>
         </van-list>
-      </lazy-component>
+      </div>
     </div>
 
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />

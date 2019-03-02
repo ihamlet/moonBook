@@ -40,12 +40,12 @@
           <van-button size="normal" v-else class="theme-btn" type="primary" round @click="follow(item)">+ 关注</van-button>
         </div>
       </div>
-      <lazy-component class="module">
+      <div class="module">
         <article-content :item='item'/>
-      </lazy-component>
-      <lazy-component>
+      </div>
+      <div>
         <comment :item='item' include='include'/>
-      </lazy-component>
+      </div>
     </div>
 
     <!-- 生成图片 -->
