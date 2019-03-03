@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'首页'}}</span>
       </div>
-      <div class="head-bar-title" slot="title" @click="cutover">
+      <div class="head-bar-title" slot="title" @click="actionsheetShow = true">
         {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerState.length > 1">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot='right' v-if='manage'>
@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="module">
-        <notice type='school' />
+        <investmentAd :key="key" :investmentAd='investment' type='notice'/>
       </div>
       <div class="module">
         <read-list type='school' title='流动红旗' field='name' />
@@ -37,7 +37,7 @@
         <van-tabs color='#409eff' :line-width='20' :line-height='4' animated swipeable>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
-              <drying-list :school_id='$route.query.id' portal_name='学校主页' />
+              <drying-list :key="key" :school_id='$route.query.id' portal_name='学校主页'/>
             </div>
           </van-tab>
         </van-tabs>
@@ -53,18 +53,22 @@ import { mapGetters, mapActions } from 'vuex'
 import apps from './../../module/myModule/apps'
 import readList from './../../module/classModule/readList'
 import dryingList from './../../module/findModule/dryingList'
-import notice from './../../module/classModule/notice'
+import investmentAd from './../../module/investment'
 
 export default {
   name: 'school',
   components: {
     apps,
     readList,
-    notice,
-    dryingList
+    dryingList,
+    investmentAd
   },
   computed: {
     ...mapGetters(['userDataState', 'managerState']),
+    //动态组件
+    key() {
+        return this.$route.name !== undefined? this.$route.name + new Date(): this.$route + new Date()
+    },
     actions() {
       let array = []
       if (this.managerState) {
@@ -100,11 +104,7 @@ export default {
       domHeight: '',
       fixedHeaderBar: true,
       actionsheetShow: false,
-      appsList: [{
-        name: '每日餐谱',
-        iconClass: 'icon-canpu',
-        path: '404'
-      }, {
+      appsList: [ {
         name: '阅读',
         iconClass: 'icon-yuedu',
         path: 'apps-find',
@@ -139,7 +139,12 @@ export default {
       tab: [{
         title: '学校动态',
         content: '',
-      }]
+      }],
+      investment:{
+        link:'#',
+        text:'每日餐谱',
+        banner: ''
+      }
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -214,9 +219,6 @@ export default {
           name: 'home'
         })
       }
-    },
-    cutover() {
-      this.actionsheetShow = true
     },
     onSelect(item) {
       this.hackReset = false

@@ -64,7 +64,7 @@
     </van-popup>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
-      <topic-list @close='show = false' @select='selectTag' type='edit'/>
+      <topic-list @close='show = false' @select='selectTag' type='edit' :topicList='topicList'/>
     </van-popup>
 
     <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="actionShow = false" />
@@ -90,7 +90,7 @@ export default {
     topicList
   },
   computed: {
-    ...mapGetters(['userDataState']),
+    ...mapGetters(['userDataState','managerState']),
     imagesLength() {
       return this.grapicData.photos.length
     },
@@ -144,7 +144,8 @@ export default {
         name: '拍摄视频',
         type: 'uploadVideo',
         index: 2,
-      }]
+      }],
+      topicList:[]
     }
   },
   created() {
@@ -164,6 +165,43 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     fetchData() {
+      // 获取文章分类
+
+      let data = {
+        params:{
+          portal_name:'宝贝主页'
+        }
+      }
+
+      if(this.$route.query.back == 'class-home'){
+        data.params.portal_name = '班级主页'
+      }    
+
+      if(this.$route.query.back == 'apps-school'){
+        data.params.portal_name = '学校主页'
+      }
+
+      axios.get('/book/schoolArticleCate/getList',data).then(res => {
+        if(res.status == 200){
+          let cateArray = res.data
+          let data = []
+          cateArray.forEach(element => {
+            if(element.access_level == 0){
+              data.push(element)
+            }else{
+              this.managerState.forEach(e =>{
+                if((this.$route.query.id == e.banji_id||this.$route.query.id == e.school_id)&& e.item_relation != 'parent'){
+                  data.push(element)
+                }
+              })
+            }
+          })
+          this.topicList = data
+          this.cateId = data[0].cate_id
+          this.cateName = data[0].cate_name
+        }
+      })
+
       // 从本地存储获取发布数据
       if(this.$route.query.type == 'edit'){
           axios.get(`/book/SchoolArticle/getEdit?post_id=${this.$route.query.post_id}`).then(res => {
@@ -302,51 +340,57 @@ export default {
           })
         }
       } else if (this.grapicData.text.length < 12000) {
-        let data = {
-          details: this.grapicData.text,
-          template_id: 1,
-          photos: this.grapicData.photos,
-          cate_id: this.cateId,
-          post_id: this.$route.query.post_id || ''
-        }
-
-        this.result.forEach(e=>{
-          if(e == 'to_banji'){
-            data.to_banji = 1
+        // 如果通知没有内容？
+        if(this.cateName == '通知'&&!this.grapicData.text.length){
+          this.$toast('请输入通知内容')
+        }else{
+          // 发布
+          let data = {
+            details: this.grapicData.text,
+            template_id: 1,
+            photos: this.grapicData.photos,
+            cate_id: this.cateId || '',
+            post_id: this.$route.query.post_id || ''
           }
 
-          if( e == 'to_baby'){
-            data.to_baby  = 1
+          this.result.forEach(e=>{
+            if(e == 'to_banji'){
+              data.to_banji = 1
+            }
+
+            if( e == 'to_baby'){
+              data.to_baby  = 1
+            }
+          })
+
+          if(this.$route.query.back == 'class-home'){
+            data.banji_id = this.$route.query.id
           }
-        })
-
-        if(this.$route.query.back == 'class-home'){
-          data.banji_id = this.$route.query.id
-        }
-        
-        if(this.$route.query.back == 'apps-school'){
-          data.school_id = this.$route.query.id
-        }
-
-        if(this.$route.query.back == 'baby-home'){
-          data.child_id = this.$route.query.id
-        }
-
-        axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
-          if(this.$route.query.back){
-            this.$router.push({
-              name: this.$route.query.back,
-              query: {
-                id:  this.$route.query.id || '',
-                cate_id: this.cate_id || ''
-              }
-            })
-          }else{
-            this.$router.push({
-              name:'apps-find'
-            })
+          
+          if(this.$route.query.back == 'apps-school'){
+            data.school_id = this.$route.query.id
           }
-        })
+
+          if(this.$route.query.back == 'baby-home'){
+            data.child_id = this.$route.query.id
+          }
+
+          axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
+            if(this.$route.query.back){
+              this.$router.push({
+                name: this.$route.query.back,
+                query: {
+                  id:  this.$route.query.id || '',
+                  cate_id: this.cate_id || ''
+                }
+              })
+            }else{
+              this.$router.push({
+                name:'apps-find'
+              })
+            }
+          })
+        }
       }
     },
     deletePhoto(index) {
