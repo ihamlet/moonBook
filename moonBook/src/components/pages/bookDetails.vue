@@ -34,7 +34,7 @@
         <freshList :list='freshList' cid="child_id" avatar="child_avatar" routerName="baby-home" name="child_name" />
       </div>
       <div>
-        <comment :item='details'/>
+        <comment :item='details' type='bookDetails'/>
       </div>
     </div>
   </div>
