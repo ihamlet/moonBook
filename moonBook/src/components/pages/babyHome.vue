@@ -390,6 +390,7 @@ export default {
             this.finished = true
           }
         }else{
+          this.tab[this.tabIndex].content = []
           this.loading = false
           this.finished = true
         }

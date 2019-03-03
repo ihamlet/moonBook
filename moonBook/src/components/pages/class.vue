@@ -70,7 +70,7 @@ export default {
       }
     },
     onClickLeft() {
-      if(this.$route.query.back){
+      if(this.$route.query.back && this.userDataState.banji_id != '0'){
         this.$router.push({
           name: this.$route.query.back,
           query:{

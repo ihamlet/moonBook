@@ -168,6 +168,7 @@ export default {
             this.finished = true
           }
         }else{
+          this.list = []
           this.loading = false
           this.finished = true
         }
