@@ -8,7 +8,7 @@
             {{MsgLengthState}}
           </div>
         </div>
-        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
+        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
           <van-pull-refresh v-model="loading" @refresh="onRefresh">
             <div class="list" v-if="list.content.length > 0">
               <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex" @click="toMsgDetails(item)">
@@ -33,8 +33,7 @@
                     </van-cell>
                   </van-cell-group>
                   <div slot="right" class="slot" :style="{width:'78px'}">
-                    <span class="topping" @click="topping(item)" :class="item.is_top == 1?'cancel':''">{{item.is_top ==
-                      1?'取消置顶':'置顶'}}</span>
+                    <span class="topping" @click="topping(item)" :class="item.is_top == 1?'cancel':''">{{item.is_top == 1?'取消置顶':'置顶'}}</span>
                   </div>
                 </van-swipe-cell>
               </div>
