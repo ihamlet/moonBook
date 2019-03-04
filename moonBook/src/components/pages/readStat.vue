@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="container">
-      <lazy-component class="gutter">
+      <div class="gutter">
         <div class="honor flex flex-align">
           <div class="flex-box certificate flex flex-align flex-justify">
             <i class="iconfont">&#xe63c;</i>
@@ -49,21 +49,8 @@
             <span>红花:{{childInfo.flower_count}}</span>
           </div>
         </div>
-
-        <div class="kings flex flex-align">
-          <div class="bar-title">阅读进度</div>
-          <div class="kings-line flex flex-align">
-            <div class="progress-bar theme-background" :style="{width: `${(childInfo.read_kinds <= '50'?50:childInfo.read_kinds)/childInfo.shelf_tushu_kinds * 100}%` }">
-              <div class="num">{{childInfo.read_kinds}}</div>
-            </div>
-            <div class="kinds-bar">
-              <div class="num">{{childInfo.shelf_tushu_kinds}}</div>
-            </div>
-          </div>
-        </div> 
-
-      </lazy-component>
-      <lazy-component class="gutter gap">
+      </div>
+      <div class="gutter gap">
         <van-nav-bar title="阅读排名" right-text="排行榜" @click-right="toRanking" />
         <div class="ranking">
           <div class="ranking-content flex flex-align">
@@ -78,8 +65,8 @@
             </div>
           </div>
         </div>
-      </lazy-component>
-      <lazy-component class="gutter gap">
+      </div>
+      <div class="gutter gap">
         <van-cell-group>
           <van-cell size='large'>
             <div class="text flex flex-justify">本月比上月阅读<span class="data">增长了24本</span></div>
@@ -94,7 +81,7 @@
             <div class="text flex flex-justify">影响<span class="data">3人</span> 阅读了<span class="data">140 本</span>图书</div>
           </van-cell>
         </van-cell-group>
-      </lazy-component>
+      </div>
     </div>
 
     <div class="gutter gap">
@@ -422,49 +409,5 @@ export default {
 
 .tag{
   margin-left: .3125rem /* 5/16 */;
-}
-
-
-.kings{
-  padding: .625rem /* 10/16 */;
-  background: #fff;
-  margin-bottom: .625rem /* 10/16 */;
-}
-
-.kings .kings-line{
-  position: relative;
-  flex: 4;
-}
-
-.kings .bar-title{
-  flex: 1;
-  font-size: .8125rem /* 13/16 */;
-}
-
-.kings .kings-line .progress-bar,
-.kings .kings-line .kinds-bar{
-  position: absolute;
-  border-radius: 1.25rem /* 20/16 */;
-}
-
-.kings .kings-line .num{
-  padding: 0 .625rem /* 10/16 */;
-}
-
-.kings .kings-line .kinds-bar{
-  background: #E4E7ED;
-  width: 100%;
-  height: 1.25rem /* 20/16 */;
-  line-height: 1.25rem /* 20/16 */;
-  text-align: right;
-}
-
-.kings .kings-line .progress-bar{
-  z-index: 1;
-  color: #fff;
-  text-align: right;
-  transition: width 1.18s cubic-bezier(0.22, 0.61, 0.36, 1);
-  -webkit-transition: width 1.18s cubic-bezier(0.22, 0.61, 0.36, 1);
-  width: 0;
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="baby-home page-padding" v-if='hackReset'>
     <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft">
       <div class="head-bar-title" slot="title" @click="selectBaby">
-        {{pageTitle}} <i class="iconfont" v-if='babyList.length > 1'>&#xe608;</i>
+        {{pageTitle}} <i class="iconfont" v-if='babyList.length'>&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
@@ -53,10 +53,10 @@
           <span class="bar-title">坚持天数</span>
         </div>
       </div>
-      <lazy-component class="module" v-if="childInfo.is_mine">
+      <div class="module" v-if="childInfo.is_mine">
         <family />
-      </lazy-component>
-      <lazy-component v-if="childInfo.is_mine">
+      </div>
+      <div v-if="childInfo.is_mine">
         <van-nav-bar title="成长日记" @click-right="toActivity">
           <div class="post-count" slot="left">
             {{childInfo.post_count}}日记
@@ -68,13 +68,12 @@
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab"
           :offsetTop='45'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
+            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
                 <div class="tab-content" v-if='list.content.length'>
                   <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
-                    <van-cell title="" v-if='item.isMe' @click="actionsheet(item)" is-link arrow-direction='down' />
                     <van-cell>
-                      <graphic-card :item="item" type="babyHome" :title='childInfo.name' :avatar='childInfo.avatar' />
+                      <graphic-card :item="item" type="babyHome" :title='childInfo.name' :avatar='childInfo.avatar' @more="actionsheet"/>
                     </van-cell>
                   </div>
                 </div>
@@ -86,18 +85,25 @@
             </van-list>
           </van-tab>
         </van-tabs>
-      </lazy-component>
-      <lazy-component class="module" v-else>
-        <reading :list="lateBook" v-show='!childInfo.is_mine' moduleTitle="宝贝最近在读的书" />
-      </lazy-component>
+      </div>
+      <div class="module" v-else>
+        <reading :list="lateBook"  moduleTitle="宝贝最近在读的书" />
+      </div>
 
     </div>
 
-    <slogan v-if="!childInfo.is_mine" />
+    <slogan v-if="!childInfo.is_mine"/>
 
     <van-popup v-model="showQrcode" class="card-popup">
       <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
     </van-popup>
+
+    <div class="punch" v-if='childInfo.is_mine'>
+      <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
+        <i class="iconfont">&#xe60a;</i>
+        阅读打卡
+      </van-button>
+    </div>
 
     <van-popup v-model="zanShow" class="add-count-popup" :overlay="false" :lock-scroll='false' get-container='#app'>
       <i class="iconfont" :class="[zanShow?'rotateInDownLeft animated':'']">&#xe6e3;</i>
@@ -210,7 +216,6 @@ export default {
       loading: false,
       finished: false,
       releasePageShow: false,
-      loading: false,
       page: 1,
       tabIndex: 0,
       tab: [{
@@ -285,6 +290,12 @@ export default {
           this.activityCount = res.data.count
         }
       })
+
+      axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
+        if (res.status == 200) {
+            this.lateBook = res.data.data
+        }
+      })
     },
     request() {
       this.getUserData().then(res => {
@@ -304,11 +315,6 @@ export default {
             }
           })
         }
-        axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
-          if (res.data.status == 1) {
-            this.lateBook = res.data.data
-          }
-        })
       })
     },
     onClickLeft() {
@@ -385,11 +391,15 @@ export default {
           } else {
             this.tab[this.tabIndex].content = this.list.concat(res.data.data)
           }
-          this.loading = false
           this.page++
+          this.loading = false
           if (this.tab[this.tabIndex].content.length >= res.data.count) {
             this.finished = true
           }
+        }else{
+          this.tab[this.tabIndex].content = []
+          this.loading = false
+          this.finished = true
         }
       })
     },
@@ -580,7 +590,7 @@ export default {
       }
     },
     selectBaby() {
-      if (this.babyList.length > 1) {
+      if (this.babyList.length) {
         this.isSelectBabyShow = true
       }
     },
@@ -615,6 +625,10 @@ export default {
       } else {
         return text
       }
+    },
+    punch() {
+      Cookies.set('punckLink', location.href)
+      location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
     }
     // toTaskLinkPage() {
     //   window.location.href = '/book/TushuDonation/intro'

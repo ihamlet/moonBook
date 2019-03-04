@@ -1,15 +1,65 @@
 <template>
   <div id="app">
+     <el-amap vid="amap" class="amap-demo" :center="center" :plugin="plugin" v-show='false' />
     <router-view />
   </div>
 </template>
 
 <script>
+import axios from './../src/components/lib/js/api'
+import { mapActions, mapGetters } from 'vuex'
+
 import './../src/components/lib/css/neat.css'
 import 'animate.css'
 
 export default {
-  name: 'App'
+  name: 'App',
+  computed: {
+    ...mapGetters(['userDataState'])
+  },
+  created () {
+    this.fetchData()
+  },
+  data () {
+    const self = this
+    return {
+      center: '114.085947,22.547',
+      plugin:[{
+          timeout:1000,
+          pName: 'Geolocation',
+          events: {
+              init:(map)=>{
+                  map.getCurrentPosition( (status, result) => {
+                  if (result && result.position) {
+                        self.center = `${result.position.lng},${result.position.lat}`
+                      }
+                  })
+              }
+          }
+      }]
+    }
+  },
+  watch: {
+    center(val){
+        let products = {
+          location:val
+        }
+        this.getUserLocation(products)
+    },
+    '$route': 'fetchData'
+  },
+  methods: {
+     ...mapActions(['getUserData','getMsg','getUserLocation','getManager']),
+    fetchData(){
+      let products = {
+        page: 1,
+        isRead: 0
+      }
+      this.getUserData()
+      this.getManager()
+      this.getMsg(products)
+    }
+  }
 }
 </script>
 
@@ -30,12 +80,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_klbufe5j5ib.eot');
-  src: url('//at.alicdn.com/t/font_893274_klbufe5j5ib.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_klbufe5j5ib.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_klbufe5j5ib.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_klbufe5j5ib.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_klbufe5j5ib.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_h94qvzsdvgm.eot');
+  src: url('//at.alicdn.com/t/font_893274_h94qvzsdvgm.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_h94qvzsdvgm.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_h94qvzsdvgm.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_h94qvzsdvgm.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_h94qvzsdvgm.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,
@@ -221,8 +271,6 @@ body.theme .head-bar-text,
 .theme-nav.van-nav-bar::after {
   display: none;
 }
-
-
 
 .theme-nav.van-nav-bar .btn-right .van-icon {
   color: #fff;
@@ -493,7 +541,7 @@ img.lazy[lazy='error'],
 }
 
 .card-popup {
-  width: 18.75rem /* 300/16 */;
+  width: 15.625rem /* 250/16 */;
   overflow: hidden;
 }
 

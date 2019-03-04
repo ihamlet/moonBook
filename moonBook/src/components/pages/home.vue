@@ -25,23 +25,23 @@
                     </van-swipe-item>
                 </van-swipe>
             </div>
-            <lazy-component class="card">
+            <div class="card">
                 <div class="apps-module module">
                     <apps-list :appsList='appsList'/>
                 </div>
-            </lazy-component>
-            <lazy-component class="card">
+            </div>
+            <div class="card">
                 <investment-ad :investmentAd='investmentAd' :isAdshow='isAdshow'/>
-            </lazy-component>
-            <lazy-component class="module">
+            </div>
+            <div class="module">
                 <news-list :newsList='newsList'/>
-            </lazy-component>
-            <lazy-component class="module">
+            </div>
+            <div class="module">
                 <video-list title='视频精选' type='home'/>
-            </lazy-component>
-            <lazy-component>
-                <article-list/> 
-            </lazy-component>
+            </div>
+            <div>
+                <article-list/>
+            </div>
         </div>
 
         <div class="apply" v-if='userDataState.isVip == 0'>

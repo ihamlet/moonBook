@@ -14,10 +14,12 @@ export default {
     toPage(list) {
       if (list.routeLink) {
           window.location = list.routeLink
-      } else {
+      } else if(list.params){
         this.$router.push({
           name: list.path,
-          query: list.params
+          query: list.params,
+          back: this.$route.name,
+          id: this.$route.query.id
         })
       }
     }

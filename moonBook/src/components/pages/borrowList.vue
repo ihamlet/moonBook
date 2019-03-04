@@ -3,7 +3,7 @@
     <van-nav-bar :title="$route.meta.title" left-text="我的" left-arrow @click-left="onClickLeft" />
     <van-tabs color='#409eff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex">
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
+        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
           <van-pull-refresh v-model="loading" @refresh="onRefresh">
             <div class="content" v-if='list.content.length'>
               <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
@@ -92,6 +92,7 @@ export default {
     },
     getReadList() {
       return axios.get(`/book/MemberBorrow/getList?page=${this.page}&is_return=${this.tab[this.tabIndex].type}`).then(res => {
+        console.log(res)
         if(res.data.status == 1){
           if (res.data.count > 0) {
             if (this.page == 1) {

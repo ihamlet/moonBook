@@ -40,12 +40,12 @@
           <van-button size="normal" v-else class="theme-btn" type="primary" round @click="follow(item)">+ 关注</van-button>
         </div>
       </div>
-      <lazy-component class="module">
+      <div class="module">
         <article-content :item='item'/>
-      </lazy-component>
-      <lazy-component>
+      </div>
+      <div>
         <comment :item='item' include='include'/>
-      </lazy-component>
+      </div>
     </div>
 
     <!-- 生成图片 -->
@@ -114,12 +114,20 @@ export default {
       })
     },
     onClickLeft() {
-      if(this.$route.query.back){
+      // 活动页需要跳转tid
+      if(this.$route.query.back&&this.$route.query.back != 'activity'){
         this.$router.push({
           name: this.$route.query.back,
           query: {
             id: this.$route.query.back_id,
-            tid: this.$route.query.tid || ''
+          }
+        })
+      }else if(this.$route.query.back){
+        this.$router.push({
+          name: this.$route.query.back,
+          query: {
+            id: this.$route.query.back_id,
+            tid: this.$route.query.tid
           }
         })
       }else{

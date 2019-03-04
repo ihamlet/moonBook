@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'首页'}}</span>
       </div>
-      <div class="head-bar-title" slot="title" @click="cutover">
+      <div class="head-bar-title" slot="title" @click="actionsheetShow = true">
         {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerState.length > 1">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot='right' v-if='manage'>
@@ -15,33 +15,34 @@
     <div class="container">
       <div class="header-card flex flex-align theme-school-background" ref="head">
         <div class="school-info">
-          <div class="school-logo" v-if='schoolInfo.logo'>
-            <img :src="schoolInfo.logo" :alt="schoolInfo.title" />
+          <div class="school-logo">
+            <img :src="schoolInfo.logo" :alt="schoolInfo.title" @error='imgError'/>
           </div>
           <div class="school-name" v-line-clamp:20="1">{{schoolInfo.title}}</div>
+          <div class="run-type">{{schoolInfo.run_type}}</div>
         </div>
         <div class="arc"></div>
       </div>
-      <lazy-component class="module">
+      <div class="module">
         <div class="apps">
           <apps :appsList='appsList' type='schoolHome' />
         </div>
-      </lazy-component>
-      <lazy-component class="module">
-        <notice type='school' />
-      </lazy-component>
-      <lazy-component class="module">
+      </div>
+      <div class="module">
+        <investmentAd :key="key" :investmentAd='investment' type='notice'/>
+      </div>
+      <div class="module">
         <read-list type='school' title='流动红旗' field='name' />
-      </lazy-component>
-      <lazy-component>
+      </div>
+      <div>
         <van-tabs color='#409eff' :line-width='20' :line-height='4' animated swipeable>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
-              <drying-list :school_id='$route.query.id' portal_name='学校主页' />
+              <drying-list :key="key" :school_id='$route.query.id' portal_name='学校主页'/>
             </div>
           </van-tab>
         </van-tabs>
-      </lazy-component>
+      </div>
     </div>
 
     <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" />
@@ -53,18 +54,22 @@ import { mapGetters, mapActions } from 'vuex'
 import apps from './../../module/myModule/apps'
 import readList from './../../module/classModule/readList'
 import dryingList from './../../module/findModule/dryingList'
-import notice from './../../module/classModule/notice'
+import investmentAd from './../../module/investment'
 
 export default {
   name: 'school',
   components: {
     apps,
     readList,
-    notice,
-    dryingList
+    dryingList,
+    investmentAd
   },
   computed: {
     ...mapGetters(['userDataState', 'managerState']),
+    //动态组件
+    key() {
+        return this.$route.name !== undefined? this.$route.name + new Date(): this.$route + new Date()
+    },
     actions() {
       let array = []
       if (this.managerState) {
@@ -100,19 +105,10 @@ export default {
       domHeight: '',
       fixedHeaderBar: true,
       actionsheetShow: false,
-      appsList: [{
-        name: '每日餐谱',
-        iconClass: 'icon-canpu',
-        path: '404'
-      }, {
+      appsList: [ {
         name: '阅读',
         iconClass: 'icon-yuedu',
         path: 'apps-find',
-        params: {
-          cid: 137,
-          pageTitle: '阅读',
-          school_id: this.$route.query.id
-        }
       }, {
         name: '讲故事',
         iconClass: 'icon-jianggushi',
@@ -121,31 +117,27 @@ export default {
         name: '荣誉',
         iconClass: 'icon-rongyu',
         path: 'apps-find',
-        params: {
-          cid: 140,
-          pageTitle: '荣誉',
-          school_id: this.$route.query.id
-        }
       }, {
         name: '才艺',
         iconClass: 'icon-caiyi',
         path: 'apps-find',
-        params: {
-          cid: 119,
-          pageTitle: '才艺',
-          school_id: this.$route.query.id
-        }
       }],
       tab: [{
         title: '学校动态',
         content: '',
-      }]
+      }],
+      investment:{
+        link:'#',
+        text:'每日餐谱',
+        banner: ''
+      }
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.getUserData().then(res => {
         if (res.isHeaderTeacher == 1) {
+
           vm.request()
         } else {
           if (res.child_id > 0) {
@@ -185,6 +177,8 @@ export default {
           this.schoolInfo = res.data.data
         }
       })
+
+      this.getCate()
     },
     handleScroll() {
       this.getDomHeight()
@@ -202,7 +196,7 @@ export default {
       }
     },
     onClickLeft() {
-      if (this.$route.query.back) {
+      if (this.$route.query.back && this.userDataState.school_id != '0') {
         this.$router.push({
           name: this.$route.query.back,
           query: {
@@ -214,9 +208,6 @@ export default {
           name: 'home'
         })
       }
-    },
-    cutover() {
-      this.actionsheetShow = true
     },
     onSelect(item) {
       this.hackReset = false
@@ -251,15 +242,56 @@ export default {
       } else {
         return text
       }
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    getCate(){
+      let data = {
+        params:{
+          portal_name:'学校主页'
+        }
+      }
+
+      axios.get('/book/schoolArticleCate/getList',data).then(res => {
+        if(res.status == 200){
+          let cateArray = res.data
+          let data = []
+          cateArray.forEach(element => {
+            if(element.access_level == 0){
+              data.push(element)
+            }else{
+              this.managerState.forEach(e =>{
+                if((this.$route.query.id == e.banji_id||this.$route.query.id == e.school_id)&& e.item_relation != 'parent'){
+                  data.push(element)
+                }
+              })
+            }
+          })
+          
+          this.appsList.forEach(e=>{
+            let params
+            data.forEach(element => {
+              if(e.name == element.cate_name){
+                params = {
+                  cid: element.cate_id,
+                  pageTitle: element.cate_name,
+                  school_id: this.$route.query.id
+                }
+              }
+            })
+            e.params = params
+          })
+        }
+      })
     }
   }
 }
 </script>
 <style scoped>
 .header-card {
-  padding: 2.8125rem /* 45/16 */ 0.9375rem /* 15/16 */ 0.625rem /* 10/16 */
-    0.9375rem /* 15/16 */;
-  height: 6.25rem /* 100/16 */;
+  padding: 2.8125rem /* 45/16 */ 0.9375rem /* 15/16 */ 0.625rem /* 10/16 */ 0.9375rem /* 15/16 */;
+  height: 8.125rem /* 130/16 */;
   position: relative;
   overflow: hidden;
 }
@@ -309,5 +341,15 @@ export default {
 
 .theme-school-background {
   background: linear-gradient(135deg, #f44336, #ff5722);
+}
+
+.run-type{
+  height: 1.875rem /* 30/16 */;
+  line-height: 1.875rem /* 30/16 */;
+  font-size: .8125rem /* 13/16 */;
+}
+
+.apps{
+  margin-top: auto;
 }
 </style>

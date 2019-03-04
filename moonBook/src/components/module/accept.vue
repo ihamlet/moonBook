@@ -6,14 +6,14 @@
       </div>
     </van-nav-bar>
     <search-bar v-if='stepActive==0' prompt='搜索学校名称' @show='searchListShow = true' />
-    <lazy-component>
+    <div>
       <van-steps :active="stepActive" active-color='#409eff'>
         <van-step>选择学校</van-step>
         <van-step>每天借书需求</van-step>
         <van-step>会员时间</van-step>
       </van-steps>
-    </lazy-component>
-    <lazy-component>
+    </div>
+    <div>
       <div class="container" v-if='stepActive==0'>
         <div class="list scroll-y" ref="scrollContainer">
           <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad">
@@ -32,8 +32,8 @@
           </van-list>
         </div>
       </div>
-    </lazy-component>
-    <lazy-component>
+    </div>
+    <div>
       <div class="container" v-if='stepActive==1'>
         <div class="card-list">
           <div class="card-box" v-for='(item,index) in levels' :key="index" @click="selectCard(item,index)">
@@ -54,8 +54,8 @@
           </div>
         </div>
       </div>
-    </lazy-component>
-    <lazy-component>
+    </div>
+    <div>
       <div class="container" v-if='stepActive==2'>
         <div class="select-list">
           <div class="card-list">
@@ -92,7 +92,7 @@
           </div>
         </div>
       </div>
-    </lazy-component>
+    </div>
     <van-popup v-model="show" position="bottom" class="order-popup">
       <div class="content">
         <div class="title">支付信息</div>

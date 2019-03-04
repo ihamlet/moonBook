@@ -6,10 +6,9 @@
           尚无内容
         </div>
         <div class="item" v-for="(item,index) in list" :key="index" @click="setItem(item)" v-else>
-          <van-cell title='' is-link arrow-direction="down" @click="actionsheet(item)" />
           <van-cell>
             <div class="content">
-              <graphic-card :item="item" @follow="follow" />
+              <graphic-card :item="item" @follow="follow" @more='actionsheet'/>
             </div>
           </van-cell>
         </div>
@@ -36,7 +35,7 @@ export default {
     slogan,
     graphicCard
   },
-  props: ['sort', 'tid', 'school_id', 'type', 'portal_name', 'cid', 'banji_id'],
+  props: ['sort', 'tid', 'school_id', 'type', 'portal_name', 'cid', 'banji_id','cateId'],
   computed: {
     ...mapGetters(['userToken', 'managerState']),
     manage() {
@@ -104,9 +103,6 @@ export default {
     reportActions() {
       let arr = []
       arr.push({
-        name: '不感兴趣',
-        subname: '减少这类内容',
-      }, {
           name: '垃圾内容',
           subname: '低俗，标题党等',
         }, {
@@ -156,6 +152,10 @@ export default {
         data.params.portal_name = this.portal_name
       }
 
+      if(this.cateId){
+        data.params.cate_id = this.cateId
+      }
+
       return axios.get('/book/SchoolArticle/getList', data).then(res => {
         if (res.data.status == 1) {
           if (this.page == 1) {
@@ -163,13 +163,15 @@ export default {
           } else {
             this.list = this.list.concat(res.data.data)
           }
-
-          this.loading = false
           this.page++
-
+          this.loading = false
           if (this.list.length >= res.data.count) {
             this.finished = true
           }
+        }else{
+          this.list = []
+          this.loading = false
+          this.finished = true
         }
       })
     },

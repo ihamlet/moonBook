@@ -1,6 +1,6 @@
 <template>
   <div class="add-child  page-padding">
-    <van-nav-bar :title="$route.query.type=='add'?'添加宝贝':'编辑宝贝'" left-arrow :left-text="$route.query.back?'返回':'我的'" :right-text="$route.query.type=='edit'?'删除':''"
+    <van-nav-bar :title="$route.query.type!='edit'?'添加宝贝':'编辑宝贝'" left-arrow :left-text="$route.query.back?'返回':'我的'" :right-text="$route.query.type=='edit'?'删除':''"
       @click-left="onClickLeft" @click-right="onClickRight('delete')" />
     <div class="avatar-uploader">
       <i class="iconfont" v-if='userDataState.isVip' :class="`vip-${userDataState.card_level}`">&#xe776;</i>
@@ -16,8 +16,7 @@
     </div>
     <van-cell-group>
       <van-field v-model="childInfo.name" input-align='right' label="孩子姓名" placeholder="请输入孩子姓名" :error-message="errorMessage.name" />
-      <van-field v-model="childInfo.birthday" input-align='right' readonly label="孩子生日" placeholder="请选择日期"
-        :error-message="errorMessage.birthday" @click="pickerShow = true" />
+      <van-field v-model="childInfo.birthday" input-align='right' readonly label="孩子生日" placeholder="请选择日期" :error-message="errorMessage.birthday" @click="pickerShow = true" />
       <van-field v-model="childInfo.relation_name" input-align='right' label="您是孩子的？" placeholder="例如：爸爸" />
     </van-cell-group>
     <van-cell-group class="theme-switch">
@@ -55,14 +54,14 @@
       <van-datetime-picker title='日期选择' v-model="currentDate" type="date" :min-date="minDate" :max-date="maxDate" @confirm="pickerShow = false" @cancel='cancelPicker' />
     </van-popup>
 
-    <!-- 添加宝贝 -->
-    <div class="form-submit" v-if="$route.query.type=='add'">
-      <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="submit">提 交</van-button>
+    <!-- 提交编辑 -->
+    <div class="form-submit" v-if="$route.query.type=='edit'">
+      <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="edit">提交修改</van-button>
     </div>
 
-    <!-- 提交编辑 -->
+    <!-- 添加宝贝 -->
     <div class="form-submit" v-else>
-      <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="edit">提交修改</van-button>
+      <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="submit">提 交</van-button>
     </div>
 
     <van-popup class="card-routing-popup" v-model="show" get-container='#app'>
@@ -158,7 +157,7 @@ export default {
     ...mapActions(['getUserData']),
     fetchData() {
 
-      if (localStorage['childInfo'] != undefined&&this.$route.query.type != 'add') {
+      if (localStorage['childInfo'] != undefined&&this.$route.query.type == 'edit') {
         this.childInfo = JSON.parse(localStorage['childInfo'])
       }
       
@@ -166,7 +165,7 @@ export default {
         this.radio = localStorage['radio']
       }
 
-      if (this.$route.query.id && this.$route.query.type == 'edit') {
+      if (this.$route.query.id) {
         axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
           let date = new Date(res.data.data.birthday * 1000)
           this.childInfo.name = res.data.data.name
@@ -235,8 +234,7 @@ export default {
       if (id) {
         this.childInfo.id = id
       }
-
-      this.submitLoading = true
+    
       return new Promise((resolve, reject) => {
         axios.post('/book/baby/edit', this.childInfo).then(res => {
           if (res.data.status) {
@@ -247,6 +245,7 @@ export default {
       })
     },
     submit(set) {
+      this.submitLoading = true
       if (!this.childInfo.avatar) {
         this.$toast.fail('请上传头像')
       }
@@ -263,7 +262,7 @@ export default {
         }, 2000)
       } else {
         this.operationApi().then(res => {
-          if(set == 'setSchool'&&this.$route.query.back != 'register'){
+          if(set == 'setSchool'){
             this.$router.push({
               name: 'edit-setting',
               query: {
@@ -272,8 +271,10 @@ export default {
                 type: this.$route.query.type
               }
             })
+          }else if(this.$route.query.type == 'register'){
+            this.show = true
           }else{
-            this.$route.query.back == 'register'?this.show = true:this.$router.push({
+            this.$router.push({
               name:'baby-home',
               query:{
                 id:res
@@ -281,11 +282,11 @@ export default {
             })
           }
 
-          this.submitLoading = false
-
           if (!res) {
             this.$toast.fail('创建失败')
           }
+
+          this.submitLoading = false
         })
       }
     },

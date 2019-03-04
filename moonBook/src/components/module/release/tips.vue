@@ -338,7 +338,7 @@ export default {
 .tips.bottom .tips-list {
   width: 18.75rem /* 300/16 */;
   margin: 0 auto;
-  padding: 1.25rem /* 20/16 */ 1.5625rem /* 25/16 */;
+  padding: 1.25rem /* 20/16 */;
   background: #fff;
   border-radius: 1.25rem /* 20/16 */;
   box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.2);

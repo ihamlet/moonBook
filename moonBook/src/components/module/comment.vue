@@ -64,7 +64,7 @@
             </div>
             <div class="comment-bar flex flex-align">
               <div class="date">{{timeAgo(item.create_time)}}</div>
-              <div class="theme-color" @click="showField(item)">
+              <div class="theme-color" @click="showField(item,'reply')">
                 <van-tag round size="medium" type="primary">{{item.replyList.length?item.replyList.length:''}}回复</van-tag>
               </div>
             </div>
@@ -96,8 +96,7 @@
               <i class="iconfont" v-else>&#xe644;</i>
             </div>
             <div class="btn" @click="addCollect(item)" v-if='include != "include"'>
-              <van-tag class="num-tag" v-if='item.collect_num > 1' round type="danger">{{item.collect_num >
-                1000?'999+':item.collect_num}}</van-tag>
+              <van-tag class="num-tag" v-if='item.collect_num > 1' round type="danger">{{item.collect_num > 1000?'999+':item.collect_num}}</van-tag>
               <i class="iconfont star highlight swing animated" v-if="item.isShoucang">&#xe64b;</i>
               <i class="iconfont" v-else> &#xe64c;</i>
             </div>
@@ -109,15 +108,14 @@
       </div>
 
       <van-popup v-model="show" class="comment-popup" position="bottom" get-container='#app'>
-        <div class="score flex-column" v-if='include != "include"'>
+        <div class="score flex-column" v-if='include != "include"&&score'>
           <div class="score-title">评分</div>
           <van-rate class="score-rate" v-model="star" :size="25" :count="5" void-color="#ceefe8" />
         </div>
         <div class="comment-content flex">
           <div class="field-box">
             <van-cell-group>
-              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1"
-                autosize />
+              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
             </van-cell-group>
           </div>
           <div class="submit-btn theme-color">
@@ -140,7 +138,7 @@ import { timeago } from './../lib/js/util'
 
 export default {
   name: 'comment',
-  props: ['item', 'include'],
+  props: ['item', 'include','type'],
   computed: {
     ...mapGetters(['userToken', 'userDataState'])
   },
@@ -162,6 +160,7 @@ export default {
       isLoading: false,
       message: '',
       shareShow: false,
+      score: false
     }
   },
   methods: {
@@ -216,13 +215,14 @@ export default {
     addPraise(item) {
       item.isZan = !item.isZan
       axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
-        console.log(res)
         if (res.data.status == 1) {
-          item.zan_num = res.data.data.like
-          this.$toast.success({
-            className: 'zan-icon toast-icon',
-            message: '点赞成功'
-          })
+          if(res.data.data){
+            item.zan_num = res.data.data.like
+            this.$toast.success({
+              className: 'zan-icon toast-icon',
+              message: '点赞成功'
+            })
+          }
         }
       })
     },
@@ -241,7 +241,7 @@ export default {
         }
       })
     },
-    showField(item) {
+    showField(item,type) {
       this.message = ''
       if (item) {
         this.prompt = `回复：${item.username}`
@@ -254,6 +254,8 @@ export default {
       this.$nextTick(() => {
         this.$refs.field.focus()
       })
+
+      type == 'reply'?this.score = false:this.score = true
     },
     getAvatar(img) {
       if (!img) {

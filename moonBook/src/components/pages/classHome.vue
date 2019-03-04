@@ -23,20 +23,20 @@
       </div>
     </div>
     <div class="container">
-      <lazy-component class="module">
+      <div class="module">
         <div class="apps">
           <apps :appsList='appsList' type='classHome' />
         </div>
-      </lazy-component>
-      <lazy-component class="module">
+      </div>
+      <div class="module">
         <read-list title='阅读榜' type='banji' field='avatar' />
-      </lazy-component>
-      <lazy-component class="module">
+      </div>
+      <div class="module">
         <notice type='banji' />
-      </lazy-component>
-      <lazy-component>
+      </div>
+      <div>
         <class-zoom type='template' :banji_id='classInfo.banji_id' />
-      </lazy-component>
+      </div>
     </div>
 
     <van-popup v-model="show" class="plate-card">
@@ -131,48 +131,23 @@ export default {
       appsList: [{
         name: '风采',
         iconClass: 'icon-fengcai',
-        path:'apps-find',      
-        params: {
-          cid: 138,
-          pageTitle: '风采',
-          banji_id: this.$route.query.id
-        }
+        path:'apps-find'
       }, {
         name: '阅读',
         iconClass: 'icon-yuedu',
         path:'apps-find',      
-        params: {
-          cid: 137,
-          pageTitle: '阅读',
-          banji_id: this.$route.query.id
-        }
       }, {
         name: '才艺',
         iconClass: 'icon-caiyi',
         path:'apps-find',      
-        params: {
-          cid: 119,
-          pageTitle: '才艺',
-          banji_id: this.$route.query.id
-        }
       }, {
         name: '荣誉',
         iconClass: 'icon-rongyu',
          path:'apps-find',      
-        params: {
-          cid: 140,
-          pageTitle: '荣誉',
-          banji_id: this.$route.query.id
-        }
       }, {
         name: '班级交流',
         iconClass: 'icon-jiaoliu',
          path:'apps-find',      
-        params: {
-          cid: 141,
-          pageTitle: '班级交流',
-          banji_id: this.$route.query.id
-        }
       }]
     }
   },
@@ -228,6 +203,7 @@ export default {
           this.classInfo = res.data.data
         }
       })
+      this.getCate()
     },
     onClickLeft() {
       if(this.$route.query.back){
@@ -304,6 +280,45 @@ export default {
       }else{
         return text 
       }
+    },
+    getCate(){
+      let data = {
+        params:{
+          portal_name:'班级主页'
+        }
+      }
+
+      axios.get('/book/schoolArticleCate/getList',data).then(res => {
+        if(res.status == 200){
+          let cateArray = res.data
+          let data = []
+          cateArray.forEach(element => {
+            if(element.access_level == 0){
+              data.push(element)
+            }else{
+              this.managerState.forEach(e =>{
+                if((this.$route.query.id == e.banji_id||this.$route.query.id == e.school_id)&& e.item_relation != 'parent'){
+                  data.push(element)
+                }
+              })
+            }
+          })
+          
+          this.appsList.forEach(e=>{
+            let params
+            data.forEach(element => {
+              if(e.name == element.cate_name){
+                params = {
+                  cid: element.cate_id,
+                  pageTitle: element.cate_name,
+                  banji_id: this.$route.query.id
+                }
+              }
+            })
+            e.params = params
+          })
+        }
+      })
     }
   }
 }
@@ -364,7 +379,7 @@ export default {
 }
 
 .plate-card {
-  width: 18.75rem /* 300/16 */;
+  width: 15.625rem /* 250/16 */;
   overflow: hidden;
 }
 

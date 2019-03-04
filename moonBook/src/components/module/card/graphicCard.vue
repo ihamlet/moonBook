@@ -24,6 +24,7 @@
           <span>{{item.views}}</span>
           <span>阅读</span>
         </div>
+        <div v-if='type!="notice"' class="more" @click="more(item)"><i class="iconfont">&#xe6f7;</i></div>
       </div>
 
       <media :item='item' type='card'/>
@@ -167,6 +168,9 @@ export default {
          result = img
       }
       return result
+    },
+    more(item){
+      this.$emit('more',item)
     }
   }
 }
@@ -197,7 +201,12 @@ export default {
 }
 
 .info{
-  flex: 4
+  flex: 3
+}
+
+.more{
+  flex: .5;
+  text-align: right;
 }
 
 .name {

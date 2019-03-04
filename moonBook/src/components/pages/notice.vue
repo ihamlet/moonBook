@@ -23,7 +23,7 @@ export default {
     methods: {
         onClickLeft(){        
             this.$router.push({
-                name:this.$route.query.back?this.$route.query.back:'my'
+                name: this.$route.query.back?this.$route.query.back:'my'
             })
         }
     }

@@ -1,18 +1,18 @@
 <template>
   <div class="my page-padding">
     <card-head :userInfo='userDataState' :children='children[0]'/>
-    <lazy-component class="gutter gap-top">
+    <div class="gutter gap-top">
       <apps :appsList='appsList' v-if='isTeacher == 1 || isHeaderTeacher == 1' />
-    </lazy-component>
-    <lazy-component class="gutter gap">
+    </div>
+    <div class="gutter gap">
       <class-home v-if='children.length!=0' :children="children[0]" />
-    </lazy-component>
-    <lazy-component class="gutter gap" v-if='zoomCard'>
+    </div>
+    <div class="gutter gap" v-if='zoomCard'>
       <zone-card :zoomCard='zoomCard' :userInfo='userDataState' />
-    </lazy-component>
-    <lazy-component class="gutter gap">
+    </div>
+    <div class="gutter gap">
       <baby-home :childrenList='children' />
-    </lazy-component>
+    </div>
     <slogan />
   </div>
 </template>

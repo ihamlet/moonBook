@@ -108,7 +108,8 @@ export default {
               name: 'edit-setting',
               query: {
                 pageTitle: this.$route.query.pageTitle,
-                registerType: this.$route.query.registerType
+                registerType: this.$route.query.registerType,
+                type: this.$route.query.type
               }
             })
           }

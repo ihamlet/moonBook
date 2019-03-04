@@ -11,13 +11,18 @@
 
     <div class="box">
       <van-row class="flex flex-align">
-        <van-col span="8">
-          <a class="box-link" :href="investmentAd.link">成为书架馆长</a>
+        <van-col span="7">
+          <a class="box-link" :href="investmentAd.link">{{`${investmentAd.text?investmentAd.text:'成为书架馆长'}`}} </a>
         </van-col>
-        <van-col span="10">
-          <div class="content">
-            <span>万册图书触手可及</span>
-            <span>幼儿园的新名片</span>
+        <van-col span="11">
+          <div class="content" v-if='type == "notice"&&notice.length'>
+             <span class="notice" v-for='(item,index) in notice' :key="index" @click="toArticle(item)">
+               {{item.details || item.title}}
+             </span>
+          </div>
+          <div class="content" v-else>
+            <span v-line-clamp:20="1">万册图书触手可及</span>
+            <span v-line-clamp:20="1">幼儿园/学校的新名片</span>
           </div>
         </van-col>
         <van-col span="6" class="flex flex-justify">
@@ -28,23 +33,29 @@
   </div>
 </template>
 <script>
+import axios from './../lib/js/api'
+
 export default {
   name: 'investment',
-  props: ['investmentAd'],
+  props: ['investmentAd','type'],
   data() {
     return {
-      isAdshow: true
+      isAdshow: true,
+      count:0,
+      notice: []
     }
   },
   created() {
     if (localStorage.getItem("ad")) {
       this.isAdshow = JSON.parse(localStorage.getItem("ad"))
     }
+    this.fetchData()
   },
   watch: {
     isAdshow(val) {
       localStorage.setItem('ad', val)
-    }
+    },
+    '$router':'fetchData'
   },
   methods: {
     hideAd() {
@@ -52,6 +63,35 @@ export default {
     },
     toRegister() {
       this.$router.push({ name: 'register' })
+    },
+    toArticle(item,point){
+      this.$router.push({
+        name:'article',
+        query:{
+          id: item.post_id,
+          type: item.template_id,
+          back: this.$route.name,
+          back_id: this.$route.query.id
+        }
+      })
+    },
+    fetchData(){
+      //需要对应学校的通知 已传school_id portal_name
+
+      let data = {
+        params: {
+          portal_name: '学校主页',
+          cate: '通知',
+          school_id: this.$route.query.id || ''
+        }
+      }
+
+      axios.get('/book/SchoolArticle/getList', data).then(res => {
+        if (res.data.status == 1) {
+          this.count = res.data.count
+          this.notice = res.data.data
+        }
+      })
     }
   }
 }
@@ -83,6 +123,14 @@ export default {
   display: inline-grid;
   font-size: 0.8125rem /* 13/16 */;
   margin-left: 0.625rem /* 10/16 */;
+}
+
+.content span{
+  font-size: .875rem /* 14/16 */;
+}
+
+.content span:first-child{
+  margin-bottom: .3125rem /* 5/16 */;
 }
 
 .box {

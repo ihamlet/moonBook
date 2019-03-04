@@ -31,7 +31,7 @@
     </div>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
-      <topic-list @close='show = false' @select='selectTag' type='edit'/>
+      <topic-list @close='show = false' @select='selectTag' type='edit' :topicList='topicList'/>
     </van-popup>
 
     <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="actionShow = false" />
@@ -45,13 +45,16 @@ import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
 import { compress } from './../../lib/js/util'
 import topicList from './../../module/release/topicList'
-
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'publishing',
   components: {
     quillEditor,
     topicList
+  },
+  computed:{
+    ...mapGetters(['managerState'])
   },
   data() {
     return {
@@ -92,7 +95,8 @@ export default {
       }, {
         name: '清空内容',
         type: 'noSave'
-      }]
+      }],
+      topicList:[]
     }
   },
   mounted() {
@@ -108,6 +112,43 @@ export default {
   },
   methods: {
     fetchData() {
+      // 获取文章分类
+
+      let data = {
+        params:{
+          portal_name:'宝贝主页'
+        }
+      }
+
+      if(this.$route.query.back == 'class-home'){
+        data.params.portal_name = '班级主页'
+      }    
+
+      if(this.$route.query.back == 'apps-school'){
+        data.params.portal_name = '学校主页'
+      }
+
+      axios.get('/book/schoolArticleCate/getList',data).then(res => {
+        if(res.status == 200){
+          let cateArray = res.data
+          let data = []
+          cateArray.forEach(element => {
+            if(element.access_level == 0){
+              data.push(element)
+            }else{
+              this.managerState.forEach(e =>{
+                if((this.$route.query.id == e.banji_id||this.$route.query.id == e.school_id)&& e.item_relation != 'parent'){
+                  data.push(element)
+                }
+              })
+            }
+          })
+          this.topicList = data
+          this.cateId = data[0].cate_id
+          this.cateName = data[0].cate_name
+        }
+      })
+
       if(this.$route.query.type == 'edit'){
           axios.get(`/book/SchoolArticle/getEdit?post_id=${this.$route.query.post_id}`).then(res => {
             if(res.data.status == 1){

@@ -9,7 +9,7 @@
       </div>
     </van-nav-bar>
     <div class="container">
-      <lazy-component class="module">
+      <div class="module">
         <div class="book-card" ref='bookCard'>
           <van-row gutter="10">
             <van-col span="9">
@@ -29,13 +29,13 @@
             </van-col>
           </van-row>
         </div>
-      </lazy-component>
-      <lazy-component class="module" v-if='freshList.length > 0'>
+      </div>
+      <div class="module" v-if='freshList.length > 0'>
         <freshList :list='freshList' cid="child_id" avatar="child_avatar" routerName="baby-home" name="child_name" />
-      </lazy-component>
-      <lazy-component>
-        <comment :item='details'/>
-      </lazy-component>
+      </div>
+      <div>
+        <comment :item='details' type='bookDetails'/>
+      </div>
     </div>
   </div>
 </template>
