@@ -13,7 +13,19 @@
       <div class="title">请选择班级</div>
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-          <van-cell v-for="(item,index) in list" size='large' :key="index" is-link :title="`${formatBanjiTitle(item.title)}-${item.year}`" :value='`${item.student_count}人已加入`' @click='select(item)' />
+          <div v-for="(item,index) in list" size='large' :key="index" is-link @click='select(item)'>
+            <div class="year" v-if='isYearShow(item,index)'>{{item.year}}</div>
+            <van-cell is-link>
+              <div class="banji-cell flex flex-align">
+                <div class="banji-name">
+                  {{formatBanjiTitle(item.title)}}
+                </div>
+                <div class="add-value">
+                  {{item.student_count}}人已加入
+                </div>
+              </div>
+            </van-cell>
+          </div>
         </van-list>
       </div>
     </div>
@@ -154,6 +166,18 @@ export default {
       }else{
         return text 
       }
+    },
+    isYearShow(item,index){
+      let yearHistory
+      if( index > 0){
+        yearHistory = this.list[index-1].year
+      }
+
+      if(item.year == yearHistory){
+        return false
+      }else{
+        return true
+      }
     }
   }
 }
@@ -161,7 +185,7 @@ export default {
 <style scoped>
 .title {
   text-align: center;
-  height: 5rem /* 80/16 */;
+  height: 3.75rem /* 60/16 */;
   line-height: 5rem /* 80/16 */;
   background: #fff;
 }
@@ -234,5 +258,16 @@ export default {
   height: 100%;
   z-index: -1;
   overflow: hidden;
+}
+
+.banji-cell{
+  justify-content: space-between;
+}
+
+.year{
+  text-align: center;
+  background: #fff;
+  height: 2.25rem /* 36/16 */;
+  line-height: 2.25rem /* 36/16 */;
 }
 </style>

@@ -4,7 +4,6 @@
       <i class="iconfont">&#xe683;</i>
     </div>
     <transition name="fade" mode="out-in">
-     
       <slot v-if="!dataURL">
         <div class="container" ref="imageWrapper" v-if="type=='babyHome'">
           <div class="bg">
@@ -59,8 +58,7 @@
       <img :src="dataURL" v-else>
     </transition>
     <div class="popup-btn">
-      <van-button class="theme-btn" :loading='isLoading' size="large" square :disabled='isDisabled' type="primary"
-        @click="toImage">
+      <van-button class="theme-btn" :loading='isLoading' size="large" square :disabled='isDisabled' type="primary" @click="toImage">
         {{dataURL?'长按上图保存分享':'生成图片'}}
       </van-button>
     </div>
@@ -225,7 +223,6 @@ export default {
 }
 
 .card {
-  width: 16.25rem /* 260/16 */;
   padding: 0.3125rem /* 5/16 */ 1.25rem; /* 20/16 */;
   justify-content: space-between;
   z-index: 1;

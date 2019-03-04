@@ -15,10 +15,11 @@
     <div class="container">
       <div class="header-card flex flex-align theme-school-background" ref="head">
         <div class="school-info">
-          <div class="school-logo" v-if='schoolInfo.logo'>
-            <img :src="schoolInfo.logo" :alt="schoolInfo.title" />
+          <div class="school-logo">
+            <img :src="schoolInfo.logo" :alt="schoolInfo.title" @error='imgError'/>
           </div>
           <div class="school-name" v-line-clamp:20="1">{{schoolInfo.title}}</div>
+          <div class="run-type">{{schoolInfo.run_type}}</div>
         </div>
         <div class="arc"></div>
       </div>
@@ -108,11 +109,6 @@ export default {
         name: '阅读',
         iconClass: 'icon-yuedu',
         path: 'apps-find',
-        params: {
-          cid: 137,
-          pageTitle: '阅读',
-          school_id: this.$route.query.id
-        }
       }, {
         name: '讲故事',
         iconClass: 'icon-jianggushi',
@@ -121,20 +117,10 @@ export default {
         name: '荣誉',
         iconClass: 'icon-rongyu',
         path: 'apps-find',
-        params: {
-          cid: 140,
-          pageTitle: '荣誉',
-          school_id: this.$route.query.id
-        }
       }, {
         name: '才艺',
         iconClass: 'icon-caiyi',
         path: 'apps-find',
-        params: {
-          cid: 119,
-          pageTitle: '才艺',
-          school_id: this.$route.query.id
-        }
       }],
       tab: [{
         title: '学校动态',
@@ -151,6 +137,7 @@ export default {
     next(vm => {
       vm.getUserData().then(res => {
         if (res.isHeaderTeacher == 1) {
+
           vm.request()
         } else {
           if (res.child_id > 0) {
@@ -190,6 +177,8 @@ export default {
           this.schoolInfo = res.data.data
         }
       })
+
+      this.getCate()
     },
     handleScroll() {
       this.getDomHeight()
@@ -253,15 +242,56 @@ export default {
       } else {
         return text
       }
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    getCate(){
+      let data = {
+        params:{
+          portal_name:'学校主页'
+        }
+      }
+
+      axios.get('/book/schoolArticleCate/getList',data).then(res => {
+        if(res.status == 200){
+          let cateArray = res.data
+          let data = []
+          cateArray.forEach(element => {
+            if(element.access_level == 0){
+              data.push(element)
+            }else{
+              this.managerState.forEach(e =>{
+                if((this.$route.query.id == e.banji_id||this.$route.query.id == e.school_id)&& e.item_relation != 'parent'){
+                  data.push(element)
+                }
+              })
+            }
+          })
+          
+          this.appsList.forEach(e=>{
+            let params
+            data.forEach(element => {
+              if(e.name == element.cate_name){
+                params = {
+                  cid: element.cate_id,
+                  pageTitle: element.cate_name,
+                  school_id: this.$route.query.id
+                }
+              }
+            })
+            e.params = params
+          })
+        }
+      })
     }
   }
 }
 </script>
 <style scoped>
 .header-card {
-  padding: 2.8125rem /* 45/16 */ 0.9375rem /* 15/16 */ 0.625rem /* 10/16 */
-    0.9375rem /* 15/16 */;
-  height: 6.25rem /* 100/16 */;
+  padding: 2.8125rem /* 45/16 */ 0.9375rem /* 15/16 */ 0.625rem /* 10/16 */ 0.9375rem /* 15/16 */;
+  height: 8.125rem /* 130/16 */;
   position: relative;
   overflow: hidden;
 }
@@ -311,5 +341,15 @@ export default {
 
 .theme-school-background {
   background: linear-gradient(135deg, #f44336, #ff5722);
+}
+
+.run-type{
+  height: 1.875rem /* 30/16 */;
+  line-height: 1.875rem /* 30/16 */;
+  font-size: .8125rem /* 13/16 */;
+}
+
+.apps{
+  margin-top: auto;
 }
 </style>

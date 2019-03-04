@@ -68,7 +68,7 @@
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab"
           :offsetTop='45'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
+            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
                 <div class="tab-content" v-if='list.content.length'>
                   <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
@@ -97,6 +97,13 @@
     <van-popup v-model="showQrcode" class="card-popup">
       <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
     </van-popup>
+
+    <div class="punch" v-if='childInfo.is_mine'>
+      <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
+        <i class="iconfont">&#xe60a;</i>
+        阅读打卡
+      </van-button>
+    </div>
 
     <van-popup v-model="zanShow" class="add-count-popup" :overlay="false" :lock-scroll='false' get-container='#app'>
       <i class="iconfont" :class="[zanShow?'rotateInDownLeft animated':'']">&#xe6e3;</i>
@@ -618,6 +625,10 @@ export default {
       } else {
         return text
       }
+    },
+    punch() {
+      Cookies.set('punckLink', location.href)
+      location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
     }
     // toTaskLinkPage() {
     //   window.location.href = '/book/TushuDonation/intro'

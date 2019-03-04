@@ -1,6 +1,7 @@
 <template>
   <div class="read-amount">
-    <van-nav-bar :title="$route.meta.title" left-text="返回" right-text='捐赠图书' fixed left-arrow @click-left="onClickLeft" @click-right="onClickRight" />
+    <van-nav-bar :zIndex='10' :title="$route.meta.title" left-text="返回" right-text='捐赠图书' fixed left-arrow @click-left="onClickLeft"
+      @click-right="onClickRight" />
     <div class="amount-list flex flex-align">
       <div class="amount-item">
         <div class="amount-type">读过</div>
@@ -24,9 +25,21 @@
       </div>
     </div>
 
+    <div class="kings flex flex-align">
+      <div class="bar-title">阅读进度</div>
+      <div class="kings-line flex flex-align">
+        <div class="progress-bar theme-background" :style="{width: `${(childInfo.read_kinds <= '50'?50:childInfo.read_kinds)/childInfo.shelf_tushu_kinds * 100}%` }">
+          <div class="num">{{childInfo.read_kinds}}</div>
+        </div>
+        <div class="kinds-bar">
+          <div class="num">{{childInfo.shelf_tushu_kinds}}</div>
+        </div>
+      </div>
+    </div>
+
     <van-tabs color="#409eff" :line-width="20" :line-height="4" sticky swipeable animated :offsetTop="45" @change="onChangeTab">
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
+        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
           <van-pull-refresh v-model="loading" @refresh="onRefresh">
             <div class="content" v-if='list.content.length > 0'>
               <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
@@ -47,6 +60,7 @@
                   <van-col span="3">
                     <div class="listening" @click="listening(item)">
                       <i class="iconfont">&#xe617;</i>
+                      
                     </div>
                   </van-col>
                 </van-row>
@@ -123,12 +137,12 @@ export default {
       let data = {
         params: {
           page: this.page,
-          keyword: this.tabIndex == 0?'':this.tab[this.tabIndex].title
+          keyword: this.tabIndex == 0 ? '' : this.tab[this.tabIndex].title
         }
       }
- 
+
       return axios.get('/book/SchoolShelfBook/getList', data).then(res => {
-      if (this.page == 1) {
+        if (this.page == 1) {
           this.tab[this.tabIndex].content = res.data.data
         } else {
           this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
@@ -168,7 +182,7 @@ export default {
         </div>
       `
     },
-    thumb(img){
+    thumb(img) {
       let hostMatch = img.match(/https?:\/\/(.+?)\//)
       if (hostMatch) {
         return `/book/api/remotePic?url=${img}`
@@ -211,7 +225,7 @@ export default {
       } else {
         location.href = url
       }
-    }  
+    }
   }
 }
 </script>
@@ -227,7 +241,7 @@ export default {
   margin-bottom: 0.3125rem /* 5/16 */;
 }
 
-.amount-list{
+.amount-list {
   margin-top: 2.8125rem /* 45/16 */;
 }
 
@@ -264,13 +278,56 @@ export default {
   color: transparent;
 }
 
-.book-cover img{
+.book-cover img {
   margin: 0 auto;
   display: block;
 }
 
-.title{
-  margin-bottom: .625rem /* 10/16 */;
+.title {
+  margin-bottom: 0.625rem /* 10/16 */;
   font-weight: 500;
+}
+
+.kings {
+  padding: 0.625rem /* 10/16 */;
+  background: #fff;
+  margin-bottom: 0.625rem /* 10/16 */;
+}
+
+.kings .kings-line {
+  position: relative;
+  flex: 4;
+}
+
+.kings .bar-title {
+  flex: 1;
+  font-size: 0.8125rem /* 13/16 */;
+}
+
+.kings .kings-line .progress-bar,
+.kings .kings-line .kinds-bar {
+  position: absolute;
+  border-radius: 1.25rem /* 20/16 */;
+}
+
+.kings .kings-line .num {
+  padding: 0 0.625rem /* 10/16 */;
+}
+
+.kings .kings-line .kinds-bar {
+  background: #e4e7ed;
+  width: 100%;
+  height: 1.25rem /* 20/16 */;
+  line-height: 1.25rem /* 20/16 */;
+  text-align: right;
+}
+
+.kings .kings-line .progress-bar {
+  z-index: 1;
+  color: #fff;
+  text-align: right;
+  transition: width 1.18s cubic-bezier(0.22, 0.61, 0.36, 1);
+  -webkit-transition: width 1.18s cubic-bezier(0.22, 0.61, 0.36, 1);
+  width: 0;
 }
 </style>

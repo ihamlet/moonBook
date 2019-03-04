@@ -35,7 +35,7 @@ export default {
     slogan,
     graphicCard
   },
-  props: ['sort', 'tid', 'school_id', 'type', 'portal_name', 'cid', 'banji_id'],
+  props: ['sort', 'tid', 'school_id', 'type', 'portal_name', 'cid', 'banji_id','cateId'],
   computed: {
     ...mapGetters(['userToken', 'managerState']),
     manage() {
@@ -103,9 +103,6 @@ export default {
     reportActions() {
       let arr = []
       arr.push({
-        name: '不感兴趣',
-        subname: '减少这类内容',
-      }, {
           name: '垃圾内容',
           subname: '低俗，标题党等',
         }, {
@@ -153,6 +150,10 @@ export default {
 
       if (this.portal_name) {
         data.params.portal_name = this.portal_name
+      }
+
+      if(this.cateId){
+        data.params.cate_id = this.cateId
       }
 
       return axios.get('/book/SchoolArticle/getList', data).then(res => {

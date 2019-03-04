@@ -11,18 +11,18 @@
 
     <div class="box">
       <van-row class="flex flex-align">
-        <van-col span="8">
+        <van-col span="7">
           <a class="box-link" :href="investmentAd.link">{{`${investmentAd.text?investmentAd.text:'成为书架馆长'}`}} </a>
         </van-col>
-        <van-col span="10">
+        <van-col span="11">
           <div class="content" v-if='type == "notice"&&notice.length'>
              <span class="notice" v-for='(item,index) in notice' :key="index" @click="toArticle(item)">
-               {{item.details}}
+               {{item.details || item.title}}
              </span>
           </div>
           <div class="content" v-else>
-            <span>万册图书触手可及</span>
-            <span>幼儿园/学校的新名片</span>
+            <span v-line-clamp:20="1">万册图书触手可及</span>
+            <span v-line-clamp:20="1">幼儿园/学校的新名片</span>
           </div>
         </van-col>
         <van-col span="6" class="flex flex-justify">
@@ -87,7 +87,6 @@ export default {
       }
 
       axios.get('/book/SchoolArticle/getList', data).then(res => {
-        console.log(res)
         if (res.data.status == 1) {
           this.count = res.data.count
           this.notice = res.data.data
@@ -127,7 +126,7 @@ export default {
 }
 
 .content span{
-  font-size: .9375rem /* 15/16 */;
+  font-size: .875rem /* 14/16 */;
 }
 
 .content span:first-child{

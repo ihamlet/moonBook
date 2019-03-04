@@ -272,8 +272,6 @@ body.theme .head-bar-text,
   display: none;
 }
 
-
-
 .theme-nav.van-nav-bar .btn-right .van-icon {
   color: #fff;
   font-size: 1.25rem /* 20/16 */;
@@ -543,7 +541,7 @@ img.lazy[lazy='error'],
 }
 
 .card-popup {
-  width: 18.75rem /* 300/16 */;
+  width: 15.625rem /* 250/16 */;
   overflow: hidden;
 }
 
