@@ -23,6 +23,7 @@ export default {
   data() {
     return {
       child_id: '',
+      school_id: '',
       setting: {
         settingClass: '',
         settingSchool: '',
@@ -57,6 +58,7 @@ export default {
         axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
           if (res.data.status == 1) {
             this.child_id = res.data.data.id
+            this.school_id = res.data.data.school_id
             this.childName = res.data.data.name
             this.setting.settingClass = res.data.data.banji_name
             this.setting.settingSchool = res.data.data.school_name
@@ -106,7 +108,7 @@ export default {
         name: 'edit-class',
         query: {
           id: this.child_id,
-          school_id: this.userDataState.school_id,
+          school_id: this.school_id,
           back: this.$route.name,
           type: this.$route.query.type,
           pageTitle: this.$route.query.pageTitle,

@@ -19,7 +19,7 @@ export default {
           name: list.path,
           query: list.params,
           back: this.$route.name,
-          id: this.$route.id
+          id: this.$route.query.id
         })
       }
     }

@@ -16,8 +16,7 @@
     </div>
     <van-cell-group>
       <van-field v-model="childInfo.name" input-align='right' label="孩子姓名" placeholder="请输入孩子姓名" :error-message="errorMessage.name" />
-      <van-field v-model="childInfo.birthday" input-align='right' readonly label="孩子生日" placeholder="请选择日期"
-        :error-message="errorMessage.birthday" @click="pickerShow = true" />
+      <van-field v-model="childInfo.birthday" input-align='right' readonly label="孩子生日" placeholder="请选择日期" :error-message="errorMessage.birthday" @click="pickerShow = true" />
       <van-field v-model="childInfo.relation_name" input-align='right' label="您是孩子的？" placeholder="例如：爸爸" />
     </van-cell-group>
     <van-cell-group class="theme-switch">

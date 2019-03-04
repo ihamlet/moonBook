@@ -1,7 +1,7 @@
 # moonbook
 
 > A Vue.js project 
-> 项目推送 2019年2月26日14:35:05
+> book/memberUser/getInfo,book/baby/getInfo?child_id=3752 当前孩子 school_id 给我的都是0 已经选择学校了
 
 ## Build Setup
 
