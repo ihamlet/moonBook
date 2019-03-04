@@ -60,7 +60,6 @@
                   <van-col span="3">
                     <div class="listening" @click="listening(item)">
                       <i class="iconfont">&#xe617;</i>
-                      
                     </div>
                   </van-col>
                 </van-row>
