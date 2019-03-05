@@ -222,7 +222,7 @@ export default {
         lng: this.lng,
         page: this.page
       }
-      axios.get(`/book/school/index?ajax=1&lat=${data.lat}&lng=${data.lng}&page=${data.page}`).then(res => {
+      axios.get('book/school/getList',{params:data}).then(res => {
         if(res.data.status == 1){
           this.page++
           this.list = this.list.concat(res.data.data)

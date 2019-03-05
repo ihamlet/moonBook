@@ -1,7 +1,7 @@
 # moonbook
 
 > A Vue.js project 
-> book/memberUser/getInfo,book/baby/getInfo?child_id=3752 当前孩子 school_id 给我的都是0 已经选择学校了
+> http://localhost/book/babySchool/bind 报错 高德地图ID不能为空 
 
 ## Build Setup
 

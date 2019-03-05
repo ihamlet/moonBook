@@ -311,7 +311,9 @@ export default {
                 params = {
                   cid: element.cate_id,
                   pageTitle: element.cate_name,
-                  banji_id: this.$route.query.id
+                  banji_id: this.$route.query.id,
+                  back: this.$route.name,
+                  id: this.$route.query.id
                 }
               }
             })

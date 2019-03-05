@@ -2,46 +2,35 @@
   <div class="read-amount">
     <van-nav-bar :zIndex='10' :title="$route.meta.title" left-text="返回" right-text='捐赠图书' fixed left-arrow @click-left="onClickLeft"
       @click-right="onClickRight" />
-    <div class="amount-list flex flex-align">
-      <div class="amount-item">
-        <div class="amount-type">读过</div>
-        <div class="amount-num">{{childInfo.reading_count}}</div>
+    <!-- <div class="read-lead">
+      <div class="lead-card">
+        {{childInfo.read_lead == 0?'还需加油':`击败了${childInfo.read_lead}人`}}
       </div>
-      <div class="amount-item">
-        <div class="amount-type">在读</div>
-        <div class="amount-num">{{childInfo.read_count}}</div>
-      </div>
-      <div class="amount-item">
-        <div class="amount-type">收藏</div>
-        <div class="amount-num">{{childInfo.collect_num}}</div>
-      </div>
-      <div class="amount-item">
-        <div class="amount-type">磨损</div>
-        <div class="amount-num">{{childInfo.broken_num}}</div>
-      </div>
-      <div class="amount-item">
-        <div class="amount-type">未读</div>
-        <div class="amount-num">{{childInfo.shelf_tushu_kinds-childInfo.read_kinds}}</div>
-      </div>
-    </div>
+    </div> -->
 
-    <div class="kings flex flex-align">
-      <div class="bar-title">阅读进度</div>
-      <div class="kings-line flex flex-align">
-        <div class="progress-bar theme-background" :style="{width: `${(childInfo.read_kinds <= '50'?50:childInfo.read_kinds)/childInfo.shelf_tushu_kinds * 100}%` }">
-          <div class="num">{{childInfo.read_kinds}}</div>
-        </div>
-        <div class="kinds-bar">
-          <div class="num">{{childInfo.shelf_tushu_kinds}}</div>
-        </div>
+    <!-- <div class="amount-list flex flex-align">
+      <div class="amount-item" v-for='(item,index) in readArray' :key="index" @click="select(item,index)" :class="[selectIndex == index?'pitchOn':'']">
+        <div class="amount-type">{{item.title}}</div>
+        <div class="amount-num">{{item.num}}</div>
       </div>
-    </div>
+    </div> -->
 
-    <van-tabs color="#409eff" :line-width="20" :line-height="4" sticky swipeable animated :offsetTop="45" @change="onChangeTab">
-      <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
+    <van-tabs title-active-color='#409eff' class="theme-tabs-select-bar" :line-width="0" sticky swipeable animated :offsetTop="45" @change="onChangeTab">
+      <van-tab v-for="(list,index) in readArray" :key="index">
+        <div class="tab-title" slot="title">
+          <div class="tab-text">{{list.title}}</div>
+          <div class="tab-num">{{list.num}}</div>
+        </div>
+        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
           <van-pull-refresh v-model="loading" @refresh="onRefresh">
-            <div class="content" v-if='list.content.length > 0'>
+            <div class="kings flex flex-align" v-if='list.title =="未读" '>
+              <div class="bar-title">阅读进度</div>
+              <div class="kings-box flex flex-align">
+                 <div class="num">{{childInfo.read_kinds}}/{{childInfo.shelf_tushu_kinds}}</div>
+                 <div class="filter"><i class="iconfont theme-color">&#xe631;</i></div>
+              </div>
+            </div>
+            <div class="content" v-if='list.content.length'>
               <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
                 <van-row gutter="10">
                   <van-col span="9">
@@ -65,6 +54,9 @@
                 </van-row>
               </van-cell>
             </div>
+            <div class="no-content" v-else>
+              暂无数据
+            </div>
           </van-pull-refresh>
         </van-list>
       </van-tab>
@@ -76,31 +68,43 @@ import axios from './../lib/js/api'
 
 export default {
   name: "readAmount",
+  computed: {
+    readArray() {
+      let arr = []
+      if(this.childInfo){
+        arr = [{
+          title: '未读',
+          num: this.childInfo.shelf_tushu_kinds - this.childInfo.read_kinds,
+          content: ''
+        }, {
+          title: '在读',
+          num: this.childInfo.read_count,
+          content: ''
+        }, {
+          title: '收藏',
+          num: this.childInfo.collect_num,
+          content: ''
+        }, {
+          title: '磨损',
+          num: this.childInfo.broken_num,
+          content: ''
+        }, {
+          title: '已读',
+          num: this.childInfo.reading_count,
+          content: ''
+        }]
+      }
+
+      return arr
+    }
+  },
   data() {
     return {
       page: 1,
       loading: false,
       finished: false,
       childInfo: '',
-      tabIndex: 0,
-      tab: [
-        {
-          title: "全部",
-          content: ''
-        },
-        {
-          title: "绘本",
-          content: ''
-        },
-        {
-          title: "科普",
-          content: ''
-        },
-        {
-          title: "3D",
-          content: ''
-        }
-      ]
+      tabIndex: 0
     }
   },
   created() {
@@ -136,19 +140,38 @@ export default {
       let data = {
         params: {
           page: this.page,
-          keyword: this.tabIndex == 0 ? '' : this.tab[this.tabIndex].title
+          keyword: '',
+          child_id: this.$route.query.id
         }
+      }
+
+      switch (this.tabIndex) {
+        case 0:
+          data.params.is_read = 0
+        break
+        case 1:
+          data.params.is_read = 2
+          break
+        case 2:
+          data.params.collect = 1
+          break
+        case 3:
+          data.params.is_broke = 1
+          break
+        case 4:
+          data.params.is_read = 1
+          break
       }
 
       return axios.get('/book/SchoolShelfBook/getList', data).then(res => {
         if (this.page == 1) {
-          this.tab[this.tabIndex].content = res.data.data
+          this.readArray[this.tabIndex].content = res.data.data
         } else {
-          this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
+          this.readArray[this.tabIndex].content = this.readArray[this.tabIndex].content.concat(res.data.data)
         }
-        this.page++
         this.loading = false
-        if (this.tab[this.tabIndex].content.length >= res.data.count) {
+        this.page++
+        if (this.readArray[this.tabIndex].content.length >= res.data.count) {
           this.finished = true
         }
       })
@@ -165,6 +188,8 @@ export default {
     onChangeTab(index) {
       this.tabIndex = index
       this.page = 1
+      this.loading = true
+      this.finished = false
       this.onRefresh()
     },
     outThumb(e, item) {
@@ -236,12 +261,29 @@ export default {
   padding: 0.625rem /* 10/16 */ 0;
 }
 
+.amount-item.pitchOn {
+  color: #409eff;
+  font-weight: 700;
+}
+
+.read-amount {
+  padding-top: 2.8125rem /* 45/16 */;
+}
+
 .amount-type {
   margin-bottom: 0.3125rem /* 5/16 */;
 }
 
+/* .read-lead {
+  width: 100%;
+} */
+
 .amount-list {
-  margin-top: 2.8125rem /* 45/16 */;
+  position: relative;
+}
+
+.lead-card {
+  padding: 0.625rem /* 10/16 */;
 }
 
 .no-content {
@@ -290,43 +332,30 @@ export default {
 .kings {
   padding: 0.625rem /* 10/16 */;
   background: #fff;
-  margin-bottom: 0.625rem /* 10/16 */;
 }
 
-.kings .kings-line {
-  position: relative;
-  flex: 4;
+.tab-title{
+  line-height: 0;
 }
 
-.kings .bar-title {
+.tab-text,
+.tab-num{
+  height: 1.375rem /* 22/16 */;
+  line-height: 1.375rem /* 22/16 */;
+}
+
+.kings-box{
   flex: 1;
-  font-size: 0.8125rem /* 13/16 */;
+  justify-content:space-between;
 }
 
-.kings .kings-line .progress-bar,
-.kings .kings-line .kinds-bar {
+.tab-tag{
   position: absolute;
-  border-radius: 1.25rem /* 20/16 */;
+  top: .3125rem /* 5/16 */;
+  right: 0;
 }
 
-.kings .kings-line .num {
-  padding: 0 0.625rem /* 10/16 */;
-}
-
-.kings .kings-line .kinds-bar {
-  background: #e4e7ed;
-  width: 100%;
-  height: 1.25rem /* 20/16 */;
-  line-height: 1.25rem /* 20/16 */;
-  text-align: right;
-}
-
-.kings .kings-line .progress-bar {
-  z-index: 1;
-  color: #fff;
-  text-align: right;
-  transition: width 1.18s cubic-bezier(0.22, 0.61, 0.36, 1);
-  -webkit-transition: width 1.18s cubic-bezier(0.22, 0.61, 0.36, 1);
-  width: 0;
+.bar-title{
+  margin-right: .3125rem /* 5/16 */;
 }
 </style>

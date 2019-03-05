@@ -2,7 +2,7 @@
   <div class="container" id='media' @click="toArticle">
     <div class="title" v-if='type=="card"&&item.template_id=="0"' v-line-clamp:20="2">{{item.title}}</div>
 
-    <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?4:0" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
+    <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?2:0" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
 
     <!-- 视频  -->
     <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"'>

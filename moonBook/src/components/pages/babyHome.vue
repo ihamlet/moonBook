@@ -89,7 +89,6 @@
       <div class="module" v-else>
         <reading :list="lateBook"  moduleTitle="宝贝最近在读的书" />
       </div>
-
     </div>
 
     <slogan v-if="!childInfo.is_mine"/>
@@ -120,6 +119,7 @@
 </template>
 <script>
 import axios from "./../lib/js/api"
+import Cookies from 'js-cookie'
 import { mapActions, mapGetters } from 'vuex'
 import { format, timeago } from "./../lib/js/util.js"
 import QRCode from "qrcode"

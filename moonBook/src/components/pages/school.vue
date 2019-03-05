@@ -7,10 +7,10 @@
     <div class="container" v-if='!isListShow'>
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <van-cell v-for="(item,index) in list" :key="index" is-link center @click="selectSchool(item)">
-          <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
+          <div class="school-name" v-line-clamp:20="1">{{item.title}}</div>
           <div class="school-address" v-line-clamp:20="1">
-            <span>{{item.adname}}</span>
-            <span v-if='item.address.length!=0'>{{item.address}}</span>
+            <span>{{item.addr}}</span>
+            <!-- <span v-if='item.address.length!=0'>{{item.address}}</span> -->
           </div>
         </van-cell>
       </van-list>
@@ -35,7 +35,7 @@ export default {
     avatar
   },
   computed: {
-    ...mapGetters(['userPointState']),
+    ...mapGetters(['userPointState','userPointState']),
   },
   data() {
     return {
@@ -44,44 +44,65 @@ export default {
       loading: false,
       finished: false,
       list: [],
-      prompt: '搜索学校/拼音'
+      prompt: '搜索学校名称'
     }
   },
   methods: {
     ...mapActions(['getSchoolList', 'getUserData']),
     onLoad() {
+      let arr = this.userPointState.location.split(",")
+
       this.page++
       let products = {
         page: this.page,
-        location: this.userPointState.location
+        location: this.userPointState.location,
+        lng:arr[0],
+        lat:arr[1]
       }
+
       this.getSchoolList(products).then(res => {
-        this.list = this.list.concat(res.pois)
+        this.list = this.list.concat(res.data.data)
         this.loading = false
-        if (this.list.length >= res.count) {
+        if (this.list.length >= res.data.count) {
           this.finished = true
         }
       })
     },
     selectSchool(item) {
-      let cityname = ''
-      if (item.cityname) {
-        cityname = item.cityname
-      } else {
-        let match = item.district.match(/省(.*?)市/)
-        cityname = match ? match[1] + '市' : ''
-      }
+      console.log(item)
+      let data
+      if(item.school_id > '0'){        
+        data = {
+          params: {
+            school_id: item.school_id,
+            school_name: item.title,
+            cityname: this.userPointState.city,
+            lat: item.lat,
+            lng: item.lng,
+            amap_id: item.amap_id,
+            typecode: item.typecode
+          }
+        }
+      }else{
+        let cityname = ''
+        if (item.cityname) {
+          cityname = item.cityname
+        } else {
+          let match = item.district.match(/省(.*?)市/)
+          cityname = match ? match[1] + '市' : ''
+        }
 
-      let location = item.location.split(',')
+        let location = item.location.split(',')
 
-      let data = {
-        params: {
-          school_name: item.name,
-          amap_id: item.id,
-          lat: location[1],
-          lng: location[0],
-          cityname: cityname,
-          typecode: item.typecode
+        data = {
+          params: {
+            school_name: item.name,
+            amap_id: item.id,
+            lat: location[1],
+            lng: location[0],
+            cityname: cityname || '',
+            typecode: item.typecode
+          }
         }
       }
 
