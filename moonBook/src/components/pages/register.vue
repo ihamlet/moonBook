@@ -30,6 +30,10 @@
     <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
       <accept @close='applyShow = false' v-model='active' />
     </van-popup>
+
+    <div class="fixed-button">
+      <van-button class="theme-btn" square type="primary" size="large" @click="toWmPage">学校入驻</van-button>
+    </div>
   </div>
 </template>
 <script>
@@ -111,6 +115,9 @@ export default {
     toAccept() {
       this.applyShow = true
       this.active = 0
+    },
+    toWmPage(){
+      location.href = 'https://fang.wmlife.net/kindergarten/index/register'
     }
   }
 }
@@ -173,5 +180,11 @@ export default {
     background: linear-gradient(90deg, #D400FF,#FF320A);
     -webkit-background-clip: text;
     color: transparent;
+}
+
+.fixed-button{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 </style>

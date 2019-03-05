@@ -549,6 +549,11 @@ img.lazy[lazy='error'],
   width: 100%;
 }
 
+.filter-popup{
+  width: 80%;
+  height: 100vh;
+}
+
 .cropper-popup {
   width: 100%;
   height: 100vh;

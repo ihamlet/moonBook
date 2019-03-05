@@ -69,7 +69,6 @@ export default {
       })
     },
     selectSchool(item) {
-      console.log(item)
       let data
       if(item.school_id > '0'){        
         data = {
