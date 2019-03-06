@@ -22,7 +22,6 @@ export default {
   },
   created () {
     this.fetchData()
-    console.log(this.is_mine)
   },
   watch: {
     '$router':'fetchData'
@@ -31,7 +30,6 @@ export default {
     fetchData(){
       axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res=>{
         if(res.data.status = 1){
-          console.log(res.data.data.is_mine)
           this.is_mine = res.data.data.is_mine
         }
       })
@@ -40,7 +38,6 @@ export default {
       if(this.is_mine){
         this.share()
       }else{
-    
         axios.get(`/book/babyParent/join?child_id=${this.$route.query.id}`).then(res => {
           this.isLoading = true
           if(res.status == 1){
@@ -90,7 +87,7 @@ export default {
 }
 
 .pictorial {
-  padding-bottom: 140%;
+  padding-bottom: 125%;
   width: 100%;
   background-image: url('./../../../assets/img/invite-family.gif');
   background-size: cover;
