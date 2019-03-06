@@ -1,6 +1,6 @@
 <template>
   <div class="comment-list" id='comment' ref='comment'>
-    <van-nav-bar :zIndex='0' @click-right="showField">
+    <van-nav-bar :border='false' :zIndex='0' @click-right="showField">
       <div class="zan" slot="right">赞 {{item.zan_num}}</div>
       <div class="comment" slot="left">评论 {{listLength}}</div>
     </van-nav-bar>
@@ -361,7 +361,6 @@ export default {
   width: 100%;
   height: 3rem /* 48/16 */;
   background: #fff;
-  border-top: 0.0625rem /* 1/16 */ solid #ebeef5;
 }
 
 .comment-popup {

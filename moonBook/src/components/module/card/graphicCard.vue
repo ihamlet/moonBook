@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0'>
-          <van-button class="theme-btn" type="primary" round size='small' plain v-if='item.isSubscribe == 0' @click="follow(item)"> 关注</van-button>
+           <van-button size="small" class="theme-btn" :plain='item.isSubscribe?true:false' type="primary" round @click="follow(item)">{{item.isSubscribe?'已关注':'关注'}}</van-button>
         </div>
         <div class="views" v-if='item.isMe'>
           <span>{{item.views}}</span>

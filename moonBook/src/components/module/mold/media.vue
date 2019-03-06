@@ -1,9 +1,10 @@
 <template>
   <div class="container" id='media' @click="toArticle">
     <div class="title" v-if='type=="card"&&item.template_id=="0"' v-line-clamp:20="2">{{item.title}}</div>
+    
+    <userCard :item='item' v-if='item.template_id=="1"&&type!="card"'/>
 
     <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?2:0" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
-
     <!-- 视频  -->
     <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"'>
       <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
@@ -44,6 +45,8 @@
   </div>
 </template>
 <script>
+import userCard from './../mold/userCard'
+
 export default {
   name: 'media',
   props: ['item', 'type'],
@@ -59,6 +62,9 @@ export default {
       }
       return num
     }
+  },
+  components: {
+    userCard
   },
   methods: {
     toArticle(e) {
@@ -89,8 +95,8 @@ export default {
 }
 </script>
 <style scoped>
-.container {
-  margin: 0.625rem /* 10/16 */ 0;
+.container{
+  margin: .625rem /* 10/16 */ 0;
 }
 
 .layout-4 {
