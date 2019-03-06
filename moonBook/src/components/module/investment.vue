@@ -135,8 +135,6 @@ export default {
 
 .box {
   background: #fff;
-  margin-bottom: 0.625rem /* 10/16 */;
-  border-radius: 0.5rem /* 8/16 */;
 }
 
 .box-link {

@@ -15,13 +15,16 @@
           </div>
         </transition>
       </div>
-      <div class="head-bar-right" slot="right">
+      <div class="head-bar-right" slot="right" v-if='item.isSubscribe!=3'>
         <transition name="slide-fade" mode="out-in">
            <van-button size="small" v-if='themeBarSearch' class="theme-btn" :plain='item.isSubscribe?true:false' type="primary" round @click="follow(item)">{{item.isSubscribe?'已关注':'关注'}}</van-button>
         </transition>
       </div>
     </van-nav-bar>
     <div class="container page-padding">
+      <div class="module-user-card">
+        <userCard :item='item' v-if='item.template_id != "0"'/>
+      </div>
       <div class="module">
         <article-content :item='item' @onScrollDomShow='onScrollDomShow'/>
       </div>
@@ -44,6 +47,7 @@ import articleShare from './../module/mold/articleShare'
 import comment from './../module/comment'
 import articleContent from './../module/articleContent'
 import vipLevel from './../module/animate/svg/vipLevel'
+import userCard from './../module/mold/userCard'
 
 export default {
   name: 'detailsArticle',
@@ -51,7 +55,8 @@ export default {
     articleContent,
     comment,
     articleShare,
-    vipLevel
+    vipLevel,
+    userCard
   },
   data() {
     return {
@@ -81,7 +86,6 @@ export default {
       })
     },
     onScrollDomShow(bl){
-      console.log(bl)
       this.themeBarSearch = bl
     },
     onClickLeft() {
@@ -181,8 +185,12 @@ export default {
   overflow: hidden;
 }
 
-
 .screenshot-popup {
   overflow: hidden;
+}
+
+.module-user-card{
+  padding: 0 10px;
+  background: #fff;
 }
 </style>

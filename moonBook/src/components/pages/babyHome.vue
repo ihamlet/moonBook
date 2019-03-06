@@ -56,7 +56,7 @@
       <div class="module" v-if="childInfo.is_mine">
         <family />
       </div>
-      <div v-if="childInfo.is_mine">
+      <div v-if="childInfo.is_mine" class="card-top">
         <van-nav-bar title="成长日记" @click-right="toActivity">
           <div class="post-count" slot="left">
             {{childInfo.post_count}}日记

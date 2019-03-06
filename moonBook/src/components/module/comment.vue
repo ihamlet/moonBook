@@ -215,8 +215,8 @@ export default {
     addPraise(item) {
       item.isZan = !item.isZan
       axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
-        if (res.data.status == 1) {
-          if(res.data.data){
+        if (res.data.status == 1) {     
+          if(res.data.data.like == '1'){
             item.zan_num = res.data.data.like
             this.$toast.success({
               className: 'zan-icon toast-icon',

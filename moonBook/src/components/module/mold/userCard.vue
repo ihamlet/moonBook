@@ -13,7 +13,7 @@
             </div>
           </div>
           <div class="date">
-            <span>{{getTimeAgo(item.create_time)}}</span>
+            <span>阅读 {{item.views}}</span><span> • {{getTimeAgo(item.create_time)}}</span><span v-if='item.school'> • {{item.school.title}}</span>
           </div>
         </div>
         <div class="follow-btn" v-if='item.isSubscribe!=3'>

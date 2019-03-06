@@ -30,7 +30,7 @@
                     <apps-list :appsList='appsList'/>
                 </div>
             </div>
-            <div class="card">
+            <div class="card-top">
                 <investment-ad :investmentAd='investmentAd' :isAdshow='isAdshow'/>
             </div>
             <div class="module">

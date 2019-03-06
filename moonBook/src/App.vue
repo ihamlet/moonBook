@@ -80,12 +80,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_mwmxui2b0we.eot');
-  src: url('//at.alicdn.com/t/font_893274_mwmxui2b0we.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_mwmxui2b0we.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_mwmxui2b0we.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_mwmxui2b0we.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_mwmxui2b0we.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_n7uy97gfyr.eot');
+  src: url('//at.alicdn.com/t/font_893274_n7uy97gfyr.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_n7uy97gfyr.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_n7uy97gfyr.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_n7uy97gfyr.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_n7uy97gfyr.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,
@@ -328,6 +328,10 @@ body.theme .head-bar-text,
 
 .card-list {
   padding: 1.25rem /* 20/16 */;
+}
+
+.card-top{
+  margin-top: .625rem /* 10/16 */;
 }
 
 .img-grid {
@@ -792,8 +796,8 @@ i.iconfont.rotate {
 /* 尚无记录 */
 .not-content {
   width: 100%;
-  height: 6.25rem /* 100/16 */;
-  line-height: 6.25rem /* 100/16 */;
+  height: 7.5rem /* 120/16 */;
+  line-height: 7.5rem /* 120/16 */;
   background: #fff;
   text-align: center;
   color: #c0c4cc;
@@ -859,10 +863,9 @@ video {
 }
 
 /* 文章 */
-
 .article-content {
   background: #fff;
-  padding: .625rem /* 10/16 */;
+  padding: 0.625rem 0.9375rem;
   position: relative;
   overflow: hidden;
 }

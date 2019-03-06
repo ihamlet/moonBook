@@ -2,6 +2,7 @@
   <div class="article-content" :class="[type=='screenshot'?'img-content':'',item.template_id!=0?'flex flex-align':'']">
     <div class="article-header" v-if='item.template_id==0'>
         <div class="title">{{item.title}}</div>
+        <div class=""></div>
         <div class="userCard" ref="userCard">
           <userCard :item='item'/>
         </div>
@@ -55,6 +56,7 @@ export default {
 .media-content{
   margin-bottom: .625rem /* 10/16 */;
   text-align: justify;
+  min-height: 12.5rem /* 200/16 */;
 }
 
 .title {

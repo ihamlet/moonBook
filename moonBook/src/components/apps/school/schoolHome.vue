@@ -28,7 +28,7 @@
           <apps :appsList='appsList' type='schoolHome' />
         </div>
       </div>
-      <div class="module">
+      <div class="module card-top">
         <investmentAd :key="key" :investmentAd='investment' type='notice'/>
       </div>
       <div class="module">

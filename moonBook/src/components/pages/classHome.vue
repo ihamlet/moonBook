@@ -28,7 +28,7 @@
           <apps :appsList='appsList' type='classHome' />
         </div>
       </div>
-      <div class="module">
+      <div class="module card-top">
         <read-list title='阅读榜' type='banji' field='avatar' />
       </div>
       <div class="module">
