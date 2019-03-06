@@ -226,7 +226,7 @@ export default {
       }
 
       this.getSchoolList(products).then(res => {
-        this.list = res.data.data
+        this.list = this.list.concat(res.data.data)
         this.loading = false
         this.page++
         if (this.list.length >= res.data.count) {
