@@ -8,7 +8,7 @@
         <div class="item" v-for="(item,index) in list" :key="index" @click="setItem(item)" v-else>
           <van-cell>
             <div class="content">
-              <graphic-card :item="item" @follow="follow" @more='actionsheet'/>
+              <graphic-card :item="item" @follow="follow" @more='actionsheet' :title='appellation'/>
             </div>
           </van-cell>
         </div>
@@ -112,6 +112,20 @@ export default {
         })
 
       return arr
+    },
+    appellation(){
+      let appellation
+      if(this.manage){
+        if(this.$route.name == 'apps-school'){
+          appellation = '校长'
+        }else{
+          appellation = '老师'
+        }
+      }else{
+        appellation = '家长'
+      }
+
+      return appellation
     }
   },
   data() {

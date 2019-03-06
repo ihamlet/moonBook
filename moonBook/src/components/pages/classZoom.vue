@@ -241,8 +241,4 @@ export default {
 .class-zoom.no-padding {
   padding-top: 0;
 }
-
-.item {
-  margin-bottom: .3125rem /* 5/16 */;
-}
 </style>

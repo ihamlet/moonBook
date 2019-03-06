@@ -11,11 +11,13 @@
                 </form>
             </div>
         </div>
-
         <div class="list">
             <div class="item" v-for='(item,index) in list' :key="index" @click="selectSchool(item)">
                 <van-cell is-link center>
-                    <div class="school-name" v-line-clamp:20="1">{{item[searchType == 'wmSearchSchool'?'title':'name']}}</div>
+                    <div class="school-name" v-line-clamp:20="1">
+                        {{item[searchType == 'wmSearchSchool'?'title':'name']}}
+                         <van-tag size="medium" :color="item.typecode == '141203'?'#409EFF':'#E6A23C'" plain>{{item.typecode == '141203'?'小学':'幼儿园'}}</van-tag>
+                    </div>
                     <div class="school-address" v-line-clamp:20="1">
                         <span v-if="item[searchType == 'wmSearchSchool'?'addr':'address']">
                             {{item[searchType == 'wmSearchSchool'?'addr':'address']}}

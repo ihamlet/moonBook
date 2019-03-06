@@ -144,6 +144,10 @@ body {
   background: #f2f6fc;
 }
 
+.item{
+  margin-bottom: .125rem /* 2/16 */;
+}
+
 .scroll-x,
 .scroll-y {
   -webkit-overflow-scrolling: touch;

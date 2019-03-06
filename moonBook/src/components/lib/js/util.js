@@ -220,6 +220,18 @@ function checkHtml(htmlStr) {
   return reg.test(htmlStr)
 }
 
+//分组
+function group(array, subGroupLength) {
+  var index = 0;
+  var newArray = [];
+
+  while(index < array.length) {
+      newArray.push(array.slice(index, index += subGroupLength));
+  }
+
+  return newArray;
+}
+
 export {
   GetDistance,
   format,
@@ -229,5 +241,6 @@ export {
   getRandomArrayElements,
   timeago,
   formatTime,
-  checkHtml
+  checkHtml,
+  group
 }
