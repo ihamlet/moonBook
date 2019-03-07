@@ -112,11 +112,13 @@ export default {
       this.$router.go(-1)
     },
     fetchData() {
-      axios.get(`/book/baby/getList?banji_id=${this.$route.query.id}`).then(res => {
-        if(res.data.status == 1){
-          this.freshList = res.data.data
-        }
-      })
+      if(this.$route.query.id){
+        axios.get(`/book/baby/getList?banji_id=${this.$route.query.id}`).then(res => {
+          if(res.data.status == 1){
+            this.freshList = res.data.data
+          }
+        })
+      }
     },
     onLoad() {
       let data = {
@@ -127,24 +129,25 @@ export default {
           portal_name: '班级主页'
         }
       }
-
-      return axios.get('/book/SchoolArticle/getList', data).then(res => {
-        if(res.data.status == 1){
-          if (this.page == 1) {
-            this.list = res.data.data
-          } else {
-            this.list = this.list.concat(res.data.data)
-          }
-          this.page++
-          this.loading = false
-          if (this.list.length >= res.data.count) {
+      if(this.$route.query.id){
+        return axios.get('/book/SchoolArticle/getList', data).then(res => {
+          if(res.data.status == 1){
+            if (this.page == 1) {
+              this.list = res.data.data
+            } else {
+              this.list = this.list.concat(res.data.data)
+            }
+            this.page++
+            this.loading = false
+            if (this.list.length >= res.data.count) {
+              this.finished = true
+            }
+          }else{
+            this.loading = false
             this.finished = true
           }
-        }else{
-          this.loading = false
-          this.finished = true
-        }
-      })
+        })
+      }
     },
     onRefresh(){
       this.page = 1

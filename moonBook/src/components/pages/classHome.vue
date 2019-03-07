@@ -19,7 +19,7 @@
         <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
       </div>
       <div class="qrcode" @click="show = true">
-        <i class="iconfont">&#xe622;</i> 
+        <i class="iconfont">&#xe622;</i>
       </div>
     </div>
     <div class="container">
@@ -77,41 +77,41 @@ export default {
     apps
   },
   computed: {
-    ...mapGetters(['userDataState','managerState']),
+    ...mapGetters(['userDataState', 'managerState']),
     actions() {
       let array = []
       if (this.managerState) {
         this.managerState.forEach(element => {
 
-            let data = {
-              name: `${element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name)}${element.child_name?'('+element.child_name+')':'(管理员)'}`,
-              subname: `${element.duty}-${element.desc}`,
-              id: element.id,
-              type: element.item_type
-            }
+          let data = {
+            name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
+            subname: `${element.duty}-${element.desc}`,
+            id: element.id,
+            type: element.item_type
+          }
 
-            array.push(data)
-          
+          array.push(data)
+
         })
       }
 
       return array
     },
-    pageTitle(){
+    pageTitle() {
       let str = ''
-      if(this.classInfo.is_my_baby_banji){
+      if (this.classInfo.is_my_baby_banji) {
         str = '班级'
-      }else{
+      } else {
         str = '我的班级'
       }
 
       return str
     },
     manage() {
-      if(this.managerState){
+      if (this.managerState) {
         let boolean
         this.managerState.forEach(element => {
-          if (this.$route.query.id == element.id && element.item_relation != 'parent'){
+          if (this.$route.query.id == element.id && element.item_relation != 'parent') {
             boolean = true
           }
         })
@@ -131,65 +131,30 @@ export default {
       appsList: [{
         name: '风采',
         iconClass: 'icon-fengcai',
-        path:'apps-find'
+        path: 'apps-find'
       }, {
         name: '阅读',
         iconClass: 'icon-yuedu',
-        path:'apps-find',      
+        path: 'apps-find',
       }, {
         name: '才艺',
         iconClass: 'icon-caiyi',
-        path:'apps-find',      
+        path: 'apps-find',
       }, {
         name: '荣誉',
         iconClass: 'icon-rongyu',
-         path:'apps-find',      
+        path: 'apps-find',
       }, {
         name: '班级交流',
         iconClass: 'icon-jiaoliu',
-         path:'apps-find',      
+        path: 'apps-find',
       }]
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.qrcode()
-      vm.getUserData().then(res => {
-        if (res.child_id > '0') {
-          if (res.school_id > '0') {
-            if (res.banji_id > '0') {
-              vm.request()
-            } else {
-              vm.$router.push({
-                name: 'edit-class',
-                query: {
-                  id: res.child_id,
-                  back: 'class-home',
-                  school_id: res.school_id,
-                  type: 'add'
-                }
-              })
-            }
-          } else {
-            vm.$router.push({
-              name: 'edit-school',
-              query: {
-                type: 'add',
-                enter: 'my',
-                id: res.child_id,
-              }
-            })
-          }
-        } else {
-          vm.$router.push({
-            name: 'edit-child',
-            query: {
-              type: 'add',
-              pageTitle: '添加宝贝',
-            }
-          })
-        }
-      })
+      vm.request()
     })
   },
   mounted() {
@@ -198,22 +163,107 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     request() {
-      axios.get(`/book/SchoolBanji/getInfo?banji_id=${this.$route.query.id}`).then(res => {
-        if(res.data.status == 1){
-          this.classInfo = res.data.data
+      this.getUserData().then(res => {
+        if (res.id != null) {
+            if( res.child_id == '0'){
+              this.$dialog.confirm({
+                title: '添加宝贝',
+                message: '请添加您的宝贝，掌握孩子阅读数据',
+                confirmButtonText: '添加',
+                cancelButtonText: '稍后',
+                showCancelButton: true
+              }).then(() => {
+                this.$router.push({
+                  name: 'edit-child',
+                  query: {
+                    type: 'add',
+                    pageTitle: '添加宝贝',
+                    isBack: this.$route.query.isBack
+                  }
+                })
+              }).catch(() => {
+                this.$router.push({
+                  name: 'home'
+                })
+              })
+            } else if(res.school_id == '0'){
+              this.$dialog.confirm({
+                title: '加入学校',
+                message: '请加入学校，掌握班学校动态',
+                confirmButtonText: '加入',
+                cancelButtonText: '稍后',   
+                showCancelButton: true
+              }).then(() => {
+                this.$router.push({
+                  name: 'edit-school',
+                  query: {
+                    type: 'add',
+                    enter: 'my',
+                    id: res.child_id,
+                    isBack: this.$route.query.isBack
+                  }
+                })
+              }).catch(() => {
+                this.$router.push({
+                  name: 'home'
+                })
+              })
+             }else if(res.banji_id == '0'){
+                this.$dialog.confirm({
+                  title: '加入班级',
+                  message: '请加入班级，掌握班级动态',
+                  confirmButtonText: '加入',
+                  cancelButtonText: '稍后',
+                  showCancelButton: true
+                }).then(() => {
+                  this.$router.push({
+                    name: 'edit-class',
+                    query: {
+                      id: res.child_id,
+                      back: 'class-home',
+                      school_id: res.school_id,
+                      type: 'add',
+                      isBack: this.$route.query.isBack
+                    }
+                  })
+                }).catch(() => {
+                  this.$router.push({
+                    name: 'home'
+                  })
+                })
+              }else{
+                if(this.$route.query.id && this.$route.query.id!=''){
+                  let data = {
+                      params:{
+                        banji_id: this.$route.query.id
+                      }
+                    }
+
+                  axios.get('/book/SchoolBanji/getInfo',data).then(res => {
+                    if(res.data.status == 1){
+                      this.classInfo = res.data.data
+                    }
+                  })
+                  this.getCate()
+                }
+              }
+        } else {
+          this.$toast.fail('获取信息失败')
+          this.$router.push({
+            name:'home'
+          })
         }
       })
-      this.getCate()
     },
     onClickLeft() {
-      if(this.$route.query.back){
+      if (this.$route.query.back) {
         this.$router.push({
           name: this.$route.query.back,
-          query:{
+          query: {
             id: this.$route.query.child_id || this.$route.query.school_id
           }
         })
-      }else{
+      } else {
         this.$router.push({ name: 'my' })
       }
     },
@@ -251,7 +301,7 @@ export default {
     onSelect(item) {
       this.hackReset = false
       this.actionsheetShow = false
-      if(item.type == 'banji'){
+      if (item.type == 'banji') {
         this.$router.push({
           name: 'class-home',
           query: {
@@ -263,10 +313,10 @@ export default {
           this.hackReset = true
           this.request()
         })
-      }else if(item.type == 'school'){
+      } else if (item.type == 'school') {
         this.$router.push({
-          name:'apps-school',
-          query:{
+          name: 'apps-school',
+          query: {
             id: item.id,
             back: this.$route.name,
             banji_id: this.$route.query.id
@@ -274,40 +324,40 @@ export default {
         })
       }
     },
-    formatBanjiTitle(text){
-      if(text&&text.indexOf('班') == -1){
+    formatBanjiTitle(text) {
+      if (text && text.indexOf('班') == -1) {
         return text + '班'
-      }else{
-        return text 
+      } else {
+        return text
       }
     },
-    getCate(){
+    getCate() {
       let data = {
-        params:{
-          portal_name:'班级主页'
+        params: {
+          portal_name: '班级主页'
         }
       }
 
-      axios.get('/book/schoolArticleCate/getList',data).then(res => {
-        if(res.status == 200){
+      axios.get('/book/schoolArticleCate/getList', data).then(res => {
+        if (res.status == 200) {
           let cateArray = res.data
           let data = []
           cateArray.forEach(element => {
-            if(element.access_level == 0){
+            if (element.access_level == 0) {
               data.push(element)
-            }else{
-              this.managerState.forEach(e =>{
-                if((this.$route.query.id == e.banji_id||this.$route.query.id == e.school_id)&& e.item_relation != 'parent'){
+            } else {
+              this.managerState.forEach(e => {
+                if ((this.$route.query.id == e.banji_id || this.$route.query.id == e.school_id) && e.item_relation != 'parent') {
                   data.push(element)
                 }
               })
             }
           })
-          
-          this.appsList.forEach(e=>{
+
+          this.appsList.forEach(e => {
             let params
             data.forEach(element => {
-              if(e.name == element.cate_name){
+              if (e.name == element.cate_name) {
                 params = {
                   cid: element.cate_id,
                   pageTitle: element.cate_name,
@@ -348,10 +398,10 @@ export default {
 
 .class-info {
   color: #fff;
-  flex: 4
+  flex: 4;
 }
 
-.qrcode{
+.qrcode {
   flex: 1;
   text-align: right;
 }
@@ -389,15 +439,15 @@ export default {
   z-index: 101;
 }
 
-.qrcode{
+.qrcode {
   color: #fff;
 }
 
-.qrcode i.iconfont{
+.qrcode i.iconfont {
   font-size: 1.625rem /* 26/16 */;
 }
 
-.module{
+.module {
   background: transparent;
 }
 </style>

@@ -135,35 +135,7 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.getUserData().then(res => {
-        if (res.isHeaderTeacher == 1) {
-
-          vm.request()
-        } else {
-          if (res.child_id > 0) {
-            if (res.school_id > 0) {
-              vm.request()
-            } else {
-              vm.$router.push({
-                name: 'edit-school',
-                query: {
-                  type: 'add',
-                  enter: 'my',
-                  id: res.child_id,
-                }
-              })
-            }
-          } else {
-            vm.$router.push({
-              name: 'edit-child',
-              query: {
-                type: 'add',
-                pageTitle: '添加宝贝'
-              }
-            })
-          }
-        }
-      })
+      vm.request()
     })
   },
   mounted() {
@@ -172,13 +144,69 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     request() {
-      axios.get(`/book/school/getInfo?school_id=${this.$route.query.id}`).then(res => {
-        if (res.data.status == 1) {
-          this.schoolInfo = res.data.data
+      this.getUserData().then(res => {
+        if(res.id != null){
+          if(res.child_id == '0'){
+              this.$dialog.confirm({
+                title: '添加宝贝',
+                message: '请添加您的宝贝，掌握孩子阅读数据',
+                confirmButtonText:'添加',
+                cancelButtonText:'稍后',
+                showCancelButton: true
+              }).then(() => {
+                this.$router.push({
+                  name: 'edit-child',
+                  query: {
+                    type: 'add',
+                    pageTitle: '添加宝贝',
+                    isBack: this.$route.query.isBack
+                  }
+                })
+              }).catch(() => {
+                this.$router.push({
+                  name: 'home'
+                })
+              })
+          }else if(res.school_id == '0'){
+            this.$dialog.confirm({
+              title: '加入学校',
+              message: '请加入学校，掌握学校动态',
+              confirmButtonText:'添加',
+              cancelButtonText:'稍后',
+              showCancelButton: true
+            }).then(() => {
+              this.$router.push({
+                name: 'edit-school',
+                query: {
+                  type: 'add',
+                  enter: 'my',
+                  id: res.child_id,
+                  isBack: this.$route.query.isBack
+                }
+              })
+            }).catch(() => {
+              this.$router.push({
+                name: 'home'
+              })
+            })
+          }else{
+            if(this.$route.query.id && this.$route.query.id!=''){
+              axios.get(`/book/school/getInfo?school_id=${this.$route.query.id}`).then(res => {
+                if (res.data.status == 1) {
+                  this.schoolInfo = res.data.data
+                }
+              })
+
+              this.getCate() 
+            }
+          }
+        }else{
+          this.$toast.fail('获取信息失败')
+          this.$router.push({
+            name:'home'
+          })
         }
       })
-
-      this.getCate()
     },
     handleScroll() {
       this.getDomHeight()

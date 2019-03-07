@@ -21,8 +21,8 @@
         </transition>
       </div>
     </van-nav-bar>
-    <div class="container page-padding">
-      <div class="module-user-card">
+    <div class="container">
+      <div class="module-user-card page-padding">
         <userCard :item='item' v-if='item.template_id != "0"'/>
       </div>
       <div class="module">

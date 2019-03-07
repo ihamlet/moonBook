@@ -275,40 +275,82 @@ export default {
       })
 
       this.getUserData().then(res => {
-        axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
-          if (res.data.status == 1) {
-            this.babyList = res.data.data
+        if(res.id != null){
+          let data = {
+            params: {
+              sort:'old',
+              user_id:res.id
+            }
           }
-        })
+          axios.get('/book/baby/getList',data).then(res => {
+            if (res.data.status == 1) {
+              this.babyList = res.data.data
+            }
+          })
+        }else{
+          this.$toast.fail('用户信息失败')
+        }
       })
 
-      axios.get(`/book/SchoolArticle/getList?tid=${this.tid}`).then(res => {
+      let getSchoolArticleData = {
+        params: {
+          tid: this.tid
+        }
+      }
+
+      axios.get('/book/SchoolArticle/getList',getSchoolArticleData).then(res => {
         if (res.data.status == 1) {
           this.activityCount = res.data.count
         }
       })
 
-      axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
+      let babyBorrowGetListData = {
+        params:{
+          page:1,
+          limit:20,
+          child_id:this.$route.query.id
+        }
+      }
+
+      axios.get('/book/BabyBorrow/getList',babyBorrowGetListData).then(res => {
         if (res.status == 200) {
-            this.lateBook = res.data.data
+          this.lateBook = res.data.data
         }
       })
     },
     request() {
       this.getUserData().then(res => {
         if (res.child_id > '0') {
-          axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
+          let data = {
+            params:{
+              child_id: this.$route.query.id
+            }
+          }
+          axios.get('/book/baby/getInfo',data).then(res => {
             if (res.data.status == 1) {
               this.childInfo = res.data.data
             }
           })
-        } else {
-          this.$router.push({
-            name: 'edit-child',
-            query: {
-              type: 'add',
-              pageTitle: '添加宝贝'
-            }
+        } else{
+          this.$dialog.confirm({
+            title: '添加宝贝',
+            message: '请添加您的宝贝，掌握孩子阅读数据',
+            confirmButtonText:'添加',
+            cancelButtonText:'稍后',
+            showCancelButton: true
+          }).then(() => {
+            this.$router.push({
+              name: 'edit-child',
+              query: {
+                type: 'add',
+                pageTitle: '添加宝贝',
+                isBack: this.$route.query.isBack
+              }
+            })
+          }).catch(() => {
+            this.$router.push({
+              name: 'home'
+            })
           })
         }
       })

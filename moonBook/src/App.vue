@@ -17,9 +17,6 @@ export default {
   computed: {
     ...mapGetters(['userDataState'])
   },
-  created () {
-    this.fetchData()
-  },
   data () {
     const self = this
     return {
@@ -38,6 +35,9 @@ export default {
           }
       }]
     }
+  },
+  created () {
+    this.fetchData()
   },
   watch: {
     center(val){

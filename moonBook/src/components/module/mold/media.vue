@@ -124,7 +124,7 @@ export default {
   text-align: justify;
 }
 
-.img-grid.long.alone{
+.img-grid.alone{
   padding-bottom: 0
 }
 

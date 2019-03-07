@@ -57,6 +57,8 @@ import ReadAmount from '@/components/pages/readAmount'
 import Train from '@/components/train'
 import AppsTrain from '@/components/apps/train/trainHome'
 
+// import Task from '@/components/pages/'
+
 Vue.use(Router)
 
 export default new Router({

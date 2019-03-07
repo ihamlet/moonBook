@@ -1,12 +1,7 @@
 <template>
   <div class="head head-background" ref="head">
-    <van-nav-bar
-      :class="[fixedHeaderBar?'theme-nav':'']"
-      :zIndex="100"
-      fixed
-      :title="fixedHeaderBar?$route.meta.title:userInfo.name"
-      @click-left="onClickLeft"
-    >
+    <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" fixed :title="fixedHeaderBar?$route.meta.title:userInfo.name"
+      @click-left="onClickLeft">
       <div class="head-bar-icon" slot="left">
         <i class="iconfont">&#xe60e;</i>
       </div>
@@ -16,10 +11,11 @@
     </van-nav-bar>
     <div class="user-info flex flex-justify">
       <div class="info">
-        <i class="iconfont">&#xe668;</i>
-        <div class="avatar">
+        <i class="iconfont" v-if='children'>&#xe668;</i>
+        <div class="avatar" v-if='userInfo.avatar'>
           <img :src="getAvatar(userInfo.avatar)" :alt="userInfo.name">
         </div>
+        <avatar v-else size='medium' avatarClass='border'/>
         <div class="children-info" v-if='children'>
           <img class="children-avatar" :src="getAvatar(children.avatar)" :alt="children.name">
           <div class="name">{{userInfo.name}}</div>
@@ -36,25 +32,25 @@
           <div class="data-flow read" @click="toBorrowList(0)">
             <span class="data-name">读过</span>
             <span class="number">
-              <number-grow :value="userInfo.borrow_count" :time=".2"/>
+              <number-grow :value="userInfo.borrow_count" :time=".2" />
             </span>
           </div>
           <div class="data-flow reading" @click="toBorrowList(1)">
             <span class="data-name">在读</span>
             <span class="number">
-              <number-grow :value="userInfo.borrowing_count" :time=".2"/>
+              <number-grow :value="userInfo.borrowing_count" :time=".2" />
             </span>
           </div>
           <div class="data-flow collection" @click="toBorrowList(2)">
             <span class="data-name">收藏</span>
             <span class="number">
-              <number-grow :value="userInfo.collect_count" :time=".2"/>
+              <number-grow :value="userInfo.collect_count" :time=".2" />
             </span>
           </div>
           <div class="data-flow abrasion" @click="toBorrowList(3)">
             <span class="data-name">破损</span>
             <span class="number">
-              <number-grow :value="userInfo.broken_count" :time=".2"/>
+              <number-grow :value="userInfo.broken_count" :time=".2" />
             </span>
           </div>
         </div>
@@ -67,11 +63,11 @@
 
     <!-- 借阅卡办理页面 -->
     <van-popup v-model="applyShow" class="page-popup" position="bottom" :overlay="false">
-      <accept @close="onAccpetPage" v-model="active"/>
+      <accept @close="onAccpetPage" v-model="active" />
     </van-popup>
 
     <van-popup v-model="punchShow" class="page-popup page-punch" position="right">
-      <punch @close="closePunch"/>
+      <punch @close="closePunch" />
     </van-popup>
   </div>
 </template>
@@ -80,13 +76,15 @@ import axios from "./../../lib/js/api";
 import numberGrow from "./../../module/animate/numberGrow";
 import punch from "./../../module/punch";
 import accept from "./../accept";
+import avatar from './../avatar'
 
 export default {
   name: "cardHead",
   components: {
     numberGrow,
     accept,
-    punch
+    punch,
+    avatar
   },
   props: ["userInfo", "children"],
   data() {

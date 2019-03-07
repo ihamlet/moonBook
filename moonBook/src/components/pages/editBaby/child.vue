@@ -156,7 +156,6 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     fetchData() {
-
       if (localStorage['childInfo'] != undefined&&this.$route.query.type == 'edit') {
         this.childInfo = JSON.parse(localStorage['childInfo'])
       }
@@ -166,7 +165,13 @@ export default {
       }
 
       if (this.$route.query.id) {
-        axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
+        let getChildByUserData = {
+          params:{
+            child_id: this.$route.query.id
+          }
+        }
+
+        axios.get('/book/family/getChildByUser',getChildByUserData).then(res => {
           let date = new Date(res.data.data.birthday * 1000)
           this.childInfo.name = res.data.data.name
           this.childInfo.avatar = res.data.data.avatar
@@ -300,7 +305,7 @@ export default {
         if (res) {
           this.$toast.success('修改成功')
         } else {
-          this.$toast.success('修改成功')
+          this.$toast.fail('修改失败')
         }
       })
     },
