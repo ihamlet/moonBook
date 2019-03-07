@@ -238,7 +238,7 @@ i.iconfont.hot {
 }
 
 .list .theme-btn {
-  margin: 0 auto;
+  margin: 10px auto 0 auto;
   display: block;
 }
 

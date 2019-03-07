@@ -7,17 +7,21 @@
                         <i class="iconfont">&#xe657;</i>
                     </div>
                     <input type="text" class="search-input" v-model="searchContent" :placeholder="prompt">
-                    <i class="iconfont clear" v-if='searchContent.length > 0' @click="clear">&#xe683;</i>
+                    <i class="iconfont clear" v-if='searchContent.length' @click="clear">&#xe683;</i>
                 </form>
             </div>
         </div>
-
         <div class="list">
             <div class="item" v-for='(item,index) in list' :key="index" @click="selectSchool(item)">
                 <van-cell is-link center>
-                    <div class="school-name" v-line-clamp:20="1">{{item.name}}</div>
+                    <div class="school-name" v-line-clamp:20="1">
+                        {{item[searchType == 'wmSearchSchool'?'title':'name']}}
+                         <van-tag size="medium" :color="item.typecode == '141203'?'#409EFF':'#E6A23C'" plain>{{item.typecode == '141203'?'小学':'幼儿园'}}</van-tag>
+                    </div>
                     <div class="school-address" v-line-clamp:20="1">
-                        <span v-if='item.address.length!=0'>{{item.address}}</span>
+                        <span v-if="item[searchType == 'wmSearchSchool'?'addr':'address']">
+                            {{item[searchType == 'wmSearchSchool'?'addr':'address']}}
+                        </span>
                     </div>
                 </van-cell>
             </div>
@@ -36,34 +40,27 @@ export default {
     data () {
         return {
             searchContent:'',
-            list:[]
+            list:[],
+            searchType:''
         }
     },
     watch: {
         searchContent(val){
+            let arr = this.userPointState.location.split(",")
             let products = {
                 keywords: val,
                 type: '141204|141203',
                 location: this.userPointState.location,
                 city: this.userPointState.city,
                 datatype:'poi',
-                searchType:this.type
+                lng:arr[0],
+                lat:arr[1]
             }
-            this.getSearch(products).then(res=>{
-                if(res.searchType == 'joinSchool'){
-                    let nweArray = []
-                    res.resData.data.forEach(element => {
-                        nweArray.push({
-                            name: element.title,
-                            address: element.addr,
-                            shelf_id: element.shelf_id
-                        })
-                    })
 
-                    this.list = nweArray
-                }else{
-                    this.list = res.tips
-                }
+            
+            this.getSearch(products).then(res=>{
+                this.searchType = res.searchType
+                this.list = res.resData
             })
         }
     },

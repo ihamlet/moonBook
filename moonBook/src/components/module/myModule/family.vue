@@ -58,14 +58,16 @@ export default {
         this.$router.push({
           name: 'verify-list',
           query: {
-            id: this.$route.query.id
+            id: this.$route.query.id,
+            back: this.$route.name,
           }
         })
       } else {
         this.$router.push({
           name: 'add-family',
           query: {
-            id: this.$route.query.id
+            id: this.$route.query.id,
+            back: this.$route.name
           }
         })
       }

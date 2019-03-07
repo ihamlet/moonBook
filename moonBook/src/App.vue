@@ -80,12 +80,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_h94qvzsdvgm.eot');
-  src: url('//at.alicdn.com/t/font_893274_h94qvzsdvgm.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_h94qvzsdvgm.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_h94qvzsdvgm.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_h94qvzsdvgm.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_h94qvzsdvgm.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_n7uy97gfyr.eot');
+  src: url('//at.alicdn.com/t/font_893274_n7uy97gfyr.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_n7uy97gfyr.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_n7uy97gfyr.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_n7uy97gfyr.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_n7uy97gfyr.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,
@@ -142,6 +142,10 @@ textarea {
 body {
   color: #606266;
   background: #f2f6fc;
+}
+
+.item{
+  margin-bottom: .125rem /* 2/16 */;
 }
 
 .scroll-x,
@@ -295,7 +299,7 @@ body.theme .head-bar-text,
 }
 
 .module {
-  margin-bottom: 0.625rem /* 10/16 */;
+  margin-bottom: .125rem /* 2/16 */;
   background: #fff;
 }
 
@@ -328,6 +332,10 @@ body.theme .head-bar-text,
 
 .card-list {
   padding: 1.25rem /* 20/16 */;
+}
+
+.card-top{
+  margin-top: .625rem /* 10/16 */;
 }
 
 .img-grid {
@@ -547,6 +555,11 @@ img.lazy[lazy='error'],
 
 .page-popup-layer {
   width: 100%;
+}
+
+.filter-popup{
+  width: 80%;
+  height: 100vh;
 }
 
 .cropper-popup {
@@ -787,8 +800,8 @@ i.iconfont.rotate {
 /* 尚无记录 */
 .not-content {
   width: 100%;
-  height: 6.25rem /* 100/16 */;
-  line-height: 6.25rem /* 100/16 */;
+  height: 7.5rem /* 120/16 */;
+  line-height: 7.5rem /* 120/16 */;
   background: #fff;
   text-align: center;
   color: #c0c4cc;
@@ -854,10 +867,9 @@ video {
 }
 
 /* 文章 */
-
 .article-content {
   background: #fff;
-  padding: 1.25rem /* 20/16 */;
+  padding: 0.625rem 0.9375rem;
   position: relative;
   overflow: hidden;
 }
@@ -868,7 +880,7 @@ video {
 }
 
 .article-content .content p {
-  font-size: 1.25rem /* 20/16 */ !important;
+  font-size: 1.125rem /* 18/16 */ !important;
   margin: 0.625rem /* 10/16 */ 0;
 }
 

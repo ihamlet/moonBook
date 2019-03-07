@@ -302,7 +302,6 @@ export default {
 }
 
 .item {
-  margin-bottom: 0.3125rem /* 5/16 */;
   position: relative;
   overflow: hidden;
   background: #fff;

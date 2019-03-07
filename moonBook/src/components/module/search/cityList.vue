@@ -52,7 +52,7 @@ export default {
             }
 
             this.getSearch(products).then(res=>{
-                this.list = res.tips
+                this.list = res.resData
             })
         }
     },

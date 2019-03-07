@@ -1,106 +1,114 @@
 <template>
   <div class="read-amount">
-    <van-nav-bar :zIndex='10' :title="$route.meta.title" left-text="返回" right-text='捐赠图书' fixed left-arrow @click-left="onClickLeft"
-      @click-right="onClickRight" />
-    <div class="amount-list flex flex-align">
-      <div class="amount-item">
-        <div class="amount-type">读过</div>
-        <div class="amount-num">{{childInfo.reading_count}}</div>
+    <van-nav-bar :zIndex='10' :title="$route.meta.title" left-text="返回" fixed left-arrow @click-left="onClickLeft"
+      @click-right="onClickRight">
+      <div class="right-btn" slot="right">
+        <van-button class="theme-btn" round size="small" type="primary">捐书</van-button>
       </div>
-      <div class="amount-item">
-        <div class="amount-type">在读</div>
-        <div class="amount-num">{{childInfo.read_count}}</div>
-      </div>
-      <div class="amount-item">
-        <div class="amount-type">收藏</div>
-        <div class="amount-num">{{childInfo.collect_num}}</div>
-      </div>
-      <div class="amount-item">
-        <div class="amount-type">磨损</div>
-        <div class="amount-num">{{childInfo.broken_num}}</div>
-      </div>
-      <div class="amount-item">
-        <div class="amount-type">未读</div>
-        <div class="amount-num">{{childInfo.shelf_tushu_kinds-childInfo.read_kinds}}</div>
-      </div>
-    </div>
-
-    <div class="kings flex flex-align">
-      <div class="bar-title">阅读进度</div>
-      <div class="kings-line flex flex-align">
-        <div class="progress-bar theme-background" :style="{width: `${(childInfo.read_kinds <= '50'?50:childInfo.read_kinds)/childInfo.shelf_tushu_kinds * 100}%` }">
-          <div class="num">{{childInfo.read_kinds}}</div>
-        </div>
-        <div class="kinds-bar">
-          <div class="num">{{childInfo.shelf_tushu_kinds}}</div>
-        </div>
-      </div>
-    </div>
-
-    <van-tabs color="#409eff" :line-width="20" :line-height="4" sticky swipeable animated :offsetTop="45" @change="onChangeTab">
-      <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
+    </van-nav-bar>
+    <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated :offsetTop="45" @change="onChangeTab" :ellipsis='false'>
+      <van-tab v-for="(list,index) in readArray" :key="index" :title="`${list.title}(${list.num})`">
+        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
           <van-pull-refresh v-model="loading" @refresh="onRefresh">
-            <div class="content" v-if='list.content.length > 0'>
-              <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
-                <van-row gutter="10">
-                  <van-col span="9">
-                    <div class="book-cover">
-                      <img :src="thumb(item.book_photo)" @error="outThumb($event,item)">
-                    </div>
-                  </van-col>
-                  <van-col span="12">
-                    <div class="book-info" @click="toBookDetails(item)">
-                      <div class="title" v-line-clamp:20="2">{{item.book_title}}</div>
-                      <div class="attach">
-                        <div class="pos-title" v-if='item.pos_name'>书架：{{item.pos_name}}</div>
-                      </div>
-                    </div>
-                  </van-col>
-                  <van-col span="3">
-                    <div class="listening" @click="listening(item)">
-                      <i class="iconfont">&#xe617;</i>
-                    </div>
-                  </van-col>
-                </van-row>
-              </van-cell>
+            <div class="tab-jianshu" v-if='list.title == "捐书"'>
+                <van-tabs type="card" color='#409eff' @click="onClickTab">
+                  <van-tab :title="tabTitle" v-for='(tabTitle,tabTitleIndex) in donationTab' :key="tabTitleIndex"></van-tab>
+                </van-tabs>
+            </div>
+
+            <div class="switch-api" v-if='list.content.length'>
+              <div class="content">
+                <div class="kings flex flex-align" v-if='list.title =="未读" '>
+                  <div class="bar-title">阅读进度</div>
+                  <div class="kings-box flex flex-align">
+                    <div class="num">{{childInfo.read_kinds}}/{{childInfo.shelf_tushu_kinds}}</div>
+                    <div class="filter" @click="show = true"><i class="iconfont theme-color">&#xe631;</i></div>
+                  </div>
+                </div>
+                <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
+                  <bookCard :item='item' />
+                </van-cell>
+              </div>
+            </div>
+            <div class="no-content" v-else>
+              暂无数据
             </div>
           </van-pull-refresh>
         </van-list>
       </van-tab>
     </van-tabs>
+
+    <van-popup class="filter-popup" v-model="show" position="right">
+      <Filter-list :filterList='selectTag' @onSelect='onSelect' @close='show = false' />
+    </van-popup>
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
+import FilterList from './../module/mold/filterList'
+import bookCard from './../module/card/bookCard'
 
 export default {
   name: "readAmount",
+  components: {
+    FilterList,
+    bookCard
+  },
+  computed: {
+    readArray() {
+      let arr = []
+      if (this.childInfo) {
+        arr = [{
+          title: '未读',
+          num: this.childInfo.shelf_tushu_kinds - this.childInfo.read_kinds,
+          content: ''
+        }, {
+          title: '在读',
+          num: this.childInfo.read_count,
+          content: ''
+        }, {
+          title: '收藏',
+          num: this.childInfo.collect_num,
+          content: ''
+        }, {
+          title: '磨损',
+          num: this.childInfo.broken_num,
+          content: ''
+        }, {
+          title: '已读',
+          num: this.childInfo.reading_count,
+          content: ''
+        }, {
+          title: '捐书',
+          num: this.childInfo.donation_count,
+          content: ''
+        }]
+      }
+
+      return arr
+    }
+  },
   data() {
     return {
+      show: false,
       page: 1,
       loading: false,
       finished: false,
       childInfo: '',
       tabIndex: 0,
-      tab: [
-        {
-          title: "全部",
-          content: ''
-        },
-        {
-          title: "绘本",
-          content: ''
-        },
-        {
-          title: "科普",
-          content: ''
-        },
-        {
-          title: "3D",
-          content: ''
-        }
-      ]
+      isCheck: 1,
+      selectTag: [{
+        title: '年龄',
+        arr: ['3-5', '5-6']
+      }, {
+        title: '分类',
+        arr: ['绘本', '寓言故事', '童话', '科普', '3D', 'VR', '故事汇']
+      }, {
+        title: '所在层数',
+        arr: ['一层', '二层', '三层', '四层', '五层', '六层']
+      }],
+      donationTab:['已捐书','待审核','未通过'],
+      selsetData: ''
     }
   },
   created() {
@@ -136,19 +144,51 @@ export default {
       let data = {
         params: {
           page: this.page,
-          keyword: this.tabIndex == 0 ? '' : this.tab[this.tabIndex].title
+          child_id: this.$route.query.id
         }
       }
 
-      return axios.get('/book/SchoolShelfBook/getList', data).then(res => {
+      switch (this.tabIndex) {
+        case 0:
+          data.params.is_read = 0
+          break
+        case 1:
+          data.params.is_read = 2
+          break
+        case 2:
+          data.params.collect = 1
+          break
+        case 3:
+          data.params.is_broke = 1
+          break
+        case 4:
+          data.params.is_read = 1
+          break
+      }
+
+      if (this.selsetData) {
+        data.params.tag = this.selsetData.tag
+        data.params.floor = this.selsetData.floor
+      }
+
+      let apiLink = ''
+
+      if (this.readArray[this.tabIndex].title != '捐书') {
+        apiLink = '/book/SchoolShelfBook/getList'
+      } else {
+        apiLink = 'book/TushuDonation/getList'
+        data.params.is_check = this.isCheck
+      }
+
+      return axios.get(apiLink, data).then(res => {
         if (this.page == 1) {
-          this.tab[this.tabIndex].content = res.data.data
+          this.readArray[this.tabIndex].content = res.data.data
         } else {
-          this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
+          this.readArray[this.tabIndex].content = this.readArray[this.tabIndex].content.concat(res.data.data)
         }
-        this.page++
         this.loading = false
-        if (this.tab[this.tabIndex].content.length >= res.data.count) {
+        this.page++
+        if (this.readArray[this.tabIndex].content.length >= res.data.count) {
           this.finished = true
         }
       })
@@ -159,71 +199,40 @@ export default {
         this.loading = false
       })
     },
+    onSelect(params) {
+      this.selsetData = params
+      this.page = 1
+      this.loading = true
+      this.finished = false
+      this.onRefresh()
+    },
     onLoad() {
       this.getList()
     },
     onChangeTab(index) {
       this.tabIndex = index
       this.page = 1
+      this.loading = true
+      this.finished = false
       this.onRefresh()
     },
-    outThumb(e, item) {
-      e.target.outerHTML = `
-        <div class='three-d-book'>
-            <div class='three-d-book-cover'>
-                <div class='three-d-book-name'>
-                    ${item.book_title}
-                </div>
-                <div class='three-d-book-author'>
-                    
-                </div>
-            </div>
-        </div>
-      `
-    },
-    thumb(img) {
-      let hostMatch = img.match(/https?:\/\/(.+?)\//)
-      if (hostMatch) {
-        return `/book/api/remotePic?url=${img}`
-      } else {
-        return img
+    onClickTab(index,title){
+      switch(title){
+        case '已捐书':
+          this.isCheck = 1
+        break
+        case '待审核':
+          this.isCheck = 0
+        break
+        case '未通过':
+          this.isCheck = 2
+        break
       }
-    },
-    listening(item) {
-      let p = /（.+?）/
-      let pureTitle = item.book.book_title.replace(p, '')
-      let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
-      let isRead = localStorage.getItem('bookRead_' + item.book_id)
-      if (!isRead) {
-        axios.get('/book/story/updateRead').then(res => {
-          localStorage.setItem('bookRead_' + item.book_id, true)
-          location.href = url
-        })
-      } else {
-        location.href = url
-      }
-    },
-    toBookDetails(item) {
-      this.$router.push({
-        name: 'book-details',
-        query: {
-          id: item.book_id
-        }
-      })
-    },
-    listening(item) {
-      let p = /（.+?）/
-      let pureTitle = item.book.title.replace(p, '')
-      let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
-      let isRead = localStorage.getItem('bookRead_' + item.book_id)
-      if (!isRead) {
-        axios.get('/book/story/updateRead').then(res => {
-          localStorage.setItem('bookRead_' + item.book_id, true)
-          location.href = url
-        })
-      } else {
-        location.href = url
-      }
+
+      this.page = 1
+      this.loading = true
+      this.finished = false
+      this.onRefresh()
     }
   }
 }
@@ -236,12 +245,25 @@ export default {
   padding: 0.625rem /* 10/16 */ 0;
 }
 
+.amount-item.pitchOn {
+  color: #409eff;
+  font-weight: 700;
+}
+
+.read-amount {
+  padding-top: 2.8125rem /* 45/16 */;
+}
+
 .amount-type {
   margin-bottom: 0.3125rem /* 5/16 */;
 }
 
 .amount-list {
-  margin-top: 2.8125rem /* 45/16 */;
+  position: relative;
+}
+
+.lead-card {
+  padding: 0.625rem /* 10/16 */;
 }
 
 .no-content {
@@ -252,81 +274,34 @@ export default {
   color: #c0c4cc;
 }
 
-.book_title {
-  margin-bottom: 0.3125rem /* 5/16 */;
-  font-weight: 500;
-}
-
-.attach {
-  color: #606266;
-}
-
-.listening {
-  width: 1.875rem /* 30/16 */;
-  height: 1.875rem /* 30/16 */;
-  line-height: 1.875rem /* 30/16 */;
-  text-align: center;
-  position: absolute;
-  right: 0;
-}
-
-.listening i.iconfont {
-  font-size: 1.75rem /* 28/16 */;
-  background: linear-gradient(135deg, #fe8537, #f02b2b);
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-.book-cover img {
-  margin: 0 auto;
-  display: block;
-}
-
-.title {
-  margin-bottom: 0.625rem /* 10/16 */;
-  font-weight: 500;
+.tab-text,
+.tab-num {
+  height: 1.375rem /* 22/16 */;
+  line-height: 1.375rem /* 22/16 */;
 }
 
 .kings {
+  height: 1.875rem /* 30/16 */;
+  line-height: 1.875rem /* 30/16 */;
   padding: 0.625rem /* 10/16 */;
   background: #fff;
-  margin-bottom: 0.625rem /* 10/16 */;
 }
 
-.kings .kings-line {
-  position: relative;
-  flex: 4;
-}
-
-.kings .bar-title {
+.kings-box {
   flex: 1;
-  font-size: 0.8125rem /* 13/16 */;
+  justify-content: space-between;
 }
 
-.kings .kings-line .progress-bar,
-.kings .kings-line .kinds-bar {
-  position: absolute;
-  border-radius: 1.25rem /* 20/16 */;
+.bar-title {
+  margin-right: 0.3125rem /* 5/16 */;
 }
 
-.kings .kings-line .num {
-  padding: 0 0.625rem /* 10/16 */;
+.filter i.iconfont {
+  font-size: 1.5rem /* 24/16 */;
 }
 
-.kings .kings-line .kinds-bar {
-  background: #e4e7ed;
-  width: 100%;
-  height: 1.25rem /* 20/16 */;
-  line-height: 1.25rem /* 20/16 */;
-  text-align: right;
-}
-
-.kings .kings-line .progress-bar {
-  z-index: 1;
-  color: #fff;
-  text-align: right;
-  transition: width 1.18s cubic-bezier(0.22, 0.61, 0.36, 1);
-  -webkit-transition: width 1.18s cubic-bezier(0.22, 0.61, 0.36, 1);
-  width: 0;
+.tab-jianshu{
+  padding: .625rem /* 10/16 */ 0;
+  background: #fff;
 }
 </style>

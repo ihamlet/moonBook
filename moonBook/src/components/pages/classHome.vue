@@ -28,7 +28,7 @@
           <apps :appsList='appsList' type='classHome' />
         </div>
       </div>
-      <div class="module">
+      <div class="module card-top">
         <read-list title='阅读榜' type='banji' field='avatar' />
       </div>
       <div class="module">
@@ -311,7 +311,9 @@ export default {
                 params = {
                   cid: element.cate_id,
                   pageTitle: element.cate_name,
-                  banji_id: this.$route.query.id
+                  banji_id: this.$route.query.id,
+                  back: this.$route.name,
+                  id: this.$route.query.id
                 }
               }
             })

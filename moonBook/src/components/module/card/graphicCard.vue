@@ -14,11 +14,11 @@
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
-            {{getTimeAgo(item.create_time)}} <span>{{type?type=='babyHome'?`${title}的家长`:title:'家长'}}</span>
+            {{getTimeAgo(item.create_time)}} <span>{{title}}</span>
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0'>
-          <van-button class="theme-btn" type="primary" round size='small' plain v-if='item.isSubscribe == 0' @click="follow(item)"> 关注</van-button>
+           <van-button size="small" class="theme-btn" :plain='item.isSubscribe?true:false' type="primary" round @click="follow(item)">{{item.isSubscribe?'已关注':'关注'}}</van-button>
         </div>
         <div class="views" v-if='item.isMe'>
           <span>{{item.views}}</span>
@@ -185,7 +185,7 @@ export default {
 .social {
   margin-top: 0.625rem /* 10/16 */;
   height: 2.25rem /* 36/16 */;
-  border-top: 0.0625rem /* 1/16 */ solid #e4e7ed;
+  border-top: 0.0625rem /* 1/16 */ solid #F2F6FC;
 }
 
 .media {

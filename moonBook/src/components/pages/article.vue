@@ -1,6 +1,6 @@
 <template>
   <div class="article">
-    <van-nav-bar :left-text="this.$route.query.back?'返回':'发现'" left-arrow fixed :zIndex='100' @click-left="onClickLeft">
+    <van-nav-bar :border='false' :left-text="this.$route.query.back?'返回':'发现'" left-arrow fixed :zIndex='100' @click-left="onClickLeft">
       <div class="head-bar-title" slot="title">
         <transition name="slide-fade" mode="out-in">
           <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
@@ -15,33 +15,18 @@
           </div>
         </transition>
       </div>
-      <!-- <div class="head-bar-right" slot="right">
-        <i class="iconfont">&#xe635;</i>
-      </div> -->
+      <div class="head-bar-right" slot="right" v-if='item.isSubscribe!=3'>
+        <transition name="slide-fade" mode="out-in">
+           <van-button size="small" v-if='themeBarSearch' class="theme-btn" :plain='item.isSubscribe?true:false' type="primary" round @click="follow(item)">{{item.isSubscribe?'已关注':'关注'}}</van-button>
+        </transition>
+      </div>
     </van-nav-bar>
     <div class="container page-padding">
-      <div class="user-card flex flex-align" ref="userCard" v-if='item.user'>
-        <div class="avatar" @click="toZoom">
-          <img :src="getAvatar(item.user.avatar)" :alt="item.user.username" @error='imgError'>
-        </div>
-        <div class="info">
-          <div class="name">
-            <div class="flex flex-align">
-              <span>{{item.user.username}}</span>
-              <vip-level v-if='item.card_level' :animate='true' :level='item.card_level.level'/>
-            </div>
-          </div>
-          <div class="date">
-            <span>{{item.createDate}}</span>
-          </div>
-        </div>
-        <div class="follow-ben"  v-if='item.isSubscribe!=3'>
-          <van-button size="normal" v-if='item.isSubscribe' round @click="follow(item)">已关注</van-button>
-          <van-button size="normal" v-else class="theme-btn" type="primary" round @click="follow(item)">+ 关注</van-button>
-        </div>
+      <div class="module-user-card">
+        <userCard :item='item' v-if='item.template_id != "0"'/>
       </div>
       <div class="module">
-        <article-content :item='item'/>
+        <article-content :item='item' @onScrollDomShow='onScrollDomShow'/>
       </div>
       <div>
         <comment :item='item' include='include'/>
@@ -62,6 +47,7 @@ import articleShare from './../module/mold/articleShare'
 import comment from './../module/comment'
 import articleContent from './../module/articleContent'
 import vipLevel from './../module/animate/svg/vipLevel'
+import userCard from './../module/mold/userCard'
 
 export default {
   name: 'detailsArticle',
@@ -69,7 +55,8 @@ export default {
     articleContent,
     comment,
     articleShare,
-    vipLevel
+    vipLevel,
+    userCard
   },
   data() {
     return {
@@ -89,22 +76,7 @@ export default {
   watch: {
     '$router': 'fetchData'
   },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll)
-  },
   methods: {
-    handleScroll() {
-      if (this.$refs.userCard) {
-        this.domHeight = this.$refs.userCard.offsetHeight
-      }
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.scrollTop > this.domHeight) {
-        this.themeBarSearch = true
-      } else {
-        this.themeBarSearch = false
-      }
-    },
     fetchData() {
       this.qrcode()
       axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id||this.$route.query.back_id}`).then(res => {
@@ -112,6 +84,9 @@ export default {
           this.item = res.data.data.post
         }
       })
+    },
+    onScrollDomShow(bl){
+      this.themeBarSearch = bl
     },
     onClickLeft() {
       // 活动页需要跳转tid
@@ -143,21 +118,15 @@ export default {
         console.error(err)
       })
     },
-    follow(item){
-      item.isSubscribe = !item.isSubscribe
-      axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res=>{
-        this.$toast.success(res.data.msg)
-      })
-    },
     getAvatar(img) {
-      let pos = img.indexOf('http://')
-      let result
-      if(pos === 0) {
-         result = img.replace('http:', 'https:')
-      } else {
-         result = img
-      }
-      return result
+        let pos = img.indexOf('http://')
+        let result
+        if(pos === 0) {
+            result = img.replace('http:', 'https:')
+        } else {
+            result = img
+        }
+        return result
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
@@ -171,6 +140,12 @@ export default {
           back_id: this.$route.query.id
         }
       })
+    },
+    follow(item){
+        item.isSubscribe = !item.isSubscribe
+        axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res=>{
+            this.$toast.success(res.data.msg)
+        })
     }
   }
 }
@@ -189,30 +164,6 @@ export default {
   margin-right: 0.3125rem /* 5/16 */;
 }
 
-.user-card {
-  padding: 0.625rem /* 10/16 */;
-  background: #fff;
-  margin-bottom: 0.3125rem /* 5/16 */;
-}
-
-.user-card .avatar {
-  width: 3.125rem /* 50/16 */;
-  height: 3.125rem /* 50/16 */;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: 0.625rem /* 10/16 */;
-}
-
-.user-card .name {
-  color: #303133;
-}
-
-.user-card .date {
-  margin-top: 0.3125rem /* 5/16 */;
-  color: #909399;
-  font-size: 0.8125rem /* 13/16 */;
-}
-
 .memberships {
   margin-left: 0.3125rem /* 5/16 */;
 }
@@ -229,18 +180,17 @@ export default {
   opacity: 0;
 }
 
-.follow-ben {
-  position: absolute;
-  right: 0.625rem /* 10/16 */;
-}
-
 .share-box{
   width: 100%;
   overflow: hidden;
 }
 
-
 .screenshot-popup {
   overflow: hidden;
+}
+
+.module-user-card{
+  padding: 0 10px;
+  background: #fff;
 }
 </style>

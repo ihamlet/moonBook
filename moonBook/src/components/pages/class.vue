@@ -1,6 +1,7 @@
 <template>
   <div class="edit-class page-padding">
-    <van-nav-bar :border='false' fixed :title="$route.query.registerType=='teacher'?schoolName:childInfo.school_name" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar :border='false' fixed :title="$route.query.registerType=='teacher'?schoolName:childInfo.school_name"
+      left-arrow @click-left="onClickLeft" />
     <div class="container">
       <div class="baby-info flex flex-justify" v-if='$route.query.registerType!="teacher"'>
         <div class="avatar flex" v-if='childInfo'>
@@ -67,7 +68,7 @@ export default {
     fetchData() {
       if (this.$route.query.registerType) {
         axios.get('/book/SchoolTeacher/getMine').then(res => {
-          if(res.data.status == 1){
+          if (res.data.status == 1) {
             this.schoolName = res.data.data.school_name
           }
         })
@@ -80,26 +81,26 @@ export default {
       }
     },
     onClickLeft() {
-      if(this.$route.query.back && this.userDataState.banji_id != '0'){
+      if (this.$route.query.back && this.userDataState.banji_id != '0') {
         this.$router.push({
           name: this.$route.query.back,
-          query:{
+          query: {
             id: this.$route.query.id,
             school_id: this.$route.query.school_id,
             pageTitle: this.$route.query.pageTitle,
             type: this.$route.query.type
           }
         })
-      }else{
+      } else {
         this.$router.push({
-          name:'my'
+          name: 'my'
         })
       }
     },
     select(item, itemIndex) {
       if (this.$route.query.registerType == 'teacher') {
         axios.get(`/book/SchoolTeacher/bind_banji?banji_name=${item.title}`).then(res => {
-          if(res.data.status == 1){
+          if (res.data.status == 1) {
             this.$router.push({
               name: 'edit-setting',
               query: {
@@ -148,7 +149,7 @@ export default {
         }
       }
       axios.get(`/book/SchoolBanji/getList`, data).then(res => {
-        if(res.data.status) {
+        if (res.data.status) {
           this.page++
           this.list = this.list.concat(res.data.data)
           this.loading = false
@@ -158,22 +159,22 @@ export default {
         }
       })
     },
-    formatBanjiTitle(text){
-      if(text&&text.indexOf('班') == -1){
+    formatBanjiTitle(text) {
+      if (text && text.indexOf('班') == -1) {
         return text + '班'
-      }else{
-        return text 
+      } else {
+        return text
       }
     },
-    isYearShow(item,index){
+    isYearShow(item, index) {
       let yearHistory
-      if( index > 0){
-        yearHistory = this.list[index-1].year
+      if (index > 0) {
+        yearHistory = this.list[index - 1].year
       }
 
-      if(item.year == yearHistory){
+      if (item.year == yearHistory) {
         return false
-      }else{
+      } else {
         return true
       }
     }
@@ -206,7 +207,7 @@ export default {
   position: relative;
 }
 
-.baby-info .avatar img{
+.baby-info .avatar img {
   width: 5rem /* 80/16 */;
   height: 5rem /* 80/16 */;
   margin: 1.25rem /* 20/16 */ auto 0 auto;
@@ -258,11 +259,11 @@ export default {
   overflow: hidden;
 }
 
-.banji-cell{
+.banji-cell {
   justify-content: space-between;
 }
 
-.year{
+.year {
   text-align: center;
   background: #fff;
   height: 2.25rem /* 36/16 */;

@@ -10,22 +10,26 @@
     </div>
 
     <div class="box">
-      <van-row class="flex flex-align">
+      <van-row class="flex flex-align" gutter="10">
         <van-col span="7">
           <a class="box-link" :href="investmentAd.link">{{`${investmentAd.text?investmentAd.text:'成为书架馆长'}`}} </a>
         </van-col>
-        <van-col span="11">
+        <van-col span="12">
           <div class="content" v-if='type == "notice"&&notice.length'>
-             <span class="notice" v-for='(item,index) in notice' :key="index" @click="toArticle(item)">
-               {{item.details || item.title}}
-             </span>
+            <van-swipe :autoplay="5000" :height='60' indicator-color="#fff" vertical :show-indicators='false'>
+              <van-swipe-item v-for="(item,index) in list" :key="index">
+                <div class="notice" @click="toArticle(content)" v-for='(content,contentIndex) in item' :key="contentIndex" v-line-clamp:20="1">
+                 <van-tag plain type="primary" class="tag">{{content.cate_name}}</van-tag>{{content.details || content.title}}
+                </div>
+              </van-swipe-item>              
+            </van-swipe>
           </div>
           <div class="content" v-else>
-            <span v-line-clamp:20="1">万册图书触手可及</span>
-            <span v-line-clamp:20="1">幼儿园/学校的新名片</span>
+            <div class="notice" v-line-clamp:20="1">万册图书触手可及</div>
+            <div class="notice" v-line-clamp:20="1">幼儿园/学校的新名片</div>
           </div>
         </van-col>
-        <van-col span="6" class="flex flex-justify">
+        <van-col span="5" class="flex flex-justify">
           <van-button class="theme-btn" size="small" type="primary" plain @click="toRegister">注册</van-button>
         </van-col>
       </van-row>
@@ -34,10 +38,16 @@
 </template>
 <script>
 import axios from './../lib/js/api'
+import { group } from './../lib/js/util'
 
 export default {
   name: 'investment',
   props: ['investmentAd','type'],
+  computed: {
+    list(){
+      return group(this.notice,2)
+    }
+  },
   data() {
     return {
       isAdshow: true,
@@ -108,6 +118,17 @@ export default {
   padding: 0.625rem /* 10/16 */ 0;
 }
 
+.notice,
+.content{
+  width: 100%;
+}
+
+.notice{
+  height: 1.875rem /* 30/16 */;
+  line-height: 1.875rem /* 30/16 */;
+  font-size: .9375rem /* 15/16 */;
+}
+
 .close {
   position: absolute;
   z-index: 2;
@@ -120,24 +141,16 @@ export default {
 }
 
 .content {
-  display: inline-grid;
   font-size: 0.8125rem /* 13/16 */;
-  margin-left: 0.625rem /* 10/16 */;
-}
-
-.content span{
-  font-size: .875rem /* 14/16 */;
-}
-
-.content span:first-child{
-  margin-bottom: .3125rem /* 5/16 */;
+  height: 3.75rem /* 60/16 */;
+  overflow: hidden;
 }
 
 .box {
   background: #fff;
-  margin-bottom: 0.625rem /* 10/16 */;
-  border-radius: 0.5rem /* 8/16 */;
+  padding: .3125rem /* 5/16 */ .625rem /* 10/16 */;
 }
+
 
 .box-link {
   height: 3.75rem /* 60/16 */;
@@ -149,6 +162,10 @@ export default {
   background: linear-gradient(90deg, #fe8537, #f02b2b);
   -webkit-background-clip: text;
   color: transparent;
+}
+
+.tag{
+  margin-right: .3125rem /* 5/16 */;
 }
 </style>
 

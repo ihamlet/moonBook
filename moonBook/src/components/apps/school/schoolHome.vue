@@ -28,7 +28,7 @@
           <apps :appsList='appsList' type='schoolHome' />
         </div>
       </div>
-      <div class="module">
+      <div class="module card-top">
         <investmentAd :key="key" :investmentAd='investment' type='notice'/>
       </div>
       <div class="module">
@@ -276,7 +276,9 @@ export default {
                 params = {
                   cid: element.cate_id,
                   pageTitle: element.cate_name,
-                  school_id: this.$route.query.id
+                  school_id: this.$route.query.id,
+                  id: this.$route.query.id,
+                  back: this.$route.name
                 }
               }
             })

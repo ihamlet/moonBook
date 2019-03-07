@@ -57,9 +57,11 @@
       </slot>
       <img :src="dataURL" v-else>
     </transition>
+
+
     <div class="popup-btn">
       <van-button class="theme-btn" :loading='isLoading' size="large" square :disabled='isDisabled' type="primary" @click="toImage">
-        {{dataURL?'长按上图保存分享':'生成图片'}}
+        {{dataURL?'长按上图保存分享':'正在为您生成图片'}}
       </van-button>
     </div>
   </div>
@@ -139,7 +141,7 @@ export default {
   font-size: 0.8125rem /* 13/16 */;
 }
 
-.avatar {
+.avatar img{
   width: 5rem /* 80/16 */;
   height: 5rem /* 80/16 */;
   border-radius: 50%;
@@ -172,7 +174,7 @@ export default {
 .bg,
 .bg .welt {
   width: 100%;
-  height: 28.125rem /* 450/16 */;
+  height: 100%;
 }
 
 .bg .welt {

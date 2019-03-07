@@ -1,6 +1,6 @@
 <template>
   <div class="find page-padding">
-    <van-nav-bar :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title" left-text="首页" left-arrow @click-left="onClickLeft"/>
+    <van-nav-bar :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title" :left-text="$route.query.back?'返回':'首页'" left-arrow @click-left="onClickLeft"/>
     <div class="module" v-if='!$route.query.cid'>
        <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname"/>
     </div>
@@ -111,9 +111,18 @@ export default {
       })
     },
     onClickLeft(){
-      this.$router.push({
-        name:'home'
-      })
+      if(this.$route.query.back){
+        this.$router.push({
+          name:this.$route.query.back,
+          query:{
+            id:this.$route.query.id
+          }
+        })
+      }else{
+        this.$router.push({
+          name:'home'
+        })
+      }
     }
   }
 }

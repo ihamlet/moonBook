@@ -139,7 +139,7 @@ export default new Router({
           name: 'readAmount',
           component: ReadAmount,
           meta: {
-            title: '读的书',
+            title: '阅读',
             isFooterBar: false
           }
         },

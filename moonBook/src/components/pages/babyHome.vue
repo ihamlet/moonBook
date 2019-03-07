@@ -12,7 +12,7 @@
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
       <div class="baby-info flex flex-align">
         <div class="avatar" v-if="childInfo.avatar" @click="toEditorBaby">
-          <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">
+          <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">  
         </div>
         <avatar :gender="childInfo.sex" size='small' avatarClass='border' v-else />
         <div class="baby-data" @click="toEditorBaby">
@@ -56,7 +56,7 @@
       <div class="module" v-if="childInfo.is_mine">
         <family />
       </div>
-      <div v-if="childInfo.is_mine">
+      <div v-if="childInfo.is_mine" class="card-top">
         <van-nav-bar title="成长日记" @click-right="toActivity">
           <div class="post-count" slot="left">
             {{childInfo.post_count}}日记
@@ -65,15 +65,14 @@
             活动<van-tag class="tag-task" round type="danger">{{activityCount}}</van-tag>
           </div>
         </van-nav-bar>
-        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab"
-          :offsetTop='45'>
+        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
                 <div class="tab-content" v-if='list.content.length'>
                   <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
                     <van-cell>
-                      <graphic-card :item="item" type="babyHome" :title='childInfo.name' :avatar='childInfo.avatar' @more="actionsheet"/>
+                      <graphic-card :item="item" type="babyHome" :title='`${childInfo.name}的家长`' :avatar='childInfo.avatar' @more="actionsheet"/>
                     </van-cell>
                   </div>
                 </div>
@@ -89,7 +88,6 @@
       <div class="module" v-else>
         <reading :list="lateBook"  moduleTitle="宝贝最近在读的书" />
       </div>
-
     </div>
 
     <slogan v-if="!childInfo.is_mine"/>
@@ -111,15 +109,14 @@
     <!-- 文章操作 -->
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
     <!-- 推荐操作 -->
-    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消"
-      getContainer='#app' />
+    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app' />
     <!-- 切换孩子 -->
-    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby"
-      @cancel="isSelectBabyShow = false" />
+    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby" @cancel="isSelectBabyShow = false" />
   </div>
 </template>
 <script>
 import axios from "./../lib/js/api"
+import Cookies from 'js-cookie'
 import { mapActions, mapGetters } from 'vuex'
 import { format, timeago } from "./../lib/js/util.js"
 import QRCode from "qrcode"
@@ -304,7 +301,6 @@ export default {
             if (res.data.status == 1) {
               this.childInfo = res.data.data
             }
-
           })
         } else {
           this.$router.push({
@@ -816,10 +812,6 @@ export default {
   margin-left: 3.125rem /* 50/16 */;
   font-size: 1.125rem /* 18/16 */;
   font-weight: 500;
-}
-
-.item {
-  margin-bottom: 0.625rem /* 10/16 */;
 }
 
 .task {
