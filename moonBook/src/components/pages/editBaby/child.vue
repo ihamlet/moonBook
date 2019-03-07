@@ -3,7 +3,6 @@
     <van-nav-bar :title="$route.query.type!='edit'?'添加宝贝':'编辑宝贝'" left-arrow :left-text="$route.query.back?'返回':'我的'" :right-text="$route.query.type=='edit'?'删除':''"
       @click-left="onClickLeft" @click-right="onClickRight('delete')" />
     <div class="avatar-uploader">
-      <i class="iconfont" v-if='userDataState.isVip' :class="`vip-${userDataState.card_level}`">&#xe776;</i>
       <van-uploader :after-read="onRead">
         <div class="prompt" v-if='!childInfo.avatar'>
           <avatar :gender='childInfo.gender' size='big'/>
@@ -250,7 +249,11 @@ export default {
       })
     },
     submit(set) {
-      this.submitLoading = true
+      
+      if(set!='setSchool'){
+        this.submitLoading = true
+      }
+
       if (!this.childInfo.avatar) {
         this.$toast.fail('请上传头像')
       }

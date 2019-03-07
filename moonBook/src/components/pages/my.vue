@@ -80,16 +80,12 @@ export default {
       axios.get('/book/SchoolTeacher/getMine').then(res => {
         if(res.data.status == 1){
           this.isTeacher = res.data.data.is_confirm
-        }else{
-          this.$toast.fail(res.data.msg)
         }
       })
 
       axios.get('/book/SchoolTeacher/getMine?is_master=1').then(res => {
         if(res.data.status == 1){
           this.isHeaderTeacher = res.data.data.is_confirm
-        }else{
-          this.$toast.fail(res.data.msg)
         }
       })
 

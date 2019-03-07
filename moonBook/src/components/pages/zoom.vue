@@ -161,10 +161,14 @@ export default {
           if(res.data.status == 1){
             this.page++
             this.list = this.list.concat(res.data.data)
-            this.loading = false;
+            this.loading = false
             if (this.list.length >= res.data.count) {
-              this.finished = true;
+              this.finished = true
             }
+          }else{
+            this.loading = false
+            this.finished = true
+            this.list = []
           }
         })
     },

@@ -1,36 +1,38 @@
 <template>
   <div class="card-list-container page-padding">
     <van-nav-bar class="card-list-nav-bar" :zIndex='99' fixed :border='false' :title="$route.meta.title" left-text="个人中心" left-arrow @click-left="onClickLeft" />
-    <div class="list flex flex-justify" v-if='cardList.length == 0'>
-      <van-loading class="card-loading"/>
-    </div>
+    <div class="list">
+      <div class="content" v-if='cardList&&cardList.length'>
 
-    <div class="list" v-else>
-      <div class="item" v-for='(item,index) in cardList' :key="index">
-        <div class="card-box" :class="`card-type-${item.level_info.level}`">
-          <div class="card-info flex flex-align">
-            <div class="card-name">{{item.level_info.name}}</div>
-            <div class="card-id">{{item.card_id}}</div>
-          </div>
-          <div class="card-content">
-            <div class="borrow-info flex flex-align">
-              <div class="borrow-count">可借{{item.level_info.borrow_count}}本</div>
-              <div class="borrow-day">{{item.level_info.borrow_day}}天内还书</div>
+        <div class="item" v-for='(item,index) in cardList' :key="index">
+          <div class="card-box" :class="`card-type-${item.level_info.level}`">
+            <div class="card-info flex flex-align">
+              <div class="card-name">{{item.level_info.name}}</div>
+              <div class="card-id">{{item.card_id}}</div>
             </div>
-            <div class="user-info flex flex-align">
-              <div class="school" v-line-clamp:20="1">
-                {{item.shelf_title}}
+            <div class="card-content">
+              <div class="borrow-info flex flex-align">
+                <div class="borrow-count">可借{{item.level_info.borrow_count}}本</div>
+                <div class="borrow-day">{{item.level_info.borrow_day}}天内还书</div>
               </div>
-              <div class="users-list flex flex-align">
-                <div class="user flex flex-align" v-for='(user,userIndex) in item.users' :key="userIndex">
-                  <div class="avatar">
-                    <img :src="user.face" :alt="user.nickname" />
+              <div class="user-info flex flex-align">
+                <div class="school" v-line-clamp:20="1">
+                  {{item.shelf_title}}
+                </div>
+                <div class="users-list flex flex-align">
+                  <div class="user flex flex-align" v-for='(user,userIndex) in item.users' :key="userIndex">
+                    <div class="avatar">
+                      <img :src="user.face" :alt="user.nickname" />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div class="no-content" v-else>
+        <div class="theme-color" @click="applyShow = true">请办理借阅卡</div>
       </div>
     </div>
     <div class="form-submit">
@@ -62,7 +64,7 @@ export default {
   },
   data() {
     return {
-      cardList: '',
+      cardList: [],
       applyShow: false,
       active: 0,
     }
@@ -105,7 +107,7 @@ export default {
 </script>
 <style scoped>
 .card-list-container {
-  background:url('./../../assets/img/giftly.png');
+  /* background:url('./../../assets/img/giftly.png'); */
   padding-top: 2.8125rem /* 45/16 */;
   min-height: 100vh;
 }
@@ -225,5 +227,11 @@ export default {
 
 .form-submit{
   z-index: 10;
+}
+
+.theme-color{
+  height: 12.5rem /* 200/16 */;
+  line-height: 12.5rem /* 200/16 */;
+  text-align: center;
 }
 </style>

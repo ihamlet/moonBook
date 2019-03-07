@@ -16,15 +16,15 @@
           <img :src="getAvatar(userInfo.avatar)" :alt="userInfo.name">
         </div>
         <avatar v-else size='medium' avatarClass='border'/>
-        <div class="children-info" v-if='children'>
+        <div class="children-info" v-if='children' @click="toBabyHome">
           <img class="children-avatar" :src="getAvatar(children.avatar)" :alt="children.name">
-          <div class="name">{{userInfo.name}}</div>
         </div>
+        <div class="name">{{userInfo.name}}</div>
       </div>
     </div>
     <div class="card">
       <div class="borrow-card flex flex-align">
-        <div class="service flex flex-align" v-if="userInfo.isVip">
+        <div class="service flex flex-align" v-if="userInfo.card_level != '0'">
           <div class="data-flow" @click="$router.push({name:'card-list'})">
             <i class="iconfont" :class="`vip-${userInfo.card_level}`">&#xe604;</i>
             <b class="card-name" v-line-clamp:20="1">{{userInfo.card_name}}</b>
@@ -159,6 +159,15 @@ export default {
         result = img;
       }
       return result;
+    },
+    toBabyHome(){
+      this.$router.push({
+        name:'baby-home',
+        query:{
+          id: this.children.id,
+          back: this.$route.name
+        }
+      })
     }
   }
 };
@@ -197,6 +206,8 @@ export default {
 .avatar img {
   width: 4.5rem /* 72/16 */;
   height: 4.5rem /* 72/16 */;
+  margin: 0 auto;
+  display: block;
 }
 
 .avatar {
@@ -213,9 +224,10 @@ export default {
   position: absolute;
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
-  right: -1.25rem /* 20/16 */;
+  left: 65%;
   top: 50%;
   transform: translate3d(0, -50%, 0);
+  z-index: 10;
 }
 
 .user-info {
@@ -230,10 +242,10 @@ export default {
 
 .info .iconfont {
   position: absolute;
-  left: 70%;
+  left: 60%;
   top: 50%;
   font-size: 1.25rem /* 20/16 */;
-  z-index: 1;
+  z-index: 11;
   background: linear-gradient(135deg, #f44, #e60000);
   -webkit-background-clip: text;
   color: transparent;

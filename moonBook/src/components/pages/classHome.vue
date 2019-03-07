@@ -182,9 +182,7 @@ export default {
                   }
                 })
               }).catch(() => {
-                this.$router.push({
-                  name: 'home'
-                })
+                this.backRouter()
               })
             } else if(res.school_id == '0'){
               this.$dialog.confirm({
@@ -204,9 +202,7 @@ export default {
                   }
                 })
               }).catch(() => {
-                this.$router.push({
-                  name: 'home'
-                })
+                this.backRouter()
               })
              }else if(res.banji_id == '0'){
                 this.$dialog.confirm({
@@ -227,9 +223,7 @@ export default {
                     }
                   })
                 }).catch(() => {
-                  this.$router.push({
-                    name: 'home'
-                  })
+                  this.backRouter()
                 })
               }else{
                 if(this.$route.query.id && this.$route.query.id!=''){
@@ -330,6 +324,9 @@ export default {
       } else {
         return text
       }
+    },
+    backRouter(){
+      this.$router.go(-1)
     },
     getCate() {
       let data = {

@@ -3,8 +3,8 @@
     <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
       <van-cell-group>
           <div class="item" v-for='(item,index) in list' :key="index" @click="toArticle(item)">
-            <van-cell>
-              <div class="cell-content" v-if='item.template_id == "0"'>
+            <van-cell v-if='item.template_id == "0"'>
+              <div class="cell-content">
                 <van-row :gutter='5'>
                   <van-col :span='item.photos.length > 3?"24":"16"'>
                     <div class="title" v-line-clamp:20="3" :class="[item.photos.length > 3?'layout-t-b':'layout-l-r']">

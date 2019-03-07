@@ -163,9 +163,7 @@ export default {
                   }
                 })
               }).catch(() => {
-                this.$router.push({
-                  name: 'home'
-                })
+                this.backRouter()
               })
           }else if(res.school_id == '0'){
             this.$dialog.confirm({
@@ -185,9 +183,7 @@ export default {
                 }
               })
             }).catch(() => {
-              this.$router.push({
-                name: 'home'
-              })
+              this.backRouter()
             })
           }else{
             if(this.$route.query.id && this.$route.query.id!=''){
@@ -273,6 +269,9 @@ export default {
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    backRouter(){
+      this.$router.go(-1)
     },
     getCate(){
       let data = {
