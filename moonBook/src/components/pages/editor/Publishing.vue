@@ -244,21 +244,22 @@ export default {
           details: this.grapicData.content,
           photos: this.grapicData.photos,
           cate_id: this.cateId,
-          to_school: 1,
-          
-          post_id: this.$route.query.post_id || ''
+          post_id: this.$route.query.post_id || '',
         }
 
         if(this.$route.query.back == 'class-home'){
           data.banji_id = this.$route.query.id
+          data.to_banji = 1
         }
         
         if(this.$route.query.back == 'apps-school'){
           data.school_id = this.$route.query.id
+          data.to_school = 1
         }
 
         if(this.$route.query.back == 'baby-home'){
-          data.child_id = this.$route.query.id
+          data.child_id = this.$route.query.id,
+          data.to_baby  = 1
         }
 
         axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {          

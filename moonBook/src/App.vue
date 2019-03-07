@@ -142,6 +142,7 @@ textarea {
 body {
   color: #606266;
   background: #f2f6fc;
+  text-size-adjust: 100% !important;
 }
 
 .item{
