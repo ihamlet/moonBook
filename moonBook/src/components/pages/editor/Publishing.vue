@@ -238,8 +238,6 @@ export default {
         this.$toast('请选择分类')
       } else if (!this.grapicData.content.length) {
         this.$toast('请输入正文')
-      } else if (!this.grapicData.photos.length) {
-        this.$toast('请至少上传一张图片做为文章封面')
       } else {
         let data = {
           title: this.grapicData.title,
@@ -247,6 +245,7 @@ export default {
           photos: this.grapicData.photos,
           cate_id: this.cateId,
           to_school: 1,
+          
           post_id: this.$route.query.post_id || ''
         }
 
@@ -277,6 +276,8 @@ export default {
                 name: 'apps-find'
               })
             }
+          }else{
+            this.$toast(res.data.info)
           }
         })
       }

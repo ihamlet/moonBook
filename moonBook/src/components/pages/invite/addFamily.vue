@@ -90,7 +90,7 @@ export default {
 }
 
 .pictorial {
-  padding-bottom: 140%;
+  padding-bottom: 125%;
   width: 100%;
   background-image: url('./../../../assets/img/invite-family.gif');
   background-size: cover;

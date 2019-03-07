@@ -376,19 +376,26 @@ export default {
           }
 
           axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
-            if(this.$route.query.back){
-              this.$router.push({
-                name: this.$route.query.back,
-                query: {
-                  id:  this.$route.query.id || '',
-                  cate_id: this.cate_id || ''
-                }
-              })
+            if(res.data.status == 1){
+              if(this.$route.query.back){
+                this.$router.push({
+                  name: this.$route.query.back,
+                  query: {
+                    id:  this.$route.query.id || '',
+                    cate_id: this.cate_id || ''
+                  }
+                })
+              }else{
+                this.$router.push({
+                  name:'apps-find'
+                })
+              }
+
+              this.$toast.success('发布成功')
             }else{
-              this.$router.push({
-                name:'apps-find'
-              })
+              this.$toast(res.data.info)
             }
+
           })
         }
       }

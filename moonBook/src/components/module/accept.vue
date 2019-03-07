@@ -215,23 +215,23 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getUserData', 'getMsgLength']),
+    ...mapActions(['getSchoolList']),
     onLoad() {
-      let data = {
-        lat: this.lat,
-        lng: this.lng,
-        page: this.page
-      }
-      axios.get('book/school/getList',{params:data}).then(res => {
-        if(res.data.status == 1){
-          this.page++
-          this.list = this.list.concat(res.data.data)
-          this.loading = false
-          if (this.list.length >= res.data.count) {
-            this.finished = true
-          }
-        }
+      let arr = this.userPointState.location.split(",")
 
+      let products = {
+        page: this.page,
+        lng:arr[0],
+        lat:arr[1]
+      }
+
+      this.getSchoolList(products).then(res => {
+        this.list = this.list.concat(res.data.data)
+        this.loading = false
+        this.page++
+        if (this.list.length >= res.data.count) {
+          this.finished = true
+        }
       })
     },
     onClickLeft() {
