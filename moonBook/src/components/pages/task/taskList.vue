@@ -14,7 +14,7 @@
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
                 <div class="card-list">
-                    <div class="task-card flex flex-align" v-for="(item,index) in list" :key="index">
+                    <div class="task-card flex flex-align fadeInUp animated" v-for="(item,index) in list" :key="index" :class="`an-${index}`">
                         <div class="cover">
                             <img :src="item.cover"/>
                         </div>
@@ -147,8 +147,8 @@ export default {
 
 .cover img{
     position: absolute;
-    width: 3.125rem /* 50/16 */;
-    height: 3.125rem /* 50/16 */;
+    width: 2.5rem /* 40/16 */;
+    height: 2.5rem /* 40/16 */;
     left: 50%;
     top: 50%;
     transform: translate3d(-50%, -50%, 0);
@@ -157,6 +157,7 @@ export default {
 
 .card-list{
     background: #fff;
+    overflow: hidden;
 }
 
 .icon-arrow{
