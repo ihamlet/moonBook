@@ -1,12 +1,15 @@
 <template>
   <div class="baby-home page-padding" v-if='hackReset'>
-    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft">
+    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft" @click-right='onClickRight'>
       <div class="head-bar-title" slot="title" @click="selectBaby">
         {{pageTitle}} <i class="iconfont" v-if='babyList.length'>&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back||$route.query.backGo?'返回':'首页'}}</span>
+      </div>
+      <div class="head-bar-text" slot="right">
+        <span class="text">任务</span>
       </div>
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
@@ -262,7 +265,13 @@ export default {
   methods: {
     ...mapActions(["getUserData"]),
     fetchData() {
-      axios.get('/book/schoolArticleCate/getList?portal_name=宝贝主页').then(res => {
+      let schoolArticleCate = {
+        params:{
+          portal_name:'宝贝主页'
+        }
+      }
+
+      axios.get('/book/schoolArticleCate/getList', schoolArticleCate).then(res => {
         if (res.status == 200) {
           let array = res.data
           array.forEach(element => {
@@ -469,7 +478,13 @@ export default {
       }
     },
     babyPraise(childInfo) {
-      axios.get(`/book/baby/zan?child_id=${this.$route.query.id}`).then(res => {
+      let data = {
+        params:{
+          child_id: this.$route.query.id
+        }
+      }
+
+      axios.get('/book/baby/zan',data).then(res => {
         if (res.data.status == 1) {
           this.zanShow = true
           childInfo.zan_count = res.data.data.zan_count
@@ -667,6 +682,16 @@ export default {
     punch() {
       Cookies.set('punckLink', location.href)
       location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
+    },
+    onClickRight(){
+      this.$router.push({
+        name:'task',
+        query:{
+          id: this.$route.query.id,
+          back: this.$route.name,
+          tid: 16
+        }
+      })
     }
     // toTaskLinkPage() {
     //   window.location.href = '/book/TushuDonation/intro'

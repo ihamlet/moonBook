@@ -10,9 +10,7 @@
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
-    "build": "node build/build.js",
-    "generate": "node build/generate.js",
-    "upload": "node build/build.js && gulp"
+    "build": "node build/build.js"
   },
   "dependencies": {
     "animate.css": "^3.7.0",

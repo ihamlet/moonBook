@@ -32,7 +32,7 @@
     </van-popup>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
-      <topic-list @close='show = false' @select='selectTag' @confirm='selectConfirm' type='share'/>
+      <topic-list @close='show = false' @select='selectTag' @confirm='selectConfirm' type='share' :topicList='topicList'/>
     </van-popup>
   </div>
 </template>
@@ -57,7 +57,8 @@ export default {
       childShow:false,
       cateId:'',
       show:false,
-      childId:''
+      childId:'',
+      topicList:''
     }
   },
   created () {
@@ -68,9 +69,30 @@ export default {
   },
   methods: {
     fetchData(){
-      axios.get(`/book/baby/getList?sort=old&user_id=${this.userDataState.user_id}`).then(res => {
+      let babyListData = {
+        params:{
+          sort:'old',
+          user_id:this.userDataState.user_id
+        }
+      }
+
+      axios.get('/book/baby/getList',babyListData).then(res => {
         if(res.data.status == 1){
           this.children = res.data.data
+          this.childId = res.data.data[0].id
+        }
+      })
+
+      let cateListData = {
+        params:{
+          portal_name:'宝贝主页'
+        }
+      }
+
+      axios.get('/book/schoolArticleCate/getList',cateListData).then(res=>{
+        if(res.status == 200){
+          this.topicList = res.data
+          this.cateId = data[0].cate_id
         }
       })
     },
