@@ -470,7 +470,6 @@ export default {
 }
 
 .ql-editor {
-  min-height: 100vh;
   font-size: 1rem /* 16/16 */;
   padding-bottom: 5rem /* 80/16 */;
 }
