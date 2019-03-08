@@ -42,7 +42,7 @@ export default {
       if (item.id) {
         path = `${item.path}?id=${item.id}`
       } else {
-        path = `${item.path}?isBack=0`
+        path = item.path
       }
 
       return path

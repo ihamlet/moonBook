@@ -177,8 +177,7 @@ export default {
                   name: 'edit-child',
                   query: {
                     type: 'add',
-                    pageTitle: '添加宝贝',
-                    isBack: this.$route.query.isBack
+                    pageTitle: '添加宝贝'
                   }
                 })
               }).catch(() => {
@@ -197,8 +196,7 @@ export default {
                   query: {
                     type: 'add',
                     enter: 'my',
-                    id: res.child_id,
-                    isBack: this.$route.query.isBack
+                    id: res.child_id
                   }
                 })
               }).catch(() => {
@@ -218,8 +216,7 @@ export default {
                       id: res.child_id,
                       back: 'class-home',
                       school_id: res.school_id,
-                      type: 'add',
-                      isBack: this.$route.query.isBack
+                      type: 'add'
                     }
                   })
                 }).catch(() => {

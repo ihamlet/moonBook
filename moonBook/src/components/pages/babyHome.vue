@@ -352,8 +352,7 @@ export default {
               name: 'edit-child',
               query: {
                 type: 'add',
-                pageTitle: '添加宝贝',
-                isBack: this.$route.query.isBack
+                pageTitle: '添加宝贝'
               }
             })
           }).catch(() => {
