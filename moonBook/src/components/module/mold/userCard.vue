@@ -81,12 +81,21 @@ export default {
   border-bottom: 0.0625rem /* 1/16 */ dashed #ebeef5;
 }
 
-.user-card .avatar {
+.user-card .avatar,
+.user-card .avatar img{
   width: 2.625rem /* 42/16 */;
   height: 2.625rem /* 42/16 */;
+}
+
+.user-card .avatar{
+  width: 2.625rem /* 42/16 */;
+  height: 2.625rem /* 42/16 */;
+  margin-right: 0.625rem /* 10/16 */;
+}
+
+.user-card .avatar img{
   border-radius: 50%;
   overflow: hidden;
-  margin-right: 0.625rem /* 10/16 */;
 }
 
 .user-card .name {

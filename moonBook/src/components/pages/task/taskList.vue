@@ -173,21 +173,21 @@ export default {
     background: #36D1DC;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    box-shadow: 0 .125rem /* 2/16 */ .625rem /* 10/16 */ #36D1DC;
+    box-shadow: 0 .3125rem /* 5/16 */ .625rem /* 10/16 */ #36D1DC;
 }
 
 .task-card:nth-child(2){
     background: #cb2d3e;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right,#cb2d3e, #ef473a);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #cb2d3e, #ef473a); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    box-shadow: 0 .125rem /* 2/16 */ .625rem /* 10/16 */ #ef473a;
+    box-shadow: 0 .3125rem /* 5/16 */ .625rem /* 10/16 */ #ef473a;
 }
 
 .task-card:nth-child(3){
     background: #FDC830;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #F37335, #FDC830);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #F37335, #FDC830); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    box-shadow: 0 .125rem /* 2/16 */ .625rem /* 10/16 */ #FDC830;
+    box-shadow: 0 .3125rem /* 5/16 */ .625rem /* 10/16 */ #FDC830;
 }
 
 
@@ -195,6 +195,6 @@ export default {
     background: #11998e;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right,#11998e, #38ef7d );  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #11998e,#38ef7d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    box-shadow: 0 .125rem /* 2/16 */ .625rem /* 10/16 */ #38ef7d;
+    box-shadow: 0 .3125rem /* 5/16 */ .625rem /* 10/16 */ #38ef7d;
 }
 </style>

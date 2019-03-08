@@ -7,20 +7,13 @@
         </div>
       </div>
       <div class="head-bar-btn theme-color" slot="right">
-        <van-loading color="#409eff" v-if='percent!=0'/>
-        <div class="release-btn"  @click="onClickRelease" v-else>
-          <i class="iconfont">
-            &#xe72c;
-          </i>
-          发布
-        </div>
+        <van-button :loading='percent != 0' class="theme-btn" type="primary" size="small" @click="onClickRelease" round>发布</van-button>
       </div>
     </van-nav-bar>
     <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
     <div class="textarea-module">
       <van-cell-group>
-        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4"
-          autosize />
+        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4" autosize />
         <van-tag class="tag" type="primary" v-if='cateName'> #{{cateName}}</van-tag>
         <van-cell title-class='theme-color' title="#选择分类" :value="grapicData.text.length>0?grapicData.text.length:''"
           is-link arrow-direction="down" @click="show = true" />
@@ -620,11 +613,21 @@ export default {
   padding: 0.625rem /* 10/16 */;
 }
 
-.user-info .avatar {
-  padding: 0.3125rem /* 5/16 */ 0;
+.user-info{
+  position: relative;
+  width: 100%;
+  height: 2.8125rem /* 45/16 */;
 }
 
-.user-info .avatar img {
+.user-info .avatar{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.user-info .avatar,
+.user-info .avatar img{
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
   border-radius: 50%;

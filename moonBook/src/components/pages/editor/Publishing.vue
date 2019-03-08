@@ -2,13 +2,7 @@
   <div class="publishing">
     <van-nav-bar title="文章发布" left-text="取消" @click-left="onClickLeft" fixed>
       <div class="head-bar-btn theme-color" slot="right">
-        <van-loading color="#409eff" v-if='percent != 0' />
-        <div class="release-btn" @click="release"  v-else>
-          <i class="iconfont">
-            &#xe72c;
-          </i>
-          发布
-        </div>
+        <van-button :loading='percent != 0' class="theme-btn" type="primary" size="small" @click="release" round>发布</van-button>
       </div>
     </van-nav-bar>
     <div class="container">
@@ -34,7 +28,23 @@
       <topic-list @close='show = false' @select='selectTag' type='edit' :topicList='topicList'/>
     </van-popup>
 
-    <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="actionShow = false" />
+    <van-popup class="page-popup-layer" position="bottom" v-model="linkShow" get-container='#app'>
+      <van-cell-group>
+        <van-cell>
+          <div class="title">获取公共账号文章</div>
+          <van-field ref='field' class="input-link" label-align='center' v-model="link" placeholder="粘贴公众账号文章链接" />
+        </van-cell>
+        <van-cell>
+          <van-button class="theme-btn" square type="primary" size="large" :loading='isLoading'  @click="setContent">获取文章内容</van-button>
+        </van-cell>
+      </van-cell-group>
+
+ 
+    </van-popup>
+    <div class="fixed-btn">
+      <van-button square type="primary" @click="onCopyLink" size="large">获取微信公众号文章</van-button>
+    </div>
+    <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="actionShow = false"/>
   </div>
 </template>
 <script>
@@ -67,6 +77,8 @@ export default {
       cateName: '',
       cateId: 0,
       UploadTypeShow: false,
+      linkShow: false,
+      isLoading: false,
       grapicData: {
         title: '',
         content: '',
@@ -82,9 +94,8 @@ export default {
         placeholder: '输入正文',
         modules: {
           toolbar: [
-            ['bold', 'italic', 'image', 'video', 'link'],
-            // [{ list: 'ordered' }, { list: "bullet" }],
-            [{ 'color': [] }, { 'background': [] }],
+            ['bold', 'italic', 'image', 'video'],
+            [{ list: 'ordered' }, { list: "bullet" }],
             ['blockquote']
           ]
         }
@@ -96,7 +107,8 @@ export default {
         name: '清空内容',
         type: 'noSave'
       }],
-      topicList:[]
+      topicList:[],
+      link:''
     }
   },
   mounted() {
@@ -165,6 +177,12 @@ export default {
 
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
+      })
+    },
+    onCopyLink(){
+      this.linkShow = true
+      this.$nextTick(() => {
+        this.$refs.field.focus()
       })
     },
     handleScroll() {
@@ -289,6 +307,32 @@ export default {
     videoHandler() {
       this.$refs.selectFileVideo.click()
     },
+    setContent(){
+      let regex = /^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?$/
+
+      if(this.link.length != 0 && regex.test(this.link)){
+        this.isLoading = true
+
+        let data = {
+          params:{
+            url: this.link
+          }
+        }
+        axios.get('/book/api/article_gather',data).then(res=>{
+          if(res.data.status == 1){
+            this.grapicData.content = res.data.data.content
+            this.grapicData.title = res.data.data.title
+            this.isLoading = false
+            this.linkShow = false
+            this.link = ''
+          }else{
+            this.$toast.fail(res.data.msg)
+            this.isLoading = false
+            this.linkShow = false
+          }
+        })
+      }
+    },
     onRead(file) {
       let array = []
       if (file.length) {
@@ -338,14 +382,16 @@ export default {
           this.percent = Math.floor(100 * (p.loaded / p.total))
         }
       }).then((res) => {
+        console.log(res)
+
         this.grapicData.photos.push({
           media: true,
           is_audio: type === 'audio' ? 1 : 0,
           is_video: type === 'video' ? 1 : 0,
           photo: path,
-          thumb: `${path}?x-oss-percent=video/snapshot,t_2000,f_jpg,w_0,h_0,m_fast`
+          thumb: `${path}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`
         })
-        this.addImage(`${path}?x-oss-percent=video/snapshot,t_2000,f_jpg,w_0,h_0,m_fast`)
+        this.addImage(`${path}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`)
         this.percent = 0
       })
     },
@@ -393,6 +439,7 @@ export default {
 <style scoped>
 .container {
   padding-top: 2.8125rem /* 45/16 */;
+  padding-bottom: 3.125rem /* 50/16 */;
   background: #fff;
 }
 
@@ -437,13 +484,21 @@ export default {
   border: none;
   height: auto;
 }
+
+.title{
+  text-align: center;
+  font-size: 1.25rem /* 20/16 */;
+  padding: .625rem /* 10/16 */ 0;
+  margin-bottom: 3.125rem /* 50/16 */;
+}
+
+.input-link{
+  margin: 1.25rem /* 20/16 */ auto 1.875rem /* 30/16 */;
+  text-align: center;
+}
+
 </style>
 <style>
-/* .edit-content.fixed .ql-toolbar.ql-snow {
-  position: fixed;
-  bottom: 0;
-} */
-
 .edit-title .van-field__control {
   font-size: 1.25rem /* 20/16 */;
   font-weight: 500;
@@ -472,6 +527,23 @@ export default {
 .ql-editor {
   font-size: 1rem /* 16/16 */;
   padding-bottom: 5rem /* 80/16 */;
+}
+
+.publishing .ql-snow.ql-toolbar button,
+.publishing .ql-snow .ql-toolbar button{
+  height: auto;
+  width: auto;
+}
+
+.publishing .ql-snow.ql-toolbar button svg, 
+.publishing .ql-snow .ql-toolbar button svg{
+  width: 1.5625rem /* 25/16 */;
+}
+
+.fixed-btn{
+  position: fixed;
+  bottom:0;
+  width: 100%;
 }
 </style>
 

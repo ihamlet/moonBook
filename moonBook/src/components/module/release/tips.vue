@@ -336,11 +336,11 @@ export default {
 }
 
 .tips.bottom .tips-list {
-  width: 18.75rem /* 300/16 */;
+  width: 17.5rem /* 280/16 */;
   margin: 0 auto;
-  padding: 1.25rem /* 20/16 */;
+  padding: .625rem /* 10/16 */;
   background: #fff;
-  border-radius: 1.25rem /* 20/16 */;
+  border-radius: .625rem /* 10/16 */;
   box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.2);
 }
 
@@ -355,7 +355,6 @@ export default {
 
 .tips.bottom .btn .name {
   font-size: 0.75rem /* 12/16 */;
-  margin-top: 0.3125rem /* 5/16 */;
   font-weight: 500;
 }
 

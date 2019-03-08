@@ -29,9 +29,9 @@
       </div>
     </div>
 
-    <div class="media img long-article-thumb" v-if='item.template_id == "0"&&type == "card"&&item.cover'>
+    <div class="media img long-article-thumb" v-if='item.template_id == "0"&&type == "card"&&item.cover&&item.hasvideo!="1"'>
       <img :src="item.cover || item.photos[0].thumb" :preview='item.post_id'/>
-      <van-tag class="photo-tag" round type="primary">文章</van-tag>
+      <van-tag class="photo-tag" type="primary">文章</van-tag>
     </div>
     
     <!-- 音频 -->

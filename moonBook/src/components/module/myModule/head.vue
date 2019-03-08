@@ -15,7 +15,7 @@
         <div class="avatar" v-if='userInfo.avatar'>
           <img :src="getAvatar(userInfo.avatar)" :alt="userInfo.name">
         </div>
-        <avatar v-else size='medium' avatarClass='border'/>
+        <avatar v-else size='medium' avatarClass='border' />
         <div class="children-info" v-if='children' @click="toBabyHome">
           <img class="children-avatar" :src="getAvatar(children.avatar)" :alt="children.name">
         </div>
@@ -160,10 +160,10 @@ export default {
       }
       return result;
     },
-    toBabyHome(){
+    toBabyHome() {
       this.$router.push({
-        name:'baby-home',
-        query:{
+        name: 'baby-home',
+        query: {
           id: this.children.id,
           back: this.$route.name
         }
@@ -176,6 +176,22 @@ export default {
 .head {
   width: 100%;
   position: relative;
+  transition: background-image 0.2s ease;
+  background: linear-gradient(223deg, #9ce8dd, #a993da, #f0cb54, #6d93a3);
+  background-size: 600% 600%;
+  animation: bg-generator 50s ease infinite;
+}
+
+@keyframes bg-generator {
+  0% {
+    background-position: 0% 84%;
+  }
+  50% {
+    background-position: 100% 17%;
+  }
+  100% {
+    background-position: 0% 84%;
+  }
 }
 
 .card {
@@ -217,7 +233,7 @@ export default {
 .avatar img,
 .children-avatar {
   border-radius: 50%;
-  border: 0.1875rem /* 3/16 */ solid #fff;
+  border: 0.1875rem /* 3/16 */ solid rgba(255, 255, 255, .5);
 }
 
 .children-avatar {

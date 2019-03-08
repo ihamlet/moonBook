@@ -22,7 +22,6 @@ export default {
   },
   created () {
     this.fetchData()
-    console.log(this.is_mine)
   },
   watch: {
     '$router':'fetchData'
@@ -31,7 +30,6 @@ export default {
     fetchData(){
       axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res=>{
         if(res.data.status = 1){
-          console.log(res.data.data.is_mine)
           this.is_mine = res.data.data.is_mine
         }
       })
@@ -90,8 +88,8 @@ export default {
 }
 
 .pictorial {
-  padding-bottom: 125%;
   width: 100%;
+  padding-bottom: 120%;
   background-image: url('./../../../assets/img/invite-family.gif');
   background-size: cover;
   background-position: bottom;
