@@ -14,7 +14,7 @@
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
                 <div class="card-list">
-                    <div class="task-card flex flex-align fadeInUp animated" v-for="(item,index) in list" :key="index" :class="`an-${index}`">
+                    <div class="task-card flex flex-align fadeInUp animated" v-for="(item,index) in list" :key="index" :class="`an-${index}`" @click="toGraphic">
                         <div class="cover">
                             <img :src="item.cover"/>
                         </div>
@@ -102,6 +102,17 @@ export default {
         this.onLoad().then(()=>{
             this.loading = false
         })
+    },
+    toGraphic(){
+      this.$router.push({
+        name: 'graphic',
+        query:{
+          id: this.$route.query.id,
+          back: 'baby-home'
+        }
+      })
+
+      this.$toast('签到成功')
     }
   }
 }

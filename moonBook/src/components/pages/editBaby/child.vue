@@ -329,7 +329,12 @@ export default {
             name: 'my'
           })
         }).catch(() => {
-          axios.get(`/book/baby/del?child_id=${this.$route.query.id}`).then(res => {
+          let data = {
+            params:{
+              child_id:this.$route.query.id
+            }
+          }
+          axios.get('/book/baby/del',data).then(res => {
             this.getUserData()
             this.$router.push({
               name: 'my'

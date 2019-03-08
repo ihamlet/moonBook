@@ -238,7 +238,13 @@ export default {
               title: '删除',
               message: '您确认要删除吗'
             }).then(() => {
-              axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
+              let data = {
+                params:{
+                  id:this.postId
+                }
+              }
+
+              axios.get('/book/SchoolArticle/del',data).then(res => {
                 if (res.data.status == 1) {
                   let index
                   this.list.forEach((element,i) => {

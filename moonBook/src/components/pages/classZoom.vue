@@ -178,7 +178,14 @@ export default {
           this.show = false
           break
         case 2:
-          axios.get(`/book/SchoolArticle/del?id=${this.cardItem.post_id}`).then(res => {
+          let data = {
+            params:{
+              id:this.cardItem.post_id,
+              mode:'banji'
+            }
+          }
+
+          axios.get('/book/SchoolArticle/del',data).then(res => {
             if(res.data.status == 1){
                 let index
                 this.list.forEach((e,i)=>{
