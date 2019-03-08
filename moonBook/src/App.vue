@@ -17,9 +17,6 @@ export default {
   computed: {
     ...mapGetters(['userDataState'])
   },
-  created () {
-    this.fetchData()
-  },
   data () {
     const self = this
     return {
@@ -38,6 +35,9 @@ export default {
           }
       }]
     }
+  },
+  created () {
+    this.fetchData()
   },
   watch: {
     center(val){
@@ -80,12 +80,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_n7uy97gfyr.eot');
-  src: url('//at.alicdn.com/t/font_893274_n7uy97gfyr.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_n7uy97gfyr.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_n7uy97gfyr.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_n7uy97gfyr.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_n7uy97gfyr.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_dugkq7iy4f6.eot');
+  src: url('//at.alicdn.com/t/font_893274_dugkq7iy4f6.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_dugkq7iy4f6.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_dugkq7iy4f6.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_dugkq7iy4f6.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_dugkq7iy4f6.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,
@@ -131,6 +131,10 @@ textarea {
   align-items: center;
 }
 
+.van-overlay.bg-opacity{
+  background: rgba(255, 255, 255, 0);
+}
+
 .flex-justify {
   justify-content: center;
 }
@@ -142,6 +146,7 @@ textarea {
 body {
   color: #606266;
   background: #f2f6fc;
+  text-size-adjust: 100% !important;
 }
 
 .item{

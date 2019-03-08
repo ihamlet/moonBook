@@ -25,7 +25,7 @@
                   <div class="avatar">
                     <img :src="getAvatar(item.user.avatar)" />
                   </div>
-                  <div class="name">
+                  <div class="name" v-line-clamp:20="1">
                     {{item.user.name}}
                   </div>
                 </div>
@@ -133,14 +133,25 @@ export default {
   position: relative;
 }
 
+.name{
+  max-width: 110px;
+}
+
 .video-cover {
-  width: 12.5rem /* 200/16 */;
-  height: 7.03125rem /* 112.5/16 */;
+  width: 210px;
+  height: 130px;
   overflow: hidden;
   border-radius: 0.3125rem /* 5/16 */;
   margin-bottom: 0.3125rem /* 5/16 */;
   position: relative;
   background-color: #eee;
+}
+
+.video-cover img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
 }
 
 .playing{

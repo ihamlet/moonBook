@@ -8,7 +8,7 @@
         <div class="item" v-for="(item,index) in list" :key="index" @click="setItem(item)" v-else>
           <van-cell>
             <div class="content">
-              <graphic-card :item="item" @follow="follow" @more='actionsheet' :title='appellation'/>
+              <graphic-card :item="item" @follow="follow" @more='actionsheet' :title='item.school_role'/>
             </div>
           </van-cell>
         </div>
@@ -112,20 +112,6 @@ export default {
         })
 
       return arr
-    },
-    appellation(){
-      let appellation
-      if(this.manage){
-        if(this.$route.name == 'apps-school'){
-          appellation = '校长'
-        }else{
-          appellation = '老师'
-        }
-      }else{
-        appellation = '家长'
-      }
-
-      return appellation
     }
   },
   data() {
@@ -247,7 +233,17 @@ export default {
             title: '删除',
             message: '您确认要删除吗'
           }).then(() => {
-            axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
+            let data ={
+              params:{
+                id: this.postId
+              }
+            }
+
+            if(this.$route.name == 'apps-school'){
+              data.params.mode = 'school'
+            }
+
+            axios.get('/book/SchoolArticle/del',data).then(res => {
               if (res.data.status == 1) {
                 let index
                 this.list.forEach((e, i) => {

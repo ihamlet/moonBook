@@ -2,7 +2,7 @@
   <div class="information">
     <van-nav-bar :title="$route.meta.title" left-text="返回" left-arrow @click-left="onClickLeft" :zIndex='2021'/>
     <div class="information-list">
-      <div class="get-praise">宝贝收到的赞</div>
+      <div class="get-praise"> <span> 宝贝收到的赞 </span> </div>
       <div class="list">
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
@@ -144,13 +144,16 @@ export default {
 
 .get-praise {
   height: 1.875rem /* 30/16 */;
-  padding: 0 1.25rem /* 20/16 */;
   line-height: 1.875rem /* 30/16 */;
   background: #fff;
   box-shadow: 0 0.125rem /* 2/16 */ 0.625rem /* 10/16 */ rgba(0, 0, 0, 0.1);
   width: 100%;
   z-index: 2020;
   position: relative;
+}
+
+.get-praise span{
+  margin-left: 1.25rem /* 20/16 */;
 }
 
 .no-content {

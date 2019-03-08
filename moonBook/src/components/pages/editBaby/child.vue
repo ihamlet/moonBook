@@ -3,7 +3,6 @@
     <van-nav-bar :title="$route.query.type!='edit'?'添加宝贝':'编辑宝贝'" left-arrow :left-text="$route.query.back?'返回':'我的'" :right-text="$route.query.type=='edit'?'删除':''"
       @click-left="onClickLeft" @click-right="onClickRight('delete')" />
     <div class="avatar-uploader">
-      <i class="iconfont" v-if='userDataState.isVip' :class="`vip-${userDataState.card_level}`">&#xe776;</i>
       <van-uploader :after-read="onRead">
         <div class="prompt" v-if='!childInfo.avatar'>
           <avatar :gender='childInfo.gender' size='big'/>
@@ -65,7 +64,7 @@
     </div>
 
     <van-popup class="card-routing-popup" v-model="show" get-container='#app'>
-      <card-routing/>
+      <card-routing :childId='childId'/>
     </van-popup>
   </div>
 </template>
@@ -106,8 +105,9 @@ export default {
         gender: 'boy',
         avatar: '',
         birthday: '',
-        relation_name: ''
+        relation_name: '',
       },
+      childId:'',
       errorMessage: {
         name: '',
         birthday: ''
@@ -156,7 +156,6 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     fetchData() {
-
       if (localStorage['childInfo'] != undefined&&this.$route.query.type == 'edit') {
         this.childInfo = JSON.parse(localStorage['childInfo'])
       }
@@ -166,7 +165,13 @@ export default {
       }
 
       if (this.$route.query.id) {
-        axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
+        let getChildByUserData = {
+          params:{
+            child_id: this.$route.query.id
+          }
+        }
+
+        axios.get('/book/family/getChildByUser',getChildByUserData).then(res => {
           let date = new Date(res.data.data.birthday * 1000)
           this.childInfo.name = res.data.data.name
           this.childInfo.avatar = res.data.data.avatar
@@ -245,12 +250,14 @@ export default {
       })
     },
     submit(set) {
-      this.submitLoading = true
-      if (!this.childInfo.avatar) {
-        this.$toast.fail('请上传头像')
+      
+      if(set!='setSchool'){
+        this.submitLoading = true
       }
 
-      if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
+      if (!this.childInfo.avatar) {
+        this.$toast.fail('请上传头像')
+      }else if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
         this.errorMessage.name = '请正确填写孩子的姓名'
         setTimeout(() => {
           this.errorMessage.name = ''
@@ -273,6 +280,7 @@ export default {
             })
           }else if(this.$route.query.type == 'register'){
             this.show = true
+            this.childId = res
           }else{
             this.$router.push({
               name:'baby-home',
@@ -300,7 +308,7 @@ export default {
         if (res) {
           this.$toast.success('修改成功')
         } else {
-          this.$toast.success('修改成功')
+          this.$toast.fail('修改失败')
         }
       })
     },
@@ -321,7 +329,12 @@ export default {
             name: 'my'
           })
         }).catch(() => {
-          axios.get(`/book/baby/del?child_id=${this.$route.query.id}`).then(res => {
+          let data = {
+            params:{
+              child_id:this.$route.query.id
+            }
+          }
+          axios.get('/book/baby/del',data).then(res => {
             this.getUserData()
             this.$router.push({
               name: 'my'

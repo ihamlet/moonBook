@@ -21,6 +21,7 @@ import EditStting from '@/components/pages/setting'
 import EditManager from '@/components/pages/editManager/manager'
 
 import Activity from '@/components/pages/activity'
+import Task from '@/components/pages/task/taskList'
 
 import AddFamily from '@/components/pages/invite/addFamily'
 import VerifyFamily from '@/components/pages/invite/verifyList'
@@ -56,6 +57,8 @@ import ReadAmount from '@/components/pages/readAmount'
 
 import Train from '@/components/train'
 import AppsTrain from '@/components/apps/train/trainHome'
+
+
 
 Vue.use(Router)
 
@@ -149,6 +152,14 @@ export default new Router({
           component: Activity,
           meta: {
             title: '活动',
+            isFooterBar: false
+          }
+        },
+        {
+          path: '/task',
+          name: 'task',
+          component: Task,
+          meta: {
             isFooterBar: false
           }
         },

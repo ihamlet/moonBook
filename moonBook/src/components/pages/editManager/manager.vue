@@ -1,8 +1,8 @@
 <template>
   <div class="add-child">
     <van-nav-bar :title="$route.query.pageTitle" left-arrow left-text="注册" @click-left="onClickLeft" />
-    <div class="verify" v-if='managerData.is_confirm == 0'>
-      您的表单需要审核，请等待审核通过...
+    <div class="verify" v-if='managerData.is_confirm!=-1'>
+      {{status}}
     </div>
     <div class="teacher-form">
       <van-radio-group>
@@ -59,6 +59,21 @@ export default {
       }
 
       return array
+    },
+    status(){
+      let msg = ''
+
+      if(this.managerData){
+        if(this.managerData.is_confirm == 0){
+          msg = '您的表单需要审核，请等待审核通过...'
+        }else if(this.managerData.is_confirm == 1){
+          msg = '表单审核通过'
+        }else if(this.managerData.is_confirm == 2){
+          msg = '表单审核，被拒绝!'
+        }
+      }
+
+      return msg
     }
   },
   data() {
@@ -70,7 +85,7 @@ export default {
         typecode:'141204',
         school_name:'',
         banji_name:'',
-        is_confirm: 1
+        is_confirm: -1
       },
       schoolInfo: ''
     }

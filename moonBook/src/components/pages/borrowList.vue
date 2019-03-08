@@ -105,6 +105,10 @@ export default {
               this.finished = true
             }
           }
+        }else{
+          this.loading = false
+          this.finished = true
+          this.tab[this.tabIndex].content = []
         }
       })
     },

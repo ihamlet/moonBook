@@ -181,16 +181,23 @@ export default {
       }
 
       return axios.get(apiLink, data).then(res => {
-        if (this.page == 1) {
-          this.readArray[this.tabIndex].content = res.data.data
-        } else {
-          this.readArray[this.tabIndex].content = this.readArray[this.tabIndex].content.concat(res.data.data)
-        }
-        this.loading = false
-        this.page++
-        if (this.readArray[this.tabIndex].content.length >= res.data.count) {
+        if(res.data.status == 1){
+          if (this.page == 1) {
+            this.readArray[this.tabIndex].content = res.data.data
+          } else {
+            this.readArray[this.tabIndex].content = this.readArray[this.tabIndex].content.concat(res.data.data)
+          }
+          this.loading = false
+          this.page++
+          if (this.readArray[this.tabIndex].content.length >= res.data.count) {
+            this.finished = true
+          }
+        }else{
+          this.loading = false
           this.finished = true
+          this.readArray[this.tabIndex].content= []
         }
+
       })
     },
     onRefresh() {

@@ -163,8 +163,14 @@ const actions = {
       //   })
 
       axios.get(WMlifeSearchSchoolLink,{params:data}).then(res=>{
-        console.log(res)
-        resolve(res)
+        let resData = []
+        if(res.data.status == 1){
+          resData = res.data
+        }else{
+          resData = []
+        }
+
+        resolve(resData)
       })
     })
   },
@@ -191,11 +197,9 @@ const actions = {
 
 
       return new Promise((resolve, reject) => {
-        fetchJsonp(amapApiLink)
-          .then(response => {
+        fetchJsonp(amapApiLink).then(response => {
             return response.json()
-          })
-          .then(res => {
+          }).then(res => {
             if(res.tips.length){
               resolve( {
                 resData: res.tips,

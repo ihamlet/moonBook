@@ -78,20 +78,35 @@ export default {
     ...mapActions(['getUserData']),
     fetchData() {
       axios.get('/book/SchoolTeacher/getMine').then(res => {
-        this.isTeacher = res.data.data.is_confirm
+        if(res.data.status == 1){
+          this.isTeacher = res.data.data.is_confirm
+        }
       })
 
       axios.get('/book/SchoolTeacher/getMine?is_master=1').then(res => {
-        this.isHeaderTeacher = res.data.data.is_confirm
+        if(res.data.status == 1){
+          this.isHeaderTeacher = res.data.data.is_confirm
+        }
       })
 
       this.getUserData().then(res => {
-        axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
-          this.children = res.data.data
-        })
-        axios.get(`/book/SchoolArticle/getList?page=1&sort=new&user_id=${res.id}`).then(res => {
-          this.zoomCard = res.data.data[0]
-        })
+        if(res.id != null){
+          let data = {
+            params:{
+              sort:'old',
+              user_id:res.id
+            }
+          }
+          axios.get('/book/baby/getList',data).then(res => {
+            this.children = res.data.data
+          })
+
+          axios.get('/book/SchoolArticle/getList?page=1&sort=new&user_id=${res.id}').then(res => {
+            this.zoomCard = res.data.data[0]
+          })
+        }else{
+           this.$toast.fail('获取数据失败')
+        }
       })
     }
   }

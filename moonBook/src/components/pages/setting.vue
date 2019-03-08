@@ -51,8 +51,10 @@ export default {
         }
 
         axios.get('/book/SchoolTeacher/getMine', data).then(res => {
-          this.setting.settingSchool = res.data.data.school_name
-          this.setting.settingClass = res.data.data.banji_name
+          if(res.data.status == 1){
+            this.setting.settingSchool = res.data.data.school_name
+            this.setting.settingClass = res.data.data.banji_name
+          }
         })
       } else {
         axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {

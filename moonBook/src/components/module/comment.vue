@@ -1,6 +1,6 @@
 <template>
   <div class="comment-list" id='comment' ref='comment'>
-    <van-nav-bar :border='false' :zIndex='0' @click-right="showField">
+    <van-nav-bar :border='false' :zIndex='0'>
       <div class="zan" slot="right">赞 {{item.zan_num}}</div>
       <div class="comment" slot="left">评论 {{listLength}}</div>
     </van-nav-bar>
@@ -107,7 +107,7 @@
         </div>
       </div>
 
-      <van-popup v-model="show" class="comment-popup" position="bottom" get-container='#app'>
+      <van-popup v-model="show" class="comment-popup" overlay-class='bg-opacity' position="bottom" get-container='#app' @close='$refs.field.blur()'>
         <div class="score flex-column" v-if='include != "include"&&score'>
           <div class="score-title">评分</div>
           <van-rate class="score-rate" v-model="star" :size="25" :count="5" void-color="#ceefe8" />
@@ -119,7 +119,7 @@
             </van-cell-group>
           </div>
           <div class="submit-btn theme-color">
-            <van-button class="theme-btn" :loading="isLoading" size="large" type="primary" @click="submit">发送</van-button>
+            <van-button class="theme-btn" round :loading="isLoading" size="large" type="primary" @click="submit">发送</van-button>
           </div>
         </div>
       </van-popup>
@@ -202,15 +202,19 @@ export default {
 
       if(this.message.length){
         axios.post(`/book/SchoolArticleComment/edit?ajax=1`, data).then(res => {
-          this.show = false
-          this.page = 1
-          this.onLoad()
+          if(res.data.status == 1){
+            this.show = false
+            this.page = 1
+            this.onLoad()
+            this.$toast.success(res.data.data.info)
+            this.isLoading = false
+          }else{
+            this.$toast.fail(res.data.data.info)
+          }
         })
       }else{
         this.$toast('请填写评论内容')
-      }
-
-      this.isLoading = false
+      }    
     },
     addPraise(item) {
       item.isZan = !item.isZan
@@ -242,6 +246,7 @@ export default {
       })
     },
     showField(item,type) {
+      this.isLoading = false
       this.message = ''
       if (item) {
         this.prompt = `回复：${item.username}`
@@ -319,7 +324,7 @@ export default {
   font-size: 0.8125rem /* 13/16 */;
 }
 
-.avatar {
+.avatar img{
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
   border-radius: 50%;
@@ -429,9 +434,13 @@ export default {
   height: 2.75rem /* 44/16 */;
 }
 
-.input-box-avatar {
+.input-box-avatar,
+.input-box-avatar img{
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
+}
+
+.input-box-avatar {
   margin-left: 0.3125rem /* 5/16 */;
 }
 

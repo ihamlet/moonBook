@@ -1,12 +1,15 @@
 <template>
   <div class="baby-home page-padding" v-if='hackReset'>
-    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft">
+    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft" @click-right='onClickRight'>
       <div class="head-bar-title" slot="title" @click="selectBaby">
         {{pageTitle}} <i class="iconfont" v-if='babyList.length'>&#xe608;</i>
       </div>
       <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back||$route.query.backGo?'返回':'首页'}}</span>
+      </div>
+      <div class="head-bar-text" slot="right">
+        <span class="text">任务</span>
       </div>
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
@@ -262,7 +265,13 @@ export default {
   methods: {
     ...mapActions(["getUserData"]),
     fetchData() {
-      axios.get('/book/schoolArticleCate/getList?portal_name=宝贝主页').then(res => {
+      let schoolArticleCate = {
+        params:{
+          portal_name:'宝贝主页'
+        }
+      }
+
+      axios.get('/book/schoolArticleCate/getList', schoolArticleCate).then(res => {
         if (res.status == 200) {
           let array = res.data
           array.forEach(element => {
@@ -275,40 +284,79 @@ export default {
       })
 
       this.getUserData().then(res => {
-        axios.get(`/book/baby/getList?sort=old&user_id=${res.id}`).then(res => {
-          if (res.data.status == 1) {
-            this.babyList = res.data.data
+        if(res.id != null){
+          let data = {
+            params: {
+              sort:'old',
+              user_id:res.id
+            }
           }
-        })
+          axios.get('/book/baby/getList',data).then(res => {
+            if (res.data.status == 1) {
+              this.babyList = res.data.data
+            }
+          })
+        }else{
+          this.$toast.fail('用户信息失败')
+        }
       })
 
-      axios.get(`/book/SchoolArticle/getList?tid=${this.tid}`).then(res => {
+      let getSchoolArticleData = {
+        params: {
+          tid: this.tid
+        }
+      }
+
+      axios.get('/book/SchoolArticle/getList',getSchoolArticleData).then(res => {
         if (res.data.status == 1) {
           this.activityCount = res.data.count
         }
       })
 
-      axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${this.$route.query.id}`).then(res => {
+      let babyBorrowGetListData = {
+        params:{
+          page:1,
+          limit:20,
+          child_id:this.$route.query.id
+        }
+      }
+
+      axios.get('/book/BabyBorrow/getList',babyBorrowGetListData).then(res => {
         if (res.status == 200) {
-            this.lateBook = res.data.data
+          this.lateBook = res.data.data
         }
       })
     },
     request() {
       this.getUserData().then(res => {
         if (res.child_id > '0') {
-          axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
+          let data = {
+            params:{
+              child_id: this.$route.query.id
+            }
+          }
+          axios.get('/book/baby/getInfo',data).then(res => {
             if (res.data.status == 1) {
               this.childInfo = res.data.data
             }
           })
-        } else {
-          this.$router.push({
-            name: 'edit-child',
-            query: {
-              type: 'add',
-              pageTitle: '添加宝贝'
-            }
+        } else{
+          this.$dialog.confirm({
+            title: '添加宝贝',
+            message: '请添加您的宝贝，掌握孩子阅读数据',
+            confirmButtonText:'添加',
+            cancelButtonText:'稍后',
+            showCancelButton: true
+          }).then(() => {
+            this.$router.push({
+              name: 'edit-child',
+              query: {
+                type: 'add',
+                pageTitle: '添加宝贝'
+              }
+            })
+          }).catch(() => {
+            this.$router.go(-1)
           })
         }
       })
@@ -427,7 +475,13 @@ export default {
       }
     },
     babyPraise(childInfo) {
-      axios.get(`/book/baby/zan?child_id=${this.$route.query.id}`).then(res => {
+      let data = {
+        params:{
+          child_id: this.$route.query.id
+        }
+      }
+
+      axios.get('/book/baby/zan',data).then(res => {
         if (res.data.status == 1) {
           this.zanShow = true
           childInfo.zan_count = res.data.data.zan_count
@@ -530,7 +584,13 @@ export default {
             title: '删除',
             message: '您确认要删除吗'
           }).then(() => {
-            axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
+            let data = {
+              params:{
+                id:this.postId
+              }
+            }
+
+            axios.get('/book/SchoolArticle/del',data).then(res => {
               if (res.data.status == 1) {
                 let index
                 this.tab[this.tabIndex].content.forEach((e, i) => {
@@ -625,6 +685,16 @@ export default {
     punch() {
       Cookies.set('punckLink', location.href)
       location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
+    },
+    onClickRight(){
+      this.$router.push({
+        name:'task',
+        query:{
+          id: this.$route.query.id,
+          back: this.$route.name,
+          tid: 16
+        }
+      })
     }
     // toTaskLinkPage() {
     //   window.location.href = '/book/TushuDonation/intro'

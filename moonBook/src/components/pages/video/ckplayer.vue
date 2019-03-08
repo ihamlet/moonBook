@@ -1,6 +1,5 @@
 <template>
   <div class="video-page page-padding" v-if='hackReset'>
-    <van-nav-bar ref='headBar' :zIndex='100' left-arrow left-text="返回" @click-left="onClickLeft" />
     <div class="video-box" ref='videoDom'>
       <div id="video" :class="!fixedHeaderBar?'fixed':''" :style="!fixedHeaderBar&&styleObject"></div>
     </div>

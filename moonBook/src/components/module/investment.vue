@@ -4,7 +4,7 @@
       <div class='close' @click="hideAd">
         <i class="iconfont">&#xe683;</i>
       </div>
-      <a :href="investmentAd.link">
+      <a :href="investmentAd.link" v-if='$route.name != "apps-school" '>
         <img class="lazy" v-lazy="investmentAd.banner" alt="加盟商广告">
       </a>
     </div>

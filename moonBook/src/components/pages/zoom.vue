@@ -62,7 +62,7 @@ import axios from "./../lib/js/api";
 import { sum } from "./../lib/js/util.js";
 import graphicCard from "./../module/card/graphicCard";
 import reading from "./../module/reading";
-import { mapGetters } from "vuex";
+import { mapGetters,mapActions } from "vuex";
 
 export default {
   name: "zoom",
@@ -112,17 +112,33 @@ export default {
     window.addEventListener("scroll", this.handleScroll);
   },
   methods: {
+    ...mapActions(['getUserData']),
     fetaData() {
-      axios.get(`/book/memberUser/getInfo?user_id=${this.$route.query.id}`).then(res => {
-          if(res.status == 200){
-            this.userInfo = res.data
-            axios.get(`/book/BabyBorrow/getList?page=1&limit=20&child_id=${res.data.child_id}`).then(res => {
+      let data = {
+        params:{
+          user_id:this.$route.query.id
+        }
+      }
+
+      this.getUserData().then(res=>{
+        if(res.id != 0 ){
+            this.userInfo = res
+            let getBabyBorrowData = {
+              params:{
+                page:1,
+                limit:20,
+                child_id:res.child_id
+              }
+            }
+
+            axios.get('/book/BabyBorrow/getList',getBabyBorrowData).then(res => {
                 if(res.status == 200){
                   this.lateBook = res.data.data
                 }
             })
-          }
-        })
+        }
+      })
+
     },
     onClickLeft() {
       if (this.$route.query.back) {
@@ -157,16 +173,30 @@ export default {
       }
     },
     onLoad() {
-      axios.get(`/book/SchoolArticle/getList?page=${this.page}&sort=post&user_id=${this.$route.query.id}`).then(res => {
+      if(this.$route.query.id){
+        let data = {
+          params:{
+            page:this.page,
+            sort:'post',
+            user_id:this.$route.query.id
+          }
+        }
+
+        axios.get('/book/SchoolArticle/getList',data).then(res => {
           if(res.data.status == 1){
             this.page++
             this.list = this.list.concat(res.data.data)
-            this.loading = false;
+            this.loading = false
             if (this.list.length >= res.data.count) {
-              this.finished = true;
+              this.finished = true
             }
+          }else{
+            this.loading = false
+            this.finished = true
+            this.list = []
           }
         })
+      }
     },
     actionsheet(item) {
       this.show = true
@@ -208,7 +238,13 @@ export default {
               title: '删除',
               message: '您确认要删除吗'
             }).then(() => {
-              axios.get(`/book/SchoolArticle/del?id=${this.postId}`).then(res => {
+              let data = {
+                params:{
+                  id:this.postId
+                }
+              }
+
+              axios.get('/book/SchoolArticle/del',data).then(res => {
                 if (res.data.status == 1) {
                   let index
                   this.list.forEach((element,i) => {

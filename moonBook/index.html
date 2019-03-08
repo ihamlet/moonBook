@@ -2,28 +2,44 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta  name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui" />
+    <meta
+      name="viewport"
+      content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui"
+    />
     <!-- touch icon -->
     <meta name="full-screen" content="yes" />
     <meta name="browsermode" content="application" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta id="status-bar" name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta
+      id="status-bar"
+      name="apple-mobile-web-app-status-bar-style"
+      content="black"
+    />
     <link rel="apple-touch-icon" href="/Public/lib/bookshelf/img/logo.png" />
     <meta name="apple-mobile-web-app-title" content="阅亮书架" />
     <!-- For Web App Manifest -->
 
-    <meta name="description" content="读书、加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。"/>
+    <meta
+      name="description"
+      content="读书、加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。"
+    />
     <meta name="keywords" content="阅亮书架" />
 
     <!-- Schema.org markup for Google+ -->
     <meta itemprop="name" content="阅亮书架" />
-    <meta itemprop="description" content="读书/加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。"/>
+    <meta
+      itemprop="description"
+      content="读书/加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。"
+    />
     <meta itemprop="image" content="/Public/lib/bookshelf/img/logo.png" />
     <!-- Twitter meta -->
     <meta name="twitter:card" content="summary" />
     <!-- Open Graph meta -->
     <meta property="og:title" content="阅亮书架" />
-    <meta property="og:description" content="读书、加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。"/>
+    <meta
+      property="og:description"
+      content="读书、加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。"
+    />
     <meta property="og:site_name" content="阅亮书架(手机版)" />
     <meta property="og:url" content="https://wwww.wmlife.net/" />
     <meta property="og:image" content="/Public/lib/bookshelf/img/logo.png" />
@@ -34,39 +50,73 @@
     <!-- Wechat meta -->
     <meta property="weixin:timeline_title" content="阅亮书架" />
     <meta property="weixin:chat_title" content="阅亮书架" />
-    <meta property="weixin:description" content="读书、加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。"/>
-    <meta property="weixin:image" content="/Public/lib/bookshelf/img/logo.png"/>
+    <meta
+      property="weixin:description"
+      content="读书、加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。"
+    />
+    <meta
+      property="weixin:image"
+      content="/Public/lib/bookshelf/img/logo.png"
+    />
     <title>阅亮书架</title>
     <script>
-      ;(function() {
+      (function() {
         window.setMeta = function(name, val) {
           var meta = document.querySelectorAll(
             'meta[property="' + name + '"], meta[name="' + name + '"]'
           )
           if (!meta.length) {
-            meta = document.createElement('meta')
+            meta = document.createElement("meta")
             meta.name = name
             document.head.appendChild(meta)
             meta = [meta]
           }
-          meta[0].content = val || ''
+          meta[0].content = val || ""
         }
         window.getMeta = function(name) {
           var meta = document.querySelectorAll(
             'meta[property="' + name + '"], meta[name="' + name + '"]'
-          )
+          );
           if (!meta.length) {
-            return ''
+            return ""
           } else {
             return meta[0].content
           }
         }
-        !getMeta('weixin:chat_title') &&
-          setMeta('weixin:chat_title', document.title)
-        !getMeta('weixin:timeline_title') &&
-          setMeta('weixin:timeline_title', document.title)
-        !getMeta('weixin:description') &&
-          setMeta('weixin:description', getMeta('og:description'))
+        !getMeta("weixin:chat_title") &&
+          setMeta("weixin:chat_title", document.title)
+        !getMeta("weixin:timeline_title") &&
+          setMeta("weixin:timeline_title", document.title)
+        !getMeta("weixin:description") &&
+          setMeta("weixin:description", getMeta("og:description"))
+      })();
+    </script>
+    <script>
+      //禁止微信修改字体
+      (function() {
+        if (
+          typeof WeixinJSBridge == "object" &&
+          typeof WeixinJSBridge.invoke == "function"
+        ) {
+          handleFontSize()
+        } else {
+          if (document.addEventListener) {
+            document.addEventListener(
+              "WeixinJSBridgeReady",
+              handleFontSize,
+              false
+            )
+          } else if (document.attachEvent) {
+            document.attachEvent("WeixinJSBridgeReady", handleFontSize)
+            document.attachEvent("onWeixinJSBridgeReady", handleFontSize)
+          }
+        }
+        function handleFontSize() {
+          WeixinJSBridge.invoke("setFontSizeCallback", { fontSize: 0 })
+          WeixinJSBridge.on("menu:setfont", function() {
+            WeixinJSBridge.invoke("setFontSizeCallback", { fontSize: 0 })
+          })
+        }
       })()
     </script>
   </head>

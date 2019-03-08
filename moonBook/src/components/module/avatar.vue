@@ -17,9 +17,9 @@ export default {
     height: 5rem /* 80/16 */;
 }
 
-.avatar-default.mini img{
-    width: 2.625rem /* 42/16 */;
-    height: 2.625rem /* 42/16 */;
+.avatar-default.medium img{
+    width: 4.5rem /* 72/16 */;
+    height: 4.5rem /* 72/16 */;
 }
 
 .avatar-default.small img{

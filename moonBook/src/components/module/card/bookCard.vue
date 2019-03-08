@@ -27,6 +27,7 @@ export default {
   methods: {
     outThumb(e, item) {
       e.target.outerHTML = `
+            <div class='no-cover'>
                 <div class='three-d-book'>
                     <div class='three-d-book-cover'>
                         <div class='three-d-book-name'>
@@ -37,6 +38,7 @@ export default {
                         </div>
                     </div>
                 </div>
+              </div>
             `
     },
     thumb(img) {

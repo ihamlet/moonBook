@@ -10,7 +10,7 @@
         </div>
         <div class="info">
           <div class="name flex flex-align">
-            <span>{{item.user.name}}</span>
+            <span  v-line-clamp:20="1" :class="[item.card_level>'0'?'vip-highlight':'']">{{item.user.name}}</span>
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
@@ -29,8 +29,8 @@
 
       <media :item='item' type='card'/>
 
-      <div class="temp-type">
-        <van-tag color='#ad0000' type="success" size="medium" plain v-if='item.school_id > 0'>
+      <div class="temp-type flex flex-align">
+        <van-tag color='#ad0000' class="school-tag"  v-line-clamp:20="1" type="success" size="medium" plain v-if='item.school_id > 0'>
           <span @click="toSchoolHome(item.school_id)">{{item.schoolName}}</span>
         </van-tag>
          <van-tag color="#ffe1e1" text-color="#ad0000" size="medium" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
@@ -257,5 +257,14 @@ export default {
 .user-card{
   position: relative;
   z-index: 2;
+}
+
+.school-tag{
+  max-width: 6.25rem /* 100/16 */;
+  margin-right: .625rem /* 10/16 */;
+}
+
+.vip-highlight{
+  color: #FF9800;
 }
 </style>

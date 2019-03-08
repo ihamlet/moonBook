@@ -34,7 +34,13 @@ export default {
   },
   methods: {
     onLoad() {
-     return axios.get(`/book/SchoolArticle/getList?tid=${this.$route.query.tid}`).then(res => {
+      let data = {
+        params:{
+          tid: this.$route.query.tid
+        }
+      }
+
+     return axios.get('/book/SchoolArticle/getList',data).then(res => {
         if (res.data.status == 1) {
           if (this.page == 1) {
             this.list = res.data.data

@@ -12,8 +12,12 @@
               <vip-level v-if='item.card_level' :animate='true' :level='item.card_level.level' />
             </div>
           </div>
-          <div class="date">
-            <span>阅读 {{item.views}}</span><span> • {{getTimeAgo(item.create_time)}}</span><span v-if='item.school'> • {{item.school.title}}</span>
+          <div class="article-info flex flex-align">
+            <div class="read-num">阅读 {{item.views}}</div>
+            <div class="origin">•</div>
+            <div class="date">{{getTimeAgo(item.create_time)}}</div>
+            <div class="origin" v-if='item.school'>•</div>
+            <div class="school-title" v-if='item.school' v-line-clamp:20="1">{{item.school.title}}</div>
           </div>
         </div>
         <div class="follow-btn" v-if='item.isSubscribe!=3'>
@@ -77,22 +81,39 @@ export default {
   border-bottom: 0.0625rem /* 1/16 */ dashed #ebeef5;
 }
 
-.user-card .avatar {
+.user-card .avatar,
+.user-card .avatar img{
   width: 2.625rem /* 42/16 */;
   height: 2.625rem /* 42/16 */;
+}
+
+.user-card .avatar{
+  width: 2.625rem /* 42/16 */;
+  height: 2.625rem /* 42/16 */;
+  margin-right: 0.625rem /* 10/16 */;
+}
+
+.user-card .avatar img{
   border-radius: 50%;
   overflow: hidden;
-  margin-right: 0.625rem /* 10/16 */;
 }
 
 .user-card .name {
   color: #303133;
 }
 
-.user-card .date {
+.user-card .article-info {
   margin-top: 0.3125rem /* 5/16 */;
   color: #909399;
   font-size: 0.8125rem /* 13/16 */;
+}
+
+.school-title{
+  flex: 1;
+}
+
+.origin{
+  margin: 0 .3125rem /* 5/16 */;
 }
 
 .handle-card {

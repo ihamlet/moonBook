@@ -21,8 +21,8 @@
         </transition>
       </div>
     </van-nav-bar>
-    <div class="container page-padding">
-      <div class="module-user-card">
+    <div class="container">
+      <div class="module-user-card page-padding">
         <userCard :item='item' v-if='item.template_id != "0"'/>
       </div>
       <div class="module">
@@ -154,14 +154,22 @@ export default {
 .container {
   background: #f2f6fc;
   padding-top: 2.8125rem /* 45/16 */;
+  padding-bottom: 3.125rem /* 50/16 */;
 }
 
-.head-bar-title .avatar {
+.head-bar-title .avatar,
+.head-bar-title .avatar img{
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
+}
+
+.head-bar-title .avatar{
+  margin-right: 0.3125rem /* 5/16 */;
+}
+
+.head-bar-title .avatar img{
   border-radius: 50%;
   overflow: hidden;
-  margin-right: 0.3125rem /* 5/16 */;
 }
 
 .memberships {

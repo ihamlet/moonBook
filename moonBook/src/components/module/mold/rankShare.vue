@@ -42,7 +42,7 @@
     <div class="popup-btn">
       <van-button class="theme-btn" :loading='isLoading' size="large" square :disabled='isDisabled' type="primary"
         @click="toImage">
-        {{dataURL?'长按上图保存分享':'生成图片'}}
+        {{dataURL?'长按上图保存分享':'正在生成图片'}}
       </van-button>
     </div>
   </div>
@@ -62,15 +62,29 @@ export default {
       day: '',
       dataURL: '',
       isDisabled: false,
-      isLoading: false
+      isLoading: false,
+      count:1,
+      timer:null
     }
   },
   created() {
     this.year = format(this.date, 'yyyy')
     this.month = new Date().toDateString().split(" ")[1]
     this.day = format(this.date, 'dd')
+    this.threeGo()
   },
   methods: {
+    threeGo(){
+      this.timer = setInterval(()=>{
+        if(this.count > 0 && this.count <= 1){
+          this.count--
+        }else{
+          clearInterval(this.timer)
+          this.timer = null
+          this.toImage()
+        }
+		  },500)
+    },
     toImage() {
       this.isLoading = true
 
