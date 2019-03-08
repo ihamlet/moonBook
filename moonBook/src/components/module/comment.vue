@@ -107,7 +107,7 @@
         </div>
       </div>
 
-      <van-popup v-model="show" class="comment-popup" position="bottom" get-container='#app'>
+      <van-popup v-model="show" class="comment-popup" overlay-class='bg-opacity' position="bottom" get-container='#app' @close='$refs.field.blur()'>
         <div class="score flex-column" v-if='include != "include"&&score'>
           <div class="score-title">评分</div>
           <van-rate class="score-rate" v-model="star" :size="25" :count="5" void-color="#ceefe8" />

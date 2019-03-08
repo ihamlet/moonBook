@@ -28,7 +28,7 @@
       <topic-list @close='show = false' @select='selectTag' type='edit' :topicList='topicList'/>
     </van-popup>
 
-    <van-popup class="page-popup-layer" position="bottom" v-model="linkShow" get-container='#app'>
+    <van-popup class="page-popup-layer" overlay-class='bg-opacity' position="bottom" v-model="linkShow" get-container='#app' @close='$refs.field.blur()'>
       <van-cell-group>
         <van-cell>
           <div class="title">获取公共账号文章</div>
@@ -38,8 +38,6 @@
           <van-button class="theme-btn" square type="primary" size="large" :loading='isLoading'  @click="setContent">获取文章内容</van-button>
         </van-cell>
       </van-cell-group>
-
- 
     </van-popup>
     <div class="fixed-btn">
       <van-button square type="primary" @click="onCopyLink" size="large">获取微信公众号文章</van-button>

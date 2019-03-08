@@ -131,6 +131,10 @@ textarea {
   align-items: center;
 }
 
+.van-overlay.bg-opacity{
+  background: rgba(255, 255, 255, 0);
+}
+
 .flex-justify {
   justify-content: center;
 }
