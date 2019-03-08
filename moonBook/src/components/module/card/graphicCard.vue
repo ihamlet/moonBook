@@ -10,7 +10,7 @@
         </div>
         <div class="info">
           <div class="name flex flex-align">
-            <span>{{item.user.name}}</span>
+            <span  v-line-clamp:20="1" :class="[item.card_level>'0'?'vip-highlight':'']">{{item.user.name}}</span>
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
@@ -262,5 +262,9 @@ export default {
 .school-tag{
   max-width: 6.25rem /* 100/16 */;
   margin-right: .625rem /* 10/16 */;
+}
+
+.vip-highlight{
+  color: #FF9800;
 }
 </style>

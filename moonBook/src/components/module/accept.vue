@@ -93,7 +93,7 @@
         </div>
       </div>
     </div>
-    <van-popup v-model="show" position="bottom" class="order-popup">
+    <van-popup v-model="isPayShow" position="bottom" class="order-popup" get-container='#app' :close-on-click-overlay='false' @click-overlay='isPayShow = false'>
       <div class="content">
         <div class="title">支付信息</div>
         <div class="list">
@@ -160,13 +160,7 @@ export default {
     searchList
   },
   computed: {
-    ...mapGetters(['userDataState', 'userPointState']),
-    lng() {
-      return this.userPointState.location.split(',')[0]
-    },
-    lat() {
-      return this.userPointState.location.split(',')[1]
-    }
+    ...mapGetters(['userDataState', 'userPointState'])
   },
   data() {
     return {
@@ -175,6 +169,7 @@ export default {
       finished: false,
       page: 1,
       searchListShow: false,
+      isPayShow:false,
       levels: '',
       tips: '',
       fees: '',
@@ -191,7 +186,6 @@ export default {
       feeId: '',
 
       pageTitle: 'addBaby',
-      addChildShow: false,
       disabled: false,
       payLoading: false,
       iconSuccessShow: false,
@@ -226,10 +220,10 @@ export default {
       }
 
       this.getSchoolList(products).then(res => {
-        this.list = this.list.concat(res.data.data)
+        this.list = this.list.concat(res.data)
         this.loading = false
         this.page++
-        if (this.list.length >= res.data.count) {
+        if (this.list.length >= res.count) {
           this.finished = true
         }
       })
@@ -267,7 +261,7 @@ export default {
       this.levelId = item.id
     },
     selectInterval(item, index) {
-      this.show = true
+      this.isPayShow = true
       this.order.feesName = item.name
       this.order.feesPrice = item.price / 100
       this.intervalIndex = index
@@ -280,10 +274,6 @@ export default {
 
       Cookies.set('payLink', location.href)
       location.href = `/book/memberCard/buycard?level_id=${this.levelId}&fee_id=${this.feeId}&is_auto=1&url=${encodeURIComponent(location.href)}`
-    },
-    closeAddChildPage() {
-      this.$emit('close')
-      this.addChildShow = false
     }
   }
 }
@@ -412,7 +402,7 @@ background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
 .select-list .item {
   width: 100%;
   margin-bottom: 1.875rem /* 30/16 */;
-  border: 0.0625rem /* 1/16 */ solid #fff;
+  border: 0.0625rem /* 1/16 */ solid #EBEEF5;
   box-shadow: 0 0.3125rem /* 5/16 */ 1.25rem /* 20/16 */ -0.3125rem /* 5/16 */ rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem /* 8/16 */;
   overflow: hidden;
@@ -425,10 +415,6 @@ background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
 
 .select-list .item.select .theme-background {
   background: linear-gradient(-135deg, #fe8537, #f02b2b);
-}
-
-.background-grey {
-  background: #f2f2f2;
 }
 
 .col-box {
