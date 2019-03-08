@@ -61,7 +61,8 @@ export default {
       }
 
       this.getSchoolList(products).then(res => {
-        this.list = this.list.concat(res.data.data)
+        console.log(res)
+        this.list = this.list.concat(res.data)
         this.loading = false
         if (this.list.length >= res.data.count) {
           this.finished = true

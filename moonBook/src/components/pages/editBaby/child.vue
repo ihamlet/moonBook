@@ -64,7 +64,7 @@
     </div>
 
     <van-popup class="card-routing-popup" v-model="show" get-container='#app'>
-      <card-routing/>
+      <card-routing :childId='childId'/>
     </van-popup>
   </div>
 </template>
@@ -105,8 +105,9 @@ export default {
         gender: 'boy',
         avatar: '',
         birthday: '',
-        relation_name: ''
+        relation_name: '',
       },
+      childId:'',
       errorMessage: {
         name: '',
         birthday: ''
@@ -256,9 +257,7 @@ export default {
 
       if (!this.childInfo.avatar) {
         this.$toast.fail('请上传头像')
-      }
-
-      if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
+      }else if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
         this.errorMessage.name = '请正确填写孩子的姓名'
         setTimeout(() => {
           this.errorMessage.name = ''
@@ -281,6 +280,7 @@ export default {
             })
           }else if(this.$route.query.type == 'register'){
             this.show = true
+            this.childId = res
           }else{
             this.$router.push({
               name:'baby-home',

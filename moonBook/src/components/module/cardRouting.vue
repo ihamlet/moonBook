@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="square-btn flex flex-align">
-      <van-button square class="theme-btn" plain type="primary" size="large" @click="toHome">返回首页</van-button>
+      <van-button square class="theme-btn" plain type="primary" size="large" @click="toBabyHome">打造宝贝主页</van-button>
       <van-button square class="theme-btn" type="primary" size="large" @click="toAccept">办理借阅卡</van-button>
     </div>
 
@@ -42,11 +42,12 @@ import accept from './../module/accept'
 
 export default {
   name: 'card-routing',
-  computed: {
-    ...mapGetters(['userDataState'])  
-  },
+  props: ['childId'],
   components: {
     accept  
+  },
+  computed: {
+    ...mapGetters(['userDataState'])  
   },
   data() {
     return {
@@ -72,10 +73,13 @@ export default {
         this.applyShow = true
         this.active = 0
     },
-    toHome(){
-        this.$router.push({
-            name:'home'
-        })
+    toBabyHome(){
+      this.$router.push({
+          name:'baby-home',
+          query:{
+            id: this.childId
+          }
+      })
     }
   }
 }
