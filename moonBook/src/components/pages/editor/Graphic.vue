@@ -320,7 +320,7 @@ export default {
     },
     onClickRelease() {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
-        if (this.$route.query.back) {
+        if (this.$route.query.back && this.$route.name!='home') {
           this.$router.push({
             name: this.$route.query.back,
             query: {
@@ -329,7 +329,7 @@ export default {
           })
         } else {
           this.$router.push({
-            name: 'home'
+            name: 'apps-find'
           })
         }
       } else if (this.grapicData.text.length < 12000) {
@@ -370,7 +370,7 @@ export default {
 
           axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
             if(res.data.status == 1){
-              if(this.$route.query.back){
+              if(this.$route.query.back && this.$route.query.back!='home'){
                 this.$router.push({
                   name: this.$route.query.back,
                   query: {
@@ -380,7 +380,10 @@ export default {
                 })
               }else{
                 this.$router.push({
-                  name:'apps-find'
+                  name:'baby-home',
+                  query:{
+                    id: this.userDataState.child_id
+                  }
                 })
               }
 

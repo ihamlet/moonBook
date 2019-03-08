@@ -80,18 +80,18 @@ export default {
   },
   computed: {
     schoolEllipsis() {
-      let data = ''
+      let schoolName = ''
       if(this.childInfo){
-        data = this.childInfo
+        schoolName = this.childInfo.school_name
       }else{
-        data = this.classInfo
+        schoolName = this.classInfo.school_name
       }
 
-      if (data.school_name.length > 10) {
-        return data.school_name.substr(0, 9) + '...'
-      } else {
-        return data.school_name
+      if (schoolName.length > 10) {
+        schoolName = schoolName.substr(0, 9) + '...'
       }
+
+      return schoolName
     }
   },
   data() {
@@ -99,16 +99,32 @@ export default {
       isLoading: false,
       isDisabled: false,
       dataURL: '',
+      count:1,
+      timer:null
     }
   },
+  created () {
+    this.threeGo()
+  },
   methods: {
+    threeGo(){
+      this.timer = setInterval(()=>{
+        if(this.count > 0 && this.count <= 1){
+          this.count--
+        }else{
+          clearInterval(this.timer)
+          this.timer = null
+          this.toImage()
+        }
+		  },500)
+    },
     toImage() {
       this.isLoading = true
-      domtoimage.toSvg(this.$refs.imageWrapper).then(dataUrl => {
-        this.dataURL = dataUrl
-        this.isLoading = false
-        this.isDisabled = true
-      })
+        domtoimage.toSvg(this.$refs.imageWrapper).then(dataUrl => {
+          this.dataURL = dataUrl
+          this.isLoading = false
+          this.isDisabled = true
+        })
     },  
     closeQrcode() {
       this.$emit('close')

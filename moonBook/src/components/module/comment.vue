@@ -246,6 +246,7 @@ export default {
       })
     },
     showField(item,type) {
+      this.isLoading = false
       this.message = ''
       if (item) {
         this.prompt = `回复：${item.username}`
