@@ -114,31 +114,29 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     fetaData() {
-      let data = {
-        params:{
-          user_id:this.$route.query.id
+        if(this.$route.query.id){
+        let data = {
+          params:{
+            user_id:this.$route.query.id
+          }
         }
-      }
 
-      this.getUserData().then(res=>{
-        if(res.id != 0 ){
-            this.userInfo = res
-            let getBabyBorrowData = {
-              params:{
-                page:1,
-                limit:20,
-                child_id:res.child_id
-              }
+        axios.get('/book/memberUser/getInfo', data).then(res => {
+          this.userInfo = res.data
+
+          let babyBorrowData = {
+            params:{
+              page:1,
+              limit:20,
+              child_id: res.data.child_id
             }
+          }
 
-            axios.get('/book/BabyBorrow/getList',getBabyBorrowData).then(res => {
-                if(res.status == 200){
-                  this.lateBook = res.data.data
-                }
-            })
-        }
-      })
-
+          axios.get('/book/BabyBorrow/getList',babyBorrowData).then(res=>{
+            this.lateBook = res.data.data
+          })
+        })
+      }
     },
     onClickLeft() {
       if (this.$route.query.back) {

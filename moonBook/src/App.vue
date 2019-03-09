@@ -482,7 +482,7 @@ img.lazy[lazy='error'],
 
 .module-title {
   font-size: 0.875rem /* 14/16 */;
-  color: #333;
+  color: #303133;
   background: #fff;
   height: 3rem /* 48/16 */;
   line-height: 3rem /* 48/16 */;

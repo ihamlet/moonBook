@@ -295,7 +295,7 @@ i.bubble {
   top: 50%;
   margin-top: -1.5625rem /* 25/16 */;
   display: block;
-  background: #333;
+  background: #303133;
   color: #fff;
   border-radius: 50%;
   display: none;
@@ -309,7 +309,7 @@ i.bubble::before {
   width: 0;
   height: 0;
   border-top: 1.25rem /* 20/16 */ solid transparent;
-  border-left: 1.25rem /* 20/16 */ solid #333;
+  border-left: 1.25rem /* 20/16 */ solid #303133;
   border-bottom: 1.25rem /* 20/16 */ solid transparent;
   position: absolute;
   left: 2.25rem /* 36/16 */;
