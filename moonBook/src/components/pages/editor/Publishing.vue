@@ -62,7 +62,7 @@ export default {
     topicList
   },
   computed:{
-    ...mapGetters(['managerState'])
+    ...mapGetters(['managerState','userDataState'])
   },
   data() {
     return {
@@ -261,21 +261,9 @@ export default {
           photos: this.grapicData.photos,
           cate_id: this.cateId,
           post_id: this.$route.query.post_id || '',
-        }
-
-        if(this.$route.query.back == 'class-home'){
-          data.banji_id = this.$route.query.id
-          data.to_banji = 1
-        }
-        
-        if(this.$route.query.back == 'apps-school'){
-          data.school_id = this.$route.query.id
-          data.to_school = 1
-        }
-
-        if(this.$route.query.back == 'baby-home'){
-          data.child_id = this.$route.query.id,
-          data.to_baby  = 1
+          to_baby:1,
+          to_school:1,
+          to_banji:1
         }
 
         axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {          
@@ -289,9 +277,18 @@ export default {
                 }
               })
             }else{
-              this.$router.push({
-                name: 'apps-find'
-              })
+              if(this.userDataState.child_id > "0"){
+                this.$router.push({
+                  name: 'baby-home',
+                  query:{
+                    id: this.userDataState.child_id
+                  }
+                })
+              }else{
+                this.$router.push({
+                  name: 'app-find'
+                })
+              }
             }
           }else{
             this.$toast(res.data.info)
@@ -380,7 +377,7 @@ export default {
           this.percent = Math.floor(100 * (p.loaded / p.total))
         }
       }).then((res) => {
-        console.log(res)
+        
 
         this.grapicData.photos.push({
           media: true,
