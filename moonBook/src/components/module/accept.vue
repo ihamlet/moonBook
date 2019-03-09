@@ -21,7 +21,10 @@
               <div class="item">
                 <div class="school-info">
                   <div class="school-name">
-                    {{item.title}}
+                    {{item.title}} 
+                    <van-tag plain type="primary" :color="item.typecode&&item.typecode=='141204'?'#E6A23C':'#409EFF'">
+                      {{item.typecode&&item.typecode=='141204'?'幼儿园':'小学'}}
+                    </van-tag>
                   </div>
                   <div class="school-address" v-line-clamp:20="1">
                     {{item.addr}}
@@ -241,7 +244,13 @@ export default {
         this.stepActive = 1
         this.searchListShow = false
 
-        axios.get(`/book/MemberCard/getMemberRegPayConfig?shelf_id=${item.shelf_id}`).then(res => {
+        let data = {
+          params:{
+            shelf_id:item.shelf_id
+          }
+        }
+
+        axios.get('/book/MemberCard/getMemberRegPayConfig',data).then(res => {
           if(res.data.status == 1){
             this.levels = res.data.data.levels
             this.tips = res.data.data.tips
