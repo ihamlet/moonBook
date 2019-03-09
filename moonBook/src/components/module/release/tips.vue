@@ -330,7 +330,6 @@ export default {
   width: 100%;
   background: linear-gradient(rgba(255, 255, 255, 0), #fff);
   padding: 1.25rem /* 20/16 */ 0 3.75rem /* 60/16 */ 0;
-
   position: absolute;
   bottom: 0;
 }
@@ -338,7 +337,7 @@ export default {
 .tips.bottom .tips-list {
   width: 17.5rem /* 280/16 */;
   margin: 0 auto;
-  padding: .625rem /* 10/16 */;
+  padding: .9375rem /* 15/16 */;
   background: #fff;
   border-radius: .625rem /* 10/16 */;
   box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.2);
