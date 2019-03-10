@@ -387,37 +387,41 @@ export default {
           axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
             if(res.data.status == 1){
               //判断发布有没有这个路由数组 如果有
-              if( this.result && this.result.length > 0){
-                this.$router.push({
-                  name: this.result[0],
-                  query: {
-                    id: this.result[0] == 'baby-home' ?this.userDataState.child_id : this.userDataState.banji_id 
-                    //判断路由数组result 此时只有两种情况 如果路由数组找到baby-home字段 那么就会从vuex中获取到用户基础信息拿到当前孩子的child_id  因为发现板块并不需要传递id
-                  }
-                })
-                
-              }
-
-              // 没有to_find 的话那就走下面这个判断吧
-              // 接下来 判断路由 如果在同步全部不选的情况下且回退路由名不等于主页，那么就会跳转到对应回退的路由页面
-              // else if(this.$route.query.back && this.$route.query.back!='home'){
+              // if( this.result && this.result.length > 0){
               //   this.$router.push({
-              //     name: this.$route.query.back,
+              //     name: this.result[0],
               //     query: {
-              //       id:  this.$route.query.id || '',
-              //       cate_id: this.cate_id || ''
+              //       id: this.result[0] == 'baby-home' ?this.userDataState.child_id : this.userDataState.banji_id 
+              //       //判断路由数组result 此时只有两种情况 如果路由数组找到baby-home字段 那么就会从vuex中获取到用户基础信息拿到当前孩子的child_id  因为发现板块并不需要传递id
               //     }
               //   })
+                
               // }
-              
-              else{
-                //默认会跳转到 空间页面 文章管理页面
+
+              // 没有to_find 的话那就来下面这个判断吧
+              // 接下来 判断路由 如果在同步全部不选的情况下且回退路由名不等于主页，那么就会跳转到对应回退的路由页面
+              if(this.$route.query.back && this.$route.query.back!='home'){
                 this.$router.push({
-                  name:'zoom',
-                  query:{
-                    id: this.userDataState.user_id
+                  name: this.$route.query.back,
+                  query: {
+                    id:  this.$route.query.id || '',
+                    cate_id: this.cate_id || ''
                   }
                 })
+              }else{
+                if(this.result[0] == 'to_find'){ //判断路由数组result 是否有to_find 如果有回退到apps-find 发现页面
+                  this.$router.push({
+                    name:'apps-find' 
+                  })
+                }else{
+                  //默认会跳转到 空间页面 文章管理页面
+                  this.$router.push({
+                    name:'zoom',
+                    query:{
+                      id: this.userDataState.user_id
+                    }
+                  })
+                }
               }
 
               this.$toast.success('发布成功')
