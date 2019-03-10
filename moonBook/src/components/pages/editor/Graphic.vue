@@ -217,17 +217,24 @@ export default {
       if (this.userDataState.child_id > 0) {
         array.push({
           title: '宝贝主页',
-          name: 'to_baby',
+          name: 'baby-home',
           to: 1
         })
-      }
+      } 
+      
       if (this.userDataState.banji_id > 0) {
         array.push({
           title: '班级',
-          name: 'to_banji',
+          name: 'class-home',
           to: 1
         })
       }
+
+      array.push({
+        title: '发现',
+        name: 'apps-find',
+        to: 1
+      })  
 
       this.resultList = array
       
@@ -346,15 +353,26 @@ export default {
             post_id: this.$route.query.post_id || ''
           }
 
+          //跳转路由
+          //如果只发布到班级 那么跳转到该数组的第一个          
           this.result.forEach(e=>{
-            if(e == 'to_banji'){
-              data.to_banji = 1
-            }
-
-            if( e == 'to_baby'){
+            if( e == 'baby-home'){
               data.to_baby  = 1
             }
+
+            if(e == 'class-home'){
+              data.to_banji = 1
+              
+            }
+
+            if(e == 'apps-find'){
+              data.to_find  = 1 // 这里难道不应该是to_find? 
+            }
           })
+
+          if(this.$route.query.back == 'baby-home'){
+            data.child_id = this.$route.query.id
+          }
 
           if(this.$route.query.back == 'class-home'){
             data.banji_id = this.$route.query.id
@@ -364,25 +382,40 @@ export default {
             data.school_id = this.$route.query.id
           }
 
-          if(this.$route.query.back == 'baby-home'){
-            data.child_id = this.$route.query.id
-          }
+
 
           axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
             if(res.data.status == 1){
-              if(this.$route.query.back && this.$route.query.back!='home'){
+              //判断发布有没有这个路由数组 如果有
+              if( this.result && this.result.length > 0){
                 this.$router.push({
-                  name: this.$route.query.back,
+                  name: this.result[0],
                   query: {
-                    id:  this.$route.query.id || '',
-                    cate_id: this.cate_id || ''
+                    id: this.result[0] == 'baby-home' ?this.userDataState.child_id : this.userDataState.banji_id 
+                    //判断路由数组result 此时只有两种情况 如果路由数组找到baby-home字段 那么就会从vuex中获取到用户基础信息拿到当前孩子的child_id  因为发现板块并不需要传递id
                   }
                 })
-              }else{
+                
+              }
+
+              // 没有to_find 的话那就走下面这个判断吧
+              // 接下来 判断路由 如果在同步全部不选的情况下且回退路由名不等于主页，那么就会跳转到对应回退的路由页面
+              // else if(this.$route.query.back && this.$route.query.back!='home'){
+              //   this.$router.push({
+              //     name: this.$route.query.back,
+              //     query: {
+              //       id:  this.$route.query.id || '',
+              //       cate_id: this.cate_id || ''
+              //     }
+              //   })
+              // }
+              
+              else{
+                //默认会跳转到 空间页面 文章管理页面
                 this.$router.push({
-                  name:'baby-home',
+                  name:'zoom',
                   query:{
-                    id: this.userDataState.child_id
+                    id: this.userDataState.user_id
                   }
                 })
               }
@@ -393,6 +426,10 @@ export default {
             }
 
           })
+
+
+
+          
         }
       }
     },
