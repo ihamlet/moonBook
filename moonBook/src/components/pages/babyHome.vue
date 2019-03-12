@@ -62,6 +62,7 @@
           <span class="bar-title">赞</span>
         </div>
       </div>
+
       <div v-if="childInfo.is_mine" class="card-top">
         <!-- <van-nav-bar title="成长日记" @click-right="toActivity">
           <div class="post-count" slot="left">
