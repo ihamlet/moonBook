@@ -432,6 +432,7 @@ export default {
 
 .theme-btn {
   height: 2.75rem /* 44/16 */;
+  line-height: 2.75rem /* 44/16 */;
 }
 
 .input-box-avatar,
@@ -442,6 +443,7 @@ export default {
 
 .input-box-avatar {
   margin-left: 0.3125rem /* 5/16 */;
+  margin-right: .3125rem /* 5/16 */;
 }
 
 .num-tag {

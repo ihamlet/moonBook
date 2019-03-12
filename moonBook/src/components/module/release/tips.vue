@@ -6,11 +6,11 @@
         <div class="name">{{list.name}}</div>
       </div>
     </div>
-    <div class="media-input" v-show="false">
+    <!-- <div class="media-input" v-show="false">
       <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
       <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
-    </div>
+    </div> -->
     <div class="close-btn" @click="$emit('close')" v-if='position != "top"' :class="[isShow?'rotateIn animated':'']">
       <i class="iconfont">&#xe647;</i>
     </div>
@@ -89,14 +89,28 @@ export default {
           })
           break
         case 1:
-          this.$refs.fileVideo.click()
+          this.$router.push({
+            name: 'graphic',
+            query: {
+              back: this.$route.name,
+              id: this.$route.query.id,
+              upVideo:1
+            }
+          })
           break
         case 2:
-          this.$refs.selectFileVideo.click()
+          this.$router.push({
+            name: 'graphic',
+            query: {
+              back: this.$route.name,
+              id: this.$route.query.id,
+              upVideo:2
+            }
+          })
           break
         case 3:
           this.$router.push({
-            name: 'publishing',
+            name: 'beautifulArticle',
             query: {
               back: this.$route.name,
               id: this.$route.query.id
@@ -108,14 +122,14 @@ export default {
           break
       }
     },
-    onRead(file) {
-      let array = []
-      if (file.length) {
-        array = file
-      } else {
-        array.push(file)
-      }
-
+    // onRead(file) {
+    //   let array = []
+    //   if (file.length) {
+    //     array = file
+    //   } else {
+    //     array.push(file)
+    //   }
+    // }
 
       // 先发布图片 @王伟
       // 
@@ -150,98 +164,54 @@ export default {
       //     }
       //   })
       // })
-    },
-    doUpload(e) {
-      let file = e.target.files[0]
-      let type = e.target.dataset.type
-      this.upOssMedia(type, file).then(() => {
-        this.$router.push({
-          name: 'graphic',
-          query: {
-            back: this.$route.name,
-            id: this.$route.query.id
-          }
-        })
-      })
-    },
-    upOssMedia(type, file) {
-      if (!this.ossSign) {
-        alert('未能获取上传参数')
-      }
+    // },
+    // doUpload(e) {
+    //   let file = e.target.files[0]
+    //   let type = e.target.dataset.type
+    //   this.upOssMedia(type, file).then(() => {
+    //     this.$router.push({
+    //       name: 'graphic',
+    //       query: {
+    //         back: this.$route.name,
+    //         id: this.$route.query.id
+    //       }
+    //     })
+    //   })
+    // },
+    // upOssMedia(type, file) {
+    //   if (!this.ossSign) {
+    //     alert('未能获取上传参数')
+    //   }
 
-      let url = this.ossSign.host.replace('http:', 'https:')
-      let data = new FormData()
-      let key = this.ossSign.dir + '/' + Date.now() + file.name
-      let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
+    //   let url = this.ossSign.host.replace('http:', 'https:')
+    //   let data = new FormData()
+    //   let key = this.ossSign.dir + '/' + Date.now() + file.name
+    //   let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
 
-      data.append('key', key)
-      data.append('OSSAccessKeyId', this.ossSign.accessid)
-      data.append('policy', this.ossSign.policy)
-      data.append('success_action_status', 200)
-      data.append('signature', this.ossSign.signature)
-      data.append('file', file)
+    //   data.append('key', key)
+    //   data.append('OSSAccessKeyId', this.ossSign.accessid)
+    //   data.append('policy', this.ossSign.policy)
+    //   data.append('success_action_status', 200)
+    //   data.append('signature', this.ossSign.signature)
+    //   data.append('file', file)
 
-      return axios({
-        url: url,
-        data: data,
-        method: 'post',
-        onUploadProgress: p => {
-          this.percent = Math.floor(100 * (p.loaded / p.total))
-          this.$toast.loading({
-            mask: false
-          })
-          if (this.percent == 100) {
-            this.$toast.clear()
-          }
-        }
-      }).then((res) => {
-        this.grapicData.photos.push({
-          media: true,
-          is_audio: type == 'audio' ? 1 : 0,
-          is_video: type == 'video' ? 1 : 0,
-          photo: path,
-          thumb: `${path}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`
-        })
-      })
-    },
-    upOssPhoto(blob, file, base64) {
-      let img = new Image()
-      img.src = base64
-
-      let fd = new FormData()
-      let url = this.ossSign.host.replace('http:', 'https:')
-      let key = this.ossSign.dir + '/' + Date.now() + file.name
-      let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
-
-      fd.append('key', key)
-      fd.append('OSSAccessKeyId', this.ossSign.accessid)
-      fd.append('policy', this.ossSign.policy)
-      fd.append('success_action_status', 200)
-      fd.append('signature', this.ossSign.signature)
-      fd.append('file', blob, file.name)
-
-      return axios({
-        url: url,
-        data: fd,
-        method: 'post',
-        onUploadProgress: p => {
-          this.percent = Math.floor(100 * (p.loaded / p.total))
-          this.$toast.loading({
-            mask: false
-          })
-          if (this.percent == 100) {
-            this.$toast.clear()
-          }
-        }
-      }).then((res) => {
-        this.grapicData.photos.push({
-          photo: path,
-          thumb: `${path}?x-oss-percent=image/resize,m_fill,h_200,w_200`,
-          height: img.height || 0,
-          width: img.width || 0
-        })
-      })
-    }
+    //   return axios({
+    //     url: url,
+    //     data: data,
+    //     method: 'post',
+    //     onUploadProgress: p => {
+    //       this.percent = Math.floor(100 * (p.loaded / p.total))
+    //     }
+    //   }).then((res) => {
+    //     this.grapicData.photos.push({
+    //       media: true,
+    //       is_audio: type == 'audio' ? 1 : 0,
+    //       is_video: type == 'video' ? 1 : 0,
+    //       photo: path,
+    //       thumb: `${path}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`
+    //     })
+    //   })
+    // }
   }
 }
 </script>

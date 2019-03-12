@@ -1,17 +1,17 @@
 <template>
-  <div class="module-card">
-    <van-cell is-link title-class='family' :value="count > 0? `${count}位待审核`:'邀请家人'" center size='large' @click="toFamily">
-      <div class="icon" slot="icon">
-        <i class="iconfont">&#xe6a3;</i>
-      </div>
-      <div class="family-list" slot="title">
+  <div class="family-card">
+    <div class="family" :value="count > 0? `${count}位待审核`:'邀请家人'" center size='large' @click="toFamily">
+      <div class="family-list flex flex-align" slot="title">
         <div class="flex flex-align">
           <div class="avatar" v-for='(item,index) in list' :key="index">
             <img :src="getAvatar(item.avatar)" v-if='index < 5'/>
           </div>
         </div>
+        <div class="invite">
+          <van-button plain type="primary" class="theme-plain" size="small" round>+ 成员</van-button>
+        </div>
       </div>
-    </van-cell>
+    </div>
   </div>
 </template>
 <script>
@@ -107,6 +107,14 @@ export default {
   border-radius: 50%;
   overflow: hidden;
   margin-right: 0.625rem /* 10/16 */;
+}
+
+.family-card{
+  margin-top: .625rem /* 10/16 */;
+}
+
+.family-list{
+  justify-content:space-between
 }
 </style>
 <style>

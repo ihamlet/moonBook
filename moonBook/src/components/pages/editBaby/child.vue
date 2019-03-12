@@ -164,29 +164,31 @@ export default {
         this.radio = localStorage['radio']
       }
 
-      if (this.$route.query.id) {
-        let getChildByUserData = {
-          params:{
-            child_id: this.$route.query.id
+
+      if(this.$route.query.back!='baby-home'&&this.$route.query.type!='edit'){
+        if (this.$route.query.id) {
+          let getChildByUserData = {
+            params:{
+              child_id: this.$route.query.id
+            }
           }
+
+          axios.get('/book/family/getChildByUser',getChildByUserData).then(res => {
+            let date = new Date(res.data.data.birthday * 1000)
+            this.childInfo.name = res.data.data.name
+            this.childInfo.avatar = res.data.data.avatar
+            this.childInfo.gender = res.data.data.sex
+            this.childInfo.relation_name = res.data.data.relation_name
+            this.currentDate = date
+
+            if (res.data.data.is_current_child == 1 || this.userDataState.child_id == this.$route.query.id) {
+              this.settingSurrent = true
+            }
+
+            this.info = res.data.data
+          })
         }
-
-        axios.get('/book/family/getChildByUser',getChildByUserData).then(res => {
-          let date = new Date(res.data.data.birthday * 1000)
-          this.childInfo.name = res.data.data.name
-          this.childInfo.avatar = res.data.data.avatar
-          this.childInfo.gender = res.data.data.sex
-          this.childInfo.relation_name = res.data.data.relation_name
-          this.currentDate = date
-
-          if (res.data.data.is_current_child == 1 || this.userDataState.child_id == this.$route.query.id) {
-            this.settingSurrent = true
-          }
-
-          this.info = res.data.data
-        })
       }
-
     },
     toggle(index) {
       this.$refs.checkboxes[index].toggle()
@@ -358,8 +360,22 @@ export default {
     // },
     onInput(checked) {
       if (checked) {
-        axios.get(`/book/MemberChild/top?child_id=${this.$route.query.id}`).then(res => {
-          this.getUserData()
+        let data = {
+          params:{
+            child_id:this.$route.query.id
+          }
+        }
+        
+        axios.get('/book/MemberChild/top',data).then(res => {
+          switch(res.data.status){
+            case 1:
+              this.getUserData()
+              this.$toast('已设为当前宝贝')
+            break
+            case 0:
+              this.$toast.fail(res.data.data.msg)
+            break
+          }
         })
       }
     }

@@ -14,13 +14,18 @@
       </div>
     </van-col>
     <van-col span="6">
-      <div class="flex flex-align button">
-        <div class="like" @click="addCollect(item)">
-          <i class="iconfont" v-if='item.isShoucang'></i>
-          <i class="iconfont" v-else>&#xe669;</i>
+      <div class="button">
+        <div class="flex flex-align">
+          <div class="like" @click="addCollect(item)">
+            <i class="iconfont" v-if='item.isShoucang'></i>
+            <i class="iconfont" v-else>&#xe669;</i>
+          </div>
+          <div class="listening" @click="listening(item)">
+            <i class="iconfont">&#xe617;</i>
+          </div>
         </div>
-        <div class="listening" @click="listening(item)">
-          <i class="iconfont">&#xe617;</i>
+        <div class="abrasion" v-if='type == "在读"'>
+          <van-button plain class="theme-btn" size="small" type="primary" round >磨损</van-button>
         </div>
       </div>
     </van-col>
@@ -31,7 +36,7 @@ import axios from "./../../lib/js/api"
 
 export default {
   name: 'bookCard',
-  props: ['item'],
+  props: ['item','type'],
   methods: {
     imgError(e) {
       e.target.src = require('@/assets/img/no-cover.jpg')
@@ -119,5 +124,10 @@ export default {
 .like .iconfont{
   font-size: 1.625rem /* 26/16 */;
   color: #f02b2b;
+}
+
+.abrasion .theme-btn{
+  width: 100%;
+  margin-top: .625rem /* 10/16 */;
 }
 </style>

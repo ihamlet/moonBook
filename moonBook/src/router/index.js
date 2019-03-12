@@ -51,6 +51,7 @@ import Register from '@/components/pages/register'
 import Editor from '@/components/Editor'
 import Publishing from '@/components/pages/editor/Publishing'
 import Graphic from '@/components/pages/editor/Graphic'
+import BeautifulArticle from '@/components/pages/editor/BeautifulArticle'
 
 import ReadStat from '@/components/pages/readStat'
 import ReadAmount from '@/components/pages/readAmount'
@@ -142,7 +143,7 @@ export default new Router({
           name: 'readAmount',
           component: ReadAmount,
           meta: {
-            title: '阅读',
+            title: '我的书',
             isFooterBar: false
           }
         },
@@ -376,6 +377,24 @@ export default new Router({
           title: '发布长文',
           type:'long'
         }
+      },
+      {
+        path: '/editor/beautifulArticle',
+        name: 'beautifulArticle',
+        component: BeautifulArticle,
+        meta: {
+          title: '编辑',
+          type:'beautifulArticle'
+        },
+        // children:[{
+        //   path: '/editor/beautifulArticle/addImage',
+        //   name:'article-image',
+        //   component: articleImage
+        // },{
+        //   path: '/editor/beautifulArticle/addImage',
+        //   name:'article-Video',
+        //   component: articleVideo
+        // }]
       },
       {
         path: '/editor/graphic',

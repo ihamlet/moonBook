@@ -14,7 +14,7 @@
           <van-row gutter="10">
             <van-col span="9">
               <div class="book-thumb">
-                <img :src="details.photo" @error="outThumb($event,details)" />
+                <img :src="details.photo" @error="imgError($event,details)" />
               </div>
             </van-col>
             <van-col span="15">
@@ -79,27 +79,8 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
   },
   methods: {
-    outThumb(e, details) {
-      let book_author = ''
-
-      if (details.author.length > 7) {
-        book_author = details.author.substr(0, 7) + '...'
-      } else {
-        book_author = details.author
-      }
-
-      e.target.outerHTML = `
-        <div class='three-d-book'>
-            <div class='three-d-book-cover'>
-                <div class='three-d-book-name'>
-                    ${details.title}
-                </div>
-                <div class='three-d-book-author'>
-                    ${book_author}
-                </div>
-            </div>
-        </div>
-      `
+    imgError(e) {
+      e.target.src = require('@/assets/img/no-cover.jpg')
     },
     fetchData() {
 
