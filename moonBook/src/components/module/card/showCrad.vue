@@ -1,5 +1,5 @@
 <template>
-  <div class="img-preview flex flex-justify" v-if="imgList.length > 0">
+  <div class="img-preview flex flex-justify" v-if="imgArray.length > 0">
     <div class="grid" v-for="(item,index) in imgArray" :key="index">
       <img :src="item.thumb" />
     </div>

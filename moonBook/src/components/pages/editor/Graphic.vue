@@ -14,9 +14,8 @@
     <div class="textarea-module">
       <van-cell-group>
         <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4" autosize />
-        <van-tag class="tag" type="primary" v-if='cateName'> #{{cateName}}</van-tag>
-        <van-cell title-class='theme-color' title="#选择分类" :value="grapicData.text.length>0?grapicData.text.length:''"
-          is-link arrow-direction="down" @click="show = true" />
+        <!-- <van-tag class="tag" type="primary" v-if='cateName'> #{{cateName}}</van-tag> -->
+        <van-cell title-class='theme-color' title="#选择分类" :value="cateName" is-link arrow-direction="down" @click="show = true" />
       </van-cell-group>
       <van-cell-group v-if='cateId!="99"&&cateId!="124"'>
         <van-cell title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
@@ -35,10 +34,10 @@
             </div>
           </van-col>
           <van-col :span="8" v-if='9 > imagesLength'>
-            <div class="img-grid" @click="UploadTypeShow = true">
+            <div class="img-grid" @click="$refs.selectPhoto.$refs.input.click()">
               <div class="photo-upload">
                 <i class="iconfont">&#xe664;</i>
-                <span class="directions">照片/视频</span>
+                <span class="directions">添加照片</span>
               </div>
             </div>
           </van-col>
@@ -61,7 +60,7 @@
     </van-popup>
 
     <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="actionShow = false" />
-    <van-actionsheet v-model="UploadTypeShow" :actions="uploadType" cancel-text="取消" @select="onUploadTypeSelect" @cancel="UploadTypeShow = false" />
+    <!-- <van-actionsheet v-model="UploadTypeShow" :actions="uploadType" cancel-text="取消" @select="onUploadTypeSelect" @cancel="UploadTypeShow = false" /> -->
 
     <div class="media-input" v-show="false">
       <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
@@ -75,7 +74,7 @@
 import axios from './../../lib/js/api'
 import { mapActions, mapGetters } from 'vuex'
 import topicList from './../../module/release/topicList'
-import { compress,checkHtml } from './../../lib/js/util'
+import { compress,checkHtml,contains,videoParse } from './../../lib/js/util'
 
 export default {
   name: 'graphic',
@@ -107,7 +106,7 @@ export default {
       resultList: '',
       show: false,
       actionShow: false,
-      UploadTypeShow: false,
+      // UploadTypeShow: false,
       grapicData: {
         text: '',
         photos: []
@@ -125,19 +124,19 @@ export default {
         name: '不保存',
         type: 'noSave'
       }],
-      uploadType: [{
-        name: '从手机选择图片',
-        type: 'photo',
-        index: 0,
-      }, {
-        name: '上传视频',
-        type: 'fileVideo',
-        index: 1,
-      }, {
-        name: '拍摄视频',
-        type: 'uploadVideo',
-        index: 2,
-      }],
+      // uploadType: [{
+      //   name: '从手机选择图片',
+      //   type: 'photo',
+      //   index: 0,
+      // }, {
+      //   name: '上传视频',
+      //   type: 'fileVideo',
+      //   index: 1,
+      // }, {
+      //   name: '拍摄视频',
+      //   type: 'uploadVideo',
+      //   index: 2,
+      // }],
       topicList:[]
     }
   },
@@ -156,10 +155,8 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
-    ...mapActions(['getUserData']),
     fetchData() {
       // 获取文章分类
-
       let data = {
         params:{
           portal_name:'宝贝主页'
@@ -217,17 +214,24 @@ export default {
       if (this.userDataState.child_id > 0) {
         array.push({
           title: '宝贝主页',
-          name: 'to_baby',
+          name: 'baby-home',
           to: 1
         })
-      }
+      } 
+      
       if (this.userDataState.banji_id > 0) {
         array.push({
           title: '班级',
-          name: 'to_banji',
+          name: 'class-home',
           to: 1
         })
       }
+
+      array.push({
+        title: '发现',
+        name: 'apps-find',
+        to: 1
+      })  
 
       this.resultList = array
       
@@ -238,7 +242,19 @@ export default {
         this.ossSign = res.data.data
       })
 
-      this.getUserData()
+      //判断路由自动触发小视频 视频
+      if(this.$route.query.upVideo){
+        this.$nextTick(() => {
+          switch(this.$route.query.upVideo){
+            case 1:
+              this.$refs.fileVideo.click()
+            break
+            case 2:
+              this.$refs.selectFileVideo.click()
+            break
+          }
+        })
+      }
     },
     onRead(file) {
       let array = []
@@ -250,7 +266,6 @@ export default {
       array.forEach(element => {
         if (this.photoLength < 9) {
           this.photoLength++
-          this.grapicData.photos.isLoading = true
           compress(element.content, 1200, 0.8, 'blob').then(val => {
             val.toBlob((blob) => {
               this.upOssPhoto(blob, element.file, element.content)
@@ -346,15 +361,26 @@ export default {
             post_id: this.$route.query.post_id || ''
           }
 
+          //跳转路由
+          //如果只发布到班级 那么跳转到该数组的第一个          
           this.result.forEach(e=>{
-            if(e == 'to_banji'){
-              data.to_banji = 1
-            }
-
-            if( e == 'to_baby'){
+            if( e == 'baby-home'){
               data.to_baby  = 1
             }
+
+            if(e == 'class-home'){
+              data.to_banji = 1
+              
+            }
+
+            if(e == 'apps-find'){
+              data.to_find  = 1 
+            }
           })
+
+          if(this.$route.query.back == 'baby-home'){
+            data.child_id = this.$route.query.id
+          }
 
           if(this.$route.query.back == 'class-home'){
             data.banji_id = this.$route.query.id
@@ -364,13 +390,22 @@ export default {
             data.school_id = this.$route.query.id
           }
 
-          if(this.$route.query.back == 'baby-home'){
-            data.child_id = this.$route.query.id
-          }
-
           axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
             if(res.data.status == 1){
-              if(this.$route.query.back && this.$route.query.back!='home'){
+              // 最初最简单的判断
+              // if( this.result && this.result.length > 0){
+              //   this.$router.push({
+              //     name: this.result[0],
+              //     query: {
+              //       id: this.result[0] == 'baby-home' ?this.userDataState.child_id : this.userDataState.banji_id 
+              //       //判断路由数组result 此时只有两种情况 如果路由数组找到baby-home字段 那么就会从vuex中获取到用户基础信息拿到当前孩子的child_id  因为发现板块并不需要传递id
+              //     }
+              //   })
+              // }
+
+              // 没有to_find 的话那就来下面这个判断吧
+              // 接下来 判断路由 如果在同步全部不选的情况下且回退路由名不等于主页和个人中心，那么就会跳转到对应回退的路由页面 在哪发往哪里跳
+              if(this.$route.query.back && this.$route.query.back!='home' && this.$route.query.back!='my'){
                 this.$router.push({
                   name: this.$route.query.back,
                   query: {
@@ -379,14 +414,42 @@ export default {
                   }
                 })
               }else{
-                this.$router.push({
-                  name:'baby-home',
-                  query:{
-                    id: this.userDataState.child_id
-                  }
-                })
+                // 发布页跳转逻辑
+                //判断路由数组result 是否有apps-find 如果有回退到apps-find 发现页面
+                switch(true){
+                  case contains(this.result,'apps-find'):
+                    this.$router.push({
+                      name:'apps-find' 
+                    })
+                  break
+                  case contains(this.result,'baby-home'):
+                    this.$router.push({
+                      name:'baby-home',
+                      query:{
+                        id: this.userDataState.child_id
+                      }
+                    })
+                  break
+                  case contains(this.result,'class-home'):
+                    this.$router.push({
+                      name:'class-home',
+                      query:{
+                        id: this.userDataState.banji_id
+                      } 
+                    })
+                  break
+                  default:
+                  this.$router.push({
+                    name:'zoom',
+                    query:{
+                      id: this.userDataState.user_id
+                    }
+                  })
+
+                }
               }
 
+              localStorage.setItem('grapicData', '') //清空浏览器缓存
               this.$toast.success('发布成功')
             }else{
               this.$toast(res.data.info)
@@ -406,32 +469,54 @@ export default {
     toggle(index) {
       this.$refs.checkboxes[index].toggle()
     },
-    onUploadTypeSelect(item) {
-      switch (item.index) {
-        case 0:
-          this.$refs.selectPhoto.$refs.input.click()
-          break;
-        case 1:
-          this.$refs.selectFileVideo.click()
-          break;
-        case 2:
-          this.$refs.fileVideo.click()
-          break;
-      }
+    // onUploadTypeSelect(item) {
+    //   switch (item.index) {
+    //     case 0:
+    //       this.$refs.selectPhoto.$refs.input.click()
+    //       break;
+    //     case 1:
+    //       this.$refs.selectFileVideo.click()
+    //       break;
+    //     case 2:
+    //       this.$refs.fileVideo.click()
+    //       break;
+    //   }
 
-      this.UploadTypeShow = false
-    },
+    //   this.UploadTypeShow = false
+    // },
     doUpload(e) {
       let file = e.target.files[0]
       let type = e.target.dataset.type
       this.upOssMedia(type, file)
     },
     upOssMedia(type, file) {
+
+
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
 
-      let url = this.ossSign.host.replace('http:', 'https:')
+      let photo
+      
+      videoParse(file).then((result)=>{
+        photo = {
+          thumb: result.thumb,
+          height: result.height,
+          width: result.width,
+          duration: result.duration,
+          thumb_blob: result.thumb_blob
+        }
+
+        
+        this.addPhotoX(photo)
+        let idx = this.grapicData.photos.length - 1
+
+        this.addPhoto(result.thumb_blob,file).then(thumb =>{
+          photo.thumb = thumb
+          this.updatePhoto(photo, idx)
+
+
+          let url = this.ossSign.host.replace('http:', 'https:')
       let data = new FormData()
       let key = this.ossSign.dir + '/' + Date.now() + file.name
       let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
@@ -443,24 +528,28 @@ export default {
       data.append('signature', this.ossSign.signature)
       data.append('file', file)
 
-      axios({
-        url: url,
-        data: data,
-        method: 'post',
-        onUploadProgress: p => {
-          this.percent = Math.floor(100 * (p.loaded / p.total))
-        }
-      }).then((res) => {
-        this.grapicData.photos.push({
-          is_audio: type == 'audio' ? 1 : 0,
-          is_video: type == 'video' ? 1 : 0,
-          photo: path,
-          thumb: `${path}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`,
-          height: 0,
-          width: 0
-        })
+          axios({
+            url: url,
+            data: data,
+            method: 'post',
+            onUploadProgress: p => {
+              this.percent = Math.floor(100 * (p.loaded / p.total))
+            }
+          }).then((res) => {
+            photo = {
+              is_audio: type == 'audio' ? 1 : 0,
+              is_video: type == 'video' ? 1 : 0,
+              photo: path,
+              thumb: photo.thumb,
+              height: photo.height || 0,
+              width:  photo.width || 0,
+              duration: Math.floor(photo.duration)
+            }
 
-        this.percent = 0
+            this.percent = 0
+            this.updatePhoto(photo, idx)
+          })
+        })
       })
     },
     upOssPhoto(blob, file, base64) {
@@ -478,7 +567,7 @@ export default {
       fd.append('success_action_status', 200)
       fd.append('signature', this.ossSign.signature)
       fd.append('file', blob, file.name)
-
+    
       axios({
         url: url,
         data: fd,
@@ -497,6 +586,41 @@ export default {
         })
         this.percent = 0
       })
+    },
+    addPhoto(blob, file){
+      let fd = new FormData()
+      let url = this.ossSign.host.replace('http:', 'https:')
+      let key = this.ossSign.dir + '/' + Date.now() + file.name
+      let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
+
+      fd.append('key', key)
+      fd.append('OSSAccessKeyId', this.ossSign.accessid)
+      fd.append('policy', this.ossSign.policy)
+      fd.append('success_action_status', 200)
+      fd.append('signature', this.ossSign.signature)
+      fd.append('file', blob, file.name)
+
+      return new Promise((resolve, reject) =>{
+        axios({
+          url: url,
+          data: fd,
+          method: 'post',
+          onUploadProgress: p => {
+            this.percent = Math.floor(100 * (p.loaded / p.total))
+          }
+        }).then(() => {
+          this.percent = 0
+          resolve(path)
+        })
+      })
+    },
+    addPhotoX(photo) {
+      this.grapicData.photos.push(photo)
+      console.log('添加图片')
+    },
+    updatePhoto(photo, idx) {
+      this.grapicData.photos[idx] = photo
+      console.log('更新图片')
     },
     selectTag(tag) {
       this.cateName = tag.cate_name

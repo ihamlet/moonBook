@@ -1,7 +1,6 @@
 <template>
   <div class="read-amount">
-    <van-nav-bar :zIndex='10' :title="$route.meta.title" left-text="返回" fixed left-arrow @click-left="onClickLeft"
-      @click-right="onClickRight">
+    <van-nav-bar :zIndex='10' :title="$route.meta.title" left-text="返回" fixed left-arrow @click-left="onClickLeft" @click-right="onClickRight">
       <div class="right-btn" slot="right">
         <van-button class="theme-btn" round size="small" type="primary">捐书</van-button>
       </div>
@@ -26,7 +25,7 @@
                   </div>
                 </div>
                 <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
-                  <bookCard :item='item' />
+                  <bookCard :item='item' :type='list.title'/>
                 </van-cell>
               </div>
             </div>
@@ -59,14 +58,14 @@ export default {
       let arr = []
       if (this.childInfo) {
         arr = [{
-          title: '未读',
-          num: this.childInfo.shelf_tushu_kinds - this.childInfo.read_kinds,
-          content: ''
-        }, {
           title: '在读',
           num: this.childInfo.read_count,
           content: ''
         }, {
+          title: '读过',
+          num: this.childInfo.reading_count,
+          content: ''
+        },{
           title: '收藏',
           num: this.childInfo.collect_num,
           content: ''
@@ -74,11 +73,11 @@ export default {
           title: '磨损',
           num: this.childInfo.broken_num,
           content: ''
-        }, {
-          title: '已读',
-          num: this.childInfo.reading_count,
+        },{
+          title: '未读',
+          num: this.childInfo.shelf_tushu_kinds - this.childInfo.read_kinds,
           content: ''
-        }, {
+        },{
           title: '捐书',
           num: this.childInfo.donation_count,
           content: ''
@@ -148,20 +147,20 @@ export default {
         }
       }
 
-      switch (this.tabIndex) {
-        case 0:
+      switch (this.readArray[this.tabIndex].title) {
+        case '未读':
           data.params.is_read = 0
           break
-        case 1:
+        case '在读':
           data.params.is_read = 2
           break
-        case 2:
+        case '收藏':
           data.params.collect = 1
           break
-        case 3:
+        case '磨损':
           data.params.is_broke = 1
           break
-        case 4:
+        case '读过':
           data.params.is_read = 1
           break
       }
@@ -197,7 +196,6 @@ export default {
           this.finished = true
           this.readArray[this.tabIndex].content= []
         }
-
       })
     },
     onRefresh() {

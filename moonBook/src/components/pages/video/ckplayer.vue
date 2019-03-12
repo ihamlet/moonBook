@@ -95,7 +95,7 @@ export default {
           array.forEach((element, index) => {
             if(element.is_video == 1){
                videoArray.push([element.photo])
-               this.videoObject.poster = `${element.photo}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`
+               this.videoObject.poster = element.thumb
             }
           })
           this.videoObject.video = videoArray

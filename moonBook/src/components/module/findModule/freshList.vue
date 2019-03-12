@@ -19,7 +19,7 @@ export default {
   methods: {
     toZoom(item) {
       this.$router.push({
-        name: this.routerName,
+        name: 'zoom',
         query: {
           id: item[this.cid],
           back: this.$route.name,

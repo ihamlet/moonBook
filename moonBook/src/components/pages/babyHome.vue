@@ -1,6 +1,7 @@
 <template>
   <div class="baby-home page-padding" v-if='hackReset'>
-    <van-nav-bar fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft" @click-right='onClickRight'>
+    <!-- @click-right='onClickRight' -->
+    <van-nav-bar :border='false' fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft">
       <div class="head-bar-title" slot="title" @click="selectBaby">
         {{pageTitle}} <i class="iconfont" v-if='babyList.length'>&#xe608;</i>
       </div>
@@ -8,9 +9,9 @@
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back||$route.query.backGo?'返回':'首页'}}</span>
       </div>
-      <div class="head-bar-text" slot="right">
+      <!-- <div class="head-bar-text" slot="right">
         <span class="text">任务</span>
-      </div>
+      </div> -->
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
       <div class="baby-info flex flex-align">
@@ -18,7 +19,7 @@
           <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">  
         </div>
         <avatar :gender="childInfo.sex" size='small' avatarClass='border' v-else />
-        <div class="baby-data" @click="toEditorBaby">
+        <div class="baby-data">
           <div class="list flex flex-align">
             <div class="item name">{{childInfo.name}}</div>
             <div class="item detail">
@@ -31,10 +32,11 @@
           </div>
           <div class="label">{{childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
+          <family />
         </div>
-        <div class="add-praise" @click="babyPraise(childInfo)">
+        <!-- <div class="add-praise" @click="babyPraise(childInfo)">
           <i class="iconfont">&#xe6e3;</i>
-        </div>
+        </div> -->
         <div class="qr-code" @click="showQrcode=true">
           <i class="iconfont">&#xe622;</i>
         </div>
@@ -45,29 +47,31 @@
       <div class="bar flex flex-align">
         <div class="bar-item totalReading" @click="toReadAmount">
           <span class="number">{{childInfo.read_count}}</span>
-          <span class="bar-title">阅读量</span>
+          <span class="bar-title">借阅量</span>
         </div>
-        <div class="bar-item praise" @click="toInformation">
-          <span class="number">{{childInfo.zan_count}}</span>
-          <span class="bar-title">赞</span>
+        <div class="bar-item">
+          <span class="number">729</span>
+          <span class="bar-title">阅读打卡</span>
         </div>
         <div class="bar-item diary" @click="toReadStat">
           <span class="number">{{childInfo.insist_days}}</span>
           <span class="bar-title">坚持天数</span>
         </div>
+        <div class="bar-item praise" @click="toInformation">
+          <span class="number">{{childInfo.zan_count}}</span>
+          <span class="bar-title">赞</span>
+        </div>
       </div>
-      <div class="module" v-if="childInfo.is_mine">
-        <family />
-      </div>
+
       <div v-if="childInfo.is_mine" class="card-top">
-        <van-nav-bar title="成长日记" @click-right="toActivity">
+        <!-- <van-nav-bar title="成长日记" @click-right="toActivity">
           <div class="post-count" slot="left">
             {{childInfo.post_count}}日记
           </div>
           <div class="task" slot="right">
             活动<van-tag class="tag-task" round type="danger">{{activityCount}}</van-tag>
           </div>
-        </van-nav-bar>
+        </van-nav-bar> -->
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
@@ -114,7 +118,29 @@
     <!-- 推荐操作 -->
     <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app' />
     <!-- 切换孩子 -->
-    <van-actionsheet v-model="isSelectBabyShow" :actions="SelectBabyActions" cancel-text="取消" @select="onSelectBaby" @cancel="isSelectBabyShow = false" />
+    <van-actionsheet v-model="isSelectBabyShow" title='切换宝贝'>
+      <div class="scroll-x" :class="babyList.length < 4?'align-items':''">
+        <div class="flex">
+           <div class="scroll-item">
+              <div class="baby-item-card add" @click="addBaby">
+                <div class="avatar">
+                  <i class="iconfont">&#xe727;</i>
+                </div>
+                <div class="child-name">添加宝贝</div>
+              </div>
+           </div>
+          <div class="scroll-item" v-for='(list,index) in babyList' :key="index">
+              <div class="baby-item-card" @click="onSelectBaby(list)" :class="$route.query.id == list.id?'active':''">
+                <div class="avatar" v-if="list.avatar">
+                  <img :src="list.avatar" @error="imgError" :alt="childInfo.name">  
+                </div>
+                <avatar :gender="childInfo.sex" size='small' avatarClass='border' v-else />
+                <div class="child-name" v-line-clamp:20="1">{{list.name}}</div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </van-actionsheet>
   </div>
 </template>
 <script>
@@ -161,26 +187,26 @@ export default {
 
       return name
     },
-    SelectBabyActions() {
-      let array = this.babyList
-      let arr = []
-      if (this.babyList) {
-        array.forEach(e => {
-          arr.push({
-            name: e.name,
-            id: e.id,
-            subname: this.$route.query.id == e.id ? '当前宝贝' : ''
-          })
-        })
-      }
-      // 添加宝贝
-      arr.push({
-        name: '添加宝贝',
-        id: 0
-      })
+    // SelectBabyActions() {
+    //   let array = this.babyList
+    //   let arr = []
+    //   if (this.babyList) {
+    //     array.forEach(e => {
+    //       arr.push({
+    //         name: e.name,
+    //         id: e.id,
+    //         subname: this.$route.query.id == e.id ? '当前宝贝' : ''
+    //       })
+    //     })
+    //   }
+    //   // 添加宝贝
+    //   arr.push({
+    //     name: '添加宝贝',
+    //     id: 0
+    //   })
 
-      return arr
-    },
+    //   return arr
+    // },
     recommendActions() {
       let array = []
       if (this.managerState) {
@@ -292,8 +318,26 @@ export default {
             }
           }
           axios.get('/book/baby/getList',data).then(res => {
-            if (res.data.status == 1) {
-              this.babyList = res.data.data
+            console.log(res.data.status)
+            switch(res.data.status){
+              case 1:
+                this.babyList = res.data.data
+              break
+              case 0:
+                let babyBorrowGetListData = {
+                  params:{
+                    page:1,
+                    limit:20,
+                    child_id:this.$route.query.id
+                  }
+                }
+
+                axios.get('/book/BabyBorrow/getList',babyBorrowGetListData).then(res => {
+                  if (res.status == 200) {
+                    this.lateBook = res.data.data
+                  }
+                })
+              break
             }
           })
         }else{
@@ -310,20 +354,6 @@ export default {
       axios.get('/book/SchoolArticle/getList',getSchoolArticleData).then(res => {
         if (res.data.status == 1) {
           this.activityCount = res.data.count
-        }
-      })
-
-      let babyBorrowGetListData = {
-        params:{
-          page:1,
-          limit:20,
-          child_id:this.$route.query.id
-        }
-      }
-
-      axios.get('/book/BabyBorrow/getList',babyBorrowGetListData).then(res => {
-        if (res.status == 200) {
-          this.lateBook = res.data.data
         }
       })
     },
@@ -362,13 +392,12 @@ export default {
       })
     },
     onClickLeft() {
-      if (this.$route.query.back) {
+      if (this.$route.query.back && this.$route.query.back!='baby-home') {
         this.$router.push({
           name: this.$route.query.back,
           query: {
             id: this.$route.query.banji_id ? this.$route.query.banji_id : this.$route.query.id,
-            back: this.$route.name,
-            child_id: this.$route.query.id
+            back: this.$route.name
           }
         })
       } else {
@@ -464,7 +493,7 @@ export default {
             id: childInfo.banji_id
           }
         })
-      } else {
+      } else {  
         this.$router.push({
           name: "class-home",
           query: {
@@ -474,26 +503,26 @@ export default {
         })
       }
     },
-    babyPraise(childInfo) {
-      let data = {
-        params:{
-          child_id: this.$route.query.id
-        }
-      }
+    // babyPraise(childInfo) {
+    //   let data = {
+    //     params:{
+    //       child_id: this.$route.query.id
+    //     }
+    //   }
 
-      axios.get('/book/baby/zan',data).then(res => {
-        if (res.data.status == 1) {
-          this.zanShow = true
-          childInfo.zan_count = res.data.data.zan_count
-        } else {
-          this.$toast(res.data.msg)
-        }
+    //   axios.get('/book/baby/zan',data).then(res => {
+    //     if (res.data.status == 1) {
+    //       this.zanShow = true
+    //       childInfo.zan_count = res.data.data.zan_count
+    //     } else {
+    //       this.$toast(res.data.msg)
+    //     }
 
-        setTimeout(() => {
-          this.zanShow = false
-        }, 2000)
-      })
-    },
+    //     setTimeout(() => {
+    //       this.zanShow = false
+    //     }, 2000)
+    //   })
+    // },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
@@ -615,9 +644,8 @@ export default {
           break
       }
     },
-    onSelectBaby(item) {
-      if (item.id == 0) {
-        this.$router.push({
+    addBaby(){
+       this.$router.push({
           name: 'edit-child',
           query: {
             pageTitle: '添加宝贝',
@@ -626,7 +654,8 @@ export default {
             id: this.$route.query.id
           }
         })
-      } else {
+    },
+    onSelectBaby(item) {
         this.hackReset = false
         this.isSelectBabyShow = false
 
@@ -643,7 +672,8 @@ export default {
             back: this.$route.name
           }
         })
-      }
+
+        this.onInput()
     },
     selectBaby() {
       if (this.babyList.length) {
@@ -693,6 +723,26 @@ export default {
           id: this.$route.query.id,
           back: this.$route.name,
           tid: 16
+        }
+      })
+    },
+    //置顶
+    onInput() {
+      let data = {
+        params:{
+          child_id:this.$route.query.id
+        }
+      }
+
+      axios.get('/book/MemberChild/top',data).then(res => {
+        switch(res.data.status){
+          case 1:
+            this.getUserData()
+            this.$toast('已设为当前宝贝')
+          break
+          case 0:
+            this.$toast.fail(res.data.data.msg)
+          break
         }
       })
     }
@@ -892,6 +942,68 @@ export default {
   position: absolute;
   top: 0.3125rem /* 5/16 */;
   right: -0.625rem /* 10/16 */;
+}
+
+.scroll-x{
+  padding:1.25rem /* 20/16 */ 0 1.25rem /* 20/16 */ 1.25rem /* 20/16 */;
+}
+
+.baby-item-card{
+  margin-right: 1.25rem /* 20/16 */;
+}
+
+.baby-item-card .avatar{
+  width: 3.125rem /* 50/16 */;
+  border: .125rem /* 2/16 */ solid #fff;
+}
+
+.baby-item-card .avatar,
+.baby-item-card .avatar img{
+  border-radius: 50%;
+}
+
+.baby-item-card.active .avatar{
+  border-color: #ffc107;
+}
+
+.baby-item-card.active .child-name{
+  font-weight: 700;
+}
+
+.baby-item-card .child-name{
+  text-align: center;
+  font-size: .9375rem /* 15/16 */;
+  padding: 0 .125rem /* 2/16 */;
+  margin-top: .3125rem /* 5/16 */;
+}
+
+.baby-item-card.add{
+  margin-right: .8125rem /* 13/16 */;
+}
+
+.baby-item-card.add .avatar{
+  height: 3.125rem /* 50/16 */;
+  text-align: center;
+  line-height: 3.125rem /* 50/16 */;
+  border: .0625rem /* 1/16 */ dashed #DCDFE6;
+  margin:0 auto;
+}
+
+.baby-item-card.add .avatar i.iconfont{
+  font-size: 1.75rem /* 28/16 */;
+  color: #C0C4CC;
+}
+
+.baby-item-card.add .child-name{
+  color: #909399; 
+}
+
+.align-items{
+  justify-content:center
+}
+
+.active{
+  transform: scale(1.1)
 }
 </style>
 <style>

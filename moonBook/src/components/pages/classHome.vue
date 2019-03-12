@@ -99,6 +99,7 @@ export default {
     },
     pageTitle() {
       let str = ''
+
       if (this.classInfo.is_my_baby_banji) {
         str = '班级'
       } else {

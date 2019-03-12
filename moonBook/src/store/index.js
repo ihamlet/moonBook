@@ -156,7 +156,7 @@ const actions = {
       //   })
       //   .then(res => {
       //     axios.get('book/school/getList',{params:data}).then(res=>{
-      //       console.log(res)
+      //       
       //     })
 
       //     resolve(res)

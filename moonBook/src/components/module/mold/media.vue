@@ -10,7 +10,7 @@
           <div class="player">
             <i class="iconfont">&#xe639;</i>
           </div>
-          <img :src="`${videoItem.photo}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`" alt="视频封面"/>
+          <img :src="item.cover" alt="视频封面"/>
           <van-tag class="photo-tag" color='#7232dd'>{{videoIndex > 1?'视频专辑':'视频'}}</van-tag>
         </div>
       </div>
