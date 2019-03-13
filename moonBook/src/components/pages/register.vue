@@ -26,10 +26,6 @@
     </div>
 
     <slogan />
-    <!-- 借阅卡办理页面 -->
-    <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
-      <accept @close='applyShow = false' v-model='active' />
-    </van-popup>
 
     <div class="fixed-button">
       <van-button class="theme-btn" square type="primary" size="large" @click="toWmPage">学校入驻</van-button>
@@ -43,7 +39,6 @@ import slogan from './../module/slogan'
 export default {
   name: 'register',
   components: {
-    accept,
     slogan
   },
   data() {
@@ -113,10 +108,11 @@ export default {
       }
     },
     toAccept() {
-      // this.applyShow = true
-      // this.active = 0
       this.$router.push({
-        name:'AcceptSchoolList'
+        name:'AcceptSchoolList',
+        query:{
+          active: 0
+        }
       })
     },
     toWmPage(){

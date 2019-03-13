@@ -120,7 +120,13 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
+      let data = {
+        params:{
+          child_id: this.$route.query.id
+        }
+      }
+
+      axios.get('/book/baby/getInfo',data).then(res => {
         this.childInfo = res.data.data
       })
     },

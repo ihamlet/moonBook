@@ -115,15 +115,24 @@ export default new Router({
           children:[{
             path:'/accept/schoolList',
             name:'AcceptSchoolList',
-            component: SchoolList
+            component: SchoolList,
+            meta:{
+              active:0
+            }
           },{
             path:'/accept/cardLevel',
             name:'AcceptCardLevel',
-            component: cardLevel
+            component: cardLevel,
+            meta:{
+              active:1
+            }
           },{
             path:'/accept/cardTime',
             name:'AcceptCardTime',
-            component: cardTime
+            component: cardTime,
+            meta:{
+              active:2
+            }
           }]
         },
         {

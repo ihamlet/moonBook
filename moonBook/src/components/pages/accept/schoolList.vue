@@ -97,7 +97,8 @@ export default {
         this.$router.push({
             name:'AcceptCardLevel',
             query:{
-                id: item.shelf_id
+                id: item.shelf_id,
+                active: 1
             }
         })
       } else {
