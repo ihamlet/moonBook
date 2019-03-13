@@ -58,8 +58,7 @@ export default {
                 name:'AcceptCardTime',
                 query:{
                     id: this.$route.query.id,
-                    leveId: item.id,
-                    active: 2
+                    leveId: item.id
                 }
             })
         }

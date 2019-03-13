@@ -30,10 +30,6 @@
       <van-button square class="theme-btn" plain type="primary" size="large" @click="toBabyHome">打造宝贝主页</van-button>
       <van-button square class="theme-btn" type="primary" size="large" @click="toAccept">办理借阅卡</van-button>
     </div>
-
-    <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
-        <accept @close='applyShow = false' v-model='active'/>
-    </van-popup>
   </div>
 </template>
 <script>
@@ -69,9 +65,10 @@ export default {
       }
       return result
     },
-    toAccept(){
-        this.applyShow = true
-        this.active = 0
+    toAccept() {
+      this.$router.push({
+        name:'AcceptSchoolList'
+      })
     },
     toBabyHome(){
       this.$router.push({

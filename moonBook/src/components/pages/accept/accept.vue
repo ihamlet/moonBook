@@ -25,22 +25,6 @@ export default {
   },
   computed: {
     ...mapGetters(['userDataState', 'userPointState'])
-  },
-  data() {
-    return {
-      active:0,
-    }
-  },
-  created () {
-    this.fetchData()
-  },
-  watch: {
-    "$router":'fetchData'
-  },
-  methods: {
-    fetchData(){
-      this.active = this.$route.query.active
-    }
   }
 }
 </script>
