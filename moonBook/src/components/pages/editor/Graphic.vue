@@ -511,12 +511,12 @@ export default {
         this.addPhotoX(photo)
         let idx = this.grapicData.photos.length - 1
 
-        this.addPhoto(result.thumb_blob,file).then(thumb =>{
-          photo.thumb = thumb
-          this.updatePhoto(photo, idx)
+      this.addPhoto(result.thumb_blob,file).then(thumb =>{
+      photo.thumb = thumb
+      this.updatePhoto(photo, idx)
 
 
-          let url = this.ossSign.host.replace('http:', 'https:')
+      let url = this.ossSign.host.replace('http:', 'https:')
       let data = new FormData()
       let key = this.ossSign.dir + '/' + Date.now() + file.name
       let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name

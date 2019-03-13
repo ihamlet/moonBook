@@ -588,35 +588,6 @@ img.lazy[lazy='error'],
   transform: translate3d(-50%, 0, 0);
 }
 
-/* 订单 */
-.order-popup {
-  padding: 1.875rem /* 30/16 */ 0;
-}
-
-.order-popup .content {
-  width: 20rem /* 320/16 */;
-  margin: 0 auto;
-  position: relative;
-}
-
-.order-popup .content::before {
-  content: '';
-  position: absolute;
-  width: 3.75rem /* 60/16 */;
-  height: 0.375rem /* 6/16 */;
-  left: 0;
-  top: -1.875rem /* 30/16 */;
-}
-
-.order-popup .content .list {
-  padding: 0.9375rem /* 15/16 */ 0;
-}
-
-.order-popup .content .list .item {
-  height: 2.25rem /* 36/16 */;
-  line-height: 2.25rem /* 36/16 */;
-}
-
 /* 图片灯箱 */
 .video-box-popup.van-popup,
 .picture-box-popup.van-popup {
@@ -657,7 +628,7 @@ img.lazy[lazy='error'],
 
 .explain {
   font-size: .8125rem /* 13/16 */;
-  color: #909399;
+  color: #bbb;
 }
 
 .explain b {

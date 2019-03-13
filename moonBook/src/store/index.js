@@ -135,33 +135,17 @@ const actions = {
   },
   getSchoolList(context, products) {
     let data = {
-      // Key: context.state.amapApiKey,
-      // keywords: '教育',
-      // types: '141204|141203',
       location: products.location,
       lat: products.lat,
       lng: products.lng,
-      // offset: 20,
       page: products.page,
-      // radius: 24000
+      school_type: products.school_type
     }
 
     let amapApiLink = `https://restapi.amap.com/v3/place/around?key=${data.Key}&location=${data.location}&radius=${data.radius}&keywords=${data.keywords}&types=${data.types}&offset=${data.offset}&page=${data.page}`
     let WMlifeSearchSchoolLink = `/book/school/getList`
 
     return new Promise((resolve, reject) => {
-      // fetchJsonp(amapApiLink)
-      //   .then(response => {
-      //     return response.json()
-      //   })
-      //   .then(res => {
-      //     axios.get('book/school/getList',{params:data}).then(res=>{
-      //       
-      //     })
-
-      //     resolve(res)
-      //   })
-
       axios.get(WMlifeSearchSchoolLink,{params:data}).then(res=>{
         let resData = []
         if(res.data.status == 1){

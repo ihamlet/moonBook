@@ -21,7 +21,7 @@
               <div class="item">
                 <div class="school-info">
                   <div class="school-name">
-                    {{item.title}} 
+                    {{item.title}}
                     <van-tag plain type="primary" :color="item.typecode&&item.typecode=='141204'?'#E6A23C':'#409EFF'">
                       {{item.typecode&&item.typecode=='141204'?'幼儿园':'小学'}}
                     </van-tag>
@@ -193,7 +193,7 @@ export default {
       payLoading: false,
       iconSuccessShow: false,
       show: false,
-      title: '借阅卡办理',
+      title: '阅读卡办理',
       next: '下一步',
       stepActive: 0,
       pushUserInfo: {

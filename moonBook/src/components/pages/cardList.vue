@@ -218,7 +218,7 @@ export default {
   opacity: .95;
 }
 .users-list .user {
-  margin-left: 0.625rem /* 10/16 */;
+  margin-left: -10px;
 }
 
 .card-loading{

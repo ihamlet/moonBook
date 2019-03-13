@@ -59,6 +59,11 @@ import ReadAmount from '@/components/pages/readAmount'
 import Train from '@/components/train'
 import AppsTrain from '@/components/apps/train/trainHome'
 
+//办卡
+import Accept from '@/components/pages/accept/accept'
+import SchoolList from '@/components/pages/accept/schoolList'
+import cardLevel from '@/components/pages/accept/cardLevel'
+import cardTime from '@/components/pages/accept/cardTime'
 
 
 Vue.use(Router)
@@ -98,6 +103,28 @@ export default new Router({
             tabActive: 4,
             isFooterBar: false
           }
+        },
+        {
+          path:'/accept',
+          name:'accept',
+          component: Accept,
+          meta:{
+            title:'阅读卡办理',
+            isFooterBar: false
+          },
+          children:[{
+            path:'/accept/schoolList',
+            name:'AcceptSchoolList',
+            component: SchoolList
+          },{
+            path:'/accept/cardLevel',
+            name:'AcceptCardLevel',
+            component: cardLevel
+          },{
+            path:'/accept/cardTime',
+            name:'AcceptCardTime',
+            component: cardTime
+          }]
         },
         {
           path: '/article',

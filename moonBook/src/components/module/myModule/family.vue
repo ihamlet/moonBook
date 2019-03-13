@@ -1,14 +1,14 @@
 <template>
   <div class="family-card">
-    <div class="family" :value="count > 0? `${count}位待审核`:'邀请家人'" center size='large' @click="toFamily">
+    <div class="family" :value="count > 0? `${count}位待审核`:'邀请家人'">
       <div class="family-list flex flex-align" slot="title">
         <div class="flex flex-align">
           <div class="avatar" v-for='(item,index) in list' :key="index">
-            <img :src="getAvatar(item.avatar)" v-if='index < 5'/>
+            <img :src="getAvatar(item.avatar)" v-if='index < 4'/>
           </div>
         </div>
         <div class="invite">
-          <van-button plain type="primary" class="theme-plain" size="small" round>+ 成员</van-button>
+          <van-button plain type="primary" class="theme-plain" size="small" round @click="toFamily">+ 成员</van-button>
         </div>
       </div>
     </div>

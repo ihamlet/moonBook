@@ -113,8 +113,11 @@ export default {
       }
     },
     toAccept() {
-      this.applyShow = true
-      this.active = 0
+      // this.applyShow = true
+      // this.active = 0
+      this.$router.push({
+        name:'AcceptSchoolList'
+      })
     },
     toWmPage(){
       location.href = 'https://fang.wmlife.net/kindergarten/index/register'
