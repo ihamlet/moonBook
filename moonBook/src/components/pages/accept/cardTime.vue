@@ -44,9 +44,11 @@
         <van-cell-group>
           <van-cell title="会员类型" :value="`${selectFees.name} ${leves.name}`" />
           <van-cell title="支付押金" :value="`￥${leves.price/100}`" />
-          <van-cell title="会员金额" :value="`￥${selectFees.price/100}`" />
-          <van-cell title="微美币抵扣" value-class='wm-coin'>
-            <div class="red">- ￥65.5</div>
+          <van-cell title="会员金额">
+              <span>￥{{selectFees.price/100}}</span><span class="red"> -￥65.5</span> 
+          </van-cell>
+          <van-cell value-class='wm-coin'>
+            <div>已使用微美币抵扣<span class="red">50%</span>的会员费</div>
             <div class="red">扣除6450微美币,剩余234微美币</div>
           </van-cell>
           <van-cell title="小计" size="large" :value="`￥${leves.price/100 + selectFees.price/100 - 65.5}`" />
@@ -240,10 +242,11 @@ export default {
 .red {
   color: red;
 }
-</style>
-<style>
-.wm-coin.van-cell__value {
-  flex: 3;
+
+.wm-coin{
+  text-align: right;
+  color: #909399;
 }
 </style>
+
 

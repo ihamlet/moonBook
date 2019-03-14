@@ -1,7 +1,6 @@
 <template>
   <div class="edit-class page-padding">
-    <van-nav-bar :border='false' fixed :title="$route.query.registerType=='teacher'?schoolName:childInfo.school_name"
-      left-arrow @click-left="onClickLeft" />
+    <van-nav-bar :border='false' fixed :title="schoolName" left-arrow @click-left="onClickLeft" />
     <div class="container">
       <div class="baby-info flex flex-justify" v-if='$route.query.registerType!="teacher"'>
         <div class="avatar flex" v-if='childInfo'>
@@ -11,9 +10,10 @@
         <div class="name">{{childInfo.name}}（{{childInfo.age}}岁）</div>
         <round class="bg-round" />
       </div>
-      <div class="title">请选择班级</div>
+      <div class="title">{{list.length?'请选择班级':''}} </div>
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+          <div class="content" v-if='list.length'>
           <div v-for="(item,index) in list" size='large' :key="index" is-link @click='select(item)'>
             <div class="year" v-if='isYearShow(item,index)'>{{item.year}}</div>
             <van-cell is-link>
@@ -27,9 +27,31 @@
               </div>
             </van-cell>
           </div>
+
+          </div>
+         <div class="theme-color no-content" v-else>
+          <van-button class="theme-btn" plain type="primary" @click="show = true">请添加班级</van-button>
+        </div>
         </van-list>
       </div>
+
     </div>
+
+    <div class="add-school">
+      <div class="fx-box flex flex-align">
+        <div class="theme-color">没有你所在的班级？</div>
+        <van-button class="theme-btn" type="primary" size='small' round @click="show = true">添加班级</van-button>
+      </div>
+    </div>
+
+
+    <van-dialog v-model="show" show-cancel-button :before-close="beforeClose">
+      <div class="dialog-title">添加班级</div>
+      <van-cell-group>
+        <van-field v-model="className" label="班级名称" placeholder="请输入班级名称" input-align='right'/>
+      </van-cell-group>
+    </van-dialog>
+
   </div>
 </template>
 <script>
@@ -54,7 +76,9 @@ export default {
       finished: false,
       page: 1,
       childInfo: '',
-      schoolName: ''
+      schoolName: '',
+      className:'',
+      show:false
     }
   },
   created() {
@@ -73,11 +97,55 @@ export default {
           }
         })
       } else {
-        axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
+        let SchoolInfoData = {
+          params:{
+            school_id:this.$route.query.school_id
+          }
+        }
+
+        axios.get('/book/school/getInfo',SchoolInfoData).then(res=>{
+          if(res.data.status == 1){
+            this.schoolName = res.data.data.title
+          }
+        })
+
+        let ChildByUserData = {
+          params:{
+            child_id:this.$route.query.id
+          }
+        }
+        
+        axios.get('/book/family/getChildByUser',ChildByUserData).then(res => {
           if (res.data.status == 1) {
             this.childInfo = res.data.data
           }
         })
+      }
+    },
+    beforeClose(action, done) {
+      if (action === 'confirm') {
+        let data = {
+          school_id: this.$route.query.school_id,
+          title: this.className
+        }
+
+        axios.post('/book/school/edit_banji',data).then(res=>{
+           switch(res.data.status){
+             case 1:
+                this.$toast.success('添加班级成功')
+                this.page = 1
+                this.list = []
+                this.onLoad()
+                done()
+             break
+             case 0:
+                this.$toast(res.data.msg)
+                done()
+             break
+           }
+        })
+      } else {
+        done()
       }
     },
     onClickLeft() {
@@ -126,7 +194,7 @@ export default {
 
         axios.get('/book/baby/join_banji',BabyJoinBanjiBdind).then(res => {
           if (res.data.status == 1) {
-            if (this.$route.query.back) {
+            if (this.$route.query.back){
               this.$router.push({
                 name: 'edit-child',
                 query: {
@@ -162,14 +230,19 @@ export default {
         }
       }
       axios.get(`/book/SchoolBanji/getList`, data).then(res => {
-        if (res.data.status) {
-          this.page++
-          this.list = this.list.concat(res.data.data)
-          this.loading = false
-          if (this.list.length >= res.data.count) {
-            this.finished = true
+        if(res.data.count == 0){
+          this.show = true
+        }else{
+          if (res.data.status == 1) {
+            this.page++
+            this.list = this.list.concat(res.data.data)
+            this.loading = false
+            if (this.list.length >= res.data.count) {
+              this.finished = true
+            }
           }
         }
+
       })
     },
     formatBanjiTitle(text) {
@@ -281,5 +354,17 @@ export default {
   background: #fff;
   height: 2.25rem /* 36/16 */;
   line-height: 2.25rem /* 36/16 */;
+}
+
+.page-padding{
+  padding-bottom: 7.5rem /* 120/16 */;
+}
+
+.no-content{
+  width: 100%;
+  height: 6.25rem /* 100/16 */;
+  line-height: 6.25rem /* 100/16 */;
+  text-align: center;
+  background: #FFF;
 }
 </style>

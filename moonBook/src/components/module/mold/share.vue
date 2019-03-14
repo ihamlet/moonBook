@@ -92,17 +92,14 @@ export default {
       axios.get('/book/schoolArticleCate/getList',cateListData).then(res=>{
         if(res.status == 200){
           this.topicList = res.data
-          this.cateId = data[0].cate_id
+          this.cateId = res.data[0].cate_id
         }
       })
-    },
-    hide() {
-      this.$emit('hide')
     },
     share(){
       Cookies.set('shareLink', location.href)
       location.href = `/book/weixin/share?back_url=${encodeURIComponent(location.href)}&id=${this.$route.query.id}&type=文章`
-      this.hide()
+      this.$emit('hide')
     },
     onChange(picker, values){
       this.childId = values.id
@@ -125,7 +122,15 @@ export default {
 
       axios.get('/book/SchoolArticle/copy',data).then(res=>{
         if(res.data.status == 1){
-          this.$toast.success('收录成功')
+          let CommentData = {
+            post_id: this.$route.query.id,
+            contents: '收录了这篇文章'
+          }
+          axios.post('/book/SchoolArticleComment/edit?ajax=1',CommentData).then(res => {
+            if(res.data.status == 1){
+              this.$toast.success('收录成功')
+            }
+          })
         }else{
           this.$toast.fail('操作失败')
         }

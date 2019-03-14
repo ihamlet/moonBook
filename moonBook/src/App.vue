@@ -1016,14 +1016,57 @@ i.iconfont.vip-1 {
   vertical-align: top;
 }
 
-.photo-tag {
+.photo-tag,
+.duration{
   position: absolute;
-  right: 0.3125rem /* 5/16 */;
   bottom: 0.3125rem /* 5/16 */;
+}
+
+.photo-tag {
+  left: 0.3125rem /* 5/16 */;
+}
+
+.duration{
+  right: .3125rem /* 5/16 */;
 }
 
 .apps{
   margin-top: -.625rem /* 10/16 */;
   padding: 0 .625rem /* 10/16 */;
+}
+
+
+.add-school,
+.add-class {
+  position: fixed;
+  bottom: 0;
+  z-index: 10;
+  width: 100%;
+}
+
+.fx-box {
+  background: #fff;
+  padding: 0.625rem /* 10/16 */ 1.25rem /* 20/16 */;
+  justify-content: space-between;
+}
+
+.theme-color {
+  margin-bottom: 0.3125rem /* 5/16 */;
+  font-size: 0.875rem /* 14/16 */;
+}
+
+.type-select{
+  justify-content: space-between;
+}
+
+.select-type .theme-btn{
+  margin-left: .625rem /* 10/16 */;
+}
+
+
+.dialog-title{
+  text-align: center;
+  line-height: 2.875rem /* 46/16 */;
+  height: 2.875rem /* 46/16 */;
 }
 </style>

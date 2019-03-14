@@ -11,39 +11,41 @@
       </div>
     </van-nav-bar>
     <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
+      
     <div class="textarea-module">
       <van-cell-group>
         <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4" autosize />
-        <!-- <van-tag class="tag" type="primary" v-if='cateName'> #{{cateName}}</van-tag> -->
-        <van-cell title-class='theme-color' title="#选择分类" :value="cateName" is-link arrow-direction="down" @click="show = true" />
-      </van-cell-group>
-      <van-cell-group v-if='cateId!="99"&&cateId!="124"'>
-        <van-cell title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
+        
+        <div class="upload-module flex wrap">
+          <van-cell>
+            <van-row gutter="4">
+              <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
+                <div class="preview img-grid" :class="[item.thumb?'transparent':'']">
+                  <img class="thumb" :src="item.thumb" :large="item.is_video==1?'':item.photo" preview />
+                  <div class="close-btn" @click="deletePhoto(index)">
+                    <i class="iconfont">&#xe647;</i>
+                  </div>
+                  <van-tag class="type-tag" color="#7232dd" v-if='item.is_video == 1'>视频</van-tag>
+                </div>
+              </van-col>
+              <van-col :span="8" v-if='9 > imagesLength'>
+                <div class="img-grid" @click="$refs.selectPhoto.$refs.input.click()">
+                  <div class="photo-upload">
+                    <i class="iconfont">&#xe664;</i>
+                    <span class="directions">添加照片</span>
+                  </div>
+                </div>
+              </van-col>
+            </van-row>
+          </van-cell>
+        </div>
       </van-cell-group>
     </div>
-    <div class="upload-module flex wrap">
-      <van-cell>
-        <van-row gutter="4">
-          <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
-            <div class="preview img-grid" :class="[item.thumb?'transparent':'']">
-              <img class="thumb" :src="item.thumb" :large="item.is_video==1?'':item.photo" preview />
-              <div class="close-btn" @click="deletePhoto(index)">
-                <i class="iconfont">&#xe647;</i>
-              </div>
-              <van-tag class="type-tag" color="#7232dd" v-if='item.is_video == 1'>视频</van-tag>
-            </div>
-          </van-col>
-          <van-col :span="8" v-if='9 > imagesLength'>
-            <div class="img-grid" @click="$refs.selectPhoto.$refs.input.click()">
-              <div class="photo-upload">
-                <i class="iconfont">&#xe664;</i>
-                <span class="directions">添加照片</span>
-              </div>
-            </div>
-          </van-col>
-        </van-row>
-      </van-cell>
-    </div>
+
+    <van-cell title-class='theme-color' title="#选择分类" :value="cateName" is-link arrow-direction="down" @click="show = true" />   
+    <van-cell v-if='cateId!="99"&&cateId!="124"' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
+    <div class=""></div>
+     
     <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
       <van-checkbox-group v-model="result">
         <div class="form-title">同步到</div>
@@ -75,7 +77,6 @@ import axios from './../../lib/js/api'
 import { mapActions, mapGetters } from 'vuex'
 import topicList from './../../module/release/topicList'
 import { compress,checkHtml,contains,videoParse } from './../../lib/js/util'
-import VideoCapture from 'video-capture'
 
 export default {
   name: 'graphic',
@@ -394,19 +395,6 @@ export default {
 
           axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
             if(res.data.status == 1){
-              // 最初最简单的判断
-              // if( this.result && this.result.length > 0){
-              //   this.$router.push({
-              //     name: this.result[0],
-              //     query: {
-              //       id: this.result[0] == 'baby-home' ?this.userDataState.child_id : this.userDataState.banji_id 
-              //       //判断路由数组result 此时只有两种情况 如果路由数组找到baby-home字段 那么就会从vuex中获取到用户基础信息拿到当前孩子的child_id  因为发现板块并不需要传递id
-              //     }
-              //   })
-              // }
-
-              // 没有to_find 的话那就来下面这个判断吧
-              // 接下来 判断路由 如果在同步全部不选的情况下且回退路由名不等于主页和个人中心，那么就会跳转到对应回退的路由页面 在哪发往哪里跳
               if(this.$route.query.back && this.$route.query.back!='home' && this.$route.query.back!='my'){
                 this.$router.push({
                   name: this.$route.query.back,
@@ -416,8 +404,6 @@ export default {
                   }
                 })
               }else{
-                // 发布页跳转逻辑
-                //判断路由数组result 是否有apps-find 如果有回退到apps-find 发现页面
                 switch(true){
                   case contains(this.result,'apps-find'):
                     this.$router.push({
@@ -471,21 +457,6 @@ export default {
     toggle(index) {
       this.$refs.checkboxes[index].toggle()
     },
-    // onUploadTypeSelect(item) {
-    //   switch (item.index) {
-    //     case 0:
-    //       this.$refs.selectPhoto.$refs.input.click()
-    //       break;
-    //     case 1:
-    //       this.$refs.selectFileVideo.click()
-    //       break;
-    //     case 2:
-    //       this.$refs.fileVideo.click()
-    //       break;
-    //   }
-
-    //   this.UploadTypeShow = false
-    // },
     doUpload(e) {
       let file = e.target.files[0]
       let type = e.target.dataset.type
@@ -496,16 +467,6 @@ export default {
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
-
-      let photo
-      
-      videoParse(file).then(result =>{
-        photo = {
-          height: result.height,
-          width: result.width,
-          duration: result.duration
-        }
-      })
 
       let url = this.ossSign.host.replace('http:', 'https:')
       let data = new FormData()
@@ -527,22 +488,21 @@ export default {
             this.percent = Math.floor(100 * (p.loaded / p.total))
           }
         }).then((res) => {
+
+        videoParse(file).then(result =>{
           this.grapicData.photos.push({
             is_audio: type == 'audio' ? 1 : 0,
             is_video: type == 'video' ? 1 : 0,
             photo: path,
-            thumb: this.videoThumb,
-            height: photo.height || 0,
-            width:  photo.width || 0,
-            duration: Math.floor(photo.duration)
+            thumb: `${path}?x-oss-process=video/snapshot,t_10000`,
+            height: result.height || 0,
+            width:  result.width || 0,
+            duration: Math.floor(result.duration)
           })
+        })
 
           this.percent = 0
         })
-    },
-    async thumb(file){
-      let thumb = await new VideoCapture(file).capture("5%","preview")
-      return Promise.resolve( thumb )
     },
     upOssPhoto(blob, file, base64) {
       let img = new Image()
@@ -577,33 +537,6 @@ export default {
           width: img.width || 0
         })
         this.percent = 0
-      })
-    },
-    addPhoto(blob, file){
-      let fd = new FormData()
-      let url = this.ossSign.host.replace('http:', 'https:')
-      let key = this.ossSign.dir + '/' + Date.now() + file.name
-      let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
-
-      fd.append('key', key)
-      fd.append('OSSAccessKeyId', this.ossSign.accessid)
-      fd.append('policy', this.ossSign.policy)
-      fd.append('success_action_status', 200)
-      fd.append('signature', this.ossSign.signature)
-      fd.append('file', blob, file.name)
-
-      return new Promise((resolve, reject) =>{
-        axios({
-          url: url,
-          data: fd,
-          method: 'post',
-          onUploadProgress: p => {
-            this.percent = Math.floor(100 * (p.loaded / p.total))
-          }
-        }).then(() => {
-          this.percent = 0
-          resolve(path)
-        })
       })
     },
     selectTag(tag) {

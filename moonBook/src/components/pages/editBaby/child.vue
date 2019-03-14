@@ -252,11 +252,6 @@ export default {
       })
     },
     submit(set) {
-      
-      if(set!='setSchool'){
-        this.submitLoading = true
-      }
-
       if (!this.childInfo.avatar) {
         this.$toast.fail('请上传头像')
       }else if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
@@ -270,6 +265,10 @@ export default {
           this.errorMessage.birthday = ''
         }, 2000)
       } else {
+        if(set!='setSchool'){
+          this.submitLoading = true
+        }
+
         this.operationApi().then(res => {
           if(set == 'setSchool'){
             this.$router.push({

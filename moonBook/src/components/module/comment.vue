@@ -96,7 +96,8 @@
               <i class="iconfont" v-else>&#xe644;</i>
             </div>
             <div class="btn" @click="addCollect(item)" v-if='include != "include"'>
-              <van-tag class="num-tag" v-if='item.collect_num > 1' round type="danger">{{item.collect_num > 1000?'999+':item.collect_num}}</van-tag>
+              <van-tag class="num-tag" v-if='item.collect_num > 1' round type="danger">{{item.collect_num >
+                1000?'999+':item.collect_num}}</van-tag>
               <i class="iconfont star highlight swing animated" v-if="item.isShoucang">&#xe64b;</i>
               <i class="iconfont" v-else> &#xe64c;</i>
             </div>
@@ -107,7 +108,8 @@
         </div>
       </div>
 
-      <van-popup v-model="show" class="comment-popup" overlay-class='bg-opacity' position="bottom" get-container='#app' @close='$refs.field.blur()'>
+      <van-popup v-model="show" class="comment-popup" overlay-class='bg-opacity' position="bottom" get-container='#app'
+        @close='$refs.field.blur()'>
         <div class="score flex-column" v-if='include != "include"&&score'>
           <div class="score-title">评分</div>
           <van-rate class="score-rate" v-model="star" :size="25" :count="5" void-color="#ceefe8" />
@@ -115,7 +117,8 @@
         <div class="comment-content flex">
           <div class="field-box">
             <van-cell-group>
-              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
+              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1"
+                autosize />
             </van-cell-group>
           </div>
           <div class="submit-btn theme-color">
@@ -138,7 +141,7 @@ import { timeago } from './../lib/js/util'
 
 export default {
   name: 'comment',
-  props: ['item', 'include','type'],
+  props: ['item', 'include', 'type'],
   computed: {
     ...mapGetters(['userToken', 'userDataState'])
   },
@@ -147,7 +150,7 @@ export default {
   },
   data() {
     return {
-      star:3,
+      star: 3,
       list: [],
       toTopAndComment: false,
       listLength: '',
@@ -165,7 +168,16 @@ export default {
   },
   methods: {
     onLoad() {
-      axios.get(`/book/SchoolArticleComment/getList?&post_id=${this.$route.query.id || this.$route.query.back_id}&page=${this.page}&limit=10&sort=new`).then(res => {
+      let data = {
+        params: {
+          post_id: this.$route.query.id || this.$route.query.back_id,
+          page: this.page,
+          limit: 10,
+          sort: 'new'
+        }
+      }
+
+      axios.get('/book/SchoolArticleComment/getList', data).then(res => {
         if (res.data.status == 1) {
           this.listLength = res.data.count
           let array = res.data.data
@@ -196,31 +208,38 @@ export default {
         data = {
           post_id: this.$route.query.id,
           contents: this.message,
-          star: this.star*2
+          star: this.star * 2
         }
       }
 
-      if(this.message.length){
-        axios.post(`/book/SchoolArticleComment/edit?ajax=1`, data).then(res => {
-          if(res.data.status == 1){
+      if (this.message.length) {
+        axios.post('/book/SchoolArticleComment/edit?ajax=1', data).then(res => {
+          if (res.data.status == 1) {
             this.show = false
             this.page = 1
             this.onLoad()
-            this.$toast.success(res.data.data.info)
+            this.$toast.success(res.data.info)
             this.isLoading = false
-          }else{
-            this.$toast.fail(res.data.data.info)
+          } else {
+            this.$toast.fail(res.data.info)
           }
         })
-      }else{
+      } else {
         this.$toast('请填写评论内容')
-      }    
+      }
     },
     addPraise(item) {
       item.isZan = !item.isZan
-      axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
-        if (res.data.status == 1) {     
-          if(res.data.data.like == '1'){
+      let data = {
+        params: {
+          ajax: 1,
+          id: this.item.post_id
+        }
+      }
+
+      axios.get('/book/SchoolArticle/zan', data).then(res => {
+        if (res.data.status == 1) {
+          if (res.data.data.like == '1') {
             item.zan_num = res.data.data.like
             this.$toast.success({
               className: 'zan-icon toast-icon',
@@ -233,7 +252,13 @@ export default {
     addCollect(item) {
       item.isShoucang = !item.isShoucang
 
-      axios.get(`/book/SchoolArticleCollect/add?post_id=${this.item.post_id}`).then(res => {
+      let data = {
+        params: {
+          post_id: this.item.post_id
+        }
+      }
+
+      axios.get('/book/SchoolArticleCollect/add', data).then(res => {
         if (res.data.status == 1) {
           if (res.data.data) {
             item.collect_num = res.data.data.collect_num
@@ -245,7 +270,7 @@ export default {
         }
       })
     },
-    showField(item,type) {
+    showField(item, type) {
       this.isLoading = false
       this.message = ''
       if (item) {
@@ -260,7 +285,7 @@ export default {
         this.$refs.field.focus()
       })
 
-      type == 'reply'?this.score = false:this.score = true
+      type == 'reply' ? this.score = false : this.score = true
     },
     getAvatar(img) {
       if (!img) {
@@ -324,7 +349,7 @@ export default {
   font-size: 0.8125rem /* 13/16 */;
 }
 
-.avatar img{
+.avatar img {
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
   border-radius: 50%;
@@ -436,14 +461,14 @@ export default {
 }
 
 .input-box-avatar,
-.input-box-avatar img{
+.input-box-avatar img {
   width: 2rem /* 32/16 */;
   height: 2rem /* 32/16 */;
 }
 
 .input-box-avatar {
   margin-left: 0.3125rem /* 5/16 */;
-  margin-right: .3125rem /* 5/16 */;
+  margin-right: 0.3125rem /* 5/16 */;
 }
 
 .num-tag {
@@ -463,13 +488,13 @@ export default {
   padding: 1.25rem /* 20/16 */ 0;
 }
 
-.score-title{
+.score-title {
   text-align: center;
-  font-size: .875rem /* 14/16 */;
+  font-size: 0.875rem /* 14/16 */;
   font-weight: 700;
 }
 
-.score-rate{
-  margin: .625rem /* 10/16 */ auto;
+.score-rate {
+  margin: 0.625rem /* 10/16 */ auto;
 }
 </style>

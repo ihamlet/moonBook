@@ -15,9 +15,35 @@
         </van-cell>
       </van-list>
     </div>
+
+    <div class="add-school">
+      <div class="fx-box flex flex-align">
+        <div class="theme-color">没有你所在的学校？</div>
+        <van-button class="theme-btn" type="primary" size='small' @click="show = true">添加学校</van-button>
+      </div>
+    </div>
+
     <van-popup v-model="isListShow" class="page-popup" :overlay="false">
       <school-list :prompt='prompt' @close='isListShow = false' @select='selectSchool' />
     </van-popup>
+
+    <van-dialog v-model="show" show-cancel-button :before-close="beforeClose">
+      <div class="dialog-title">添加学校</div>
+      <van-cell-group>
+        <van-field v-model="schoolName" label="学校名称" placeholder="请输入学校名称" input-align='right' />
+        <van-cell>
+          <div class="flex flex-align type-select">
+            <div class="school-type">学校类型</div>
+            <div class="select-type flex flex-align">
+              <div v-for='(item,index) in shcoolType' :key="index" @click="selectSchoolType(item,index)">
+                <van-button size="small" class="theme-btn" type="primary" :plain='schoolTypeIndex==index?false:true'
+                  round>{{item.name}}</van-button>
+              </div>
+            </div>
+          </div>
+        </van-cell>
+      </van-cell-group>
+    </van-dialog>
   </div>
 </template>
 <script>
@@ -35,7 +61,7 @@ export default {
     avatar
   },
   computed: {
-    ...mapGetters(['userPointState','userPointState']),
+    ...mapGetters(['userPointState', 'userPointState']),
   },
   data() {
     return {
@@ -44,7 +70,18 @@ export default {
       loading: false,
       finished: false,
       list: [],
-      prompt: '搜索学校名称'
+      prompt: '搜索学校名称',
+      schoolName: '',
+      show: false,
+      schoolTypeIndex: 0,
+      schoolType: '小学',
+      shcoolType: [{
+        name: '小学',
+        index: 0,
+      }, {
+        name: '幼儿园',
+        index: 1
+      }]
     }
   },
   methods: {
@@ -56,22 +93,73 @@ export default {
       let products = {
         page: this.page,
         location: this.userPointState.location,
-        lng:arr[0],
-        lat:arr[1]
+        lng: arr[0],
+        lat: arr[1]
       }
 
       this.getSchoolList(products).then(res => {
-        
-        this.list = this.list.concat(res.data)
-        this.loading = false
-        if (this.list.length >= res.data.count) {
+        if (res.data.length) {
+          this.list = this.list.concat(res.data)
+          this.loading = false
+          if (this.list.length >= res.data.count) {
+            this.finished = true
+          }
+        } else {
+          this.page = 1
+          this.loading = false
           this.finished = true
         }
+
       })
+    },
+    beforeClose(action, done) {
+      if (action === 'confirm') {
+        let data = {
+          title: this.schoolName,
+          school_type: this.schoolType,
+          city:this.userPointState.city
+        }
+
+        axios.post('/book/school/edit_school', data).then(res => {
+          switch (res.data.status) {
+            case 1:
+              let bindData = {
+                params:{
+                  child_id:this.$route.query.id,
+                  school_id:res.data.data.school_id
+                }
+              }
+              axios.get('/book/babySchool/bind', bindData).then(res => {
+                if (res.data.status) {
+                  this.$toast.success('加入学校成功')
+                  this.$router.push({
+                    name: 'edit-class',
+                    query: {
+                      id: this.$route.query.id,
+                      school_id: res.data.data.school_id,
+                      back: this.$route.query.back,
+                      type: this.$route.query.type,
+                    }
+                  })
+                  this.getUserData()
+                }
+              })
+              done()
+              break
+            case 0:
+              this.$toast(res.data.msg)
+              done()
+              break
+
+          }
+        })
+      } else {
+        done()
+      }
     },
     selectSchool(item) {
       let data
-      if(item.school_id > '0'){        
+      if (item.school_id > '0') {
         data = {
           params: {
             school_id: item.school_id,
@@ -83,7 +171,7 @@ export default {
             typecode: item.typecode
           }
         }
-      }else{
+      } else {
         let cityname = ''
         if (item.cityname) {
           cityname = item.cityname
@@ -139,7 +227,7 @@ export default {
         data.params.child_id = this.$route.query.id
         axios.get('/book/babySchool/bind', data).then(res => {
           if (res.data.status) {
-            this.$toast.success('已加入学校')
+            this.$toast.success('加入学校成功')
             this.$router.push({
               name: 'edit-class',
               query: {
@@ -165,6 +253,10 @@ export default {
       } else {
         this.$router.go(-1)
       }
+    },
+    selectSchoolType(item, index) {
+      this.schoolType = item.name
+      this.schoolTypeIndex = index
     }
   }
 }
@@ -178,5 +270,9 @@ export default {
 
 .container {
   padding-top: 5.625rem /* 90/16 */;
+}
+
+.edit-school {
+  padding-bottom: 7.5rem /* 120/16 */;
 }
 </style>

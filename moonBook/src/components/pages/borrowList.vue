@@ -10,16 +10,16 @@
                 <van-row gutter="10">
                   <van-col span="7">
                     <div class="book-cover" @click="toBookDetails(item)">
-                      <img :src="thumb(item.book.thumb)" @error="outThumb($event,item)" />
+                      <img :src="thumb(item.thumb)" @error="outThumb($event,item)" />
                     </div>
                   </van-col>
                   <van-col span="11">
                     <div class="book-info" @click="toBookDetails(item)">
-                      <div class="title" v-line-clamp:20="2">{{item.book.title}}</div>
+                      <div class="title" v-line-clamp:20="2">{{item.title}}</div>
                       <div class="attach">
-                        <div class="location" v-if='item.location'><i class="iconfont">&#xe724;</i>{{item.location}}</div>
-                        <div class="author" v-line-clamp:20="1" v-if='item.book.author'>作者：{{item.book.author}}</div>
-                        <div class="pos-title" v-if='item.pos_title'>书架：{{item.pos_title}}</div>
+                        <!-- <div class="location" v-if='item.location'><i class="iconfont">&#xe724;</i>{{item.location}}</div> -->
+                        <div class="author" v-line-clamp:20="1" v-if='item.author'>作者：{{item.author}}</div>
+                        <!-- <div class="pos-title" v-if='item.pos_title'>书架：{{item.pos_title}}</div> -->
                       </div>
                     </div>
                   </van-col>
@@ -107,10 +107,18 @@ export default {
       return axios.get('/book/MemberBorrow/getList',data).then(res => {
         if(res.data.status == 1){
           if (res.data.count > 0) {
+              let datas = []
+              let array = res.data.data
+              array.forEach(element => {
+                if(element.book != null){
+                  datas.push( element.book)
+                }
+              })
+
             if (this.page == 1) {
-              this.tab[this.tabIndex].content = res.data.data
+              this.tab[this.tabIndex].content = datas
             } else {
-              this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
+              this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(datas)
             }
             this.page++
             this.loading = false
@@ -136,10 +144,19 @@ export default {
       return axios.get('/book/SchoolArticleCollect/getList',data).then(res => {
         if(res.data.status == 1){
           if (res.data.count > 0) {
+
+              let datas = []
+              let array = res.data.data
+              array.forEach(element => {
+                if(element.book != null){
+                  datas.push( element.book)
+                }
+              })
+
             if (this.page == 1) {
-              this.tab[this.tabIndex].content = res.data.data
+              this.tab[this.tabIndex].content = datas
             } else {
-              this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
+              this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(datas)
             }
             this.page++
             this.loading = false
@@ -154,10 +171,18 @@ export default {
       return axios.get('/book/MemberBookBroken/getList').then(res => {
         if(res.data.status == 1){
           if (res.data.count > 0) {
+              let datas = []
+              let array = res.data.data
+              array.forEach(element => {
+                if(element.book != null){
+                  datas.push( element.book)
+                }
+              })
+
             if (this.page == 1) {
-              this.tab[this.tabIndex].content = res.data.data
+              this.tab[this.tabIndex].content = datas
             } else {
-              this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
+              this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(datas)
             }
             this.page++
             this.loading = false
@@ -199,11 +224,13 @@ export default {
       e.target.src = require('@/assets/img/no-cover.jpg')
     },
     thumb(img){
-      let hostMatch = img.match(/https?:\/\/(.+?)\//)
-      if (hostMatch) {
-        return `/book/api/remotePic?url=${img}`
-      } else {
-        return img
+      if(img){
+        let hostMatch = img.match(/https?:\/\/(.+?)\//)
+        if (hostMatch) {
+          return `/book/api/remotePic?url=${img}`
+        } else {
+          return img
+        }
       }
     },
     listening(item) {
