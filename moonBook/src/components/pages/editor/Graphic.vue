@@ -488,18 +488,22 @@ export default {
             this.percent = Math.floor(100 * (p.loaded / p.total))
           }
         }).then((res) => {
-
+          
+          let duration 
         videoParse(file).then(result =>{
+          duration = result.duration
+        })
+
+
           this.grapicData.photos.push({
             is_audio: type == 'audio' ? 1 : 0,
             is_video: type == 'video' ? 1 : 0,
             photo: path,
             thumb: `${path}?x-oss-process=video/snapshot,t_10000`,
-            height: result.height || 0,
-            width:  result.width || 0,
-            duration: Math.floor(result.duration)
+            height: 0,
+            width: 0,
+            duration: Math.floor(duration) || 10
           })
-        })
 
           this.percent = 0
         })

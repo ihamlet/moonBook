@@ -248,31 +248,16 @@ function contains(arr, obj) {
 //获取视频信息
 function videoParse(file) {
   return new Promise((resolve, reject) => {
-    let video = document.createElement("Video")
+    let video = document.createElement("Audio")
     let url = URL.createObjectURL(file)
-    video.src = url
     video.onloadeddata = e => {
       //加载视频
-      let canvas = document.createElement("canvas")
-      let width = e.path[0].videoWidth
-      let height = e.path[0].videoHeight
-      let rate = width > 375 ? width / 375 : 1
-      canvas.width =  width / rate 
-      canvas.height = height / rate
-
-      let context = canvas.getContext("2d")
-      context.drawImage(video, 0, 0, canvas.width, canvas.height)
-
-      canvas.toBlob((blob)=>{
-        resolve({
-          width: e.path[0].videoWidth,
-          height: e.path[0].videoHeight,
-          duration: e.path[0].duration,
-          thumb_blob: blob,
-          thumb: canvas.toDataURL()
-        })
-      })  
+      resolve({
+        duration: e.path[0].duration,
+      })
     }
+    video.src = url
+    video.onload()
   })
 }
 

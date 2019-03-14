@@ -1050,11 +1050,6 @@ i.iconfont.vip-1 {
   justify-content: space-between;
 }
 
-.theme-color {
-  margin-bottom: 0.3125rem /* 5/16 */;
-  font-size: 0.875rem /* 14/16 */;
-}
-
 .type-select{
   justify-content: space-between;
 }

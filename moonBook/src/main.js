@@ -51,20 +51,6 @@ VueAMap.initAMapApiLoader({
   plugin: ['AMap.Geolocation']
 })
 
-if (typeof (Worker) !== "undefined") {
-
-  //创建 Web Worker 对象
-  if (typeof (Worker) == "undefined") {
-    Worker = new Worker("./../static/webworker.js")
-    Worker.postMessage("测试");
-  }
-  Worker.onmessage = function (event) {
-      console.log(event.data);
-  }
-}else {
-  console.log("浏览器不支持Web Worker");
-}
-
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
