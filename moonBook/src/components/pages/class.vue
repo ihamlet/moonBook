@@ -99,7 +99,13 @@ export default {
     },
     select(item, itemIndex) {
       if (this.$route.query.registerType == 'teacher') {
-        axios.get(`/book/SchoolTeacher/bind_banji?banji_name=${item.title}`).then(res => {
+        let SchoolTeacherBind = {
+          params:{
+            banji_id: item.banji_id
+          }
+        }
+
+        axios.get('/book/SchoolTeacher/bind_banji',SchoolTeacherBind).then(res => {
           if (res.data.status == 1) {
             this.$router.push({
               name: 'edit-setting',
@@ -111,7 +117,14 @@ export default {
           }
         })
       } else {
-        axios.get(`/book/babyBanji/bind?banji_name=${item.title}&child_id=${this.$route.query.id}`).then(res => {
+        let BabyJoinBanjiBdind = {
+          params:{
+            banji_id: item.banji_id,
+            child_id: this.$route.query.id
+          }
+        }
+
+        axios.get('/book/baby/join_banji',BabyJoinBanjiBdind).then(res => {
           if (res.data.status == 1) {
             if (this.$route.query.back) {
               this.$router.push({

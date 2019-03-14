@@ -18,7 +18,7 @@
                 <div class="label">{{label}}</div>
               </div>
               <div class="text" v-if='childInfo.read_count!=0'>
-                <span>{{childInfo.name}}宝贝在阅亮书架一共阅读了图书</span>
+                <span>宝贝在阅亮书架一共阅读了图书</span>
                 <span class="book-number">{{childInfo.read_count}}本</span>
               </div>
               <div class="code-img flex flex-justify">

@@ -200,7 +200,7 @@ export default {
 .order-popup .content::before {
   content: '';
   position: absolute;
-  width: 3.75rem /* 60/16 */;
+  width: 4rem /* 64/16 */;
   height: 0.375rem /* 6/16 */;
   left: 0.9375rem /* 15/16 */;
   top: -1.875rem /* 30/16 */;
@@ -242,9 +242,8 @@ export default {
 }
 </style>
 <style>
-.wm-coin,
-.van-cell__value {
-  flex: 2;
+.wm-coin.van-cell__value {
+  flex: 3;
 }
 </style>
 

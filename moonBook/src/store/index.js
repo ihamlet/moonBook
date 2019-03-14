@@ -142,7 +142,6 @@ const actions = {
       school_type: products.school_type
     }
 
-    let amapApiLink = `https://restapi.amap.com/v3/place/around?key=${data.Key}&location=${data.location}&radius=${data.radius}&keywords=${data.keywords}&types=${data.types}&offset=${data.offset}&page=${data.page}`
     let WMlifeSearchSchoolLink = `/book/school/getList`
 
     return new Promise((resolve, reject) => {

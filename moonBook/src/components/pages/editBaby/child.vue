@@ -156,7 +156,7 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     fetchData() {
-      if (localStorage['childInfo'] != undefined&&this.$route.query.type == 'edit') {
+      if (localStorage['childInfo'] != undefined&&this.$route.query.type != 'register'&&this.$route.query.type!='add') {
         this.childInfo = JSON.parse(localStorage['childInfo'])
       }
       
@@ -165,7 +165,7 @@ export default {
       }
 
 
-      if(this.$route.query.back!='baby-home'&&this.$route.query.type!='edit'){
+      if(this.$route.query.type!='add'){
         if (this.$route.query.id) {
           let getChildByUserData = {
             params:{

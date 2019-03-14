@@ -34,14 +34,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import accept from './../module/accept'
-
 export default {
   name: 'card-routing',
   props: ['childId'],
-  components: {
-    accept  
-  },
   computed: {
     ...mapGetters(['userDataState'])  
   },

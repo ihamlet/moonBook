@@ -52,9 +52,9 @@
         </div>
 
         <!-- 借阅卡办理页面 -->
-        <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
+        <!-- <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
             <accept @close='applyShow = false' v-model='active' @stepActiveChange='active = 0'/>
-        </van-popup>
+        </van-popup> -->
 
         <!-- 城市列表 -->
         <van-popup v-model="cityListShow" class="page-popup" position="right" get-container='#app'>
@@ -84,8 +84,6 @@ import newsList from './../module/news'
 import videoList from './../module/video'
 import articleList from './../module/articleList'
 
-import accept from './../module/accept'
-
 import city from './../module/city'
 import cityList from './../module/search/cityList'
 
@@ -101,7 +99,6 @@ export default {
         articleList,
         city,
         cityList,
-        accept,
         tips
     },
     computed: {

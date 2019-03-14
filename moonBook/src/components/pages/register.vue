@@ -33,7 +33,6 @@
   </div>
 </template>
 <script>
-import accept from './../module/accept'
 import slogan from './../module/slogan'
 
 export default {
@@ -109,10 +108,7 @@ export default {
     },
     toAccept() {
       this.$router.push({
-        name:'AcceptSchoolList',
-        query:{
-          active: 0
-        }
+        name:'AcceptSchoolList'
       })
     },
     toWmPage(){

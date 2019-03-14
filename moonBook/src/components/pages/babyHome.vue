@@ -324,7 +324,6 @@ export default {
             }
           }
           axios.get('/book/baby/getList',data).then(res => {
-            console.log(res.data.status)
             switch(res.data.status){
               case 1:
                 this.babyList = res.data.data
@@ -372,6 +371,7 @@ export default {
             }
           }
           axios.get('/book/baby/getInfo',data).then(res => {
+            console.log('/book/baby/getInfo','接口school_name为空，school_id为0')
             if (res.data.status == 1) {
               this.childInfo = res.data.data
             }

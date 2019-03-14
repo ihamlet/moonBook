@@ -3,7 +3,7 @@
     <div class="title">{{schoolName}}</div>
     <div class="card-box" v-for='(item,index) in levels' :key="index" @click="selectCard(item,index)">
       <div class="borrow-card flex animated" :class="[cardIndex==index?'rotate':'bounceInUp',`an-${index}`]">
-        <div class="borrow">
+        <div class="borrow flex flex-align flex-justify">
           <span class="l">每天</span>
           {{item.borrow_count}}
           <span class="r">本</span>
@@ -12,7 +12,7 @@
           <div class="type">{{item.name}}</div>
           <div class="period">租期{{item.borrow_day}}天</div>
         </div>
-        <div class="deposit">
+        <div class="deposit flex flex-align flex-justify">
           {{item.price/100}}
         </div>
       </div>
@@ -108,26 +108,17 @@ background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
   font-size: 1.375rem /* 22/16 */;
 }
 
-.info .period {
-  position: absolute;
-  bottom: -1.5625rem /* 25/16 */;
-  font-size: 0.875rem /* 14/16 */;
-}
-
 .borrow span {
   display: block;
   font-size: 0.875rem /* 14/16 */;
-  position: absolute;
 }
 
-.borrow span.l {
-  top: -0.3125rem /* 5/16 */;
-  left: 0.9375rem /* 15/16 */;
+.borrow span.l{
+  margin-right: .3125rem /* 5/16 */;
 }
 
-.borrow span.r {
-  right: 1.875rem /* 30/16 */;
-  bottom: -0.5rem /* 8/16 */;
+.borrow span.r{
+  margin-left: .3125rem /* 5/16 */;
 }
 
 .borrow-card {
@@ -144,10 +135,10 @@ background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
 .info,
 .deposit {
   flex: 1;
-  height: 5rem /* 80/16 */;
-  line-height: 5rem /* 80/16 */;
   color: #fff;
   position: relative;
+  height: 3.125rem /* 50/16 */;
+  margin-top: 1.25rem /* 20/16 */;
 }
 
 .deposit {
@@ -159,6 +150,7 @@ background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
 .deposit::before {
   content: '¥';
   font-size: 0.875rem /* 14/16 */;
+  margin-right: 5px
 }
 
 .rotate {
@@ -172,4 +164,8 @@ background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
     color: #606266;
 }
 
+.type,
+.period{
+  text-align: right;
+}
 </style>

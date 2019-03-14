@@ -29,15 +29,10 @@
     <div class="not-content" v-else>
       尚无记录 <span class="theme-color" v-if='userDataState.isVip == 0' @click="toAccept"> 办理阅亮书架借阅卡</span>
     </div>
-
-    <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
-      <accept @close='applyShow = false' v-model='active'/>
-    </van-popup>
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
-import accept from './../module/accept'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -45,9 +40,6 @@ export default {
   props: ['list', 'moduleTitle', 'type', 'babyId'],
   computed: {
     ...mapGetters(['userDataState'])
-  },
-  components:{
-    accept
   },
   data () {
     return {

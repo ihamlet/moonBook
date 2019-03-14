@@ -244,9 +244,7 @@ export default {
           this.isCheck = 2
         break
       }
-
-      this.page = 1
-      this.loading = true
+      
       this.finished = false
       this.onRefresh()
     }

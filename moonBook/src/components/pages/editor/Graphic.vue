@@ -75,6 +75,7 @@ import axios from './../../lib/js/api'
 import { mapActions, mapGetters } from 'vuex'
 import topicList from './../../module/release/topicList'
 import { compress,checkHtml,contains,videoParse } from './../../lib/js/util'
+import VideoCapture from 'video-capture'
 
 export default {
   name: 'graphic',
@@ -137,7 +138,8 @@ export default {
       //   type: 'uploadVideo',
       //   index: 2,
       // }],
-      topicList:[]
+      topicList:[],
+      videoThumb:''
     }
   },
   created() {
@@ -491,30 +493,19 @@ export default {
     },
     upOssMedia(type, file) {
 
-
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
 
       let photo
       
-      videoParse(file).then((result)=>{
+      videoParse(file).then(result =>{
         photo = {
-          thumb: result.thumb,
           height: result.height,
           width: result.width,
-          duration: result.duration,
-          thumb_blob: result.thumb_blob
+          duration: result.duration
         }
-
-        
-        this.addPhotoX(photo)
-        let idx = this.grapicData.photos.length - 1
-
-      this.addPhoto(result.thumb_blob,file).then(thumb =>{
-      photo.thumb = thumb
-      this.updatePhoto(photo, idx)
-
+      })
 
       let url = this.ossSign.host.replace('http:', 'https:')
       let data = new FormData()
@@ -528,29 +519,30 @@ export default {
       data.append('signature', this.ossSign.signature)
       data.append('file', file)
 
-          axios({
-            url: url,
-            data: data,
-            method: 'post',
-            onUploadProgress: p => {
-              this.percent = Math.floor(100 * (p.loaded / p.total))
-            }
-          }).then((res) => {
-            photo = {
-              is_audio: type == 'audio' ? 1 : 0,
-              is_video: type == 'video' ? 1 : 0,
-              photo: path,
-              thumb: photo.thumb,
-              height: photo.height || 0,
-              width:  photo.width || 0,
-              duration: Math.floor(photo.duration)
-            }
-
-            this.percent = 0
-            this.updatePhoto(photo, idx)
+        axios({
+          url: url,
+          data: data,
+          method: 'post',
+          onUploadProgress: p => {
+            this.percent = Math.floor(100 * (p.loaded / p.total))
+          }
+        }).then((res) => {
+          this.grapicData.photos.push({
+            is_audio: type == 'audio' ? 1 : 0,
+            is_video: type == 'video' ? 1 : 0,
+            photo: path,
+            thumb: this.videoThumb,
+            height: photo.height || 0,
+            width:  photo.width || 0,
+            duration: Math.floor(photo.duration)
           })
+
+          this.percent = 0
         })
-      })
+    },
+    async thumb(file){
+      let thumb = await new VideoCapture(file).capture("5%","preview")
+      return Promise.resolve( thumb )
     },
     upOssPhoto(blob, file, base64) {
       let img = new Image()
@@ -613,14 +605,6 @@ export default {
           resolve(path)
         })
       })
-    },
-    addPhotoX(photo) {
-      this.grapicData.photos.push(photo)
-      console.log('添加图片')
-    },
-    updatePhoto(photo, idx) {
-      this.grapicData.photos[idx] = photo
-      console.log('更新图片')
     },
     selectTag(tag) {
       this.cateName = tag.cate_name
