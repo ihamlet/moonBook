@@ -1,10 +1,10 @@
 <template>
   <div class="family-card">
-    <div class="family" :value="count > 0? `${count}位待审核`:'邀请家人'">
+    <div class="family">
       <div class="family-list flex flex-align" slot="title">
         <div class="flex flex-align">
-          <div class="avatar" v-for='(item,index) in list' :key="index">
-            <img :src="getAvatar(item.avatar)" v-if='index < 4'/>
+          <div class="avatar" v-for='(item,index) in list' :key="index" @click="toDialog">
+            <img :src="getAvatar(item.avatar)" v-if='index < 4' />
           </div>
         </div>
         <div class="invite">
@@ -38,10 +38,26 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get(`/book/babyParent/getList?child_id=${this.$route.query.id}`).then(res => {
+      let wmLifeGetBabyParent = '/book/babyParent/getList'
+
+      let data = {
+        params: {
+          child_id: this.$route.query.id
+        }
+      }
+
+      axios.get(wmLifeGetBabyParent, data).then(res => {
         this.list = res.data.data
       })
-      axios.get(`/book/babyParent/getList?child_id=${this.$route.query.id}&is_close=1`).then(res => {
+
+      let ParentListData = {
+        params: {
+          child_id: data.params.child_id,
+          is_close: 1
+        }
+      }
+
+      axios.get(wmLifeGetBabyParent, ParentListData).then(res => {
         let array = res.data.data
 
         array.forEach((element, i) => {
@@ -72,15 +88,24 @@ export default {
         })
       }
     },
-    getAvatar(img){
+    getAvatar(img) {
       let pos = img.indexOf('http://')
       let result
-      if(pos === 0) {
-         result = img.replace('http:', 'https:')
+      if (pos === 0) {
+        result = img.replace('http:', 'https:')
       } else {
-         result = img
+        result = img
       }
       return result
+    },
+    toDialog() {
+      this.$router.push({
+        name: 'dialog',
+        query: {
+          title: '家庭群聊',
+          id: this.$route.query.id
+        }
+      })
     }
   }
 }
@@ -109,12 +134,12 @@ export default {
   margin-right: 0.625rem /* 10/16 */;
 }
 
-.family-card{
-  margin-top: .625rem /* 10/16 */;
+.family-card {
+  margin-top: 0.625rem /* 10/16 */;
 }
 
-.family-list{
-  justify-content:space-between
+.family-list {
+  justify-content: space-between;
 }
 </style>
 <style>

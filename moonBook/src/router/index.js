@@ -59,6 +59,8 @@ import ReadAmount from '@/components/pages/readAmount'
 import Train from '@/components/train'
 import AppsTrain from '@/components/apps/train/trainHome'
 
+import Dialog from '@/components/pages/dialog/dialog'
+
 //办卡
 import Accept from '@/components/pages/accept/accept'
 import SchoolList from '@/components/pages/accept/schoolList'
@@ -101,6 +103,14 @@ export default new Router({
           meta: {
             title: '登录',
             tabActive: 4,
+            isFooterBar: false
+          }
+        },
+        {
+          path: '/dialog',
+          name:'dialog',
+          component: Dialog,
+          meta: {
             isFooterBar: false
           }
         },
@@ -330,7 +340,6 @@ export default new Router({
           component: Ranking,
           meta: {
             title: '阅读榜',
-
             isFooterBar: false
           }
         },

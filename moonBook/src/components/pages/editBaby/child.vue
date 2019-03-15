@@ -86,13 +86,12 @@ export default {
   computed: {
     ...mapGetters(['userDataState']),
     isMainParent(){
-      let b
-      if(this.info.main_parent_id == this.userDataState.id){
-        b = false
-      }else{
-        b = true
+       let b = false    
+      if(this.info){
+        if(this.info.main_parent_id != this.userDataState.id){
+          b = true
+        }
       }
-
       return b
     }
   },
