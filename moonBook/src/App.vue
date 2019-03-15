@@ -132,7 +132,7 @@ textarea {
 }
 
 .van-overlay.bg-opacity{
-  background: rgba(255, 255, 255, 0);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .flex-justify {

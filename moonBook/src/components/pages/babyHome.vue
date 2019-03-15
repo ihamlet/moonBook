@@ -32,7 +32,7 @@
           </div>
           <div class="label">{{childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
-          <family />
+          <family v-if='childInfo.is_mine'/>
         </div>
         <!-- <div class="add-praise" @click="babyPraise(childInfo)">
           <i class="iconfont">&#xe6e3;</i>
@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <div class="metro-card">
+      <div class="metro-card" v-if='childInfo.is_mine'>
         <metro/>
       </div>
 
@@ -327,19 +327,23 @@ export default {
             switch(res.data.status){
               case 1:
                 this.babyList = res.data.data
-              break
-              case 0:
-                let babyBorrowGetListData = {
-                  params:{
-                    page:1,
-                    limit:20,
-                    child_id:this.$route.query.id
-                  }
-                }
 
-                axios.get('/book/BabyBorrow/getList',babyBorrowGetListData).then(res => {
-                  if (res.status == 200) {
-                    this.lateBook = res.data.data
+                let array = res.data.data
+                array.forEach(element => {
+                  if(element.id != this.$route.query.id){
+                    let babyBorrowGetListData = {
+                      params:{
+                        page:1,
+                        limit:20,
+                        child_id:this.$route.query.id
+                      }
+                    }
+
+                    axios.get('/book/BabyBorrow/getList',babyBorrowGetListData).then(res => {
+                      if (res.status == 200) {
+                        this.lateBook = res.data.data
+                      }
+                    })
                   }
                 })
               break
@@ -371,7 +375,6 @@ export default {
             }
           }
           axios.get('/book/baby/getInfo',data).then(res => {
-            console.log('/book/baby/getInfo','接口school_name为空，school_id为0')
             if (res.data.status == 1) {
               this.childInfo = res.data.data
             }

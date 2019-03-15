@@ -2,7 +2,7 @@
   <van-row gutter="10">
     <van-col span="7">
       <div class="book-cover">
-        <img :src="thumb(item.book_photo)" @error="imgError($event)">
+        <img  class="lazy" v-lazy="thumb(item.book_photo)"/>
       </div>
     </van-col>
     <van-col span="11">
@@ -25,7 +25,7 @@
           </div>
         </div>
         <div class="abrasion" v-if='type == "在读"'>
-          <van-button plain class="theme-btn" size="small" type="primary" round >磨损</van-button>
+          <van-button plain class="theme-btn" size="small" type="primary" round @click="toBorrow(item)">磨损</van-button>
         </div>
       </div>
     </van-col>
@@ -33,6 +33,7 @@
 </template>
 <script>
 import axios from "./../../lib/js/api"
+
 
 export default {
   name: 'bookCard',
@@ -74,7 +75,7 @@ export default {
     addCollect(item) {
       item.isShoucang = !item.isShoucang
       console.log('/book/SchoolShelfBook/getList','收藏没有isShoucang')
-      axios.get(`/book/SchoolArticleCollect/add?post_id=${this.item.book_id}`).then(res => {
+      axios.get(`/book/SchoolArticleCollect/add?post_id=${this.item.post_id}`).then(res => {
         if (res.data.status == 1) {
           if (res.data.data) {
             item.collect_num = res.data.data.collect_num
@@ -85,6 +86,11 @@ export default {
           }
         }
       })
+    },
+    toBorrow(item){
+      if(item.borrow_id){
+        location.href = `/book/MemberBookBroken/add/borrow_id/${item.borrow_id}?back_url=${encodeURIComponent(location.href)}`
+      }
     }
   }
 }

@@ -10,7 +10,7 @@
                 <van-row gutter="10">
                   <van-col span="7">
                     <div class="book-cover" @click="toBookDetails(item)">
-                      <img :src="thumb(item.thumb)" @error="outThumb($event,item)" />
+                      <img class="lazy" v-lazy="thumb(item.thumb)"/>
                     </div>
                   </van-col>
                   <van-col span="11">
@@ -219,9 +219,6 @@ export default {
           this.loading = false
         })
       }
-    },
-    outThumb(e, item) {
-      e.target.src = require('@/assets/img/no-cover.jpg')
     },
     thumb(img){
       if(img){

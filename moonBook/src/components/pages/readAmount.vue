@@ -10,13 +10,11 @@
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
           <van-pull-refresh v-model="loading" @refresh="onRefresh">
             <van-notice-bar text="代还还有2本逾期，产生逾期费用4元，逾期为1元/本/天，从押金中扣除" left-icon="volume-o" v-if='list.title=="读过"||list.title=="在读"'/>
-
             <div class="tab-jianshu" v-if='list.title == "捐书"'>
                 <van-tabs type="card" color='#409eff' @click="onClickTab">
                   <van-tab :title="tabTitle" v-for='(tabTitle,tabTitleIndex) in donationTab' :key="tabTitleIndex"></van-tab>
                 </van-tabs>
             </div>
-
             <div class="switch-api" v-if='list.content.length'>
               <div class="content">
                 <div class="kings flex flex-align" v-if='list.title =="未读" '>
@@ -61,11 +59,11 @@ export default {
       if (this.childInfo) {
         arr = [{
           title: '在读',
-          num: this.childInfo.read_count,
+          num: this.childInfo.reading_count,
           content: ''
         }, {
           title: '读过',
-          num: this.childInfo.reading_count,
+          num: this.childInfo.read_count,
           content: ''
         },{
           title: '收藏',

@@ -14,24 +14,24 @@
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <div class="content" v-if='list.length'>
-          <div v-for="(item,index) in list" size='large' :key="index" is-link @click='select(item)'>
-            <div class="year" v-if='isYearShow(item,index)'>{{item.year}}</div>
-            <van-cell is-link>
-              <div class="banji-cell flex flex-align">
-                <div class="banji-name">
-                  {{formatBanjiTitle(item.title)}}
+            <div v-for="(item,index) in list" size='large' :key="index" is-link @click='select(item)'>
+              <div class="year" v-if='isYearShow(item,index)'>{{item.year}}</div>
+              <van-cell is-link>
+                <div class="banji-cell flex flex-align">
+                  <div class="banji-name">
+                    {{formatBanjiTitle(item.title)}}
+                  </div>
+                  <div class="add-value">
+                    {{item.student_count}}人已加入
+                  </div>
                 </div>
-                <div class="add-value">
-                  {{item.student_count}}人已加入
-                </div>
-              </div>
-            </van-cell>
-          </div>
+              </van-cell>
+            </div>
 
           </div>
-         <div class="theme-color no-content" v-else>
-          <van-button class="theme-btn" plain type="primary" @click="show = true">请添加班级</van-button>
-        </div>
+          <div class="theme-color no-content" v-else>
+            <van-button class="theme-btn" plain type="primary" @click="show = true">请添加班级</van-button>
+          </div>
         </van-list>
       </div>
 
@@ -44,19 +44,23 @@
       </div>
     </div>
 
-
     <van-dialog v-model="show" show-cancel-button :before-close="beforeClose">
       <div class="dialog-title">添加班级</div>
       <van-cell-group>
-        <van-field v-model="className" label="班级名称" placeholder="请输入班级名称" input-align='right'/>
+        <van-field v-model="className" label="班级名称" placeholder="请输入班级名称" input-align='right' />
+        <van-field v-model="classYear" label="加入班级年份" placeholder="请选择年份" input-align='right' readonly @click="pickerShow = true" />
       </van-cell-group>
     </van-dialog>
 
+    <van-popup v-model="pickerShow" positiion='bottom' get-container='#app'>
+      <van-datetime-picker type="year-month" v-model="currentDate" :min-date="minDate" :formatter="formatter"/>
+    </van-popup>
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
+import { format } from './../lib/js/util'
 import avatar from './../module/avatar'
 import round from './../module/animate/round'
 
@@ -77,12 +81,19 @@ export default {
       page: 1,
       childInfo: '',
       schoolName: '',
-      className:'',
-      show:false
+      classYear: '',
+      className: '',
+      show: false,
+      year: '',
+      pickerShow:false,
+      currentDate: new Date(),
+      minDate: new Date(format(new Date(), 'yyyy') - 3, 0, 0),
     }
   },
   created() {
     this.fetchData()
+    let date = new Date
+    this.year = date.getFullYear()
   },
   watch: {
     '$router': 'fetchData'
@@ -98,24 +109,24 @@ export default {
         })
       } else {
         let SchoolInfoData = {
-          params:{
-            school_id:this.$route.query.school_id
+          params: {
+            school_id: this.$route.query.school_id
           }
         }
 
-        axios.get('/book/school/getInfo',SchoolInfoData).then(res=>{
-          if(res.data.status == 1){
+        axios.get('/book/school/getInfo', SchoolInfoData).then(res => {
+          if (res.data.status == 1) {
             this.schoolName = res.data.data.title
           }
         })
 
         let ChildByUserData = {
-          params:{
-            child_id:this.$route.query.id
+          params: {
+            child_id: this.$route.query.id
           }
         }
-        
-        axios.get('/book/family/getChildByUser',ChildByUserData).then(res => {
+
+        axios.get('/book/family/getChildByUser', ChildByUserData).then(res => {
           if (res.data.status == 1) {
             this.childInfo = res.data.data
           }
@@ -129,24 +140,32 @@ export default {
           title: this.className
         }
 
-        axios.post('/book/school/edit_banji',data).then(res=>{
-           switch(res.data.status){
-             case 1:
-                this.$toast.success('添加班级成功')
-                this.page = 1
-                this.list = []
-                this.onLoad()
-                done()
-             break
-             case 0:
-                this.$toast(res.data.msg)
-                done()
-             break
-           }
+        axios.post('/book/school/edit_banji', data).then(res => {
+          switch (res.data.status) {
+            case 1:
+              this.$toast.success('添加班级成功')
+              this.page = 1
+              this.list = []
+              this.onLoad()
+              done()
+              break
+            case 0:
+              this.$toast(res.data.msg)
+              done()
+              break
+          }
         })
       } else {
         done()
       }
+    },
+    formatter(type,value){
+      if (type === 'year') {
+        return `${value}年`;
+      } else if (type === 'month') {
+        return `${value}月`
+      }
+      return value;
     },
     onClickLeft() {
       if (this.$route.query.back && this.userDataState.banji_id != '0') {
@@ -168,12 +187,12 @@ export default {
     select(item, itemIndex) {
       if (this.$route.query.registerType == 'teacher') {
         let SchoolTeacherBind = {
-          params:{
+          params: {
             banji_id: item.banji_id
           }
         }
 
-        axios.get('/book/SchoolTeacher/bind_banji',SchoolTeacherBind).then(res => {
+        axios.get('/book/SchoolTeacher/bind_banji', SchoolTeacherBind).then(res => {
           if (res.data.status == 1) {
             this.$router.push({
               name: 'edit-setting',
@@ -186,15 +205,15 @@ export default {
         })
       } else {
         let BabyJoinBanjiBdind = {
-          params:{
+          params: {
             banji_id: item.banji_id,
             child_id: this.$route.query.id
           }
         }
 
-        axios.get('/book/baby/join_banji',BabyJoinBanjiBdind).then(res => {
+        axios.get('/book/baby/join_banji', BabyJoinBanjiBdind).then(res => {
           if (res.data.status == 1) {
-            if (this.$route.query.back){
+            if (this.$route.query.back) {
               this.$router.push({
                 name: 'edit-child',
                 query: {
@@ -230,9 +249,9 @@ export default {
         }
       }
       axios.get(`/book/SchoolBanji/getList`, data).then(res => {
-        if(res.data.count == 0){
+        if (res.data.count == 0) {
           this.show = true
-        }else{
+        } else {
           if (res.data.status == 1) {
             this.page++
             this.list = this.list.concat(res.data.data)
@@ -356,15 +375,15 @@ export default {
   line-height: 2.25rem /* 36/16 */;
 }
 
-.page-padding{
+.page-padding {
   padding-bottom: 7.5rem /* 120/16 */;
 }
 
-.no-content{
+.no-content {
   width: 100%;
   height: 6.25rem /* 100/16 */;
   line-height: 6.25rem /* 100/16 */;
   text-align: center;
-  background: #FFF;
+  background: #fff;
 }
 </style>

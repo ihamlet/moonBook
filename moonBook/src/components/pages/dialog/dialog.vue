@@ -51,6 +51,7 @@ export default {
   },
   watch: {
     "$router":'fetchData'
+    
   },
   methods: {
     fetchData(){
