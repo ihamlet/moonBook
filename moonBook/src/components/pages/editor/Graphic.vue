@@ -42,9 +42,23 @@
       </van-cell-group>
     </div>
 
+
+    <!-- 分类设置、同步、设置机构标签 -->
     <van-cell title-class='theme-color' title="#选择分类" :value="cateName" is-link arrow-direction="down" @click="show = true" />   
     <van-cell v-if='cateId!="99"&&cateId!="124"' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
-    <div class=""></div>
+    <div class="group-cell">
+      <div class="cell-link">
+        <van-cell title="设置机构标签" is-link @click="selectGroup = true" :value="group.group_name">
+          <div class="icon" slot="icon">
+            <i class="iconfont">&#xe652;</i>
+          </div>
+        </van-cell>
+      </div>
+    </div>
+
+    <van-popup v-model="selectGroup" position="bottom">
+      <van-picker :columns="groupList" value-key='group_name' @change="onChangeGroup" />
+    </van-popup>
      
     <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
       <van-checkbox-group v-model="result">
@@ -140,7 +154,10 @@ export default {
       //   index: 2,
       // }],
       topicList:[],
-      videoThumb:''
+      videoThumb:'',
+      groupList:[],
+      selectGroup:false,
+      group:''
     }
   },
   created() {
@@ -197,7 +214,11 @@ export default {
 
       // 从本地存储获取发布数据
       if(this.$route.query.type == 'edit'){
-          axios.get(`/book/SchoolArticle/getEdit?post_id=${this.$route.query.post_id}`).then(res => {
+          let articleData = {
+            post_id:this.$route.query.post_id
+          }
+
+          axios.get('/book/SchoolArticle/getEdit',articleData).then(res => {
             if(res.data.status == 1){
               this.grapicData.photos = res.data.data.photos
               if(checkHtml(res.data.data.details)){
@@ -258,6 +279,16 @@ export default {
           }
         })
       }
+
+      //获取机构标签
+      axios.get('/book/member/get_groups').then(res=>{
+        switch(res.data.status){
+          case 1:
+            this.groupList = res.data.data
+            this.group = res.data.data[0]
+          break
+        }
+      })
     },
     onRead(file) {
       let array = []
@@ -361,7 +392,8 @@ export default {
             template_id: 1,
             photos: this.grapicData.photos,
             cate_id: this.cateId || '',
-            post_id: this.$route.query.post_id || ''
+            post_id: this.$route.query.post_id || '',
+            group_id: this.group.group_id
           }
 
           //跳转路由
@@ -560,6 +592,9 @@ export default {
         result = img
       }
       return result
+    },
+    onChangeGroup(picker,values){
+      this.group = values
     }
   }
 }
@@ -705,6 +740,27 @@ export default {
 
 .img-grid{
   background: #f8f8f8;
+}
+
+.group-cell{
+  padding: .625rem /* 10/16 */;
+}
+
+.cell-link{
+  border-radius: .625rem /* 10/16 */;
+  overflow: hidden;
+  box-shadow: 0 .125rem /* 2/16 */ .9375rem /* 15/16 */ rgba(0, 0, 0, .1)
+}
+
+.icon{
+  margin-right: .625rem /* 10/16 */;
+}
+
+.icon .iconfont{
+  font-size: 1.25rem /* 20/16 */;
+  background: linear-gradient(135deg, #00bcd4, #409eff);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 </style>
 <style>

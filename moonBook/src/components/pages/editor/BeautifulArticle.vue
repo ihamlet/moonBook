@@ -2,7 +2,7 @@
   <div class="beautiful-article">
     <van-nav-bar title="编辑" left-text="取消" @click-left="onClickLeft" fixed>
       <div class="head-bar-btn theme-color" slot="right">
-        <van-button :loading='percent != 0' class="theme-btn" type="primary" size="small" @click="release" round>发布</van-button>
+        <van-button :loading='percent != 0' class="theme-btn" type="primary" size="small" @click="release" round>下一步</van-button>
       </div>
     </van-nav-bar>
     <div class="container">
@@ -10,18 +10,11 @@
         <div class="add-thumb"><i class="iconfont">&#xe607;</i>更换文章封面</div>
       </div>
       <van-field class="edit-title" v-model="title" placeholder="点击输入文章标题" />
-        <div class="classify">
-            <van-cell title-class='theme-color' title="#选择分类" :value="cateName" is-link arrow-direction="down" @click="show = true" />
-        </div>
     </div>
     <div class="article-list">
-      <articleCard />
+      <articleCard :content='content'/>
     </div>
     <div class="reprint">转载外部文章 ></div>
-
-    <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
-      <topic-list @close='show = false' @select='selectTag' type='edit' :topicList='topicList'/>
-    </van-popup>
   </div>
 </template>
 <script>
@@ -42,7 +35,8 @@ export default {
       show: false,
       cateName:'',
       cateId:'',
-      topicList:[]
+      topicList:[],
+      content:''
     }
   },
   created () {
@@ -85,6 +79,10 @@ export default {
           this.topicList = data
           this.cateId = data[0].cate_id
           this.cateName = data[0].cate_name
+        }
+
+        if(this.$route.query.content){
+          this.content = this.$route.query.content
         }
       })
     },
