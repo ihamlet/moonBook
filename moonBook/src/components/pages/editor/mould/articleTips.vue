@@ -22,10 +22,10 @@
 <script>
 export default {
   name: 'article-tips',
-  props: ['addTop', 'addBottom'],
+  props: ['type','index'],
   data() {
     return {
-      isTipsShow: true,
+      isTipsShow: false,
       tipsList: [{
         type: 'images',
         icon: 'icon-tupian',
@@ -59,7 +59,11 @@ export default {
             break
             case 1:
                 this.$router.push({
-                    name:'publishing'
+                    name:'publishing',
+                    query:{
+                      type: this.type,
+                      index: this.index
+                    }
                 })
             break
             case 2:
@@ -72,17 +76,18 @@ export default {
     onRead(file) {
       let data = {
         file:file,
-        upLoadType:'image'
+        upLoadType:'image',
+        index: this.index
       }
 
       this.$emit('onRead',data)
     },
     doUpload(e){
-
       let data = {
         file:e.target.files[0],
         type:e.target.dataset.type,
-        upLoadType:'video'
+        upLoadType:'video',
+        index: this.index
       }
 
       this.$emit('doUpload',data)

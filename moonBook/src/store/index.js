@@ -4,6 +4,8 @@ import axios from './../components/lib/js/api'
 import fetchJsonp from 'fetch-jsonp'
 import Cookies from 'js-cookie'
 
+import beautifulArticle from './BeautifulArticle'
+
 Vue.use(Vuex)
 
 const state = {
@@ -243,5 +245,8 @@ export default new Vuex.Store({
   state,
   getters,
   mutations,
-  actions
+  actions,
+  modules:{
+    beautifulArticle
+  }
 })

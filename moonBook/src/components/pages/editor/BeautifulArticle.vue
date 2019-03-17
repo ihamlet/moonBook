@@ -12,9 +12,9 @@
       <van-field class="edit-title" v-model="title" placeholder="点击输入文章标题" />
     </div>
     <div class="article-list">
-      <articleCard :content='content'/>
+      <articleCard/>
     </div>
-    <div class="reprint">转载外部文章 ></div>
+    <!-- <div class="reprint">转载外部文章 ></div> -->
   </div>
 </template>
 <script>
@@ -39,53 +39,7 @@ export default {
       content:''
     }
   },
-  created () {
-    this.fetchData()
-  },
-  watch: {
-    "$router":"fetchData"  
-  },
   methods: {
-    fetchData(){
-      let data = {
-        params:{
-          portal_name:'宝贝主页'
-        }
-      }
-
-      if(this.$route.query.back == 'class-home'){
-        data.params.portal_name = '班级主页'
-      }    
-
-      if(this.$route.query.back == 'apps-school'){
-        data.params.portal_name = '学校主页'
-      }
-
-      axios.get('/book/schoolArticleCate/getList',data).then(res => {
-        if(res.status == 200){
-          let cateArray = res.data
-          let data = []
-          cateArray.forEach(element => {
-            if(element.access_level == 0){
-              data.push(element)
-            }else{
-              this.managerState.forEach(e =>{
-                if((this.$route.query.id == e.banji_id||this.$route.query.id == e.school_id)&& e.item_relation != 'parent'){
-                  data.push(element)
-                }
-              })
-            }
-          })
-          this.topicList = data
-          this.cateId = data[0].cate_id
-          this.cateName = data[0].cate_name
-        }
-
-        if(this.$route.query.content){
-          this.content = this.$route.query.content
-        }
-      })
-    },
     onClickLeft() {
 
     },

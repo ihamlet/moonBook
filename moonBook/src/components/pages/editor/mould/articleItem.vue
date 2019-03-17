@@ -3,15 +3,15 @@
     <van-cell>
       <van-row gutter="10">
         <van-col span="6">
-          <div class="img-grid" @click="select(type)">
-            <div class="photo-upload" v-if='photo'>
-              <img :src="photo.thumb" alt="" srcset="">
+          <div class="img-grid" @click="select">
+            <div class="photo-upload" v-if='item.photos'>
+              <img :src="photos.thumb" alt="" srcset="">
             </div>
           </div>
         </van-col>
         <van-col span="16">
           <div class="text-box" @click="toPublishing">
-            <div class="text-content" v-if='text' v-html="text" v-line-clamp:20="3"></div>
+            <div class="text-content" v-if='item.text' v-html="item.text.text" v-line-clamp:20="3"></div>
             <div class="add-text" v-else>
               <div class="description">点击添加文字</div>
             </div>
@@ -34,15 +34,15 @@
       <van-uploader ref='selectPhoto' :after-read="onRead" />
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
     </div>
-
   </div>
 </template>
 <script>
 import Publishing from './../Publishing'
-
+import { mapActions } from 'vuex'
+ 
 export default {
   name: 'article-item',
-  props: ['photo', 'text','type'],
+  props: ['item','index','type'],
   components: {
     Publishing
   },
@@ -52,16 +52,19 @@ export default {
     }
   },
   methods: {
+    ...mapActions('beautifulArticle',['delete']),
     toPublishing() {
       this.$router.push({
         name: 'publishing',
         query: {
-            content: this.$route.query.content
+            index: this.index,
+            onClickType:'revise'
         }
       })
     },
-    select(type){
-        switch(type){
+    select(){
+      if(this.item.photos){
+        switch(this.item.photos.type){
             case 'image':
                 this.$refs.selectPhoto.$refs.input.click()
             break
@@ -69,11 +72,16 @@ export default {
                 this.$refs.selectFileVideo.click()
             break
         }
+      }else{
+        this.$refs.selectPhoto.$refs.input.click()
+      }
     },
     onRead(file) {
       let data = {
         file:file,
-        upLoadType:'image'
+        upLoadType:'image',
+        onClickType:'revise',
+        index:this.index
       }
       this.$emit('onRead',data)
     },
@@ -81,12 +89,14 @@ export default {
       let data = {
         file:e.target.files[0],
         type:e.target.dataset.type,
-        upLoadType:'video'
+        upLoadType:'video',
+        onClickType:'revise',
+        index:this.index
       }
       this.$emit('doUpload',data)
     },
     deleteArticle(){
-
+      this.delete(this.index)
     }
   }
 }

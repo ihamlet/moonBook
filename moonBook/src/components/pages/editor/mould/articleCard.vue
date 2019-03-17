@@ -1,8 +1,11 @@
 <template>
   <div class="article-card">
     <div class="article-item">
-      <articleTips @onRead='onRead' @doUpload='doUpload' />
-      <articleItem v-if='photo || content' :photo='photo' :text='content' @onRead='onRead' :type='upLoadType'/>
+      <articleTips @onRead='onRead' @doUpload='doUpload' :index='0'/>
+      <div class="item" v-for='(item,index) in getArticleList' :key="index">
+        <articleItem :item='item' :index='index' :type='upLoadType' @onRead='onRead' @doUpload='doUpload'/>
+        <articleTips @onRead='onRead' @doUpload='doUpload' :index='index+1'/>
+      </div>
     </div>
   </div>
 </template>
@@ -12,13 +15,16 @@ import axios from './../../../lib/js/api'
 import { compress,checkHtml } from './../../../lib/js/util'
 import articleItem from './articleItem'
 import articleTips from './articleTips'
+import { mapActions,mapGetters } from 'vuex'
 
 export default {
   name: 'article-card',
-  props: ['content'],
   components: {
     articleTips,
     articleItem
+  },
+  computed: {
+    ...mapGetters('beautifulArticle',['getArticleList'])
   },
   data() {
     return {
@@ -38,18 +44,20 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
+    ...mapActions('beautifulArticle',['add','revise']),
     fetchData() {
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
       })
     },
-    upLoandData(data) {
-      this.photo = data.photos[0].photo
-    },
+
+    // 方法调用
     onRead(data) {
       this.upLoadType = data.upLoadType
       let file = data.file
+      let index = data.index
       let array = []
+      let onClickType = data.onClickType
       
       if (file.length) {
         array = file
@@ -62,7 +70,7 @@ export default {
           this.photoLength++
           compress(element.content, 1200, 0.8, 'blob').then(val => {
             val.toBlob((blob) => {
-              this.upOssPhoto(blob, element.file, element.content)
+              this.upOssPhoto(blob, element.file, element.content, index,onClickType)
             })
           })
         } else {
@@ -75,10 +83,14 @@ export default {
     doUpload(data) {
       let file = data.file
       let type = data.type
+      let index = data.index
       this.upLoadType = data.upLoadType
-      this.upOssMedia(type, file)
+      let onClickType = data.onClickType
+      this.upOssMedia(type, file, index,onClickType)
     },
-    upOssMedia(type, file) {
+
+    //上传
+    upOssMedia(type, file, index,onClickType) {
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
@@ -103,18 +115,32 @@ export default {
           this.percent = Math.floor(100 * (p.loaded / p.total))
         }
       }).then(() => {
-        this.photo = {
+        let data = {
           is_audio: type == 'audio' ? 1 : 0,
           is_video: type == 'video' ? 1 : 0,
           photo: path,
           thumb: `${path}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`,
           height: 0,
-          width: 0
+          width: 0,
+          type:'video',
+          index:index
         }
+
+        if(onClickType){
+          let reviseData = {
+            index:index,
+            data:data
+          }
+
+          this.revise(reviseData)
+        }else{
+          this.add(data)
+        }
+  
         this.percent = 0
       })
     },
-    upOssPhoto(blob, file, base64) {
+    upOssPhoto(blob, file, base64, index,onClickType) {
       let img = new Image()
       img.src = base64
 
@@ -136,18 +162,31 @@ export default {
         method: 'post',
         onUploadProgress: p => {
           this.percent = Math.floor(100 * (p.loaded / p.total))
-
         }
       }).then(() => {
-        // 设置localStorage
-        this.photo = {
+        
+        let data = {
           photo: path,
           is_audio: 0,
           is_video: 0,
           thumb: `${path}?x-oss-percent=image/resize,m_fill,h_200,w_200`,
           height: img.height || 0,
-          width: img.width || 0
+          width: img.width || 0,
+          type:'image',
+          index:index
         }
+
+        if(onClickType){
+          let reviseData = {
+            index:index,
+            data:data
+          }
+
+          this.revise(reviseData)
+        }else{
+          this.add(data)
+        }
+
         this.percent = 0
       })
     }

@@ -15,17 +15,17 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
 import { compress } from './../../lib/js/util'
-import topicList from './../../module/release/topicList'
-import { mapGetters } from 'vuex'
+// import topicList from './../../module/release/topicList'
+import { mapActions,mapGetters } from 'vuex'
 
 export default {
   name: 'publishing',
   components: {
     quillEditor,
-    topicList
+    // topicList
   },
-  computed:{
-    ...mapGetters(['managerState','userDataState'])
+  computed: {
+    ...mapGetters('beautifulArticle',['getArticleList'])
   },
   data() {
     return {
@@ -50,21 +50,33 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
+    ...mapActions('beautifulArticle',['add','revise']),
     fetchData() {
-      if(this.$route.query.content){
-        this.content = this.$route.query.content
-      }
+        if(this.$route.query.onClickType){
+          this.content = this.getArticleList[this.$route.query.index].text.text
+        }
     },
     onClickLeft() {
-      this.$emit('close')
+      this.$router.go(-1)
     },
     onClickCarryOut() {
-      this.$router.push({
-        name:'beautifulArticle',
-        query:{
-          content: this.content
+      let data = {
+        text: this.content,
+        type:'text',
+        index: this.$route.query.index
+      }
+
+      if(this.$route.query.onClickType){
+        let reviseData = {
+          index: this.$route.query.index,
+          data: data
         }
-      })
+        this.revise(reviseData)
+      }else{
+        this.add(data)
+      }
+    
+      this.$router.go(-1)
     }
   }
 }
