@@ -14,9 +14,9 @@
       </van-uploader>
     </div>
     <van-cell-group>
-      <van-field v-model="childInfo.name" input-align='right' label="孩子姓名" placeholder="请输入孩子姓名" :error-message="errorMessage.name" />
-      <van-field v-model="childInfo.birthday" input-align='right' readonly label="孩子生日" placeholder="请选择日期" :error-message="errorMessage.birthday" @click="pickerShow = true" />
-      <van-field v-model="childInfo.relation_name" input-align='right' label="您是孩子的？" placeholder="例如：爸爸" />
+      <van-field v-model="childInfo.name" :disabled='isMainParent' input-align='right' label="孩子姓名" placeholder="请输入孩子姓名" :error-message="errorMessage.name" />
+      <van-field v-model="childInfo.birthday" :disabled='isMainParent' input-align='right' readonly label="孩子生日" placeholder="请选择日期" :error-message="errorMessage.birthday" @click="pickerShow = true" />
+      <van-field v-model="childInfo.relation_name" :disabled='isMainParent' input-align='right' label="您是孩子的？" placeholder="例如：爸爸" />
     </van-cell-group>
     <van-cell-group class="theme-switch">
       <van-switch-cell v-model="settingSurrent" @input="onInput" title="设为当前宝贝" />
@@ -25,17 +25,17 @@
       <div class="form-title">孩子性别</div>
       <van-cell-group>
         <van-cell title="男孩" clickable @click="radio = '1'">
-          <van-radio class="theme-radio" name="1" />
+          <van-radio :disabled='isMainParent' class="theme-radio" name="1" />
         </van-cell>
         <van-cell title="女孩" clickable @click="radio = '2'">
-          <van-radio class="theme-radio" name="2" />
+          <van-radio :disabled='isMainParent' class="theme-radio" name="2" />
         </van-cell>
       </van-cell-group>
     </van-radio-group>
     <van-radio-group>
       <div class="form-title">学校设置</div>
       <van-cell-group>
-        <van-cell value='设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="submit('setSchool')" />
+        <van-cell value='设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="!isMainParent&&submit('setSchool')" />
       </van-cell-group>
     </van-radio-group>
 
@@ -84,7 +84,16 @@ export default {
     cardRouting
   },
   computed: {
-    ...mapGetters(['userDataState'])
+    ...mapGetters(['userDataState']),
+    isMainParent(){
+       let b = false    
+      if(this.info){
+        if(this.info.main_parent_id != this.userDataState.id){
+          b = true
+        }
+      }
+      return b
+    }
   },
   data() {
     return {
@@ -156,7 +165,7 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     fetchData() {
-      if (localStorage['childInfo'] != undefined&&this.$route.query.type == 'edit') {
+      if (localStorage['childInfo'] != undefined&&this.$route.query.type != 'register'&&this.$route.query.type!='add') {
         this.childInfo = JSON.parse(localStorage['childInfo'])
       }
       
@@ -165,7 +174,7 @@ export default {
       }
 
 
-      if(this.$route.query.back!='baby-home'&&this.$route.query.type!='edit'){
+      if(this.$route.query.type!='add'){
         if (this.$route.query.id) {
           let getChildByUserData = {
             params:{
@@ -252,11 +261,6 @@ export default {
       })
     },
     submit(set) {
-      
-      if(set!='setSchool'){
-        this.submitLoading = true
-      }
-
       if (!this.childInfo.avatar) {
         this.$toast.fail('请上传头像')
       }else if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
@@ -270,6 +274,10 @@ export default {
           this.errorMessage.birthday = ''
         }, 2000)
       } else {
+        if(set!='setSchool'){
+          this.submitLoading = true
+        }
+
         this.operationApi().then(res => {
           if(set == 'setSchool'){
             this.$router.push({

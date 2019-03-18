@@ -52,11 +52,13 @@ export default {
         name: '文章',
         type: 'article',
         icon: 'icon-wenzhang'
-      }, {
-        name: '发提问',
-        type: 'question',
-        icon: 'icon-tiwen'
-      }]
+      } 
+      // ,{
+      //   name: '发提问',
+      //   type: 'question',
+      //   icon: 'icon-tiwen'
+      // }
+      ]
     }
   },
   created() {

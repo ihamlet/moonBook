@@ -59,6 +59,13 @@ import ReadAmount from '@/components/pages/readAmount'
 import Train from '@/components/train'
 import AppsTrain from '@/components/apps/train/trainHome'
 
+import Dialog from '@/components/pages/dialog/dialog'
+
+//办卡
+import Accept from '@/components/pages/accept/accept'
+import SchoolList from '@/components/pages/accept/schoolList'
+import cardLevel from '@/components/pages/accept/cardLevel'
+import cardTime from '@/components/pages/accept/cardTime'
 
 
 Vue.use(Router)
@@ -98,6 +105,45 @@ export default new Router({
             tabActive: 4,
             isFooterBar: false
           }
+        },
+        {
+          path: '/dialog',
+          name:'dialog',
+          component: Dialog,
+          meta: {
+            isFooterBar: false
+          }
+        },
+        {
+          path:'/accept',
+          name:'accept',
+          component: Accept,
+          meta:{
+            title:'阅读卡办理',
+            isFooterBar: false
+          },
+          children:[{
+            path:'/accept/schoolList',
+            name:'AcceptSchoolList',
+            component: SchoolList,
+            meta:{
+              active:0
+            }
+          },{
+            path:'/accept/cardLevel',
+            name:'AcceptCardLevel',
+            component: cardLevel,
+            meta:{
+              active:1
+            }
+          },{
+            path:'/accept/cardTime',
+            name:'AcceptCardTime',
+            component: cardTime,
+            meta:{
+              active:2
+            }
+          }]
         },
         {
           path: '/article',
@@ -294,7 +340,6 @@ export default new Router({
           component: Ranking,
           meta: {
             title: '阅读榜',
-
             isFooterBar: false
           }
         },

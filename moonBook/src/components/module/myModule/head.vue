@@ -61,11 +61,6 @@
       </div>
     </div>
 
-    <!-- 借阅卡办理页面 -->
-    <van-popup v-model="applyShow" class="page-popup" position="bottom" :overlay="false">
-      <accept @close="onAccpetPage" v-model="active" />
-    </van-popup>
-
     <van-popup v-model="punchShow" class="page-popup page-punch" position="right">
       <punch @close="closePunch" />
     </van-popup>
@@ -75,14 +70,12 @@
 import axios from "./../../lib/js/api";
 import numberGrow from "./../../module/animate/numberGrow";
 import punch from "./../../module/punch";
-import accept from "./../accept";
 import avatar from './../avatar'
 
 export default {
   name: "cardHead",
   components: {
     numberGrow,
-    accept,
     punch,
     avatar
   },
@@ -126,8 +119,9 @@ export default {
       this.punchShow = true;
     },
     toAccept() {
-      this.applyShow = true;
-      this.active = 0;
+      this.$router.push({
+        name:'AcceptSchoolList'
+      })
     },
     onAccpetPage() {
       this.applyShow = false;

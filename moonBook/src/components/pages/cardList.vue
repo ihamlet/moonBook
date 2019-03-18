@@ -42,16 +42,11 @@
     <div class="slogn">
       <slogan />
     </div>
-    <!-- 借阅卡办理页面 -->
-    <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
-      <accept @close='applyClose' v-model='active' />
-    </van-popup>
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
 import vipLevel from './../module/animate/svg/vipLevel'
-import accept from './../module/accept'
 import slogan from './../module/slogan'
 
 
@@ -59,7 +54,6 @@ export default {
   name: 'card-list',
   components: {
     vipLevel,
-    accept,
     slogan
   },
   data() {
@@ -95,8 +89,9 @@ export default {
       this.$router.push({ name: 'my' })
     },
     toAccept() {
-      this.applyShow = true
-      this.active = 0
+      this.$router.push({
+        name:'AcceptSchoolList'
+      })
     },
     applyClose() {
       this.applyShow = false
@@ -119,7 +114,7 @@ export default {
 .card-box {
   width: 100%;
   height: 7.5rem /* 120/16 */;
-  border-radius: 0.625rem /* 10/16 */ 0.625rem /* 10/16 */ 0 0;
+  border-radius: .9375rem /* 15/16 */ .9375rem /* 15/16 */ 0 0;
   margin-top: 1.25rem /* 20/16 */;
   position: relative;
   border-bottom: .125rem /* 2/16 */ solid rgba(0,0,0,.1);
@@ -218,7 +213,7 @@ export default {
   opacity: .95;
 }
 .users-list .user {
-  margin-left: 0.625rem /* 10/16 */;
+  margin-left: -10px;
 }
 
 .card-loading{

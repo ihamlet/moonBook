@@ -45,6 +45,7 @@
 import axios from "./../../lib/js/api"
 import numberGrow from "./../../module/animate/numberGrow"
 import avatar from "./../../module/avatar"
+import { mapGetters } from 'vuex'
 
 export default {
   name: "baby-home",
@@ -53,6 +54,9 @@ export default {
     numberGrow,
     // addClass,
     avatar
+  },
+  computed: {
+    ...mapGetters(['userDataState'])
   },
   data() {
     return {

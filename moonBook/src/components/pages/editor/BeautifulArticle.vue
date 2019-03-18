@@ -2,7 +2,7 @@
   <div class="beautiful-article">
     <van-nav-bar title="编辑" left-text="取消" @click-left="onClickLeft" fixed>
       <div class="head-bar-btn theme-color" slot="right">
-        <van-button :loading='percent != 0' class="theme-btn" type="primary" size="small" @click="release" round>发布</van-button>
+        <van-button :loading='percent != 0' class="theme-btn" type="primary" size="small" @click="release" round>下一步</van-button>
       </div>
     </van-nav-bar>
     <div class="container">
@@ -10,18 +10,11 @@
         <div class="add-thumb"><i class="iconfont">&#xe607;</i>更换文章封面</div>
       </div>
       <van-field class="edit-title" v-model="title" placeholder="点击输入文章标题" />
-        <div class="classify">
-            <van-cell title-class='theme-color' title="#选择分类" :value="cateName" is-link arrow-direction="down" @click="show = true" />
-        </div>
     </div>
     <div class="article-list">
-      <articleCard />
+      <articleCard/>
     </div>
-    <div class="reprint">转载外部文章 ></div>
-
-    <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
-      <topic-list @close='show = false' @select='selectTag' type='edit' :topicList='topicList'/>
-    </van-popup>
+    <!-- <div class="reprint">转载外部文章 ></div> -->
   </div>
 </template>
 <script>
@@ -42,52 +35,11 @@ export default {
       show: false,
       cateName:'',
       cateId:'',
-      topicList:[]
+      topicList:[],
+      content:''
     }
   },
-  created () {
-    this.fetchData()
-  },
-  watch: {
-    "$router":"fetchData"  
-  },
   methods: {
-    fetchData(){
-      let data = {
-        params:{
-          portal_name:'宝贝主页'
-        }
-      }
-
-      if(this.$route.query.back == 'class-home'){
-        data.params.portal_name = '班级主页'
-      }    
-
-      if(this.$route.query.back == 'apps-school'){
-        data.params.portal_name = '学校主页'
-      }
-
-      axios.get('/book/schoolArticleCate/getList',data).then(res => {
-        if(res.status == 200){
-          let cateArray = res.data
-          let data = []
-          cateArray.forEach(element => {
-            if(element.access_level == 0){
-              data.push(element)
-            }else{
-              this.managerState.forEach(e =>{
-                if((this.$route.query.id == e.banji_id||this.$route.query.id == e.school_id)&& e.item_relation != 'parent'){
-                  data.push(element)
-                }
-              })
-            }
-          })
-          this.topicList = data
-          this.cateId = data[0].cate_id
-          this.cateName = data[0].cate_name
-        }
-      })
-    },
     onClickLeft() {
 
     },

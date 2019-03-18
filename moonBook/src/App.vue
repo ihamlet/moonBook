@@ -80,12 +80,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_eyyi6u8zynt.eot');
-  src: url('//at.alicdn.com/t/font_893274_eyyi6u8zynt.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_eyyi6u8zynt.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_eyyi6u8zynt.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_eyyi6u8zynt.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_eyyi6u8zynt.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_path8unj8.eot');
+  src: url('//at.alicdn.com/t/font_893274_path8unj8.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_path8unj8.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_path8unj8.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_path8unj8.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_path8unj8.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,
@@ -132,7 +132,7 @@ textarea {
 }
 
 .van-overlay.bg-opacity{
-  background: rgba(255, 255, 255, 0);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .flex-justify {
@@ -588,35 +588,6 @@ img.lazy[lazy='error'],
   transform: translate3d(-50%, 0, 0);
 }
 
-/* 订单 */
-.order-popup {
-  padding: 1.875rem /* 30/16 */ 0;
-}
-
-.order-popup .content {
-  width: 20rem /* 320/16 */;
-  margin: 0 auto;
-  position: relative;
-}
-
-.order-popup .content::before {
-  content: '';
-  position: absolute;
-  width: 3.75rem /* 60/16 */;
-  height: 0.375rem /* 6/16 */;
-  left: 0;
-  top: -1.875rem /* 30/16 */;
-}
-
-.order-popup .content .list {
-  padding: 0.9375rem /* 15/16 */ 0;
-}
-
-.order-popup .content .list .item {
-  height: 2.25rem /* 36/16 */;
-  line-height: 2.25rem /* 36/16 */;
-}
-
 /* 图片灯箱 */
 .video-box-popup.van-popup,
 .picture-box-popup.van-popup {
@@ -657,7 +628,7 @@ img.lazy[lazy='error'],
 
 .explain {
   font-size: .8125rem /* 13/16 */;
-  color: #909399;
+  color: #bbb;
 }
 
 .explain b {
@@ -1045,14 +1016,52 @@ i.iconfont.vip-1 {
   vertical-align: top;
 }
 
-.photo-tag {
+.photo-tag,
+.duration{
   position: absolute;
-  right: 0.3125rem /* 5/16 */;
   bottom: 0.3125rem /* 5/16 */;
+}
+
+.photo-tag {
+  left: 0.3125rem /* 5/16 */;
+}
+
+.duration{
+  right: .3125rem /* 5/16 */;
 }
 
 .apps{
   margin-top: -.625rem /* 10/16 */;
   padding: 0 .625rem /* 10/16 */;
+}
+
+
+.add-school,
+.add-class {
+  position: fixed;
+  bottom: 0;
+  z-index: 10;
+  width: 100%;
+}
+
+.fx-box {
+  background: #fff;
+  padding: 0.625rem /* 10/16 */ 1.25rem /* 20/16 */;
+  justify-content: space-between;
+}
+
+.type-select{
+  justify-content: space-between;
+}
+
+.select-type .theme-btn{
+  margin-left: .625rem /* 10/16 */;
+}
+
+
+.dialog-title{
+  text-align: center;
+  line-height: 2.875rem /* 46/16 */;
+  height: 2.875rem /* 46/16 */;
 }
 </style>

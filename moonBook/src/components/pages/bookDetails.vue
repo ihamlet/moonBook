@@ -136,6 +136,7 @@ export default {
 .book-thumb {
   width: 100%;
   height: 8.75rem /* 140/16 */;
+  overflow: hidden;
 }
 
 .title {

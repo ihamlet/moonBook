@@ -32,7 +32,7 @@
           </div>
           <div class="label">{{childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
-          <family />
+          <family v-if='childInfo.is_mine'/>
         </div>
         <!-- <div class="add-praise" @click="babyPraise(childInfo)">
           <i class="iconfont">&#xe6e3;</i>
@@ -63,7 +63,11 @@
         </div>
       </div>
 
-      <div v-if="childInfo.is_mine" class="card-top">
+      <div class="metro-card" v-if='childInfo.is_mine'>
+        <metro/>
+      </div>
+
+      <div v-if="childInfo.is_mine" class="article-list">
         <!-- <van-nav-bar title="成长日记" @click-right="toActivity">
           <div class="post-count" slot="left">
             {{childInfo.post_count}}日记
@@ -156,6 +160,7 @@ import reading from "./../module/reading"
 import graphicCard from "./../module/card/graphicCard"
 import classShow from './../module/classModule/classShow'
 import family from './../module/myModule/family'
+import metro from './../module/mold/metro'
 import slogan from './../module/slogan'
 
 export default {
@@ -168,6 +173,7 @@ export default {
     graphicCard,
     classShow,
     family,
+    metro,
     slogan
   },
   computed: {
@@ -318,23 +324,26 @@ export default {
             }
           }
           axios.get('/book/baby/getList',data).then(res => {
-            console.log(res.data.status)
             switch(res.data.status){
               case 1:
                 this.babyList = res.data.data
-              break
-              case 0:
-                let babyBorrowGetListData = {
-                  params:{
-                    page:1,
-                    limit:20,
-                    child_id:this.$route.query.id
-                  }
-                }
 
-                axios.get('/book/BabyBorrow/getList',babyBorrowGetListData).then(res => {
-                  if (res.status == 200) {
-                    this.lateBook = res.data.data
+                let array = res.data.data
+                array.forEach(element => {
+                  if(element.id != this.$route.query.id){
+                    let babyBorrowGetListData = {
+                      params:{
+                        page:1,
+                        limit:20,
+                        child_id:this.$route.query.id
+                      }
+                    }
+
+                    axios.get('/book/BabyBorrow/getList',babyBorrowGetListData).then(res => {
+                      if (res.status == 200) {
+                        this.lateBook = res.data.data
+                      }
+                    })
                   }
                 })
               break
@@ -791,6 +800,10 @@ export default {
 
 </script>
 <style scoped>
+.metro-card{
+  padding: .625rem /* 10/16 */;
+}
+
 .header {
   width: 100%;
   position: relative;
@@ -863,7 +876,7 @@ export default {
 
 .bar {
   background: #fff;
-  padding: 0.625rem /* 10/16 */ 0;
+  padding-bottom: .625rem /* 10/16 */;
 }
 
 .bar-item {
@@ -873,12 +886,12 @@ export default {
 }
 
 .bar-item .number {
-  font-size: 1.375rem /* 22/16 */;
+  font-size: 1.25rem /* 20/16 */;
   font-weight: 500;
 }
 
 .bar-title {
-  font-size: 0.875rem /* 14/16 */;
+  font-size: .8125rem /* 13/16 */;
 }
 
 .label {
@@ -948,22 +961,16 @@ export default {
   padding:1.25rem /* 20/16 */ 0 1.25rem /* 20/16 */ 1.25rem /* 20/16 */;
 }
 
-.baby-item-card{
-  margin-right: 1.25rem /* 20/16 */;
-}
-
-.baby-item-card .avatar{
+.baby-item-card .avatar img{
   width: 3.125rem /* 50/16 */;
-  border: .125rem /* 2/16 */ solid #fff;
+  height: 3.125rem /* 50/16 */;
+  margin: 0 auto;
+  display: block;
 }
 
 .baby-item-card .avatar,
 .baby-item-card .avatar img{
   border-radius: 50%;
-}
-
-.baby-item-card.active .avatar{
-  border-color: #ffc107;
 }
 
 .baby-item-card.active .child-name{
@@ -977,11 +984,8 @@ export default {
   margin-top: .3125rem /* 5/16 */;
 }
 
-.baby-item-card.add{
-  margin-right: .8125rem /* 13/16 */;
-}
-
 .baby-item-card.add .avatar{
+  width: 3.125rem /* 50/16 */;
   height: 3.125rem /* 50/16 */;
   text-align: center;
   line-height: 3.125rem /* 50/16 */;
@@ -996,6 +1000,7 @@ export default {
 
 .baby-item-card.add .child-name{
   color: #909399; 
+  font-size: .8125rem /* 13/16 */;
 }
 
 .align-items{
@@ -1004,6 +1009,11 @@ export default {
 
 .active{
   transform: scale(1.1)
+}
+
+.scroll-item{
+  width: 3.75rem /* 60/16 */;
+  margin-right: .625rem /* 10/16 */;
 }
 </style>
 <style>

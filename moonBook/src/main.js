@@ -36,7 +36,7 @@ Vue.use(Vuex)
 Vue.use(Vant)
 Vue.use(Lazyload, {
   preLoad: 1,
-  error: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+  error: require('@/assets/img/no-cover.jpg'),
   loading: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
   attempt: 3,
   lazyComponent:true
@@ -50,20 +50,6 @@ VueAMap.initAMapApiLoader({
   // 插件集合 （插件按需引入）
   plugin: ['AMap.Geolocation']
 })
-
-if (typeof (Worker) !== "undefined") {
-
-  //创建 Web Worker 对象
-  if (typeof (Worker) == "undefined") {
-    Worker = new Worker("./../static/webworker.js")
-    Worker.postMessage("测试");
-  }
-  Worker.onmessage = function (event) {
-      console.log(event.data);
-  }
-}else {
-  console.log("浏览器不支持Web Worker");
-}
 
 Vue.config.productionTip = false
 

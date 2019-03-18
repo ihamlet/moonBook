@@ -1,6 +1,6 @@
 <template>
   <div class="read-amount">
-    <van-nav-bar :zIndex='10' :title="$route.meta.title" left-text="返回" fixed left-arrow @click-left="onClickLeft" @click-right="onClickRight">
+    <van-nav-bar :zIndex='10' :border='false' :title="$route.meta.title" left-text="返回" fixed left-arrow @click-left="onClickLeft" @click-right="onClickRight">
       <div class="right-btn" slot="right">
         <van-button class="theme-btn" round size="small" type="primary">捐书</van-button>
       </div>
@@ -9,12 +9,12 @@
       <van-tab v-for="(list,index) in readArray" :key="index" :title="`${list.title}(${list.num})`">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
           <van-pull-refresh v-model="loading" @refresh="onRefresh">
+            <van-notice-bar text="代还还有2本逾期，产生逾期费用4元，逾期为1元/本/天，从押金中扣除" left-icon="volume-o" v-if='list.title=="读过"||list.title=="在读"'/>
             <div class="tab-jianshu" v-if='list.title == "捐书"'>
                 <van-tabs type="card" color='#409eff' @click="onClickTab">
                   <van-tab :title="tabTitle" v-for='(tabTitle,tabTitleIndex) in donationTab' :key="tabTitleIndex"></van-tab>
                 </van-tabs>
             </div>
-
             <div class="switch-api" v-if='list.content.length'>
               <div class="content">
                 <div class="kings flex flex-align" v-if='list.title =="未读" '>
@@ -59,11 +59,11 @@ export default {
       if (this.childInfo) {
         arr = [{
           title: '在读',
-          num: this.childInfo.read_count,
+          num: this.childInfo.reading_count,
           content: ''
         }, {
           title: '读过',
-          num: this.childInfo.reading_count,
+          num: this.childInfo.read_count,
           content: ''
         },{
           title: '收藏',
@@ -118,7 +118,13 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
+      let data = {
+        params:{
+          child_id: this.$route.query.id
+        }
+      }
+
+      axios.get('/book/baby/getInfo',data).then(res => {
         this.childInfo = res.data.data
       })
     },
@@ -147,36 +153,38 @@ export default {
         }
       }
 
+      let apiLink = ''
+
       switch (this.readArray[this.tabIndex].title) {
         case '未读':
           data.params.is_read = 0
+          apiLink = '/book/SchoolShelfBook/getList'
           break
         case '在读':
           data.params.is_read = 2
+          apiLink = '/book/SchoolShelfBook/getList'
           break
         case '收藏':
           data.params.collect = 1
+          apiLink = '/book/SchoolShelfBook/getList'
           break
         case '磨损':
           data.params.is_broke = 1
+          apiLink = '/book/SchoolShelfBook/getList'
           break
         case '读过':
           data.params.is_read = 1
+          apiLink = '/book/SchoolShelfBook/getList'
+          break
+        case '捐书':
+          data.params.is_check = this.isCheck
+          apiLink = 'book/TushuDonation/getList'
           break
       }
 
       if (this.selsetData) {
         data.params.tag = this.selsetData.tag
         data.params.floor = this.selsetData.floor
-      }
-
-      let apiLink = ''
-
-      if (this.readArray[this.tabIndex].title != '捐书') {
-        apiLink = '/book/SchoolShelfBook/getList'
-      } else {
-        apiLink = 'book/TushuDonation/getList'
-        data.params.is_check = this.isCheck
       }
 
       return axios.get(apiLink, data).then(res => {
@@ -192,6 +200,7 @@ export default {
             this.finished = true
           }
         }else{
+          this.page = 1
           this.loading = false
           this.finished = true
           this.readArray[this.tabIndex].content= []
@@ -233,9 +242,7 @@ export default {
           this.isCheck = 2
         break
       }
-
-      this.page = 1
-      this.loading = true
+      
       this.finished = false
       this.onRefresh()
     }

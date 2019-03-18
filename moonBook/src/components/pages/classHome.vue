@@ -99,9 +99,15 @@ export default {
     },
     pageTitle() {
       let str = ''
-
+      let childName = ''
       if (this.classInfo.is_my_baby_banji) {
-        str = '班级'
+        this.managerState.forEach(element => {
+          if(element.id == this.$route.query.id){
+            childName = element.child_name
+          }
+        })
+
+        str = `${childName}的班级`
       } else {
         str = '我的班级'
       }

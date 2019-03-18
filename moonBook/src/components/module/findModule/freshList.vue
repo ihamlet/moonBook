@@ -23,7 +23,7 @@ export default {
         query: {
           id: item[this.cid],
           back: this.$route.name,
-          banji_id: item.banji_id
+          back_id: item.banji_id || item.child_id
         }
       })
     },

@@ -18,11 +18,11 @@
                 <div class="label">{{label}}</div>
               </div>
               <div class="text" v-if='childInfo.read_count!=0'>
-                <span>{{childInfo.name}}宝贝在阅亮书架一共阅读了图书</span>
+                <span>宝贝在阅亮书架一共阅读了图书</span>
                 <span class="book-number">{{childInfo.read_count}}本</span>
               </div>
               <div class="code-img flex flex-justify">
-                <img src="./../../../assets/img/code.png" alt="二维码">
+                <img :src="qrImage" alt="二维码">
               </div>
               <div class="explain">
                 <span> — 长按识别二维码进入 — </span>

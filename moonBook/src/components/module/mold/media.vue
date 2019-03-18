@@ -11,7 +11,8 @@
             <i class="iconfont">&#xe639;</i>
           </div>
           <img :src="item.cover" alt="视频封面"/>
-          <van-tag class="photo-tag" color='#7232dd'>{{videoIndex > 1?'视频专辑':'视频'}}</van-tag>
+          <van-tag class="photo-tag" size="medium" color='#7232dd'>{{videoIndex > 1?'视频专辑':'视频'}}</van-tag>
+          <van-tag class="duration" size="medium" color="rgba(0,0,0,.5)">{{getDuration(videoItem.duration)}}</van-tag>
         </div>
       </div>
     </div>
@@ -44,6 +45,7 @@
 </template>
 <script>
 import userCard from './../mold/userCard'
+import { formatTime } from './../../lib/js/util'
 
 export default {
   name: 'media',
@@ -88,6 +90,9 @@ export default {
           back_id: this.$route.query.id
         }
       })
+    },
+    getDuration(time){
+      return formatTime(time)
     }
   }
 }

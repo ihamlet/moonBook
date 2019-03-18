@@ -1,94 +1,143 @@
 <template>
-    <div class="article-item">
-        <van-cell>
-            <van-row gutter="10">
-                <van-col span="6">
-                    <div class="img-grid" @click="$refs.selectPhoto.$refs.input.click()">
-                        <div class="photo-upload"  v-if='photo'>
-                            <img :src="photo" alt="" srcset="">
-                        </div>
-                    </div>
-                </van-col>
-                <van-col span="16">
-                    <div class="add-text" @click="show = true">
-                        <div class="description">点击添加文字</div>
-                    </div>
-                    <div class="text-content" v-if='text'>
-                        {{text}}
-                    </div>
-                </van-col>
-               <van-col span="2">
-                   <div class="operation">
-                        <div class="delete">
-                            <i class="iconfont">&#xe651;</i>
-                        </div>
-                        <div class="sort">
-                            <i class="iconfont">&#xe68d;</i>
-                        </div>
-                   </div>
-                </van-col>
-            </van-row>
-        </van-cell>
-        
-        <van-popup class="publishing-popup" v-model="show" position="bottom">
-            <Publishing />
-        </van-popup>
-    </div>    
+  <div class="article-item">
+    <van-cell>
+      <van-row gutter="10">
+        <van-col span="6">
+          <div class="img-grid" @click="select">
+            <div class="photo-upload" v-if='item.photos'>
+              <img :src="photos.thumb" alt="" srcset="">
+            </div>
+          </div>
+        </van-col>
+        <van-col span="16">
+          <div class="text-box" @click="toPublishing">
+            <div class="text-content" v-if='item.text' v-html="item.text.text" v-line-clamp:20="3"></div>
+            <div class="add-text" v-else>
+              <div class="description">点击添加文字</div>
+            </div>
+          </div>
+        </van-col>
+        <van-col span="2">
+          <div class="operation">
+            <div class="delete" @click="deleteArticle">
+              <i class="iconfont">&#xe651;</i>
+            </div>
+            <div class="sort">
+              <i class="iconfont">&#xe68d;</i>
+            </div>
+          </div>
+        </van-col>
+      </van-row>
+    </van-cell>
+
+    <div class="media-input" v-show="false">
+      <van-uploader ref='selectPhoto' :after-read="onRead" />
+      <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
+    </div>
+  </div>
 </template>
 <script>
 import Publishing from './../Publishing'
-
+import { mapActions } from 'vuex'
+ 
 export default {
-    name:'article-item',
-    props: ['photo','text'],
-    components: {
-        Publishing
-    },
-    data () {
-        return {
-            show: false      
-        }
-    },
-    methods: {
-        addText(){
-            
-        }
+  name: 'article-item',
+  props: ['item','index','type'],
+  components: {
+    Publishing
+  },
+  data() {
+    return {
+      show: false
     }
+  },
+  methods: {
+    ...mapActions('beautifulArticle',['delete']),
+    toPublishing() {
+      this.$router.push({
+        name: 'publishing',
+        query: {
+            index: this.index,
+            onClickType:'revise'
+        }
+      })
+    },
+    select(){
+      if(this.item.photos){
+        switch(this.item.photos.type){
+            case 'image':
+                this.$refs.selectPhoto.$refs.input.click()
+            break
+            case 'video':
+                this.$refs.selectFileVideo.click()
+            break
+        }
+      }else{
+        this.$refs.selectPhoto.$refs.input.click()
+      }
+    },
+    onRead(file) {
+      let data = {
+        file:file,
+        upLoadType:'image',
+        onClickType:'revise',
+        index:this.index
+      }
+      this.$emit('onRead',data)
+    },
+    doUpload(e){
+      let data = {
+        file:e.target.files[0],
+        type:e.target.dataset.type,
+        upLoadType:'video',
+        onClickType:'revise',
+        index:this.index
+      }
+      this.$emit('doUpload',data)
+    },
+    deleteArticle(){
+      this.delete(this.index)
+    }
+  }
 }
 </script>
 <style scoped>
-.article-item{
-    width: 100%;
-    overflow: hidden;
-    position: relative;
+.article-item {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
-.img-grid{
-    background: #f2f2f2;
-    margin-top: 0;
+.img-grid {
+  background: #f2f2f2;
+  margin-top: 0;
 }
 
-.photo-upload{
+.photo-upload img{
     position: absolute;
-    text-align: center;
-}
-
-.add-text{
+    left: 0;
+    top: 0;
     width: 100%;
-    font-size: 1rem /* 16/16 */;
-    color: #C0C4CC;
+    height: 100%;
+    object-fit: cover;
 }
 
-.operation{
-    width: 100%;
-    text-align: center;
+.add-text {
+  width: 100%;
+  font-size: 1rem /* 16/16 */;
+  color: #c0c4cc;
 }
 
-.operation .delete{
-    margin-bottom: .625rem /* 10/16 */;
+.operation {
+  width: 100%;
+  text-align: center;
 }
 
-.publishing-popup{
-    height: 100vh;
+.operation .delete {
+  margin-bottom: 0.625rem /* 10/16 */;
+}
+
+.publishing-popup {
+  height: 100vh;
 }
 </style>

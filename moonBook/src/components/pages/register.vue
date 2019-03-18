@@ -26,10 +26,6 @@
     </div>
 
     <slogan />
-    <!-- 借阅卡办理页面 -->
-    <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
-      <accept @close='applyShow = false' v-model='active' />
-    </van-popup>
 
     <div class="fixed-button">
       <van-button class="theme-btn" square type="primary" size="large" @click="toWmPage">学校入驻</van-button>
@@ -37,13 +33,11 @@
   </div>
 </template>
 <script>
-import accept from './../module/accept'
 import slogan from './../module/slogan'
 
 export default {
   name: 'register',
   components: {
-    accept,
     slogan
   },
   data() {
@@ -113,8 +107,9 @@ export default {
       }
     },
     toAccept() {
-      this.applyShow = true
-      this.active = 0
+      this.$router.push({
+        name:'AcceptSchoolList'
+      })
     },
     toWmPage(){
       location.href = 'https://fang.wmlife.net/kindergarten/index/register'

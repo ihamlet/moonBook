@@ -11,39 +11,55 @@
       </div>
     </van-nav-bar>
     <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
+      
     <div class="textarea-module">
       <van-cell-group>
         <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4" autosize />
-        <!-- <van-tag class="tag" type="primary" v-if='cateName'> #{{cateName}}</van-tag> -->
-        <van-cell title-class='theme-color' title="#选择分类" :value="cateName" is-link arrow-direction="down" @click="show = true" />
-      </van-cell-group>
-      <van-cell-group v-if='cateId!="99"&&cateId!="124"'>
-        <van-cell title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
+        
+        <div class="upload-module flex wrap">
+          <van-cell>
+            <van-row gutter="4">
+              <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
+                <div class="preview img-grid" :class="[item.thumb?'transparent':'']">
+                  <img class="thumb" :src="item.thumb" :large="item.is_video==1?'':item.photo" preview />
+                  <div class="close-btn" @click="deletePhoto(index)">
+                    <i class="iconfont">&#xe647;</i>
+                  </div>
+                  <van-tag class="type-tag" color="#7232dd" v-if='item.is_video == 1'>视频</van-tag>
+                </div>
+              </van-col>
+              <van-col :span="8" v-if='9 > imagesLength'>
+                <div class="img-grid" @click="$refs.selectPhoto.$refs.input.click()">
+                  <div class="photo-upload">
+                    <i class="iconfont">&#xe664;</i>
+                    <span class="directions">添加照片</span>
+                  </div>
+                </div>
+              </van-col>
+            </van-row>
+          </van-cell>
+        </div>
       </van-cell-group>
     </div>
-    <div class="upload-module flex wrap">
-      <van-cell>
-        <van-row gutter="4">
-          <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
-            <div class="preview img-grid" :class="[item.thumb?'transparent':'']">
-              <img class="thumb" :src="item.thumb" :large="item.is_video==1?'':item.photo" preview />
-              <div class="close-btn" @click="deletePhoto(index)">
-                <i class="iconfont">&#xe647;</i>
-              </div>
-              <van-tag class="type-tag" color="#7232dd" v-if='item.is_video == 1'>视频</van-tag>
-            </div>
-          </van-col>
-          <van-col :span="8" v-if='9 > imagesLength'>
-            <div class="img-grid" @click="$refs.selectPhoto.$refs.input.click()">
-              <div class="photo-upload">
-                <i class="iconfont">&#xe664;</i>
-                <span class="directions">添加照片</span>
-              </div>
-            </div>
-          </van-col>
-        </van-row>
-      </van-cell>
+
+
+    <!-- 分类设置、同步、设置机构标签 -->
+    <van-cell title-class='theme-color' title="#选择分类" :value="cateName" is-link arrow-direction="down" @click="show = true" />   
+    <van-cell v-if='cateId!="99"&&cateId!="124"' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
+    <div class="group-cell">
+      <div class="cell-link">
+        <van-cell title="设置机构标签" is-link @click="selectGroup = true" :value="group.group_name">
+          <div class="icon" slot="icon">
+            <i class="iconfont">&#xe652;</i>
+          </div>
+        </van-cell>
+      </div>
     </div>
+
+    <van-popup v-model="selectGroup" position="bottom">
+      <van-picker :columns="groupList" value-key='group_name' @change="onChangeGroup" />
+    </van-popup>
+     
     <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
       <van-checkbox-group v-model="result">
         <div class="form-title">同步到</div>
@@ -137,7 +153,11 @@ export default {
       //   type: 'uploadVideo',
       //   index: 2,
       // }],
-      topicList:[]
+      topicList:[],
+      videoThumb:'',
+      groupList:[],
+      selectGroup:false,
+      group:''
     }
   },
   created() {
@@ -194,7 +214,11 @@ export default {
 
       // 从本地存储获取发布数据
       if(this.$route.query.type == 'edit'){
-          axios.get(`/book/SchoolArticle/getEdit?post_id=${this.$route.query.post_id}`).then(res => {
+          let articleData = {
+            post_id:this.$route.query.post_id
+          }
+
+          axios.get('/book/SchoolArticle/getEdit',articleData).then(res => {
             if(res.data.status == 1){
               this.grapicData.photos = res.data.data.photos
               if(checkHtml(res.data.data.details)){
@@ -255,6 +279,16 @@ export default {
           }
         })
       }
+
+      //获取机构标签
+      axios.get('/book/member/get_groups').then(res=>{
+        switch(res.data.status){
+          case 1:
+            this.groupList = res.data.data
+            this.group = res.data.data[0]
+          break
+        }
+      })
     },
     onRead(file) {
       let array = []
@@ -358,7 +392,8 @@ export default {
             template_id: 1,
             photos: this.grapicData.photos,
             cate_id: this.cateId || '',
-            post_id: this.$route.query.post_id || ''
+            post_id: this.$route.query.post_id || '',
+            group_id: this.group.group_id
           }
 
           //跳转路由
@@ -392,19 +427,6 @@ export default {
 
           axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
             if(res.data.status == 1){
-              // 最初最简单的判断
-              // if( this.result && this.result.length > 0){
-              //   this.$router.push({
-              //     name: this.result[0],
-              //     query: {
-              //       id: this.result[0] == 'baby-home' ?this.userDataState.child_id : this.userDataState.banji_id 
-              //       //判断路由数组result 此时只有两种情况 如果路由数组找到baby-home字段 那么就会从vuex中获取到用户基础信息拿到当前孩子的child_id  因为发现板块并不需要传递id
-              //     }
-              //   })
-              // }
-
-              // 没有to_find 的话那就来下面这个判断吧
-              // 接下来 判断路由 如果在同步全部不选的情况下且回退路由名不等于主页和个人中心，那么就会跳转到对应回退的路由页面 在哪发往哪里跳
               if(this.$route.query.back && this.$route.query.back!='home' && this.$route.query.back!='my'){
                 this.$router.push({
                   name: this.$route.query.back,
@@ -414,8 +436,6 @@ export default {
                   }
                 })
               }else{
-                // 发布页跳转逻辑
-                //判断路由数组result 是否有apps-find 如果有回退到apps-find 发现页面
                 switch(true){
                   case contains(this.result,'apps-find'):
                     this.$router.push({
@@ -469,21 +489,6 @@ export default {
     toggle(index) {
       this.$refs.checkboxes[index].toggle()
     },
-    // onUploadTypeSelect(item) {
-    //   switch (item.index) {
-    //     case 0:
-    //       this.$refs.selectPhoto.$refs.input.click()
-    //       break;
-    //     case 1:
-    //       this.$refs.selectFileVideo.click()
-    //       break;
-    //     case 2:
-    //       this.$refs.fileVideo.click()
-    //       break;
-    //   }
-
-    //   this.UploadTypeShow = false
-    // },
     doUpload(e) {
       let file = e.target.files[0]
       let type = e.target.dataset.type
@@ -491,32 +496,11 @@ export default {
     },
     upOssMedia(type, file) {
 
-
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
 
-      let photo
-      
-      videoParse(file).then((result)=>{
-        photo = {
-          thumb: result.thumb,
-          height: result.height,
-          width: result.width,
-          duration: result.duration,
-          thumb_blob: result.thumb_blob
-        }
-
-        
-        this.addPhotoX(photo)
-        let idx = this.grapicData.photos.length - 1
-
-        this.addPhoto(result.thumb_blob,file).then(thumb =>{
-          photo.thumb = thumb
-          this.updatePhoto(photo, idx)
-
-
-          let url = this.ossSign.host.replace('http:', 'https:')
+      let url = this.ossSign.host.replace('http:', 'https:')
       let data = new FormData()
       let key = this.ossSign.dir + '/' + Date.now() + file.name
       let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
@@ -528,29 +512,33 @@ export default {
       data.append('signature', this.ossSign.signature)
       data.append('file', file)
 
-          axios({
-            url: url,
-            data: data,
-            method: 'post',
-            onUploadProgress: p => {
-              this.percent = Math.floor(100 * (p.loaded / p.total))
-            }
-          }).then((res) => {
-            photo = {
-              is_audio: type == 'audio' ? 1 : 0,
-              is_video: type == 'video' ? 1 : 0,
-              photo: path,
-              thumb: photo.thumb,
-              height: photo.height || 0,
-              width:  photo.width || 0,
-              duration: Math.floor(photo.duration)
-            }
-
-            this.percent = 0
-            this.updatePhoto(photo, idx)
-          })
+        axios({
+          url: url,
+          data: data,
+          method: 'post',
+          onUploadProgress: p => {
+            this.percent = Math.floor(100 * (p.loaded / p.total))
+          }
+        }).then((res) => {
+          
+          let duration 
+        videoParse(file).then(result =>{
+          duration = result.duration
         })
-      })
+
+
+          this.grapicData.photos.push({
+            is_audio: type == 'audio' ? 1 : 0,
+            is_video: type == 'video' ? 1 : 0,
+            photo: path,
+            thumb: `${path}?x-oss-process=video/snapshot,t_10000`,
+            height: 0,
+            width: 0,
+            duration: Math.floor(duration) || 10
+          })
+
+          this.percent = 0
+        })
     },
     upOssPhoto(blob, file, base64) {
       let img = new Image()
@@ -587,41 +575,6 @@ export default {
         this.percent = 0
       })
     },
-    addPhoto(blob, file){
-      let fd = new FormData()
-      let url = this.ossSign.host.replace('http:', 'https:')
-      let key = this.ossSign.dir + '/' + Date.now() + file.name
-      let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
-
-      fd.append('key', key)
-      fd.append('OSSAccessKeyId', this.ossSign.accessid)
-      fd.append('policy', this.ossSign.policy)
-      fd.append('success_action_status', 200)
-      fd.append('signature', this.ossSign.signature)
-      fd.append('file', blob, file.name)
-
-      return new Promise((resolve, reject) =>{
-        axios({
-          url: url,
-          data: fd,
-          method: 'post',
-          onUploadProgress: p => {
-            this.percent = Math.floor(100 * (p.loaded / p.total))
-          }
-        }).then(() => {
-          this.percent = 0
-          resolve(path)
-        })
-      })
-    },
-    addPhotoX(photo) {
-      this.grapicData.photos.push(photo)
-      console.log('添加图片')
-    },
-    updatePhoto(photo, idx) {
-      this.grapicData.photos[idx] = photo
-      console.log('更新图片')
-    },
     selectTag(tag) {
       this.cateName = tag.cate_name
       this.cateId = tag.cate_id
@@ -639,6 +592,9 @@ export default {
         result = img
       }
       return result
+    },
+    onChangeGroup(picker,values){
+      this.group = values
     }
   }
 }
@@ -784,6 +740,27 @@ export default {
 
 .img-grid{
   background: #f8f8f8;
+}
+
+.group-cell{
+  padding: .625rem /* 10/16 */;
+}
+
+.cell-link{
+  border-radius: .625rem /* 10/16 */;
+  overflow: hidden;
+  box-shadow: 0 .125rem /* 2/16 */ .9375rem /* 15/16 */ rgba(0, 0, 0, .1)
+}
+
+.icon{
+  margin-right: .625rem /* 10/16 */;
+}
+
+.icon .iconfont{
+  font-size: 1.25rem /* 20/16 */;
+  background: linear-gradient(135deg, #00bcd4, #409eff);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 </style>
 <style>
