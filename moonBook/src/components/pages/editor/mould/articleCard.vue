@@ -113,11 +113,31 @@ export default {
       let index = data.index
       this.upLoadType = data.upLoadType
       let onClickType = data.onClickType
-      this.upOssMedia(type, file, index,onClickType)
+
+      let formData = new FormData()
+      let maxSize = 1024 * 1024 * 3
+      let blob = file.slice(0, maxSize)
+
+      formData.append('file',blob,file.name)
+
+      let url = '/book/file/get_video_screen'
+
+      axios({
+        url: url,
+        data: formData,
+        method: 'post',
+        onUploadProgress: p => {
+          this.percent = Math.floor(100 * (p.loaded / p.total))
+        }
+      }).then( res => {
+        let info = res.data.data
+        this.upOssMedia(type, file, index, onClickType, info)
+        this.percent = 0
+      })
     },
 
     //上传
-    upOssMedia(type, file, index,onClickType) {
+    upOssMedia(type, file, index,onClickType,info) {
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
@@ -147,7 +167,7 @@ export default {
           is_audio: type == 'audio' ? 1 : 0,
           is_video: type == 'video' ? 1 : 0,
           photo: path,
-          thumb: `${path}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`,
+          thumb: info.thumb,
           height: 0,
           width: 0,
           type:'video',

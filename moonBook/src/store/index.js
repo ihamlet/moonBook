@@ -244,7 +244,6 @@ const actions = {
   //文章发布
   release(context, products){
     let setting = context.state.articleSetting
-
     let data={
       cate_id: setting.tag.cate_id,
       group_id: setting.group.group_id,
@@ -254,7 +253,8 @@ const actions = {
       photos: products.photos,
       child_id: products.child_id,
       banji_id: products.banji_id,
-      school_id: products.school_id
+      school_id: products.school_id,
+      title: products.title
     }
 
     setting.result.forEach(e=>{

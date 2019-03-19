@@ -96,11 +96,6 @@ export default {
         }
       })
     },
-    share(){
-      Cookies.set('shareLink', location.href)
-      location.href = `/book/weixin/share?back_url=${encodeURIComponent(location.href)}&id=${this.$route.query.id}&type=文章`
-      this.$emit('hide')
-    },
     onChange(picker, values){
       this.childId = values.id
     },

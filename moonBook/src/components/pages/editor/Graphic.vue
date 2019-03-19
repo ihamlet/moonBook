@@ -332,7 +332,7 @@ export default {
       let file = e.target.files[0]
       let type = e.target.dataset.type
       let formData = new FormData()
-      let maxSize = 1024 * 1024 * 2
+      let maxSize = 1024 * 1024 * 3
       let blob = file.slice(0, maxSize)
 
       formData.append('file',blob,file.name)

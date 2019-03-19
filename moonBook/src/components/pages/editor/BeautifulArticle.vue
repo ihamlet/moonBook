@@ -38,7 +38,7 @@ export default {
   computed: {
     ...mapState('beautifulArticle',['cover']),
     ...mapState('articleSetting',['tag','result','group']),
-    ...mapGetters('beautifulArticle',['getPercentNum','getArticleContent','getImageList']),
+    ...mapGetters('beautifulArticle',['getPercentNum','getArticleContent','getImageList','getTitle']),
     ...mapGetters(['userDataState'])
   },
   data() {
@@ -120,7 +120,8 @@ export default {
           let data = {
             details: this.getArticleContent,
             template_id: 0,
-            cover: this.cover?this.cover:this.getImageList[0]
+            cover: this.cover?this.cover:this.getImageList[0],
+            title: this.getTitle
           }
   
           if(this.$route.query.back == 'baby-home'){

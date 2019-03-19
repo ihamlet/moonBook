@@ -76,7 +76,9 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    this.fetchData()    
+    this.share()
+    console.log(111)
   },
   watch: {
     '$router': 'fetchData'
@@ -110,6 +112,25 @@ export default {
           }
         })
       }
+    },
+    share(){
+      let toast = this.$toast
+
+      let data = {
+        title:'测试',
+        link: location.href,
+        desc:'测试测试',
+        imgUrl:'#',
+        success(){
+          toast('分享成功')
+        }
+      }
+
+      this.wx.onMenuShareTimeline(data)
+      this.wx.onMenuShareQQ(data)
+      this.wx.onMenuShareWeibo(data)
+      this.wx.onMenuShareQZone(data)
+      this.wx.onMenuShareAppMessage(data)
     },
     onScrollDomShow(bl){
       this.themeBarSearch = bl

@@ -8,7 +8,6 @@
 <script>
 import axios from './../src/components/lib/js/api'
 import { mapActions, mapGetters } from 'vuex'
-
 import './../src/components/lib/css/neat.css'
 import 'animate.css'
 
@@ -38,6 +37,9 @@ export default {
   },
   created () {
     this.fetchData()
+    this.wxConfig().then(res=>{
+      console.log(res)
+    })
   },
   watch: {
     center(val){
