@@ -1,32 +1,45 @@
 <template>
   <div class="beautiful-article">
-    <van-nav-bar title="编辑" left-text="取消" @click-left="onClickLeft" fixed>
+    <van-nav-bar title="编辑" left-text="取消" @click-left="onClickLeft" fixed :zIndex='10'>  
       <div class="head-bar-btn theme-color" slot="right">
-        <van-button :loading='percent != 0' class="theme-btn" type="primary" size="small" @click="release" round>下一步</van-button>
+        <van-button :loading='getPercentNum != 0' class="theme-btn" type="primary" size="small" round @click="onClickRelease">发布</van-button>
       </div>
     </van-nav-bar>
     <div class="container">
-      <div class="edit-thumb theme-background">
-        <div class="add-thumb"><i class="iconfont">&#xe607;</i>更换文章封面</div>
+      <div class="edit-thumb theme-background" @click="toChangeCover">
+        <img v-if='getImageList.length' :src='cover?cover:getImageList[0]'>
+        <div class="add-thumb"><i class="iconfont">&#xe607;</i>更换封面</div>
       </div>
       <van-field class="edit-title" v-model="title" placeholder="点击输入文章标题" />
     </div>
     <div class="article-list">
-      <articleCard/>
+      <articleCard :PercentNum='getPercentNum'/>
     </div>
-    <!-- <div class="reprint">转载外部文章 ></div> -->
+
+    <div class="flex flex-align footer-bar">
+       <div class="preview theme-color" @click="preview">预览</div>
+       <van-button class="theme-btn" square type="primary" size="normal" @click="next">下一步</van-button>
+    </div>
   </div>
 </template>
 <script>
 import axios from './../../lib/js/api'
 import articleCard from './../editor/mould/articleCard'
 import topicList from './../../module/release/topicList'
+import { mapState,mapGetters,mapActions } from 'vuex'
+import { contains } from './../../lib/js/util'
 
 export default {
   name: 'beautiful-article',
   components: {
     articleCard,
     topicList
+  },
+  computed: {
+    ...mapState('beautifulArticle',['cover']),
+    ...mapState('articleSetting',['tag','result','group']),
+    ...mapGetters('beautifulArticle',['getPercentNum','getArticleContent','getImageList']),
+    ...mapGetters(['userDataState'])
   },
   data() {
     return {
@@ -35,20 +48,144 @@ export default {
       show: false,
       cateName:'',
       cateId:'',
-      topicList:[],
-      content:''
+      topicList:[]
+    }
+  },
+  watch: {
+    title(val){
+      this.addTitle(val)
     }
   },
   methods: {
-    onClickLeft() {
-
+    ...mapActions(['release']),
+    ...mapActions('beautifulArticle',['addTitle']),
+    preview(){
+      this.$router.push({
+        name:'article',
+        query:{
+          type:'preview',
+          back: this.$route.name,
+          back_id: this.$route.query.id,
+          back_name: this.$route.query.back
+        }
+      })
     },
-    release() {
-
+    onClickLeft(){
+      if(this.$route.query.back){
+        this.$router.push({
+          name: this.$route.query.back,
+          query:{
+            id: this.$route.query.id
+          }
+        })
+      }
+    },
+    next() {
+      this.$router.push({
+        name:'articleSetting',
+        query:{
+          back: this.$route.name,
+          id: this.$route.query.id,
+          back_name: this.$route.query.back
+        }
+      })
     },
     selectTag(tag) {
       this.cateName = tag.cate_name
       this.cateId = tag.cate_id
+    },
+    toChangeCover(){
+      this.$router.push({
+        name:'changeCover',
+        query:{
+          type:'revise'
+        }
+      })
+    },
+    onClickRelease(){
+      if (!this.getArticleContent.length) {
+        if (this.$route.query.back && this.$route.name!='home') {
+          this.$router.push({
+            name: this.$route.query.back,
+            query: {
+              id:  this.$route.query.id
+            }
+          })
+        } else {
+          this.$router.push({
+            name: 'apps-find'
+          })
+        }
+      } else {
+          let data = {
+            details: this.getArticleContent,
+            template_id: 0,
+            cover: this.cover?this.cover:this.getImageList[0]
+          }
+  
+          if(this.$route.query.back == 'baby-home'){
+            data.child_id = this.$route.query.id
+          }
+
+          if(this.$route.query.back == 'class-home'){
+            data.banji_id = this.$route.query.id
+          }
+          
+          if(this.$route.query.back == 'apps-school'){
+            data.school_id = this.$route.query.id
+          }
+
+          this.release(data).then(res=>{
+            switch(res){
+              case 1:
+                if(this.$route.query.back && this.$route.query.back!='home' && this.$route.query.back!='my'){
+                  this.$router.push({
+                    name: this.$route.query.back,
+                    query: {
+                      id:  this.$route.query.id,
+                      cate_id: this.tag.cate_id
+                    }
+                  })
+                }else{
+                  switch(true){
+                    case contains(this.result,'apps-find'):
+                      this.$router.push({
+                        name:'apps-find' 
+                      })
+                    break
+                    case contains(this.result,'baby-home'):
+                      this.$router.push({
+                        name:'baby-home',
+                        query:{
+                          id: this.userDataState.child_id
+                        }
+                      })
+                    break
+                    case contains(this.result,'class-home'):
+                      this.$router.push({
+                        name:'class-home',
+                        query:{
+                          id: this.userDataState.banji_id
+                        } 
+                      })
+                    break
+                    default:
+                    this.$router.push({
+                      name:'zoom',
+                      query:{
+                        id: this.userDataState.user_id
+                      }
+                    })
+                  }
+                }
+                this.$toast.success('发布成功')
+              break
+              case 0:
+                this.$toast(res.data.info)
+              break
+            }
+          })
+      }
     }
   }
 }
@@ -65,17 +202,25 @@ export default {
   color: #909399;
 }
 
-.edit-thumb {
-  width: 100%;
-  height: 12.5rem /* 200/16 */;
-}
-
 .edit-title {
   font-size: 1.25rem /* 20/16 */;
 }
 
 .edit-thumb {
   position: relative;
+  width: 100%;
+  height: 9.375rem /* 150/16 */;
+  overflow: hidden;
+}
+
+.edit-thumb img{
+  position: absolute;
+  left:50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .add-thumb,
@@ -113,5 +258,29 @@ i.iconfont {
 
 .add {
   margin-top: 0.625rem /* 10/16 */;
+}
+
+.beautiful-article{
+  padding-bottom: 12.5rem /* 200/16 */;
+  overflow: hidden;
+}
+
+.footer-bar{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.preview{
+  flex: 1;
+  text-align: center;
+  background: #fff;
+  height: 2.75rem;
+  line-height: 2.75rem;
+}
+
+.theme-btn{
+  flex: 2
 }
 </style>

@@ -30,6 +30,7 @@ export default {
   data() {
     return {
       content: '',
+      item:'',
       editorOption: {
         placeholder: '请输入正文',
         modules: {
@@ -53,7 +54,10 @@ export default {
     ...mapActions('beautifulArticle',['add','revise']),
     fetchData() {
         if(this.$route.query.onClickType){
-          this.content = this.getArticleList[this.$route.query.index].text.text
+          if(this.getArticleList[this.$route.query.index].text){
+            this.content = this.getArticleList[this.$route.query.index].text.text
+          }
+          this.item = this.getArticleList[this.$route.query.index]
         }
     },
     onClickLeft() {
@@ -68,6 +72,7 @@ export default {
 
       if(this.$route.query.onClickType){
         let reviseData = {
+          photos: this.item.photos,
           index: this.$route.query.index,
           data: data
         }
@@ -76,7 +81,12 @@ export default {
         this.add(data)
       }
     
-      this.$router.go(-1)
+      this.$router.push({
+        name:'beautifulArticle',
+        query:{
+          back: this.$route.name
+        }
+      })
     }
   }
 }

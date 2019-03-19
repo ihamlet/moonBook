@@ -80,12 +80,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_path8unj8.eot');
-  src: url('//at.alicdn.com/t/font_893274_path8unj8.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_path8unj8.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_path8unj8.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_path8unj8.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_path8unj8.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_wx8nk5m0f1p.eot');
+  src: url('//at.alicdn.com/t/font_893274_wx8nk5m0f1p.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_wx8nk5m0f1p.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_wx8nk5m0f1p.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_wx8nk5m0f1p.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_wx8nk5m0f1p.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,
@@ -1063,5 +1063,29 @@ i.iconfont.vip-1 {
   text-align: center;
   line-height: 2.875rem /* 46/16 */;
   height: 2.875rem /* 46/16 */;
+}
+
+.photo-upload {
+  position: absolute;
+  top: 56%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  text-align: center;
+  color: #9e9e9e;
+  width: 4.375rem /* 70/16 */;
+}
+
+.photo-upload i.iconfont,
+.photo-upload .directions {
+  display: block;
+}
+
+.photo-upload i.iconfont {
+  font-size: 2.1875rem /* 35/16 */;
+}
+
+.photo-upload .directions {
+  font-size: 0.8125rem /* 13/16 */;
+  margin-top: 0.625rem /* 10/16 */;
 }
 </style>

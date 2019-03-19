@@ -101,7 +101,7 @@
               <i class="iconfont star highlight swing animated" v-if="item.isShoucang">&#xe64b;</i>
               <i class="iconfont" v-else> &#xe64c;</i>
             </div>
-            <div class="btn" v-else @click="shareShow = true">
+            <div class="btn" v-else @click="isShare">
               <i class="iconfont">&#xe96e;</i>
             </div>
           </div>
@@ -229,25 +229,27 @@ export default {
       }
     },
     addPraise(item) {
-      item.isZan = !item.isZan
-      let data = {
-        params: {
-          ajax: 1,
-          id: this.item.post_id
-        }
-      }
-
-      axios.get('/book/SchoolArticle/zan', data).then(res => {
-        if (res.data.status == 1) {
-          if (res.data.data.like == '1') {
-            item.zan_num = res.data.data.like
-            this.$toast.success({
-              className: 'zan-icon toast-icon',
-              message: '点赞成功'
-            })
+      if(this.$route.query.type!='preview'){
+        item.isZan = !item.isZan
+        let data = {
+          params: {
+            ajax: 1,
+            id: this.item.post_id
           }
         }
-      })
+
+        axios.get('/book/SchoolArticle/zan', data).then(res => {
+          if (res.data.status == 1) {
+            if (res.data.data.like == '1') {
+              item.zan_num = res.data.data.like
+              this.$toast.success({
+                className: 'zan-icon toast-icon',
+                message: '点赞成功'
+              })
+            }
+          }
+        })
+      }
     },
     addCollect(item) {
       item.isShoucang = !item.isShoucang
@@ -271,21 +273,23 @@ export default {
       })
     },
     showField(item, type) {
-      this.isLoading = false
-      this.message = ''
-      if (item) {
-        this.prompt = `回复：${item.username}`
-        this.commentId = item.comment_id
-      } else {
-        this.commentId = ''
-        this.prompt = '写评论'
-      }
-      this.show = true
-      this.$nextTick(() => {
-        this.$refs.field.focus()
-      })
+      if(this.$route.query.type!='preview'){
+        this.isLoading = false
+        this.message = ''
+        if (item) {
+          this.prompt = `回复：${item.username}`
+          this.commentId = item.comment_id
+        } else {
+          this.commentId = ''
+          this.prompt = '写评论'
+        }
+        this.show = true
+        this.$nextTick(() => {
+          this.$refs.field.focus()
+        })
 
-      type == 'reply' ? this.score = false : this.score = true
+        type == 'reply' ? this.score = false : this.score = true
+      }
     },
     getAvatar(img) {
       if (!img) {
@@ -322,6 +326,11 @@ export default {
           back_id: this.$route.query.id || this.$route.query.back_id
         }
       })
+    },
+    isShare(){
+      if(this.$route.query.type!='preview'){
+        this.shareShow = true
+      }
     }
   }
 }

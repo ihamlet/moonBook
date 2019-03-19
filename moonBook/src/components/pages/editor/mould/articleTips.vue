@@ -2,27 +2,34 @@
   <div class="article-tips">
     <div class="add">
       <div class="insert">
-        <i class="iconfont" @click="tipsShow">&#xe728;</i>
+        <i class="iconfont" @click="onClickTipsShow">&#xe728;</i>
       </div>
     </div>
 
-    <div class="list flex flex-align" v-show='isTipsShow'>
-      <div class="icon-item" v-for='(item,itemIndex) in tipsList' :key="itemIndex" @click="select(item)">
-        <div class="iconfont" :class="item.icon"></div>
-        <span>{{item.name}}</span>
+    <transition leave-active-class="bounceOut" enter-active-class="bounceIn" class='case'>
+      <div class="list flex flex-align" v-show='getArticleList.length == index?!isTipsShow:isTipsShow'>
+        <div class="icon-item" v-for='(item,itemIndex) in tipsList' :key="itemIndex" @click="select(item)">
+          <div class="iconfont" :class="item.icon"></div>
+          <span>{{item.name}}</span>
+        </div>
       </div>
-    </div>
-    
+    </transition>
+
     <div class="media-input" v-show="false">
-      <van-uploader ref='selectPhoto' :after-read="onRead"/>
+      <van-uploader ref='selectPhoto' :after-read="onRead" />
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'article-tips',
-  props: ['type','index'],
+  props: ['type', 'index', 'show'],
+  computed: {
+    ...mapGetters('beautifulArticle', ['getArticleList'])
+  },
   data() {
     return {
       isTipsShow: false,
@@ -42,55 +49,55 @@ export default {
         name: '视频',
         index: 2
       }],
-      data:{
-          text:'',
-          photos:[]
+      data: {
+        text: '',
+        photos: []
       }
     }
   },
   methods: {
-    tipsShow() {
+    onClickTipsShow() {
       this.isTipsShow = !this.isTipsShow
     },
-    select(item){
-        switch(item.index){
-            case 0:
-                this.$refs.selectPhoto.$refs.input.click()
-            break
-            case 1:
-                this.$router.push({
-                    name:'publishing',
-                    query:{
-                      type: this.type,
-                      index: this.index
-                    }
-                })
-            break
-            case 2:
-                this.$refs.selectFileVideo.click()
-            break
-        }
-
-      this.isTipsShow = false
+    select(item) {
+      this.isTipsShow = !this.isTipsShow
+      switch (item.index) {
+        case 0:
+          this.$refs.selectPhoto.$refs.input.click()
+          break
+        case 1:
+          this.$router.push({
+            name: 'publishing',
+            query: {
+              index: this.index,
+              back: this.$route.query.back,
+              id: this.$route.query.id
+            }
+          })
+          break
+        case 2:
+          this.$refs.selectFileVideo.click()
+          break
+      }
     },
     onRead(file) {
       let data = {
-        file:file,
-        upLoadType:'image',
+        file: file,
+        upLoadType: 'image',
         index: this.index
       }
 
-      this.$emit('onRead',data)
+      this.$emit('onRead', data)
     },
-    doUpload(e){
+    doUpload(e) {
       let data = {
-        file:e.target.files[0],
-        type:e.target.dataset.type,
-        upLoadType:'video',
+        file: e.target.files[0],
+        type: e.target.dataset.type,
+        upLoadType: 'video',
         index: this.index
       }
 
-      this.$emit('doUpload',data)
+      this.$emit('doUpload', data)
     }
   }
 }
@@ -100,12 +107,12 @@ export default {
   content: '\e643';
 }
 
-.icon-shipin::before{
-    content: '\e611'
+.icon-shipin::before {
+  content: '\e611';
 }
 
-.icon-wenzi::before{
-    content: '\e642'
+.icon-wenzi::before {
+  content: '\e642';
 }
 
 .add {
@@ -128,36 +135,36 @@ export default {
   left: 50%;
   z-index: 10;
   background: #fff;
+  margin-left: -5.625rem /* 90/16 */;
+  border-radius: 0.5rem /* 8/16 */;
+  box-shadow: 0 0.3125rem /* 5/16 */ 0.9375rem /* 15/16 */ rgba(0, 0, 0, 0.2);
+}
+
+.list::before {
+  content: '';
+  position: absolute;
+  border-style: solid;
+  border-width: 12px;
+  border-color: transparent transparent #fff transparent;
+  width: 0px;
+  height: 0px;
+  left: 50%;
+  top: -1.25rem /* 20/16 */;
   transform: translate3d(-50%, 0, 0);
-  border-radius: .5rem /* 8/16 */;
-  box-shadow: 0 .3125rem /* 5/16 */ .9375rem /* 15/16 */ rgba(0,0,0,.2)
+  z-index: 9;
 }
 
-.list::before{
-    content:'';
-    position: absolute;
-    border-style: solid;
-    border-width: 12px;
-    border-color: transparent transparent #fff transparent;
-    width: 0px;
-    height: 0px;
-    left: 50%;
-    top: -1.25rem /* 20/16 */;
-    transform: translate3d(-50%, 0, 0);
-    z-index: 9;
+.list .icon-item {
+  flex: 1;
+  text-align: center;
 }
 
-.list .icon-item{
-    flex: 1;
-    text-align: center;
+.list .icon-item .iconfont {
+  font-size: 1.5rem /* 24/16 */;
 }
 
-.list .icon-item .iconfont{
-    font-size: 1.5rem /* 24/16 */;
-}
-
-.list .icon-item span{
-    font-size: .875rem /* 14/16 */;
+.list .icon-item span {
+  font-size: 0.875rem /* 14/16 */;
 }
 </style>
 

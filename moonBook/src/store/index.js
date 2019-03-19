@@ -5,6 +5,7 @@ import fetchJsonp from 'fetch-jsonp'
 import Cookies from 'js-cookie'
 
 import beautifulArticle from './BeautifulArticle'
+import articleSetting from './articleSetting'
 
 Vue.use(Vuex)
 
@@ -65,7 +66,8 @@ const getters = {
       }
       return (state.token = data)
     }
-  }
+  },
+  
 }
 
 const mutations = {
@@ -238,6 +240,48 @@ const actions = {
         })
       })
     })
+  },
+  //文章发布
+  release(context, products){
+    let setting = context.state.articleSetting
+
+    let data={
+      cate_id: setting.tag.cate_id,
+      group_id: setting.group.group_id,
+      details: products.details,
+      template_id: products.template_id,
+      cover: products.cover,
+      photos: products.photos,
+      child_id: products.child_id,
+      banji_id: products.banji_id,
+      school_id: products.school_id
+    }
+
+    setting.result.forEach(e=>{
+      switch(e){
+        case 'baby-home':
+          data.to_baby  = 1
+        break
+        case 'class-home':
+          data.to_banji = 1   
+        break
+        case 'apps-find':
+          data.to_find  = 1
+        break
+      }
+    })
+
+    return new Promise((resolve, reject) => {
+      axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
+        switch(res.data.status){
+          case 1:
+            localStorage.setItem('grapicData', '') //清空浏览器缓存
+          break
+        }
+
+        resolve(res.data.status)
+      })
+    })
   }
 }
 
@@ -247,6 +291,7 @@ export default new Vuex.Store({
   mutations,
   actions,
   modules:{
-    beautifulArticle
+    beautifulArticle,
+    articleSetting
   }
 })

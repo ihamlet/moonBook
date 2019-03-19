@@ -2,39 +2,64 @@
   <div class="article-card">
     <div class="article-item">
       <articleTips @onRead='onRead' @doUpload='doUpload' :index='0'/>
-      <div class="item" v-for='(item,index) in getArticleList' :key="index">
-        <articleItem :item='item' :index='index' :type='upLoadType' @onRead='onRead' @doUpload='doUpload'/>
-        <articleTips @onRead='onRead' @doUpload='doUpload' :index='index+1'/>
-      </div>
+      <draggable v-model="articleList" handle='.handle'>
+        <div class="item" v-for='(item,index) in articleList' :key="index">
+          <articleItem :item='item' :index='index' :type='upLoadType' @onRead='onRead' @doUpload='doUpload'/>
+          <articleTips @onRead='onRead' @doUpload='doUpload' :index='index+1'/>
+
+          <!-- 删除排序 -->
+          <div class="operation">
+            <div class="delete" @click="deleteArticle(index)">
+              <i class="iconfont">&#xe651;</i>
+            </div>
+            <div class="sort handle">
+              <i class="iconfont">&#xe68d;</i>
+            </div>
+          </div>
+
+        </div>
+      </draggable>
     </div>
+    <van-progress v-if='PercentNum!=0&&PercentNum!=100' :percentage="PercentNum" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
   </div>
 </template>
 
 <script>
 import axios from './../../../lib/js/api'
 import { compress,checkHtml } from './../../../lib/js/util'
+import draggable from 'vuedraggable'
 import articleItem from './articleItem'
 import articleTips from './articleTips'
 import { mapActions,mapGetters } from 'vuex'
 
 export default {
   name: 'article-card',
+  props: ['PercentNum'],
   components: {
     articleTips,
-    articleItem
+    articleItem,
+    draggable
   },
   computed: {
-    ...mapGetters('beautifulArticle',['getArticleList'])
+    ...mapGetters('beautifulArticle',['getArticleList']),
+    articleList:{
+      get(){
+        return this.getArticleList
+      },
+      set(value){
+        this.upDataList(value)
+      }
+    }
   },
   data() {
     return {
-      sTipsShow: false,
       percent: 0,
       ossSign:'',
       percent: 0,
       photoLength:0,
       photo:'',
-      upLoadType:'image'
+      upLoadType:'image',
+
     }
   },
   created() {
@@ -44,13 +69,15 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
-    ...mapActions('beautifulArticle',['add','revise']),
+    ...mapActions('beautifulArticle',['add','revise','requestPercent','delete','upDataList']),
     fetchData() {
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
       })
     },
-
+    deleteArticle(index){
+      this.delete(this.getArticleList[index])
+    },
     // 方法调用
     onRead(data) {
       this.upLoadType = data.upLoadType
@@ -113,6 +140,7 @@ export default {
         method: 'post',
         onUploadProgress: p => {
           this.percent = Math.floor(100 * (p.loaded / p.total))
+          this.requestPercent(this.percent)
         }
       }).then(() => {
         let data = {
@@ -138,6 +166,7 @@ export default {
         }
   
         this.percent = 0
+        this.requestPercent(0)
       })
     },
     upOssPhoto(blob, file, base64, index,onClickType) {
@@ -162,6 +191,7 @@ export default {
         method: 'post',
         onUploadProgress: p => {
           this.percent = Math.floor(100 * (p.loaded / p.total))
+          this.requestPercent(this.percent)
         }
       }).then(() => {
         
@@ -181,17 +211,33 @@ export default {
             index:index,
             data:data
           }
-
+ 
           this.revise(reviseData)
         }else{
           this.add(data)
         }
 
         this.percent = 0
+        this.requestPercent(0)
       })
     }
   }
 }
 </script>
 <style scoped>
+.item{
+  position: relative;
+}
+
+.operation {
+  width: 2.1875rem /* 35/16 */;
+  text-align: center;
+  position: absolute;
+  top: .625rem /* 10/16 */;
+  right: 0;
+}
+
+.operation .delete {
+  margin-bottom: 0.625rem /* 10/16 */;
+}
 </style>

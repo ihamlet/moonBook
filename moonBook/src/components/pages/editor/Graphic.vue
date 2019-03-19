@@ -42,42 +42,9 @@
       </van-cell-group>
     </div>
 
-
     <!-- 分类设置、同步、设置机构标签 -->
-    <van-cell title-class='theme-color' title="#选择分类" :value="cateName" is-link arrow-direction="down" @click="show = true" />   
-    <van-cell v-if='cateId!="99"&&cateId!="124"' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
-    <div class="group-cell">
-      <div class="cell-link">
-        <van-cell title="设置机构标签" is-link @click="selectGroup = true" :value="group.group_name">
-          <div class="icon" slot="icon">
-            <i class="iconfont">&#xe652;</i>
-          </div>
-        </van-cell>
-      </div>
-    </div>
-
-    <van-popup v-model="selectGroup" position="bottom">
-      <van-picker :columns="groupList" value-key='group_name' @change="onChangeGroup" />
-    </van-popup>
-     
-    <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
-      <van-checkbox-group v-model="result">
-        <div class="form-title">同步到</div>
-        <van-cell-group>
-          <van-cell v-for="(item,index) in resultList" clickable :key="index" :title="item.title" @click="toggle(index)">
-            <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" />
-          </van-cell>
-        </van-cell-group>
-      </van-checkbox-group>
-    </van-popup>
-
-    <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
-      <topic-list @close='show = false' @select='selectTag' type='edit' :topicList='topicList'/>
-    </van-popup>
-
+    <articleSetting type='mould'/>
     <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="actionShow = false" />
-    <!-- <van-actionsheet v-model="UploadTypeShow" :actions="uploadType" cancel-text="取消" @select="onUploadTypeSelect" @cancel="UploadTypeShow = false" /> -->
-
     <div class="media-input" v-show="false">
       <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
@@ -88,41 +55,29 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapActions, mapGetters } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import topicList from './../../module/release/topicList'
-import { compress,checkHtml,contains,videoParse } from './../../lib/js/util'
+import articleSetting from './mould/articleSetting'
+import { compress,checkHtml,contains } from './../../lib/js/util'
 
 export default {
   name: 'graphic',
   components: {
-    topicList
+    topicList,
+    articleSetting
   },
   computed: {
+    ...mapState('articleSetting', ['result','group','tag']),
     ...mapGetters(['userDataState','managerState']),
     imagesLength() {
       return this.grapicData.photos.length
-    },
-    synchronous() {
-      let array = []
-      this.resultList.forEach(element => {
-        this.result.forEach(e => {
-          if (e == element.name) {
-            array.push(element.title)
-          }
-        })
-      })
-      return array.join(',')
     }
   },
   data() {
     let self = this
     return {
-      result: [],
-      isResultShow: false,
-      resultList: '',
       show: false,
       actionShow: false,
-      // UploadTypeShow: false,
       grapicData: {
         text: '',
         photos: []
@@ -131,8 +86,6 @@ export default {
       mediaContent: [],
       percent: 0,
       photoLength: 0,
-      cateId: '',
-      cateName: '',
       actions: [{
         name: '保存草稿',
         type: 'save'
@@ -140,24 +93,7 @@ export default {
         name: '不保存',
         type: 'noSave'
       }],
-      // uploadType: [{
-      //   name: '从手机选择图片',
-      //   type: 'photo',
-      //   index: 0,
-      // }, {
-      //   name: '上传视频',
-      //   type: 'fileVideo',
-      //   index: 1,
-      // }, {
-      //   name: '拍摄视频',
-      //   type: 'uploadVideo',
-      //   index: 2,
-      // }],
-      topicList:[],
       videoThumb:'',
-      groupList:[],
-      selectGroup:false,
-      group:''
     }
   },
   created() {
@@ -175,43 +111,8 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
+    ...mapActions(['release']),
     fetchData() {
-      // 获取文章分类
-      let data = {
-        params:{
-          portal_name:'宝贝主页'
-        }
-      }
-
-      if(this.$route.query.back == 'class-home'){
-        data.params.portal_name = '班级主页'
-      }    
-
-      if(this.$route.query.back == 'apps-school'){
-        data.params.portal_name = '学校主页'
-      }
-
-      axios.get('/book/schoolArticleCate/getList',data).then(res => {
-        if(res.status == 200){
-          let cateArray = res.data
-          let data = []
-          cateArray.forEach(element => {
-            if(element.access_level == 0){
-              data.push(element)
-            }else{
-              this.managerState.forEach(e =>{
-                if((this.$route.query.id == e.banji_id||this.$route.query.id == e.school_id)&& e.item_relation != 'parent'){
-                  data.push(element)
-                }
-              })
-            }
-          })
-          this.topicList = data
-          this.cateId = data[0].cate_id
-          this.cateName = data[0].cate_name
-        }
-      })
-
       // 从本地存储获取发布数据
       if(this.$route.query.type == 'edit'){
           let articleData = {
@@ -234,34 +135,6 @@ export default {
         }
       }
 
-      let array = []
-      if (this.userDataState.child_id > 0) {
-        array.push({
-          title: '宝贝主页',
-          name: 'baby-home',
-          to: 1
-        })
-      } 
-      
-      if (this.userDataState.banji_id > 0) {
-        array.push({
-          title: '班级',
-          name: 'class-home',
-          to: 1
-        })
-      }
-
-      array.push({
-        title: '发现',
-        name: 'apps-find',
-        to: 1
-      })  
-
-      this.resultList = array
-      
-      array.forEach(e => {
-        this.result.push(e.name)
-      })
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
       })
@@ -279,16 +152,6 @@ export default {
           }
         })
       }
-
-      //获取机构标签
-      axios.get('/book/member/get_groups').then(res=>{
-        switch(res.data.status){
-          case 1:
-            this.groupList = res.data.data
-            this.group = res.data.data[0]
-          break
-        }
-      })
     },
     onRead(file) {
       let array = []
@@ -373,7 +236,7 @@ export default {
           this.$router.push({
             name: this.$route.query.back,
             query: {
-              id:  this.$route.query.id || ''
+              id:  this.$route.query.id
             }
           })
         } else {
@@ -383,36 +246,16 @@ export default {
         }
       } else if (this.grapicData.text.length < 12000) {
         // 如果通知没有内容？
-        if(this.cateName == '通知'&&!this.grapicData.text.length){
+        if(this.tag.cate_name == '通知'&&!this.grapicData.text.length){
           this.$toast('请输入通知内容')
         }else{
           // 发布
           let data = {
             details: this.grapicData.text,
             template_id: 1,
-            photos: this.grapicData.photos,
-            cate_id: this.cateId || '',
-            post_id: this.$route.query.post_id || '',
-            group_id: this.group.group_id
+            photos: this.grapicData.photos
           }
-
-          //跳转路由
-          //如果只发布到班级 那么跳转到该数组的第一个          
-          this.result.forEach(e=>{
-            if( e == 'baby-home'){
-              data.to_baby  = 1
-            }
-
-            if(e == 'class-home'){
-              data.to_banji = 1
-              
-            }
-
-            if(e == 'apps-find'){
-              data.to_find  = 1 
-            }
-          })
-
+  
           if(this.$route.query.back == 'baby-home'){
             data.child_id = this.$route.query.id
           }
@@ -425,56 +268,55 @@ export default {
             data.school_id = this.$route.query.id
           }
 
-          axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
-            if(res.data.status == 1){
-              if(this.$route.query.back && this.$route.query.back!='home' && this.$route.query.back!='my'){
-                this.$router.push({
-                  name: this.$route.query.back,
-                  query: {
-                    id:  this.$route.query.id || '',
-                    cate_id: this.cate_id || ''
-                  }
-                })
-              }else{
-                switch(true){
-                  case contains(this.result,'apps-find'):
-                    this.$router.push({
-                      name:'apps-find' 
-                    })
-                  break
-                  case contains(this.result,'baby-home'):
-                    this.$router.push({
-                      name:'baby-home',
-                      query:{
-                        id: this.userDataState.child_id
-                      }
-                    })
-                  break
-                  case contains(this.result,'class-home'):
-                    this.$router.push({
-                      name:'class-home',
-                      query:{
-                        id: this.userDataState.banji_id
-                      } 
-                    })
-                  break
-                  default:
+          this.release(data).then(res=>{
+            switch(res){
+              case 1:
+                if(this.$route.query.back && this.$route.query.back!='home' && this.$route.query.back!='my'){
                   this.$router.push({
-                    name:'zoom',
-                    query:{
-                      id: this.userDataState.user_id
+                    name: this.$route.query.back,
+                    query: {
+                      id:  this.$route.query.id,
+                      cate_id: this.tag.cate_id
                     }
                   })
-
+                }else{
+                  switch(true){
+                    case contains(this.result,'apps-find'):
+                      this.$router.push({
+                        name:'apps-find' 
+                      })
+                    break
+                    case contains(this.result,'baby-home'):
+                      this.$router.push({
+                        name:'baby-home',
+                        query:{
+                          id: this.userDataState.child_id
+                        }
+                      })
+                    break
+                    case contains(this.result,'class-home'):
+                      this.$router.push({
+                        name:'class-home',
+                        query:{
+                          id: this.userDataState.banji_id
+                        } 
+                      })
+                    break
+                    default:
+                    this.$router.push({
+                      name:'zoom',
+                      query:{
+                        id: this.userDataState.user_id
+                      }
+                    })
+                  }
                 }
-              }
-
-              localStorage.setItem('grapicData', '') //清空浏览器缓存
-              this.$toast.success('发布成功')
-            }else{
-              this.$toast(res.data.info)
+                this.$toast.success('发布成功')
+              break
+              case 0:
+                this.$toast(res.data.info)
+              break
             }
-
           })
         }
       }
@@ -486,16 +328,39 @@ export default {
     toTopicPage() {
       this.show = true
     },
-    toggle(index) {
-      this.$refs.checkboxes[index].toggle()
-    },
     doUpload(e) {
       let file = e.target.files[0]
       let type = e.target.dataset.type
+      let formData = new FormData()
+      let maxSize = 1024 * 1024 * 2
+      let blob = file.slice(0, maxSize)
+
+      formData.append('file',blob,file.name)
+
+      let url = '/book/file/get_video_screen'
+
+      axios({
+        url: url,
+        data: formData,
+        method: 'post',
+        onUploadProgress: p => {
+          this.percent = Math.floor(100 * (p.loaded / p.total))
+        }
+      }).then( res => {
+         let info = res.data.data
+          this.grapicData.photos.push({
+            thumb: info.thumb,
+            height: info.height,
+            width: info.width,
+            rotate: info.rotate,
+            duration: Math.floor(info.duration) || 10
+          })
+        this.percent = 0
+      })
+
       this.upOssMedia(type, file)
     },
     upOssMedia(type, file) {
-
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
@@ -520,23 +385,9 @@ export default {
             this.percent = Math.floor(100 * (p.loaded / p.total))
           }
         }).then((res) => {
-          
-          let duration 
-        videoParse(file).then(result =>{
-          duration = result.duration
-        })
-
-
-          this.grapicData.photos.push({
-            is_audio: type == 'audio' ? 1 : 0,
-            is_video: type == 'video' ? 1 : 0,
-            photo: path,
-            thumb: `${path}?x-oss-process=video/snapshot,t_10000`,
-            height: 0,
-            width: 0,
-            duration: Math.floor(duration) || 10
-          })
-
+          this.grapicData.photos[0].is_audio =  type == 'audio' ? 1 : 0
+          this.grapicData.photos[0].is_video =  type == 'video' ? 1 : 0
+          this.grapicData.photos[0].photo = path
           this.percent = 0
         })
     },
@@ -575,10 +426,6 @@ export default {
         this.percent = 0
       })
     },
-    selectTag(tag) {
-      this.cateName = tag.cate_name
-      this.cateId = tag.cate_id
-    },
     getAvatar(img) {
       if (!img) {
         return img
@@ -592,9 +439,6 @@ export default {
         result = img
       }
       return result
-    },
-    onChangeGroup(picker,values){
-      this.group = values
     }
   }
 }
@@ -607,30 +451,6 @@ export default {
 
 .text-length.danger {
   color: #f56c6c;
-}
-
-.photo-upload {
-  position: absolute;
-  top: 56%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  text-align: center;
-  color: #9e9e9e;
-  width: 4.375rem /* 70/16 */;
-}
-
-.photo-upload i.iconfont,
-.photo-upload .directions {
-  display: block;
-}
-
-.photo-upload i.iconfont {
-  font-size: 2.1875rem /* 35/16 */;
-}
-
-.photo-upload .directions {
-  font-size: 0.8125rem /* 13/16 */;
-  margin-top: 0.625rem /* 10/16 */;
 }
 
 .preview {
@@ -649,33 +469,6 @@ export default {
   background: #000;
   color: #fff;
   opacity: 0.5;
-}
-
-.btn-video,
-.btn-audio {
-  width: 3rem /* 48/16 */;
-  height: 3rem /* 48/16 */;
-  text-align: center;
-  line-height: 3rem /* 48/16 */;
-}
-
-.btn-video i.iconfont,
-.btn-audio i.iconfont {
-  font-size: 1.25rem /* 20/16 */;
-}
-
-.btn-video i.iconfont {
-  background: linear-gradient(90deg, #ff765c, #ff23b3);
-  -webkit-background-clip: text;
-  color: transparent;
-  text-shadow: 0 0.0625rem /* 1/16 */ 0.3125rem /* 5/16 */ #ff2383;
-}
-
-.btn-audio i.iconfont {
-  background: linear-gradient(90deg, #00c2ab, #3e94ff);
-  -webkit-background-clip: text;
-  color: transparent;
-  text-shadow: 0 0.0625rem /* 1/16 */ 0.3125rem /* 5/16 */ #3e94ff;
 }
 
 .upload-media {
@@ -740,27 +533,6 @@ export default {
 
 .img-grid{
   background: #f8f8f8;
-}
-
-.group-cell{
-  padding: .625rem /* 10/16 */;
-}
-
-.cell-link{
-  border-radius: .625rem /* 10/16 */;
-  overflow: hidden;
-  box-shadow: 0 .125rem /* 2/16 */ .9375rem /* 15/16 */ rgba(0, 0, 0, .1)
-}
-
-.icon{
-  margin-right: .625rem /* 10/16 */;
-}
-
-.icon .iconfont{
-  font-size: 1.25rem /* 20/16 */;
-  background: linear-gradient(135deg, #00bcd4, #409eff);
-  -webkit-background-clip: text;
-  color: transparent;
 }
 </style>
 <style>

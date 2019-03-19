@@ -4,7 +4,7 @@
       <div class="head-bar-title" slot="title">
         <transition name="slide-fade" mode="out-in">
           <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
-            {{$route.meta.title}}
+            {{$route.query.type=='preview'?'预览':$route.meta.title}}
           </div>
           <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else @click="toZoom">
             <div class="avatar" v-if='item.user'>
@@ -48,6 +48,7 @@ import comment from './../module/comment'
 import articleContent from './../module/articleContent'
 import vipLevel from './../module/animate/svg/vipLevel'
 import userCard from './../module/mold/userCard'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'detailsArticle',
@@ -57,6 +58,10 @@ export default {
     articleShare,
     vipLevel,
     userCard
+  },
+  computed: {
+    ...mapGetters(['userDataState']),
+    ...mapGetters('beautifulArticle',['getArticleContent','getTitle'])
   },
   data() {
     return {
@@ -78,12 +83,33 @@ export default {
   },
   methods: {
     fetchData() {
-      this.qrcode()
-      axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id||this.$route.query.back_id}`).then(res => {
-        if(res.data.status == 1){
-          this.item = res.data.data.post
-        }
-      })
+      // this.qrcode()
+      if(this.$route.query.type == 'preview'){
+        this.item = {
+          details:this.getArticleContent,
+          create_time: Math.floor(new Date().getTime()/1000),
+          views:'999+',
+          title: this.getTitle,
+          template_id:'0',
+          user:{
+            avatar: this.userDataState.avatar,
+            username: this.userDataState.name,
+            user_id: this.userDataState.id
+          },
+          card_level:{
+            level: this.userDataState.card_level
+          },
+          school:{
+            title: this.userDataState.school_name
+          }
+        } 
+      }else{
+        axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id||this.$route.query.back_id}`).then(res => {
+          if(res.data.status == 1){
+            this.item = res.data.data.post
+          }
+        })
+      }
     },
     onScrollDomShow(bl){
       this.themeBarSearch = bl
@@ -95,29 +121,31 @@ export default {
           name: this.$route.query.back,
           query: {
             id: this.$route.query.back_id,
+            type: this.$route.query.type,
+            back: this.$route.query.back_name
           }
         })
       }else if(this.$route.query.back){
-        this.$router.push({
-          name: this.$route.query.back,
-          query: {
-            id: this.$route.query.back_id,
-            tid: this.$route.query.tid
-          }
-        })
+          this.$router.push({
+            name: this.$route.query.back,
+            query: {
+              id: this.$route.query.back_id,
+              tid: this.$route.query.tid
+            }
+          })
       }else{
         this.$router.push({
           name:'apps-find'
         })
       }
     },
-    qrcode() {
-      QRCode.toDataURL(window.location.href).then(url => {
-        this.qrImage = url
-      }).catch(err => {
-        console.error(err)
-      })
-    },
+    // qrcode() {
+    //   QRCode.toDataURL(window.location.href).then(url => {
+    //     this.qrImage = url
+    //   }).catch(err => {
+    //     console.error(err)
+    //   })
+    // },
     getAvatar(img) {
         let pos = img.indexOf('http://')
         let result

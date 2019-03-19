@@ -40,10 +40,12 @@ export default {
   },
   methods: {
     follow(item) {
-      item.isSubscribe = !item.isSubscribe
-      axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res => {
-        this.$toast.success(res.data.msg)
-      })
+      if(this.$route.query.type!='preview'){
+        item.isSubscribe = !item.isSubscribe
+        axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res => {
+          this.$toast.success(res.data.msg)
+        })
+      }
     },
     getAvatar(img) {
       let pos = img.indexOf('http://')

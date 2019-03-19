@@ -1,0 +1,212 @@
+<template>
+  <div class="article-setting">
+    <van-nav-bar v-if='type!="mould"' :title="$route.meta.title" left-text="返回" left-arrow @click-left="onClickLeft" />
+    <!-- 分类设置、同步、设置机构标签 -->
+    <van-cell title-class='theme-color' title="#选择分类" :value="tag.cate_name" is-link arrow-direction="down" @click="show = true" />
+    <van-cell v-if='tag.cate_id!="99"&&tag.cate_id!="124"' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
+    <div class="group-cell">
+      <div class="cell-link">
+        <van-cell title="设置机构标签" is-link @click="selectGroup = true" :label="group.group_name" center>
+          <div class="icon" slot="icon">
+            <i class="iconfont">&#xe652;</i>
+          </div>
+        </van-cell>
+      </div>
+    </div>
+
+    <van-popup v-model="selectGroup" position="bottom">
+      <van-picker :columns="groupList" value-key='group_name' @change="onChangeGroup" />
+    </van-popup>
+
+    <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
+      <van-checkbox-group v-model="settingResult">
+        <div class="form-title">同步到</div>
+        <van-cell-group>
+          <van-cell v-for="(item,index) in resultList" clickable :key="index" :title="item.title" @click="toggle(index)">
+            <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" />
+          </van-cell>
+        </van-cell-group>
+      </van-checkbox-group>
+    </van-popup>
+
+    <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
+      <topic-list @close='show = false' @select='selectTag' type='edit' :topicList='topicList' />
+    </van-popup>
+  </div>
+</template>
+<script>
+import axios from './../../../lib/js/api'
+import topicList from './../../../module/release/topicList'
+import { mapState, mapGetters, mapActions } from 'vuex'
+
+export default {
+  name: 'article-setting',
+  props: ['type'],
+  components: {
+    topicList
+  },
+  computed: {
+    ...mapState('articleSetting', ['result','group','tag']),
+    ...mapGetters(['userDataState', 'managerState']),
+    synchronous() {
+      let array = []
+      this.resultList.forEach(element => {
+        this.result.forEach(e => {
+          if (e == element.name) {
+            array.push(element.title)
+          }
+        })
+      })
+      return array.join(',')
+    }
+  },
+  data() {
+    return {
+      show: false,
+      isResultShow: false,
+      selectGroup: false,
+      groupList: [],
+      resultList: [],
+      topicList: [],
+
+      settingResult: []
+    }
+  },
+  created() {
+    this.fetchData()
+  },
+  watch: {
+    "$router": 'fetchData',
+    settingResult: {
+      handler(v) {
+        this.addResult(v)
+      },
+      deep: true
+    }
+  },
+  methods: {
+    ...mapActions('articleSetting', ['addResult','addGroup','addTag']),
+    fetchData() {
+      let array = []
+      if (this.userDataState.child_id > 0) {
+        array.push({
+          title: '宝贝主页',
+          name: 'baby-home',
+          to: 1
+        })
+      }
+
+      if (this.userDataState.banji_id > 0) {
+        array.push({
+          title: '班级',
+          name: 'class-home',
+          to: 1
+        })
+      }
+
+      array.push({
+        title: '发现',
+        name: 'apps-find',
+        to: 1
+      })
+
+      this.resultList = array
+
+      //   设置默认
+      let arr = []
+      array.map(e => {
+        arr.push(e.name)
+      })
+
+      this.settingResult = arr
+      this.addResult(arr)
+
+      // 获取文章分类
+      let data = {
+        params: {
+          portal_name: '宝贝主页'
+        }
+      }
+
+      if (this.$route.query.back == 'class-home' || this.$route.query.back_name == 'class-home') {
+        data.params.portal_name = '班级主页'
+      }
+
+      if (this.$route.query.back == 'apps-school' || this.$route.query.back_name == 'apps-school') {
+        data.params.portal_name = '学校主页'
+      }
+
+      axios.get('/book/schoolArticleCate/getList', data).then(res => {
+        if (res.status == 200) {
+          let cateArray = res.data
+          let data = []
+          cateArray.forEach(element => {
+            if (element.access_level == 0) {
+              data.push(element)
+            } else {
+              this.managerState.forEach(e => {
+                if ((this.$route.query.id == e.banji_id || this.$route.query.id == e.school_id) && e.item_relation != 'parent') {
+                  data.push(element)
+                }
+              })
+            }
+          })
+          this.topicList = data
+          
+          this.addTag(data[0])
+        }
+      })
+
+      //获取机构标签
+      axios.get('/book/member/get_groups').then(res => {
+        switch (res.data.status) {
+          case 1:
+            this.groupList = res.data.data
+            this.addGroup(res.data.data[0])
+            break
+        }
+      })
+    },
+    toggle(index) {
+      this.$refs.checkboxes[index].toggle()
+    },
+    onChangeGroup(picker, values) {
+      this.addGroup(values)
+    },
+    selectTag(tag) {
+       this.addTag(tag)
+    },
+    onClickLeft() {
+      this.$router.push({
+        name: this.$route.query.back,
+        query:{
+          back: this.$route.query.back_name,
+          id: this.$route.query.id
+        }
+      })
+    }
+  }
+}
+</script>
+<style scoped>
+.group-cell{
+  padding: .625rem /* 10/16 */;
+}
+
+.cell-link{
+  border-radius: .625rem /* 10/16 */;
+  overflow: hidden;
+  box-shadow: 0 .125rem /* 2/16 */ .9375rem /* 15/16 */ rgba(0, 0, 0, .1)
+}
+
+.icon{
+  margin-right: .625rem /* 10/16 */;
+}
+
+.icon .iconfont{
+  font-size: 1.25rem /* 20/16 */;
+  background: linear-gradient(135deg, #00bcd4, #409eff);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+</style>

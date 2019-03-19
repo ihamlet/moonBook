@@ -52,6 +52,8 @@ import Editor from '@/components/Editor'
 import Publishing from '@/components/pages/editor/Publishing'
 import Graphic from '@/components/pages/editor/Graphic'
 import BeautifulArticle from '@/components/pages/editor/BeautifulArticle'
+import changeCover from '@/components/pages/editor/mould/changeCover'
+import articleSetting from '@/components/pages/editor/mould/articleSetting'
 
 import ReadStat from '@/components/pages/readStat'
 import ReadAmount from '@/components/pages/readAmount'
@@ -431,15 +433,14 @@ export default new Router({
           title: '编辑',
           type:'beautifulArticle'
         },
-        // children:[{
-        //   path: '/editor/beautifulArticle/addImage',
-        //   name:'article-image',
-        //   component: articleImage
-        // },{
-        //   path: '/editor/beautifulArticle/addImage',
-        //   name:'article-Video',
-        //   component: articleVideo
-        // }]
+      },
+      {
+        path: '/editor/changeCover',
+        name:'changeCover',
+        component: changeCover,
+        meta: {
+          title: '设置封面'
+        }
       },
       {
         path: '/editor/graphic',
@@ -448,6 +449,13 @@ export default new Router({
         meta: {
           title: '发布',
           type:'webo'
+        }
+      },{
+        path:'/editor/articleSetting',
+        name:'articleSetting',
+        component: articleSetting,
+        meta: {
+          title: '发布设置'
         }
       }]
     },
