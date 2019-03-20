@@ -6,10 +6,6 @@ import Vuex from 'vuex'
 import App from './App'
 import router from './router'
 import store from './store/index'
-import { wxConfig } from './../src/components/lib/js/wxConfig'
-import wx from 'weixin-js-sdk'
-Vue.prototype.wxConfig = wxConfig
-Vue.prototype.wx = wx
 
 // 高德地图vue组件
 import VueAMap from 'vue-amap'

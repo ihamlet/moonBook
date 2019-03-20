@@ -29,7 +29,7 @@
                 </div>
               </van-col>
               <van-col :span="8" v-if='9 > imagesLength'>
-                <div class="img-grid" @click="$refs.selectPhoto.$refs.input.click()">
+                <div class="img-grid" @click="uploaderImg">
                   <div class="photo-upload">
                     <i class="iconfont">&#xe664;</i>
                     <span class="directions">添加照片</span>
@@ -67,6 +67,7 @@ export default {
     articleSetting
   },
   computed: {
+    ...mapState('openWX',['ready','imgList']),
     ...mapState('articleSetting', ['result','group','tag']),
     ...mapGetters(['userDataState','managerState']),
     imagesLength() {
@@ -108,9 +109,16 @@ export default {
       },
       deep: true
     },
+    imgList:{
+      handler(val) {
+        this.grapicData.photos = val
+      },
+      deep: true
+    },
     '$router': 'fetchData'
   },
   methods: {
+    ...mapActions('openWX',['selectImg']),
     ...mapActions(['release']),
     fetchData() {
       // 从本地存储获取发布数据
@@ -151,6 +159,13 @@ export default {
             break
           }
         })
+      }
+    },
+    uploaderImg(){
+      if(this.ready){
+        this.selectImg()
+      }else{
+        this.$refs.selectPhoto.$refs.input.click()
       }
     },
     onRead(file) {

@@ -6,11 +6,13 @@ import Cookies from 'js-cookie'
 
 import beautifulArticle from './BeautifulArticle'
 import articleSetting from './articleSetting'
+import openWX from './openWX'
 
 Vue.use(Vuex)
 
 const state = {
   slogan: '阅读照亮人生',
+  logo:`${location.origin}/Public/lib/bookshelf/img/logo.png`,
   userData: {},
   msgLength: 1,
   tabBtn: [],
@@ -246,7 +248,7 @@ const actions = {
     let setting = context.state.articleSetting
     let data={
       cate_id: setting.tag.cate_id,
-      group_id: setting.group.group_id,
+      ad_label: setting.group.group_name,
       details: products.details,
       template_id: products.template_id,
       cover: products.cover,
@@ -292,6 +294,7 @@ export default new Vuex.Store({
   actions,
   modules:{
     beautifulArticle,
-    articleSetting
+    articleSetting,
+    openWX
   }
 })

@@ -7,7 +7,7 @@
     </div>
 
     <transition leave-active-class="bounceOut" enter-active-class="bounceIn" class='case'>
-      <div class="list flex flex-align" v-show='getArticleList.length == index?!isTipsShow:isTipsShow'>
+      <div class="list flex flex-align" v-show='isTipsShow(index)'>
         <div class="icon-item" v-for='(item,itemIndex) in tipsList' :key="itemIndex" @click="select(item)">
           <div class="iconfont" :class="item.icon"></div>
           <span>{{item.name}}</span>
@@ -32,7 +32,6 @@ export default {
   },
   data() {
     return {
-      isTipsShow: false,
       tipsList: [{
         type: 'images',
         icon: 'icon-tupian',
@@ -52,15 +51,16 @@ export default {
       data: {
         text: '',
         photos: []
-      }
+      },
+      tipsShow: false
     }
   },
   methods: {
     onClickTipsShow() {
-      this.isTipsShow = !this.isTipsShow
+      this.tipsShow = !this.tipsShow
     },
     select(item) {
-      this.isTipsShow = !this.isTipsShow
+      this.tipsShow = !this.tipsShow
       switch (item.index) {
         case 0:
           this.$refs.selectPhoto.$refs.input.click()
@@ -70,7 +70,8 @@ export default {
             name: 'publishing',
             query: {
               index: this.index,
-              back: this.$route.query.back,
+              back: this.$route.query.name,
+              back_name: this.$route.query.back_name,
               id: this.$route.query.id
             }
           })
@@ -88,6 +89,18 @@ export default {
       }
 
       this.$emit('onRead', data)
+    },
+    isTipsShow(index){
+      let b 
+      if(this.getArticleList.length){
+        if(index == this.getArticleList.length){
+          b = !this.tipsShow
+        }
+      }else{
+        b = !this.tipsShow
+      }
+      
+      return b
     },
     doUpload(e) {
       let data = {

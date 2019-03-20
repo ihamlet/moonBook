@@ -1,5 +1,6 @@
 <template>
   <div class="article-card">
+    <van-progress v-if='PercentNum!=0&&PercentNum!=100' :percentage="PercentNum" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
     <div class="article-item">
       <articleTips @onRead='onRead' @doUpload='doUpload' :index='0'/>
       <draggable v-model="articleList" handle='.handle'>
@@ -20,7 +21,6 @@
         </div>
       </draggable>
     </div>
-    <van-progress v-if='PercentNum!=0&&PercentNum!=100' :percentage="PercentNum" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
   </div>
 </template>
 
@@ -59,7 +59,7 @@ export default {
       photoLength:0,
       photo:'',
       upLoadType:'image',
-
+      mediaInfo:''
     }
   },
   created() {
@@ -130,14 +130,15 @@ export default {
           this.percent = Math.floor(100 * (p.loaded / p.total))
         }
       }).then( res => {
-        let info = res.data.data
-        this.upOssMedia(type, file, index, onClickType, info)
-        this.percent = 0
+        this.mediaInfo = res.data.data
+        this.upOssMedia(type, file, index, onClickType)
       })
+
+      this.percent = 0
     },
 
     //上传
-    upOssMedia(type, file, index,onClickType,info) {
+    upOssMedia(type, file, index,onClickType) {
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
@@ -167,7 +168,7 @@ export default {
           is_audio: type == 'audio' ? 1 : 0,
           is_video: type == 'video' ? 1 : 0,
           photo: path,
-          thumb: info.thumb,
+          thumb: this.mediaInfo?this.mediaInfo.thumb:`${path}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`,
           height: 0,
           width: 0,
           type:'video',
@@ -214,7 +215,6 @@ export default {
           this.requestPercent(this.percent)
         }
       }).then(() => {
-        
         let data = {
           photo: path,
           is_audio: 0,

@@ -37,9 +37,7 @@ export default {
   },
   created () {
     this.fetchData()
-    this.wxConfig().then(res=>{
-      console.log(res)
-    })
+    this.wxConfig()
   },
   watch: {
     center(val){
@@ -51,7 +49,8 @@ export default {
     '$route': 'fetchData'
   },
   methods: {
-     ...mapActions(['getUserData','getMsg','getUserLocation','getManager']),
+    ...mapActions('openWX',['wxConfig']),
+    ...mapActions(['getUserData','getMsg','getUserLocation','getManager']),
     fetchData(){
       let products = {
         page: 1,
@@ -864,6 +863,7 @@ video {
 .article-content .content img {
   margin: 1.25rem /* 20/16 */ auto;
   display: block;
+  width: 100%;
 }
 
 .article-content .content p {

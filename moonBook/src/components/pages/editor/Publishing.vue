@@ -81,12 +81,7 @@ export default {
         this.add(data)
       }
     
-      this.$router.push({
-        name:'beautifulArticle',
-        query:{
-          back: this.$route.name
-        }
-      })
+      this.$router.go(-1)
     }
   }
 }

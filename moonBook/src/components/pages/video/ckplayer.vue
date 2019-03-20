@@ -36,6 +36,7 @@ import { timeago } from './../../lib/js/util'
 import videoList from './../../module/video'
 import comment from './../../module/comment'
 import './../../../../static/ckplayer/ckplayer/ckplayer'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'ckplayer',
@@ -82,10 +83,24 @@ export default {
       this.player
     })
   },
+  updated (){
+    this.$nextTick(()=>{
+      let toast = this.$toast
+      let data = {
+        item: this.item,
+        success(){
+          toast('分享成功')
+        }
+      }
+
+      this.share(data)
+    })
+  },
   watch: {
     "$router": 'fetchData'
   },
   methods: {
+    ...mapActions('openWX',['share']),
     fetchData() {
       return axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id}`).then(res => {
         if (res.data.status == 1) {

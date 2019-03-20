@@ -18,17 +18,14 @@ export default {
 
             if(state.articleItem.length){
               let array = state.articleItem
-              array.forEach(element => {
-        
+              array.forEach((element,i) => {        
                 let img = ''
                 let video = ''
                 let text = ''
 
-
-      
                 if(element.photos){
                   if(element.photos.type == "image"){
-                    img = `<img src='${element.photos.thumb}'></img>`
+                    img = `<img preview='1' data-pswp-uid='${i}' src='${element.photos.thumb}'></img>`
                   }    
                   if(element.photos.type == 'video'){
                     video = `

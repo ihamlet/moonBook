@@ -11,7 +11,6 @@
             <i class="iconfont">&#xe639;</i>
           </div>
           <img :src="item.cover" alt="视频封面"/>
-          <van-tag class="photo-tag" size="medium" color='#7232dd'>{{videoIndex > 1?'视频专辑':'视频'}}</van-tag>
           <van-tag class="duration" size="medium" color="rgba(0,0,0,.5)">{{getDuration(videoItem.duration)}}</van-tag>
         </div>
       </div>
@@ -118,7 +117,9 @@ export default {
 }
 
 .video-thumb.vertical{
-  width: 36%;
+  width: 8.75rem /* 140/16 */;
+  height: 13.75rem /* 220/16 */;
+  overflow: hidden;
 }
 
 .text,

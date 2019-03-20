@@ -1,5 +1,5 @@
 <template>
-  <div class="article">
+  <div class="article page-padding">
     <van-nav-bar :border='false' :left-text="this.$route.query.back?'返回':'发现'" left-arrow fixed :zIndex='100' @click-left="onClickLeft">
       <div class="head-bar-title" slot="title">
         <transition name="slide-fade" mode="out-in">
@@ -27,16 +27,12 @@
       </div>
       <div class="module">
         <article-content :item='item' @onScrollDomShow='onScrollDomShow'/>
+        <articleOperation :item='item'/>
       </div>
       <div>
         <comment :item='item' include='include'/>
       </div>
     </div>
-
-    <!-- 生成图片 -->
-    <!-- <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
-      <article-share :item='item' :userName='item.user?item.user.username:""' :qrImage='qrImage' @close='imageShow = false'/>
-    </van-popup> -->
   </div>
 </template>
 <script>
@@ -44,11 +40,12 @@ import axios from './../lib/js/api'
 
 import QRCode from "qrcode"
 import articleShare from './../module/mold/articleShare'
+import articleOperation from './../module/mold/articleOperation'
 import comment from './../module/comment'
 import articleContent from './../module/articleContent'
 import vipLevel from './../module/animate/svg/vipLevel'
 import userCard from './../module/mold/userCard'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters,mapActions } from 'vuex'
 
 export default {
   name: 'detailsArticle',
@@ -57,9 +54,11 @@ export default {
     comment,
     articleShare,
     vipLevel,
-    userCard
+    userCard,
+    articleOperation
   },
   computed: {
+    ...mapState(['slogan','logo']),
     ...mapGetters(['userDataState']),
     ...mapGetters('beautifulArticle',['getArticleContent','getTitle'])
   },
@@ -77,15 +76,27 @@ export default {
   },
   created() {
     this.fetchData()    
-    this.share()
-    console.log(111)
+  },
+  //数据加载完成后执行该方法
+  updated (){
+    this.$nextTick(()=>{
+      let toast = this.$toast
+      let data = {
+        item: this.item,
+        success(){
+          toast('分享成功')
+        }
+      }
+
+      this.share(data)
+    })
   },
   watch: {
     '$router': 'fetchData'
   },
   methods: {
+    ...mapActions('openWX',['share']),
     fetchData() {
-      // this.qrcode()
       if(this.$route.query.type == 'preview'){
         this.item = {
           details:this.getArticleContent,
@@ -106,31 +117,19 @@ export default {
           }
         } 
       }else{
-        axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id||this.$route.query.back_id}`).then(res => {
+        let articleDetailData = {
+          params:{
+            ajax:1,
+            id:this.$route.query.id||this.$route.query.back_id
+          }
+        }
+
+        axios.get('/book/SchoolArticle/detail',articleDetailData).then(res => {
           if(res.data.status == 1){
             this.item = res.data.data.post
           }
         })
       }
-    },
-    share(){
-      let toast = this.$toast
-
-      let data = {
-        title:'测试',
-        link: location.href,
-        desc:'测试测试',
-        imgUrl:'#',
-        success(){
-          toast('分享成功')
-        }
-      }
-
-      this.wx.onMenuShareTimeline(data)
-      this.wx.onMenuShareQQ(data)
-      this.wx.onMenuShareWeibo(data)
-      this.wx.onMenuShareQZone(data)
-      this.wx.onMenuShareAppMessage(data)
     },
     onScrollDomShow(bl){
       this.themeBarSearch = bl
@@ -191,10 +190,10 @@ export default {
       })
     },
     follow(item){
-        item.isSubscribe = !item.isSubscribe
-        axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res=>{
-            this.$toast.success(res.data.msg)
-        })
+      item.isSubscribe = !item.isSubscribe
+      axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res=>{
+          this.$toast.success(res.data.msg)
+      })
     }
   }
 }

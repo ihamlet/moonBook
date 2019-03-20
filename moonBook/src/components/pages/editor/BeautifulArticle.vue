@@ -1,9 +1,9 @@
 <template>
   <div class="beautiful-article">
     <van-nav-bar title="编辑" left-text="取消" @click-left="onClickLeft" fixed :zIndex='10'>  
-      <div class="head-bar-btn theme-color" slot="right">
+      <!-- <div class="head-bar-btn theme-color" slot="right">
         <van-button :loading='getPercentNum != 0' class="theme-btn" type="primary" size="small" round @click="onClickRelease">发布</van-button>
-      </div>
+      </div> -->
     </van-nav-bar>
     <div class="container">
       <div class="edit-thumb theme-background" @click="toChangeCover">
@@ -17,8 +17,8 @@
     </div>
 
     <div class="flex flex-align footer-bar">
-       <div class="preview theme-color" @click="preview">预览</div>
-       <van-button class="theme-btn" square type="primary" size="normal" @click="next">下一步</van-button>
+       <div class="preview theme-color" @click="preview">{{getPercentNum != 0?'生成中...':'预览'}}</div>
+       <van-button class="theme-btn" :loading='getPercentNum != 0' square type="primary" size="normal" @click="next">下一步</van-button>
     </div>
   </div>
 </template>
@@ -37,8 +37,7 @@ export default {
   },
   computed: {
     ...mapState('beautifulArticle',['cover']),
-    ...mapState('articleSetting',['tag','result','group']),
-    ...mapGetters('beautifulArticle',['getPercentNum','getArticleContent','getImageList','getTitle']),
+    ...mapGetters('beautifulArticle',['getPercentNum','getImageList','getTitle']),
     ...mapGetters(['userDataState'])
   },
   data() {
@@ -57,18 +56,19 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['release']),
     ...mapActions('beautifulArticle',['addTitle']),
     preview(){
-      this.$router.push({
-        name:'article',
-        query:{
-          type:'preview',
-          back: this.$route.name,
-          back_id: this.$route.query.id,
-          back_name: this.$route.query.back
-        }
-      })
+      if(this.getPercentNum == 0){
+        this.$router.push({
+          name:'article',
+          query:{
+            type:'preview',
+            back: this.$route.name,
+            back_id: this.$route.query.id,
+            back_name: this.$route.query.back
+          }
+        })
+      }
     },
     onClickLeft(){
       if(this.$route.query.back){
@@ -78,17 +78,25 @@ export default {
             id: this.$route.query.id
           }
         })
+      }else{
+        this.$router.push({
+          name:'apps-find'
+        })
       }
     },
     next() {
-      this.$router.push({
-        name:'articleSetting',
-        query:{
-          back: this.$route.name,
-          id: this.$route.query.id,
-          back_name: this.$route.query.back
-        }
-      })
+      if(this.getTitle.length&&this.getImageList.length){
+        this.$router.push({
+          name:'articleSetting',
+          query:{
+            id: this.$route.query.id,
+            back: this.$route.query.back
+          }
+        })
+      }else{
+        this.$toast('请输入文章标题')
+      }
+
     },
     selectTag(tag) {
       this.cateName = tag.cate_name
@@ -101,92 +109,6 @@ export default {
           type:'revise'
         }
       })
-    },
-    onClickRelease(){
-      if (!this.getArticleContent.length) {
-        if (this.$route.query.back && this.$route.name!='home') {
-          this.$router.push({
-            name: this.$route.query.back,
-            query: {
-              id:  this.$route.query.id
-            }
-          })
-        } else {
-          this.$router.push({
-            name: 'apps-find'
-          })
-        }
-      } else {
-          let data = {
-            details: this.getArticleContent,
-            template_id: 0,
-            cover: this.cover?this.cover:this.getImageList[0],
-            title: this.getTitle
-          }
-  
-          if(this.$route.query.back == 'baby-home'){
-            data.child_id = this.$route.query.id
-          }
-
-          if(this.$route.query.back == 'class-home'){
-            data.banji_id = this.$route.query.id
-          }
-          
-          if(this.$route.query.back == 'apps-school'){
-            data.school_id = this.$route.query.id
-          }
-
-          this.release(data).then(res=>{
-            switch(res){
-              case 1:
-                if(this.$route.query.back && this.$route.query.back!='home' && this.$route.query.back!='my'){
-                  this.$router.push({
-                    name: this.$route.query.back,
-                    query: {
-                      id:  this.$route.query.id,
-                      cate_id: this.tag.cate_id
-                    }
-                  })
-                }else{
-                  switch(true){
-                    case contains(this.result,'apps-find'):
-                      this.$router.push({
-                        name:'apps-find' 
-                      })
-                    break
-                    case contains(this.result,'baby-home'):
-                      this.$router.push({
-                        name:'baby-home',
-                        query:{
-                          id: this.userDataState.child_id
-                        }
-                      })
-                    break
-                    case contains(this.result,'class-home'):
-                      this.$router.push({
-                        name:'class-home',
-                        query:{
-                          id: this.userDataState.banji_id
-                        } 
-                      })
-                    break
-                    default:
-                    this.$router.push({
-                      name:'zoom',
-                      query:{
-                        id: this.userDataState.user_id
-                      }
-                    })
-                  }
-                }
-                this.$toast.success('发布成功')
-              break
-              case 0:
-                this.$toast(res.data.info)
-              break
-            }
-          })
-      }
     }
   }
 }

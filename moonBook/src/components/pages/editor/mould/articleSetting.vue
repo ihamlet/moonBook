@@ -32,6 +32,10 @@
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
       <topic-list @close='show = false' @select='selectTag' type='edit' :topicList='topicList' />
     </van-popup>
+
+    <div class="footer-bar" v-if='type!="mould"'>
+      <van-button class="theme-btn" square size="normal" type="primary" @click="onClickRelease">发 布</van-button>
+    </div>
   </div>
 </template>
 <script>
@@ -47,6 +51,8 @@ export default {
   },
   computed: {
     ...mapState('articleSetting', ['result','group','tag']),
+    ...mapState('beautifulArticle',['cover']),
+    ...mapGetters('beautifulArticle',['getArticleContent','getTitle','getImageList']),
     ...mapGetters(['userDataState', 'managerState']),
     synchronous() {
       let array = []
@@ -85,6 +91,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['release']),
     ...mapActions('articleSetting', ['addResult','addGroup','addTag']),
     fetchData() {
       let array = []
@@ -184,6 +191,88 @@ export default {
           id: this.$route.query.id
         }
       })
+    },
+    onClickRelease(){
+      if (!this.getArticleContent.length) {
+        if (this.$route.query.back && this.$route.name!='home') {
+          this.$router.push({
+            name: this.$route.query.back,
+            query: {
+              id:  this.$route.query.id
+            }
+          })
+        }
+      } else {
+          let data = {
+            details: this.getArticleContent,
+            template_id: 0,
+            cover: this.cover?this.cover:this.getImageList[0],
+            title: this.getTitle
+          }
+  
+          if(this.$route.query.back == 'baby-home'){
+            data.child_id = this.$route.query.id
+          }
+
+          if(this.$route.query.back == 'class-home'){
+            data.banji_id = this.$route.query.id
+          }
+          
+          if(this.$route.query.back == 'apps-school'){
+            data.school_id = this.$route.query.id
+          }
+
+          this.release(data).then(res=>{
+            switch(res){
+              case 1:
+                if(this.$route.query.back && this.$route.query.back!='home' && this.$route.query.back!='my'){
+                  this.$router.push({
+                    name: this.$route.query.back,
+                    query: {
+                      id:  this.$route.query.id,
+                      cate_id: this.tag.cate_id
+                    }
+                  })
+                }else{
+                  switch(true){
+                    case contains(this.result,'apps-find'):
+                      this.$router.push({
+                        name:'apps-find' 
+                      })
+                    break
+                    case contains(this.result,'baby-home'):
+                      this.$router.push({
+                        name:'baby-home',
+                        query:{
+                          id: this.userDataState.child_id
+                        }
+                      })
+                    break
+                    case contains(this.result,'class-home'):
+                      this.$router.push({
+                        name:'class-home',
+                        query:{
+                          id: this.userDataState.banji_id
+                        } 
+                      })
+                    break
+                    default:
+                    this.$router.push({
+                      name:'zoom',
+                      query:{
+                        id: this.userDataState.user_id
+                      }
+                    })
+                  }
+                }
+                this.$toast.success('发布成功')
+              break
+              case 0:
+                this.$toast(res.data.info)
+              break
+            }
+          })
+      }
     }
   }
 }
@@ -208,5 +297,16 @@ export default {
   background: linear-gradient(135deg, #00bcd4, #409eff);
   -webkit-background-clip: text;
   color: transparent;
+}
+
+.footer-bar{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.theme-btn{
+  width: 100%;
 }
 </style>
