@@ -64,7 +64,7 @@ export default {
       }, {
         name: '捐书',
         iconClass: 'icon-shujia',
-        routeLink: '/book/TushuDonation/entry'
+        routeLink: '/book/member/donation_entry'
       }]
     }
   },
