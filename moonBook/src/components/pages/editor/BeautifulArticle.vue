@@ -27,7 +27,6 @@ import axios from './../../lib/js/api'
 import articleCard from './../editor/mould/articleCard'
 import topicList from './../../module/release/topicList'
 import { mapState,mapGetters,mapActions } from 'vuex'
-import { contains } from './../../lib/js/util'
 
 export default {
   name: 'beautiful-article',

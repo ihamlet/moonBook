@@ -42,6 +42,7 @@
 import axios from './../../../lib/js/api'
 import topicList from './../../../module/release/topicList'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { contains } from './../../../lib/js/util'
 
 export default {
   name: 'article-setting',
