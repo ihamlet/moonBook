@@ -91,17 +91,25 @@ export default {
 
       this.getUserData().then(res => {
         if(res.id != null){
-          let data = {
+          let babyListData = {
             params:{
               sort:'old',
               user_id:res.id
             }
           }
-          axios.get('/book/baby/getList',data).then(res => {
+          axios.get('/book/baby/getList',babyListData).then(res => {
             this.children = res.data.data
           })
 
-          axios.get('/book/SchoolArticle/getList?page=1&sort=new&user_id=${res.id}').then(res => {
+          let getArticlrList = {
+            params:{
+              page:1,
+              sort:'new',
+              user_id:res.id
+            }
+          }
+
+          axios.get('/book/SchoolArticle/getList',getArticlrList).then(res => {
             this.zoomCard = res.data.data[0]
           })
         }else{

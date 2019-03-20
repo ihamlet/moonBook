@@ -3,24 +3,25 @@
     <van-cell :title="moduleTitle" :is-link="type =='rank'" @click="toBabyHome" />
     <div class="book-list scroll-x" v-if='list && list.length'>
       <div class="book-item scroll-item" v-for='(item,index) in list' :key="index">
-        <div class="book-cover">
-          <img :src="thumb(item.book_thumb)" @error="outThumb($event,item)" :alt="item.book_name" @click="toBookDetails(item)">
-
-          <div class="listening" @click="listening(item)">
-            <i class="iconfont">&#xe617;</i>
+        <div class="book-box" v-if='item.book_thumb'>
+          <div class="book-cover">
+            <img :src="thumb(item.book_thumb)" @error="outThumb($event,item)" :alt="item.book_name" @click="toBookDetails(item)">
+            <div class="listening" @click="listening(item)">
+              <i class="iconfont">&#xe617;</i>
+            </div>
           </div>
-        </div>
-        <div class="book-name" v-line-clamp:20="2"  @click="toBookDetails(item)">
-          {{item.book_name}}
-        </div>
-        <div class="book-detail">
-          <div class="book-author" v-line-clamp:20="1">作者:{{item.book_author}}</div>
-          <div class="book-borrow">
-            <span>{{item.book_borrow_count}}</span>人借过
+          <div class="book-name" v-line-clamp:20="2"  @click="toBookDetails(item)">
+            {{item.book_name}}
           </div>
-          <div class="book-label">
-            <div class="label-item" v-for='(sortItem,sortIndex) in item.book_tags' :key="sortIndex">
-              {{sortItem}}
+          <div class="book-detail">
+            <div class="book-author" v-line-clamp:20="1">作者:{{item.book_author}}</div>
+            <div class="book-borrow">
+              <span>{{item.book_borrow_count}}</span>人借过
+            </div>
+            <div class="book-label">
+              <div class="label-item" v-for='(sortItem,sortIndex) in item.book_tags' :key="sortIndex">
+                {{sortItem}}
+              </div>
             </div>
           </div>
         </div>
@@ -57,11 +58,13 @@ export default {
       })
     },
     thumb(img) {
-      let hostMatch = img.match(/https?:\/\/(.+?)\//)
-      if (hostMatch) {
-        return `/book/api/remotePic?url=${img}`
-      } else {
-        return img
+      if(img){
+        let hostMatch = img.match(/https?:\/\/(.+?)\//)
+        if (hostMatch) {
+          return `/book/api/remotePic?url=${img}`
+        } else {
+          return img
+        }
       }
     },
     outThumb(e, item) {

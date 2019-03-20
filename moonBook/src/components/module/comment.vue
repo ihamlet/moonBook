@@ -5,20 +5,7 @@
       <div class="comment" slot="left">评论 {{listLength}}</div>
     </van-nav-bar>
     <div class="no-centent" v-if='listLength == 0'>
-      <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
-        viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15655">
-        <path d="M169.5 541.6V318.8c0-98.3 66.3-178.7 147.4-178.7h400c81.1 0 147.4 80.4 147.4 178.7v222.8" fill="#D9DFFF"
-          p-id="15656"></path>
-        <path d="M859.9 370c-43 0-78.1 35.2-78.1 78.1v228.5H252.1V448.1c0-43-35.2-78.1-78.1-78.1-43 0-78.1 35.2-78.1 78.1v306.6c0 43 35.2 78.1 78.1 78.1h685.9c43 0 78.1-35.2 78.1-78.1V448.1c0-42.9-35.2-78.1-78.1-78.1z"
-          fill="#D9DFFF" p-id="15657"></path>
-        <path d="M859.9 855.8H174c-55.8 0-101.1-45.4-101.1-101.1V448.1C72.8 392.4 118.2 347 174 347s101.1 45.4 101.1 101.1v205.5h483.7V448.1c0-55.8 45.4-101.1 101.1-101.1S961 392.4 961 448.1v306.6c0 55.8-45.4 101.1-101.1 101.1zM174 393c-30.4 0-55.1 24.7-55.1 55.1v306.6c0 30.4 24.7 55.1 55.1 55.1h685.9c30.4 0 55.1-24.7 55.1-55.1V448.1c0-30.4-24.7-55.1-55.1-55.1-30.4 0-55.1 24.7-55.1 55.1v228.5c0 12.7-10.3 23-23 23H252.1c-12.7 0-23-10.3-23-23V448.1c0-30.4-24.7-55.1-55.1-55.1z"
-          fill="#728BFF" p-id="15658"></path>
-        <path d="M751.7 697.6H282.1c-29.2 0-53-23.8-53-53v-6.8c0-76.9 62.6-139.5 139.5-139.5h296.7c76.9 0 139.5 62.6 139.5 139.5v6.8c-0.1 29.3-23.8 53-53.1 53zM368.6 544.3c-51.6 0-93.5 41.9-93.5 93.5v6.8c0 3.9 3.1 7 7 7h469.7c3.9 0 7-3.1 7-7v-6.8c0-51.6-41.9-93.5-93.5-93.5H368.6zM169.5 383.1c-12.7 0-23-10.3-23-23v-116c0-35.4 18.8-68.1 53-92.3C231.3 129.4 273 117 316.9 117h400c43.9 0 85.6 12.4 117.4 34.8 34.2 24.1 53 56.9 53 92.3v112c0 12.7-10.3 23-23 23s-23-10.3-23-23v-112c0-43.9-57-81.1-124.4-81.1h-400c-67.4 0-124.4 37.1-124.4 81.1v116c0 12.7-10.3 23-23 23zM260.2 928.7c-12.7 0-23-10.3-23-23v-67.2c0-12.7 10.3-23 23-23s23 10.3 23 23v67.2c0 12.7-10.3 23-23 23zM773.6 928.7c-12.7 0-23-10.3-23-23v-67.2c0-12.7 10.3-23 23-23s23 10.3 23 23v67.2c0 12.7-10.3 23-23 23z"
-          fill="#728BFF" p-id="15659"></path>
-        <path d="M462.7 228.5h-0.5l-19.6-0.7c-8.3-0.3-14.8-7.2-14.5-15.5 0.3-8.3 7.2-14.8 15.5-14.5l19.6 0.7c8.3 0.3 14.8 7.2 14.5 15.5-0.3 8.2-6.9 14.5-15 14.5zM796.2 344.9l-28.9-8s0 0.1-0.1 0.3c0-0.2 3.5-15.7-0.4-64.4-3-38.3-66.5-44.5-71.7-44.9H521.6c-8.3 0-15-6.7-15-15s6.7-15 15-15h174.9c0.9 0.1 23 1.5 45.9 10.1 42 15.9 52.7 42.7 54.3 62.4 4.3 53.8 0.3 71.5-0.5 74.5z"
-          fill="#FFFFFF" p-id="15660"></path>
-      </svg>
-      <div class="prompt">快来抢沙发</div>
+      <div class="prompt" @click="showField()">暂无评论,点击抢沙发</div>
     </div>
     <div class="container">
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
@@ -65,7 +52,7 @@
             <div class="comment-bar flex flex-align">
               <div class="date">{{timeAgo(item.create_time)}}</div>
               <div class="theme-color" @click="showField(item,'reply')">
-                <van-tag round size="medium" type="primary">{{item.replyList.length?item.replyList.length:''}}回复</van-tag>
+                <van-tag round size="large" type="primary">{{item.replyList.length?item.replyList.length:''}}回复</van-tag>
               </div>
             </div>
           </div>
@@ -101,7 +88,7 @@
               <i class="iconfont star highlight swing animated" v-if="item.isShoucang">&#xe64b;</i>
               <i class="iconfont" v-else> &#xe64c;</i>
             </div>
-            <div class="btn" v-else @click="shareShow = true">
+            <div class="btn" v-else @click="isShare">
               <i class="iconfont">&#xe96e;</i>
             </div>
           </div>
@@ -128,8 +115,10 @@
       </van-popup>
     </div>
 
-    <van-popup v-model="shareShow" position='bottom' get-container='#app'>
-      <share @show='imageShow = true' :postId='$route.query.id' :item='item' />
+    <van-popup v-model="shareShow" get-container='#app' class="share-popup">
+      <div class="share-img">
+        <img src="./../../assets/img/shareWord.png"/>
+      </div>
     </van-popup>
   </div>
 </template>
@@ -229,25 +218,27 @@ export default {
       }
     },
     addPraise(item) {
-      item.isZan = !item.isZan
-      let data = {
-        params: {
-          ajax: 1,
-          id: this.item.post_id
-        }
-      }
-
-      axios.get('/book/SchoolArticle/zan', data).then(res => {
-        if (res.data.status == 1) {
-          if (res.data.data.like == '1') {
-            item.zan_num = res.data.data.like
-            this.$toast.success({
-              className: 'zan-icon toast-icon',
-              message: '点赞成功'
-            })
+      if(this.$route.query.type!='preview'){
+        item.isZan = !item.isZan
+        let data = {
+          params: {
+            ajax: 1,
+            id: this.item.post_id
           }
         }
-      })
+
+        axios.get('/book/SchoolArticle/zan', data).then(res => {
+          if (res.data.status == 1) {
+            if (res.data.data.like == '1') {
+              item.zan_num = res.data.data.like
+              this.$toast.success({
+                className: 'zan-icon toast-icon',
+                message: '点赞成功'
+              })
+            }
+          }
+        })
+      }
     },
     addCollect(item) {
       item.isShoucang = !item.isShoucang
@@ -271,21 +262,23 @@ export default {
       })
     },
     showField(item, type) {
-      this.isLoading = false
-      this.message = ''
-      if (item) {
-        this.prompt = `回复：${item.username}`
-        this.commentId = item.comment_id
-      } else {
-        this.commentId = ''
-        this.prompt = '写评论'
-      }
-      this.show = true
-      this.$nextTick(() => {
-        this.$refs.field.focus()
-      })
+      if(this.$route.query.type!='preview'){
+        this.isLoading = false
+        this.message = ''
+        if (item) {
+          this.prompt = `回复：${item.username}`
+          this.commentId = item.comment_id
+        } else {
+          this.commentId = ''
+          this.prompt = '写评论'
+        }
+        this.show = true
+        this.$nextTick(() => {
+          this.$refs.field.focus()
+        })
 
-      type == 'reply' ? this.score = false : this.score = true
+        type == 'reply' ? this.score = false : this.score = true
+      }
     },
     getAvatar(img) {
       if (!img) {
@@ -322,6 +315,11 @@ export default {
           back_id: this.$route.query.id || this.$route.query.back_id
         }
       })
+    },
+    isShare(){
+      if(this.$route.query.type!='preview'){
+        this.shareShow = true
+      }
     }
   }
 }
@@ -496,5 +494,24 @@ export default {
 
 .score-rate {
   margin: 0.625rem /* 10/16 */ auto;
+}
+
+.share-img{
+  width: 100%;
+  position: relative;
+}
+
+.share-img img{
+  max-width:  250px;
+  width: 15.625rem /* 250/16 */;
+}
+</style>
+<style>
+.share-popup.van-popup{
+  background: transparent;
+  transform: none;
+  top:0;
+  left: auto;
+  right: 0;
 }
 </style>

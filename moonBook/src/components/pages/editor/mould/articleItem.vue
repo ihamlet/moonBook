@@ -4,8 +4,8 @@
       <van-row gutter="10">
         <van-col span="6">
           <div class="img-grid" @click="select">
-            <div class="photo-upload" v-if='item.photos'>
-              <img :src="photos.thumb" alt="" srcset="">
+            <div class="photo" v-if='item.photos'>
+              <img :src="item.photos.thumb" alt="" srcset="">
             </div>
           </div>
         </van-col>
@@ -14,16 +14,6 @@
             <div class="text-content" v-if='item.text' v-html="item.text.text" v-line-clamp:20="3"></div>
             <div class="add-text" v-else>
               <div class="description">点击添加文字</div>
-            </div>
-          </div>
-        </van-col>
-        <van-col span="2">
-          <div class="operation">
-            <div class="delete" @click="deleteArticle">
-              <i class="iconfont">&#xe651;</i>
-            </div>
-            <div class="sort">
-              <i class="iconfont">&#xe68d;</i>
             </div>
           </div>
         </van-col>
@@ -38,7 +28,7 @@
 </template>
 <script>
 import Publishing from './../Publishing'
-import { mapActions } from 'vuex'
+// import { mapActions } from 'vuex'
  
 export default {
   name: 'article-item',
@@ -52,13 +42,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions('beautifulArticle',['delete']),
+    // ...mapActions('beautifulArticle',['delete']),
     toPublishing() {
       this.$router.push({
         name: 'publishing',
         query: {
             index: this.index,
-            onClickType:'revise'
+            onClickType:'revise',
+            back: this.$route.query.back,
+            id: this.$route.query.id
         }
       })
     },
@@ -94,9 +86,6 @@ export default {
         index:this.index
       }
       this.$emit('doUpload',data)
-    },
-    deleteArticle(){
-      this.delete(this.index)
     }
   }
 }
@@ -113,7 +102,7 @@ export default {
   margin-top: 0;
 }
 
-.photo-upload img{
+.photo img{
     position: absolute;
     left: 0;
     top: 0;
@@ -126,18 +115,5 @@ export default {
   width: 100%;
   font-size: 1rem /* 16/16 */;
   color: #c0c4cc;
-}
-
-.operation {
-  width: 100%;
-  text-align: center;
-}
-
-.operation .delete {
-  margin-bottom: 0.625rem /* 10/16 */;
-}
-
-.publishing-popup {
-  height: 100vh;
 }
 </style>

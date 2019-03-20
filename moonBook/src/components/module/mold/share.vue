@@ -2,7 +2,7 @@
   <div class="share-box">
     <van-row class="svg-list">
       <van-col :span="userDataState.user_id==item.user_id?'24':'12'">
-        <div class='btn' @click="share">
+        <div class='btn'>
           <svg class="icon wechat" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
             viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3129">
             <path d="M1024 636.032c0-141.888-141.866667-257.429333-301.461333-257.429333-169.088 0-301.866667 115.541333-301.866667 257.429333 0 142.250667 132.778667 257.386667 301.866667 257.386667 35.370667 0 71.146667-9.024 106.496-17.642667l97.450667 53.418667-26.666667-88.789333C970.922667 786.965333 1024 715.84 1024 636.032zM624.618667 591.616c-17.642667 0-35.328-17.664-35.328-35.392 0-17.621333 17.685333-35.328 35.328-35.328 26.752 0 44.458667 17.706667 44.458667 35.328C669.077333 573.952 651.370667 591.616 624.618667 591.616zM820.010667 591.616c-17.664 0-35.306667-17.664-35.306667-35.392 0-17.621333 17.642667-35.328 35.306667-35.328 26.709333 0 44.416 17.706667 44.416 35.328C864.426667 573.952 846.293333 591.616 820.010667 591.616z"
@@ -27,13 +27,13 @@
       </van-col>
     </van-row>
 
-    <van-popup v-model="childShow" position='bottom'  get-container='#app'>
+    <!-- <van-popup v-model="childShow" position='bottom'  get-container='#app'>
       <van-picker show-toolbar :columns="children" value-key='name' @change="onChange" title='收录到' @confirm='selectChild' @cancel='childShow = false'/>
     </van-popup>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
       <topic-list @close='show = false' @select='selectTag' @confirm='selectConfirm' type='share' :topicList='topicList'/>
-    </van-popup>
+    </van-popup> -->
   </div>
 </template>
 <script>
@@ -95,11 +95,6 @@ export default {
           this.cateId = res.data[0].cate_id
         }
       })
-    },
-    share(){
-      Cookies.set('shareLink', location.href)
-      location.href = `/book/weixin/share?back_url=${encodeURIComponent(location.href)}&id=${this.$route.query.id}&type=文章`
-      this.$emit('hide')
     },
     onChange(picker, values){
       this.childId = values.id

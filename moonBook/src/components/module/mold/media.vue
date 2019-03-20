@@ -6,12 +6,11 @@
     <!-- 视频  -->
     <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"'>
       <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
-        <div class="video-thumb"  v-if='videoItem&&videoItem.is_video == "1"' @click="toVideoPage(videoItem)">
+        <div class="video-thumb" :class="videoItem.rotate == '90'?'vertical':''" v-if='videoItem&&videoItem.is_video == "1"' @click="toVideoPage(videoItem)">
           <div class="player">
             <i class="iconfont">&#xe639;</i>
           </div>
           <img :src="item.cover" alt="视频封面"/>
-          <van-tag class="photo-tag" size="medium" color='#7232dd'>{{videoIndex > 1?'视频专辑':'视频'}}</van-tag>
           <van-tag class="duration" size="medium" color="rgba(0,0,0,.5)">{{getDuration(videoItem.duration)}}</van-tag>
         </div>
       </div>
@@ -22,7 +21,7 @@
         <van-row :gutter="4">
           <van-col :span="grid" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
             <div class="img-grid" :class="[item.photos.length == 1&&photo.height/photo.width > 18/9?'long':'',item.photos.length == 1&&type=='details'?'alone':'']" v-if='photo&&photo.is_video==0 && photo.is_audio == 0'>
-              <img class="img-preview" :class="[photo.height/photo.width > 18/9?'long':'']" :src="photo.thumb" :large="photo.photo" :preview='photo.post_id' />
+              <img class="img-preview" :class="[photo.height/photo.width > 2?'long':'']" :src="photo.thumb" :large="photo.photo" :preview='photo.post_id' />
               <van-tag class="photo-tag" type="primary" v-if='photo.height/photo.width > 18/9&&type=="card"'>长图</van-tag>
             </div>
           </van-col>
@@ -103,7 +102,7 @@ export default {
 }
 
 .layout-4 {
-  width: 70%;
+  width: 60%;
 }
 
 .text{
@@ -115,6 +114,12 @@ export default {
   position: relative;
   float: left;
   margin-bottom: .625rem /* 10/16 */;
+}
+
+.video-thumb.vertical{
+  width: 8.75rem /* 140/16 */;
+  height: 13.75rem /* 220/16 */;
+  overflow: hidden;
 }
 
 .text,

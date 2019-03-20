@@ -7,7 +7,7 @@
             <i class="iconfont">&#xe606;</i>
           </span>
           <div class="content flex flex-align flex-justify" slot="title">
-            <show-card :imgList="imgList" :text='zoomCard.details'/>
+            <show-card :imgList="imgList" :text='text'/>
           </div>
         </van-cell>
       </van-cell-group>
@@ -30,6 +30,16 @@ export default {
       }else{
         return ''
       }
+    },
+    text(){
+      let text
+      if(this.zoomCard.details.length > 1){
+        text = this.zoomCard.details
+      }else{
+        text = this.zoomCard.title
+      }
+
+      return `《${this.zoomCard.title}》`
     }
   },
   methods: {

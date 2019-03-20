@@ -1,10 +1,10 @@
 <template>
-  <div class="article">
+  <div class="article page-padding">
     <van-nav-bar :border='false' :left-text="this.$route.query.back?'返回':'发现'" left-arrow fixed :zIndex='100' @click-left="onClickLeft">
       <div class="head-bar-title" slot="title">
         <transition name="slide-fade" mode="out-in">
           <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
-            {{$route.meta.title}}
+            {{$route.query.type=='preview'?'预览':$route.meta.title}}
           </div>
           <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else @click="toZoom">
             <div class="avatar" v-if='item.user'>
@@ -27,16 +27,12 @@
       </div>
       <div class="module">
         <article-content :item='item' @onScrollDomShow='onScrollDomShow'/>
+        <articleOperation :item='item'/>
       </div>
       <div>
         <comment :item='item' include='include'/>
       </div>
     </div>
-
-    <!-- 生成图片 -->
-    <!-- <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
-      <article-share :item='item' :userName='item.user?item.user.username:""' :qrImage='qrImage' @close='imageShow = false'/>
-    </van-popup> -->
   </div>
 </template>
 <script>
@@ -44,10 +40,12 @@ import axios from './../lib/js/api'
 
 import QRCode from "qrcode"
 import articleShare from './../module/mold/articleShare'
+import articleOperation from './../module/mold/articleOperation'
 import comment from './../module/comment'
 import articleContent from './../module/articleContent'
 import vipLevel from './../module/animate/svg/vipLevel'
 import userCard from './../module/mold/userCard'
+import { mapState, mapGetters,mapActions } from 'vuex'
 
 export default {
   name: 'detailsArticle',
@@ -56,7 +54,13 @@ export default {
     comment,
     articleShare,
     vipLevel,
-    userCard
+    userCard,
+    articleOperation
+  },
+  computed: {
+    ...mapState(['slogan','logo']),
+    ...mapGetters(['userDataState']),
+    ...mapGetters('beautifulArticle',['getArticleContent','getTitle'])
   },
   data() {
     return {
@@ -71,19 +75,61 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    this.fetchData()    
+  },
+  //数据加载完成后执行该方法
+  updated (){
+    this.$nextTick(()=>{
+      let toast = this.$toast
+      let data = {
+        item: this.item,
+        success(){
+          toast('分享成功')
+        }
+      }
+
+      this.share(data)
+    })
   },
   watch: {
     '$router': 'fetchData'
   },
   methods: {
+    ...mapActions('openWX',['share']),
     fetchData() {
-      this.qrcode()
-      axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id||this.$route.query.back_id}`).then(res => {
-        if(res.data.status == 1){
-          this.item = res.data.data.post
+      if(this.$route.query.type == 'preview'){
+        this.item = {
+          details:this.getArticleContent,
+          create_time: Math.floor(new Date().getTime()/1000),
+          views:'999+',
+          title: this.getTitle,
+          template_id:'0',
+          user:{
+            avatar: this.userDataState.avatar,
+            username: this.userDataState.name,
+            user_id: this.userDataState.id
+          },
+          card_level:{
+            level: this.userDataState.card_level
+          },
+          school:{
+            title: this.userDataState.school_name
+          }
+        } 
+      }else{
+        let articleDetailData = {
+          params:{
+            ajax:1,
+            id:this.$route.query.id||this.$route.query.back_id
+          }
         }
-      })
+
+        axios.get('/book/SchoolArticle/detail',articleDetailData).then(res => {
+          if(res.data.status == 1){
+            this.item = res.data.data.post
+          }
+        })
+      }
     },
     onScrollDomShow(bl){
       this.themeBarSearch = bl
@@ -95,29 +141,31 @@ export default {
           name: this.$route.query.back,
           query: {
             id: this.$route.query.back_id,
+            type: this.$route.query.type,
+            back: this.$route.query.back_name
           }
         })
       }else if(this.$route.query.back){
-        this.$router.push({
-          name: this.$route.query.back,
-          query: {
-            id: this.$route.query.back_id,
-            tid: this.$route.query.tid
-          }
-        })
+          this.$router.push({
+            name: this.$route.query.back,
+            query: {
+              id: this.$route.query.back_id,
+              tid: this.$route.query.tid
+            }
+          })
       }else{
         this.$router.push({
           name:'apps-find'
         })
       }
     },
-    qrcode() {
-      QRCode.toDataURL(window.location.href).then(url => {
-        this.qrImage = url
-      }).catch(err => {
-        console.error(err)
-      })
-    },
+    // qrcode() {
+    //   QRCode.toDataURL(window.location.href).then(url => {
+    //     this.qrImage = url
+    //   }).catch(err => {
+    //     console.error(err)
+    //   })
+    // },
     getAvatar(img) {
         let pos = img.indexOf('http://')
         let result
@@ -142,10 +190,10 @@ export default {
       })
     },
     follow(item){
-        item.isSubscribe = !item.isSubscribe
-        axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res=>{
-            this.$toast.success(res.data.msg)
-        })
+      item.isSubscribe = !item.isSubscribe
+      axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res=>{
+          this.$toast.success(res.data.msg)
+      })
     }
   }
 }

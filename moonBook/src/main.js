@@ -6,7 +6,6 @@ import Vuex from 'vuex'
 import App from './App'
 import router from './router'
 import store from './store/index'
-import axios from './../src/components/lib/js/api'
 
 // 高德地图vue组件
 import VueAMap from 'vue-amap'
@@ -30,7 +29,7 @@ let options = {
 
 Vue.use(preview,options)
 
-Vue.prototype.$axios = axios
+
 
 Vue.use(Vuex)
 Vue.use(Vant)

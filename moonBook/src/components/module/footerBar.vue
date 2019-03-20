@@ -8,7 +8,7 @@
     </van-tabbar>
 
     <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar'>
-      <tips :isShow='show' position='bottom' @percent='percent' @close='show = false'/>
+      <tips :isShow='show' position='bottom' @close='show = false'/>
     </van-popup>
   </div>
 </template>
@@ -54,15 +54,6 @@ export default {
       }
 
       this.active = this.$route.meta.tabActive
-    },
-    percent(){
-        this.$toast.loading({
-            mask: false
-        })
-
-        if(val == 100){
-            this.$toast.clear()
-        }
     }
   }
 }

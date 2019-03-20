@@ -134,12 +134,12 @@ export default {
 }
 
 .name{
-  max-width: 110px;
+  max-width: 80px;
 }
 
 .video-cover {
-  width: 210px;
-  height: 130px;
+  width: 11.25rem /* 180/16 */;
+  padding-bottom: 130%;
   overflow: hidden;
   border-radius: 0.3125rem /* 5/16 */;
   margin-bottom: 0.3125rem /* 5/16 */;

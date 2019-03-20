@@ -245,10 +245,11 @@ export default {
       }
     },
     toBookDetails(item) {
+      console.log(item)
       this.$router.push({
         name: 'book-details',
         query: {
-          id: item.book_id
+          id: item.post_id
         }
       })
     },
