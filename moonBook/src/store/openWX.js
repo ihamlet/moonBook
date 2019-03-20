@@ -88,14 +88,14 @@ export default {
     selectImg(context, products){
         wx.chooseImage({
             count: 9,
-            sizeType: ['original', 'compressed'],
+            sizeType: ['compressed'],
             sourceType: ['album', 'camera'], 
             success(res){
                 let localIds = res.localIds 
                 localIds.forEach(element => {
                     wx.uploadImage({
-                        localId: element.replace('wxLocalResource://imageid',''),
-                        isShowProgressTips: 0, 
+                        localId: element,
+                        isShowProgressTips: 1, 
                         success(res){
                             let data = {
                                 params:{
