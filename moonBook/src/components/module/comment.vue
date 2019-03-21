@@ -495,23 +495,5 @@ export default {
 .score-rate {
   margin: 0.625rem /* 10/16 */ auto;
 }
-
-.share-img{
-  width: 100%;
-  position: relative;
-}
-
-.share-img img{
-  max-width:  250px;
-  width: 15.625rem /* 250/16 */;
-}
 </style>
-<style>
-.share-popup.van-popup{
-  background: transparent;
-  transform: none;
-  top:0;
-  left: auto;
-  right: 0;
-}
-</style>
+

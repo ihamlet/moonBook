@@ -173,8 +173,9 @@ export default {
             this.active = val
         },
         toAccept(){
-            this.applyShow = true
-            this.active = 0
+            this.$router.push({
+                name:'AcceptSchoolList'
+            })
         },
         toTips(){
            this.tipsShow = !this.tipsShow

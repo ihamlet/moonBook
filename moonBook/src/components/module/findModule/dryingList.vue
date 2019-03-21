@@ -37,7 +37,7 @@ export default {
   },
   props: ['sort', 'tid', 'school_id', 'type', 'portal_name', 'cid', 'banji_id','cateId'],
   computed: {
-    ...mapGetters(['userToken', 'managerState']),
+    ...mapGetters(['userToken', 'managerState','userDataState']),
     manage() {
       if (this.managerState) {
         let boolean
@@ -263,9 +263,44 @@ export default {
           })
           this.show = false
           break
-        case 2:
-          this.actionsheetShow = true
-          this.show = false
+          case 2:
+            if(this.managerState.length){
+              this.actionsheetShow = true
+            }else{
+              let data = {
+                title:'',
+                message:'',
+                routeName:''
+              }
+
+              switch('0'){
+                case this.userDataState.school_id:
+                  data.title = '请加入学校',
+                  data.message = '加入学校，及时了解学校动态',
+                  data.routeName = 'edit-school'
+                break
+                case this.userDataState.banji_id:
+                  data.title = '请加入班级',
+                  data.message = '加入班级，及时了解班级动态',
+                  data.routeName = 'edit-class'
+                break
+              }
+
+              this.$dialog.confirm({
+                title: data.title,
+                message: data.message,
+                cancelButtonText:'稍后',
+                confirmButtonText:'加入'
+              }).then(() => {
+                this.$router.push({
+                  name: data.routeName
+                })
+              }).catch(() => {
+                
+              })
+
+              this.show = false
+          }
           break
         case 3:
           this.reportShow = true

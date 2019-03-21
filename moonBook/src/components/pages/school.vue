@@ -35,9 +35,8 @@
           <div class="flex flex-align type-select">
             <div class="school-type">学校类型</div>
             <div class="select-type flex flex-align">
-              <div v-for='(item,index) in shcoolType' :key="index" @click="selectSchoolType(item,index)">
-                <van-button size="small" class="theme-btn" type="primary" :plain='schoolTypeIndex==index?false:true'
-                  round>{{item.name}}</van-button>
+              <div class="select-btn" v-for='(item,index) in shcoolType' :key="index" @click="selectSchoolType(item,index)">
+                <van-button size="small" class="theme-btn" type="primary" :plain='schoolTypeIndex==index?false:true' round>{{item.name}}</van-button>
               </div>
             </div>
           </div>

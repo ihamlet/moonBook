@@ -8,7 +8,8 @@ export default {
     slogan: "阅读照亮人生",
     logo: `${location.origin}/Public/lib/bookshelf/img/logo.png`,
     ready: "",
-    imgList:[]
+    imgList:[],
+    resultStr:''
   },
   getters: {
 
@@ -33,6 +34,9 @@ export default {
 
            state.imgList.push(data)
         }
+    },
+    setResultStr(state,params){
+      state.resultStr = params
     }
   },
   actions: {
@@ -58,16 +62,11 @@ export default {
         let desc
 
         if (products.item.template_id == "0" && products.item.hasvideo != "1") {
-          title = `【阅亮书架】#${products.item.cate.cate_name}#${
-            products.item.title
-          }`
+          title = `【阅亮书架】#${products.item.cate.cate_name}#${products.item.title}`
           desc = context.state.slogan
         } else {
           title = "阅亮书架"
-          desc =
-            products.item.hasvideo == "1"
-              ? `[小视频]${context.state.slogan}`
-              : products.item.details
+          desc = products.item.hasvideo == "1"? `[小视频]${context.state.slogan}`: products.item.details
         }
 
         let data = {
@@ -84,35 +83,52 @@ export default {
         wx.onMenuShareAppMessage(data)
       }
     },
-    //拍照或从手机相册中选图接口
+    //图片接口
     selectImg(context, products){
         wx.chooseImage({
-            count: 9,
+            count: products,
             sizeType: ['compressed'],
             sourceType: ['album', 'camera'], 
             success(res){
                 let localIds = res.localIds 
-                localIds.forEach(element => {
+                let i = 0 
+                let length = localIds.length
+                function upload(){
                     wx.uploadImage({
-                        localId: element,
-                        isShowProgressTips: 1, 
-                        success(res){
-                            let data = {
-                                params:{
-                                    id: res.serverId
-                                }
+                      localId: localIds[i],
+                      isShowProgressTips: 1, 
+                      success(res){
+                        i++
+                        let data = {
+                            params:{
+                                id: res.serverId
                             }
-                            axios.get('/book/file/upload_weixin_img',data).then(res=>{
-                                switch(res.data.status){
-                                    case 1:
-                                        context.commit('setImg',res.data.data)
-                                    break
-                                }
-                            })
                         }
-                    })
-                })
+                        axios.get('/book/file/upload_weixin_img',data).then(res=>{
+                            switch(res.data.status){
+                                case 1:
+                                    context.commit('setImg',res.data.data)
+                                break
+                            }
+                        })
+                        if (i < length) {
+                          upload()
+                        }
+                      }
+                  })
+                }
+                upload()
             }
+        })
+    },
+    //扫一扫接口
+    scanQRcode(){
+      wx.scanQRCode({
+        needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+        scanType: ["barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+          success: function (res) {
+            context.commit('setResultStr',res.resultStr)
+          }
         })
     }
   }

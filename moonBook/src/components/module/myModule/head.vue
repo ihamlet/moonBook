@@ -1,6 +1,6 @@
 <template>
   <div class="head head-background" ref="head">
-    <van-nav-bar :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" fixed :title="fixedHeaderBar?$route.meta.title:userInfo.name"
+    <van-nav-bar :border='false' :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" fixed :title="fixedHeaderBar?$route.meta.title:userInfo.name"
       @click-left="onClickLeft">
       <div class="head-bar-icon" slot="left">
         <i class="iconfont">&#xe60e;</i>

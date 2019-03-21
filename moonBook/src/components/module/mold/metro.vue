@@ -7,7 +7,7 @@
                         <div class="info">
                             <div class="title">书架</div>
                             <div class="sub">阅亮书架</div>
-                            <van-button class="button" type="info" round size="mini">立即查看</van-button>
+                            <van-button class="theme-button" type="info" round size="mini">立即查看</van-button>
                         </div>
                         <img class="bg-img book-shelf" src="./../../../assets/img/book-shelf.png"/>
                         <div class="circle"></div>
@@ -20,7 +20,7 @@
                         <div class="info">
                             <div class="title">每日任务:4/5</div>
                             <div class="sub">好的习惯贵在坚持</div>
-                            <van-button class="button" type="info" round size="mini">立即查看</van-button>
+                            <van-button class="theme-button" type="info" round size="mini">立即查看</van-button>
                         </div>
                     </div>
                     <img class="bg-img book-task" src="./../../../assets/img/task.png"/>
@@ -101,7 +101,7 @@ export default {
     top: 0;
 }
 
-.button{
+.theme-button{
     margin-top: .625rem /* 10/16 */;
 }
 

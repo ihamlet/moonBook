@@ -3,30 +3,56 @@
     <van-nav-bar :border='false' title="邀请" fixed :left-text="$route.query.back?'返回':'首页'" left-arrow @click-left="onClickLeft" />
     <div class="pictorial"></div>
     <div class="btn">
-      <van-button class="theme-btn" round :loading='isLoading' :plain='!is_mine' type="primary" size="large" @click="addFamily">{{is_mine?'分享到家庭群':'加 入'}}</van-button>
+      <van-button class="theme-btn" round :loading='isLoading' :plain='!is_mine' type="primary" size="large" @click="addFamily">{{is_mine?'分享到给家人或朋友圈':'加 入'}}</van-button>
     </div>
     <div class="copyright">阅亮书架</div>
+
+    <van-popup v-model="shareShow" get-container='#app' class="share-popup">
+      <div class="share-img">
+        <img src="./../../../assets/img/shareWord.png"/>
+      </div>
+    </van-popup>
   </div>
 </template>
 <script>
 import Cookies from 'js-cookie'
 import axios from './../../lib/js/api'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'add-family',
   data() {
     return {
       isLoading: false,
-      is_mine: ''
+      shareShow:false,
+      is_mine: '',
+      item:{
+        template_id: '1',
+        cate_name:'分享',
+        details:'邀您打造宝贝主页'
+      }
     }
   },
   created () {
     this.fetchData()
   },
+  updated () {
+    this.$nextTick(()=>{
+      let data = {
+        item: this.item,
+        success(){
+          console.log('微信分享')
+        }
+      }
+
+      this.share(data)
+    })
+  },
   watch: {
     '$router':'fetchData'
   },
   methods: {
+    ...mapActions('openWX',['share']),
     fetchData(){
       axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res=>{
         if(res.data.status = 1){
@@ -36,9 +62,8 @@ export default {
     },
     addFamily() {
       if(this.is_mine){
-        this.share()
+        this.shareShow = true
       }else{
-    
         axios.get(`/book/babyParent/join?child_id=${this.$route.query.id}`).then(res => {
           this.isLoading = true
           if(res.status == 1){
@@ -66,11 +91,6 @@ export default {
             name:'home'
         })  
       }
-    },
-    share(){
-      Cookies.set('shareLink', location.href)
-      location.href = `/book/weixin/share?back_url=${encodeURIComponent(location.href)}&id=${this.$route.query.id}&type=文章`
-      this.hide()
     },
     onClickLeft(){
       this.$router.push({
@@ -104,14 +124,5 @@ export default {
   line-height: 2.25rem /* 36/16 */;
   color: #909399;
   font-size: 0.8125rem /* 13/16 */;
-}
-
-.share-word {
-  background: transparent;
-}
-
-.share-img {
-  width: 18.75rem /* 300/16 */;
-  float: right;
 }
 </style>

@@ -39,7 +39,6 @@
 import axios from './../lib/js/api'
 
 import QRCode from "qrcode"
-import articleShare from './../module/mold/articleShare'
 import articleOperation from './../module/mold/articleOperation'
 import comment from './../module/comment'
 import articleContent from './../module/articleContent'
@@ -52,10 +51,9 @@ export default {
   components: {
     articleContent,
     comment,
-    articleShare,
     vipLevel,
     userCard,
-    articleOperation
+    articleOperation,
   },
   computed: {
     ...mapState(['slogan','logo']),
@@ -80,11 +78,10 @@ export default {
   //数据加载完成后执行该方法
   updated (){
     this.$nextTick(()=>{
-      let toast = this.$toast
       let data = {
         item: this.item,
         success(){
-          toast('分享成功')
+          console.log('微信分享')
         }
       }
 

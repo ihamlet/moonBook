@@ -85,11 +85,10 @@ export default {
   },
   updated (){
     this.$nextTick(()=>{
-      let toast = this.$toast
       let data = {
         item: this.item,
         success(){
-          toast('分享成功')
+          console.log('微信分享')
         }
       }
 

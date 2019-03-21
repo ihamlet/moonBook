@@ -26,7 +26,7 @@
                   <van-col span="6">
                     <div class="flex flex-align button">
                       <div class="like" @click="addCollect(item)">
-                        <i class="iconfont" v-if='item.isShoucang'></i>
+                        <i class="iconfont" v-if='item.is_collect'>&#xe668;</i>
                         <i class="iconfont" v-else>&#xe669;</i>
                       </div>
                       <div class="listening" @click="listening(item)">
@@ -232,12 +232,12 @@ export default {
     },
     listening(item) {
       let p = /（.+?）/
-      let pureTitle = item.book.title.replace(p, '')
+      let pureTitle = item.title.replace(p, '')
       let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
-      let isRead = localStorage.getItem('bookRead_' + item.book_id)
+      let isRead = localStorage.getItem('bookRead_' + item.tushu_id)
       if (!isRead) {
         axios.get('/book/story/updateRead').then(res => {
-          localStorage.setItem('bookRead_' + item.book_id, true)
+          localStorage.setItem('bookRead_' + item.tushu_id, true)
           location.href = url
         })
       } else {
@@ -245,7 +245,6 @@ export default {
       }
     },
     toBookDetails(item) {
-      console.log(item)
       this.$router.push({
         name: 'book-details',
         query: {
@@ -254,19 +253,22 @@ export default {
       })
     },
     addCollect(item) {
-      item.isShoucang = !item.isShoucang
-      console.log('/book/SchoolShelfBook/getList','收藏没有isShoucang')
-      console.log('bookId',item.book_id)
+      console.log('接口:/book/member/add_favorite',item)
+      item.is_collect = !item.is_collect
 
-      axios.get(`/book/SchoolArticleCollect/add?post_id=${item.book_id}`).then(res => {
-        if (res.data.status == 1) {
-          if (res.data.data) {
-            item.collect_num = res.data.data.collect_num
-            this.$toast.success({
-              className: 'shoucang-icon toast-icon',
-              message: '收藏成功'
-            })
+      let data = {
+          params:{
+            target_id: item.tushu_id, 
+            type_id: 5
           }
+      }
+
+      axios.get('/book/member/add_favorite',data).then(res => {
+        if (res.data.status == 1) {
+          this.$toast.success({
+            className: 'like-icon toast-icon',
+            message: '喜欢'
+          })
         }
       })
     }
