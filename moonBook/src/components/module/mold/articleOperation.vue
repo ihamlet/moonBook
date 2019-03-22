@@ -2,10 +2,10 @@
   <div class="article-operation">
     <div class="btn-warp flex flex-align">
       <div class="flex-btn">
-        <van-button class="theme-btn tuijian" round size="normal" type="primary" @click="actionsheetShow = true"> <i class="iconfont">&#xe668;</i> 推荐</van-button>
+        <van-button class="theme-btn tuijian" round size="normal" type="primary" @click="recommend"> <i class="iconfont">&#xe668;</i> 推荐</van-button>
       </div>
       <div class="flex-btn">
-        <van-button class="theme-btn shoulu" round size="normal" type="primary" @click="childShow = true"> <i class="iconfont">&#xe6ea;</i> 收录</van-button>
+        <van-button class="theme-btn shoulu" round size="normal" type="primary" @click="selectChildren"> <i class="iconfont">&#xe6ea;</i> 收录</van-button>
       </div>
     </div>
 
@@ -23,7 +23,7 @@
 <script>
 import axios from './../../lib/js/api'
 import topicList from './../../module/release/topicList'
-import { mapGetters } from 'vuex'
+import { mapGetters,mapActions } from 'vuex'
 
 export default {
   name: 'article-operation',
@@ -69,20 +69,28 @@ export default {
     "$router":'fetchData'  
   },
   methods: {
+    ...mapActions(['getUserData']),
     fetchData(){
-      let babyListData = {
-        params:{
-          sort:'old',
-          user_id:this.userDataState.user_id
-        }
-      }
+      this.getUserData().then(res=>{
+        if(res.user_id){
+          let babyListData = {
+            params:{
+              sort:'old',
+              user_id:res.user_id
+            }
+          }
 
-      axios.get('/book/baby/getList',babyListData).then(res => {
-        if(res.data.status == 1){
-          this.children = res.data.data
-          this.childId = res.data.data[0].id
+          axios.get('/book/baby/getList',babyListData).then(res => {
+            if(res.data.status == 1&&res.data.data.length){
+              this.children = res.data.data
+              this.childId = res.data.data[0].id
+            }
+          })
+        }else{
+          this.$toast('获取用户信息失败')
         }
       })
+
 
       let cateListData = {
         params:{
@@ -165,6 +173,65 @@ export default {
       })
 
       this.show = false
+    },
+    recommend(){
+      if(this.managerState.length){
+        this.actionsheetShow = true
+      }else{
+        let data = {
+          title:'',
+          message:'',
+          routeName:''
+        }
+
+        switch('0'){
+          case this.userDataState.school_id:
+            data.title = '请加入学校',
+            data.message = '加入学校，及时了解学校动态',
+            data.routeName = 'edit-school'
+          break
+          case this.userDataState.banji_id:
+            data.title = '请加入班级',
+            data.message = '加入班级，及时了解班级动态',
+            data.routeName = 'edit-class'
+          break
+        }
+
+        this.$dialog.confirm({
+          title: data.title,
+          message: data.message,
+          cancelButtonText:'稍后',
+          confirmButtonText:'加入'
+        }).then(() => {
+          this.$router.push({
+            name: data.routeName
+          })
+        }).catch(() => {
+          
+        })
+
+      }   
+    },
+    selectChildren(){
+      if(this.children.length){
+        this.childShow = true
+      }else{
+        this.$dialog.confirm({
+          title: '请添加宝贝',
+          message: '添加宝贝，掌握孩子阅读数据，亲子阅读邀请你来参加',
+          cancelButtonText:'稍后',
+          confirmButtonText:'添加'
+        }).then(() => {
+          this.$router.push({
+            name:'edit-child',
+            query:{
+              type:'add'
+            }
+          })
+        }).catch(() => {
+          
+        })
+      }
     }
   }
 }

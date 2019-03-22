@@ -2,12 +2,12 @@
   <div class="article-tips">
     <div class="add">
       <div class="insert">
-        <i class="iconfont" @click="onClickTipsShow">&#xe728;</i>
+        <i class="iconfont">&#xe728;</i>
       </div>
     </div>
 
     <transition leave-active-class="bounceOut" enter-active-class="bounceIn" class='case'>
-      <div class="list flex flex-align" v-show='isTipsShow(index)'>
+      <div class="list flex flex-align" v-show='isTipsShow'>
         <div class="icon-item" v-for='(item,itemIndex) in tipsList' :key="itemIndex" @click="select(item)">
           <div class="iconfont" :class="item.icon"></div>
           <span>{{item.name}}</span>
@@ -28,7 +28,19 @@ export default {
   name: 'article-tips',
   props: ['type', 'index', 'show'],
   computed: {
-    ...mapGetters('beautifulArticle', ['getArticleList'])
+    ...mapGetters('beautifulArticle', ['getArticleList']),
+    isTipsShow(){
+        let b = false
+        if(this.getArticleList.length){
+          if(this.index == this.getArticleList.length){
+            b = true
+          }
+        }else{
+          b = true
+        }
+        
+        return b
+    }
   },
   data() {
     return {
@@ -51,16 +63,14 @@ export default {
       data: {
         text: '',
         photos: []
-      },
-      tipsShow: false
+      }
     }
   },
+  updated () {
+
+  },
   methods: {
-    onClickTipsShow() {
-      this.tipsShow = !this.tipsShow
-    },
     select(item) {
-      this.tipsShow = !this.tipsShow
       switch (item.index) {
         case 0:
           this.$refs.selectPhoto.$refs.input.click()
@@ -89,18 +99,6 @@ export default {
       }
 
       this.$emit('onRead', data)
-    },
-    isTipsShow(index){
-      let b 
-      if(this.getArticleList.length){
-        if(index == this.getArticleList.length){
-          b = !this.tipsShow
-        }
-      }else{
-        b = !this.tipsShow
-      }
-      
-      return b
     },
     doUpload(e) {
       let data = {

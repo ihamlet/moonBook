@@ -39,7 +39,14 @@ export default {
   },
   methods: {
     onLoad(){
-      axios.get(`/book/babyParent/getList?child_id=${this.$route.query.id}&is_close=1`).then(res => {
+      let data = {
+        params:{
+          child_id: this.$route.query.id,
+          is_close: 1
+        }
+      }
+
+      axios.get('/book/babyParent/getList',data).then(res => {
         this.count = res.data.count
         this.list = res.data.data
         this.loading = false

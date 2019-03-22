@@ -1,36 +1,41 @@
 <template>
   <div class="article page-padding">
-    <van-nav-bar :border='false' :left-text="this.$route.query.back?'返回':'发现'" left-arrow fixed :zIndex='100' @click-left="onClickLeft">
-      <div class="head-bar-title" slot="title">
-        <transition name="slide-fade" mode="out-in">
-          <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
-            {{$route.query.type=='preview'?'预览':$route.meta.title}}
-          </div>
-          <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else @click="toZoom">
-            <div class="avatar" v-if='item.user'>
-              <img :src="getAvatar(item.user.avatar)" :alt="item.user.username" @error='imgError'>
+    <div class="cover" v-if='item.template_id == 0'>
+      <img :src="item.cover" />
+    </div>
+    <div class="page-container">
+      <van-nav-bar :border='false' :class="item.template_id == 0&&!themeBarSearch?'theme-nav':''" :left-text="this.$route.query.back?'返回':'发现'" left-arrow fixed :zIndex='100' @click-left="onClickLeft">
+        <div class="head-bar-title" slot="title">
+          <transition name="slide-fade" mode="out-in">
+            <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
+              {{$route.query.type=='preview'?'预览':$route.meta.title}}
             </div>
-            <div class="name" v-if='item.user'>{{item.user.username}}</div>
-            <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
-          </div>
-        </transition>
-      </div>
-      <div class="head-bar-right" slot="right" v-if='item.isSubscribe!=3'>
-        <transition name="slide-fade" mode="out-in">
-           <van-button size="small" v-if='themeBarSearch' class="theme-btn" :plain='item.isSubscribe?true:false' type="primary" round @click="follow(item)">{{item.isSubscribe?'已关注':'关注'}}</van-button>
-        </transition>
-      </div>
-    </van-nav-bar>
-    <div class="container">
-      <div class="module-user-card page-padding">
-        <userCard :item='item' v-if='item.template_id != "0"'/>
-      </div>
-      <div class="module">
-        <article-content :item='item' @onScrollDomShow='onScrollDomShow'/>
-        <articleOperation :item='item'/>
-      </div>
-      <div>
-        <comment :item='item' include='include'/>
+            <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else @click="toZoom">
+              <div class="avatar" v-if='item.user'>
+                <img :src="getAvatar(item.user.avatar)" :alt="item.user.username" @error='imgError'>
+              </div>
+              <div class="name" v-if='item.user'>{{item.user.username}}</div>
+              <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
+            </div>
+          </transition>
+        </div>
+        <div class="head-bar-right" slot="right" v-if='item.isSubscribe!=3'>
+          <transition name="slide-fade" mode="out-in">
+            <van-button size="small" v-if='themeBarSearch' class="theme-btn" :plain='item.isSubscribe?true:false' type="primary" round @click="follow(item)">{{item.isSubscribe?'已关注':'关注'}}</van-button>
+          </transition>
+        </div>
+      </van-nav-bar>
+      <div class="container" :class="item.template_id == 0?'noTop':''">
+        <div class="module-user-card page-padding">
+          <userCard :item='item' v-if='item.template_id != "0"'/>
+        </div>
+        <div class="module">
+          <article-content :item='item' @onScrollDomShow='onScrollDomShow'/>
+          <articleOperation :item='item'/>
+        </div>
+        <div>
+          <comment :item='item' include='include'/>
+        </div>
       </div>
     </div>
   </div>
@@ -39,7 +44,6 @@
 import axios from './../lib/js/api'
 
 import QRCode from "qrcode"
-import articleShare from './../module/mold/articleShare'
 import articleOperation from './../module/mold/articleOperation'
 import comment from './../module/comment'
 import articleContent from './../module/articleContent'
@@ -52,10 +56,9 @@ export default {
   components: {
     articleContent,
     comment,
-    articleShare,
     vipLevel,
     userCard,
-    articleOperation
+    articleOperation,
   },
   computed: {
     ...mapState(['slogan','logo']),
@@ -80,11 +83,10 @@ export default {
   //数据加载完成后执行该方法
   updated (){
     this.$nextTick(()=>{
-      let toast = this.$toast
       let data = {
         item: this.item,
         success(){
-          toast('分享成功')
+          console.log('微信分享')
         }
       }
 
@@ -191,7 +193,13 @@ export default {
     },
     follow(item){
       item.isSubscribe = !item.isSubscribe
-      axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res=>{
+      let data = {
+        params:{
+          user_id: item.user_id
+        }
+      }
+
+      axios.get('/book/MemberFollow/subscribe',data).then(res=>{
           this.$toast.success(res.data.msg)
       })
     }
@@ -203,6 +211,13 @@ export default {
   background: #f2f6fc;
   padding-top: 2.8125rem /* 45/16 */;
   padding-bottom: 3.125rem /* 50/16 */;
+}
+
+.container.noTop{
+  padding-top: 0;
+  border-radius: .625rem /* 10/16 */ .625rem /* 10/16 */ 0 0;
+  margin-top: -.625rem /* 10/16 */;
+  overflow: hidden;
 }
 
 .head-bar-title .avatar,
@@ -248,5 +263,9 @@ export default {
 .module-user-card{
   padding: 0 10px;
   background: #fff;
+}
+
+.cover{
+  height: 10.625rem /* 170/16 */;
 }
 </style>

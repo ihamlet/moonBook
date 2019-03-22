@@ -30,6 +30,8 @@ import Information from '@/components/pages/invite/information'
 
 import BorrowList from '@/components/pages/borrowList'
 
+import Bookshelf from '@/components/pages/bookshelf'
+
 import Article from '@/components/pages/article'
 import BookDetails from '@/components/pages/bookDetails'
 
@@ -201,6 +203,14 @@ export default new Router({
             title: '我的书',
             isFooterBar: false
           }
+        },
+        {
+          path: '/bookshelf',
+          name: 'bookshelf',
+          component: Bookshelf,
+          meta: {
+            isFooterBar: false
+          } 
         },
         {
           path: '/activity',

@@ -17,7 +17,7 @@
       <div class="button">
         <div class="flex flex-align">
           <div class="like" @click="addCollect(item)">
-            <i class="iconfont" v-if='item.isShoucang'></i>
+            <i class="iconfont" v-if='item.is_collect'>&#xe668;</i>
             <i class="iconfont" v-else>&#xe669;</i>
           </div>
           <div class="listening" @click="listening(item)">
@@ -34,10 +34,14 @@
 <script>
 import axios from "./../../lib/js/api"
 
-
 export default {
   name: 'bookCard',
   props: ['item','type'],
+  data () {
+    return {
+      bookItem: ''
+    }
+  },
   methods: {
     imgError(e) {
       e.target.src = require('@/assets/img/no-cover.jpg')
@@ -52,7 +56,7 @@ export default {
     },
     listening(item) {
       let p = /（.+?）/
-      let pureTitle = item.book.book_title.replace(p, '')
+      let pureTitle = item.book_title.replace(p, '')
       let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
       let isRead = localStorage.getItem('bookRead_' + item.book_id)
       if (!isRead) {
@@ -72,16 +76,23 @@ export default {
         }
       })
     },
-    addCollect(item) {
-      item.isShoucang = !item.isShoucang
-      console.log('/book/SchoolShelfBook/getList','收藏没有isShoucang')
-      axios.get(`/book/SchoolArticleCollect/add?post_id=${this.item.post_id}`).then(res => {
+    addCollect(item,index) {
+      let data = {
+          params:{
+            target_id: item.book_id,
+            type_id: 5
+          }
+      }
+
+      axios.get('/book/member/add_favorite',data).then(res => {
         if (res.data.status == 1) {
-          if (res.data.data) {
-            item.collect_num = res.data.data.collect_num
+          this.$forceUpdate() //强制刷新数据
+          this.$set(item,'is_collect',!item.is_collect) //使用$set 来修改
+          if(item.is_collect){
             this.$toast.success({
-              className: 'shoucang-icon toast-icon',
-              message: '收藏成功'
+              className: 'like-icon toast-icon',
+              duration: '800',
+              message: '喜欢'
             })
           }
         }

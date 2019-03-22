@@ -23,6 +23,9 @@ import lineClamp from 'vue-line-clamp'
 // 图片灯箱
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
+
+import './components/lib/js/wxAdapter'
+
 let options = {
   fullscreenEl: false
 }

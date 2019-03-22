@@ -72,6 +72,9 @@ export default {
     changeTab(index){
         this.tabIndex = index
         this.page = 1
+        this.onLoad().then(()=>{
+          this.loading = false
+        })
     },
     onLoad() {
       let arr = this.userPointState.location.split(",")
@@ -82,15 +85,15 @@ export default {
         lat: arr[1],
         school_type: this.tab[this.tabIndex].title
       }
-
-      this.getSchoolList(products).then(res => {
-        this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data)
-        this.loading = false
-        this.page++
-        if (this.tab[this.tabIndex].content.length >= res.count) {
-          this.finished = true
-        }
-      })
+  
+      return this.getSchoolList(products).then(res => {
+          this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data)
+          this.loading = false
+          this.page++
+          if (this.tab[this.tabIndex].content.length >= res.count) {
+            this.finished = true
+          }
+        })
     },
     select(item) {
       if (item.shelf_id > 0) {

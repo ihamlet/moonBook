@@ -18,26 +18,28 @@
       <van-field v-model="childInfo.birthday" :disabled='isMainParent' input-align='right' readonly label="孩子生日" placeholder="请选择日期" :error-message="errorMessage.birthday" @click="pickerShow = true" />
       <van-field v-model="childInfo.relation_name" :disabled='isMainParent' input-align='right' label="您是孩子的？" placeholder="例如：爸爸" />
     </van-cell-group>
-    <van-cell-group class="theme-switch">
-      <van-switch-cell v-model="settingSurrent" @input="onInput" title="设为当前宝贝" />
-    </van-cell-group>
-    <van-radio-group v-model="radio">
-      <div class="form-title">孩子性别</div>
-      <van-cell-group>
-        <van-cell title="男孩" clickable @click="radio = '1'">
-          <van-radio :disabled='isMainParent' class="theme-radio" name="1" />
-        </van-cell>
-        <van-cell title="女孩" clickable @click="radio = '2'">
-          <van-radio :disabled='isMainParent' class="theme-radio" name="2" />
-        </van-cell>
-      </van-cell-group>
-    </van-radio-group>
     <van-radio-group>
       <div class="form-title">学校设置</div>
       <van-cell-group>
         <van-cell value='设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="!isMainParent&&submit('setSchool')" />
       </van-cell-group>
     </van-radio-group>
+    <van-cell-group>
+      <van-cell>
+        <div class="flex flex-align type-select">
+          <div>孩子性别</div>
+          <div class="select-type flex flex-align">
+            <div class="select-btn" v-for='(item,index) in sexType' :key="index" @click="selectSexType(item,index)">
+                <van-button size="small" class="theme-btn" type="primary" :plain='sexTypeIndex==index?false:true' round>{{item}}</van-button>
+            </div>
+          </div>
+        </div>
+      </van-cell>
+    </van-cell-group>
+
+    <van-cell-group class="theme-switch">
+      <van-switch-cell v-model="settingSurrent" @input="onInput" title="设为当前宝贝" />
+    </van-cell-group>
 
     <!-- 截图工具 -->
     <van-popup class="cropper-popup" v-model="cropperShow" get-container='#app'>
@@ -55,12 +57,12 @@
 
     <!-- 提交编辑 -->
     <div class="form-submit" v-if="$route.query.type=='edit'">
-      <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="edit">提交修改</van-button>
+      <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="normal" @click="edit">提交修改</van-button>
     </div>
 
     <!-- 添加宝贝 -->
     <div class="form-submit" v-else>
-      <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="large" @click="submit">提 交</van-button>
+      <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="normal" @click="submit">提 交</van-button>
     </div>
 
     <van-popup class="card-routing-popup" v-model="show" get-container='#app'>
@@ -101,7 +103,7 @@ export default {
       show:false,
       fileName: '',  
       cropperLoading: false,
-      radio: '1',
+      sexTypeIndex: 0,
       submitLoading: false,
       minHour: 10,
       maxHour: 20,
@@ -117,6 +119,7 @@ export default {
         relation_name: '',
       },
       childId:'',
+      sexType:['小王子','小公主'],
       errorMessage: {
         name: '',
         birthday: ''
@@ -147,9 +150,9 @@ export default {
     listenData(val) {
       this.childInfo = val
     },
-    radio(val) {
+    sexTypeIndex(val) {
       localStorage.setItem('radio', val)
-      val == '1' ? this.childInfo.gender = 'boy' : this.childInfo.gender = 'girl'
+      val == 0 ? this.childInfo.gender = 'boy' : this.childInfo.gender = 'girl'
     },
     currentDate(val) {
       this.childInfo.birthday = format(new Date(val), 'yyyy-MM-dd')
@@ -170,7 +173,7 @@ export default {
       }
       
       if (localStorage['radio'] != undefined) {
-        this.radio = localStorage['radio']
+        this.sexTypeIndex = localStorage['radio']
       }
 
 
@@ -310,16 +313,12 @@ export default {
     },
     edit() {
       this.operationApi(this.$route.query.id).then(res => {
-
-        this.$router.push({
-          name: 'my'
-        })
-
         if (res) {
           this.$toast.success('修改成功')
         } else {
           this.$toast.fail('修改失败')
         }
+        this.$router.go(-1)
       })
     },
     onClickRight(type) {
@@ -386,6 +385,9 @@ export default {
           }
         })
       }
+    },
+    selectSexType(item,index){
+      this.sexTypeIndex = index
     }
   }
 }
@@ -393,6 +395,10 @@ export default {
 <style>
 .add-child .van-cell__title.cell-school-title {
   flex: 5;
+}
+
+.form-submit .theme-btn{
+  width: 100%;
 }
 </style>
 

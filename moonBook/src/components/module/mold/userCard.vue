@@ -122,4 +122,9 @@ export default {
   flex: 1;
   justify-content: space-between;
 }
+
+.info{
+  flex: 3;
+  margin-right: .625rem /* 10/16 */;
+}
 </style>
