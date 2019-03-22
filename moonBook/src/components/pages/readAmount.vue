@@ -143,7 +143,7 @@ export default {
       }
     },
     onClickRight() {
-      window.location.href = '/book/TushuDonation/intro'
+      window.location.href = '/book/member/donation_entry'
     },
     getList() {
       let data = {
