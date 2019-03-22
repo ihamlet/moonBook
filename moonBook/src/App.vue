@@ -106,6 +106,10 @@ textarea {
    content: '\e6e3'
 }
 
+.like-icon .van-icon.van-icon-success::before{
+  content: '\e668'
+}
+
 .shoucang-icon .van-icon.van-icon-success::before{
   content: '\e606'
 }
@@ -690,8 +694,8 @@ i.iconfont.rotate {
 .form-title {
   font-size: 0.875rem /* 14/16 */;
   margin-left: 0.9375rem /* 15/16 */;
-  height: 3rem /* 48/16 */;
-  line-height: 3rem /* 48/16 */;
+  height: 2.25rem /* 36/16 */;
+  line-height: 2.25rem /* 36/16 */;
 }
 
 .avatar-uploader {
@@ -869,6 +873,10 @@ video {
 .article-content .content p {
   font-size: 1.125rem /* 18/16 */ !important;
   margin: 0.625rem /* 10/16 */ 0;
+}
+
+.article-content .content h1{
+  display: none !important;
 }
 
 .long-article-thumb{
@@ -1089,5 +1097,23 @@ i.iconfont.vip-1 {
 .photo-upload .directions {
   font-size: 0.8125rem /* 13/16 */;
   margin-top: 0.625rem /* 10/16 */;
+}
+
+.share-img{
+  width: 100%;
+  position: relative;
+}
+
+.share-img img{
+  max-width:  250px;
+  width: 15.625rem /* 250/16 */;
+}
+
+.share-popup.van-popup{
+  background: transparent;
+  transform: none;
+  top:0;
+  left: auto;
+  right: 0;
 }
 </style>

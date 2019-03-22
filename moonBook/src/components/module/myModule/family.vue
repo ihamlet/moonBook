@@ -127,8 +127,8 @@ export default {
 }
 
 .avatar img {
-  width: 2rem /* 32/16 */;
-  height: 2rem /* 32/16 */;
+  width: 1.5625rem /* 25/16 */;
+  height: 1.5625rem /* 25/16 */;
   border-radius: 50%;
   overflow: hidden;
   margin-right: 0.625rem /* 10/16 */;

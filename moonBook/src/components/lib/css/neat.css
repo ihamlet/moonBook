@@ -500,11 +500,11 @@ option:disabled:checked {
 /**
 * 修正 Safari 3+, Chrome 1+ Placeholder 居中问题
 */
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
+/* @media screen and (-webkit-min-device-pixel-ratio: 0) {
   input {
     line-height: normal !important;
   }
-}
+} */
 
 /**
 * 修正 Firefox 19+ Placeholder 设置了opacity 的问题

@@ -17,7 +17,6 @@ import { createPayFrame } from './../../lib/js/util'
 import { mapGetters, mapActions } from 'vuex'
 import iconSuccess from './../../module/animate/iconSuccess'
 
-
 export default {
   name: 'accept',
   components: {

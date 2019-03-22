@@ -2,7 +2,7 @@
     <div class="task-card">
         <van-cell class="card-cell" is-link title-class='tast-card-title' center size='large' value='查看'>
             <div class="task-cover" slot="icon">
-                <img src="./../../../assets/img/task-cover.png" />
+                <!-- <img src="./../../../assets/img/task-cover.png" /> -->
             </div>
             <div class="tast-title" slot="title">
                 <div class="name" v-line-clamp:20="1">亲子时光，阅读相伴。</div>

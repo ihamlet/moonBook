@@ -84,7 +84,14 @@ export default {
       }
     },
     next() {
-      if(this.getTitle.length&&this.getImageList.length){
+      switch(0){
+        case this.getTitle.length:
+          this.$toast('请输入文章标题')
+        break
+        case this.getImageList.length:
+          this.$toast('请添加文章段落')
+        break
+        default:
         this.$router.push({
           name:'articleSetting',
           query:{
@@ -92,9 +99,19 @@ export default {
             back: this.$route.query.back
           }
         })
-      }else{
-        this.$toast('请输入文章标题')
       }
+
+      // if(this.getTitle.length&&this.getImageList.length){
+      //   this.$router.push({
+      //     name:'articleSetting',
+      //     query:{
+      //       id: this.$route.query.id,
+      //       back: this.$route.query.back
+      //     }
+      //   })
+      // }else{
+      //   this.$toast('请输入文章标题')
+      // }
 
     },
     selectTag(tag) {

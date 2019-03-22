@@ -8,7 +8,7 @@
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'我的'}}</span>
       </div>
-      <div class="head-bar-text" slot='right' v-if='manage'>
+      <div class="head-bar-text" slot='right' v-if='manage' @click="toManage">
         <span class="text">管理班级</span>
       </div>
     </van-nav-bar>
@@ -82,16 +82,16 @@ export default {
       let array = []
       if (this.managerState) {
         this.managerState.forEach(element => {
+          if(element.item_relation !='parent'){
+            let data = {
+              name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
+              subname: `${element.duty}-${element.desc}`,
+              id: element.id,
+              type: element.item_type
+            }
 
-          let data = {
-            name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
-            subname: `${element.duty}-${element.desc}`,
-            id: element.id,
-            type: element.item_type
+            array.push(data)
           }
-
-          array.push(data)
-
         })
       }
 
@@ -116,7 +116,7 @@ export default {
     },
     manage() {
       if (this.managerState) {
-        let boolean
+        let boolean = false
         this.managerState.forEach(element => {
           if (this.$route.query.id == element.id && element.item_relation != 'parent') {
             boolean = true
@@ -372,6 +372,9 @@ export default {
           })
         }
       })
+    },
+    toManage(){
+      location.href = '/SchoolManage'
     }
   }
 }

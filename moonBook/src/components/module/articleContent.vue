@@ -8,6 +8,7 @@
         </div>
     </div>
     <article>
+      <adLabel :item='item' v-if='item.ad_label'/>
       <div class="main">
         <div class="media-content">
           <media :item='item' type='details'/>
@@ -19,13 +20,15 @@
 <script>
 import media from './../module/mold/media'
 import userCard from './../module/mold/userCard'
+import adLabel from './../module/mold/adLabel'
 
 export default {
   name: 'article-content',
   props: ['item', 'type'],
   components: {
     media,
-    userCard
+    userCard,
+    adLabel
   },
   data () {
     return {

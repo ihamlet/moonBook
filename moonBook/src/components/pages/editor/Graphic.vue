@@ -163,7 +163,8 @@ export default {
     },
     uploaderImg(){
       if(this.ready){
-        this.selectImg()
+        // 传上传张数
+        this.selectImg(9)
       }else{
         this.$refs.selectPhoto.$refs.input.click()
       }
@@ -370,10 +371,11 @@ export default {
             rotate: info.rotate,
             duration: Math.floor(info.duration) || 10
           })
+        this.upOssMedia(type, file)
         this.percent = 0
       })
 
-      this.upOssMedia(type, file)
+      
     },
     upOssMedia(type, file) {
       if (!this.ossSign) {

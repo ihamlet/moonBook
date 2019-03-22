@@ -70,6 +70,13 @@ export default {
   },
   methods: {
     ...mapActions('beautifulArticle',['add','revise','requestPercent','delete','upDataList']),
+    // 置底滚动位置
+    scroll(){
+        this.$nextTick(() => {
+          let scrollHeight = document.documentElement.scrollHeight
+          document.documentElement.scrollTop  = scrollHeight
+        })
+    },
     fetchData() {
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
@@ -187,6 +194,7 @@ export default {
         }
   
         this.percent = 0
+        this.scroll()
         this.requestPercent(0)
       })
     },
@@ -238,6 +246,7 @@ export default {
         }
 
         this.percent = 0
+        this.scroll()
         this.requestPercent(0)
       })
     }

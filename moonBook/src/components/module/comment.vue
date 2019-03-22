@@ -2,33 +2,34 @@
   <div class="comment-list" id='comment' ref='comment'>
     <van-nav-bar :border='false' :zIndex='0'>
       <div class="zan" slot="right">赞 {{item.zan_num}}</div>
-      <div class="comment" slot="left">评论 {{listLength}}</div>
+      <div class="comment" slot="left">{{listLength}} 评论</div>
     </van-nav-bar>
     <div class="no-centent" v-if='listLength == 0'>
       <div class="prompt" @click="showField()">暂无评论,点击抢沙发</div>
     </div>
     <div class="container">
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-        <van-cell v-for="(item,index) in list" :key="index">
+        <van-cell v-for="(contentItem,index) in list" :key="index">
           <div class="user-card flex flex-align">
-            <div class="avatar" @click="toZoom(item)">
-              <img :src="getAvatar(item.avatar)" :alt="item.username" />
+            <div class="avatar" @click="toZoom(contentItem)">
+              <img :src="getAvatar(contentItem.avatar)" :alt="contentItem.username" />
             </div>
             <div class="user-data">
-              <span class="user-name">{{item.username}}</span>
+              <span class="user-name">{{contentItem.username}}</span>
+              <span class="tags" v-if='contentItem.tags'>{{contentItem.tags}}</span>
             </div>
           </div>
           <div class="contents">
-            {{item.contents}}
+            {{contentItem.contents}}
           </div>
 
           <div class="reply">
-            <div v-if="item.replyList.length != 0" class="reply-content">
-              <div class="list" v-for='(reply,replyIndex) in  item.replyList' :key='replyIndex'>
+            <div v-if="contentItem.replyList.length != 0" class="reply-content">
+              <div class="list" v-for='(reply,replyIndex) in  contentItem.replyList' :key='replyIndex'>
                 <div class="item">
                   <span class="reply-title">
                     <i class="iconfont">&#xe6ea;</i>
-                    {{reply.username}}回复{{item.username}}
+                    {{reply.username}}回复{{contentItem.username}}
                   </span>
                   <span class="reply-contents">
                     {{reply.contents}}
@@ -41,18 +42,18 @@
                 <div class="item">
                   <span class="reply-title">
                     <i class="iconfont">&#xe60d;</i>
-                    {{item.quote.username}}的评论
+                    {{contentItem.quote.username}}的评论
                   </span>
                   <span class="reply-contents">
-                    {{item.quote.contents}}
+                    {{contentItem.quote.contents}}
                   </span>
                 </div>
               </div>
             </div>
             <div class="comment-bar flex flex-align">
-              <div class="date">{{timeAgo(item.create_time)}}</div>
-              <div class="theme-color" @click="showField(item,'reply')">
-                <van-tag round size="large" type="primary">{{item.replyList.length?item.replyList.length:''}}回复</van-tag>
+              <div class="date">{{timeAgo(contentItem.create_time)}}</div>
+              <div class="theme-color" @click="showField(contentItem,'reply')">
+                <van-tag round size="large" type="primary">{{contentItem.replyList.length?contentItem.replyList.length:''}}回复</van-tag>
               </div>
             </div>
           </div>
@@ -72,19 +73,16 @@
           </div>
           <div class="btn-icon flex flex-align">
             <div class="btn" @click="toScroll">
-              <van-tag class="num-tag" v-if='listLength > 1' round type="danger">{{listLength >
-                1000?'999+':listLength}}</van-tag>
+              <van-tag class="num-tag" v-if='listLength > 1' round type="danger">{{listLength > 1000?'999+':listLength}}</van-tag>
               <i class="iconfont">&#xe731;</i>
             </div>
             <div class="btn" @click="addPraise(item)">
-              <van-tag class="num-tag" v-if='item.zan_num > 1' round type="danger">{{item.zan_num >
-                1000?'999+':item.zan_num}}</van-tag>
+              <van-tag class="num-tag" v-if='item.zan_num > 1' round type="danger">{{item.zan_num > 1000?'999+':item.zan_num}}</van-tag>
               <i class="iconfont highlight rotateInDownLeft animated" v-if="item.isZan">&#xe6e3;</i>
               <i class="iconfont" v-else>&#xe644;</i>
             </div>
             <div class="btn" @click="addCollect(item)" v-if='include != "include"'>
-              <van-tag class="num-tag" v-if='item.collect_num > 1' round type="danger">{{item.collect_num >
-                1000?'999+':item.collect_num}}</van-tag>
+              <van-tag class="num-tag" v-if='item.collect_num > 1' round type="danger">{{item.collect_num > 1000?'999+':item.collect_num}}</van-tag>
               <i class="iconfont star highlight swing animated" v-if="item.isShoucang">&#xe64b;</i>
               <i class="iconfont" v-else> &#xe64c;</i>
             </div>
@@ -95,8 +93,7 @@
         </div>
       </div>
 
-      <van-popup v-model="show" class="comment-popup" overlay-class='bg-opacity' position="bottom" get-container='#app'
-        @close='$refs.field.blur()'>
+      <van-popup v-model="show" class="comment-popup" overlay-class='bg-opacity' position="bottom" get-container='#app' @close='$refs.field.blur()'>
         <div class="score flex-column" v-if='include != "include"&&score'>
           <div class="score-title">评分</div>
           <van-rate class="score-rate" v-model="star" :size="25" :count="5" void-color="#ceefe8" />
@@ -104,8 +101,7 @@
         <div class="comment-content flex">
           <div class="field-box">
             <van-cell-group>
-              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1"
-                autosize />
+              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
             </van-cell-group>
           </div>
           <div class="submit-btn theme-color">
@@ -117,7 +113,7 @@
 
     <van-popup v-model="shareShow" get-container='#app' class="share-popup">
       <div class="share-img">
-        <img src="./../../assets/img/shareWord.png"/>
+        <img src="./../../assets/img/shareWord.png" />
       </div>
     </van-popup>
   </div>
@@ -186,19 +182,16 @@ export default {
     },
     submit() {
       this.isLoading = true
-      let data = ''
+      let data = {
+        post_id: this.$route.query.id,
+        contents: this.message,
+        tags: this.item.ad_label
+      }
+
       if (this.commentId) {
-        data = {
-          post_id: this.$route.query.id,
-          contents: this.message,
-          reply_comment_id: this.commentId,
-        }
+        data.reply_comment_id = this.commentId
       } else {
-        data = {
-          post_id: this.$route.query.id,
-          contents: this.message,
-          star: this.star * 2
-        }
+        data.star = this.star * 2
       }
 
       if (this.message.length) {
@@ -209,6 +202,9 @@ export default {
             this.onLoad()
             this.$toast.success(res.data.info)
             this.isLoading = false
+
+            this.toTopAndComment = false
+            this.toScroll() // 滚动到指定位置
           } else {
             this.$toast.fail(res.data.info)
           }
@@ -218,7 +214,7 @@ export default {
       }
     },
     addPraise(item) {
-      if(this.$route.query.type!='preview'){
+      if (this.$route.query.type != 'preview') {
         item.isZan = !item.isZan
         let data = {
           params: {
@@ -262,7 +258,7 @@ export default {
       })
     },
     showField(item, type) {
-      if(this.$route.query.type!='preview'){
+      if (this.$route.query.type != 'preview') {
         this.isLoading = false
         this.message = ''
         if (item) {
@@ -316,8 +312,8 @@ export default {
         }
       })
     },
-    isShare(){
-      if(this.$route.query.type!='preview'){
+    isShare() {
+      if (this.$route.query.type != 'preview') {
         this.shareShow = true
       }
     }
@@ -496,22 +492,8 @@ export default {
   margin: 0.625rem /* 10/16 */ auto;
 }
 
-.share-img{
-  width: 100%;
-  position: relative;
+.tags{
+  color: #909399;
 }
+</style>
 
-.share-img img{
-  max-width:  250px;
-  width: 15.625rem /* 250/16 */;
-}
-</style>
-<style>
-.share-popup.van-popup{
-  background: transparent;
-  transform: none;
-  top:0;
-  left: auto;
-  right: 0;
-}
-</style>

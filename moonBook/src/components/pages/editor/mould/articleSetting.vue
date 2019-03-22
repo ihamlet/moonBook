@@ -185,13 +185,7 @@ export default {
        this.addTag(tag)
     },
     onClickLeft() {
-      this.$router.push({
-        name: this.$route.query.back,
-        query:{
-          back: this.$route.query.back_name,
-          id: this.$route.query.id
-        }
-      })
+      this.$router.go(-1)
     },
     onClickRelease(){
       if (!this.getArticleContent.length) {

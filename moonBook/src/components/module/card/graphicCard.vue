@@ -71,7 +71,6 @@ import QRCode from "qrcode"
 import vipLevel from './../animate/svg/vipLevel'
 import share from './../mold/share'
 import taskCard from './taskCard'
-// import articleShare from './../mold/articleShare'
 import media from './../mold/media'
 import { timeago } from './../../lib/js/util'
 
@@ -80,7 +79,6 @@ export default {
   props: ["item", "type",'avatar','title'],
   components: {
     share,
-    // articleShare,
     taskCard,
     vipLevel,
     media
