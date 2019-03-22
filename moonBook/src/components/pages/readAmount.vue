@@ -7,33 +7,33 @@
     </van-nav-bar>
     <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated :offsetTop="45" @change="onChangeTab" :ellipsis='false'>
       <van-tab v-for="(list,index) in readArray" :key="index" :title="`${list.title}(${list.num})`">
-        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
-          <van-pull-refresh v-model="loading" @refresh="onRefresh">
-            <van-notice-bar text="代还还有2本逾期，产生逾期费用4元，逾期为1元/本/天，从押金中扣除" left-icon="volume-o" v-if='list.title=="读过"||list.title=="在读"'/>
-            <div class="tab-jianshu" v-if='list.title == "捐书"'>
-                <van-tabs type="card" color='#409eff' @click="onClickTab">
-                  <van-tab :title="tabTitle" v-for='(tabTitle,tabTitleIndex) in donationTab' :key="tabTitleIndex"></van-tab>
-                </van-tabs>
-            </div>
-            <div class="switch-api" v-if='list.content.length'>
-              <div class="content">
-                <div class="kings flex flex-align" v-if='list.title =="未读" '>
-                  <div class="bar-title">阅读进度</div>
-                  <div class="kings-box flex flex-align">
-                    <div class="num">{{childInfo.read_kinds}}/{{childInfo.shelf_tushu_kinds}}</div>
-                    <div class="filter" @click="show = true"><i class="iconfont theme-color">&#xe631;</i></div>
-                  </div>
-                </div>
-                <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
-                  <bookCard :item='item' :type='list.title'/>
-                </van-cell>
+        <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
+          <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+              <van-notice-bar text="代还还有2本逾期，产生逾期费用4元，逾期为1元/本/天，从押金中扣除" left-icon="volume-o" v-if='list.title=="读过"||list.title=="在读"'/>
+              <div class="tab-jianshu" v-if='list.title == "捐书"'>
+                  <van-tabs type="card" color='#409eff' @click="onClickTab">
+                    <van-tab :title="tabTitle" v-for='(tabTitle,tabTitleIndex) in donationTab' :key="tabTitleIndex"></van-tab>
+                  </van-tabs>
               </div>
-            </div>
-            <div class="no-content" v-else>
-              暂无数据
-            </div>
-          </van-pull-refresh>
-        </van-list>
+              <div class="switch-api" v-if='list.content.length'>
+                <div class="content">
+                  <div class="kings flex flex-align" v-if='list.title =="未读" '>
+                    <div class="bar-title">阅读进度</div>
+                    <div class="kings-box flex flex-align">
+                      <div class="num">{{childInfo.read_kinds}}/{{childInfo.shelf_tushu_kinds}}</div>
+                      <div class="filter" @click="show = true"><i class="iconfont theme-color">&#xe631;</i></div>
+                    </div>
+                  </div>
+                  <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
+                    <bookCard :item='item' :type='list.title'/>
+                  </van-cell>
+                </div>
+              </div>
+              <div class="no-content" v-else>
+                暂无数据
+              </div>
+          </van-list>
+        </van-pull-refresh>
       </van-tab>
     </van-tabs>
 
@@ -188,22 +188,25 @@ export default {
       }
 
       return axios.get(apiLink, data).then(res => {
-        if(res.data.status == 1){
-          if (this.page == 1) {
-            this.readArray[this.tabIndex].content = res.data.data
-          } else {
-            this.readArray[this.tabIndex].content = this.readArray[this.tabIndex].content.concat(res.data.data)
-          }
-          this.loading = false
-          this.page++
-          if (this.readArray[this.tabIndex].content.length >= res.data.count) {
+        switch(res.data.status){
+          case 1:
+            if (this.page == 1) {
+              this.readArray[this.tabIndex].content = res.data.data
+            } else {
+              this.readArray[this.tabIndex].content = this.readArray[this.tabIndex].content.concat(res.data.data)
+            }
+            this.loading = false
+            this.page++
+            if (this.readArray[this.tabIndex].content.length >= res.data.count) {
+              this.finished = true
+            }
+          break
+          case 0:
+            this.page = 1
+            this.loading = false
             this.finished = true
-          }
-        }else{
-          this.page = 1
-          this.loading = false
-          this.finished = true
-          this.readArray[this.tabIndex].content= []
+            this.readArray[this.tabIndex].content= []
+          break
         }
       })
     },

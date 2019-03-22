@@ -84,13 +84,12 @@ export default {
       }
     },
     next() {
-
       switch(0){
         case this.getTitle.length:
           this.$toast('请输入文章标题')
         break
         case this.getImageList.length:
-          this.$toast('请填写文章段落')
+          this.$toast('请添加文章段落')
         break
         default:
         this.$router.push({

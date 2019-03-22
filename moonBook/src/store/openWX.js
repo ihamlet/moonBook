@@ -14,7 +14,7 @@ export default {
   getters: {
 
   },
-  mutations: {
+  mutations: {  
     setReady(state, params) {
       state.ready = params
     },
@@ -42,8 +42,7 @@ export default {
   actions: {
     //配置微信
     wxConfig(context, products) {
-      axios
-        .post("/book/index/getWxJsParams", {
+      axios.post("/book/index/getWxJsParams", {
           apiList: jsApiList,
           url: location.href
         })
@@ -60,8 +59,9 @@ export default {
       if (context.state.ready) {
         let title
         let desc
-
-        if (products.item.template_id == "0" && products.item.hasvideo != "1") {
+        let template_id = products.item.template_id || "1"
+  
+        if (template_id == "0" && products.item.hasvideo != "1") {
           title = `【阅亮书架】#${products.item.cate.cate_name}#${products.item.title}`
           desc = context.state.slogan
         } else {
@@ -70,12 +70,16 @@ export default {
         }
 
         let data = {
-          title: title,
+          title: products.item.title || title,
           link: location.href,
           desc: desc,
-          imgUrl: context.state.logo,
+          imgUrl: products.item.imgUrl || context.state.logo,
           success: products.success
         }
+
+
+        console.log(products.item.imgUrl)
+
         wx.onMenuShareTimeline(data)
         wx.onMenuShareQQ(data)
         wx.onMenuShareWeibo(data)

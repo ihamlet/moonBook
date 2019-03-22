@@ -313,16 +313,12 @@ export default {
     },
     edit() {
       this.operationApi(this.$route.query.id).then(res => {
-
-        this.$router.push({
-          name: 'my'
-        })
-
         if (res) {
           this.$toast.success('修改成功')
         } else {
           this.$toast.fail('修改失败')
         }
+        this.$router.go(-1)
       })
     },
     onClickRight(type) {

@@ -3,46 +3,45 @@
     <van-nav-bar :title="$route.meta.title" left-text="我的" left-arrow @click-left="onClickLeft" />
     <van-tabs color='#409eff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex">
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
-          <van-pull-refresh v-model="loading" @refresh="onRefresh">
-            <div class="content" v-if='list.content.length'>
-              <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
-                <van-row gutter="10">
-                  <van-col span="7">
-                    <div class="book-cover" @click="toBookDetails(item)">
-                      <img class="lazy" v-lazy="thumb(item.thumb)"/>
-                    </div>
-                  </van-col>
-                  <van-col span="11">
-                    <div class="book-info" @click="toBookDetails(item)">
-                      <div class="title" v-line-clamp:20="2">{{item.title}}</div>
-                      <div class="attach">
-                        <!-- <div class="location" v-if='item.location'><i class="iconfont">&#xe724;</i>{{item.location}}</div> -->
-                        <div class="author" v-line-clamp:20="1" v-if='item.author'>作者：{{item.author}}</div>
-                        <!-- <div class="pos-title" v-if='item.pos_title'>书架：{{item.pos_title}}</div> -->
+        <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
+          <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+              <div class="content" v-if='list.content.length'>
+                <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
+                  <van-row gutter="10">
+                    <van-col span="7">
+                      <div class="book-cover" @click="toBookDetails(item)">
+                        <img class="lazy" v-lazy="thumb(item.thumb)"/>
                       </div>
-                    </div>
-                  </van-col>
-                  <van-col span="6">
-                    <div class="flex flex-align button">
-                      <div class="like" @click="addCollect(item)">
-                        <i class="iconfont" v-if='item.is_collect'>&#xe668;</i>
-                        <i class="iconfont" v-else>&#xe669;</i>
+                    </van-col>
+                    <van-col span="11">
+                      <div class="book-info" @click="toBookDetails(item)">
+                        <div class="title" v-line-clamp:20="2">{{item.title}}</div>
+                        <div class="attach">
+                          <!-- <div class="location" v-if='item.location'><i class="iconfont">&#xe724;</i>{{item.location}}</div> -->
+                          <div class="author" v-line-clamp:20="1" v-if='item.author'>作者：{{item.author}}</div>
+                          <!-- <div class="pos-title" v-if='item.pos_title'>书架：{{item.pos_title}}</div> -->
+                        </div>
                       </div>
-                      <div class="listening" @click="listening(item)">
-                        <i class="iconfont">&#xe617;</i>
+                    </van-col>
+                    <van-col span="6">
+                      <div class="flex flex-align button">
+                        <div class="like" @click="addCollect(item)">
+                          <i class="iconfont" v-if='item.is_collect'>&#xe668;</i>
+                          <i class="iconfont" v-else>&#xe669;</i>
+                        </div>
+                        <div class="listening" @click="listening(item)">
+                          <i class="iconfont">&#xe617;</i>
+                        </div>
                       </div>
-                    </div>
-                  </van-col>
-                </van-row>
-              </van-cell>
-            </div>
-            <div class="no-content" v-else>
-              还没有没有{{list.title}}的书
-            </div>
-          </van-pull-refresh>
-        </van-list>
-
+                    </van-col>
+                  </van-row>
+                </van-cell>
+              </div>
+              <div class="no-content" v-else>
+                还没有没有{{list.title}}的书
+              </div>
+          </van-list>
+      </van-pull-refresh>
       </van-tab>
     </van-tabs>
   </div>
@@ -144,7 +143,6 @@ export default {
       return axios.get('/book/SchoolArticleCollect/getList',data).then(res => {
         if(res.data.status == 1){
           if (res.data.count > 0) {
-
               let datas = []
               let array = res.data.data
               array.forEach(element => {
@@ -248,14 +246,11 @@ export default {
       this.$router.push({
         name: 'book-details',
         query: {
-          id: item.post_id
+          id: item.tushu_id
         }
       })
     },
     addCollect(item) {
-      console.log('接口:/book/member/add_favorite',item)
-      item.is_collect = !item.is_collect
-
       let data = {
           params:{
             target_id: item.tushu_id, 
@@ -265,10 +260,15 @@ export default {
 
       axios.get('/book/member/add_favorite',data).then(res => {
         if (res.data.status == 1) {
-          this.$toast.success({
-            className: 'like-icon toast-icon',
-            message: '喜欢'
-          })
+          this.$forceUpdate() //强制刷新数据
+          this.$set(item,'is_collect',!item.is_collect) //使用$set 来修改
+          if(item.is_collect){
+            this.$toast.success({
+              className: 'like-icon toast-icon',
+              message: '喜欢',
+              duration: '800',
+            })
+          }
         }
       })
     }

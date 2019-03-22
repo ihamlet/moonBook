@@ -9,9 +9,9 @@
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back||$route.query.backGo?'返回':'首页'}}</span>
       </div>
-      <!-- <div class="head-bar-text" slot="right">
-        <span class="text">任务</span>
-      </div> -->
+      <div class="head-bar-text" slot="right" @click="toVerifyList">
+        <span class="text">成员审核</span>
+      </div>
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
       <div class="baby-info flex flex-align">
@@ -284,12 +284,12 @@ export default {
       vm.request()
     })
   },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll)
+  },
   created() {
     this.fetchData()
     // this.StartCountDown() //倒计时
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll)
   },
   watch: {
     $router: "fetchData"
@@ -752,6 +752,14 @@ export default {
           case 0:
             this.$toast.fail(res.data.data.msg)
           break
+        }
+      })
+    },
+    toVerifyList(){
+      this.$router.push({
+        name:'verify-list',
+        query:{
+          id: this.$route.query.id
         }
       })
     }

@@ -3,7 +3,7 @@
         <van-row gutter="5">
             <van-col span="10">
                 <div class="metro-l">
-                    <div class="grid-metro">
+                    <div class="grid-metro" @click="toBookShelf">
                         <div class="info">
                             <div class="title">书架</div>
                             <div class="sub">阅亮书架</div>
@@ -33,9 +33,14 @@
 <script>
 export default {
     name:'metro',
-    data () {
-        return {
-            
+    methods: {
+        toBookShelf(){
+            this.$router.push({
+                name:'bookshelf',
+                query:{
+                    id: this.$route.query.id
+                }
+            })
         }
     }
 }

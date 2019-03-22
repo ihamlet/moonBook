@@ -8,7 +8,7 @@
         </div>
     </div>
     <article>
-      <adLabel :item='item' />
+      <adLabel :item='item' v-if='item.ad_label'/>
       <div class="main">
         <div class="media-content">
           <media :item='item' type='details'/>

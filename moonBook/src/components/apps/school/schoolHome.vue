@@ -8,7 +8,7 @@
       <div class="head-bar-title" slot="title" @click="actionsheetShow = true">
         {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerState.length > 1">&#xe608;</i>
       </div>
-      <div class="head-bar-text" slot='right' v-if='manage'>
+      <div class="head-bar-text" slot='right' v-if='manage'  @click="toManage">
         <span class="text">管理学校</span>
       </div>
     </van-nav-bar>
@@ -311,6 +311,9 @@ export default {
           })
         }
       })
+    },
+    toManage(){
+      location.href = '/SchoolManage'
     }
   }
 }

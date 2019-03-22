@@ -83,8 +83,6 @@ export default {
       e.target.src = require('@/assets/img/no-cover.jpg')
     },
     fetchData() {
-
-
       axios.get(`/book/ShelfBook/getInfo?book_id=${this.$route.query.id}`).then(res => {
         if(res.data.status == 1){
           this.details = res.data.data

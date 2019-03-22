@@ -34,13 +34,12 @@
 <script>
 import axios from "./../../lib/js/api"
 
-
 export default {
   name: 'bookCard',
   props: ['item','type'],
   data () {
     return {
-      isLike: 0
+      bookItem: ''
     }
   },
   methods: {
@@ -56,7 +55,6 @@ export default {
       }
     },
     listening(item) {
-      console.log(item)
       let p = /（.+?）/
       let pureTitle = item.book_title.replace(p, '')
       let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
@@ -79,7 +77,6 @@ export default {
       })
     },
     addCollect(item,index) {
-      item.is_collect = !item.is_collect
       let data = {
           params:{
             target_id: item.book_id,
@@ -88,11 +85,13 @@ export default {
       }
 
       axios.get('/book/member/add_favorite',data).then(res => {
-        
         if (res.data.status == 1) {
-          if (res.data.data) {
+          this.$forceUpdate() //强制刷新数据
+          this.$set(item,'is_collect',!item.is_collect) //使用$set 来修改
+          if(item.is_collect){
             this.$toast.success({
               className: 'like-icon toast-icon',
+              duration: '800',
               message: '喜欢'
             })
           }
