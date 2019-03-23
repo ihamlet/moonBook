@@ -11,6 +11,9 @@
         <div class="attach">
           <div class="pos-title" v-if='item.pos_name'>书位：{{item.pos_name}}</div>
         </div>
+        <div class="borrow" v-if='type=="guide"'>
+          借阅：{{item.borrow_count > '50'?item.borrow_count:'999+'}} 次
+        </div>
       </div>
     </van-col>
     <van-col span="6">

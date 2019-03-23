@@ -6,7 +6,7 @@
         <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
                 <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
-                    <bookCard :item='item'/>
+                    <bookCard :item='item' type='guide'/>
                 </van-cell>
             </van-list>
         </van-pull-refresh>
@@ -71,6 +71,13 @@ export default {
               this.finished = true
             break
         }
+      })
+
+        let data = {
+
+        }
+      axios.get('/book/SchoolArticle/detail',data).then(res=>{
+          
       })
       //获取官方文章
     },
