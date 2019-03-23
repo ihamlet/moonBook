@@ -1,19 +1,19 @@
 <template>
   <div class="drying-list">
-    <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-      <van-pull-refresh v-model="loading" @refresh="onRefresh">
-        <div class="no-content" v-if='list.length == 0'>
-          尚无内容
-        </div>
-        <div class="item" v-for="(item,index) in list" :key="index" @click="setItem(item)" v-else>
-          <van-cell>
-            <div class="content">
-              <graphic-card :item="item" @follow="follow" @more='actionsheet' :title='item.school_role'/>
-            </div>
-          </van-cell>
-        </div>
-      </van-pull-refresh>
-    </van-list>
+    <van-pull-refresh v-model="loading" @refresh="onRefresh">
+      <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+          <div class="no-content" v-if='list.length == 0'>
+            尚无内容
+          </div>
+          <div class="item" v-for="(item,index) in list" :key="index" @click="setItem(item)" v-else>
+            <van-cell>
+              <div class="content">
+                <graphic-card :item="item" @follow="follow" @more='actionsheet' :title='item.school_role'/>
+              </div>
+            </van-cell>
+          </div>
+      </van-list>
+     </van-pull-refresh>
 
     <!-- 管理员推荐操作 -->
     <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app' />

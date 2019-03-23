@@ -19,9 +19,8 @@
       <van-field v-model="childInfo.relation_name" :disabled='isMainParent' input-align='right' label="您是孩子的？" placeholder="例如：爸爸" />
     </van-cell-group>
     <van-radio-group>
-      <div class="form-title">学校设置</div>
       <van-cell-group>
-        <van-cell value='设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="!isMainParent&&submit('setSchool')" />
+        <van-cell value='校园设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="!isMainParent&&submit('setSchool')" />
       </van-cell-group>
     </van-radio-group>
     <van-cell-group>
@@ -37,9 +36,9 @@
       </van-cell>
     </van-cell-group>
 
-    <van-cell-group class="theme-switch">
+    <!-- <van-cell-group class="theme-switch">
       <van-switch-cell v-model="settingSurrent" @input="onInput" title="设为当前宝贝" />
-    </van-cell-group>
+    </van-cell-group> -->
 
     <!-- 截图工具 -->
     <van-popup class="cropper-popup" v-model="cropperShow" get-container='#app'>
@@ -110,7 +109,7 @@ export default {
       minDate: new Date(format(new Date(), 'yyyy') - 20, 0, 0),
       maxDate: new Date(format(new Date(), 'yyyy') - 1, 0),
       currentDate: new Date(format(new Date(), 'yyyy') - 2, 0, 0),
-      settingSurrent: false,
+      // settingSurrent: false,
       childInfo: {
         name: '',
         gender: 'boy',
@@ -172,9 +171,9 @@ export default {
         this.childInfo = JSON.parse(localStorage['childInfo'])
       }
       
-      if (localStorage['radio'] != undefined) {
-        this.sexTypeIndex = localStorage['radio']
-      }
+      // if (localStorage['radio'] != undefined) {
+      //   this.sexTypeIndex = localStorage['radio']
+      // }
 
 
       if(this.$route.query.type!='add'){
@@ -394,7 +393,7 @@ export default {
 </script>
 <style>
 .add-child .van-cell__title.cell-school-title {
-  flex: 5;
+  flex: 4;
 }
 
 .form-submit .theme-btn{

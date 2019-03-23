@@ -71,13 +71,14 @@ import cardLevel from '@/components/pages/accept/cardLevel'
 import cardTime from '@/components/pages/accept/cardTime'
 
 
+//阅读指导
+import ReadGuide from '@/components/pages/guided/readGuide'
+
+
 Vue.use(Router)
 
 export default new Router({
   scrollBehavior (to, from, savedPosition) {
-    console.log(to)
-    console.log(from)
-    console.log(savedPosition)
     if (savedPosition) {
       return savedPosition
     } else {
@@ -161,17 +162,6 @@ export default new Router({
           }]
         },
         {
-          path: '/article',
-          name: 'article',
-          component: Article,
-          meta: {
-            keepAlive: true,
-            title: '正文',
-            tabActive: 1,
-            isFooterBar: false,
-          }
-        },
-        {
           path: '/notice',
           name: 'notice',
           component: Notice,
@@ -202,25 +192,6 @@ export default new Router({
           }
         },
         {
-          path: '/readAmount',
-          name: 'readAmount',
-          component: ReadAmount,
-          meta: {
-            title: '我的书',
-            isFooterBar: false,
-            keepAlive: true
-          }
-        },
-        {
-          path: '/bookshelf',
-          name: 'bookshelf',
-          component: Bookshelf,
-          meta: {
-            isFooterBar: false,
-            keepAlive: true
-          } 
-        },
-        {
           path: '/activity',
           name: 'activity',
           component: Activity,
@@ -244,7 +215,8 @@ export default new Router({
           meta: {
             title: 'BookZoom',
             tabActive: 4,
-            isFooterBar: true
+            isFooterBar: true,
+            keepAlive: true
           }
         },
         {
@@ -347,15 +319,6 @@ export default new Router({
           }
         },
         {
-          path: '/borrow-list',
-          name: 'borrow-list',
-          component: BorrowList,
-          meta: {
-            title: '借阅记录',
-            isFooterBar: false
-          }
-        },
-        {
           path: '/ranking',
           name: 'ranking',
           component: Ranking,
@@ -374,6 +337,55 @@ export default new Router({
           }
         }
       ]
+    },
+    {
+      path: '/article',
+      name: 'article',
+      component: Article,
+      meta: {
+        title: '正文',
+        tabActive: 1,
+        isFooterBar: false,
+      }
+    },
+    {
+      path: '/bookshelf',
+      name: 'bookshelf',
+      component: Bookshelf,
+      meta: {
+        isFooterBar: false,
+        keepAlive: true
+      } 
+    },
+    {
+      path: '/readAmount',
+      name: 'readAmount',
+      component: ReadAmount,
+      meta: {
+        title: '我的书',
+        isFooterBar: false,
+        keepAlive: true
+      }
+    },
+    {
+      path: '/borrow-list',
+      name: 'borrow-list',
+      component: BorrowList,
+      meta: {
+        title: '借阅记录',
+        keepAlive: true,
+        isFooterBar: false
+      }
+    },
+    {
+      path: '/read-guide',
+      name: 'read-guide',
+      component: ReadGuide,
+      meta: {
+        title: '阶梯阅读指导',
+        keepAlive: true,
+        isFooterBar: false
+      }
     },
     {
       path:'/train',
@@ -409,6 +421,9 @@ export default new Router({
       path:'/find',
       name:'find',
       component: Find,
+      meta:{
+        keepAlive: true
+      },
       children:[{
         path: '/apps-find',
         name: 'apps-find',

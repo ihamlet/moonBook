@@ -10,7 +10,9 @@
         <span class="text">{{$route.query.back||$route.query.backGo?'返回':'首页'}}</span>
       </div>
       <div class="head-bar-text" slot="right" @click="toVerifyList">
-        <span class="text">成员审核</span>
+        <span class="text">
+          <i class="iconfont">&#xe653;</i>
+        </span>
       </div>
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
@@ -32,7 +34,6 @@
           </div>
           <div class="label">{{childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
-          <family v-if='childInfo.is_mine'/>
         </div>
         <!-- <div class="add-praise" @click="babyPraise(childInfo)">
           <i class="iconfont">&#xe6e3;</i>
@@ -50,7 +51,7 @@
           <span class="bar-title">借阅量</span>
         </div>
         <div class="bar-item">
-          <span class="number">729</span>
+          <span class="number">{{childInfo.sign_read_count}}</span>
           <span class="bar-title">阅读打卡</span>
         </div>
         <div class="bar-item diary" @click="toReadStat">
@@ -159,7 +160,6 @@ import avatar from "./../module/avatar"
 import reading from "./../module/reading"
 import graphicCard from "./../module/card/graphicCard"
 import classShow from './../module/classModule/classShow'
-import family from './../module/myModule/family'
 import metro from './../module/mold/metro'
 import slogan from './../module/slogan'
 
@@ -172,7 +172,6 @@ export default {
     avatar,
     graphicCard,
     classShow,
-    family,
     metro,
     slogan
   },

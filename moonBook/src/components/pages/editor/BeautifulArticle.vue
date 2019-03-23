@@ -1,6 +1,6 @@
 <template>
   <div class="beautiful-article">
-    <van-nav-bar title="编辑" left-text="取消" @click-left="onClickLeft" fixed :zIndex='10'>  
+    <van-nav-bar title="编辑" fixed :zIndex='10'>  
       <!-- <div class="head-bar-btn theme-color" slot="right">
         <van-button :loading='getPercentNum != 0' class="theme-btn" type="primary" size="small" round @click="onClickRelease">发布</van-button>
       </div> -->
@@ -66,20 +66,6 @@ export default {
             back_id: this.$route.query.id,
             back_name: this.$route.query.back
           }
-        })
-      }
-    },
-    onClickLeft(){
-      if(this.$route.query.back){
-        this.$router.push({
-          name: this.$route.query.back,
-          query:{
-            id: this.$route.query.id
-          }
-        })
-      }else{
-        this.$router.push({
-          name:'apps-find'
         })
       }
     },

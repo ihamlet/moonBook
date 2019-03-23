@@ -4,7 +4,7 @@
       <div class="family-list flex flex-align" slot="title">
         <div class="flex flex-align">
           <div class="avatar" v-for='(item,index) in list' :key="index" @click="toDialog">
-            <img :src="getAvatar(item.avatar)" v-if='index < 4' />
+            <img :src="getAvatar(item.avatar)" v-if='index < 6' />
           </div>
         </div>
         <div class="invite">
@@ -127,19 +127,19 @@ export default {
 }
 
 .avatar img {
-  width: 1.5625rem /* 25/16 */;
-  height: 1.5625rem /* 25/16 */;
+  width: 1.875rem /* 30/16 */;
+  height: 1.875rem /* 30/16 */;
   border-radius: 50%;
   overflow: hidden;
   margin-right: 0.625rem /* 10/16 */;
 }
 
-.family-card {
-  margin-top: 0.625rem /* 10/16 */;
-}
-
 .family-list {
   justify-content: space-between;
+}
+
+.family-card{
+  padding: .625rem /* 10/16 */;
 }
 </style>
 <style>

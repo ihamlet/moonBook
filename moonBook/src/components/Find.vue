@@ -3,9 +3,9 @@
     <div class="root-dom">
       <div class="refresh">
         <keep-alive>
-          <router-view v-if="$route.meta.keepAlive"/>
+          <router-view v-if="$route.meta.keepAlive" />
         </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive"></router-view>
+        <router-view v-if="!$route.meta.keepAlive" />
       </div>
       <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='userTabBtn' />
     </div>

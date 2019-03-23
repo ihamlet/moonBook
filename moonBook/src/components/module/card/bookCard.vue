@@ -9,7 +9,7 @@
       <div class="book-info"  @click="toBookDetails(item)">
         <div class="title" v-line-clamp:20="2">{{item.book_title}}</div>
         <div class="attach">
-          <div class="pos-title" v-if='item.pos_name'>书架：{{item.pos_name}}</div>
+          <div class="pos-title" v-if='item.pos_name'>书位：{{item.pos_name}}</div>
         </div>
       </div>
     </van-col>

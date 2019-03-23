@@ -95,6 +95,7 @@ export default {
   width: 100%;
   overflow: hidden;
   position: relative;
+  user-select: none;
 }
 
 .img-grid {

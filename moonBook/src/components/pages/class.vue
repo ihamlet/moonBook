@@ -211,15 +211,6 @@ export default {
 
         axios.get('/book/baby/join_banji', BabyJoinBanjiBdind).then(res => {
           if (res.data.status == 1) {
-            if (this.$route.query.back) {
-              this.$router.push({
-                name: 'edit-child',
-                query: {
-                  id: this.$route.query.id,
-                  type: this.$route.query.type
-                }
-              })
-            } else {
               this.$toast.success(res.data.msg)
               this.$router.push({
                 name: 'class-home',
@@ -228,7 +219,6 @@ export default {
                 }
               })
               this.getUserData()
-            }
           } else {
             this.$toast.fail('加入失败')
             this.$router.push({
@@ -247,10 +237,13 @@ export default {
         }
       }
       axios.get(`/book/SchoolBanji/getList`, data).then(res => {
-        if (res.data.count == 0) {
-          this.show = true
-        } else {
-          if (res.data.status == 1) {
+        switch(res.data.status){
+          case 1: 
+          if(res.data.count == 0){
+            this.show = true
+            this.loading = false
+            this.finished = false
+          }else{
             this.page++
             this.list = this.list.concat(res.data.data)
             this.loading = false
@@ -258,8 +251,8 @@ export default {
               this.finished = true
             }
           }
+          break
         }
-
       })
     },
     formatBanjiTitle(text) {

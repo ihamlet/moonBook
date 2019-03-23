@@ -1,7 +1,7 @@
 <template>
   <div class="bookshelf">
-    <van-search v-model="keyword" placeholder="请输入搜索关键词" shape="round" @search="onSearch">
-      <div slot="action" @click="onSearch">搜索</div>
+    <van-search v-model="keyword" placeholder="请输入搜索关键词" show-action shape="round" @search="onSearch">
+      <div slot="action" class="theme-color" @click="onSearch">搜索</div>
     </van-search>
     <van-tabs color='#409eff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex" @click="onClick" @disabled='onClickDisabled'>
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index" :disabled='list.title=="筛选"'>
@@ -79,8 +79,7 @@ export default {
 
       let data = {
         params: {
-          page: this.page,
-          child_id: this.$route.query.id
+          page: this.page
         }
       }
 

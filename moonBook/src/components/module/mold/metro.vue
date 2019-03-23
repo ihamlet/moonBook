@@ -5,8 +5,8 @@
                 <div class="metro-l">
                     <div class="grid-metro" @click="toBookShelf">
                         <div class="info">
-                            <div class="title">书架</div>
-                            <div class="sub">阅亮书架</div>
+                            <div class="title">推荐书单</div>
+                            <div class="sub">书架</div>
                             <van-button class="theme-button" type="info" round size="mini">立即查看</van-button>
                         </div>
                         <img class="bg-img book-shelf" src="./../../../assets/img/book-shelf.png"/>
@@ -36,10 +36,7 @@ export default {
     methods: {
         toBookShelf(){
             this.$router.push({
-                name:'bookshelf',
-                query:{
-                    id: this.$route.query.id
-                }
+                name:'read-guide'
             })
         }
     }
