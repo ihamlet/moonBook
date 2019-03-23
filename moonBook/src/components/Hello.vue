@@ -5,7 +5,11 @@
     </transition>
     <div class="root-dom" v-if='!startPageShow'>
       <div class="refresh">
-        <router-view />
+        <!-- 通过keep-alive 缓存页面 -->
+        <keep-alive>
+          <router-view v-if="$route.meta.keepAlive" />
+        </keep-alive>
+        <router-view v-if="!$route.meta.keepAlive"></router-view>
       </div>
       <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='userTabBtn'/>
     </div>

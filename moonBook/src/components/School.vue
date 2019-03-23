@@ -2,7 +2,10 @@
   <div class="page">
     <div class="root-dom">
       <div class="refresh">
-        <router-view />
+        <keep-alive>
+            <router-view v-if="$route.meta.keepAlive"></router-view>
+        </keep-alive>
+        <router-view v-if="!$route.meta.keepAlive"></router-view>
       </div>
       <footer-bar v-if='$route.meta.isFooterBar' @release="isGraphicShow = true" :userTabBtn='userTabBtn' />
     </div>

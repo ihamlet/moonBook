@@ -10,7 +10,6 @@ import Login from '@/components/pages/login'
 import Zoom from '@/components/pages/zoom'
 import BabyHome from '@/components/pages/babyHome'
 import ClassHome from '@/components/pages/classHome'
-import ClassZoom from '@/components/pages/classZoom'
 
 import cardList from '@/components/pages/cardList'
 
@@ -76,6 +75,9 @@ Vue.use(Router)
 
 export default new Router({
   scrollBehavior (to, from, savedPosition) {
+    console.log(to)
+    console.log(from)
+    console.log(savedPosition)
     if (savedPosition) {
       return savedPosition
     } else {
@@ -94,7 +96,8 @@ export default new Router({
           component: Home,
           meta: {
             tabActive: 0,
-            isFooterBar: true
+            isFooterBar: true,
+            keepAlive: true
           }
         },
         {
@@ -138,7 +141,8 @@ export default new Router({
             name:'AcceptSchoolList',
             component: SchoolList,
             meta:{
-              active:0
+              active:0,
+              keepAlive: true
             }
           },{
             path:'/accept/cardLevel',
@@ -161,9 +165,10 @@ export default new Router({
           name: 'article',
           component: Article,
           meta: {
+            keepAlive: true,
             title: '正文',
             tabActive: 1,
-            isFooterBar: false
+            isFooterBar: false,
           }
         },
         {
@@ -173,7 +178,8 @@ export default new Router({
           meta: {
             title: '消息中心',
             tabActive: 4,
-            isFooterBar: true
+            isFooterBar: true,
+            keepAlive: true
           }
         },
         {
@@ -201,7 +207,8 @@ export default new Router({
           component: ReadAmount,
           meta: {
             title: '我的书',
-            isFooterBar: false
+            isFooterBar: false,
+            keepAlive: true
           }
         },
         {
@@ -209,7 +216,8 @@ export default new Router({
           name: 'bookshelf',
           component: Bookshelf,
           meta: {
-            isFooterBar: false
+            isFooterBar: false,
+            keepAlive: true
           } 
         },
         {
@@ -246,17 +254,8 @@ export default new Router({
           meta: {
             title: '宝贝的班级',
             tabActive: 1,
-            isFooterBar: true
-          }
-        },
-        {
-          path: '/class-zoom',
-          name: 'class-zoom',
-          component: ClassZoom,
-          meta: {
-            title: '班级风采',
-            tabActive: 0,
-            isFooterBar: true
+            isFooterBar: true,
+            keepAlive: true
           }
         },
         {
@@ -265,7 +264,8 @@ export default new Router({
           component: cardList,
           meta: {
             title: '我的卡包',
-            isFooterBar: false
+            isFooterBar: false,
+            keepAlive: true
           }
         },
         {
@@ -332,7 +332,8 @@ export default new Router({
           component: Information,
           meta: {
             title:'收到的赞',
-            isFooterBar: false
+            isFooterBar: false,
+            keepAlive: true
           }
         },
         {
@@ -341,7 +342,8 @@ export default new Router({
           component: VerifyFamily,
           meta: {
             title: '成员审核',
-            isFooterBar: false
+            isFooterBar: false,
+            keepAlive: true
           }
         },
         {
@@ -359,7 +361,8 @@ export default new Router({
           component: Ranking,
           meta: {
             title: '阅读榜',
-            isFooterBar: false
+            isFooterBar: false,
+            keepAlive: true
           }
         },
         {
@@ -398,7 +401,8 @@ export default new Router({
         meta: {
           title: '学校主页',
           tabActive: 0,
-          isFooterBar: true
+          isFooterBar: true,
+          keepAlive: true
         }
       }]
     },{
@@ -412,18 +416,23 @@ export default new Router({
         meta: {
           title: '发现',
           tabActive: 0,
-          isFooterBar: true
+          isFooterBar: true,
+          keepAlive: true
         }
       }]
     },{
       path:'/baby',
       name:'baby',
       component: Baby,
+      meta:{
+        keepAlive: true
+      },
       children:[{
         path: '/baby-home',
         name: 'baby-home',
         component: BabyHome,
         meta: {
+          keepAlive: true,
           title: '我的宝贝',
           tabActive: 0,
           isFooterBar: true
@@ -439,7 +448,8 @@ export default new Router({
         component: Publishing,
         meta: {
           title: '发布长文',
-          type:'long'
+          type:'long',
+          keepAlive: true
         }
       },
       {

@@ -7,8 +7,10 @@
         <van-step>会员时间</van-step>
       </van-steps>
     </div>
-
-    <router-view />
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"/>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 <script>
