@@ -1119,4 +1119,30 @@ i.iconfont.vip-1 {
   left: auto;
   right: 0;
 }
+
+
+.date {
+  width: 100%;
+  height: 2.8125rem /* 45/16 */;
+  text-align: center;
+  line-height: 2.8125rem /* 45/16 */;
+  background: #fff;
+  position: relative;
+  color: #303133;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.date::before {
+  content: '';
+  position: absolute;
+  width: 1.875rem /* 30/16 */;
+  height: .625rem /* 10/16 */;
+  border-radius: 30px/10px;
+  background: linear-gradient(#b8dbff,  #409eff); /* 标准的语法 */
+  bottom: .75rem /* 12/16 */;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  z-index: -1;
+}
 </style>

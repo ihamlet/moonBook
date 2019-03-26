@@ -148,29 +148,6 @@ export default {
   width: 100%;
 }
 
-.date {
-  width: 100%;
-  height: 2.8125rem /* 45/16 */;
-  text-align: center;
-  line-height: 2.8125rem /* 45/16 */;
-  background: #fff;
-  position: relative;
-  color: #303133;
-  font-weight: 700;
-}
-
-.date::before {
-  content: '';
-  position: absolute;
-  width: 3.75rem /* 60/16 */;
-  height: 0.25rem /* 4/16 */;
-  border-radius: 0.25rem /* 4/16 */;
-  background: #409eff;
-  bottom: 0;
-  left: 50%;
-  transform: translate3d(-50%, 0, 0);
-}
-
 .footer-bar {
   position: fixed;
   bottom: 0.625rem /* 10/16 */;
