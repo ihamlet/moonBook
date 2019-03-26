@@ -165,11 +165,11 @@ export default {
           apiLink = '/book/SchoolShelfBook/getList'
           break
         case '收藏':
-          data.params.collect = 1
+          data.params.is_collect = 1
           apiLink = '/book/SchoolShelfBook/getList'
           break
         case '磨损':
-          data.params.is_broke = 1
+          data.params.is_broken = 1
           apiLink = '/book/SchoolShelfBook/getList'
           break
         case '读过':
@@ -178,7 +178,7 @@ export default {
           break
         case '捐书':
           data.params.is_check = this.isCheck
-          apiLink = 'book/TushuDonation/getList'
+          apiLink = '/book/member/get_donations'
           break
       }
 

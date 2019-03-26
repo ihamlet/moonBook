@@ -31,7 +31,7 @@
         <div class="volume flex flex-justify">
           坚持阅读
           <div class="flex">
-            <div class="number">{{childInfo.insist_days}}</div>
+            <div class="number">{{childInfo.continuous_sign_day}}</div>
             <div class="unit">天</div>
           </div>
         </div>

@@ -55,7 +55,7 @@
           <span class="bar-title">阅读打卡</span>
         </div>
         <div class="bar-item diary" @click="toReadStat">
-          <span class="number">{{childInfo.continuity_days}}</span>
+          <span class="number">{{childInfo.continuous_sign_day}}</span>
           <span class="bar-title">坚持天数</span>
         </div>
         <div class="bar-item praise" @click="toInformation">
@@ -664,15 +664,15 @@ export default {
       }
     },
     addBaby(){
-       this.$router.push({
-          name: 'edit-child',
-          query: {
-            pageTitle: '添加宝贝',
-            type: 'add',
-            back: this.$route.name,
-            id: this.$route.query.id
-          }
-        })
+      this.$router.push({
+        name: 'edit-child',
+        query: {
+          pageTitle: '添加宝贝',
+          type: 'add',
+          back: this.$route.name,
+          id: this.$route.query.id
+        }
+      })
     },
     onSelectBaby(item) {
         this.hackReset = false

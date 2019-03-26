@@ -288,8 +288,21 @@ export default {
       }
     },
     punch() {
-      Cookies.set('punckLink', location.href)
-      location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
+      this.scanQRcode({id:this.$route.query.id}).then(res=>{
+        switch(res.data.status){
+          case 1:
+            this.$router.push({
+              name:'punch-back',
+              query:{
+                id: this.$route.query.id
+              }
+            })
+          break
+          case 0:
+            this.$toast.fail('打卡失败')
+          break
+        }
+      })
     },
     cutover() {
       if (this.managerState.length > 1 && this.actions != null) {

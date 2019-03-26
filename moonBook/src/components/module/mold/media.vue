@@ -6,14 +6,23 @@
     <!-- 视频  -->
     <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"'>
       <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
-        <div class="video-thumb" :class="videoItem.rotate == '90'?'vertical':''" v-if='videoItem&&videoItem.is_video == "1"' @click="toVideoPage(videoItem)">
-          <div class="player">
-            <i class="iconfont">&#xe639;</i>
+        <!-- 卡片 -->
+        <div class="video-thumb" v-if='videoItem&&videoItem.is_video == "1"'>
+          <div class="player-card" :class="videoItem.rotate == '90'?'vertical':''" v-if="type=='card'">
+            <div class="player">
+              <i class="iconfont">&#xe639;</i>
+            </div>
+            <img :src="item.cover" alt="视频封面"/>
+            <van-tag class="duration" size="medium" color="rgba(0,0,0,.5)">{{getDuration(videoItem.duration)}}</van-tag>
           </div>
-          <img :src="item.cover" alt="视频封面"/>
-          <van-tag class="duration" size="medium" color="rgba(0,0,0,.5)">{{getDuration(videoItem.duration)}}</van-tag>
+
+          <!-- 正文播放 -->
+          <div class="player-windows" v-else>
+              <video :src='videoItem.photo' :poster='videoItem.thumb' controls muted x-webkit-airplay="true" playsinline  webkit-playsinline="true" x5-video-player-type="h5"></video>
+          </div>
         </div>
       </div>
+
     </div>
 
     <div class="media img" v-if='item.template_id == "1"'>
@@ -116,13 +125,13 @@ export default {
   margin-bottom: .625rem /* 10/16 */;
 }
 
-.video-thumb.vertical{
+.player-card.vertical{
   width: 8.75rem /* 140/16 */;
   height: 13.75rem /* 220/16 */;
   overflow: hidden;
 }
 
-.video-thumb.vertical img{
+.player-card.vertical img{
   width: 100%;
   height: 100%;
   object-fit: cover;
