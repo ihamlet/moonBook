@@ -211,12 +211,11 @@ export default {
                 list.map(item=>tab.convert(item))
               }
 
-              console.log('list', list)
-
               if(tab.params.page === 1) {                
                 tab.content = list
               } else {
-                tab.content = tab.content.concat(list);
+                tab.content = tab.content.concat(list)
+                this.$forceUpdate()
               }
             
               tab.params.page ++
