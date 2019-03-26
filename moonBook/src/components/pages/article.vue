@@ -1,10 +1,10 @@
 <template>
   <div class="article page-padding">
-    <div class="cover" v-if='item.template_id == 0'>
+    <div class="cover" v-if='item.template_id == 0&&item.cover'>
       <img :src="item.cover" />
     </div>
     <div class="page-container">
-      <van-nav-bar :border='false' :class="item.template_id == 0&&!themeBarSearch?'theme-nav':''" :left-text="this.$route.query.back?'返回':'发现'" left-arrow fixed :zIndex='100' @click-left="onClickLeft">
+      <van-nav-bar :border='false' :class="item.cover&&item.template_id == 0&&!themeBarSearch?'theme-nav':''" fixed :zIndex='100'>
         <div class="head-bar-title" slot="title">
           <transition name="slide-fade" mode="out-in">
             <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
@@ -25,7 +25,7 @@
           </transition>
         </div>
       </van-nav-bar>
-      <div class="container" :class="item.template_id == 0?'noTop':''">
+      <div class="container" :class="item.template_id == 0&&item.cover?'noTop':''">
         <div class="module-user-card page-padding">
           <userCard :item='item' v-if='item.template_id != "0"'/>
         </div>
@@ -63,7 +63,8 @@ export default {
   computed: {
     ...mapState(['slogan','logo']),
     ...mapGetters(['userDataState']),
-    ...mapGetters('beautifulArticle',['getArticleContent','getTitle'])
+    ...mapState('beautifulArticle',['cover']),
+    ...mapGetters('beautifulArticle',['getArticleContent','getTitle','getImageList'])
   },
   data() {
     return {
@@ -106,6 +107,7 @@ export default {
           views:'999+',
           title: this.getTitle,
           template_id:'0',
+          cover: this.getImageList[0] || this.cover,
           user:{
             avatar: this.userDataState.avatar,
             username: this.userDataState.name,
@@ -136,38 +138,6 @@ export default {
     onScrollDomShow(bl){
       this.themeBarSearch = bl
     },
-    onClickLeft() {
-      // 活动页需要跳转tid
-      if(this.$route.query.back&&this.$route.query.back != 'activity'){
-        this.$router.push({
-          name: this.$route.query.back,
-          query: {
-            id: this.$route.query.back_id,
-            type: this.$route.query.type,
-            back: this.$route.query.back_name
-          }
-        })
-      }else if(this.$route.query.back){
-          this.$router.push({
-            name: this.$route.query.back,
-            query: {
-              id: this.$route.query.back_id,
-              tid: this.$route.query.tid
-            }
-          })
-      }else{
-        this.$router.push({
-          name:'apps-find'
-        })
-      }
-    },
-    // qrcode() {
-    //   QRCode.toDataURL(window.location.href).then(url => {
-    //     this.qrImage = url
-    //   }).catch(err => {
-    //     console.error(err)
-    //   })
-    // },
     getAvatar(img) {
         let pos = img.indexOf('http://')
         let result

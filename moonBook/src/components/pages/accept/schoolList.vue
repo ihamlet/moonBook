@@ -87,7 +87,12 @@ export default {
       }
   
       return this.getSchoolList(products).then(res => {
-          this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data)
+          if(this.page == 1){
+            this.tab[this.tabIndex].content = res.data
+          }else{
+            this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data)
+          }
+          
           this.loading = false
           this.page++
           if (this.tab[this.tabIndex].content.length >= res.count) {

@@ -10,7 +10,7 @@
         </div>
         <div class="info">
           <div class="name flex flex-align">
-            <span  v-line-clamp:20="1" :class="[item.card_level>'0'?'vip-highlight':'']">{{item.user.name}}</span>
+            <span v-line-clamp:20="1" :class="[item.card_level>'0'?'vip-highlight':'']">{{item.user.name}}</span>
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
@@ -20,10 +20,6 @@
         <div class="follow" v-if='!item.isMe&&item.user_id>0'>
            <van-button size="small" class="theme-btn" :plain='item.isSubscribe?true:false' type="primary" round @click="follow(item)">{{item.isSubscribe?'已关注':'关注'}}</van-button>
         </div>
-        <div class="views" v-if='item.isMe'>
-          <span>{{item.views}}</span>
-          <span>阅读</span>
-        </div>
         <div v-if='type!="notice"' class="more" @click="more(item)"><i class="iconfont">&#xe6f7;</i></div>
       </div>
 
@@ -31,7 +27,7 @@
 
       <div class="temp-type flex flex-align">
         <van-tag color='#ad0000' class="school-tag"  v-line-clamp:20="1" type="success" size="medium" plain v-if='item.school_id > 0'>
-          <span @click="toSchoolHome(item.school_id)">{{item.schoolName}}</span>
+          <div @click="toSchoolHome(item.school_id)">{{item.schoolName}}</div>
         </van-tag>
          <van-tag color="#ffe1e1" text-color="#ad0000" size="medium" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
       </div>
@@ -41,8 +37,8 @@
       </div>
 
       <div class="social flex flex-align">
-        <div class="share" @click="share(item)">
-          <i class="iconfont">&#xe6eb;</i> {{item.share_num>1000?'999+':item.share_num == '0'?'分享':item.share_num}}
+        <div class="share">
+          <i class="iconfont">&#xe654;</i> {{item.views>1000?'999+':item.views == '0'?'浏览':item.views}}
         </div>
         <div class="message"  @click="toArticle(item)">
           <i class="iconfont">&#xe731;</i> {{item.reply_num>1000?'999+':item.reply_num == '0'?'评论':item.reply_num}}
@@ -55,9 +51,9 @@
       </div>
     </div>
 
-    <van-popup v-model="shareShow" position='bottom' get-container='#app'>
+    <!-- <van-popup v-model="shareShow" position='bottom' get-container='#app'>
       <share @hide='shareShow = false' :postId='item.post_id' :item='item'/>
-    </van-popup>
+    </van-popup> -->
 
     <!-- 生成图片 -->
     <!-- <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
@@ -78,7 +74,7 @@ export default {
   name: "graphic-card",
   props: ["item", "type",'avatar','title'],
   components: {
-    share,
+    // share,
     taskCard,
     vipLevel,
     media
@@ -114,15 +110,15 @@ export default {
     follow(item){
       this.$emit('follow',item)
     },
-    share(item){
-      this.shareShow = true
-      this.link = `/article?id=${item.post_id}&type=${item.template_id}`
-      QRCode.toDataURL(this.link).then(url => {
-        this.qrImage = url
-      }).catch(err => {
-        console.log(err)
-      })
-    },
+    // share(item){
+    //   this.shareShow = true
+    //   this.link = `/article?id=${item.post_id}&type=${item.template_id}`
+    //   QRCode.toDataURL(this.link).then(url => {
+    //     this.qrImage = url
+    //   }).catch(err => {
+    //     console.log(err)
+    //   })
+    // },
     toBookZoom(item){
       this.$router.push({
         name:'zoom',
@@ -222,22 +218,8 @@ export default {
   border-radius: 50%;
 }
 
-.follow,
-.views{
+.follow{
   flex: .6
-}
-
-.views{
-  text-align: center;
-  border: 1px solid #E4E7ED;
-  font-size: .8125rem /* 13/16 */;
-  padding: 0 .3125rem /* 5/16 */;
-}
-
-.views span{
-  display: block;
-  height: 1.25rem /* 20/16 */;
-  color: #909399;
 }
 
 .school {
@@ -264,5 +246,9 @@ export default {
 
 .vip-highlight{
   color: #FF9800;
+}
+
+.temp-type{
+  padding: .3125rem /* 5/16 */ 0;
 }
 </style>

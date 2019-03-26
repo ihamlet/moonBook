@@ -1,6 +1,6 @@
 <template>
   <div class="read-amount">
-    <van-nav-bar :zIndex='10' :border='false' :title="$route.meta.title" left-text="返回" fixed left-arrow @click-left="onClickLeft" @click-right="onClickRight">
+    <van-nav-bar :zIndex='10' :border='false' :title="$route.meta.title" fixed @click-right="onClickRight">
       <div class="right-btn" slot="right">
         <van-button class="theme-btn" round size="small" type="primary">捐书</van-button>
       </div>
@@ -128,20 +128,20 @@ export default {
         this.childInfo = res.data.data
       })
     },
-    onClickLeft() {
-      if (this.$route.query.back) {
-        this.$router.push({
-          name: this.$route.query.back,
-          query: {
-            id: this.$route.query.id
-          }
-        })
-      } else {
-        this.$router.push({
-          name: 'my'
-        })
-      }
-    },
+    // onClickLeft() {
+    //   if (this.$route.query.back) {
+    //     this.$router.push({
+    //       name: this.$route.query.back,
+    //       query: {
+    //         id: this.$route.query.id
+    //       }
+    //     })
+    //   } else {
+    //     this.$router.push({
+    //       name: 'my'
+    //     })
+    //   }
+    // },
     onClickRight() {
       window.location.href = '/book/member/donation_entry'
     },

@@ -1,7 +1,10 @@
 <template>
   <div class="verify-list">
-    <van-nav-bar :title="$route.meta.title" left-text="我的宝贝" right-text="邀请家人" left-arrow @click-left="onClickLeft" @click-right="onClickRight" />
+    <van-nav-bar :title="$route.meta.title"/>
     <div class="container">
+      <div class="theme-background">
+        <family />
+      </div>
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <van-cell v-for="(item,index) in list" :key="index" center>
@@ -12,7 +15,7 @@
                   <div class="name">{{item.parent_name}}</div>
               </div>
               <div class="btn">
-                  <van-button class="theme-btn" size='small' type="primary" @click="by(item)">通过</van-button>
+                  <van-button class="theme-btn" size='small' type="primary" round @click="by(item)">通过</van-button>
               </div>
           </van-cell>
 
@@ -26,9 +29,13 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
+import family from './../../module/myModule/family'
 
 export default {
   name: 'verifyList',
+  components: {
+    family
+  },
   data() {
     return {
       list: [],
@@ -52,14 +59,6 @@ export default {
         this.loading = false
         if (this.list.length >= res.data.count) {
           this.finished = true
-        }
-      })
-    },
-    onClickLeft() {
-      this.$router.push({
-        name: 'baby-home',
-        query:{
-          id: this.$route.query.id
         }
       })
     },

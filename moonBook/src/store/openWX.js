@@ -42,9 +42,9 @@ export default {
   actions: {
     //配置微信
     wxConfig(context, products) {
-      axios.post("/book/index/getWxJsParams", {
+      axios.post("/book/weixin/js_params", {
           apiList: jsApiList,
-          url: location.href
+          url: location.href.split('#')[0]
         })
         .then(res => {
           wx.config(res.data)
@@ -70,15 +70,12 @@ export default {
         }
 
         let data = {
-          title: products.item.title || title,
+          title: title || products.item.title,
           link: location.href,
           desc: desc,
           imgUrl: products.item.imgUrl || context.state.logo,
           success: products.success
         }
-
-
-        console.log(products.item.imgUrl)
 
         wx.onMenuShareTimeline(data)
         wx.onMenuShareQQ(data)
@@ -125,15 +122,23 @@ export default {
             }
         })
     },
-    //扫一扫接口
-    scanQRcode(){
-      wx.scanQRCode({
-        needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-        scanType: ["barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-          success: function (res) {
-            context.commit('setResultStr',res.resultStr)
-          }
+    scanQRcode(context, products){
+      return new Promise((resolve, reject) => {
+        wx.scanQRCode({
+          needResult: 1,
+          scanType: ["barCode"],
+            success(res) {
+              let data = {
+                child_id: products.id,
+                isbn: res.resultStr
+              }
+              
+              axios.post('/book/member/read_sign',data).then(res=>{
+                resolve(res)
+              })
+            }
         })
+      })
     }
   }
 }

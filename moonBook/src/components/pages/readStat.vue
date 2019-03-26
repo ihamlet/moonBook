@@ -1,10 +1,10 @@
 <template>
   <div class="readstat page-padding">
-    <van-nav-bar :zIndex='99' :class="fixedHeaderBar?'theme-nav':''" :title="fixedHeaderBar?$route.meta.title:childInfo.name" fixed left-text="返回" @click-left="onClickLeft" @click-right="show = true">
-      <div class="head-bar-text" slot="left">
+    <van-nav-bar :zIndex='99' :class="fixedHeaderBar?'theme-nav':''" :title="fixedHeaderBar?$route.meta.title:childInfo.name" fixed @click-right="show = true">
+      <!-- <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'我的'}}</span>
-      </div>
+      </div> -->
       <div class="head-bar-icon" slot="right">
         <i class="iconfont">&#xe635;</i>
       </div>
@@ -74,11 +74,11 @@
           <van-cell size='large'>
             <div class="text flex flex-justify">
               <div class="content l">本月上传内容<span class="data">{{childInfo.month_post_count}}篇</span></div>
-              <div class="content r"><span class="data">349人</span>点赞</div>
+              <div class="content r"><span class="data">{{childInfo.zan_count}}人</span>点赞</div>
             </div>
           </van-cell>
           <van-cell size='large'>
-            <div class="text flex flex-justify">影响<span class="data">3人</span> 阅读了<span class="data">140 本</span>图书</div>
+            <div class="text flex flex-justify">影响<span class="data">{{childInfo.fluent_count}}人</span> 阅读了<span class="data">{{childInfo.fluent_read_count}} 本</span>图书</div>
           </van-cell>
         </van-cell-group>
       </div>
@@ -185,20 +185,20 @@ export default {
         this.domHeight = this.$refs.head.offsetHeight / 2
       }
     },
-    onClickLeft() {
-      if (this.$route.query.back) {
-        this.$router.push({
-          name: this.$route.query.back,
-          query: {
-            id: this.$route.query.id
-          }
-        })
-      } else {
-        this.$router.push({
-          name: 'my'
-        })
-      }
-    },
+    // onClickLeft() {
+    //   if (this.$route.query.back) {
+    //     this.$router.push({
+    //       name: this.$route.query.back,
+    //       query: {
+    //         id: this.$route.query.id
+    //       }
+    //     })
+    //   } else {
+    //     this.$router.push({
+    //       name: 'my'
+    //     })
+    //   }
+    // },
     toRanking() {
       this.$router.push({
         name: 'ranking',
@@ -231,7 +231,7 @@ export default {
 }
 
 .baby-info {
-  padding: 5rem /* 80/16 */ 1.875rem /* 30/16 */;
+  padding: 4.0625rem /* 65/16 */ 1.875rem /* 30/16 */;
   color: #fff;
   justify-content: space-between;
 }

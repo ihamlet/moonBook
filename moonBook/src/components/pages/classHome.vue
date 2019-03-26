@@ -1,13 +1,13 @@
 <template>
   <div class="class-home page-padding" v-if='hackReset'>
-    <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed @click-left="onClickLeft">
+    <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed :border='false'>
       <div class="head-bar-title" slot="title" @click="cutover">
         {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="managerState.length > 1 && actions != null">&#xe608;</i>
       </div>
-      <div class="head-bar-text" slot="left">
+      <!-- <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'我的'}}</span>
-      </div>
+      </div> -->
       <div class="head-bar-text" slot='right' v-if='manage' @click="toManage">
         <span class="text">管理班级</span>
       </div>
@@ -109,7 +109,7 @@ export default {
 
         str = `${childName}的班级`
       } else {
-        str = '我的班级'
+        str = '班级'
       }
 
       return str
@@ -253,18 +253,18 @@ export default {
         }
       })
     },
-    onClickLeft() {
-      if (this.$route.query.back) {
-        this.$router.push({
-          name: this.$route.query.back,
-          query: {
-            id: this.$route.query.child_id || this.$route.query.school_id
-          }
-        })
-      } else {
-        this.$router.push({ name: 'my' })
-      }
-    },
+    // onClickLeft() {
+    //   if (this.$route.query.back) {
+    //     this.$router.push({
+    //       name: this.$route.query.back,
+    //       query: {
+    //         id: this.$route.query.child_id || this.$route.query.school_id
+    //       }
+    //     })
+    //   } else {
+    //     this.$router.push({ name: 'my' })
+    //   }
+    // },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {
         this.qrImage = url

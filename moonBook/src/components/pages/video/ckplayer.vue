@@ -181,7 +181,7 @@ export default {
 #video,
 .video-box {
   overflow: hidden;
-  height: 15rem /* 240/16 */;
+  height: 12.5rem /* 200/16 */;
 }
 
 .avatar img{

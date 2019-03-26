@@ -1,7 +1,10 @@
 <template>
   <div id="app">
-     <el-amap vid="amap" class="amap-demo" :center="center" :plugin="plugin" v-show='false' />
-    <router-view />
+    <el-amap vid="amap" class="amap-demo" :center="center" :plugin="plugin" v-show='false' />
+    <keep-alive>
+        <router-view v-if="$route.meta.keepAlive"></router-view>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 
@@ -81,12 +84,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_wx8nk5m0f1p.eot');
-  src: url('//at.alicdn.com/t/font_893274_wx8nk5m0f1p.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_wx8nk5m0f1p.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_wx8nk5m0f1p.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_wx8nk5m0f1p.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_wx8nk5m0f1p.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_v6ji1my07hb.eot');
+  src: url('//at.alicdn.com/t/font_893274_v6ji1my07hb.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_v6ji1my07hb.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_v6ji1my07hb.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_v6ji1my07hb.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_v6ji1my07hb.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,

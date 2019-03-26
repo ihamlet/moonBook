@@ -1,19 +1,19 @@
 <template>
   <div class="drying-list">
-    <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-      <van-pull-refresh v-model="loading" @refresh="onRefresh">
-        <div class="no-content" v-if='list.length == 0'>
-          尚无内容
-        </div>
-        <div class="item" v-for="(item,index) in list" :key="index" @click="setItem(item)" v-else>
-          <van-cell>
-            <div class="content">
-              <graphic-card :item="item" @follow="follow" @more='actionsheet' :title='item.school_role'/>
-            </div>
-          </van-cell>
-        </div>
-      </van-pull-refresh>
-    </van-list>
+    <van-pull-refresh v-model="loading" @refresh="onRefresh">
+      <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+          <div class="no-content" v-if='list.length == 0'>
+            尚无内容
+          </div>
+          <div class="item" v-for="(item,index) in list" :key="index" @click="setItem(item)" v-else>
+            <van-cell>
+              <div class="content">
+                <graphic-card :item="item" @follow="follow" @more='actionsheet' :title='item.school_role'/>
+              </div>
+            </van-cell>
+          </div>
+      </van-list>
+     </van-pull-refresh>
 
     <!-- 管理员推荐操作 -->
     <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app' />
@@ -56,11 +56,13 @@ export default {
         index: 2
       }]
       if (this.item.isMe) {
-        arr.push({
-          name: '编辑',
-          type: 'edit',
-          index: 0
-        }, {
+        arr.push(
+        // {
+        //   name: '编辑',
+        //   type: 'edit',
+        //   index: 0
+        // }, 
+        {
           name: '删除',
           type: 'delete',
           index: 1
@@ -200,34 +202,34 @@ export default {
     },
     onSelect(item) {
       switch (item.index) {
-        case 0:
-          switch (this.templateId) {
-            case '0':
-              this.$router.push({
-                name: 'publishing',
-                query: {
-                  post_id: this.postId,
-                  template_id: this.templateId,
-                  back: this.$route.name,
-                  id: this.$route.query.id,
-                  type: 'edit'
-                }
-              })
-              break
-            case '1':
-              this.$router.push({
-                name: 'graphic',
-                query: {
-                  post_id: this.postId,
-                  template_id: this.templateId,
-                  back: this.$route.name,
-                  id: this.$route.query.id,
-                  type: 'edit'
-                }
-              })
-              break
-          }
-          break
+        // case 0:
+        //   switch (this.templateId) {
+        //     case '0':
+        //       this.$router.push({
+        //         name: 'publishing',
+        //         query: {
+        //           post_id: this.postId,
+        //           template_id: this.templateId,
+        //           back: this.$route.name,
+        //           id: this.$route.query.id,
+        //           type: 'edit'
+        //         }
+        //       })
+        //       break
+        //     case '1':
+        //       this.$router.push({
+        //         name: 'graphic',
+        //         query: {
+        //           post_id: this.postId,
+        //           template_id: this.templateId,
+        //           back: this.$route.name,
+        //           id: this.$route.query.id,
+        //           type: 'edit'
+        //         }
+        //       })
+        //       break
+        //   }
+        //   break
         case 1:
           this.$dialog.confirm({
             title: '删除',

@@ -2,13 +2,12 @@
   <div class="article-content" :class="[type=='screenshot'?'img-content':'',item.template_id!=0?'flex flex-align':'']">
     <div class="article-header" v-if='item.template_id==0'>
         <div class="title">{{item.title}}</div>
-        <div class=""></div>
         <div class="userCard" ref="userCard">
           <userCard :item='item'/>
         </div>
     </div>
     <article>
-      <adLabel :item='item' v-if='item.ad_label'/>
+      <!-- <adLabel :item='item' v-if='item.ad_label'/> -->
       <div class="main">
         <div class="media-content">
           <media :item='item' type='details'/>
@@ -20,7 +19,7 @@
 <script>
 import media from './../module/mold/media'
 import userCard from './../module/mold/userCard'
-import adLabel from './../module/mold/adLabel'
+// import adLabel from './../module/mold/adLabel'
 
 export default {
   name: 'article-content',
@@ -28,7 +27,7 @@ export default {
   components: {
     media,
     userCard,
-    adLabel
+    // adLabel
   },
   data () {
     return {

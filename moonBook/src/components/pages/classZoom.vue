@@ -112,7 +112,7 @@ export default {
       this.$router.go(-1)
     },
     fetchData() {
-      if(this.$route.query.id){
+      if(this.$route.query.id&&this.$route.query.id!='0'){
         axios.get(`/book/baby/getList?banji_id=${this.$route.query.id}`).then(res => {
           if(res.data.status == 1){
             this.freshList = res.data.data
@@ -129,24 +129,30 @@ export default {
           portal_name: '班级主页'
         }
       }
-      if(this.$route.query.id){
+      if(this.$route.query.id&&this.$route.query.id!='0'){
         return axios.get('/book/SchoolArticle/getList', data).then(res => {
-          if(res.data.status == 1){
-            if (this.page == 1) {
-              this.list = res.data.data
-            } else {
-              this.list = this.list.concat(res.data.data)
-            }
-            this.page++
-            this.loading = false
-            if (this.list.length >= res.data.count) {
+          switch(res.data.status){
+            case 1:
+              if (this.page == 1) {
+                this.list = res.data.data
+              } else {
+                this.list = this.list.concat(res.data.data)
+              }
+              this.page++
+              this.loading = false
+              if (this.list.length >= res.data.count) {
+                this.finished = true
+              }
+            break
+            case 0:
+              this.loading = false
               this.finished = true
-            }
-          }else{
-            this.loading = false
-            this.finished = true
+            break
           }
         })
+      }else{
+        this.loading = false
+        this.finished = true
       }
     },
     onRefresh(){

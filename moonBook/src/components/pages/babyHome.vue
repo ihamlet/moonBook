@@ -5,12 +5,14 @@
       <div class="head-bar-title" slot="title" @click="selectBaby">
         {{pageTitle}} <i class="iconfont" v-if='babyList.length'>&#xe608;</i>
       </div>
-      <div class="head-bar-text" slot="left">
+      <!-- <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back||$route.query.backGo?'返回':'首页'}}</span>
-      </div>
-      <div class="head-bar-text" slot="right" @click="toVerifyList">
-        <span class="text">成员审核</span>
+      </div> -->
+      <div class="head-bar-text" slot="right" v-if='childInfo.is_mine' @click="toVerifyList">
+        <span class="text">
+          <i class="iconfont">&#xe653;</i>
+        </span>
       </div>
     </van-nav-bar>
     <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
@@ -32,7 +34,6 @@
           </div>
           <div class="label">{{childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
-          <family v-if='childInfo.is_mine'/>
         </div>
         <!-- <div class="add-praise" @click="babyPraise(childInfo)">
           <i class="iconfont">&#xe6e3;</i>
@@ -49,12 +50,12 @@
           <span class="number">{{childInfo.read_count}}</span>
           <span class="bar-title">借阅量</span>
         </div>
-        <div class="bar-item">
-          <span class="number">729</span>
+        <div class="bar-item" @click="toPunchList">
+          <span class="number">{{childInfo.sign_read_count}}</span>
           <span class="bar-title">阅读打卡</span>
         </div>
         <div class="bar-item diary" @click="toReadStat">
-          <span class="number">{{childInfo.insist_days}}</span>
+          <span class="number">{{childInfo.continuity_days}}</span>
           <span class="bar-title">坚持天数</span>
         </div>
         <div class="bar-item praise" @click="toInformation">
@@ -159,7 +160,6 @@ import avatar from "./../module/avatar"
 import reading from "./../module/reading"
 import graphicCard from "./../module/card/graphicCard"
 import classShow from './../module/classModule/classShow'
-import family from './../module/myModule/family'
 import metro from './../module/mold/metro'
 import slogan from './../module/slogan'
 
@@ -172,7 +172,6 @@ export default {
     avatar,
     graphicCard,
     classShow,
-    family,
     metro,
     slogan
   },
@@ -254,11 +253,13 @@ export default {
         title: '全部',
         content: ''
       }],
-      actions: [{
-        name: '编辑',
-        type: 'edit',
-        index: 0
-      }, {
+      actions: [
+      // {
+      //   name: '编辑',
+      //   type: 'edit',
+      //   index: 0
+      // }, 
+      {
         name: '删除',
         type: 'delete',
         index: 1
@@ -295,6 +296,7 @@ export default {
     $router: "fetchData"
   },
   methods: {
+    ...mapActions('openWX',['scanQRcode']),
     ...mapActions(["getUserData"]),
     fetchData() {
       let schoolArticleCate = {
@@ -415,16 +417,16 @@ export default {
         })
       }
     },
-    toActivity() {
-      this.$router.push({
-        name:'activity',
-        query: {
-          tid:this.tid,
-          back: this.$route.name,
-          id: this.$route.query.id
-        }
-      })
-    },
+    // toActivity() {
+    //   this.$router.push({
+    //     name:'activity',
+    //     query: {
+    //       tid:this.tid,
+    //       back: this.$route.name,
+    //       id: this.$route.query.id
+    //     }
+    //   })
+    // },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {
         this.qrImage = url
@@ -582,6 +584,14 @@ export default {
         })
       }
     },
+    toPunchList(){
+      this.$router.push({
+        name:'punch-list',
+        query:{
+          id: this.$route.query.id
+        }
+      })
+    },
     actionsheet(item) {
       this.show = true
       this.postId = item.post_id
@@ -589,34 +599,34 @@ export default {
     },
     onSelect(item) {
       switch (item.index) {
-        case 0:
-          switch (this.templateId) {
-            case '0':
-              this.$router.push({
-                name: 'publishing',
-                query: {
-                  post_id: this.postId,
-                  template_id: this.templateId,
-                  back: this.$route.name,
-                  id: this.$route.query.id,
-                  type: 'edit'
-                }
-              })
-              break
-            case '1':
-              this.$router.push({
-                name: 'graphic',
-                query: {
-                  post_id: this.postId,
-                  template_id: this.templateId,
-                  back: this.$route.name,
-                  id: this.$route.query.id,
-                  type: 'edit'
-                }
-              })
-              break
-          }
-          break
+        // case 0:
+        //   switch (this.templateId) {
+        //     case '0':
+        //       this.$router.push({
+        //         name: 'publishing',
+        //         query: {
+        //           post_id: this.postId,
+        //           template_id: this.templateId,
+        //           back: this.$route.name,
+        //           id: this.$route.query.id,
+        //           type: 'edit'
+        //         }
+        //       })
+        //       break
+        //     case '1':
+        //       this.$router.push({
+        //         name: 'graphic',
+        //         query: {
+        //           post_id: this.postId,
+        //           template_id: this.templateId,
+        //           back: this.$route.name,
+        //           id: this.$route.query.id,
+        //           type: 'edit'
+        //         }
+        //       })
+        //       break
+        //   }
+        //   break
         case 1:
           this.$dialog.confirm({
             title: '删除',
@@ -722,16 +732,19 @@ export default {
       }
     },
     punch() {
-      Cookies.set('punckLink', location.href)
-      location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
-    },
-    onClickRight(){
-      this.$router.push({
-        name:'task',
-        query:{
-          id: this.$route.query.id,
-          back: this.$route.name,
-          tid: 16
+      this.scanQRcode({id:this.$route.query.id}).then(res=>{
+        switch(res.data.status){
+          case 1:
+            this.$router.push({
+              name:'punch-back',
+              query:{
+                id: this.$route.query.id
+              }
+            })
+          break
+          case 0:
+            this.$toast.fail('打卡失败')
+          break
         }
       })
     },
@@ -841,7 +854,7 @@ export default {
 }
 
 .baby-info {
-  padding: 3.5rem /* 56/16 */ 1.25rem /* 20/16 */ 0 1.25rem /* 20/16 */;
+  padding: 2.8125rem /* 45/16 */ 1.25rem /* 20/16 */ 0 1.25rem /* 20/16 */;
   position: relative;
   z-index: 1;
 }

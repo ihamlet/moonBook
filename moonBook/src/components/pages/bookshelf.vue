@@ -1,13 +1,16 @@
 <template>
   <div class="bookshelf">
-    <van-search v-model="keyword" placeholder="请输入搜索关键词" shape="round" @search="onSearch">
-      <div slot="action" @click="onSearch">搜索</div>
+    <van-search v-model="keyword" placeholder="请输入搜索关键词" show-action shape="round" @search="onSearch">
+      <div slot="action" class="theme-color" @click="onSearch">搜索</div>
     </van-search>
     <van-tabs color='#409eff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex" @click="onClick" @disabled='onClickDisabled'>
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index" :disabled='list.title=="筛选"'>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
+              <div class="create-time theme-color" v-if='list.title=="最新"&&timediff(item,itemIndex)'>
+                {{getTimeAgo(item.create_time)}}
+              </div>
               <bookCard :item='item' :type='list.title' />
             </van-cell>
           </van-list>
@@ -24,6 +27,7 @@
 import axios from './../lib/js/api'
 import bookCard from './../module/card/bookCard'
 import FilterList from './../module/mold/filterList'
+import { timeago } from './../lib/js/util'
 
 export default {
   name: 'bookshelf',
@@ -79,8 +83,7 @@ export default {
 
       let data = {
         params: {
-          page: this.page,
-          child_id: this.$route.query.id
+          page: this.page
         }
       }
 
@@ -162,9 +165,45 @@ export default {
       this.loading = true
       this.finished = false
       this.onRefresh()
+    },
+    getTimeAgo(time){
+      return timeago(time*1000)
+    },
+    timediff(item,itemIndex){
+      if(itemIndex == 0){
+        return true
+      }
+
+      if(itemIndex){
+        let timeHistory = timeago(this.tab[this.tabIndex].content[itemIndex-1].create_time * 1000)
+        let time = timeago(item.create_time*1000)
+        if(timeHistory == time){
+          return false
+        }else{
+          return true
+        }
+      }
+
     }
   }
 }
 </script>
 <style>
+.create-time{
+  height: 2.25rem /* 36/16 */;
+  padding-left: .3125rem /* 5/16 */;
+  line-height: 2.25rem /* 36/16 */;
+  font-weight: 700;
+  position: relative;
+  margin-bottom: .625rem /* 10/16 */;
+}
+
+.create-time::before{
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 1.875rem /* 30/16 */;
+  height: .1875rem /* 3/16 */;
+  background: #409EFF;
+}
 </style>

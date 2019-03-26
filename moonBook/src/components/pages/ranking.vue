@@ -1,11 +1,10 @@
 <template>
   <div class="ranking-page page-padding">
-    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''" left-text="返回" left-arrow title="阅读之星榜" fixed
-      @click-left="onClickLeft">
-      <div class="head-bar-text" slot="left">
+    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''" title="阅读之星榜" fixed>
+      <!-- <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'我的'}}</span>
-      </div>
+      </div> -->
     </van-nav-bar>
     <div class="container">
       <div class="header" ref='head'>
@@ -15,7 +14,7 @@
       </div>
       <van-tabs color='#409eff' :line-width='20' :line-height='4' swipeable animated @change="onTopTabClick">
         <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-          <div class="content">
+          <div class="content" v-if='topTabIdx == index'>
             <van-tabs color='#409eff' type="card" @disabled="onTabDisabledClick" @click="onTabClick">
               <van-tab v-for="(item,itemIndex) in list.content" :disabled="item.disabled" :title="item.title" :key="itemIndex">
                 <van-cell-group v-if="item.content">
@@ -279,20 +278,20 @@ export default {
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
-    onClickLeft() {
-      if (this.$route.query.back) {
-        this.$router.push({
-          name: this.$route.query.back,
-          query: {
-            id: this.$route.query.id
-          }
-        })
-      } else {
-        this.$router.push({
-          name: 'my'
-        })
-      }
-    },
+    // onClickLeft() {
+    //   if (this.$route.query.back) {
+    //     this.$router.push({
+    //       name: this.$route.query.back,
+    //       query: {
+    //         id: this.$route.query.id
+    //       }
+    //     })
+    //   } else {
+    //     this.$router.push({
+    //       name: 'my'
+    //     })
+    //   }
+    // },
     toPage(content) {
       if (this.topTabIdx == 0) {
         this.$router.push({

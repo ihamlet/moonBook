@@ -37,7 +37,7 @@
                 </div>
               </div>
             </div>
-            <div v-if='item.quote' class="reply-content">
+            <div v-if='contentItem.quote' class="reply-content">
               <div class="list">
                 <div class="item">
                   <span class="reply-title">

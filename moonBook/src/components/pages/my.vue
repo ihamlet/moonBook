@@ -1,7 +1,7 @@
 <template>
   <div class="my page-padding">
     <card-head :userInfo='userDataState' :children='children[0]'/>
-    <div class="gutter gap-top">
+    <div class="gutter gap">
       <apps :appsList='appsList' v-if='isTeacher == 1 || isHeaderTeacher == 1' />
     </div>
     <div class="gutter gap">

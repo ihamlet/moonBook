@@ -59,7 +59,10 @@ export default {
       photoLength:0,
       photo:'',
       upLoadType:'image',
-      mediaInfo:''
+      mediaInfo:'',
+      handle:'',
+      loop: null,
+      flag:true
     }
   },
   created() {

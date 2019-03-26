@@ -32,8 +32,6 @@ let options = {
 
 Vue.use(preview,options)
 
-
-
 Vue.use(Vuex)
 Vue.use(Vant)
 Vue.use(Lazyload, {

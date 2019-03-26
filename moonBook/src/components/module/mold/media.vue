@@ -21,7 +21,7 @@
         <van-row :gutter="4">
           <van-col :span="grid" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
             <div class="img-grid" :class="[item.photos.length == 1&&photo.height/photo.width > 18/9?'long':'',item.photos.length == 1&&type=='details'?'alone':'']" v-if='photo&&photo.is_video==0 && photo.is_audio == 0'>
-              <img class="img-preview" :class="[photo.height/photo.width > 2?'long':'']" :src="photo.thumb" :large="photo.photo" :preview='photo.post_id' />
+              <img class="img-preview" :class="[photo.height/photo.width > 2?'long':'']" :src="photo.thumb" :large="photo.photo" :preview='type=="card"?false:photo.post_id' />
               <van-tag class="photo-tag" type="primary" v-if='photo.height/photo.width > 18/9&&type=="card"'>长图</van-tag>
             </div>
           </van-col>
@@ -30,7 +30,7 @@
     </div>
 
     <div class="media img long-article-thumb" v-if='item.template_id == "0"&&type == "card"&&item.cover&&item.hasvideo!="1"'>
-      <img :src="item.cover || item.photos[0].thumb" :preview='item.post_id'/>
+      <img :src="item.cover || item.photos[0].thumb"/>
       <van-tag class="photo-tag" type="primary">文章</van-tag>
     </div>
     
@@ -66,8 +66,8 @@ export default {
     userCard
   },
   methods: {
-    toArticle(e) {
-      if (this.type == 'card' && e.target.tagName!='IMG') {
+    toArticle() {
+      if(this.type == 'card'){
         this.$router.push({
           name: 'article',
           query: {
@@ -120,6 +120,12 @@ export default {
   width: 8.75rem /* 140/16 */;
   height: 13.75rem /* 220/16 */;
   overflow: hidden;
+}
+
+.video-thumb.vertical img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .text,
