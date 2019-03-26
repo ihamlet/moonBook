@@ -4,8 +4,8 @@
 
 const path = require('path')
 
-const server_host = 'https://hu.wmlife.net/'
-//const server_host = 'http://book.wmdev.com/'
+// const server_host = 'https://hu.wmlife.net/'
+const server_host = 'http://book.wmdev.com/'
 module.exports = {
   dev: {
     // Paths
