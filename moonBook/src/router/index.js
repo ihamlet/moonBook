@@ -73,6 +73,8 @@ import cardTime from '@/components/pages/accept/cardTime'
 
 //阅读指导
 import ReadGuide from '@/components/pages/guided/readGuide'
+//打卡记录
+import punchList from '@/components/pages/punch/punchList'
 
 
 Vue.use(Router)
@@ -383,6 +385,16 @@ export default new Router({
       component: ReadGuide,
       meta: {
         title: '阶梯阅读指导',
+        keepAlive: true,
+        isFooterBar: false
+      }
+    },
+    {
+      path: '/punch-list',
+      name: 'punch-list',
+      component: punchList,
+      meta: {
+        title: '打卡记录',
         keepAlive: true,
         isFooterBar: false
       }

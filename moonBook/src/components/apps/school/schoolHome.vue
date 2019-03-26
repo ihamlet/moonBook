@@ -1,10 +1,10 @@
 <template>
   <div class="school-home page-padding">
-    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" left-arrow @click-left="onClickLeft" fixed>
-      <div class="head-bar-text" slot="left">
+    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" fixed>
+      <!-- <div class="head-bar-text" slot="left">
         <van-icon name="arrow-left" />
         <span class="text">{{$route.query.back?'返回':'首页'}}</span>
-      </div>
+      </div> -->
       <div class="head-bar-title" slot="title" @click="actionsheetShow = true">
         {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerState.length > 1">&#xe608;</i>
       </div>
@@ -217,20 +217,20 @@ export default {
         this.domHeight = this.$refs.head.offsetHeight / 2
       }
     },
-    onClickLeft() {
-      if (this.$route.query.back && this.userDataState.school_id != '0') {
-        this.$router.push({
-          name: this.$route.query.back,
-          query: {
-            id: this.$route.query.banji_id
-          }
-        })
-      } else {
-        this.$router.push({
-          name: 'home'
-        })
-      }
-    },
+    // onClickLeft() {
+    //   if (this.$route.query.back && this.userDataState.school_id != '0') {
+    //     this.$router.push({
+    //       name: this.$route.query.back,
+    //       query: {
+    //         id: this.$route.query.banji_id
+    //       }
+    //     })
+    //   } else {
+    //     this.$router.push({
+    //       name: 'home'
+    //     })
+    //   }
+    // },
     onSelect(item) {
       this.hackReset = false
       this.actionsheetShow = false

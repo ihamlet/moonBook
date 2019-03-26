@@ -1,10 +1,10 @@
 <template>
   <div class="article page-padding">
-    <div class="cover" v-if='item.template_id == 0'>
+    <div class="cover" v-if='item.template_id == 0&&item.cover'>
       <img :src="item.cover" />
     </div>
     <div class="page-container">
-      <van-nav-bar :border='false' :class="item.template_id == 0&&!themeBarSearch?'theme-nav':''" fixed :zIndex='100'>
+      <van-nav-bar :border='false' :class="item.cover&&item.template_id == 0&&!themeBarSearch?'theme-nav':''" fixed :zIndex='100'>
         <div class="head-bar-title" slot="title">
           <transition name="slide-fade" mode="out-in">
             <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
@@ -25,7 +25,7 @@
           </transition>
         </div>
       </van-nav-bar>
-      <div class="container" :class="item.template_id == 0?'noTop':''">
+      <div class="container" :class="item.template_id == 0&&item.cover?'noTop':''">
         <div class="module-user-card page-padding">
           <userCard :item='item' v-if='item.template_id != "0"'/>
         </div>

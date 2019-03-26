@@ -1,5 +1,5 @@
 <template>
-  <van-row gutter="10">
+  <van-row gutter="20">
     <van-col span="7">
       <div class="book-cover">
         <img  class="lazy" v-lazy="thumb(item.book_photo)"/>
@@ -12,7 +12,7 @@
           <div class="pos-title" v-if='item.pos_name'>书位：{{item.pos_name}}</div>
         </div>
         <div class="borrow" v-if='type=="guide"'>
-          借阅：{{item.borrow_count > '50'?item.borrow_count:'999+'}} 次
+          借阅：{{item.book_views}} 次
         </div>
       </div>
     </van-col>
@@ -149,5 +149,10 @@ export default {
 .abrasion .theme-btn{
   width: 100%;
   margin-top: .625rem /* 10/16 */;
+}
+
+.book-cover img{
+  min-height: 6.25rem /* 100/16 */;
+  background: #fff;
 }
 </style>

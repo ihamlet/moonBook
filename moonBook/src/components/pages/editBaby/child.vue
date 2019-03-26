@@ -316,8 +316,8 @@ export default {
           this.$toast.success('修改成功')
         } else {
           this.$toast.fail('修改失败')
-        }
-        this.$router.go(-1)
+        }    
+        this.back()
       })
     },
     onClickRight(type) {
@@ -387,6 +387,20 @@ export default {
     },
     selectSexType(item,index){
       this.sexTypeIndex = index
+    },
+    back(){
+        if(this.$route.query.back){
+          this.$router.push({
+            name: this.$route.query.back,
+            query:{
+              id: this.$route.query.id
+            }
+          })
+        }else{
+          this.$router.push({
+            name:'my'
+          })
+        }
     }
   }
 }

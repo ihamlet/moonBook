@@ -1,7 +1,6 @@
 <template>
   <div class="head head-background" ref="head">
-    <van-nav-bar :border='false' :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" fixed :title="fixedHeaderBar?$route.meta.title:userInfo.name"
-      @click-left="onClickLeft">
+    <van-nav-bar :border='false' :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" fixed :title="fixedHeaderBar?$route.meta.title:userInfo.name" @click-left="onClickLeft">
       <div class="head-bar-icon" slot="left">
         <i class="iconfont">&#xe60e;</i>
       </div>
@@ -23,8 +22,15 @@
       </div>
     </div>
     <div class="card">
-      <div class="borrow-card flex flex-align">
-        <div class="service flex flex-align" v-if="userInfo.card_level != '0'">
+      <div class="borrow-card">
+        <div class="library-card flex flex-align" v-if="userInfo.card_level != '0'" @click="onClickLeft">
+          <img class="logo" src="./../../../assets/img/logo.png" />
+          <div class="card-info flex flex-align">
+            <div class="card-name">{{userInfo.card_name}}</div>
+            <vipLevel :level='userInfo.card_level' animate='1'/>
+          </div>
+        </div>
+        <!-- <div class="service flex flex-align" v-if="userInfo.card_level != '0'">
           <div class="data-flow" @click="$router.push({name:'card-list'})">
             <i class="iconfont" :class="`vip-${userInfo.card_level}`">&#xe604;</i>
             <b class="card-name" v-line-clamp:20="1">{{userInfo.card_name}}</b>
@@ -53,7 +59,7 @@
               {{userInfo.broken_count}}
             </span>
           </div>
-        </div>
+        </div> -->
         <div class="no-service flex flex-align flex-justify" v-else @click="toAccept">您还没有办理借阅卡?
           <div class="theme-color">前往办卡</div>
           <i class="iconfont">&#xe61b;</i>
@@ -71,13 +77,15 @@ import axios from "./../../lib/js/api";
 import numberGrow from "./../../module/animate/numberGrow";
 import punch from "./../../module/punch";
 import avatar from './../avatar'
+import vipLevel from './../../module/animate/svg/vipLevel'
 
 export default {
   name: "cardHead",
   components: {
     numberGrow,
     punch,
-    avatar
+    avatar,
+    vipLevel
   },
   props: ["userInfo", "children"],
   data() {
@@ -132,14 +140,14 @@ export default {
     closePunch() {
       this.punchShow = false;
     },
-    toBorrowList(num) {
-      this.$router.push({
-        name: "borrow-list",
-        query: {
-          tabActive: num
-        }
-      });
-    },
+    // toBorrowList(num) {
+    //   this.$router.push({
+    //     name: "borrow-list",
+    //     query: {
+    //       tabActive: num
+    //     }
+    //   });
+    // },
     getAvatar(img) {
       if (!img) {
         return img;
@@ -190,23 +198,19 @@ export default {
 
 .card {
   position: absolute;
-  bottom: -3.125rem /* 50/16 */;
+  bottom: 0;
   padding: 0;
   width: 95%;
   left: 50%;
   transform: translate3d(-50%, 0, 0);
 }
 
-.borrow-card,
 .avatar img {
   box-shadow: 0 0.3125rem /* 5/16 */ 2.5rem /* 40/16 */ -0.625rem /* 10/16 */ rgba(0, 0, 0, 0.2);
 }
 
 .borrow-card {
   width: 100%;
-  background: #fff;
-  padding: 0.3125rem /* 5/16 */ 0;
-  border-radius: 0.625rem /* 10/16 */;
 }
 
 .borrow-card i.iconfont {
@@ -242,7 +246,7 @@ export default {
 
 .user-info {
   padding-top: 3.125rem /* 50/16 */;
-  padding-bottom: 1.875rem /* 30/16 */;
+  padding-bottom: 2.8125rem /* 45/16 */;
 }
 
 .info {
@@ -288,6 +292,8 @@ export default {
   font-size: 0.875rem /* 14/16 */;
   width: 100%;
   height: 3.125rem /* 50/16 */;
+  background: #fff;
+  border-radius: .9375rem /* 15/16 */ .9375rem /* 15/16 */ 0 0;
 }
 
 .no-service i.iconfont {
@@ -301,13 +307,13 @@ export default {
   display: inline-grid;
 }
 
-.data-flow .number {
-  font-size: 1.875rem /* 30/16 */;
-}
+/* .data-flow .number {
+  font-size: 1.875rem;
+} */
 
-.data-flow .card-name {
+/* .data-flow .card-name {
   font-size: x-small;
-}
+} */
 
 .theme-color {
   margin: 0 0.3125rem /* 5/16 */;
@@ -315,5 +321,21 @@ export default {
 
 .page-punch {
   background: #de4313;
+}
+
+.library-card{
+  height: 2.625rem /* 42/16 */;
+  background: #fff;
+  border-radius: .9375rem /* 15/16 */ .9375rem /* 15/16 */ 0 0;
+  padding: 0 .625rem /* 10/16 */;
+  justify-content: space-between;
+}
+
+.logo{
+  height: 32px;
+}
+
+.card-name{
+  font-weight: 700;
 }
 </style>

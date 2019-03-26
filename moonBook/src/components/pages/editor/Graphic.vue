@@ -1,6 +1,6 @@
 <template>
-  <div class="graphic">
-    <van-nav-bar left-text="取消" @click-left="onClickLeft" :border='false'>
+  <div class="graphic page-padding">
+    <van-nav-bar left-text="取消" @click-left="onClickLeft" :border='false' fixed>
       <div class="user-info" slot='title'>
         <div class="avatar">
           <img :src="getAvatar(userDataState.avatar)" />
@@ -14,7 +14,7 @@
       
     <div class="textarea-module">
       <van-cell-group>
-        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="4" autosize />
+        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="2" autosize />
         
         <div class="upload-module flex wrap">
           <van-cell>
@@ -103,9 +103,7 @@ export default {
   watch: {
     grapicData: {
       handler(val) {
-        if (val.text.match('#')) {
-          this.show = true
-        }
+        localStorage.setItem('grapicData',JSON.stringify(val))
       },
       deep: true
     },
@@ -122,26 +120,26 @@ export default {
     ...mapActions(['release']),
     fetchData() {
       // 从本地存储获取发布数据
-      if(this.$route.query.type == 'edit'){
-          let articleData = {
-            post_id:this.$route.query.post_id
-          }
+      // if(this.$route.query.type == 'edit'){
+      //     let articleData = {
+      //       post_id:this.$route.query.post_id
+      //     }
 
-          axios.get('/book/SchoolArticle/getEdit',articleData).then(res => {
-            if(res.data.status == 1){
-              this.grapicData.photos = res.data.data.photos
-              if(checkHtml(res.data.data.details)){
-                this.grapicData.text = ''
-              }else{
-                this.grapicData.text = res.data.data.details
-              }
-            }
-          })
-      }else{
+      //     axios.get('/book/SchoolArticle/getEdit',articleData).then(res => {
+      //       if(res.data.status == 1){
+      //         this.grapicData.photos = res.data.data.photos
+      //         if(checkHtml(res.data.data.details)){
+      //           this.grapicData.text = ''
+      //         }else{
+      //           this.grapicData.text = res.data.data.details
+      //         }
+      //       }
+      //     })
+      // }else{
         if (localStorage.getItem('grapicData')) {
           this.grapicData = JSON.parse(localStorage.getItem('grapicData'))
         }
-      }
+      // }
 
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
@@ -211,7 +209,6 @@ export default {
     },
     onSelect(item) {
       if (item.type == 'save') {
-        localStorage.setItem('grapicData', JSON.stringify(this.grapicData))
         if (this.$route.query.back) {
           this.$router.push({
             name: this.$route.query.back,
@@ -238,7 +235,6 @@ export default {
             name: 'home'
           })
         }
-        localStorage.setItem('grapicData', '')
         this.actionShow = false
         this.grapicData = {
           text: '',
@@ -261,10 +257,6 @@ export default {
           })
         }
       } else if (this.grapicData.text.length < 12000) {
-        // 如果通知没有内容？
-        if(this.tag.cate_name == '通知'&&!this.grapicData.text.length){
-          this.$toast('请输入通知内容')
-        }else{
           // 发布
           let data = {
             details: this.grapicData.text,
@@ -335,7 +327,6 @@ export default {
             }
           })
         }
-      }
     },
     deletePhoto(index) {
       this.grapicData.photos.splice(index, 1)
@@ -394,19 +385,19 @@ export default {
       data.append('signature', this.ossSign.signature)
       data.append('file', file)
 
-        axios({
-          url: url,
-          data: data,
-          method: 'post',
-          onUploadProgress: p => {
-            this.percent = Math.floor(100 * (p.loaded / p.total))
-          }
-        }).then((res) => {
-          this.grapicData.photos[0].is_audio =  type == 'audio' ? 1 : 0
-          this.grapicData.photos[0].is_video =  type == 'video' ? 1 : 0
-          this.grapicData.photos[0].photo = path
-          this.percent = 0
-        })
+      axios({
+        url: url,
+        data: data,
+        method: 'post',
+        onUploadProgress: p => {
+          this.percent = Math.floor(100 * (p.loaded / p.total))
+        }
+      }).then((res) => {
+        this.grapicData.photos[0].is_audio =  type == 'audio' ? 1 : 0
+        this.grapicData.photos[0].is_video =  type == 'video' ? 1 : 0
+        this.grapicData.photos[0].photo = path
+        this.percent = 0
+      })
     },
     upOssPhoto(blob, file, base64) {
       let img = new Image()
@@ -550,6 +541,10 @@ export default {
 
 .img-grid{
   background: #f8f8f8;
+}
+
+.textarea-module{
+  padding-top: 2.8125rem /* 45/16 */;
 }
 </style>
 <style>

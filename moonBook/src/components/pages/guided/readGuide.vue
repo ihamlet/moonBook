@@ -42,6 +42,7 @@ export default {
         content: []
       }],
       tabIndex: 0,
+      article:''
     }
   },
   methods: {
@@ -57,14 +58,34 @@ export default {
       return axios.get('/book/SchoolShelfBook/getList', bookList).then(res => {
         switch(res.data.status){
             case 1:
-                if(res.data.count > 0){
-                    this.tab[this.tabIndex].content = res.data.data
-                    this.loading = false
-                    this.page = 1
-                    if (this.tab[this.tabIndex].content.length >= 20) {
-                        this.finished = true
-                    }
+              if(this.page == 1){
+                this.tab[this.tabIndex].content = res.data.data
+              }else{
+                this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
+              }
+      
+              this.loading = false
+              this.page++
+              if (this.tab[this.tabIndex].content.length >= res.data.count) {
+                  this.finished = true
+              }
+
+              let articleData = {
+                params:{
+                  ajax:1,
+                  fr:'official',
+                  title:`${this.tab[this.tabIndex].title}进阶指导`
                 }
+              }
+
+              axios.get('/book/SchoolArticle/detail',articleData).then(res=>{
+                  switch(res.data.status){
+                    case 1:
+                      console.log(res)
+                    break
+                  }
+              })
+
             break
             case 0:
               this.loading = false
@@ -72,14 +93,6 @@ export default {
             break
         }
       })
-
-        let data = {
-
-        }
-      axios.get('/book/SchoolArticle/detail',data).then(res=>{
-          
-      })
-      //获取官方文章
     },
     onClickRight() {
       this.$router.push({

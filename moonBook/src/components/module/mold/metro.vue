@@ -16,7 +16,7 @@
             </van-col>
             <van-col span="14">
                 <div class="metro-r">
-                    <div class="grid-metro">
+                    <div class="grid-metro" @click="toTask">
                         <div class="info">
                             <div class="title">每日任务:4/5</div>
                             <div class="sub">好的习惯贵在坚持</div>
@@ -38,6 +38,15 @@ export default {
             this.$router.push({
                 name:'read-guide'
             })
+        },
+        toTask(){
+            this.$router.push({
+                name:'task',
+                query:{
+                    id: this.$route.query.id,
+                    tid: 16
+                }
+            })
         }
     }
 }
@@ -55,7 +64,7 @@ export default {
 .metro-r{
    position: relative;
    overflow: hidden;
-   background: linear-gradient(127deg, #d3f1ff, #ebf6ff);
+   background: linear-gradient(127deg, #d6f2ff, #3ba7ff);
    border-radius: .5rem /* 8/16 */;
 }
 
@@ -94,10 +103,6 @@ export default {
     font-size: 13px;
 }
 
-.metro-r{
-    background: linear-gradient(-45deg, #d3f1ff, #ebf6ff);
-}
-
 .book-task{
     height: 7.5rem /* 120/16 */;
     top: 0;
@@ -111,7 +116,7 @@ export default {
     width: 7.5rem /* 120/16 */;
     height: 7.5rem /* 120/16 */;
     border-radius: 50%;
-    background: rgba(255,255,255,.7);
+    background: #fff;
     position: absolute;
     bottom:-2.1875rem /* 35/16 */;
     right: -1.875rem /* 30/16 */;

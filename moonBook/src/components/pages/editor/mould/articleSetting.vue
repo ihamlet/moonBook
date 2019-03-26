@@ -1,10 +1,10 @@
 <template>
   <div class="article-setting">
-    <van-nav-bar v-if='type!="mould"' :title="$route.meta.title" left-text="返回" left-arrow @click-left="onClickLeft" />
-    <!-- 分类设置、同步、设置机构标签 -->
+    <van-nav-bar v-if='type!="mould"' :title="$route.meta.title" />
     <van-cell title-class='theme-color' title="#选择分类" :value="tag.cate_name" is-link arrow-direction="down" @click="show = true" />
     <van-cell v-if='tag.cate_id!="99"&&tag.cate_id!="124"' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
-    <div class="group-cell">
+    
+    <!-- <div class="group-cell">
       <div class="cell-link">
         <van-cell title="设置机构标签" is-link @click="selectGroup = true" :label="group.group_name" center>
           <div class="icon" slot="icon">
@@ -12,7 +12,7 @@
           </div>
         </van-cell>
       </div>
-    </div>
+    </div> -->
 
     <van-popup v-model="selectGroup" position="bottom">
       <van-picker :columns="groupList" value-key='group_name' @change="onChangeGroup" />
@@ -75,7 +75,6 @@ export default {
       groupList: [],
       resultList: [],
       topicList: [],
-
       settingResult: []
     }
   },
@@ -85,8 +84,9 @@ export default {
   watch: {
     "$router": 'fetchData',
     settingResult: {
-      handler(v) {
-        this.addResult(v)
+      handler(val) {
+        this.addResult(val)
+        localStorage.setItem('result', JSON.stringify(val))
       },
       deep: true
     }
@@ -119,15 +119,20 @@ export default {
       })
 
       this.resultList = array
-
       //   设置默认
       let arr = []
       array.map(e => {
         arr.push(e.name)
       })
-
-      this.settingResult = arr
-      this.addResult(arr)
+      
+      //从localStorage 中获取用户选择的同步信息
+      if(localStorage.getItem('result')){
+        this.settingResult = JSON.parse(localStorage.getItem('result'))
+        this.addResult(this.settingResult)
+      }else{
+        this.settingResult = arr
+        this.addResult(arr)
+      }
 
       // 获取文章分类
       let data = {
@@ -160,8 +165,12 @@ export default {
             }
           })
           this.topicList = data
-          
-          this.addTag(data[0])
+          //从localStorage 获取 分类信息
+          if(localStorage.getItem('tag')){
+            this.addTag(JSON.parse(localStorage.getItem('tag')))
+          }else{
+            this.addTag(data[0])
+          }
         }
       })
 
@@ -183,9 +192,7 @@ export default {
     },
     selectTag(tag) {
        this.addTag(tag)
-    },
-    onClickLeft() {
-      this.$router.go(-1)
+       localStorage.setItem('tag',JSON.stringify(tag))
     },
     onClickRelease(){
       if (!this.getArticleContent.length) {
