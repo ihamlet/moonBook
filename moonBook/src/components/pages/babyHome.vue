@@ -586,7 +586,10 @@ export default {
     },
     toPunchList(){
       this.$router.push({
-        name:'punch-list'
+        name:'punch-list',
+        query:{
+          id: this.$route.query.id
+        }
       })
     },
     actionsheet(item) {
@@ -729,7 +732,21 @@ export default {
       }
     },
     punch() {
-      this.scanQRcode({id:this.$route.query.id})
+      this.scanQRcode({id:this.$route.query.id}).then(res=>{
+        switch(res.data.status){
+          case 1:
+            this.$router.push({
+              name:'punch-back',
+              query:{
+                id: this.$route.query.id
+              }
+            })
+          break
+          case 0:
+            this.$toast.fail('打卡失败')
+          break
+        }
+      })
     },
     //置顶
     onInput() {

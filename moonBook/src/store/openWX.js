@@ -122,25 +122,23 @@ export default {
             }
         })
     },
-    //扫一扫接口
     scanQRcode(context, products){
-      wx.scanQRCode({
-        needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-        scanType: ["barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-          success(res) {
-            console.log(res)
-            let data = {
-              child_id: products.id,
-              isbn: res.resultStr
+      return new Promise((resolve, reject) => {
+        wx.scanQRCode({
+          needResult: 1,
+          scanType: ["barCode"],
+            success(res) {
+              let data = {
+                child_id: products.id,
+                isbn: res.resultStr
+              }
+              
+              axios.post('/book/member/read_sign',data).then(res=>{
+                resolve(res)
+              })
             }
-
-            console.log(products.id)
-            // context.commit('setResultStr',res.resultStr)
-            axios.post('/book/member/read_sign',data).then(res=>{
-              console.log(res)
-            })
-          }
         })
+      })
     }
   }
 }

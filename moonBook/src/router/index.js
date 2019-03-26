@@ -74,7 +74,7 @@ import cardTime from '@/components/pages/accept/cardTime'
 //阅读指导
 import ReadGuide from '@/components/pages/guided/readGuide'
 //打卡记录
-import punchList from '@/components/pages/punch/punchList'
+import punchBack from '@/components/pages/punch/punchBack'
 
 
 Vue.use(Router)
@@ -390,11 +390,11 @@ export default new Router({
       }
     },
     {
-      path: '/punch-list',
-      name: 'punch-list',
-      component: punchList,
+      path: '/punch-back',
+      name: 'punch-back',
+      component: punchBack,
       meta: {
-        title: '打卡记录',
+        title: '打卡成功',
         keepAlive: true,
         isFooterBar: false
       }
