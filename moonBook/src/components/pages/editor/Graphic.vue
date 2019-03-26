@@ -371,10 +371,11 @@ export default {
             rotate: info.rotate,
             duration: Math.floor(info.duration) || 10
           })
+        this.upOssMedia(type, file)
         this.percent = 0
       })
 
-      this.upOssMedia(type, file)
+      
     },
     upOssMedia(type, file) {
       if (!this.ossSign) {
