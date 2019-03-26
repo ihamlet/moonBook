@@ -32,7 +32,6 @@
 <script>
 import axios from './../../lib/js/api'
 import { mapActions } from 'vuex'
-import { format } from './../../lib/js/util'
 import iconSuccess from './../../module/animate/iconSuccess'
 import cardPunch from './cardPunch'
 

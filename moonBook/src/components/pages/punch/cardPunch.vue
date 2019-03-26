@@ -10,6 +10,8 @@
   </div>
 </template>
 <script>
+import { format } from './../../lib/js/util'
+
 export default {
     name:'card-punch',
     props: ['item'],
