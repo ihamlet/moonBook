@@ -50,9 +50,6 @@ export default {
     }
   },
   methods: {
-    imgError(e) {
-      e.target.src = require('@/assets/img/no-cover.jpg')
-    },
     thumb(img) {
       let hostMatch = img.match(/https?:\/\/(.+?)\//)
       if (hostMatch) {

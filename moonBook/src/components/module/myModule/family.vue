@@ -47,7 +47,11 @@ export default {
       }
 
       axios.get(wmLifeGetBabyParent, data).then(res => {
-        this.list = res.data.data
+        switch(res.data.status){
+          case 1:
+            this.list = res.data.data
+          break
+        }
       })
 
       let ParentListData = {
@@ -58,15 +62,20 @@ export default {
       }
 
       axios.get(wmLifeGetBabyParent, ParentListData).then(res => {
-        let array = res.data.data
+        switch(res.data.status){
+          case 1:
+            let array = res.data.data
 
-        array.forEach((element, i) => {
-          if (this.userDataState.id == element.parent_id) {
-            array.splice(i, 1)
-          }
-        })
+            array.forEach((element, i) => {
+              if (this.userDataState.id == element.parent_id) {
+                array.splice(i, 1)
+              }
+            })
 
-        this.count = array.length
+            this.count = array.length
+          break
+        }
+
       })
     },
     toFamily() {

@@ -19,7 +19,7 @@ export default {
     width: 60px;
     height: 60px;
     overflow: hidden;
-    transform: rotate(270deg);
+    transform: rotate(270deg) scale(0.7);
 }
 
 .circle,

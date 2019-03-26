@@ -168,6 +168,7 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
   },
   methods: {
+    ...mapActions('openWX',['scanQRcode']),
     ...mapActions(['getUserData']),
     request() {
       this.getUserData().then(res => {
@@ -288,18 +289,20 @@ export default {
       }
     },
     punch() {
-      this.scanQRcode({id:this.$route.query.id}).then(res=>{
+      this.scanQRcode({id:this.userDataState.child_id}).then(res=>{
         switch(res.data.status){
           case 1:
             this.$router.push({
               name:'punch-back',
               query:{
-                id: this.$route.query.id
+                id: this.$route.query.id,
+                child_id: this.userDataState.child_id,
+                back: this.$route.name 
               }
             })
           break
           case 0:
-            this.$toast.fail('打卡失败')
+            this.$toast(res.data.msg)
           break
         }
       })

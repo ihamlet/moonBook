@@ -738,12 +738,14 @@ export default {
             this.$router.push({
               name:'punch-back',
               query:{
-                id: this.$route.query.id
+                id: this.$route.query.id,
+                child_id: this.$route.query.id,
+                back: this.$route.name
               }
             })
           break
           case 0:
-            this.$toast.fail('打卡失败')
+            this.$toast(res.data.msg)
           break
         }
       })
