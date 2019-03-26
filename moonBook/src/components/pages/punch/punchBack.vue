@@ -34,6 +34,7 @@ import axios from './../../lib/js/api'
 import { mapActions } from 'vuex'
 import iconSuccess from './../../module/animate/iconSuccess'
 import cardPunch from './cardPunch'
+import { format } from './../../lib/js/util'
 
 export default {
   name: 'punchBack',
@@ -92,6 +93,7 @@ export default {
       this.scanQRcode({ id: this.$route.query.child_id }).then(res => {
         switch (res.data.status) {
           case 1:
+            this.onRefresh()
             this.success = true
             setTimeout(() => {
                 this.success = false

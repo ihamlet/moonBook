@@ -12,6 +12,7 @@
 <script>
 import axios from './../../lib/js/api'
 import cardPunch from './cardPunch'
+import { format } from './../../lib/js/util'
 
 export default {
   name: 'punch-list',
