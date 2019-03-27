@@ -147,7 +147,8 @@ export default {
           api: '/book/member/get_donations',
           params: {
             page: 1,
-            limit: 20
+            limit: 20,
+            is_check: 1
           }
         }]
       }
@@ -203,28 +204,29 @@ export default {
       let tab = this.readArray[this.tabIndex]
       return axios.get(tab.api,{params: tab.params}).then(res => {
         this.loading = false
-          if(res.data.status === 1) {
+          if(res.data.status == 1) {
             tab.num = res.data.count
             let list = res.data.data
-            if (list.length) {
               if (tab.convert) {
                 list.map(item=>tab.convert(item))
               }
 
-              if(tab.params.page === 1) {                
+              if(tab.params.page == 1) {                
                 tab.content = list
               } else {
                 tab.content = tab.content.concat(list)
                 this.$forceUpdate()
               }
             
-              tab.params.page ++
+              tab.params.page++
               this.finished = false
-            } else {
+
+
+            if (list.length >= res.data.count) {
               this.finished = true
             }
           } else {
-            this.finished = true;
+            this.finished = true
           }
       })
     },
@@ -237,9 +239,6 @@ export default {
     },
     onSelect(params) {
       this.selsetData = params
-      this.page = 1
-      this.loading = true
-      this.finished = false
       this.onRefresh()
     },
     onLoad() {
@@ -247,10 +246,8 @@ export default {
     },
     onChangeTab(index) {
       this.tabIndex = index
-      this.page = 1
-      this.loading = true
-      this.finished = false
       this.onRefresh()
+      this.readArray[this.tabIndex].params.is_check = 1
     },
     onClickTab(index,title){
       switch(title){
@@ -264,8 +261,9 @@ export default {
           this.isCheck = 2
         break
       }
+      
       this.readArray[this.tabIndex].params.is_check = this.isCheck
-      this.finished = false
+      this.readArray[this.tabIndex].params.page = 1
       this.onRefresh()
     },
     onBookCollect(e) {       
