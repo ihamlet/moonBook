@@ -197,7 +197,7 @@ export default {
       })
     },
     onClickRight() {
-      window.location.href = '/book/member/donation_entry'
+      window.location.href = '/book/member/entry_donation'
     },
     getList() {    
       let tab = this.readArray[this.tabIndex]
@@ -264,13 +264,12 @@ export default {
           this.isCheck = 2
         break
       }
-      
+      this.readArray[this.tabIndex].params.is_check = this.isCheck
       this.finished = false
       this.onRefresh()
     },
     onBookCollect(e) {       
-      this.readArray[this.tabIndex].params.page = 1
-      this.getList()
+      this.onRefresh()
     }
   }
 }
