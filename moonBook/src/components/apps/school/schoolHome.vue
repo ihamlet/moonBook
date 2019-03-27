@@ -182,7 +182,11 @@ export default {
             }
 
             if(this.$route.query.id && this.$route.query.id!=''){
+<<<<<<< HEAD
               axios.get('/book/school/get_info', data).then(res => {
+=======
+              axios.get(`/book/school/get_info?school_id=${this.$route.query.id}`).then(res => {
+>>>>>>> origin/wandway
                 if (res.data.status == 1) {
                   this.schoolInfo = res.data.data
                 }

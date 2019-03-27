@@ -90,8 +90,9 @@ export default {
 
       axios.get('/book/member/add_favorite',data).then(res => {
         if (res.data.status == 1) {
-          this.$forceUpdate() //强制刷新数据
-          this.$set(item,'is_collect',!item.is_collect) //使用$set 来修改
+          this.$forceUpdate()
+          this.$set(item, 'is_collect', !item.is_collect)
+          this.$emit('book_collect', {book_id: item.book_id})
           if(item.is_collect){
             this.$toast.success({
               className: 'like-icon toast-icon',
