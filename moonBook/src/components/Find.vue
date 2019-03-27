@@ -25,9 +25,9 @@ export default {
     userTabBtn() {
       let array = [
         {
-          iconClass: 'icon-faxian',
-          name: '发现',
-          path: '/apps-find'
+          iconClass: 'icon-home',
+          name: '首页',
+          path: '/'
         },
         {
           iconClass: 'icon-banji',

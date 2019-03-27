@@ -1,8 +1,9 @@
 <template>
   <div class="container" id='media' @click="toArticle" :class="$route.name == 'article'?'article':''">
     <div class="title" v-if='type=="card"&&item.template_id=="0"' v-line-clamp:20="2">{{item.title}}</div>
-    
-    <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?2:0" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
+
+    <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?2:0" :class="item.template_id == 0?'content':''"
+      v-html='item.details'></div>
     <!-- 视频  -->
     <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"'>
       <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
@@ -12,13 +13,14 @@
             <div class="player">
               <i class="iconfont">&#xe639;</i>
             </div>
-            <img :src="item.cover" alt="视频封面"/>
+            <img :src="item.cover" alt="视频封面" />
             <van-tag class="duration" size="medium" color="rgba(0,0,0,.5)">{{getDuration(videoItem.duration)}}</van-tag>
           </div>
 
           <!-- 正文播放 -->
           <div class="player-windows" v-else>
-              <video :src='videoItem.photo' :poster='videoItem.thumb' controls muted x-webkit-airplay="true" playsinline  webkit-playsinline="true" x5-video-player-type="h5"></video>
+            <video :src='videoItem.photo' :poster='videoItem.thumb' controls muted x-webkit-airplay="true" playsinline
+              webkit-playsinline="true" x5-video-player-type="h5"></video>
           </div>
         </div>
       </div>
@@ -29,8 +31,10 @@
       <div :class="[item.photos.length == 4?'layout-4':'']">
         <van-row :gutter="4">
           <van-col :span="grid" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
-            <div class="img-grid" :class="[item.photos.length == 1&&photo.height/photo.width > 18/9?'long':'',item.photos.length == 1&&type=='details'?'alone':'']" v-if='photo&&photo.is_video==0 && photo.is_audio == 0'>
-              <img class="img-preview" :class="[photo.height/photo.width > 2?'long':'']" :src="photo.thumb" :large="photo.photo" :preview='type=="card"?false:photo.post_id' />
+            <div class="img-grid" :class="[item.photos.length == 1&&photo.height/photo.width > 18/9?'long':'',item.photos.length == 1&&type=='details'?'alone':'']"
+              v-if='photo&&photo.is_video==0 && photo.is_audio == 0'>
+              <img class="img-preview" :class="[photo.height/photo.width > 2?'long':'']" :src="photo.thumb" :large="photo.photo"
+                :preview='type=="card"?false:photo.post_id' />
               <van-tag class="photo-tag" type="primary" v-if='photo.height/photo.width > 18/9&&type=="card"'>长图</van-tag>
             </div>
           </van-col>
@@ -39,10 +43,10 @@
     </div>
 
     <div class="media img long-article-thumb" v-if='item.template_id == "0"&&type == "card"&&item.cover&&item.hasvideo!="1"'>
-      <img :src="item.cover || item.photos[0].thumb"/>
+      <img :src="item.cover || item.photos[0].thumb" />
       <van-tag class="photo-tag" type="primary">文章</van-tag>
     </div>
-    
+
     <!-- 音频 -->
     <!-- <div class="media" :class="item.hasaudio==1?'audio-cover':''" v-if='item.hasaudio==1'>
       <audio controls="controls" v-for='(audioItem,audioIndex) in item.photos' :key="audioIndex">
@@ -59,13 +63,13 @@ export default {
   name: 'media',
   props: ['item', 'type'],
   computed: {
-    grid(){
+    grid() {
       let num
-      if(this.item.photos.length == 4){
+      if (this.item.photos.length == 4) {
         num = 12
-      }else if( this.item.photos.length == 1 && this.type == 'details'){
+      } else if (this.item.photos.length == 1 && this.type == 'details') {
         num = 24
-      }else{
+      } else {
         num = 8
       }
       return num
@@ -76,7 +80,7 @@ export default {
   },
   methods: {
     toArticle() {
-      if(this.type == 'card'){
+      if (this.type == 'card') {
         this.$router.push({
           name: 'article',
           query: {
@@ -99,69 +103,71 @@ export default {
         }
       })
     },
-    getDuration(time){
+    getDuration(time) {
       return formatTime(time)
     }
   }
 }
 </script>
 <style scoped>
-.container{
-  margin: .625rem /* 10/16 */ 0;
+.container {
+  margin: 0.625rem /* 10/16 */ 0;
 }
 
 .layout-4 {
   width: 60%;
 }
 
-.text{
+.text {
   font-size: 1.125rem /* 18/16 */;
-  margin-bottom: .625rem /* 10/16 */;
+  margin-bottom: 0.625rem /* 10/16 */;
 }
 
-.video-thumb{
+.video-thumb {
   position: relative;
   float: left;
-  margin-bottom: .625rem /* 10/16 */;
+  margin-bottom: 0.625rem /* 10/16 */;
 }
 
-.player-card.vertical{
+.player-card.vertical {
   width: 8.75rem /* 140/16 */;
   height: 13.75rem /* 220/16 */;
   overflow: hidden;
 }
 
-.player-card.vertical img{
+.player-card.vertical img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 .text,
-.title{
+.title {
   line-height: 1.5;
 }
 
-.title{
+.title {
   font-size: 1.25rem /* 20/16 */;
-  margin-bottom: .625rem /* 10/16 */;
+  margin-bottom: 0.625rem /* 10/16 */;
   font-weight: 700;
   text-align: justify;
 }
 
-.img-grid.alone{
-  padding-bottom: 0
+.img-grid.alone {
+  padding-bottom: 0;
 }
 
-.img-grid.alone .img-preview{
+.img-grid.alone .img-preview {
   width: auto;
   height: auto;
   position: static;
 }
+
+
 </style>
 <style>
 #media .text img,
-#media .text p{
-  margin: .625rem /* 10/16 */ 0;
+#media .text p {
+  margin: 0.625rem /* 10/16 */ 0;
 }
 </style>

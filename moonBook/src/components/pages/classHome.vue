@@ -1,5 +1,5 @@
 <template>
-  <div class="class-home page-padding" v-if='hackReset'>
+  <div class="class-home page-padding">
     <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed :border='false'>
       <div class="head-bar-title" slot="title" @click="cutover">
         {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="managerState.length > 1 && actions != null">&#xe608;</i>
@@ -133,7 +133,6 @@ export default {
       qrImage: '',
       classInfo: '',
       lateBook: '',
-      hackReset: true,
       actionsheetShow: false,
       appsList: [{
         name: '风采',
@@ -171,7 +170,13 @@ export default {
     ...mapActions('openWX',['scanQRcode']),
     ...mapActions(['getUserData']),
     request() {
+      this.$toast.loading({
+        mask:false,
+        duration:0,
+        className:'page-loading'
+      })
       this.getUserData().then(res => {
+        this.$toast.clear()
         if (res.id != null) {
             if( res.child_id == '0'){
               this.$dialog.confirm({
@@ -313,7 +318,6 @@ export default {
       }
     },
     onSelect(item) {
-      this.hackReset = false
       this.actionsheetShow = false
       if (item.type == 'banji') {
         this.$router.push({
@@ -323,10 +327,8 @@ export default {
             back: this.$route.name
           }
         })
-        this.$nextTick(() => {
-          this.hackReset = true
-          this.request()
-        })
+
+        this.$router.go(0)
       } else if (item.type == 'school') {
         this.$router.push({
           name: 'apps-school',

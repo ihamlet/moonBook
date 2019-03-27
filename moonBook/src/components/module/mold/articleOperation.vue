@@ -4,7 +4,7 @@
       <div class="flex-btn">
         <van-button class="theme-btn tuijian" round size="normal" type="primary" @click="recommend"> <i class="iconfont">&#xe668;</i> 推荐</van-button>
       </div>
-      <div class="flex-btn" v-if='$route.query.back!="baby-home"'>
+      <div class="flex-btn" v-if='isBtnShow'>
         <van-button class="theme-btn shoulu" round size="normal" type="primary" @click="selectChildren"> <i class="iconfont">&#xe6ea;</i> 收录</van-button>
       </div>
     </div>
@@ -49,7 +49,15 @@ export default {
       }
 
       return array
-    },  
+    }, 
+    isBtnShow(){
+      let boole = true
+      if(this.$route.query.back == 'zoom' || this.$route.query.back == 'baby-home'){
+        boole = false
+      }
+
+      return boole
+    }
   },
   data() {
     return {

@@ -1,10 +1,6 @@
 <template>
   <div class="school-home page-padding">
-    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" fixed>
-      <!-- <div class="head-bar-text" slot="left">
-        <van-icon name="arrow-left" />
-        <span class="text">{{$route.query.back?'返回':'首页'}}</span>
-      </div> -->
+    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" fixed :border='false'>
       <div class="head-bar-title" slot="title" @click="actionsheetShow = true">
         {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerState.length > 1">&#xe608;</i>
       </div>
@@ -23,13 +19,11 @@
         </div>
         <div class="arc"></div>
       </div>
-      <div class="module">
         <div class="apps">
           <apps :appsList='appsList' type='schoolHome' />
         </div>
-      </div>
       <div class="module card-top">
-        <investmentAd :key="key" :investmentAd='investment' type='notice'/>
+        <investmentAd :investmentAd='investment' type='notice'/>
       </div>
       <div class="module">
         <read-list type='school' title='流动红旗' field='name' />
@@ -38,7 +32,7 @@
         <van-tabs color='#409eff' :line-width='20' :line-height='4' animated swipeable>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
-              <drying-list :key="key" :school_id='$route.query.id' portal_name='学校主页'/>
+              <drying-list :school_id='$route.query.id' portal_name='学校主页'/>
             </div>
           </van-tab>
         </van-tabs>
@@ -67,9 +61,6 @@ export default {
   computed: {
     ...mapGetters(['userDataState', 'managerState']),
     //动态组件
-    key() {
-        return this.$route.name !== undefined? this.$route.name + new Date(): this.$route + new Date()
-    },
     actions() {
       let array = []
       if (this.managerState) {
@@ -184,8 +175,14 @@ export default {
               this.backRouter()
             })
           }else{
+            let data = {
+              params:{
+                school_id:this.$route.query.id
+              }
+            }
+
             if(this.$route.query.id && this.$route.query.id!=''){
-              axios.get(`/book/school/getInfo?school_id=${this.$route.query.id}`).then(res => {
+              axios.get('/book/school/get_info', data).then(res => {
                 if (res.data.status == 1) {
                   this.schoolInfo = res.data.data
                 }
@@ -330,7 +327,7 @@ export default {
   position: absolute;
   width: 62.5rem /* 1000/16 */;
   height: 62.5rem /* 1000/16 */;
-  background: #fff;
+  background: #f2f6fc;
   border-radius: 62.5rem /* 1000/16 */;
   left: 50%;
   top: 50%;
@@ -343,6 +340,7 @@ export default {
   height: 3.75rem /* 60/16 */;
   overflow: hidden;
   border-radius: 50%;
+  background: #fff;
 }
 
 .school-logo {
@@ -370,7 +368,7 @@ export default {
 }
 
 .theme-school-background {
-  background: linear-gradient(135deg, #f44336, #ff5722);
+  background: linear-gradient(#FF9800, #F44336);
 }
 
 .run-type{
@@ -380,6 +378,7 @@ export default {
 }
 
 .apps{
-  margin-top: auto;
+  margin-top: -.625rem /* 10/16 */;
+  position: relative;
 }
 </style>

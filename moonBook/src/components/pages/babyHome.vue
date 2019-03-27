@@ -51,11 +51,11 @@
           <span class="bar-title">借阅量</span>
         </div>
         <div class="bar-item" @click="toPunchList">
-          <span class="number">{{childInfo.sign_read_count}}</span>
-          <span class="bar-title">阅读打卡</span>
+          <span class="number">{{childInfo.continuous_sign_day}}</span>
+          <span class="bar-title">打卡天数</span>
         </div>
         <div class="bar-item diary" @click="toReadStat">
-          <span class="number">{{childInfo.continuous_sign_day}}</span>
+          <span class="number">{{childInfo.insist_days}}</span>
           <span class="bar-title">坚持天数</span>
         </div>
         <div class="bar-item praise" @click="toInformation">
@@ -318,6 +318,7 @@ export default {
       })
 
       this.getUserData().then(res => {
+        this.$toast.clear()
         if(res.id != null){
           let data = {
             params: {
@@ -369,6 +370,12 @@ export default {
       })
     },
     request() {
+      this.$toast.loading({
+        mask:false,
+        duration:0,
+        className:'page-loading'
+      })
+
       this.getUserData().then(res => {
         if (res.child_id > '0') {
           let data = {

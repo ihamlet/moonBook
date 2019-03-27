@@ -5,7 +5,7 @@
         <keep-alive>
             <router-view v-if="$route.meta.keepAlive"></router-view>
         </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive"></router-view>
+        <router-view v-if="!$route.meta.keepAlive" :key="key"></router-view>
       </div>
       <footer-bar v-if='$route.meta.isFooterBar' @release="isGraphicShow = true" :userTabBtn='userTabBtn' />
     </div>
@@ -22,6 +22,9 @@ export default {
   },
   computed: {
     ...mapGetters(['userDataState']),
+    key(){
+        return this.$route.path + Math.random()
+    },
     userTabBtn() {
       let array = [
         {

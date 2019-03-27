@@ -1,9 +1,5 @@
 <template>
-  <div class="class-zoom" :class="[type!='template'?'page-padding':'no-padding']">
-    <van-nav-bar v-if='type!="template"' :title="$route.query.name?$route.query.name:'班级风采'" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft"/>
-    <div class="module" v-if="type != 'template'">
-      <freshList :list='freshList' cid="id" avatar="avatar" routerName='baby-home' name="name" type='template' />
-    </div>
+  <div class="class-zoom page-padding">
     <div>
       <van-nav-bar :title="$route.query.name?'':'班级动态'"/>
       <van-pull-refresh v-model="loading" @refresh="onRefresh">
@@ -31,16 +27,14 @@
 </template>
 <script>
 import axios from './../lib/js/api'
-import freshList from './../module/findModule/freshList'
 import graphicCard from './../module/card/graphicCard'
 import qrCode from "./../module/mold/qrCode"
 import { mapGetters } from 'vuex'
 
 export default {
   name: "class-zoom",
-  props: ['type', 'banji_id'],
+  props: ['banji_id'],
   components: {
-    freshList,
     graphicCard
   },
   computed:{
@@ -101,25 +95,7 @@ export default {
       }]
     }
   },
-  created() {
-    this.fetchData()
-  },
-  watch: {
-    '$router': 'fetchData'
-  },
   methods: {
-    onClickLeft() {
-      this.$router.go(-1)
-    },
-    fetchData() {
-      if(this.$route.query.id&&this.$route.query.id!='0'){
-        axios.get(`/book/baby/getList?banji_id=${this.$route.query.id}`).then(res => {
-          if(res.data.status == 1){
-            this.freshList = res.data.data
-          }
-        })
-      }
-    },
     onLoad() {
       let data = {
         params: {
@@ -129,31 +105,27 @@ export default {
           portal_name: '班级主页'
         }
       }
-      if(this.$route.query.id&&this.$route.query.id!='0'){
-        return axios.get('/book/SchoolArticle/getList', data).then(res => {
-          switch(res.data.status){
-            case 1:
-              if (this.page == 1) {
-                this.list = res.data.data
-              } else {
-                this.list = this.list.concat(res.data.data)
-              }
-              this.page++
-              this.loading = false
-              if (this.list.length >= res.data.count) {
-                this.finished = true
-              }
-            break
-            case 0:
-              this.loading = false
+  
+      return axios.get('/book/SchoolArticle/getList', data).then(res => {
+        switch(res.data.status){
+          case 1:
+            if (this.page == 1) {
+              this.list = res.data.data
+            } else {
+              this.list = this.list.concat(res.data.data)
+            }
+            this.page++
+            this.loading = false
+            if (this.list.length >= res.data.count) {
               this.finished = true
-            break
-          }
-        })
-      }else{
-        this.loading = false
-        this.finished = true
-      }
+            }
+          break
+          case 0:
+            this.loading = false
+            this.finished = true
+          break
+        }
+      })
     },
     onRefresh(){
       this.page = 1
@@ -211,9 +183,6 @@ export default {
           break
       }
     },
-    toManger(){
-      console.log('管理页面')
-    },
     onRecommendSelect(){
       let data = {
         params:{
@@ -250,11 +219,4 @@ export default {
 };
 </script>
 <style scoped>
-.class-zoom {
-  padding-top: 2.8125rem /* 45/16 */;
-}
-
-.class-zoom.no-padding {
-  padding-top: 0;
-}
 </style>

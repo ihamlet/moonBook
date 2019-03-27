@@ -7,7 +7,7 @@
           <div class="container">
             <div class="article-title">{{list.articleTitle}}</div>
             <div class="content" v-html='list.article'></div>
-            <van-button class="theme-btn" type="primary" plain size='normal'>阅读全文</van-button>
+            <van-button class="theme-btn" type="primary" plain hairline size='normal'>阅读全文</van-button>
           </div>
         </div>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>

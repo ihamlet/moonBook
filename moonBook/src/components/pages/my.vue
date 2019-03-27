@@ -77,6 +77,12 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     fetchData() {
+      this.$toast.loading({
+        mask:false,
+        duration:0,
+        className:'page-loading'
+      })
+
       axios.get('/book/SchoolTeacher/getMine').then(res => {
         if(res.data.status == 1){
           this.isTeacher = res.data.data.is_confirm
@@ -90,6 +96,7 @@ export default {
       })
 
       this.getUserData().then(res => {
+        this.$toast.clear()
         if(res.id != null){
           let babyListData = {
             params:{

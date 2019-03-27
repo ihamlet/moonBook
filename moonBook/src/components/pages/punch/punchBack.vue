@@ -2,10 +2,7 @@
   <div class="punch-list page-padding">
     <van-nav-bar :title="$route.meta.title" :border='false' />
     <van-pull-refresh v-model="loading" @refresh="onRefresh">
-      <div class="success flex flex-justify" v-if='success'>
-        <iconSuccess class="icon"/>
-      </div>
-      <div class="date">{{day}}</div>
+      <div class="date-title">{{day}}</div>
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <van-cell v-for="(item,index) in list" :key="index" :is-link='item.book_id' center>
           <cardPunch :item='item'/>
@@ -18,6 +15,18 @@
         广告位
       </div>
     </div>
+
+    <van-popup class="popup-punch" v-model="show" position="bottom" get-container="#app">
+      <div class="book-info" v-if='bookInfo'>
+        <div class="thumb">
+            <img class="lazy" v-lazy="thumb(bookInfo.thumb)" />
+        </div>
+        <div class="book-name">{{bookInfo.title}}</div>
+      </div>
+      <div class="success flex flex-justify">
+        <iconSuccess class="icon"/>
+      </div>
+    </van-popup>
 
     <div class="footer-bar flex">
       <div class="btn-box">
@@ -47,9 +56,10 @@ export default {
       loading: false,
       finished: false,
       list: [],
+      bookInfo: '',
       page: 1,
       day: '',
-      success: false
+      show: false
     }
   },
   methods: {
@@ -94,13 +104,14 @@ export default {
         switch (res.data.status) {
           case 1:
             this.onRefresh()
-            this.success = true
+            this.bookInfo = res.data.data.book
+            this.show = true
             setTimeout(() => {
-                this.success = false
-            },5000)
+                this.show = false
+            },4000)
             break
           case 0:
-            this.success = false
+            this.show = false
             this.$toast(res.data.msg)
             break
         }
@@ -119,6 +130,16 @@ export default {
           id:this.$route.query.id
         }
       })
+    },
+    thumb(img) {
+      if (img) {
+          let hostMatch = img.match(/https?:\/\/(.+?)\//)
+          if (hostMatch) {
+            return `/book/api/remotePic?url=${img}`
+          } else {
+            return img
+          }
+      }
     }
   }
 }
@@ -152,9 +173,29 @@ export default {
   position: fixed;
   bottom: 0.625rem /* 10/16 */;
   width: 100%;
+  z-index: 2010;
 }
 
 .success {
   background: #fff;
+  margin-bottom: 3.75rem /* 60/16 */;
+}
+
+.thumb{
+  width: 5rem /* 80/16 */;
+  height: 5rem /* 80/16 */;
+  margin: .625rem /* 10/16 */ auto;
+}
+
+.book-name{
+  text-align: center;
+}
+
+.book-info{
+  margin-bottom: 1.25rem /* 20/16 */;
+}
+
+.popup-punch{
+  border-radius: .625rem /* 10/16 */ .625rem /* 10/16 */ 0 0;
 }
 </style>

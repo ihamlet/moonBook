@@ -1,6 +1,6 @@
 <template>
   <div class="add-family">
-    <van-nav-bar :border='false' title="邀请" fixed :left-text="$route.query.back?'返回':'首页'" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar :border='false' title="邀请"/>
     <div class="pictorial">
       <div class="tips" v-show='is_mine'>点击发送给家人 邀请加入</div>
       <div class="logo">
@@ -63,11 +63,17 @@ export default {
     this.fetchData()
   },
   updated () {
+    let self = this //this指向到vue实例
     this.$nextTick(()=>{
       let data = {
         item: this.item,
         success(){
-          console.log('微信分享')
+          self.$router.push({
+            name:'baby-home',
+            query:{
+              id: self.$route.query.id
+            }
+          })
         }
       }
       this.share(data)
@@ -79,7 +85,12 @@ export default {
   methods: {
     ...mapActions('openWX',['share']),
     fetchData(){
-      axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res=>{
+      let data = {
+        params:{
+          child_id:this.$route.query.id
+        }
+      }
+      axios.get('/book/baby/getInfo',data).then(res=>{
         if(res.data.status = 1){
           this.is_mine = res.data.data.is_mine
           this.babyInfo = res.data.data
@@ -87,7 +98,13 @@ export default {
       })
     },
     addFamily() {
-        axios.get(`/book/babyParent/join?child_id=${this.$route.query.id}`).then(res => {
+      let data = {
+        params:{
+          child_id:this.$route.query.id
+        }
+      }
+
+        axios.get('/book/babyParent/join',data).then(res => {
           this.isLoading = true
           if(res.status == 1){
             this.$toast(res.data.msg)
@@ -113,20 +130,6 @@ export default {
             name:'home'
         })  
       }
-    },
-    onClickLeft(){
-      if(this.$route.query.back){
-        this.$router.push({
-          name:this.$route.query.back,
-          query:{
-            id: this.$route.query.id
-          }
-        })
-      }else{
-        this.$router.push({
-          name:'my'
-        })
-      }
     }
   }
 }
@@ -140,7 +143,7 @@ export default {
 
 .pictorial {
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 45px);
   background-image: url('./../../../assets/img/share-bg.jpg');
   background-size: cover;
   background-position: bottom;

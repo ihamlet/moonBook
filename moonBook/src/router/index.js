@@ -40,6 +40,7 @@ import VideoPlayer from '@/components/pages/video/ckplayer'
 
 
 import School from '@/components/School'
+import Banji from '@/components/Banji'
 import Find from '@/components/Find'
 import Baby from '@/components/Baby'
 
@@ -218,18 +219,7 @@ export default new Router({
           meta: {
             title: 'BookZoom',
             tabActive: 4,
-            isFooterBar: true,
-            keepAlive: true
-          }
-        },
-        {
-          path: '/class-home',
-          name: 'class-home',
-          component: ClassHome,
-          meta: {
-            title: '宝贝的班级',
-            tabActive: 1,
-            isFooterBar: true,
+            isFooterBar: false,
             keepAlive: true
           }
         },
@@ -436,6 +426,21 @@ export default new Router({
         meta: {
           title: '学校主页',
           tabActive: 0,
+          isFooterBar: false,
+          keepAlive: true
+        }
+      }]
+    },{
+      path:'/banji',
+      name:'banji',
+      component: Banji,
+      children:[{
+        path: '/class-home',
+        name: 'class-home',
+        component: ClassHome,
+        meta: {
+          title: '宝贝的班级',
+          tabActive: 1,
           isFooterBar: true,
           keepAlive: true
         }
@@ -472,7 +477,7 @@ export default new Router({
         meta: {
           keepAlive: true,
           title: '我的宝贝',
-          tabActive: 0,
+          tabActive: 3,
           isFooterBar: true
         }
       }]

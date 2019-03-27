@@ -59,7 +59,7 @@ export default {
       if (context.state.ready) {
         let title
         let desc
-        let template_id = products.item.template_id || "1"
+        let template_id = products.item.template_id?products.item.template_id:"1"
   
         if (template_id == "0" && products.item.hasvideo != "1") {
           title = `【阅亮书架】#${products.item.cate.cate_name}#${products.item.title}`

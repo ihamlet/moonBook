@@ -1120,8 +1120,7 @@ i.iconfont.vip-1 {
   right: 0;
 }
 
-
-.date {
+.date-title {
   width: 100%;
   height: 2.8125rem /* 45/16 */;
   text-align: center;
@@ -1130,19 +1129,26 @@ i.iconfont.vip-1 {
   position: relative;
   color: #303133;
   font-weight: 700;
-  z-index: 1;
 }
 
-.date::before {
+.date-title::before {
   content: '';
   position: absolute;
   width: 1.875rem /* 30/16 */;
-  height: .625rem /* 10/16 */;
-  border-radius: 30px/10px;
-  background: linear-gradient(#b8dbff,  #409eff); /* 标准的语法 */
-  bottom: .75rem /* 12/16 */;
+  height: 5px;
+  background:#409eff;
+  border-radius: .3125rem /* 5/16 */;
+  bottom:0;
   left: 50%;
   transform: translate3d(-50%, 0, 0);
-  z-index: -1;
+}
+
+.page-loading.van-toast--default{
+  width: 3.125rem /* 50/16 */;
+  min-height: 3.125rem /* 50/16 */;
+}
+
+.page-loading.van-toast{
+  background-color: rgba(0, 0, 0, 0.3);
 }
 </style>

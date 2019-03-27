@@ -1,12 +1,18 @@
 <template>
-  <div class="flex flex-align" @click="toBookDetails(item)">
-    <div class="book-cover">
-      <img class="lazy" v-lazy="thumb(item.book_photo)" />
-    </div>
-    <div class="book-info">
-      <div class="title">{{item.book_name}}</div>
-      <div class="time">打卡时间：{{getTime(item.create_time)}} </div>
-    </div>
+  <div class="card flex flex-align" @click="toBookDetails(item)">
+    <van-row gutter="10" type="flex" align="center">
+      <van-col span="6">
+        <div class="book-cover">
+          <img class="lazy" v-lazy="thumb(item.book_photo)" />
+        </div>
+      </van-col>
+      <van-col span='18'>
+        <div class="book-info">
+          <div class="title" v-line-clamp:20="2" >{{item.book_name}}</div>
+          <div class="time">打卡时间：{{getTime(item.create_time)}}</div>
+        </div>
+      </van-col>
+    </van-row>
   </div>
 </template>
 <script>
@@ -20,9 +26,9 @@ export default {
             if (img) {
                 let hostMatch = img.match(/https?:\/\/(.+?)\//)
                 if (hostMatch) {
-                return `/book/api/remotePic?url=${img}`
+                  return `/book/api/remotePic?url=${img}`
                 } else {
-                return img
+                  return img
                 }
             }
         },
@@ -43,13 +49,15 @@ export default {
 }
 </script>
 <style scoped>
-.book-cover {
-  width: 3.75rem /* 60/16 */;
-  height: 3.75rem /* 60/16 */;
-  margin-right: 0.625rem /* 10/16 */;
+.book-cover img{
+  min-height: 70px;
 }
 
 .time{
   color: #909399;
+}
+
+.card{
+  justify-content: space-between;
 }
 </style>
