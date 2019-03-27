@@ -3,6 +3,10 @@
     <van-col span="7">
       <div class="book-cover">
         <img  class="lazy" v-lazy="thumb(item.book_photo)"/>
+        <div class="is-read flex flex-justify" v-if='item.is_read == 1'>
+          <span class="read-text">已 读</span>
+          <i class="iconfont">&#xe6b3;</i>
+        </div>
       </div>
     </van-col>
     <van-col span="11">
@@ -12,7 +16,7 @@
           <div class="pos-title" v-if='item.pos_name'>书位：{{item.pos_name}}</div>
         </div>
         <div class="borrow" v-if='type=="guide"'>
-          借阅：{{item.book_views}} 次
+          借阅：{{item.book_borrow_count}} 次
         </div>
       </div>
     </van-col>
@@ -46,9 +50,6 @@ export default {
     }
   },
   methods: {
-    imgError(e) {
-      e.target.src = require('@/assets/img/no-cover.jpg')
-    },
     thumb(img) {
       let hostMatch = img.match(/https?:\/\/(.+?)\//)
       if (hostMatch) {
@@ -116,8 +117,13 @@ export default {
   font-weight: 500;
 }
 
-.attach {
+.attach,
+.borrow{
   color: #606266;
+}
+
+.book-cover{
+  position: relative;
 }
 
 .book-cover img {
@@ -155,5 +161,33 @@ export default {
 .book-cover img{
   min-height: 6.25rem /* 100/16 */;
   background: #fff;
+}
+
+.is-read{
+  position: absolute;
+  left: 0;
+  top: 0;
+  writing-mode:vertical-lr;
+  height: 5rem /* 80/16 */;
+  text-align: center;
+}
+
+.read-text,
+.is-read .iconfont{
+  position: absolute;
+}
+
+.is-read .iconfont{
+  font-size: 2.5rem /* 40/16 */;
+  top: 0;
+  color: #8BC34A;
+  z-index: 1;
+}
+
+.read-text{
+  color: #fff;
+  z-index: 2;
+  font-size: .75rem /* 12/16 */;
+  top: .1875rem /* 3/16 */;
 }
 </style>

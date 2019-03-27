@@ -84,12 +84,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_v6ji1my07hb.eot');
-  src: url('//at.alicdn.com/t/font_893274_v6ji1my07hb.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_v6ji1my07hb.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_v6ji1my07hb.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_v6ji1my07hb.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_v6ji1my07hb.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_jjd0qtutchh.eot');
+  src: url('//at.alicdn.com/t/font_893274_jjd0qtutchh.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_jjd0qtutchh.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_jjd0qtutchh.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_jjd0qtutchh.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_jjd0qtutchh.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,
@@ -1118,5 +1118,31 @@ i.iconfont.vip-1 {
   top:0;
   left: auto;
   right: 0;
+}
+
+
+.date {
+  width: 100%;
+  height: 2.8125rem /* 45/16 */;
+  text-align: center;
+  line-height: 2.8125rem /* 45/16 */;
+  background: #fff;
+  position: relative;
+  color: #303133;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.date::before {
+  content: '';
+  position: absolute;
+  width: 1.875rem /* 30/16 */;
+  height: .625rem /* 10/16 */;
+  border-radius: 30px/10px;
+  background: linear-gradient(#b8dbff,  #409eff); /* 标准的语法 */
+  bottom: .75rem /* 12/16 */;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  z-index: -1;
 }
 </style>

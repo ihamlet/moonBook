@@ -1,6 +1,6 @@
 <template>
   <div class="book-details page-padding">
-    <van-nav-bar left-text="返回" fixed left-arrow @click-left="onClickLeft">
+    <van-nav-bar fixed>
       <div class="head-bar-title" slot="title">
         <transition name="slide-fade" mode="out-in">
           <div key="1" v-if='!themeBarSearch'>{{$route.meta.title}}</div>
@@ -43,6 +43,7 @@
 import axios from './../lib/js/api'
 import freshList from './../module/findModule/freshList'
 import comment from './../module/comment'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'book-details',
@@ -69,6 +70,18 @@ export default {
       themeBarSearch: false,
     }
   },
+  updated (){
+    this.$nextTick(()=>{
+      let data = {
+        item: this.details,
+        success(){
+          console.log('微信分享')
+        }
+      }
+
+      this.share(data)
+    })
+  },
   created() {
     this.fetchData()
   },
@@ -79,6 +92,7 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
   },
   methods: {
+    ...mapActions('openWX',['share']),
     imgError(e) {
       e.target.src = require('@/assets/img/no-cover.jpg')
     },
@@ -106,9 +120,6 @@ export default {
       } else {
         this.themeBarSearch = false
       }
-    },
-    onClickLeft() {
-      this.$router.go(-1)
     }
   }
 }

@@ -168,6 +168,7 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
   },
   methods: {
+    ...mapActions('openWX',['scanQRcode']),
     ...mapActions(['getUserData']),
     request() {
       this.getUserData().then(res => {
@@ -288,8 +289,23 @@ export default {
       }
     },
     punch() {
-      Cookies.set('punckLink', location.href)
-      location.href = `/book/MemberSign/punch?child_id=${this.userDataState.child_id}&is_auto=1&url=${encodeURIComponent(location.href)}`
+      this.scanQRcode({id:this.userDataState.child_id}).then(res=>{
+        switch(res.data.status){
+          case 1:
+            this.$router.push({
+              name:'punch-back',
+              query:{
+                id: this.$route.query.id,
+                child_id: this.userDataState.child_id,
+                back: this.$route.name 
+              }
+            })
+          break
+          case 0:
+            this.$toast(res.data.msg)
+          break
+        }
+      })
     },
     cutover() {
       if (this.managerState.length > 1 && this.actions != null) {
