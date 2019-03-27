@@ -185,7 +185,7 @@ export default {
             })
           }else{
             if(this.$route.query.id && this.$route.query.id!=''){
-              axios.get(`/book/school/getInfo?school_id=${this.$route.query.id}`).then(res => {
+              axios.get(`/book/school/get_info?school_id=${this.$route.query.id}`).then(res => {
                 if (res.data.status == 1) {
                   this.schoolInfo = res.data.data
                 }
