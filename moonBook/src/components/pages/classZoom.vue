@@ -1,7 +1,6 @@
 <template>
   <div class="class-zoom page-padding">
-    <div>
-      <van-nav-bar :title="$route.query.name?'':'班级动态'"/>
+     <van-nav-bar :title="$route.query.name?'':'班级动态'" :border='false'/>
       <van-pull-refresh v-model="loading" @refresh="onRefresh">
         <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
           <div class="list" v-if='list.length > 0'>
@@ -14,12 +13,6 @@
           <div class="not-content" v-else>尚无内容</div>
         </van-list>
       </van-pull-refresh>
-    </div>
-    <!-- 发布 -->
-    <van-popup v-model="releasePageShow" class="page-popup" position="bottom">
-      <graphic @close='releasePageShow = false' />
-    </van-popup>
-
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
     <!-- 管理员推荐操作 -->
     <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" />

@@ -50,6 +50,7 @@ export default {
 </script>
 <style scoped>
 .book-cover img{
+  min-width: 70px;
   min-height: 70px;
 }
 

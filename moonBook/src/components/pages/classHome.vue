@@ -1,13 +1,9 @@
 <template>
-  <div class="class-home page-padding">
+  <div class="class-home page-padding" v-if='hackReset'>
     <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed :border='false'>
       <div class="head-bar-title" slot="title" @click="cutover">
         {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="managerState.length > 1 && actions != null">&#xe608;</i>
       </div>
-      <!-- <div class="head-bar-text" slot="left">
-        <van-icon name="arrow-left" />
-        <span class="text">{{$route.query.back?'返回':'我的'}}</span>
-      </div> -->
       <div class="head-bar-text" slot='right' v-if='manage' @click="toManage">
         <span class="text">管理班级</span>
       </div>
@@ -35,7 +31,7 @@
         <notice type='banji' />
       </div>
       <div>
-        <class-zoom type='template' :banji_id='classInfo.banji_id' />
+        <class-zoom type='template' :banji_id='classInfo.banji_id' :key="classInfo.banji_id"/>
       </div>
     </div>
 
@@ -130,6 +126,7 @@ export default {
     return {
       show: false,
       fixedHeaderBar: true,
+      hackReset: true,
       qrImage: '',
       classInfo: '',
       lateBook: '',
@@ -170,13 +167,7 @@ export default {
     ...mapActions('openWX',['scanQRcode']),
     ...mapActions(['getUserData']),
     request() {
-      this.$toast.loading({
-        mask:false,
-        duration:0,
-        className:'page-loading'
-      })
       this.getUserData().then(res => {
-        this.$toast.clear()
         if (res.id != null) {
             if( res.child_id == '0'){
               this.$dialog.confirm({
@@ -320,6 +311,15 @@ export default {
     onSelect(item) {
       this.actionsheetShow = false
       if (item.type == 'banji') {
+
+        this.hackReset = false
+        this.isSelectBabyShow = false
+
+        this.$nextTick(() => {
+          this.hackReset = true
+          this.request()
+        })
+
         this.$router.push({
           name: 'class-home',
           query: {
@@ -327,8 +327,6 @@ export default {
             back: this.$route.name
           }
         })
-
-        this.$router.go(0)
       } else if (item.type == 'school') {
         this.$router.push({
           name: 'apps-school',

@@ -318,7 +318,6 @@ export default {
       })
 
       this.getUserData().then(res => {
-        this.$toast.clear()
         if(res.id != null){
           let data = {
             params: {
@@ -370,12 +369,6 @@ export default {
       })
     },
     request() {
-      this.$toast.loading({
-        mask:false,
-        duration:0,
-        className:'page-loading'
-      })
-
       this.getUserData().then(res => {
         if (res.child_id > '0') {
           let data = {
