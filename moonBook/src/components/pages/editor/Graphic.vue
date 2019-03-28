@@ -110,6 +110,9 @@ export default {
     imgList:{
       handler(val) {
         this.grapicData.photos = val
+        this.photoLength = val.length
+
+        this.percent = 100/val.length
       },
       deep: true
     },
@@ -144,7 +147,13 @@ export default {
     uploaderImg(){
       if(this.ready){
         // 传上传张数
-        this.selectImg(9)
+        if(this.photoLength < 9){
+          this.selectImg(9)
+        }else{
+          this.$dialog.alert({
+            message: `<div class='text-center'>最多只能上传9张图片</div>`
+          })
+        } 
       }else{
         this.$refs.selectPhoto.$refs.input.click()
       }

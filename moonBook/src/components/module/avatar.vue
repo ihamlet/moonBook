@@ -1,6 +1,6 @@
 <template>
     <div class="avatar-default" :class="[size,avatarClass]">
-        <img v-if="gender=='boy'" src="./../../assets/img/boy-avatar.png" alt="默认男孩头像" />
+        <img v-if="gender==1" src="./../../assets/img/boy-avatar.png" alt="默认男孩头像" />
         <img v-else src="./../../assets/img/girl-avatar.png" alt="默认女孩头像" />
     </div>
 </template>

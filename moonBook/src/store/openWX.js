@@ -86,41 +86,41 @@ export default {
     },
     //图片接口
     selectImg(context, products){
-        wx.chooseImage({
-            count: products,
-            sizeType: ['compressed'],
-            sourceType: ['album', 'camera'], 
-            success(res){
-                let localIds = res.localIds 
-                let i = 0 
-                let length = localIds.length
-                function upload(){
-                    wx.uploadImage({
-                      localId: localIds[i],
-                      isShowProgressTips: 1, 
-                      success(res){
-                        i++
-                        let data = {
-                            params:{
-                                id: res.serverId
-                            }
-                        }
-                        axios.get('/book/file/upload_weixin_img',data).then(res=>{
-                            switch(res.data.status){
-                                case 1:
-                                    context.commit('setImg',res.data.data)
-                                break
-                            }
-                        })
-                        if (i < length) {
-                          upload()
+      wx.chooseImage({
+          count: products,
+          sizeType: ['compressed'],
+          sourceType: ['album', 'camera'], 
+          success(res){
+              let localIds = res.localIds 
+              let i = 0 
+              let length = localIds.length
+              function upload(){
+                  wx.uploadImage({
+                    localId: localIds[i],
+                    isShowProgressTips: 1, 
+                    success(res){
+                      i++
+                      let data = {
+                        params:{
+                          id:res.serverId
                         }
                       }
-                  })
-                }
-                upload()
-            }
-        })
+                      axios.get('/book/file/upload_weixin_img',data).then(res=>{
+                        switch(res.data.status){
+                            case 1:
+                                context.commit('setImg',res.data.data)
+                            break
+                        }
+                      })
+                      if (i < length) {
+                        upload()
+                      }
+                    }
+                })
+              }
+              upload()
+          }
+      })
     },
     scanQRcode(context, products){
       return new Promise((resolve, reject) => {

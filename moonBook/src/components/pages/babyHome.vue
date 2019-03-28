@@ -1,21 +1,16 @@
 <template>
   <div class="baby-home page-padding" v-if='hackReset'>
-    <!-- @click-right='onClickRight' -->
     <van-nav-bar :border='false' fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft">
       <div class="head-bar-title" slot="title" @click="selectBaby">
         {{pageTitle}} <i class="iconfont" v-if='babyList.length'>&#xe608;</i>
       </div>
-      <!-- <div class="head-bar-text" slot="left">
-        <van-icon name="arrow-left" />
-        <span class="text">{{$route.query.back||$route.query.backGo?'返回':'首页'}}</span>
-      </div> -->
       <div class="head-bar-text" slot="right" v-if='childInfo.is_mine' @click="toVerifyList">
         <span class="text">
           <i class="iconfont">&#xe653;</i>
         </span>
       </div>
     </van-nav-bar>
-    <div class="header" ref="head" :class="[childInfo.sex=='boy'?'theme-background':'background']">
+    <div class="header" ref="head" :class="[childInfo.gendor==1?'theme-background':'background']">
       <div class="baby-info flex flex-align">
         <div class="avatar" v-if="childInfo.avatar" @click="toEditorBaby">
           <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">  
@@ -35,9 +30,6 @@
           <div class="label">{{childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
         </div>
-        <!-- <div class="add-praise" @click="babyPraise(childInfo)">
-          <i class="iconfont">&#xe6e3;</i>
-        </div> -->
         <div class="qr-code" @click="showQrcode=true">
           <i class="iconfont">&#xe622;</i>
         </div>

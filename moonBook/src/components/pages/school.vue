@@ -1,7 +1,7 @@
 <template>
   <div class="edit-school">
     <div class="fixed">
-      <van-nav-bar title="选择学校" left-arrow @click-left="close" />
+      <van-nav-bar title="选择学校" />
       <search-bar :prompt='prompt' @show='isListShow = true' />
     </div>
     <div class="container" v-if='!isListShow'>
@@ -242,15 +242,6 @@ export default {
             this.$router.go(-1)
           }
         })
-      }
-    },
-    close() {
-      if (this.$route.query.enter) {
-        this.$router.push({
-          name: this.$route.query.enter
-        })
-      } else {
-        this.$router.go(-1)
       }
     },
     selectSchoolType(item, index) {

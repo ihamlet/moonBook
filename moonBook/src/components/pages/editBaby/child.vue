@@ -19,7 +19,7 @@
     </van-cell-group>
     <van-radio-group>
       <van-cell-group>
-        <van-cell value='校园设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="!isMainParent&&submit($route.query.type)" />
+        <van-cell value='校园设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="!isMainParent&&setSchool($route.query.type)" />
       </van-cell-group>
     </van-radio-group>
     <van-cell-group>
@@ -35,17 +35,13 @@
       </van-cell>
     </van-cell-group>
 
-    <!-- <van-cell-group class="theme-switch">
-      <van-switch-cell v-model="settingSurrent" @input="onInput" title="设为当前宝贝" />
-    </van-cell-group> -->
-
     <!-- 截图工具 -->
     <van-popup class="cropper-popup" v-model="cropperShow" get-container='#app'>
       <vue-cropper class="theme-cropper" ref="cropper" :img="option.img" :output-size="option.size" :output-type="option.outputType"
         :info="true" :full="option.full" :can-move="option.canMove" :can-move-box="option.canMoveBox" :fixed-box="option.fixedBox"
         :original="option.original" :auto-crop="option.autoCrop" :auto-crop-width="option.autoCropWidth"
         :auto-crop-height="option.autoCropHeight" :center-box="option.centerBox" :fixed='option.fixed'></vue-cropper>
-      <van-button class="theme-btn" type="primary" :loading='cropperLoading' @click="getCropData">完成截图</van-button>
+      <van-button class="theme-btn" type="primary" :loading='cropperLoading' @click="getCropData" round>完成截图</van-button>
     </van-popup>
 
     <!-- 日期选择器 -->
@@ -108,10 +104,9 @@ export default {
       minDate: new Date(format(new Date(), 'yyyy') - 20, 0, 0),
       maxDate: new Date(format(new Date(), 'yyyy') - 1, 0),
       currentDate: new Date(format(new Date(), 'yyyy') - 2, 0, 0),
-      // settingSurrent: false,
       childInfo: {
         name: '',
-        gender: 'boy',
+        gender: 1,
         avatar: '',
         birthday: '',
         relation_name: '',
@@ -138,7 +133,8 @@ export default {
         autoCropWidth: 250,
         autoCropHeight: 250,
         centerBox: true,
-        high: true
+        size:'0.3',
+        high: false
       }
     }
   },
@@ -151,7 +147,7 @@ export default {
     },
     sexTypeIndex(val) {
       localStorage.setItem('radio', val)
-      val == 0 ? this.childInfo.gender = 'boy' : this.childInfo.gender = 'girl'
+      val == 0 ? this.childInfo.gender = 1 : this.childInfo.gender = 2
     },
     currentDate(val) {
       this.childInfo.birthday = format(new Date(val), 'yyyy-MM-dd')
@@ -169,15 +165,15 @@ export default {
         if(this.$route.query.id){
           let getChildByUserData = {
             params:{
-              child_id: this.$route.query.id || localStorage.getItem('child_id')
+              child_id: this.$route.query.id
             }
           }
 
-          axios.get('/book/family/getChildByUser',getChildByUserData).then(res => {
+          axios.get('/book/baby/getInfo',getChildByUserData).then(res => {
             let date = new Date(res.data.data.birthday * 1000)
             this.childInfo.name = res.data.data.name
             this.childInfo.avatar = res.data.data.avatar
-            this.childInfo.gender = res.data.data.sex
+            this.sexTypeIndex = res.data.data.gender == 1?0:1
             this.childInfo.relation_name = res.data.data.relation_name
             this.currentDate = date
 
@@ -251,7 +247,18 @@ export default {
           this.errorMessage.birthday = ''
         }, 2000)
       } else {
-        if(set == 'add' || set == 'register'){
+        this.operationApi().then(res => {
+          this.$router.push({
+            name: 'baby-home',
+            query: {
+              id: res,
+            }
+          })
+        })
+      }
+    },
+    setSchool(set){
+      if(set == 'add' || set == 'register'){
           this.operationApi().then(res => {
             this.$router.push({
               name: 'edit-setting',
@@ -261,19 +268,17 @@ export default {
                 type: this.$route.query.type
               }
             })
-
             localStorage.setItem('childInfo', JSON.stringify(this.childInfo))
           })
-        }else{
-            this.$router.push({
-              name: 'edit-setting',
-              query: {
-                id: this.$route.query.id,
-                back: this.$route.name,
-                type: this.$route.query.type
-              }
-            })
-        }
+      }else{
+        this.$router.push({
+          name: 'edit-setting',
+          query: {
+            id: this.$route.query.id,
+            back: this.$route.name,
+            type: this.$route.query.type
+          }
+        })
       }
     },
     edit() {

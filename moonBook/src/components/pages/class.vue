@@ -48,13 +48,8 @@
       <div class="dialog-title">添加班级</div>
       <van-cell-group>
         <van-field v-model="className" label="班级名称" placeholder="请输入班级名称" input-align='right' />
-        <!-- <van-field v-model="classYear" label="加入班级年份" placeholder="请选择年份" input-align='right' readonly/> -->
       </van-cell-group>
     </van-dialog>
-
-    <!-- <van-popup v-model="pickerShow" positiion='bottom' get-container='#app'>
-      <van-datetime-picker type="year-month" v-model="currentDate" :min-date="minDate" :formatter="formatter"/>
-    </van-popup> -->
   </div>
 </template>
 <script>
@@ -149,12 +144,12 @@ export default {
               break
             case 0:
               this.$toast(res.data.msg)
-              done()
+              this.$router.go(-1)
               break
           }
         })
       } else {
-        done()
+        this.$router.go(-1)
       }
     },
     formatter(type,value){
