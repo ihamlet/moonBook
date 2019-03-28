@@ -30,7 +30,7 @@ import { compress,checkHtml } from './../../../lib/js/util'
 import draggable from 'vuedraggable'
 import articleItem from './articleItem'
 import articleTips from './articleTips'
-import { mapActions,mapGetters } from 'vuex'
+import { mapActions,mapGetters,mapState } from 'vuex'
 
 export default {
   name: 'article-card',
@@ -42,6 +42,7 @@ export default {
   },
   computed: {
     ...mapGetters('beautifulArticle',['getArticleList']),
+    ...mapState('openWX',['ready']),
     articleList:{
       get(){
         return this.getArticleList
@@ -73,6 +74,7 @@ export default {
   },
   methods: {
     ...mapActions('beautifulArticle',['add','revise','requestPercent','delete','upDataList']),
+    ...mapActions('openWX',['selectImg']),
     // 置底滚动位置
     scroll(){
         this.$nextTick(() => {
@@ -201,7 +203,7 @@ export default {
         this.requestPercent(0)
       })
     },
-    upOssPhoto(blob, file, base64, index,onClickType) {
+    upOssPhoto(blob, file, base64, index, onClickType) {
       let img = new Image()
       img.src = base64
 

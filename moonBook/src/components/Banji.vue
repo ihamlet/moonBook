@@ -52,7 +52,7 @@ export default {
         {
           iconClass: 'icon-people',
           name: '我的',
-          path: 'my'
+          path: 'my-home'
         }
       ]
       return array

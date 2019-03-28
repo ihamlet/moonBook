@@ -1,7 +1,6 @@
 <template>
   <div class="add-child  page-padding">
-    <van-nav-bar :title="$route.query.type!='edit'?'添加宝贝':'编辑宝贝'" left-arrow :left-text="$route.query.back?'返回':'我的'" :right-text="$route.query.type=='edit'?'删除':''"
-      @click-left="onClickLeft" @click-right="onClickRight('delete')" />
+    <van-nav-bar :title="$route.query.type!='edit'?'添加宝贝':'编辑宝贝'" :right-text="$route.query.type=='edit'?'删除':''" @click-right="onClickRight('delete')" />
     <div class="avatar-uploader">
       <van-uploader :after-read="onRead">
         <div class="prompt" v-if='!childInfo.avatar'>
@@ -20,7 +19,7 @@
     </van-cell-group>
     <van-radio-group>
       <van-cell-group>
-        <van-cell value='校园设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="!isMainParent&&submit('setSchool')" />
+        <van-cell value='校园设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="!isMainParent&&submit($route.query.type)" />
       </van-cell-group>
     </van-radio-group>
     <van-cell-group>
@@ -45,7 +44,7 @@
       <vue-cropper class="theme-cropper" ref="cropper" :img="option.img" :output-size="option.size" :output-type="option.outputType"
         :info="true" :full="option.full" :can-move="option.canMove" :can-move-box="option.canMoveBox" :fixed-box="option.fixedBox"
         :original="option.original" :auto-crop="option.autoCrop" :auto-crop-width="option.autoCropWidth"
-        :auto-crop-height="option.autoCropHeight" :center-box="option.centerBox"></vue-cropper>
+        :auto-crop-height="option.autoCropHeight" :center-box="option.centerBox" :fixed='option.fixed'></vue-cropper>
       <van-button class="theme-btn" type="primary" :loading='cropperLoading' @click="getCropData">完成截图</van-button>
     </van-popup>
 
@@ -130,13 +129,14 @@ export default {
         img: '',
         full: false,
         outputType: 'png',
-        canMove: true,
-        fixedBox: true,
+        canMove: false,
+        fixedBox: false,
+        fixed: true,
         original: false,
         canMoveBox: true,
         autoCrop: true,
-        autoCropWidth: 350,
-        autoCropHeight: 350,
+        autoCropWidth: 250,
+        autoCropHeight: 250,
         centerBox: true,
         high: true
       }
@@ -156,31 +156,20 @@ export default {
     currentDate(val) {
       this.childInfo.birthday = format(new Date(val), 'yyyy-MM-dd')
     },
-    childInfo: {
-      handler(val) {
-        localStorage.setItem('childInfo', JSON.stringify(val))
-      },
-      deep: true
-    },
     $router: 'fetchData'
   },
   methods: {
     ...mapActions(['getUserData']),
     fetchData() {
-      if (localStorage['childInfo'] != undefined&&this.$route.query.type != 'register'&&this.$route.query.type!='add') {
+      if (localStorage['childInfo']) {
         this.childInfo = JSON.parse(localStorage['childInfo'])
       }
       
-      // if (localStorage['radio'] != undefined) {
-      //   this.sexTypeIndex = localStorage['radio']
-      // }
-
-
       if(this.$route.query.type!='add'){
-        if (this.$route.query.id) {
+        if(this.$route.query.id){
           let getChildByUserData = {
             params:{
-              child_id: this.$route.query.id
+              child_id: this.$route.query.id || localStorage.getItem('child_id')
             }
           }
 
@@ -228,20 +217,6 @@ export default {
         })
       })
     },
-    onClickLeft() {
-      if(this.$route.query.back){
-        this.$router.push({
-          name:this.$route.query.back,
-          query:{
-            id: this.$route.query.id
-          }
-        })
-      }else{
-        this.$router.push({
-          name: 'my'
-        })
-      }
-    },
     cancelPicker() {
       this.childInfo.birthday = ''
       this.pickerShow = false
@@ -276,12 +251,8 @@ export default {
           this.errorMessage.birthday = ''
         }, 2000)
       } else {
-        if(set!='setSchool'){
-          this.submitLoading = true
-        }
-
-        this.operationApi().then(res => {
-          if(set == 'setSchool'){
+        if(set == 'add' || set == 'register'){
+          this.operationApi().then(res => {
             this.$router.push({
               name: 'edit-setting',
               query: {
@@ -290,24 +261,19 @@ export default {
                 type: this.$route.query.type
               }
             })
-          }else if(this.$route.query.type == 'register'){
-            this.show = true
-            this.childId = res
-          }else{
+
+            localStorage.setItem('childInfo', JSON.stringify(this.childInfo))
+          })
+        }else{
             this.$router.push({
-              name:'baby-home',
-              query:{
-                id:res
+              name: 'edit-setting',
+              query: {
+                id: this.$route.query.id,
+                back: this.$route.name,
+                type: this.$route.query.type
               }
             })
-          }
-
-          if (!res) {
-            this.$toast.fail('创建失败')
-          }
-
-          this.submitLoading = false
-        })
+        }
       }
     },
     edit() {
@@ -319,37 +285,6 @@ export default {
         }    
         this.back()
       })
-    },
-    onClickRight(type) {
-      if (type == 'jump') {
-        this.$router.push({
-          name: 'my'
-        })
-      }
-      if (type == 'delete') {
-        this.$dialog.alert({
-          message: `<div class='text-center'>确定要删除吗？</div>`,
-          confirmButtonText: '取消',
-          cancelButtonText: '确认',
-          showCancelButton: true
-        }).then(() => {
-          this.$router.push({
-            name: 'my'
-          })
-        }).catch(() => {
-          let data = {
-            params:{
-              child_id:this.$route.query.id
-            }
-          }
-          axios.get('/book/baby/del',data).then(res => {
-            this.getUserData()
-            this.$router.push({
-              name: 'my'
-            })
-          })
-        })
-      }
     },
     // toSetting(info) {
     //   this.operationApi().then(res => {
@@ -398,9 +333,40 @@ export default {
           })
         }else{
           this.$router.push({
-            name:'my'
+            name:'my-home'
           })
         }
+    },
+    onClickRight(type) {
+      if (type == 'jump') {
+        this.$router.push({
+          name: 'my-home'
+        })
+      }
+      if (type == 'delete') {
+        this.$dialog.alert({
+          message: `<div class='text-center'>确定要删除吗？</div>`,
+          confirmButtonText: '取消',
+          cancelButtonText: '确认',
+          showCancelButton: true
+        }).then(() => {
+          this.$router.push({
+            name: 'my-home'
+          })
+        }).catch(() => {
+          let data = {
+            params:{
+              child_id:this.$route.query.id
+            }
+          }
+          axios.get('/book/baby/del',data).then(res => {
+            this.getUserData()
+            this.$router.push({
+              name: 'my-home'
+            })
+          })
+        })
+      }
     }
   }
 }

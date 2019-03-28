@@ -7,6 +7,7 @@
         </keep-alive>
         <router-view v-if="!$route.meta.keepAlive"></router-view>
       </div>
+      
       <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='userTabBtn' />
     </div>
   </div>
@@ -49,7 +50,7 @@ export default {
         {
           iconClass: 'icon-people',
           name: '我的',
-          path: 'my'
+          path: 'my-home'
         }
       ]
       return array

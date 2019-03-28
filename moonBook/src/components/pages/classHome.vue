@@ -184,6 +184,8 @@ export default {
                     pageTitle: '添加宝贝'
                   }
                 })
+
+                localStorage.removeItem('childInfo')
               }).catch(() => {
                 this.backRouter()
               })
@@ -199,7 +201,7 @@ export default {
                   name: 'edit-school',
                   query: {
                     type: 'add',
-                    enter: 'my',
+                    enter: 'my-home',
                     id: res.child_id
                   }
                 })

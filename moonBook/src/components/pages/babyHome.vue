@@ -21,7 +21,7 @@
           <img class="avatar-img" :src="childInfo.avatar" @error="imgError" :alt="childInfo.name">  
         </div>
         <avatar :gender="childInfo.sex" size='small' avatarClass='border' v-else />
-        <div class="baby-data">
+        <div class="baby-data" @click="toEditorBaby">
           <div class="list flex flex-align">
             <div class="item name">{{childInfo.name}}</div>
             <div class="item detail">
@@ -51,8 +51,8 @@
           <span class="bar-title">借阅量</span>
         </div>
         <div class="bar-item" @click="toPunchList">
-          <span class="number">{{childInfo.continuous_sign_day}}</span>
-          <span class="bar-title">打卡天数</span>
+          <span class="number">{{childInfo.sign_read_count}}</span>
+          <span class="bar-title">打卡数量</span>
         </div>
         <div class="bar-item diary" @click="toReadStat">
           <span class="number">{{childInfo.insist_days}}</span>
@@ -69,14 +69,6 @@
       </div>
 
       <div v-if="childInfo.is_mine" class="article-list">
-        <!-- <van-nav-bar title="成长日记" @click-right="toActivity">
-          <div class="post-count" slot="left">
-            {{childInfo.post_count}}日记
-          </div>
-          <div class="task" slot="right">
-            活动<van-tag class="tag-task" round type="danger">{{activityCount}}</van-tag>
-          </div>
-        </van-nav-bar> -->
         <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
@@ -192,26 +184,6 @@ export default {
 
       return name
     },
-    // SelectBabyActions() {
-    //   let array = this.babyList
-    //   let arr = []
-    //   if (this.babyList) {
-    //     array.forEach(e => {
-    //       arr.push({
-    //         name: e.name,
-    //         id: e.id,
-    //         subname: this.$route.query.id == e.id ? '当前宝贝' : ''
-    //       })
-    //     })
-    //   }
-    //   // 添加宝贝
-    //   arr.push({
-    //     name: '添加宝贝',
-    //     id: 0
-    //   })
-
-    //   return arr
-    // },
     recommendActions() {
       let array = []
       if (this.managerState) {
@@ -254,11 +226,6 @@ export default {
         content: ''
       }],
       actions: [
-      // {
-      //   name: '编辑',
-      //   type: 'edit',
-      //   index: 0
-      // }, 
       {
         name: '删除',
         type: 'delete',
@@ -272,11 +239,6 @@ export default {
       templateId: '',
       activityCount: '',
       tid:12
-      // 倒计时
-      // keepTime: '倒计时',
-      // limittime: 100,
-      // endTime: '2019-12-30 22:22:22',
-      // flag: false
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -290,7 +252,6 @@ export default {
   },
   created() {
     this.fetchData()
-    // this.StartCountDown() //倒计时
   },
   watch: {
     $router: "fetchData"
@@ -396,6 +357,8 @@ export default {
                 pageTitle: '添加宝贝'
               }
             })
+
+            localStorage.removeItem('childInfo')
           }).catch(() => {
             this.$router.go(-1)
           })

@@ -1,6 +1,6 @@
 <template>
   <div class="edit-class page-padding">
-    <van-nav-bar :border='false' fixed :title="schoolName" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar :border='false' fixed :title="schoolName" />
     <div class="container">
       <div class="baby-info flex flex-justify" v-if='$route.query.registerType!="teacher"'>
         <div class="avatar flex" v-if='childInfo'>
@@ -165,23 +165,6 @@ export default {
       }
       return value;
     },
-    onClickLeft() {
-      if (this.$route.query.back && this.userDataState.banji_id != '0') {
-        this.$router.push({
-          name: this.$route.query.back,
-          query: {
-            id: this.$route.query.id,
-            school_id: this.$route.query.school_id,
-            pageTitle: this.$route.query.pageTitle,
-            type: this.$route.query.type
-          }
-        })
-      } else {
-        this.$router.push({
-          name: 'my'
-        })
-      }
-    },
     select(item, itemIndex) {
       if (this.$route.query.registerType == 'teacher') {
         let SchoolTeacherBind = {
@@ -211,7 +194,15 @@ export default {
 
         axios.get('/book/baby/join_banji', BabyJoinBanjiBdind).then(res => {
           if (res.data.status == 1) {
-              this.$toast.success(res.data.msg)
+            this.$toast.success(res.data.msg)
+            if(this.$route.query.type){
+              this.$router.push({
+                name: 'baby-home',
+                query: {
+                  id: this.$route.query.id
+                }
+              })
+            }else{
               this.$router.push({
                 name: 'class-home',
                 query: {
@@ -219,10 +210,11 @@ export default {
                 }
               })
               this.getUserData()
+            }
           } else {
             this.$toast.fail('加入失败')
             this.$router.push({
-              name: 'my'
+              name: 'my-home'
             })
           }
         })

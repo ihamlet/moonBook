@@ -1,6 +1,6 @@
 <template>
   <div class="borrow-list">
-    <van-nav-bar :title="$route.meta.title" left-text="我的" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar :title="$route.meta.title" left-text="我的" left-arrow />
     <van-tabs color='#409eff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex">
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
         <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
@@ -77,11 +77,6 @@ export default {
     }
   },
   methods: {
-    onClickLeft() {
-      this.$router.push({
-        name: 'my'
-      })
-    },
     onLoad() {
       if (this.tabIndex < 2) {
         this.getReadList()

@@ -7,7 +7,7 @@
       </van-tabbar-item>
     </van-tabbar>
 
-    <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar'>
+    <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' @click-overlay='show = false' :lock-scroll='false'>
       <tips :isShow='show' position='bottom' @close='show = false'/>
     </van-popup>
   </div>
@@ -34,6 +34,7 @@ export default {
   watch: {
     $route(to, from) {
       this.active = to.meta.tabActive
+      this.show = false
     }
   },
   methods: {
@@ -48,11 +49,9 @@ export default {
       return path
     },
     onClick(index) {
-
       if (index == 2) {
-        this.show = true
+        this.show = !this.show
       }
-
       this.active = this.$route.meta.tabActive
     }
   }

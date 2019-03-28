@@ -36,7 +36,7 @@
           </div>
         </div>
 
-        <van-button class="theme-btn" plain round type="primary" @click="toAddChild">添加宝贝</van-button>
+        <van-button class="theme-btn" plain round type="primary" size="normal" @click="toAddChild">添加宝贝</van-button>
       </div>
     </div>
   </div>
@@ -48,7 +48,7 @@ import avatar from "./../../module/avatar"
 import { mapGetters } from 'vuex'
 
 export default {
-  name: "baby-home",
+  name: "baby-list",
   props: ['childrenList'],
   components: {
     numberGrow,
@@ -70,13 +70,15 @@ export default {
   },
   methods: {
     toAddChild() {
-        this.$router.push({
+      this.$router.push({
         name:'edit-child',
         query:{
           pageTitle:'添加宝贝',
           type:'add'
         }
       })
+
+      localStorage.removeItem('childInfo')
     },
     onClickRight(list) {
       this.pageTitle = "editBaby"

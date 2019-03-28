@@ -11,7 +11,7 @@
       <zone-card :zoomCard='zoomCard' :userInfo='userDataState' />
     </div>
     <div class="gutter gap">
-      <baby-home :childrenList='children' />
+      <baby-list :childrenList='children' />
     </div>
     <slogan />
   </div>
@@ -22,7 +22,7 @@ import { mapGetters, mapActions } from 'vuex'
 import cardHead from './../module/myModule/head'
 import classHome from './../module/myModule/classHome'
 import zoneCard from './../module/myModule/zoneCard'
-import babyHome from './../module/myModule/babyHome'
+import babyList from './../module/myModule/babyList'
 import apps from './../module/myModule/apps'
 import slogan from './../module/slogan'
 
@@ -32,7 +32,7 @@ export default {
     slogan,
     cardHead,
     zoneCard,
-    babyHome,
+    babyList,
     classHome,
     apps
   },

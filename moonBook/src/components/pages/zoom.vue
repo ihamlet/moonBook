@@ -1,7 +1,6 @@
 <template>
   <div class="zoom page-padding">
-    <van-nav-bar :zIndex="99" :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed left-text="返回"
-      left-arrow @click-left="onClickLeft" />
+    <van-nav-bar :zIndex="99" :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed/>
     <div class="container">
       <div class="module">
         <div class="user-card flex flex-align" ref="userCrad">
@@ -138,20 +137,6 @@ export default {
             this.lateBook = res.data.data
           })
         })
-      }
-    },
-    onClickLeft() {
-      if (this.$route.query.back) {
-        this.$router.push({
-          name: this.$route.query.back,
-          query: {
-            id: this.$route.query.back_id
-          }
-        });
-      } else {
-        this.$router.push({
-          name: "apps-find"
-        });
       }
     },
     handleScroll() {

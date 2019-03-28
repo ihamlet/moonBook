@@ -1,6 +1,6 @@
 <template>
   <div class="publishing">
-    <van-nav-bar title="编辑文字" left-text="取消" right-text='完成' @click-left="onClickLeft" @click-right='onClickCarryOut'/>
+    <van-nav-bar title="编辑文字" right-text='完成' @click-right='onClickCarryOut'/>
     <div class="container">
       <div class="edit-content">
         <quill-editor ref='myQuillEditor' v-model="content" :options="editorOption" />
@@ -59,9 +59,6 @@ export default {
           }
           this.item = this.getArticleList[this.$route.query.index]
         }
-    },
-    onClickLeft() {
-      this.$router.go(-1)
     },
     onClickCarryOut() {
       let data = {

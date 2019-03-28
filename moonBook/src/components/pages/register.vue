@@ -1,6 +1,6 @@
 <template>
   <div class="register">
-    <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' left-text="返回" left-arrow @click-left="onClickLeft">
+    <van-nav-bar :title="$route.meta.title" fixed :zIndex='99'>
       <div class="icon-right" slot="right">
         <i class="iconfont">&#xe618;</i>
       </div>
@@ -8,8 +8,7 @@
     <div class="container" ref='listContainer'>
       <div class="identity">
         <van-cell-group>
-          <van-cell class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role'
-            :key='index' @click="selectRole(item)">
+          <van-cell class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role' :key='index' @click="selectRole(item)">
             <div class="icon iconfont" :class="item.iconClass" slot="icon"></div>
           </van-cell>
         </van-cell-group>
@@ -77,11 +76,6 @@ export default {
     }
   },
   methods: {
-    onClickLeft() {
-      this.$router.push({
-        name:'home'
-      })
-    },
     selectRole(role) {
       switch (role.index){
         case 0:
@@ -93,6 +87,8 @@ export default {
               back: this.$route.name
             }
           })
+
+          localStorage.removeItem('childInfo')
         break
         case 1:
           this.$router.push({

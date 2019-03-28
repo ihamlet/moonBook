@@ -1,6 +1,6 @@
 <template>
   <div class="card-list-container page-padding">
-    <van-nav-bar class="card-list-nav-bar" :zIndex='99' fixed :border='false' :title="$route.meta.title" left-text="个人中心" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar class="card-list-nav-bar" :zIndex='99' fixed :border='false' :title="$route.meta.title" left-text="个人中心" left-arrow/>
     <div class="list">
       <div class="content" v-if='cardList&&cardList.length'>
 
@@ -84,9 +84,6 @@ export default {
           this.cardList = data
         }
       })
-    },
-    onClickLeft() {
-      this.$router.push({ name: 'my' })
     },
     toAccept() {
       this.$router.push({

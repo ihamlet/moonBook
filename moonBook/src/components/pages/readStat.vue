@@ -97,7 +97,6 @@
 </template>
 <script>
 import axios from './../lib/js/api'
-import babyHome from './../module/myModule/babyHome'
 import avatar from './../module/avatar'
 import numberGrow from './../module/animate/numberGrow'
 import rankShare from './../module/mold/rankShare'
@@ -106,7 +105,6 @@ import slogan from './../module/slogan'
 export default {
   name: 'readstat',
   components: {
-    babyHome,
     numberGrow,
     avatar,
     slogan,

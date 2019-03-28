@@ -28,14 +28,12 @@
 <script>
 import axios from './../../lib/js/api'
 import { mapActions, mapGetters } from 'vuex'
-import { VueCropper } from 'vue-cropper'
 import { format } from './../../lib/js/util'
 import avatar from './../../module/avatar'
 
 export default {
   name: 'teacher',
   components: {
-    VueCropper,
     avatar
   },
   computed: {

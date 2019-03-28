@@ -1,6 +1,6 @@
 <template>
   <div class="graphic page-padding">
-    <van-nav-bar left-text="取消" @click-left="onClickLeft" :border='false' fixed>
+    <van-nav-bar left-text="取消" :border='false' fixed>
       <div class="user-info" slot='title'>
         <div class="avatar">
           <img :src="getAvatar(userDataState.avatar)" />
@@ -119,28 +119,10 @@ export default {
     ...mapActions('openWX',['selectImg']),
     ...mapActions(['release']),
     fetchData() {
-      // 从本地存储获取发布数据
-      // if(this.$route.query.type == 'edit'){
-      //     let articleData = {
-      //       post_id:this.$route.query.post_id
-      //     }
-
-      //     axios.get('/book/SchoolArticle/getEdit',articleData).then(res => {
-      //       if(res.data.status == 1){
-      //         this.grapicData.photos = res.data.data.photos
-      //         if(checkHtml(res.data.data.details)){
-      //           this.grapicData.text = ''
-      //         }else{
-      //           this.grapicData.text = res.data.data.details
-      //         }
-      //       }
-      //     })
-      // }else{
-        if (localStorage.getItem('grapicData')) {
-          this.grapicData = JSON.parse(localStorage.getItem('grapicData'))
-        }
-      // }
-
+      if (localStorage.getItem('grapicData')) {
+        this.grapicData = JSON.parse(localStorage.getItem('grapicData'))
+      }
+  
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
       })
@@ -188,24 +170,6 @@ export default {
           })
         }
       })
-    },
-    onClickLeft() {
-      if (!this.grapicData.text.length && !this.grapicData.photos.length) {
-        if (this.$route.query.back) {
-          this.$router.push({
-            name: this.$route.query.back,
-            query: {
-              id: this.$route.query.id
-            }
-          })
-        } else {
-          this.$router.push({
-            name: 'home'
-          })
-        }
-      } else {
-        this.actionShow = true
-      }
     },
     onSelect(item) {
       if (item.type == 'save') {
@@ -279,7 +243,7 @@ export default {
           this.release(data).then(res=>{
             switch(res){
               case 1:
-                if(this.$route.query.back && this.$route.query.back!='home' && this.$route.query.back!='my'){
+                if(this.$route.query.back && this.$route.query.back!='home' && this.$route.query.back!='my-home'){
                   this.$router.push({
                     name: this.$route.query.back,
                     query: {

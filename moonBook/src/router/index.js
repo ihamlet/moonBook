@@ -4,7 +4,7 @@ import Hello from '@/components/Hello'
 import Error from '@/components/notFound'
 import Home from '@/components/pages/home'
 import Notice from '@/components/pages/notice'
-import My from '@/components/pages/my'
+import MyHome from '@/components/pages/my'
 import Login from '@/components/pages/login'
 
 import Zoom from '@/components/pages/zoom'
@@ -43,6 +43,8 @@ import School from '@/components/School'
 import Banji from '@/components/Banji'
 import Find from '@/components/Find'
 import Baby from '@/components/Baby'
+import My from '@/components/My'
+
 
 import AppsFind from '@/components/apps/find/find'
 import AppsSchool from '@/components/apps/school/schoolHome'
@@ -60,8 +62,6 @@ import articleSetting from '@/components/pages/editor/mould/articleSetting'
 import ReadStat from '@/components/pages/readStat'
 import ReadAmount from '@/components/pages/readAmount'
 
-import Train from '@/components/train'
-import AppsTrain from '@/components/apps/train/trainHome'
 
 import Dialog from '@/components/pages/dialog/dialog'
 
@@ -174,16 +174,6 @@ export default new Router({
             tabActive: 4,
             isFooterBar: true,
             keepAlive: true
-          }
-        },
-        {
-          path: '/my',
-          name: 'my',
-          component: My,
-          meta: {
-            title: '我的',
-            tabActive: 4,
-            isFooterBar: true
           }
         },
         {
@@ -401,19 +391,19 @@ export default new Router({
       }
     },
     {
-      path:'/train',
-      name:'train',
-      component: Train,
+      path:'/my',
+      name:'my',
+      component: My,
       children:[{
-        path:'/apps-train',
-        name:'apps-train',
-        component: AppsTrain,
-        meta:{
-          title: '教育',
-          tabActive:0,
+        path: '/my-home',
+        name: 'my-home',
+        component: MyHome,
+        meta: {
+          title: '我的',
+          tabActive: 4,
           isFooterBar: true
         }
-      }]
+      },]
     },
     {
       path:'/school',

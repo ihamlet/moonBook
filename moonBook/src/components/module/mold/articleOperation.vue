@@ -236,6 +236,7 @@ export default {
               type:'add'
             }
           })
+          localStorage.removeItem('childInfo')
         }).catch(() => {
           
         })

@@ -22,10 +22,9 @@ export default {
     userTabBtn() {
       let array = [
         {
-          iconClass: 'icon-crown',
-          name: '宝贝',
-          path: 'baby-home',
-          id: this.userDataState.child_id
+          iconClass: 'icon-home',
+          name: '首页',
+          path: '/'
         },
         {
           iconClass: 'icon-banji',
@@ -39,15 +38,15 @@ export default {
           path: ''
         },
         {
-          iconClass: 'icon-school',
-          name: '学校',
-          path: 'apps-school',
-          id: this.userDataState.school_id
+          iconClass: 'icon-crown',
+          name: '宝贝',
+          path: 'baby-home',
+          id: this.userDataState.child_id
         },
         {
           iconClass: 'icon-people',
           name: '我的',
-          path: 'my'
+          path: 'my-home'
         }
       ]
       return array
