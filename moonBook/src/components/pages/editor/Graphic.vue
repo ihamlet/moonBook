@@ -28,11 +28,11 @@
                   <van-tag class="type-tag" color="#7232dd" v-if='item.is_video == 1'>视频</van-tag>
                 </div>
               </van-col>
-              <van-col :span="8" v-if='9 > imagesLength'>
+              <van-col :span="8" v-if='boolean'>
                 <div class="img-grid" @click="uploaderImg">
                   <div class="photo-upload">
                     <i class="iconfont">&#xe664;</i>
-                    <span class="directions">添加照片</span>
+                    <span class="directions">{{typeUpload?'添加视频':'添加图片'}}</span>
                   </div>
                 </div>
               </van-col>
@@ -72,6 +72,19 @@ export default {
     ...mapGetters(['userDataState','managerState']),
     imagesLength() {
       return this.grapicData.photos.length
+    },
+    boolean(){
+      let boolean = true
+      if(this.typeUpload){
+        if(this.imagesLength == 1){
+          boolean = false
+        }
+      }else{
+        if(9 > this.imagesLength){
+          boolean = false
+        }
+      }
+      return boolean
     }
   },
   data() {
@@ -95,6 +108,7 @@ export default {
         type: 'noSave'
       }],
       videoThumb:'',
+      typeUpload:''
     }
   },
   created() {
@@ -134,26 +148,37 @@ export default {
           switch(this.$route.query.upVideo){
             case 1:
               this.$refs.fileVideo.click()
+              this.typeUpload = 'fileVideo'
             break
             case 2:
               this.$refs.selectFileVideo.click()
+              this.typeUpload = 'selectFileVideo'
             break
           }
         })
       }
     },
     uploaderImg(){
-      if(this.ready){
-        // 传上传张数
-        if(this.photoLength < 9){
-          this.selectImg(9)
-        }else{
-          this.$dialog.alert({
-            message: `<div class='text-center'>最多只能上传9张图片</div>`
-          })
-        } 
-      }else{
-        this.$refs.selectPhoto.$refs.input.click()
+      switch(this.typeUpload){
+        case 'fileVideo':
+          this.$refs.fileVideo.click()
+        break
+        case 'selectFileVideo':
+          this.$refs.selectFileVideo.click()
+        break
+        default:
+          if(this.ready){
+            // 传上传张数
+            if(this.photoLength < 9){
+              this.selectImg(9)
+            }else{
+              this.$dialog.alert({
+                message: `<div class='text-center'>最多只能上传9张图片</div>`
+              })
+            } 
+          }else{
+            this.$refs.selectPhoto.$refs.input.click()
+          }
       }
     },
     onRead(file) {

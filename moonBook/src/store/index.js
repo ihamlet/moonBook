@@ -277,7 +277,7 @@ const actions = {
       axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
         switch(res.data.status){
           case 1:
-            localStorage.setItem('grapicData', '') //清空浏览器缓存
+            localStorage.removeItem('grapicData') //清空浏览器缓存
           break
         }
 

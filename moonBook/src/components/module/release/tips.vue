@@ -80,6 +80,7 @@ export default {
       })
     },
     toRelease(index) {
+      localStorage.removeItem('grapicData')
       switch (index) {
         case 0:
           this.$router.push({
