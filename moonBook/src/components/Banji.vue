@@ -5,9 +5,9 @@
         <keep-alive>
             <router-view v-if="$route.meta.keepAlive"></router-view>
         </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive" :key="key"></router-view>
+        <router-view v-if="!$route.meta.keepAlive"></router-view>
       </div>
-      <footer-bar v-if='$route.meta.isFooterBar' @release="isGraphicShow = true" :userTabBtn='userTabBtn' />
+      <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='userTabBtn' />
     </div>
   </div>
 </template>
@@ -22,9 +22,6 @@ export default {
   },
   computed: {
     ...mapGetters(['userDataState']),
-    key(){
-        return this.$route.path + Math.random()
-    },
     userTabBtn() {
       let array = [
         {
@@ -36,7 +33,7 @@ export default {
           iconClass: 'icon-banji',
           name: '班级',
           path: 'class-home',
-          id: this.userDataState.banji_id,
+          id: this.userDataState.banji_id
         },
         {
           iconClass: 'icon-release',

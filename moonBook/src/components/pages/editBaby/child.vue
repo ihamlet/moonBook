@@ -133,7 +133,7 @@ export default {
         autoCropWidth: 250,
         autoCropHeight: 250,
         centerBox: true,
-        size:'0.3',
+        size:.3,
         high: false
       }
     }

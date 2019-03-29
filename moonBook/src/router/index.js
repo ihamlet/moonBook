@@ -111,7 +111,6 @@ export default new Router({
           component: Register,
           meta: {
             title: '注册',
-            tabActive: 0,
             isFooterBar: false
           }
         },
@@ -121,7 +120,6 @@ export default new Router({
           component: Login,
           meta: {
             title: '登录',
-            tabActive: 4,
             isFooterBar: false
           }
         },
@@ -171,8 +169,7 @@ export default new Router({
           component: Notice,
           meta: {
             title: '消息中心',
-            tabActive: 4,
-            isFooterBar: true,
+            isFooterBar: false,
             keepAlive: true
           }
         },
@@ -208,7 +205,6 @@ export default new Router({
           component: Zoom,
           meta: {
             title: 'BookZoom',
-            tabActive: 4,
             isFooterBar: false,
             keepAlive: true
           }
@@ -327,7 +323,6 @@ export default new Router({
       component: Article,
       meta: {
         title: '正文',
-        tabActive: 1,
         isFooterBar: false,
       }
     },
@@ -394,6 +389,9 @@ export default new Router({
       path:'/my',
       name:'my',
       component: My,
+      meta:{
+        keepAlive: true
+      },
       children:[{
         path: '/my-home',
         name: 'my-home',
@@ -401,6 +399,7 @@ export default new Router({
         meta: {
           title: '我的',
           tabActive: 4,
+          keepAlive: true,
           isFooterBar: true
         }
       },]
@@ -415,7 +414,6 @@ export default new Router({
         component: AppsSchool,
         meta: {
           title: '学校主页',
-          tabActive: 0,
           isFooterBar: false,
           keepAlive: true
         }
@@ -448,8 +446,7 @@ export default new Router({
         component: AppsFind,
         meta: {
           title: '发现',
-          tabActive: 0,
-          isFooterBar: true,
+          isFooterBar: false,
           keepAlive: true
         }
       }]

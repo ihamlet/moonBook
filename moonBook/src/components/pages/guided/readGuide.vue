@@ -1,6 +1,6 @@
 <template>
   <div class="read-guide">
-    <van-nav-bar :title="$route.meta.title" right-text="书架" @click-right="onClickRight" />
+    <van-nav-bar :title="$route.meta.title" right-text="书架" @click-right="onClickRight" :border='false'/>
     <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab">
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
         <div class="article">
@@ -105,7 +105,6 @@ export default {
       })
     },
     onClickRight() {
-      
       this.$router.push({
         name: 'bookshelf'
       })

@@ -1,6 +1,6 @@
 <template>
   <div class="information">
-    <van-nav-bar :title="$route.meta.title" left-text="返回" left-arrow @click-left="onClickLeft" :zIndex='2021'/>
+    <van-nav-bar :title="$route.meta.title" :zIndex='2021'/>
     <div class="information-list">
       <div class="get-praise"> <span> 宝贝收到的赞 </span> </div>
       <div class="list">
@@ -45,20 +45,6 @@ export default {
     }
   },
   methods: {
-    onClickLeft() {
-      if (this.$route.query.back) {
-        this.$router.push({
-          name: this.$route.query.back,
-          query: {
-            id: this.$route.query.id
-          }
-        })
-      } else {
-        this.$router.push({
-          name: 'my'
-        })
-      }
-    },
     onRefresh() {
       this.page = 1
       this.onLoad().then(res => {

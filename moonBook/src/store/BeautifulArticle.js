@@ -1,18 +1,16 @@
 export default {
     namespaced: true,
     state:{
-        articleItem: [],
+        articleItem: [{
+            index:0,
+            photos:'',
+            text:''
+        }],
         title:'',
         cover:'',
         percentNum: 0,
     },
     getters:{
-        getTitle: state =>{
-            return state.title
-        },
-        getArticleList: state => {
-            return state.articleItem
-        },
         getArticleContent: state =>{
             let datas = []
 
@@ -64,14 +62,11 @@ export default {
             })
 
             return datas
-        },
-        getPercentNum: state => {
-            return state.percentNum
         }
     },
     mutations:{
         setAdd(state, params){
-            state.articleItem.splice(params.index,0,params)
+            state.articleItem = params
         },
         setDelete(state,params){
             let index
@@ -83,81 +78,41 @@ export default {
 
             state.articleItem.splice(index,index+1)
         },
-        setRevise(state, params){
-            switch(params.data.type){
-                case 'image':
-                    state.articleItem[params.index].photos = params.data 
-                break
-                case 'video':
-                    state.articleItem[params.index].photos = params.data 
-                break
-                case 'text':
-                    state.articleItem[params.index] = {
-                        index: params.index,
-                        photos: params.photos,
-                        text: params.data
-                    }
-                break
-            }
-        },
         setPercent(state, params){
             state.percentNum = params
-        },
-        setSort(state, params){
-            state.articleItem = params
         },
         setTitle(state, params){
             state.title = params
         },
         setCover(state, params){
             state.cover = params
+        },
+        modify(state,params){
+           state.articleItem.forEach(e=>{
+               if(e.index == params.index){
+                   e.text = params.text
+               }
+           })
         }
     },
     actions:{
         //添加
         add(context,products){
-            let data = {
-                index:products.index
-            }
-
-            switch(products.type){
-                case 'image':
-                    data.photos = products
-                break
-                case 'video':
-                    data.photos = products
-                break
-                case 'text':
-                    data = {
-                        index:products.index,
-                        photos:'',
-                        text:products
-                    }
-                break
-            }
-
-            context.commit('setAdd', data)
+           context.commit('setAdd', products)
         },
         //删除
         delete(context,products){
             context.commit('setDelete', products)
         },
-        //修改
-        revise(context,products){
-            context.commit('setRevise', products)
-        },
         //进度条
         requestPercent(context,products){
             context.commit('setPercent', products)
-        },
-        //拖动排序
-        upDataList(context,products){
-            context.commit('setSort', products)
         },
         //标题
         addTitle(context,products){
             context.commit('setTitle',products)
         },
+        //封面
         addCover(context,products){
             context.commit('setCover',products)
         }

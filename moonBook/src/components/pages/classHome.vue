@@ -252,18 +252,6 @@ export default {
         }
       })
     },
-    // onClickLeft() {
-    //   if (this.$route.query.back) {
-    //     this.$router.push({
-    //       name: this.$route.query.back,
-    //       query: {
-    //         id: this.$route.query.child_id || this.$route.query.school_id
-    //       }
-    //     })
-    //   } else {
-    //     this.$router.push({ name: 'my' })
-    //   }
-    // },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {
         this.qrImage = url

@@ -11,7 +11,7 @@
         </van-col>
         <van-col span="16">
           <div class="text-box" @click="toPublishing">
-            <div class="text-content" v-if='item.text' v-html="item.text.text" v-line-clamp:20="3"></div>
+            <div class="text-content" v-if='item.text' v-html="item.text" v-line-clamp:20="3"></div>
             <div class="add-text" v-else>
               <div class="description">点击添加文字</div>
             </div>
@@ -19,11 +19,6 @@
         </van-col>
       </van-row>
     </van-cell>
-
-    <div class="media-input" v-show="false">
-      <van-uploader ref='selectPhoto' :after-read="onRead" />
-      <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
-    </div>
   </div>
 </template>
 <script>
@@ -32,7 +27,7 @@ import Publishing from './../Publishing'
  
 export default {
   name: 'article-item',
-  props: ['item','index','type'],
+  props: ['item','index'],
   components: {
     Publishing
   },
@@ -47,10 +42,10 @@ export default {
       this.$router.push({
         name: 'publishing',
         query: {
-            index: this.index,
-            onClickType:'revise',
-            back: this.$route.query.back,
-            id: this.$route.query.id
+          index: this.index,
+          onClickType:'revise',
+          back: this.$route.query.back,
+          id: this.$route.query.id
         }
       })
     },

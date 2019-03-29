@@ -7,7 +7,7 @@
         </keep-alive>
         <router-view v-if="!$route.meta.keepAlive"></router-view>
       </div>
-      <footer-bar v-if='$route.meta.isFooterBar' @release="isGraphicShow = true" :userTabBtn='userTabBtn' />
+      <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='userTabBtn' />
     </div>
   </div>
 </template>

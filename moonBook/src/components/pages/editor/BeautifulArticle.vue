@@ -1,24 +1,19 @@
 <template>
   <div class="beautiful-article">
-    <van-nav-bar title="编辑" fixed :zIndex='10'>  
-      <!-- <div class="head-bar-btn theme-color" slot="right">
-        <van-button :loading='getPercentNum != 0' class="theme-btn" type="primary" size="small" round @click="onClickRelease">发布</van-button>
-      </div> -->
-    </van-nav-bar>
     <div class="container">
       <div class="edit-thumb theme-background" @click="toChangeCover">
         <img v-if='getImageList.length' :src='cover?cover:getImageList[0]'>
         <div class="add-thumb"><i class="iconfont">&#xe607;</i>更换封面</div>
       </div>
-      <van-field class="edit-title" v-model="title" placeholder="点击输入文章标题" />
+      <van-field class="edit-title" v-model="getTitle" placeholder="点击输入文章标题" />
     </div>
     <div class="article-list">
-      <articleCard :PercentNum='getPercentNum'/>
+      <articleCard/>
     </div>
 
     <div class="flex flex-align footer-bar">
-       <div class="preview theme-color" @click="preview">{{getPercentNum != 0?'生成中...':'预览'}}</div>
-       <van-button class="theme-btn" :loading='getPercentNum != 0' square type="primary" size="normal" @click="next">下一步</van-button>
+       <div class="preview theme-color" @click="preview">{{percentNum != 0?'生成中...':'预览'}}</div>
+       <van-button class="theme-btn" :loading='percentNum != 0' square type="primary" size="normal" @click="next">下一步</van-button>
     </div>
   </div>
 </template>
@@ -35,14 +30,14 @@ export default {
     topicList
   },
   computed: {
-    ...mapState('beautifulArticle',['cover']),
-    ...mapGetters('beautifulArticle',['getPercentNum','getImageList','getTitle']),
+    ...mapState('beautifulArticle',['cover','percentNum','title']),
+    ...mapGetters('beautifulArticle',['getImageList']),
     ...mapGetters(['userDataState'])
   },
   data() {
     return {
       percent: 0,
-      title: '',
+      getTitle: '',
       show: false,
       cateName:'',
       cateId:'',
@@ -50,14 +45,14 @@ export default {
     }
   },
   watch: {
-    title(val){
+    getTitle(val){
       this.addTitle(val)
     }
   },
   methods: {
     ...mapActions('beautifulArticle',['addTitle']),
     preview(){
-      if(this.getPercentNum == 0){
+      if(this.percentNum == 0){
         this.$router.push({
           name:'article',
           query:{
@@ -71,7 +66,7 @@ export default {
     },
     next() {
       switch(0){
-        case this.getTitle.length:
+        case this.title.length:
           this.$toast('请输入文章标题')
         break
         case this.getImageList.length:
@@ -86,19 +81,6 @@ export default {
           }
         })
       }
-
-      // if(this.getTitle.length&&this.getImageList.length){
-      //   this.$router.push({
-      //     name:'articleSetting',
-      //     query:{
-      //       id: this.$route.query.id,
-      //       back: this.$route.query.back
-      //     }
-      //   })
-      // }else{
-      //   this.$toast('请输入文章标题')
-      // }
-
     },
     selectTag(tag) {
       this.cateName = tag.cate_name
@@ -134,7 +116,7 @@ export default {
 .edit-thumb {
   position: relative;
   width: 100%;
-  height: 9.375rem /* 150/16 */;
+  height: 6.875rem /* 110/16 */;
   overflow: hidden;
 }
 

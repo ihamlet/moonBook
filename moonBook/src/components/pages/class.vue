@@ -66,7 +66,21 @@ export default {
     round
   },
   computed: {
-    ...mapGetters(["userDataState"])
+    ...mapGetters(["userDataState"]),
+    classYear(){
+      let date = new Date()
+      let month = date.getMonth() + 1
+      let year = date.getFullYear() 
+      let time
+
+      if(month < 9){
+        time = year -1
+      }else{
+        time = year
+      }
+
+      return time
+    }
   },
   data() {
     return {
@@ -76,13 +90,8 @@ export default {
       page: 1,
       childInfo: '',
       schoolName: '',
-      classYear: '',
       className: '',
-      show: false,
-      // year: '2019',
-      // pickerShow:false,
-      // currentDate: new Date(),
-      // minDate: new Date(format(new Date(), 'yyyy') - 3, 0, 0),
+      show: false
     }
   },
   created() {
@@ -130,35 +139,30 @@ export default {
       if (action === 'confirm') {
         let data = {
           school_id: this.$route.query.school_id,
-          title: this.className
+          title: this.className,
+          year: this.classYear
         }
 
         axios.post('/book/school/edit_banji', data).then(res => {
           switch (res.data.status) {
             case 1:
-              this.$toast.success('添加班级成功')
-              this.page = 1
-              this.list = []
-              this.onLoad()
-              done()
+              let BabyJoinBanjiBdind = {
+                params: {
+                  banji_id: res.data.data.banji_id,
+                  child_id: this.$route.query.id
+                }
+              }
+
+              this.babyJoin(BabyJoinBanjiBdind)
               break
             case 0:
               this.$toast(res.data.msg)
-              this.$router.go(-1)
               break
           }
         })
       } else {
         this.$router.go(-1)
       }
-    },
-    formatter(type,value){
-      if (type === 'year') {
-        return `${value}年`;
-      } else if (type === 'month') {
-        return `${value}月`
-      }
-      return value;
     },
     select(item, itemIndex) {
       if (this.$route.query.registerType == 'teacher') {
@@ -187,33 +191,25 @@ export default {
           }
         }
 
-        axios.get('/book/baby/join_banji', BabyJoinBanjiBdind).then(res => {
+        this.babyJoin(BabyJoinBanjiBdind)
+      }
+    },
+    babyJoin(data){
+        axios.get('/book/baby/join_banji', data).then(res => {
           if (res.data.status == 1) {
             this.$toast.success(res.data.msg)
-            if(this.$route.query.type){
-              this.$router.push({
-                name: 'baby-home',
-                query: {
-                  id: this.$route.query.id
-                }
-              })
-            }else{
-              this.$router.push({
-                name: 'class-home',
-                query: {
-                  id: res.data.data.banji_id
-                }
-              })
-              this.getUserData()
-            }
+            this.$router.replace({
+              name: 'edit-child',
+              query:{
+                id: this.$route.query.id
+              }
+            })
+            this.getUserData()
           } else {
             this.$toast.fail('加入失败')
-            this.$router.push({
-              name: 'my-home'
-            })
+            this.$router.replace('/my-home')
           }
         })
-      }
     },
     onLoad() {
       let data = {

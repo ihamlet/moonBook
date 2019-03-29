@@ -111,8 +111,6 @@ export default {
       handler(val) {
         this.grapicData.photos = val
         this.photoLength = val.length
-
-        this.percent = 100/val.length
       },
       deep: true
     },
@@ -181,39 +179,12 @@ export default {
       })
     },
     onSelect(item) {
-      if (item.type == 'save') {
-        if (this.$route.query.back) {
-          this.$router.push({
-            name: this.$route.query.back,
-            query: {
-              id: this.$route.query.id
-            }
-          })
-        } else {
-          this.$router.push({
-            name: 'home'
-          })
-        }
-        this.actionShow = false
-      } else {
-        if (this.$route.query.back) {
-          this.$router.push({
-            name: this.$route.query.back,
-            query: {
-              id: this.$route.query.id
-            }
-          })
-        } else {
-          this.$router.push({
-            name: 'home'
-          })
-        }
+        this.$router.go(-1)
         this.actionShow = false
         this.grapicData = {
           text: '',
           photos: []
         }
-      }
     },
     onClickRelease() {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
@@ -252,45 +223,33 @@ export default {
           this.release(data).then(res=>{
             switch(res){
               case 1:
-                if(this.$route.query.back && this.$route.query.back!='home' && this.$route.query.back!='my-home'){
-                  this.$router.push({
-                    name: this.$route.query.back,
-                    query: {
-                      id:  this.$route.query.id,
-                      cate_id: this.tag.cate_id
-                    }
-                  })
-                }else{
-                  switch(true){
-                    case contains(this.result,'apps-find'):
-                      this.$router.push({
-                        name:'apps-find' 
-                      })
-                    break
-                    case contains(this.result,'baby-home'):
-                      this.$router.push({
-                        name:'baby-home',
-                        query:{
-                          id: this.userDataState.child_id
-                        }
-                      })
-                    break
-                    case contains(this.result,'class-home'):
-                      this.$router.push({
-                        name:'class-home',
-                        query:{
-                          id: this.userDataState.banji_id
-                        } 
-                      })
-                    break
-                    default:
-                    this.$router.push({
+                switch(true){
+                  case contains(this.result,'apps-find'):
+                    this.$router.replace('/apps-find')
+                  break
+                  case contains(this.result,'baby-home'):
+                    this.$router.replace({
+                      name:'baby-home',
+                      query:{
+                        id: this.userDataState.child_id
+                      }
+                    })
+                  break
+                  case contains(this.result,'class-home'):
+                    this.$router.replace({
+                      name:'class-home',
+                      query:{
+                        id: this.userDataState.banji_id
+                      }
+                    })
+                  break
+                  default:
+                    this.$router.replace({
                       name:'zoom',
                       query:{
                         id: this.userDataState.user_id
                       }
                     })
-                  }
                 }
                 this.$toast.success('发布成功')
               break
@@ -338,8 +297,6 @@ export default {
         this.upOssMedia(type, file)
         this.percent = 0
       })
-
-      
     },
     upOssMedia(type, file) {
       if (!this.ossSign) {

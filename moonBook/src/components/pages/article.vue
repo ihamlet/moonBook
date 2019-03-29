@@ -63,8 +63,8 @@ export default {
   computed: {
     ...mapState(['slogan','logo']),
     ...mapGetters(['userDataState']),
-    ...mapState('beautifulArticle',['cover']),
-    ...mapGetters('beautifulArticle',['getArticleContent','getTitle','getImageList'])
+    ...mapState('beautifulArticle',['cover','title']),
+    ...mapGetters('beautifulArticle',['getArticleContent','getImageList'])
   },
   data() {
     return {
@@ -105,7 +105,7 @@ export default {
           details:this.getArticleContent,
           create_time: Math.floor(new Date().getTime()/1000),
           views:'999+',
-          title: this.getTitle,
+          title: this.title,
           template_id:'0',
           cover: this.getImageList[0] || this.cover,
           user:{

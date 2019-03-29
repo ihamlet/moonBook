@@ -67,7 +67,7 @@ export default {
       }
     },
     toSelectSchool() {
-      this.$router.push({
+      this.$router.replace({
         name: 'edit-school',
         query: {
           id: this.child_id,
@@ -76,10 +76,10 @@ export default {
           pageTitle: this.$route.query.pageTitle,
           registerType: this.$route.query.registerType
         }
-      })
+      })     
     },
     toSelectClass() {
-      this.$router.push({
+      this.$router.replace({
         name: 'edit-class',
         query: {
           id: this.child_id,

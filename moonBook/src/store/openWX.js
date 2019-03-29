@@ -108,7 +108,7 @@ export default {
                       axios.get('/book/file/upload_weixin_img',data).then(res=>{
                         switch(res.data.status){
                             case 1:
-                                context.commit('setImg',res.data.data)
+                              context.commit('setImg',res.data.data)
                             break
                         }
                       })

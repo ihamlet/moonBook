@@ -4,20 +4,6 @@
     <van-cell title-class='theme-color' title="#选择分类" :value="tag.cate_name" is-link arrow-direction="down" @click="show = true" />
     <van-cell v-if='tag.cate_id!="99"&&tag.cate_id!="124"' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
     
-    <!-- <div class="group-cell">
-      <div class="cell-link">
-        <van-cell title="设置机构标签" is-link @click="selectGroup = true" :label="group.group_name" center>
-          <div class="icon" slot="icon">
-            <i class="iconfont">&#xe652;</i>
-          </div>
-        </van-cell>
-      </div>
-    </div> -->
-
-    <van-popup v-model="selectGroup" position="bottom">
-      <van-picker :columns="groupList" value-key='group_name' @change="onChangeGroup" />
-    </van-popup>
-
     <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
       <van-checkbox-group v-model="settingResult">
         <div class="form-title">同步到</div>
@@ -52,8 +38,8 @@ export default {
   },
   computed: {
     ...mapState('articleSetting', ['result','group','tag']),
-    ...mapState('beautifulArticle',['cover']),
-    ...mapGetters('beautifulArticle',['getArticleContent','getTitle','getImageList']),
+    ...mapState('beautifulArticle',['cover','title']),
+    ...mapGetters('beautifulArticle',['getArticleContent','getImageList']),
     ...mapGetters(['userDataState', 'managerState']),
     synchronous() {
       let array = []
@@ -209,7 +195,7 @@ export default {
             details: this.getArticleContent,
             template_id: 0,
             cover: this.cover?this.cover:this.getImageList[0],
-            title: this.getTitle
+            title: this.title
           }
   
           if(this.$route.query.back == 'baby-home'){
@@ -227,45 +213,33 @@ export default {
           this.release(data).then(res=>{
             switch(res){
               case 1:
-                if(this.$route.query.back && this.$route.query.back!='home' && this.$route.query.back!='my'){
-                  this.$router.push({
-                    name: this.$route.query.back,
-                    query: {
-                      id:  this.$route.query.id,
-                      cate_id: this.tag.cate_id
-                    }
-                  })
-                }else{
-                  switch(true){
-                    case contains(this.result,'apps-find'):
-                      this.$router.push({
-                        name:'apps-find' 
-                      })
-                    break
-                    case contains(this.result,'baby-home'):
-                      this.$router.push({
-                        name:'baby-home',
-                        query:{
-                          id: this.userDataState.child_id
-                        }
-                      })
-                    break
-                    case contains(this.result,'class-home'):
-                      this.$router.push({
-                        name:'class-home',
-                        query:{
-                          id: this.userDataState.banji_id
-                        } 
-                      })
-                    break
-                    default:
-                    this.$router.push({
+                switch(true){
+                  case contains(this.result,'apps-find'):
+                    this.$router.replace('/apps-find')
+                  break
+                  case contains(this.result,'baby-home'):
+                    this.$router.replace({
+                      name:'baby-home',
+                      query:{
+                        id: this.userDataState.child_id
+                      }
+                    })
+                  break
+                  case contains(this.result,'class-home'):
+                    this.$router.replace({
+                      name:'class-home',
+                      query:{
+                        id: this.userDataState.banji_id
+                      }
+                    })
+                  break
+                  default:
+                    this.$router.replace({
                       name:'zoom',
                       query:{
                         id: this.userDataState.user_id
                       }
                     })
-                  }
                 }
                 this.$toast.success('发布成功')
               break

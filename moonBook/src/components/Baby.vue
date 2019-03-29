@@ -34,7 +34,7 @@ export default {
           iconClass: 'icon-banji',
           name: '班级',
           path: 'class-home',
-          id: this.userDataState.banji_id,
+          id: this.userDataState.banji_id
         },
         {
           iconClass: 'icon-release',

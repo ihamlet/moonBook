@@ -15,8 +15,7 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
 import { compress } from './../../lib/js/util'
-// import topicList from './../../module/release/topicList'
-import { mapActions,mapGetters } from 'vuex'
+import { mapMutations,mapState } from 'vuex'
 
 export default {
   name: 'publishing',
@@ -25,12 +24,11 @@ export default {
     // topicList
   },
   computed: {
-    ...mapGetters('beautifulArticle',['getArticleList'])
+    ...mapState('beautifulArticle',['articleItem'])
   },
   data() {
     return {
       content: '',
-      item:'',
       editorOption: {
         placeholder: '请输入正文',
         modules: {
@@ -44,40 +42,35 @@ export default {
       }
     }
   },
-  created() {
-    this.fetchData()
-  },
-  watch: {
-    '$router': 'fetchData'
+  // created() {
+  //   this.fetchData()
+  // },
+  // watch: {
+  //   '$router': 'fetchData'
+  // },
+  beforeRouteUpdate (to, from, next) {
+    next(vm => {
+      vm.fetchData()
+    })
   },
   methods: {
-    ...mapActions('beautifulArticle',['add','revise']),
+    ...mapMutations('beautifulArticle',['modify']),
     fetchData() {
-        if(this.$route.query.onClickType){
-          if(this.getArticleList[this.$route.query.index].text){
-            this.content = this.getArticleList[this.$route.query.index].text.text
+      console.log(111)
+        this.articleItem.forEach(element => {
+          if(element.index == this.$route.query.index){
+            console.log(element)
+            this.content = element.text
           }
-          this.item = this.getArticleList[this.$route.query.index]
-        }
+        })
     },
     onClickCarryOut() {
       let data = {
-        text: this.content,
-        type:'text',
-        index: this.$route.query.index
+        index:this.$route.query.index,
+        text:this.content
       }
 
-      if(this.$route.query.onClickType){
-        let reviseData = {
-          photos: this.item.photos,
-          index: this.$route.query.index,
-          data: data
-        }
-        this.revise(reviseData)
-      }else{
-        this.add(data)
-      }
-    
+      this.modify(data)
       this.$router.go(-1)
     }
   }
