@@ -114,6 +114,10 @@ export default {
   created() {
     this.fetchData()
   },
+  beforeRouteLeave(to, from, next) {
+    to.meta.keepAlive = false //去掉页面数据缓存
+    next()
+  },
   watch: {
     grapicData: {
       handler(val) {
@@ -133,6 +137,7 @@ export default {
   methods: {
     ...mapActions('openWX',['selectImg']),
     ...mapActions(['release']),
+    ...mapMutations('openWX',['clearImg']),
     fetchData() {
       if (localStorage.getItem('grapicData')) {
         this.grapicData = JSON.parse(localStorage.getItem('grapicData'))
@@ -248,6 +253,7 @@ export default {
           this.release(data).then(res=>{
             switch(res){
               case 1:
+                this.clearImg()
                 switch(true){
                   case contains(this.result,'apps-find'):
                     this.$router.replace('/apps-find')
