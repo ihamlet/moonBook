@@ -37,6 +37,10 @@ export default {
     },
     setResultStr(state,params){
       state.resultStr = params
+    },
+    //发布完了清除数据
+    clearImg(state){
+      state.imgList = []
     }
   },
   actions: {

@@ -389,9 +389,6 @@ export default new Router({
       path:'/my',
       name:'my',
       component: My,
-      meta:{
-        keepAlive: true
-      },
       children:[{
         path: '/my-home',
         name: 'my-home',
@@ -399,7 +396,6 @@ export default new Router({
         meta: {
           title: '我的',
           tabActive: 4,
-          keepAlive: true,
           isFooterBar: true
         }
       },]

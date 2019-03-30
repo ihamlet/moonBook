@@ -55,7 +55,7 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import topicList from './../../module/release/topicList'
 import articleSetting from './mould/articleSetting'
 import { compress,checkHtml,contains } from './../../lib/js/util'
@@ -80,7 +80,7 @@ export default {
           boolean = false
         }
       }else{
-        if(9 > this.imagesLength){
+        if(this.imagesLength >= 9){
           boolean = false
         }
       }

@@ -278,6 +278,7 @@ const actions = {
         switch(res.data.status){
           case 1:
             localStorage.removeItem('grapicData') //清空浏览器缓存
+            console.log(openWX)
           break
         }
 
