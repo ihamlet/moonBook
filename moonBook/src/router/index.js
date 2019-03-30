@@ -396,7 +396,7 @@ export default new Router({
         meta: {
           title: '我的',
           tabActive: 4,
-          isFooterBar: true
+          isFooterBar: true,
         }
       },]
     },

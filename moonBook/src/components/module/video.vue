@@ -85,7 +85,7 @@ export default {
 
     },
     toVideoPage(item) {
-      console.log(item)
+  
       let data = {}
 
       if (this.$route.query.user_id) {

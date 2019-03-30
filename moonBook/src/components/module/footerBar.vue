@@ -14,7 +14,6 @@
 </template>
 <script>
 import tips from './../module/release/tips'
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'footer-bar',
@@ -32,7 +31,7 @@ export default {
     this.active = this.$route.meta.tabActive
   },
   watch: {
-    $route(to, from) {
+    $route(to, from, next) {
       this.active = to.meta.tabActive
       this.show = false
     }
@@ -50,7 +49,7 @@ export default {
     },
     onClick(index) {
       if (index == 2) {
-        this.show = !this.show
+        this.show = true
       }
       this.active = this.$route.meta.tabActive
     }
@@ -60,6 +59,7 @@ export default {
 <style scoped>
 .footer-bar {
   width: 100%;
+  z-index: 999;
 }
 
 .footer-bar .van-tabbar {
