@@ -1,6 +1,6 @@
 <template>
   <div class="graphic page-padding">
-    <van-nav-bar left-text="取消" :border='false' fixed>
+    <van-nav-bar :border='false' fixed>
       <div class="user-info" slot='title'>
         <div class="avatar">
           <img :src="getAvatar(userDataState.avatar)" />
