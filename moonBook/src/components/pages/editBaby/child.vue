@@ -138,6 +138,10 @@ export default {
       }
     }
   },
+  beforeRouteLeave(to, from, next) {
+    to.meta.keepAlive = false //去掉页面数据缓存
+    next()
+  },
   created() {
     this.fetchData()
   },
@@ -343,11 +347,6 @@ export default {
         }
     },
     onClickRight(type) {
-      if (type == 'jump') {
-        this.$router.push({
-          name: 'my-home'
-        })
-      }
       if (type == 'delete') {
         this.$dialog.alert({
           message: `<div class='text-center'>确定要删除吗？</div>`,
