@@ -1,15 +1,15 @@
 <template>
   <div class="article-card">
     <draggable v-model="articleList" handle='.handle'>
-      <div class="item" v-for='(item,index) in articleList' :key="index">
+      <div class="item" v-for='(item,index) in articleList' :key="index" ref='articleDom'>
         <div class="add" v-if='index == 0' @click="setAddIndex(index)">
           <div class="insert">
             <i class="iconfont">&#xe728;</i>
           </div>
         </div>
         <div class="card-item" v-if='item.photos || item.text'>
-          <articleItem :item='item' :index='item.index' />
-          <div class="add" @click="setAddIndex(index)">
+          <articleItem :item='item' :index='item.index' @onChange='change'/>
+          <div class="add" @click="setAddIndex(index+1)">
             <div class="insert">
               <i class="iconfont">&#xe728;</i>
             </div>
@@ -28,7 +28,7 @@
     </draggable>
 
     <transition leave-active-class="bounceOut" enter-active-class="bounceIn">
-      <div class="icon-list flex flex-align" v-show='isTipsShow'>
+      <div class="icon-list flex flex-align" v-show='isTipsShow' :style="{top:domTop + 'px'}">
         <div class="icon-item" v-for='(item,itemIndex) in tipsList' :key="itemIndex" @click="select(item)">
           <div class="iconfont" :class="item.icon"></div>
           <span>{{item.name}}</span>
@@ -37,7 +37,7 @@
     </transition>
 
     <div class="media-input" v-show="false">
-      <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
+      <van-uploader ref='selectPhoto' :after-read="onRead" :multiple='multiple' />
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
     </div>
 
@@ -50,7 +50,7 @@ import axios from './../../../lib/js/api'
 import { compress, checkHtml } from './../../../lib/js/util'
 import draggable from 'vuedraggable'
 import articleItem from './articleItem'
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapActions,mapMutations, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'article-card',
@@ -66,16 +66,11 @@ export default {
         return this.articleItem
       },
       set(value) {
-        let array = []
-        value.forEach(e => {
-          if (e) {
-            array.push(e)
-          }
-        })
-        this.add(array)
+        this.drag(value)
       }
     },
-    cardList() {
+    cardList(){
+
       let array = []
 
       this.grapicData.photos.forEach((e, i) => {
@@ -115,7 +110,9 @@ export default {
       grapicData: {
         text: '',
         photos: []
-      }
+      },
+      domTop: 40,
+      multiple: true
     }
   },
   created() {
@@ -123,26 +120,26 @@ export default {
   },
   watch: {
     '$router': 'fetchData',
-    cardList: {
-      handler(val) {
-        this.add(val)
-      },
-      deep: true
+    cardList(val){
+      this.add(val)
     }
   },
   methods: {
-    ...mapActions('beautifulArticle', ['add', 'revise', 'delete', 'requestPercent']),
+    ...mapActions('beautifulArticle', ['add', 'revise', 'delete', 'requestPercent','drag']),
+    ...mapMutations('beautifulArticle',['setIndex']),
     ...mapActions('openWX', ['selectImg']),
-    // 置底滚动位置
-    scroll() {
-      this.$nextTick(() => {
-        let scrollHeight = document.documentElement.scrollHeight
-        document.documentElement.scrollTop = scrollHeight
-      })
-    },
+
     setAddIndex(index){
-      console.log(index)
-      this.addIndex = index
+      this.setIndex(index)
+      this.$refs.articleDom.forEach((e,i)=>{
+        if(i == index){
+          if(e.offsetTop == 0){
+            this.domTop = 40
+          }else{
+            this.domTop = e.offsetTop
+          }
+        }
+      })
     },
     fetchData() {
       axios.get('/book/api/oss_sign').then(res => {
@@ -150,9 +147,25 @@ export default {
       })
     },
     deleteArticle(index) {
-      this.delete(this.getArticleList[index])
+      this.delete(index)
+    },
+    change(index){
+      this.multiple = false
+      switch(index){
+        case 0:
+          if (this.ready) {
+            this.selectImg(1)
+          } else {
+            this.$refs.selectPhoto.$refs.input.click()
+          }
+        break
+        case 2:
+          this.$refs.selectFileVideo.click()
+        break
+      }
     },
     select(item) {
+      this.multiple = true
       switch (item.index) {
         case 0:
           if (this.ready) {
@@ -324,7 +337,6 @@ export default {
 
         this.requestPercent(0)
         this.percent = 0
-        this.scroll()
       })
     }
   }

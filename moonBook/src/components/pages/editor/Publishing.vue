@@ -15,7 +15,7 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
 import { compress } from './../../lib/js/util'
-import { mapMutations,mapState } from 'vuex'
+import { mapActions,mapState,mapMutations } from 'vuex'
 
 export default {
   name: 'publishing',
@@ -42,21 +42,15 @@ export default {
       }
     }
   },
-  // created() {
-  //   this.fetchData()
-  // },
-  // watch: {
-  //   '$router': 'fetchData'
-  // },
-  beforeRouteUpdate (to, from, next) {
-    next(vm => {
-      vm.fetchData()
-    })
+  created() {
+    this.fetchData()
+  },
+  watch: {
+    '$router': 'fetchData'
   },
   methods: {
-    ...mapMutations('beautifulArticle',['modify']),
+    ...mapActions('beautifulArticle',['add']),
     fetchData() {
-      console.log(111)
         this.articleItem.forEach(element => {
           if(element.index == this.$route.query.index){
             console.log(element)
@@ -65,12 +59,12 @@ export default {
         })
     },
     onClickCarryOut() {
-      let data = {
-        index:this.$route.query.index,
-        text:this.content
-      }
+      let data = [{
+        index: this.$route.query.index,
+        text: this.content
+      }]
 
-      this.modify(data)
+      this.add(data)
       this.$router.go(-1)
     }
   }

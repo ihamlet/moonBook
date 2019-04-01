@@ -122,27 +122,22 @@ export default {
         axios.post('/book/school/edit_school', data).then(res => {
           switch (res.data.status) {
             case 1:
-              let bindData = {
-                params:{
-                  child_id:this.$route.query.id,
-                  school_id:res.data.data.school_id
+                let bindData = {
+                  params:{
+                    child_id:this.$route.query.id,
+                    school_id:res.data.data.school_id
+                  }
                 }
+
+              if (this.$route.query.registerType == 'headmaster') {
+                bindData.params.is_master = 1
               }
-              axios.get('/book/babySchool/bind', bindData).then(res => {
-                if (res.data.status) {
-                  this.$toast.success('加入学校成功')
-                  this.$router.push({
-                    name: 'edit-class',
-                    query: {
-                      id: this.$route.query.id,
-                      school_id: res.data.data.school_id,
-                      back: this.$route.query.back,
-                      type: this.$route.query.type,
-                    }
-                  })
-                  this.getUserData()
-                }
-              })
+
+              if(this.$route.query.registerType){
+                this.thearchJoin(bindData)
+              }else{
+                this.babyJoin(bindData)
+              }
               done()
               break
             case 0:
@@ -198,8 +193,14 @@ export default {
       }
 
       if (this.$route.query.registerType) {
+        this.thearchJoin(data)
+      } else {
+        data.params.child_id = this.$route.query.id
+        this.babyJoin(data)
+      }
+    },
+    thearchJoin(data){
         axios.get('/book/SchoolTeacher/bind', data).then(res => {
-          console.log('高德地图ID 不能为空')
           if (this.$route.query.registerType == 'teacher') {
             this.$router.push({
               name: 'edit-class',
@@ -213,8 +214,8 @@ export default {
               }
             })
           } else {
-            this.$router.push({
-              name: 'edit-setting',
+            this.$router.replace({
+              name: 'edit-manager',
               query: {
                 pageTitle: this.$route.query.pageTitle,
                 registerType: this.$route.query.registerType,
@@ -223,8 +224,8 @@ export default {
             })
           }
         })
-      } else {
-        data.params.child_id = this.$route.query.id
+    },
+    babyJoin(data){
         axios.get('/book/babySchool/bind', data).then(res => {
           if (res.data.status) {
             this.$toast.success('加入学校成功')
@@ -243,7 +244,6 @@ export default {
             this.$router.go(-1)
           }
         })
-      }
     },
     selectSchoolType(item, index) {
       this.schoolType = item.name

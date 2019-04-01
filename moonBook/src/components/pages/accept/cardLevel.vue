@@ -48,7 +48,7 @@ export default {
             axios.get('/book/MemberCard/getMemberRegPayConfig', data).then(res => {
                 if (res.data.status == 1) {
                     this.schoolName = res.data.data.title
-                    this.levels = res.data.data.levels
+                    this.levels = res.data.data.deposites
                 }
             })
         },

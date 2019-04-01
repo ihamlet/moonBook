@@ -3,7 +3,7 @@
     <van-cell>
       <van-row gutter="10">
         <van-col span="6">
-          <div class="img-grid" @click="select">
+          <div class="img-grid" @click="change">
             <div class="photo" v-if='item.photos'>
               <img :src="item.photos.thumb" alt="" srcset="">
             </div>
@@ -49,19 +49,9 @@ export default {
         }
       })
     },
-    select(){
-      if(this.item.photos){
-        switch(this.item.photos.type){
-            case 'image':
-                this.$refs.selectPhoto.$refs.input.click()
-            break
-            case 'video':
-                this.$refs.selectFileVideo.click()
-            break
-        }
-      }else{
-        this.$refs.selectPhoto.$refs.input.click()
-      }
+    change(){
+      let index = this.item.type == 'video'?2:0
+      this.$emit('onChange',index)
     },
     onRead(file) {
       let data = {

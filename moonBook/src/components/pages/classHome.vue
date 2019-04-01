@@ -11,8 +11,11 @@
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">
         <div class="class-name">{{formatBanjiTitle(classInfo.title)}}</div>
-        <div class="class-people">{{`${classInfo.grade_name?classInfo.grade_name:''}班`}}（{{classInfo.student_count}}人）</div>
-        <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
+        <div class="flex flex-align">
+          <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
+          <span class="splitter">|</span>
+          <div class="class-people">{{`${classInfo.grade_name?classInfo.grade_name:''}班`}}（{{classInfo.student_count}}人）</div>
+        </div>
       </div>
       <div class="qrcode" @click="show = true">
         <i class="iconfont">&#xe622;</i>
@@ -388,7 +391,6 @@ export default {
 <style scoped>
 .school {
   text-align: left;
-  margin-top: 0.3125rem /* 5/16 */;
 }
 
 .school,
@@ -398,7 +400,7 @@ export default {
 
 .header {
   padding: 2.8125rem /* 45/16 */ 1.25rem /* 20/16 */ 0.625rem /* 10/16 */;
-  height: 5.625rem /* 90/16 */;
+  height: 4.375rem /* 70/16 */;
   justify-content: space-between;
 }
 
@@ -459,5 +461,9 @@ export default {
 
 .module {
   background: transparent;
+}
+
+.splitter{
+  margin: 0 .3125rem /* 5/16 */;
 }
 </style>

@@ -9,6 +9,7 @@ export default {
         title:'',
         cover:'',
         percentNum: 0,
+        index:0,
     },
     getters:{
         getArticleContent: state =>{
@@ -65,18 +66,26 @@ export default {
         }
     },
     mutations:{
+        setIndex(state,params){
+            state.index = params
+        },
         setAdd(state, params){
-            state.articleItem = params
+            if(params.length){
+                state.articleItem.splice(state.index,0,params[params.length - 1])
+            }
+
+            state.index++
         },
         setDelete(state,params){
-            let index
-            state.articleItem.forEach((element,i) => {
-                if(element == params){
-                    index  = i
-                }
-            })
-
-            state.articleItem.splice(index,index+1)
+            state.articleItem.splice(params,params+1)
+            if(state.articleItem.length == 0){
+                console.log(111)
+                this.articleItem = [{
+                    index:0,
+                    photos:'',
+                    text:''
+                }]
+            }
         },
         setPercent(state, params){
             state.percentNum = params
@@ -87,17 +96,13 @@ export default {
         setCover(state, params){
             state.cover = params
         },
-        modify(state,params){
-           state.articleItem.forEach(e=>{
-               if(e.index == params.index){
-                   e.text = params.text
-               }
-           })
+        setDrag(state,params){
+            state.articleItem = params
         }
     },
     actions:{
         //添加
-        add(context,products){
+        add(context,products){           
            context.commit('setAdd', products)
         },
         //删除
@@ -115,6 +120,10 @@ export default {
         //封面
         addCover(context,products){
             context.commit('setCover',products)
+        },
+        //拖动
+        drag(context,products){
+            context.commit('setDrag',products)
         }
     }
 }

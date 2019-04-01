@@ -185,7 +185,6 @@ const actions = {
 
       return new Promise((resolve, reject) => {
         axios.get(WMlifeSearchSchoolLink,{params:wmData}).then(res=>{
-            console.log()
             if(res.data.data.length){
               resolve( {
                 resData: res.data.data,

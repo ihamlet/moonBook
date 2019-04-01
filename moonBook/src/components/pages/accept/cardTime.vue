@@ -21,15 +21,15 @@
             </van-col>
             <van-col span="6">
               <div class="col-box price">
-                {{item.price/100}}
+                {{item.origin_price/100}}
               </div>
             </van-col>
           </van-row>
         </div>
 
         <div class="explain">
-          <b>会员说明</b>
-          <p>{{tips.borrow_tip}} <br /> {{tips.member_tip}} <br /> {{tips.notice}}</p>
+          <b>说明</b>
+          <p>{{tips}}</p>
         </div>
       </div>
     </div>
@@ -45,13 +45,14 @@
           <van-cell title="会员类型" :value="`${selectFees.name} ${leves.name}`" />
           <van-cell title="支付押金" :value="`￥${leves.price/100}`" />
           <van-cell title="会员金额">
-              <span>￥{{selectFees.price/100}}</span><span class="red"> -￥65.5</span> 
+              <span>￥{{selectFees.origin_price/100}}</span>
+              <span class="red" v-if="selectFees.gold_cut_price"> -￥{{selectFees.gold_cut_price}}</span> 
           </van-cell>
-          <van-cell value-class='wm-coin'>
-            <div>已使用微美币抵扣<span class="red">50%</span>的会员费</div>
-            <div class="red">扣除6450微美币,剩余234微美币</div>
+          <van-cell value-class='wm-coin' v-if="selectFees.gold_cut_price">
+            <div>已使用微美币抵扣<span class="red">{{selectFees.cut_off}}</span>的会员费</div>
+            <div class="red">扣除{{selectFees.gold}}微美币,剩余{{selectFees.gold_remain}}微美币</div>
           </van-cell>
-          <van-cell title="小计" size="large" :value="`￥${leves.price/100 + selectFees.price/100 - 65.5}`" />
+          <van-cell title="小计" size="large" :value="`￥${leves.price/100 + selectFees.price/100 - (selectFees.gold_cut_price||0)}`" />
 
           <van-button square class="theme-btn" :loading='payLoading' size="large" type="primary" @click="pay">
             支 付
@@ -99,10 +100,10 @@ export default {
         if (res.data.status == 1) {
           this.schoolName = res.data.data.title
 
-          this.tips = res.data.data.tips
-          this.fees = res.data.data.fees
+          this.tips = res.data.data.borrow_tip
+          this.fees = res.data.data.durations
 
-          let array = res.data.data.levels
+          let array = res.data.data.deposites
           array.forEach(element => {
             if (element.id == this.$route.query.leveId) {
               this.leves = element

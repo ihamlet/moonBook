@@ -146,14 +146,23 @@ export default {
         axios.post('/book/school/edit_banji', data).then(res => {
           switch (res.data.status) {
             case 1:
-              let BabyJoinBanjiBdind = {
-                params: {
-                  banji_id: res.data.data.banji_id,
-                  child_id: this.$route.query.id
+              if(this.$route.registerType == 'teacher'){
+                let SchoolTeacherBind = {
+                  params: {
+                    banji_id: res.data.data.banji_id
+                  }
                 }
-              }
+                this.teacherJoin(SchoolTeacherBind)
+              }else{
+                let BabyJoinBanjiBdind = {
+                  params: {
+                    banji_id: res.data.data.banji_id,
+                    child_id: this.$route.query.id
+                  }
+                }
 
-              this.babyJoin(BabyJoinBanjiBdind)
+                this.babyJoin(BabyJoinBanjiBdind)
+              }
               break
             case 0:
               this.$toast(res.data.msg)
@@ -165,24 +174,14 @@ export default {
       }
     },
     select(item, itemIndex) {
-      if (this.$route.query.registerType == 'teacher') {
+      if (this.$route.query.registerType) {
         let SchoolTeacherBind = {
           params: {
             banji_id: item.banji_id
           }
         }
 
-        axios.get('/book/SchoolTeacher/bind_banji', SchoolTeacherBind).then(res => {
-          if (res.data.status == 1) {
-            this.$router.push({
-              name: 'edit-setting',
-              query: {
-                registerType: 'teacher',
-                pageTitle: this.$route.query.pageTitle
-              }
-            })
-          }
-        })
+        this.teacherJoin(SchoolTeacherBind)
       } else {
         let BabyJoinBanjiBdind = {
           params: {
@@ -207,7 +206,27 @@ export default {
             this.getUserData()
           } else {
             this.$toast.fail('加入失败')
-            this.$router.replace('/my-home')
+            this.$router.replace({
+              name:'my-home'
+            })
+          }
+        })
+    },
+    teacherJoin(data){
+        axios.get('/book/SchoolTeacher/bind_banji', data).then(res => {
+          if (res.data.status == 1) {
+            this.$router.replace({
+              name: 'edit-manager',
+              query: {
+                registerType: 'teacher',
+                pageTitle: this.$route.query.pageTitle
+              }
+            })
+          }else{
+            this.$toast.fail('加入失败')
+            this.$router.replace({
+              name:'setting'
+            })
           }
         })
     },

@@ -23,7 +23,7 @@
             </div>
             <div class="content">
               <div class="avatar" v-if="list.avatar" :class="list.sex">
-                <img :src="list.avatar" alt="宝贝头像">
+                <img :src="list.avatar" alt="宝贝头像" @error="imgError">
               </div>
               <avatar :gender="list.sex" v-else />
               <div class="age">{{list.age}}岁</div>
@@ -126,6 +126,9 @@ export default {
           back: this.$route.name
         }
       })
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     }
   }
 }

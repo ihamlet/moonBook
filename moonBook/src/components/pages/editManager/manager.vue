@@ -1,6 +1,6 @@
 <template>
   <div class="add-child">
-    <van-nav-bar :title="$route.query.pageTitle" left-arrow left-text="注册" @click-left="onClickLeft" />
+    <van-nav-bar :title="$route.query.pageTitle" />
     <div class="verify" v-if='managerData.is_confirm!=-1'>
       {{status}}
     </div>
@@ -40,22 +40,14 @@ export default {
     ...mapGetters(['userDataState', 'userPointState']),
     jobList() {
       let array = []
-      if (this.$route.query.registerType == 'teacher' && this.managerData.typecode == '141203') {
-        array = ['班主任', '任课老师', '行政', '其它']
+
+      if (this.$route.query.registerType == 'teacher') {
+        array = ['带班老师', '信息老师', '生活老师', '班主任', '任课老师', '其他']
       }
 
-      if (this.$route.query.registerType == 'teacher' && this.managerData.typecode == '141204') {
-        array = ['带班老师', '信息老师', '生活老师', '其它']
+      if (this.$route.query.registerType == 'headmaster') {
+        array = ['校长', '副校长']
       }
-
-      if (this.$route.query.registerType == 'headmaster' && this.managerData.typecode == '141203') {
-        array = ['校长', '副校长', '其它']
-      }
-
-      if (this.$route.query.registerType == 'headmaster' && this.managerData.typecode == '141204') {
-        array = ['园长', '副园长', '其它']
-      }
-
       return array
     },
     status(){
@@ -116,11 +108,6 @@ export default {
           this.schoolInfo = res.data.school
           this.office = res.data.data.duty
         }
-      })
-    },
-    onClickLeft() {
-      this.$router.push({
-        name: 'register'
       })
     },
     toSetting(managerData) {
