@@ -199,6 +199,7 @@ export default {
 
       if (this.$route.query.registerType) {
         axios.get('/book/SchoolTeacher/bind', data).then(res => {
+          console.log('高德地图ID 不能为空')
           if (this.$route.query.registerType == 'teacher') {
             this.$router.push({
               name: 'edit-class',

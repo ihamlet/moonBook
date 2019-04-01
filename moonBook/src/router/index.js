@@ -144,8 +144,7 @@ export default new Router({
             name:'AcceptSchoolList',
             component: SchoolList,
             meta:{
-              active:0,
-              keepAlive: true
+              active:0
             }
           },{
             path:'/accept/cardLevel',

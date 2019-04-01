@@ -263,6 +263,19 @@ export default {
     },
     setSchool(set){
       if(set == 'add' || set == 'register'){
+        if (!this.childInfo.avatar) {
+          this.$toast.fail('请上传头像')
+        }else if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
+          this.errorMessage.name = '请正确填写孩子的姓名'
+          setTimeout(() => {
+            this.errorMessage.name = ''
+          }, 2000)
+        } else if (this.childInfo.birthday == '') {
+          this.errorMessage.birthday = '请填写孩子的生日'
+          setTimeout(() => {
+            this.errorMessage.birthday = ''
+          }, 2000)
+        } else {
           this.operationApi().then(res => {
             this.$router.push({
               name: 'edit-setting',
@@ -274,6 +287,7 @@ export default {
             })
             localStorage.setItem('childInfo', JSON.stringify(this.childInfo))
           })
+        }
       }else{
         this.$router.push({
           name: 'edit-setting',

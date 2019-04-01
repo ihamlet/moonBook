@@ -164,45 +164,44 @@ const actions = {
     })
   },
   getSearch(context, products) {
-    let data = {
-      Key: context.state.amapApiKey,
-      keywords: products.keywords,
-      type: products.type,
-      location: products.location,
-      city: products.city,
-      citylimit: true,
-      datatype: 'all'
-    }
+      let data = {
+        Key: context.state.amapApiKey,
+        keywords: products.keywords,
+        type: products.type,
+        location: products.location,
+        city: products.city,
+        citylimit: true,
+        datatype: 'all'
+      }
 
-    let wmData = {
-      keyword: products.keywords,
-      lng: products.lng,
-      lat: products.lat,
-    }
-
+      let wmData = {
+        keyword: products.keywords,
+        lng: products.lng,
+        lat: products.lat,
+      }
 
       let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${ data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
       let WMlifeSearchSchoolLink = '/book/school/getList'
 
-
       return new Promise((resolve, reject) => {
-        fetchJsonp(amapApiLink).then(response => {
-            return response.json()
-          }).then(res => {
-            if(res.tips.length){
+        axios.get(WMlifeSearchSchoolLink,{params:wmData}).then(res=>{
+            console.log()
+            if(res.data.data.length){
               resolve( {
-                resData: res.tips,
-                searchType: 'amapSearchSchool'
+                resData: res.data.data,
+                searchType: 'wmSearchSchool'
               })
             }else{
-              axios.get(WMlifeSearchSchoolLink,{params:wmData}).then(res=>{
+              fetchJsonp(amapApiLink).then(response => {
+                return response.json()
+              }).then(res=>{
                 resolve( {
-                  resData: res.data.data,
-                  searchType: 'wmSearchSchool'
+                  resData: res.tips,
+                  searchType: 'amapSearchSchool'
                 })
               })
             }
-          })
+        })
       })
     },
   getCityDistrict(context, products) {

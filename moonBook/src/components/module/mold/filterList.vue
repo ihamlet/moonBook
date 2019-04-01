@@ -11,7 +11,7 @@
       </van-row>
     </div>
 
-        <div class="w-popup-list">
+    <div class="w-popup-list">
       <div class="w-tit-box flex flex-align"><span></span>{{filterList[1].title}}</div>
       <van-row gutter="10">
         <van-col span="8" v-for="(item,itemIndex) in filterList[1].arr" :key="itemIndex">

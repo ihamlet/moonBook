@@ -50,6 +50,7 @@ export default {
 
         axios.get('/book/SchoolTeacher/getMine', data).then(res => {
           if(res.data.status == 1){
+            this.school_id = res.data.data.school_id
             this.setting.settingSchool = res.data.data.school_name
             this.setting.settingClass = res.data.data.banji_name
           }

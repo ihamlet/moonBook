@@ -2,15 +2,15 @@
   <div class="article-card">
     <draggable v-model="articleList" handle='.handle'>
       <div class="item" v-for='(item,index) in articleList' :key="index">
-        <div class="add" v-if='index == 0'>
+        <div class="add" v-if='index == 0' @click="setAddIndex(index)">
           <div class="insert">
             <i class="iconfont">&#xe728;</i>
           </div>
-        </div> 
+        </div>
         <div class="card-item" v-if='item.photos || item.text'>
-          <articleItem :item='item' :index='item.index'/>
-          <div class="add">
-            <div class="insert"> 
+          <articleItem :item='item' :index='item.index' />
+          <div class="add" @click="setAddIndex(index)">
+            <div class="insert">
               <i class="iconfont">&#xe728;</i>
             </div>
           </div>
@@ -36,9 +36,8 @@
       </div>
     </transition>
 
-
     <div class="media-input" v-show="false">
-      <van-uploader ref='selectPhoto' :after-read="onRead" multiple/>
+      <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
     </div>
 
@@ -48,10 +47,10 @@
 
 <script>
 import axios from './../../../lib/js/api'
-import { compress,checkHtml } from './../../../lib/js/util'
+import { compress, checkHtml } from './../../../lib/js/util'
 import draggable from 'vuedraggable'
 import articleItem from './articleItem'
-import { mapActions,mapGetters,mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'article-card',
@@ -60,28 +59,28 @@ export default {
     draggable
   },
   computed: {
-    ...mapState('beautifulArticle',['articleItem']),
-    ...mapState('openWX',['ready','imgList']),
-    articleList:{
-      get(){
+    ...mapState('beautifulArticle', ['articleItem']),
+    ...mapState('openWX', ['ready', 'imgList']),
+    articleList: {
+      get() {
         return this.articleItem
       },
-      set(value){
+      set(value) {
         let array = []
-        value.forEach(e=>{
-          if(e){
+        value.forEach(e => {
+          if (e) {
             array.push(e)
           }
         })
         this.add(array)
       }
     },
-    cardList(){
+    cardList() {
       let array = []
 
-      this.grapicData.photos.forEach((e,i)=>{
+      this.grapicData.photos.forEach((e, i) => {
         array.push({
-          type:'image',
+          type: 'image',
           index: i,
           photos: e
         })
@@ -92,10 +91,10 @@ export default {
   },
   data() {
     return {
-      ossSign:'',
+      ossSign: '',
       percent: 0,
-      photoLength:0,
-      addIndex:0,
+      photoLength: 0,
+      addIndex: 0,
       tipsList: [{
         type: 'images',
         icon: 'icon-tupian',
@@ -112,7 +111,7 @@ export default {
         name: '视频',
         index: 2
       }],
-      isTipsShow:true,
+      isTipsShow: true,
       grapicData: {
         text: '',
         photos: []
@@ -124,42 +123,45 @@ export default {
   },
   watch: {
     '$router': 'fetchData',
-    cardList:{
-      handler(val){
+    cardList: {
+      handler(val) {
         this.add(val)
       },
-      deep:true
+      deep: true
     }
   },
   methods: {
-    ...mapActions('beautifulArticle',['add','revise','delete','requestPercent']),
-    ...mapActions('openWX',['selectImg']),
+    ...mapActions('beautifulArticle', ['add', 'revise', 'delete', 'requestPercent']),
+    ...mapActions('openWX', ['selectImg']),
     // 置底滚动位置
-    scroll(){
-        this.$nextTick(() => {
-          let scrollHeight = document.documentElement.scrollHeight
-          document.documentElement.scrollTop  = scrollHeight
-        })
+    scroll() {
+      this.$nextTick(() => {
+        let scrollHeight = document.documentElement.scrollHeight
+        document.documentElement.scrollTop = scrollHeight
+      })
+    },
+    setAddIndex(index){
+      console.log(index)
+      this.addIndex = index
     },
     fetchData() {
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
       })
     },
-    deleteArticle(index){
+    deleteArticle(index) {
       this.delete(this.getArticleList[index])
     },
     select(item) {
       switch (item.index) {
         case 0:
-          if(this.ready){
+          if (this.ready) {
             this.selectImg(9)
-          }else{
+          } else {
             this.$refs.selectPhoto.$refs.input.click()
           }
           break
         case 1:
-          console.log(this.addIndex)
           this.$router.push({
             name: 'publishing',
             query: {
@@ -167,7 +169,7 @@ export default {
               back: this.$route.query.name,
               back_name: this.$route.query.back_name,
               id: this.$route.query.id,
-              onClickType:'revise'
+              onClickType: 'revise'
             }
           })
           break
@@ -206,7 +208,7 @@ export default {
       let maxSize = 1024 * 1024 * 3
       let blob = file.slice(0, maxSize)
 
-      formData.append('file',blob,file.name)
+      formData.append('file', blob, file.name)
 
       let url = '/book/file/get_video_screen'
 
@@ -219,14 +221,14 @@ export default {
           this.requestPercent(this.percent)
         }
       }).then(res => {
-         let info = res.data.data
-          this.grapicData.photos.push({
-            thumb: info.thumb,
-            height: info.height,
-            width: info.width,
-            rotate: info.rotate,
-            duration: Math.floor(info.duration) || 10
-          })
+        let info = res.data.data
+        this.grapicData.photos.push({
+          thumb: info.thumb,
+          height: info.height,
+          width: info.width,
+          rotate: info.rotate,
+          duration: Math.floor(info.duration) || 10
+        })
         this.upOssMedia(type, file)
         this.percent = 0
       })
@@ -279,7 +281,7 @@ export default {
     //     }else{
     //       this.add(data)
     //     }
-  
+
     //     this.percent = 0
     //     this.scroll()
     //     this.requestPercent(0)
@@ -310,7 +312,7 @@ export default {
           this.requestPercent(this.percent)
         }
       }).then(() => {
-        
+
         this.grapicData.photos.push({
           photo: path,
           is_audio: 0,
@@ -329,7 +331,7 @@ export default {
 }
 </script>
 <style scoped>
-.item{
+.item {
   position: relative;
 }
 
@@ -337,7 +339,7 @@ export default {
   width: 2.1875rem /* 35/16 */;
   text-align: center;
   position: absolute;
-  top: .625rem /* 10/16 */;
+  top: 0.625rem /* 10/16 */;
   right: 0;
 }
 
@@ -396,7 +398,6 @@ export default {
   content: '\e642';
 }
 
-
 .add {
   height: 2.5rem /* 40/16 */;
   line-height: 2.5rem /* 40/16 */;
@@ -410,7 +411,7 @@ export default {
   color: #c0c4cc;
 }
 
-.card-item{
+.card-item {
   position: relative;
 }
 </style>

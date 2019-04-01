@@ -85,7 +85,8 @@ export default {
         banji_name:'',
         is_confirm: -1
       },
-      schoolInfo: ''
+      schoolInfo: '',
+      school:''
     }
   },
   created() {
