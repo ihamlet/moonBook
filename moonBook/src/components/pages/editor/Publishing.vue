@@ -29,6 +29,7 @@ export default {
   data() {
     return {
       content: '',
+      photos:'',
       editorOption: {
         placeholder: '请输入正文',
         modules: {
@@ -49,22 +50,29 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
-    ...mapActions('beautifulArticle',['add']),
+    ...mapActions('beautifulArticle',['change','add']),
     fetchData() {
+      if(this.$route.query.onClickType == 'change')
         this.articleItem.forEach(element => {
           if(element.index == this.$route.query.index){
-            console.log(element)
             this.content = element.text
+            this.photos = element.photos
           }
         })
     },
     onClickCarryOut() {
-      let data = [{
+      let data = {
         index: this.$route.query.index,
-        text: this.content
-      }]
+        text: this.content,
+        photos: this.photos
+      }
 
-      this.add(data)
+      if(this.$route.query.onClickType == 'change'){
+        this.change(data)
+      }else{
+        this.add(data)
+      }
+
       this.$router.go(-1)
     }
   }

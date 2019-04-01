@@ -474,8 +474,7 @@ export default new Router({
         component: Publishing,
         meta: {
           title: '发布长文',
-          type:'long',
-          keepAlive: true
+          type:'long'
         }
       },
       {

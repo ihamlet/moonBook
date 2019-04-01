@@ -8,7 +8,7 @@
           </div>
         </div>
         <div class="card-item" v-if='item.photos || item.text'>
-          <articleItem :item='item' :index='item.index' @onChange='change'/>
+          <articleItem :item='item' :index='item.index' :ossSign='ossSign'/>
           <div class="add" @click="setAddIndex(index+1)">
             <div class="insert">
               <i class="iconfont">&#xe728;</i>
@@ -37,7 +37,7 @@
     </transition>
 
     <div class="media-input" v-show="false">
-      <van-uploader ref='selectPhoto' :after-read="onRead" :multiple='multiple' />
+      <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
     </div>
 
@@ -70,12 +70,10 @@ export default {
       }
     },
     cardList(){
-
       let array = []
-
       this.grapicData.photos.forEach((e, i) => {
         array.push({
-          type: 'image',
+          type: e.is_video == 0?'image':'video',
           index: i,
           photos: e
         })
@@ -108,11 +106,9 @@ export default {
       }],
       isTipsShow: true,
       grapicData: {
-        text: '',
         photos: []
       },
-      domTop: 40,
-      multiple: true
+      domTop: 40
     }
   },
   created() {
@@ -122,50 +118,37 @@ export default {
     '$router': 'fetchData',
     cardList(val){
       this.add(val)
+      this.photoLength = 0
+    },
+    imgList:{
+      handler(val) {
+        this.grapicData.photos = val
+        this.photoLength = val.length
+      },
+      deep: true
     }
   },
   methods: {
     ...mapActions('beautifulArticle', ['add', 'revise', 'delete', 'requestPercent','drag']),
     ...mapMutations('beautifulArticle',['setIndex']),
     ...mapActions('openWX', ['selectImg']),
-
+    fetchData() {
+      axios.get('/book/api/oss_sign').then(res => {
+        this.ossSign = res.data.data
+      })
+    },    
     setAddIndex(index){
       this.setIndex(index)
       this.$refs.articleDom.forEach((e,i)=>{
         if(i == index){
-          if(e.offsetTop == 0){
-            this.domTop = 40
-          }else{
-            this.domTop = e.offsetTop
-          }
+          this.domTop = e.offsetTop == 0?40:e.offsetTop
         }
-      })
-    },
-    fetchData() {
-      axios.get('/book/api/oss_sign').then(res => {
-        this.ossSign = res.data.data
       })
     },
     deleteArticle(index) {
       this.delete(index)
     },
-    change(index){
-      this.multiple = false
-      switch(index){
-        case 0:
-          if (this.ready) {
-            this.selectImg(1)
-          } else {
-            this.$refs.selectPhoto.$refs.input.click()
-          }
-        break
-        case 2:
-          this.$refs.selectFileVideo.click()
-        break
-      }
-    },
     select(item) {
-      this.multiple = true
       switch (item.index) {
         case 0:
           if (this.ready) {
@@ -247,60 +230,40 @@ export default {
       })
     },
     //上传
-    // upOssMedia(type, file, index) {
-    //   if (!this.ossSign) {
-    //     alert('未能获取上传参数')
-    //   }
+    upOssMedia(type, file) {
+      if (!this.ossSign) {
+        alert('未能获取上传参数')
+      }
 
-    //   let url = this.ossSign.host.replace('http:', 'https:')
-    //   let data = new FormData()
-    //   let key = this.ossSign.dir + '/' + Date.now() + file.name
-    //   let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
+      let url = this.ossSign.host.replace('http:', 'https:')
+      let data = new FormData()
+      let key = this.ossSign.dir + '/' + Date.now() + file.name
+      let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
 
-    //   data.append('key', key)
-    //   data.append('OSSAccessKeyId', this.ossSign.accessid)
-    //   data.append('policy', this.ossSign.policy)
-    //   data.append('success_action_status', 200)
-    //   data.append('signature', this.ossSign.signature)
-    //   data.append('file', file)
+      data.append('key', key)
+      data.append('OSSAccessKeyId', this.ossSign.accessid)
+      data.append('policy', this.ossSign.policy)
+      data.append('success_action_status', 200)
+      data.append('signature', this.ossSign.signature)
+      data.append('file', file)
 
-    //   axios({
-    //     url: url,
-    //     data: data,
-    //     method: 'post',
-    //     onUploadProgress: p => {
-    //       this.percent = Math.floor(100 * (p.loaded / p.total))
-    //       this.requestPercent(this.percent)
-    //     }
-    //   }).then(() => {
-    //     let data = {
-    //       is_audio: type == 'audio' ? 1 : 0,
-    //       is_video: type == 'video' ? 1 : 0,
-    //       photo: path,
-    //       thumb: this.mediaInfo?this.mediaInfo.thumb:`${path}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`,
-    //       height: 0,
-    //       width: 0,
-    //       type:'video',
-    //       index:index
-    //     }
-
-    //     if(onClickType){
-    //       let reviseData = {
-    //         index:index,
-    //         data:data
-    //       }
-
-    //       this.revise(reviseData)
-    //     }else{
-    //       this.add(data)
-    //     }
-
-    //     this.percent = 0
-    //     this.scroll()
-    //     this.requestPercent(0)
-    //   })
-    // },
-    upOssPhoto(blob, file, base64, index) {
+      axios({
+        url: url,
+        data: data,
+        method: 'post',
+        onUploadProgress: p => {
+          this.percent = Math.floor(100 * (p.loaded / p.total))
+          this.requestPercent(this.percent)
+        }
+      }).then((res) => {
+        this.grapicData.photos[this.grapicData.photos.length-1].is_audio =  type == 'audio' ? 1 : 0
+        this.grapicData.photos[this.grapicData.photos.length-1].is_video =  type == 'video' ? 1 : 0
+        this.grapicData.photos[this.grapicData.photos.length-1].photo = path
+        this.requestPercent(0)
+        this.percent = 0
+      })
+    },
+    upOssPhoto(blob, file, base64) {
       let img = new Image()
       img.src = base64
 
