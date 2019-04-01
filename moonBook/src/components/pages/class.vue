@@ -117,7 +117,6 @@ export default {
         }
 
         axios.get('/book/school/get_info', SchoolInfoData).then(res => {
-          console.log(SchoolInfoData)
           if (res.data.status == 1) {
             this.schoolName = res.data.data.title
           }
