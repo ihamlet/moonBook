@@ -6,8 +6,8 @@
     <div class="container">
     <van-tabs type="card" swipeable animated color='#409eff' @change='changeTab'>
         <van-tab :title="list.title" v-for='(list,index) in tab' :key="index">
-            <div class="list">
-                <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
+            <div class="list" v-if='index == tabIndex'>
+                <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad">
                     <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" is-link class="flex flex-align" @click="select(item)">
                       <div class="item">
                           <div class="school-info">
@@ -76,9 +76,7 @@ export default {
     changeTab(index){
         this.tabIndex = index
         this.page = 1
-        this.onLoad().then(()=>{
-          this.loading = false
-        })
+        this.loading = false
     },
     onLoad() {
       let arr = this.userPointState.location.split(",")
