@@ -2,7 +2,7 @@
   <div class="school-home page-padding">
     <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" fixed :border='false'>
       <div class="head-bar-title" slot="title" @click="actionsheetShow = true">
-        {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont" v-if="managerState.length > 1">&#xe608;</i>
+        {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont">&#xe608;</i>
       </div>
       <div class="head-bar-text" slot='right' v-if='manage'  @click="toManage">
         <span class="text">管理学校</span>
@@ -26,13 +26,13 @@
         <investmentAd :investmentAd='investment' type='notice'/>
       </div>
       <div class="module">
-        <read-list type='school' title='流动红旗' field='name' />
+        <read-list type='school' title='阅读榜' field='name' />
       </div>
       <div>
         <van-tabs color='#409eff' :line-width='20' :line-height='4' animated swipeable>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
-              <drying-list :school_id='$route.query.id' portal_name='学校主页'/>
+              <drying-list :school_id='$route.query.id' portal_name='学校主页' :key="$route.query.id"/>
             </div>
           </van-tab>
         </van-tabs>
@@ -60,7 +60,6 @@ export default {
   },
   computed: {
     ...mapGetters(['userDataState', 'managerState']),
-    //动态组件
     actions() {
       let array = []
       if (this.managerState) {
@@ -75,6 +74,12 @@ export default {
           array.push(data)
         })
       }
+
+      array.push({
+        name:'学校地图',
+        subname:'周边学校',
+        type:'toMap'
+      })
 
       return array
     },
@@ -135,70 +140,77 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     request() {
-      this.getUserData().then(res => {
-        if(res.id != null){
-          if(res.child_id == '0'){
+      if(this.$route.query.type != 'preview'){
+        this.getUserData().then(res => {
+          if(res.id!= null){
+            if(res.child_id == '0'){
+                this.$dialog.confirm({
+                  title: '添加宝贝',
+                  message: '请添加您的宝贝，掌握孩子阅读数据',
+                  confirmButtonText:'添加',
+                  cancelButtonText:'稍后',
+                  showCancelButton: true
+                }).then(() => {
+                  this.$router.push({
+                    name: 'edit-child',
+                    query: {
+                      type: 'add',
+                      pageTitle: '添加宝贝'
+                    }
+                  })
+                  localStorage.removeItem('childInfo')
+                }).catch(() => {
+                  this.backRouter()
+                })
+            }else if(res.school_id == '0'){
               this.$dialog.confirm({
-                title: '添加宝贝',
-                message: '请添加您的宝贝，掌握孩子阅读数据',
+                title: '加入学校',
+                message: '请加入学校，掌握学校动态',
                 confirmButtonText:'添加',
                 cancelButtonText:'稍后',
                 showCancelButton: true
               }).then(() => {
                 this.$router.push({
-                  name: 'edit-child',
+                  name: 'edit-school',
                   query: {
                     type: 'add',
-                    pageTitle: '添加宝贝'
+                    enter: 'my-home',
+                    id: res.child_id
                   }
                 })
-                localStorage.removeItem('childInfo')
               }).catch(() => {
                 this.backRouter()
               })
-          }else if(res.school_id == '0'){
-            this.$dialog.confirm({
-              title: '加入学校',
-              message: '请加入学校，掌握学校动态',
-              confirmButtonText:'添加',
-              cancelButtonText:'稍后',
-              showCancelButton: true
-            }).then(() => {
-              this.$router.push({
-                name: 'edit-school',
-                query: {
-                  type: 'add',
-                  enter: 'my-home',
-                  id: res.child_id
-                }
-              })
-            }).catch(() => {
-              this.backRouter()
-            })
+            }else{
+              this.getSchoolInfo()
+            }
           }else{
-            let data = {
-              params:{
-                school_id:this.$route.query.id
-              }
-            }
-
-            if(this.$route.query.id && this.$route.query.id!=''){
-              axios.get('/book/school/get_info', data).then(res => {
-                if (res.data.status == 1) {
-                  this.schoolInfo = res.data.data
-                }
-              })
-
-              this.getCate() 
-            }
+            this.$toast.fail('获取信息失败')
+            this.$router.push({
+              name:'home'
+            })
           }
-        }else{
-          this.$toast.fail('获取信息失败')
-          this.$router.push({
-            name:'home'
-          })
+        })
+      }else{
+        this.getSchoolInfo()
+      }
+    },
+    getSchoolInfo(){
+      let data = {
+        params:{
+          school_id:this.$route.query.id
         }
-      })
+      }
+
+      if(this.$route.query.id && this.$route.query.id!=''){
+        axios.get('/book/school/get_info', data).then(res => {
+          if (res.data.status == 1) {
+            this.schoolInfo = res.data.data
+          }
+        })
+
+        this.getCate() 
+      }
     },
     handleScroll() {
       this.getDomHeight()
@@ -215,46 +227,40 @@ export default {
         this.domHeight = this.$refs.head.offsetHeight / 2
       }
     },
-    // onClickLeft() {
-    //   if (this.$route.query.back && this.userDataState.school_id != '0') {
-    //     this.$router.push({
-    //       name: this.$route.query.back,
-    //       query: {
-    //         id: this.$route.query.banji_id
-    //       }
-    //     })
-    //   } else {
-    //     this.$router.push({
-    //       name: 'home'
-    //     })
-    //   }
-    // },
     onSelect(item) {
-      this.hackReset = false
       this.actionsheetShow = false
-      if (item.type == 'banji') {
-        this.$router.push({
-          name: 'class-home',
-          query: {
-            id: item.id,
-            back: this.$route.name
-          }
-        })
-      } else if (item.type == 'school') {
-        this.$router.push({
-          name: 'apps-school',
-          query: {
-            id: item.id,
-            back: this.$route.name,
-            banji_id: this.$route.query.id
-          }
-        })
+
+      switch(item.type){
+        case 'banji':
+          this.$router.push({
+            name: 'class-home',
+            query: {
+              id: item.id,
+              back: this.$route.name
+            }
+          })
+        break
+        case 'school':
+          this.$router.replace({
+            name: 'apps-school',
+            query: {
+              id: item.id,
+              back: this.$route.name,
+              banji_id: this.$route.query.id
+            }
+          })
+        break
+        case 'toMap':
+          this.$router.push({
+            name: 'school-map',
+            query:{
+              type:'preview'
+            }
+          })
+        break
       }
 
-      this.$nextTick(() => {
-        this.hackReset = true
-        this.request()
-      })
+      this.request()
     },
     formatBanjiTitle(text) {
       if (text && text.indexOf('班') == -1) {
@@ -267,7 +273,16 @@ export default {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
     backRouter(){
-      this.$router.go(-1)
+      if(this.$route.name == 'apps-school'){
+        this.$router.replace({
+          name:'AcceptSchoolList',
+          query:{
+            type:'page'
+          }
+        })
+      }else{
+        this.$router.go(-1)
+      }
     },
     getCate(){
       let data = {
@@ -318,8 +333,8 @@ export default {
 </script>
 <style scoped>
 .header-card {
-  padding: 2.8125rem /* 45/16 */ 0.9375rem /* 15/16 */ 0.625rem /* 10/16 */ 0.9375rem /* 15/16 */;
-  height: 8.125rem /* 130/16 */;
+  padding: 30px 0.9375rem /* 15/16 */ 0.625rem /* 10/16 */ 0.9375rem /* 15/16 */;
+  height: 9.375rem /* 150/16 */;
   position: relative;
   overflow: hidden;
 }
@@ -379,7 +394,6 @@ export default {
 }
 
 .apps{
-  margin-top: -.625rem /* 10/16 */;
   position: relative;
 }
 </style>

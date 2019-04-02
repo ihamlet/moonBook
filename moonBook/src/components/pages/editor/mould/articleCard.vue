@@ -122,6 +122,7 @@ export default {
     '$router': 'fetchData',
     cardList(val){
       this.add(val)
+      this.photoLength = 0
     }
   },
   methods: {

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-amap vid="amap" class="amap-demo" :center="center" :plugin="plugin" v-show='false' />
+    <el-amap :center="center" :plugin="plugin" v-show='false' />
     <keep-alive>
         <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>

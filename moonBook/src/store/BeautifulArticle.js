@@ -79,7 +79,6 @@ export default {
         setDelete(state,params){
             state.articleItem.splice(params,params+1)
             if(state.articleItem.length == 0){
-                console.log(111)
                 this.articleItem = [{
                     index:0,
                     photos:'',

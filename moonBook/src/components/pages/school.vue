@@ -202,7 +202,7 @@ export default {
     thearchJoin(data){
         axios.get('/book/SchoolTeacher/bind', data).then(res => {
           if (this.$route.query.registerType == 'teacher') {
-            this.$router.push({
+            this.$router.replace({
               name: 'edit-class',
               query: {
                 id: this.$route.query.id,

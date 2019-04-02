@@ -2,8 +2,7 @@
   <div class="read-list">
     <van-cell size='large' center>
       <div class="icon" slot="icon" @click="toRanking">
-        <i class="iconfont" :class="`icon-${type}`" v-if='type == "school"'>&#xe64e;</i>
-        <i class="iconfont" :class="`icon-${type}`" v-if='type == "banji"'>&#xe61d;</i>
+        <i class="iconfont">&#xe61d;</i>
         <span class="name">{{title}}</span>
       </div>
       <van-row v-if='count > 0'>
@@ -146,17 +145,12 @@ export default {
   font-size: 1.75rem /* 28/16 */;
 }
 
-.icon .iconfont.icon-banji {
+.icon .iconfont{
   background: linear-gradient(127deg, #ffeb3b, #ff9800);
   -webkit-background-clip: text;
   color: transparent;
 }
 
-.icon .iconfont.icon-school {
-  background: linear-gradient(127deg, #ff5722, #f44336);
-  -webkit-background-clip: text;
-  color: transparent;
-}
 
 .icon .name {
   font-size: 0.75rem /* 12/16 */;
@@ -182,7 +176,7 @@ export default {
 }
 
 .ranking-list {
-  padding-left: 0.625rem /* 10/16 */;
+  padding-left: .3125rem /* 5/16 */;
 }
 
 .ranking-list .item{

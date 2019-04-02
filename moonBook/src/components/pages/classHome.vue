@@ -170,90 +170,97 @@ export default {
     ...mapActions('openWX',['scanQRcode']),
     ...mapActions(['getUserData']),
     request() {
-      this.getUserData().then(res => {
-        if (res.id != null) {
-            if( res.child_id == '0'){
-              this.$dialog.confirm({
-                title: '添加宝贝',
-                message: '请添加您的宝贝，掌握孩子阅读数据',
-                confirmButtonText: '添加',
-                cancelButtonText: '稍后',
-                showCancelButton: true
-              }).then(() => {
-                this.$router.push({
-                  name: 'edit-child',
-                  query: {
-                    type: 'add',
-                    pageTitle: '添加宝贝'
-                  }
-                })
-
-                localStorage.removeItem('childInfo')
-              }).catch(() => {
-                this.backRouter()
-              })
-            } else if(res.school_id == '0'){
-              this.$dialog.confirm({
-                title: '加入学校',
-                message: '请加入学校，掌握班学校动态',
-                confirmButtonText: '加入',
-                cancelButtonText: '稍后',   
-                showCancelButton: true
-              }).then(() => {
-                this.$router.push({
-                  name: 'edit-school',
-                  query: {
-                    type: 'add',
-                    enter: 'my-home',
-                    id: res.child_id
-                  }
-                })
-              }).catch(() => {
-                this.backRouter()
-              })
-             }else if(res.banji_id == '0'){
+      if(this.$route.query.type != 'preview'){
+        this.getUserData().then(res => {
+          if (res.id != null) {
+              if( res.child_id == '0'){
                 this.$dialog.confirm({
-                  title: '加入班级',
-                  message: '请加入班级，掌握班级动态',
-                  confirmButtonText: '加入',
+                  title: '添加宝贝',
+                  message: '请添加您的宝贝，掌握孩子阅读数据',
+                  confirmButtonText: '添加',
                   cancelButtonText: '稍后',
                   showCancelButton: true
                 }).then(() => {
                   this.$router.push({
-                    name: 'edit-class',
+                    name: 'edit-child',
                     query: {
-                      id: res.child_id,
-                      back: 'class-home',
-                      school_id: res.school_id,
-                      type: 'add'
+                      type: 'add',
+                      pageTitle: '添加宝贝'
+                    }
+                  })
+
+                  localStorage.removeItem('childInfo')
+                }).catch(() => {
+                  this.backRouter()
+                })
+              } else if(res.school_id == '0'){
+                this.$dialog.confirm({
+                  title: '加入学校',
+                  message: '请加入学校，掌握班学校动态',
+                  confirmButtonText: '加入',
+                  cancelButtonText: '稍后',   
+                  showCancelButton: true
+                }).then(() => {
+                  this.$router.push({
+                    name: 'edit-school',
+                    query: {
+                      type: 'add',
+                      enter: 'my-home',
+                      id: res.child_id
                     }
                   })
                 }).catch(() => {
                   this.backRouter()
                 })
-              }else{
-                if(this.$route.query.id && this.$route.query.id!=''){
-                  let data = {
-                      params:{
-                        banji_id: this.$route.query.id
+              }else if(res.banji_id == '0'){
+                  this.$dialog.confirm({
+                    title: '加入班级',
+                    message: '请加入班级，掌握班级动态',
+                    confirmButtonText: '加入',
+                    cancelButtonText: '稍后',
+                    showCancelButton: true
+                  }).then(() => {
+                    this.$router.push({
+                      name: 'edit-class',
+                      query: {
+                        id: res.child_id,
+                        back: 'class-home',
+                        school_id: res.school_id,
+                        type: 'add'
                       }
-                    }
-
-                  axios.get('/book/SchoolBanji/getInfo',data).then(res => {
-                    if(res.data.status == 1){
-                      this.classInfo = res.data.data
-                    }
+                    })
+                  }).catch(() => {
+                    this.backRouter()
                   })
-                  this.getCate()
+                }else{
+                  this.getClassInfo()
                 }
-              }
-        } else {
-          this.$toast.fail('获取信息失败')
-          this.$router.push({
-            name:'home'
-          })
-        }
-      })
+          } else {
+            this.$toast.fail('获取信息失败')
+            this.$router.push({
+              name:'home'
+            })
+          }
+        })
+      }else{
+        this.getClassInfo()
+      }
+    },
+    getClassInfo(){
+      if(this.$route.query.id && this.$route.query.id!=''){
+        let data = {
+            params:{
+              banji_id: this.$route.query.id
+            }
+          }
+
+        axios.get('/book/SchoolBanji/getInfo',data).then(res => {
+          if(res.data.status == 1){
+            this.classInfo = res.data.data
+          }
+        })
+        this.getCate()
+      }
     },
     qrcode() {
       QRCode.toDataURL(window.location.href).then(url => {
@@ -400,7 +407,7 @@ export default {
 
 .header {
   padding: 2.8125rem /* 45/16 */ 1.25rem /* 20/16 */ 0.625rem /* 10/16 */;
-  height: 4.375rem /* 70/16 */;
+  height: 3.75rem /* 60/16 */;
   justify-content: space-between;
 }
 

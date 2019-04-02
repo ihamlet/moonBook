@@ -48,7 +48,7 @@ import My from '@/components/My'
 
 import AppsFind from '@/components/apps/find/find'
 import AppsSchool from '@/components/apps/school/schoolHome'
-
+import SchoolMap from '@/components/apps/school/schoolMap'
 
 import Register from '@/components/pages/register'
 
@@ -77,7 +77,6 @@ import ReadGuide from '@/components/pages/guided/readGuide'
 //打卡记录
 import punchBack from '@/components/pages/punch/punchBack'
 import punchList from '@/components/pages/punch/punchList'
-
 
 Vue.use(Router)
 
@@ -412,6 +411,13 @@ export default new Router({
           title: '学校主页',
           isFooterBar: false,
           keepAlive: true
+        }
+      },{
+        path:'/school-map',
+        name:'school-map',
+        component: SchoolMap,
+        meta:{
+          isFooterBar: false,
         }
       }]
     },{

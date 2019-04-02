@@ -1,6 +1,6 @@
 <template>
   <div class="school-list">
-    <div class="fixed-bar">
+    <div class="fixed-bar" v-if='$route.query.type!="page"'>
       <search-bar prompt='搜索学校名称' @show='searchListShow = true' />
     </div>
     <div class="container">
@@ -9,16 +9,20 @@
             <div class="list">
                 <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
                     <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" is-link class="flex flex-align" @click="select(item)">
-                    <div class="item">
-                        <div class="school-info">
-                        <div class="school-name">
-                            {{item.title}}
-                        </div>
-                        <div class="school-address" v-line-clamp:20="1">
-                            {{item.addr}}
-                        </div>
-                        </div>
-                    </div>
+                      <div class="item">
+                          <div class="school-info">
+                            <div class="school-name">
+                                {{item.title}}
+                            </div>
+                            <div class="school-address">
+                                <div class="addr"  v-line-clamp:20="1">{{item.addr}}</div>
+                                <div class="remark" v-if='$route.query.type=="page"'>
+                                  <van-tag mark type="primary" v-if='item.level&&item.level!="未定级"'>{{item.level}}</van-tag>
+                                  <span class="distance">距离:{{item.distance}}</span>
+                                </div>
+                            </div>
+                          </div>
+                      </div>
                     </van-cell>
                 </van-list>
             </div>
@@ -101,15 +105,25 @@ export default {
         })
     },
     select(item) {
-      if (item.shelf_id > 0) {
+      if(this.$route.query.type == 'page'){
         this.$router.push({
-            name:'AcceptCardLevel',
-            query:{
-                id: item.shelf_id
-            }
+          name:'apps-school',
+          query:{
+            id: item.school_id,
+            type: 'preview'
+          }
         })
-      } else {
-        this.$notify('该学校暂未有书架')
+      }else{
+        if (item.shelf_id > 0) {
+          this.$router.push({
+              name:'AcceptCardLevel',
+              query:{
+                  id: item.shelf_id
+              }
+          })
+        } else {
+          this.$toast('该学校暂未有书架')
+        }
       }
     }
   }
@@ -117,8 +131,8 @@ export default {
 </script>
 <style scoped>
 .school-name {
-  color: #303133;
-  font-size: 1rem /* 16/16 */;
+  color: #000000;
+  font-size: 1.0625rem /* 17/16 */;
 }
 
 .school-address {

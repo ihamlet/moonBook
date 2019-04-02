@@ -1,10 +1,9 @@
 <template>
   <div class="ranking-page page-padding">
-    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''" title="阅读之星榜" fixed>
-      <!-- <div class="head-bar-text" slot="left">
-        <van-icon name="arrow-left" />
-        <span class="text">{{$route.query.back?'返回':'我的'}}</span>
-      </div> -->
+    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''" title="阅读之星榜" fixed :border='false'>
+        <div class="child-avatar" slot="right">
+          
+        </div>
     </van-nav-bar>
     <div class="container">
       <div class="header" ref='head'>

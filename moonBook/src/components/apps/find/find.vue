@@ -33,11 +33,7 @@ export default {
     ...mapGetters(['managerState']),
     tab(){
       let array = []
-      if( this.$route.query.tid ){
-        array = [{
-          title:'亲子阅读' 
-        }]
-      }else if(this.$route.query.cid){
+      if(this.$route.query.cid){
         array.push({
           title:'全部',
           cate_id: this.$route.query.cid
@@ -90,9 +86,7 @@ export default {
       }
 
       axios.get('/book/SchoolArticle/recommendUsers',data).then(res => {
-        if(res.status == 200){
           this.freshList = res.data
-        }
       })
 
       this.getCate()
@@ -105,25 +99,9 @@ export default {
       }
 
       axios.get('/book/schoolArticleCate/getList',data).then(res => {
-        if(res.status == 200){
           this.cateList = res.data[0].children
-        }
       })
-    },
-    // onClickLeft(){
-    //   if(this.$route.query.back){
-    //     this.$router.push({
-    //       name:this.$route.query.back,
-    //       query:{
-    //         id:this.$route.query.id
-    //       }
-    //     })
-    //   }else{
-    //     this.$router.push({
-    //       name:'home'
-    //     })
-    //   }
-    // }
+    }
   }
 }
 </script>

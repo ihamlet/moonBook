@@ -62,14 +62,14 @@ export default {
           name: '老师',
           subtitle: '阅读课教学 阅读方法 育儿交流',
           type: 'teacher',
-          iconClass: 'icon-teacher',
+          iconClass: 'icon-principal',
           index:1
         },
         {
           name: '园长/校长',
           subtitle: '学校风采 掌握教育动态',
           type: 'headmaster',
-          iconClass: 'icon-principal',
+          iconClass: 'icon-teacher',
           index:1
         }
       ]

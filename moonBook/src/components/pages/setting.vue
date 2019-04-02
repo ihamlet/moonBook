@@ -52,7 +52,7 @@ export default {
           if(res.data.status == 1){
             this.school_id = res.data.data.school_id
             this.setting.settingSchool = res.data.data.school_name
-            this.setting.settingClass = res.data.data.banji_name
+            this.setting.settingClass = this.formatBanjiTitle(res.data.data.banji_name)
           }
         })
       } else {
@@ -91,6 +91,13 @@ export default {
           registerType: this.$route.query.registerType
         }
       })
+    },
+    formatBanjiTitle(text){
+      if (text && text.indexOf('班') == -1) {
+        return text + '班'
+      } else {
+        return text
+      }
     }
   }
 }

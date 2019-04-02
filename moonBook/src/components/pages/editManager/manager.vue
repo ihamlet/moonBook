@@ -1,14 +1,18 @@
 <template>
   <div class="add-child">
-    <van-nav-bar :title="$route.query.pageTitle" />
-    <div class="verify" v-if='managerData.is_confirm!=-1'>
-      {{status}}
-    </div>
-    <div class="teacher-form">
+    <van-nav-bar :title="$route.query.pageTitle" :border='false'/>
+
+    <van-steps :active="active" active-icon="success" active-color="#38f">
+      <van-step>注册申请</van-step>
+      <van-step>等待审核</van-step>
+      <van-step>通过</van-step>
+    </van-steps>
+
+    <div class="teacher-form" v-if='active == 0'>
       <van-radio-group>
         <div class="form-title">学校设置</div>
         <van-cell-group>
-          <van-cell value='设置' :title="managerData.school_name" :label='managerData.banji_name' title-class='cell-school-title'
+          <van-cell value='设置' :title="managerData.school_name" :label='formatBanjiTitle(managerData.banji_name)' title-class='cell-school-title'
             center is-link @click="toSetting(managerData)" />
         </van-cell-group>
       </van-radio-group>
@@ -23,18 +27,35 @@
         <van-picker :columns="jobList" @change="onChange" />
       </van-popup>
     </div>
+
+    <div class="verify" v-if='active == 1'>
+      <van-cell-group>
+        <van-cell title="提交时间" :value="getTime(managerData.update_time)"/>
+        <van-cell title="学校" :label="managerData.school_name" is-link center @click="toSchool"/>
+        <van-cell v-if='managerData.banji_name' title="班级" :label="formatBanjiTitle(managerData.banji_name)" is-link center @click="toBanji"/>
+        <van-cell title="职务" :value="managerData.duty"/>
+      </van-cell-group>
+    </div>
+
+    <div class="manage" v-if='active == 2'>
+      <apps :appsList='appsList'/>
+    </div>
+
+    <div class="footer-bar">
+      <van-button class="theme-btn" square type="primary" size="large" :loading='loading'  @click="setStep">{{btnText}}</van-button> 
+    </div>
   </div>
 </template>
 <script>
 import axios from './../../lib/js/api'
 import { mapActions, mapGetters } from 'vuex'
 import { format } from './../../lib/js/util'
-import avatar from './../../module/avatar'
+import apps from './../../module/myModule/apps'
 
 export default {
   name: 'teacher',
   components: {
-    avatar
+    apps
   },
   computed: {
     ...mapGetters(['userDataState', 'userPointState']),
@@ -78,7 +99,31 @@ export default {
         is_confirm: -1
       },
       schoolInfo: '',
-      school:''
+      school:'',
+      active: 0,
+      btnText:'下一步',
+      loading: false,
+      appsList: [{
+        name: '代借还',
+        iconClass: 'icon-huanshu',
+        routeLink:'/book/ManageBorrow/borrow',
+      }, {
+        name: '定位码',
+        iconClass: 'icon-saomadingwei',
+        routeLink:'/book/ManageShelf/location'
+      }, {
+        name: '数据',
+        iconClass: 'icon-shuju',
+        routeLink:'/SchoolManage/MemberCard'
+      }, {
+        name: '权限管理',
+        iconClass: 'icon-quanxian',
+        routeLink:'/SchoolManage'
+      }, {
+        name: '捐书',
+        iconClass: 'icon-shujia',
+        routeLink: '/book/member/entry_donation'
+      }]
     }
   },
   created() {
@@ -86,7 +131,20 @@ export default {
     this.office = this.managerData.duty
   },
   watch: {
-    '$router': 'fetchData'
+    '$router': 'fetchData',
+    active(val){
+      switch(val){
+        case 0:
+          this.btnText = '下一步'
+        break
+        case 1:
+          this.btnText = '修改申请'
+        break
+        case 2:
+          this.btnText = '修改申请'
+        break
+      }
+    }
   },
   methods: {
     ...mapActions(['getUserData']),
@@ -105,6 +163,19 @@ export default {
       axios.get('/book/SchoolTeacher/getMine', data).then(res => {
         if(res.data.status){
           this.managerData = res.data.data
+
+          switch(res.data.data.is_confirm){
+            case '0':
+              this.active = 1 //正在审核
+            break
+            case '1': //审核通过
+              this.active = 2
+            break
+            case '2': //审核被拒绝
+              this.active = 1
+            break
+          }
+
           this.schoolInfo = res.data.school
           this.office = res.data.data.duty
         }
@@ -118,7 +189,7 @@ export default {
           cancelButtonText: '取消',
           showCancelButton: true
         }).then(() => {
-          this.$router.push({
+          this.$router.replace({
             name: 'edit-setting',
             query: {
               registerType: this.$route.query.registerType,
@@ -146,23 +217,6 @@ export default {
       }
     },
     onChange(picker, value, index) {
-      let data = {
-        params: {
-          school_name: this.managerData.school_name,
-          cityname: this.schoolInfo.cityname,
-          lat: this.schoolInfo.lat,
-          lng: this.schoolInfo.lng,
-          amap_id: this.schoolInfo.amap_id,
-          typecode: this.managerData.typecode
-        }
-      }
-
-      if (this.$route.query.registerType == 'headmaster') {
-        data.params.is_master = 1
-      }
-
-      data.params.duty = value
-
       if (this.managerData.is_confirm == 1) {
         this.$dialog.alert({
           message: '您的注册表单已经通过审核，修改将会重新提交表单进行审核，您确定要修改吗？',
@@ -171,44 +225,84 @@ export default {
           showCancelButton: true
         }).then(() => {
           this.office = value
-          axios.get('/book/SchoolTeacher/bind', data).then(res => {
-            if (res.data.status == 1) {
-              this.$toast.success('操作成功')
-            } else {
-              this.$toast.fail('操作失败')
-            }
-          })
+
         }).catch(() => {
           this.show = false
         })
       } else {
         this.office = value
-        axios.get('/book/SchoolTeacher/bind', data).then(res => {
-          if (res.data.status == 1) {
-            this.$toast.success('操作成功')
-          } else {
-            this.$toast.fail('操作失败')
+      }
+    },
+    setStep(){
+      switch(this.active){
+        case 0:
+          this.loading = true
+          let data = {
+            params: {
+              school_id: this.managerData.school_id,
+              school_name: this.managerData.school_name,
+              cityname: this.schoolInfo.cityname,
+              lat: this.schoolInfo.lat,
+              lng: this.schoolInfo.lng,
+              amap_id: this.schoolInfo.amap_id,
+              typecode: this.managerData.typecode
+            }
           }
-        })
+
+          if (this.$route.query.registerType == 'headmaster') {
+            data.params.is_master = 1
+          }
+
+          data.params.duty = this.office
+          
+          axios.get('/book/SchoolTeacher/bind', data).then(res => {
+            this.loading = false
+            if (res.data.status == 1) {
+              this.active = 1
+              this.fetchData()
+            }
+          })
+        break
+        case 1:
+          this.active = 0
+        break
+        case 2:
+          this.active = 0
+        break
+      }
+    },
+    toSchool(){
+      this.$router.push({
+        name:'apps-school',
+        query:{
+          id: this.managerData.school_id,
+          type:'preview'
+        }
+      })
+    },
+    toBanji(){
+      this.$router.push({
+        name:'class-home',
+        query:{
+          id: this.managerData.banji_id,
+          type:'preview'
+        }
+      })
+    },
+    getTime(time){
+      return format(time*1000,'yyyy-MM-dd')
+    },
+    formatBanjiTitle(text){
+      if (text && text.indexOf('班') == -1) {
+        return text + '班'
+      } else {
+        return text
       }
     }
   }
 }
 </script>
 <style scoped>
-.avatar-uploader .box {
-  width: 100%;
-  height: 100%;
-  background: #f2f2f2;
-  text-align: center;
-}
-
-.avatar-uploader .box .icon.van-icon {
-  font-size: 1.625rem /* 26/16 */;
-  line-height: 6.25rem /* 100/16 */;
-  color: #9e9e9e;
-}
-
 .wait-prompt {
   display: grid;
   text-align: center;
@@ -230,12 +324,14 @@ export default {
   margin: 1.25rem /* 20/16 */ 0;
 }
 
-.verify {
-  text-align: center;
-  height: 7.5rem /* 120/16 */;
-  line-height: 7.5rem /* 120/16 */;
-  font-size: 0.875rem /* 14/16 */;
-  color: #909399;
+.footer-bar{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.manage{
+  padding: 30px 10px;
 }
 </style>
 <style>
