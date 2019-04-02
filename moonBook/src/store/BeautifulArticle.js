@@ -22,12 +22,12 @@ export default {
                 let video = ''
                 let text = ''
 
-                if(element.photos){
-                  if(element.photos.type == "image"){
+            
+                if(element.type == "image"){
                     img = `<img preview='1' data-pswp-uid='${i}' src='${element.photos.thumb}'></img>`
-                  }    
-                  if(element.photos.type == 'video'){
-                    video = `
+                }    
+                if(element.type == 'video'){
+                video = `
                     <video 
                         src='${element.photos.photo}' 
                         poster='${element.photos.thumb}'
@@ -39,11 +39,10 @@ export default {
                         x5-video-player-type="h5"
                     >
                     </video>`
-                  }
                 }
-      
+                
                 if(element.text){
-                  text =  element.text.text
+                  text =  element.text
                 }
       
                 let content = [img,video,text].join('\x0c')
@@ -72,19 +71,25 @@ export default {
         setAdd(state, params){
             if(params.length){
                 state.articleItem.splice(state.index,0,params[params.length - 1])
+            }else{
+                state.articleItem.splice(state.index,0,params)
             }
 
             state.index++
         },
         setDelete(state,params){
-            state.articleItem.splice(params,params+1)
-            if(state.articleItem.length == 0){
-                this.articleItem = [{
-                    index:0,
-                    photos:'',
-                    text:''
-                }]
-            }
+            state.articleItem.splice(params, params + 1)
+        },
+        setChange(state, params){
+            state.articleItem.forEach(e =>{
+                if(e.index == params.index){
+                    if(params.text){
+                        e.text = params.text
+                    }else{
+                        e.photos = params.photos
+                    }
+                }
+            })
         },
         setPercent(state, params){
             state.percentNum = params
@@ -107,6 +112,10 @@ export default {
         //删除
         delete(context,products){
             context.commit('setDelete', products)
+        },
+        //修改
+        change(context,products){
+            context.commit('setChange',products)
         },
         //进度条
         requestPercent(context,products){

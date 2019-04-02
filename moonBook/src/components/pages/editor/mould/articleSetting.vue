@@ -20,7 +20,7 @@
     </van-popup>
 
     <div class="footer-bar" v-if='type!="mould"'>
-      <van-button class="theme-btn" square size="normal" type="primary" @click="onClickRelease">发 布</van-button>
+      <van-button class="theme-btn" square size="normal" type="primary" :loading='loading' @click="onClickRelease">发 布</van-button>
     </div>
   </div>
 </template>
@@ -58,6 +58,7 @@ export default {
       show: false,
       isResultShow: false,
       selectGroup: false,
+      loading:false,
       groupList: [],
       resultList: [],
       topicList: [],
@@ -214,7 +215,10 @@ export default {
             data.school_id = this.$route.query.id
           }
 
+          this.loading = true
+
           this.release(data).then(res=>{
+            this.loading = false
             switch(res){
               case 1:
                 switch(true){
