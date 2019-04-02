@@ -119,8 +119,6 @@ export default {
     cardList(val){
       this.add(val)
       this.photoLength = 0
-<<<<<<< HEAD
-=======
     },
     imgList:{
       handler(val) {
@@ -128,7 +126,6 @@ export default {
         this.photoLength = val.length
       },
       deep: true
->>>>>>> 6387d036a01cd079aa04e0885f4c8451872f5d4f
     }
   },
   methods: {
