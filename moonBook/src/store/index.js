@@ -164,55 +164,81 @@ const actions = {
     })
   },
   getSearch(context, products) {
-      let data = {
-        Key: context.state.amapApiKey,
-        keywords: products.keywords,
-        type: products.type,
-        location: products.location,
-        city: products.city,
-        citylimit: true,
-        datatype: 'all'
-      }
+    let data = {
+      Key: context.state.amapApiKey,
+      keywords: products.keywords,
+      type: products.type,
+      location: products.location,
+      city: products.city,
+      citylimit: true,
+      datatype: 'all'
+    }
 
-      let wmData = {
-        keyword: products.keywords,
-        lng: products.lng,
-        lat: products.lat,
-        schoolType: products.schoolType
-      }
+    let wmData = {
+      keyword: products.keywords,
+      lng: products.lng,
+      lat: products.lat,
+      school_type: products.schoolType
+    }
 
-      let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${ data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
-      let WMlifeSearchSchoolLink = '/book/school/getList'
+    let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${ data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
+    let WMlifeSearchSchoolLink = '/book/school/getList'
 
-      return new Promise((resolve, reject) => {
-        axios.get(WMlifeSearchSchoolLink,{params:wmData}).then(res=>{
-            if(res.data.data.length){
+    return new Promise((resolve, reject) => {
+      axios.get(WMlifeSearchSchoolLink,{params:wmData}).then(res=>{
+          if(res.data.data.length){
+            resolve( {
+              resData: res.data.data,
+              searchType: 'wmSearchSchool'
+            })
+          }else{
+            fetchJsonp(amapApiLink).then(response => {
+              return response.json()
+            }).then(res=>{
               resolve( {
-                resData: res.data.data,
-                searchType: 'wmSearchSchool'
+                resData: res.tips,
+                searchType: 'amapSearchSchool'
               })
-            }else{
-              fetchJsonp(amapApiLink).then(response => {
-                return response.json()
-              }).then(res=>{
-                resolve( {
-                  resData: res.tips,
-                  searchType: 'amapSearchSchool'
-                })
-              })
-            }
+            })
+          }
+      })
+    })
+  },
+  searchCity(context,products){
+    let data = {
+      Key: context.state.amapApiKey,
+      keywords: products.keywords,
+      type: products.type,
+      location: products.location,
+      city: products.city,
+      citylimit: true,
+      datatype: products.datatype
+    }
+
+    let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${ data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
+    return new Promise((resolve, reject) => {
+      fetchJsonp(amapApiLink).then(response => {
+        return response.json()
+      }).then(res=>{
+        resolve( {
+          resData: res.tips,
+          searchType: 'amapSearchSchool'
         })
       })
-    },
+    })
+  },
   getCityDistrict(context, products) {
     let data = {
       Key: context.state.amapApiKey,
       keywords: products.city,
       subdistrict: 2,
+      type: products.type,
+      location: products.location,
+      datatype: products.datatype,
       extensions: 'base'
     }
 
-    let amamApiLink = `https://restapi.amap.com/v3/config/district?key=${data.Key}&keywords=${data.keywords}&subdistrict=${data.subdistrict}&extensions=${data.extensions}`
+    let amamApiLink = `https://restapi.amap.com/v3/config/district?key=${data.Key}&keywords=${data.keywords}&subdistrict=${data.subdistrict}&extensions=${data.extensions}&type=${data.type}&location=${data.location}&datatype=${data.datatype}`
 
     return new Promise((resolve, reject) => {
       fetchJsonp(amamApiLink)

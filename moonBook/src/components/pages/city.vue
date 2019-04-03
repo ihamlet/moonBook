@@ -1,57 +1,69 @@
 <template>
-  <div class="city-list" @scroll.passive="onScroll($event)">
-    <div class="bar flex felx-align fixed" :class="isDevice == 'ios'?'ios':'android'">
-      <i class="iconfont" @click="$emit('close')">&#xe657;</i>
-      <div class="search" @click="$emit('show')">
-        <search-bar :prompt='prompt' />
+  <div class="city-list">
+    <div class="bar flex felx-align fixed">
+      <div class="search">
+        <van-search placeholder="请输入城市名/拼音" v-model="keyword" show-action shape="round" @search="onSearch">
+            <div class="theme-color" slot="action" @click="onSearch">
+              搜索
+            </div>
+        </van-search>
       </div>
     </div>
-    <div class="new-city" ref='domHeight' :class="isDevice == 'ios'?'ios':'android'">
-      <div class="current-city">
-        <div class="district">
-          <van-cell-group v-if='userPointState'>
-            <van-cell :title="`当前城市:${userPointState.city}`" is-link :arrow-direction="isSilde?'up':'down'" value="切换区县"
-              @click="silde" />
-          </van-cell-group>
-          <div class="list" v-show='isSilde'>
-            <div class="item scroll-x">
-              <div class="district-name scroll-item" @click="selectCity(item.name)" v-for='(item,index) in cityCounty'
-                :key="index">
-                {{item.name}}
+    <div class="content" v-if='list.length'>
+      <div class="list">
+        <van-cell-group>
+          <van-cell :title="item.name" v-for='(item,index) in list' :key="index" @click="selectCity(item.name)" clickable center/>
+        </van-cell-group>
+      </div>
+    </div>
+    <div class="content" v-else>
+      <div class="new-city" ref='domHeight'>
+        <div class="current-city">
+          <div class="district">
+            <van-cell-group v-if='userPointState'>
+              <van-cell :title="`当前城市:${userPointState.city}`" is-link :arrow-direction="isSilde?'up':'down'" value="切换区县"
+                @click="silde" />
+            </van-cell-group>
+            <div class="list" v-show='isSilde'>
+              <div class="item scroll-x">
+                <div class="district-name scroll-item" @click="selectCity(item.name)" v-for='(item,index) in cityCounty'
+                  :key="index">
+                  {{item.name}}
+                </div>
               </div>
             </div>
           </div>
+          <div class="form-title">定位/最近访问</div>
+          <ul class="recent flex wrap">
+            <li class="city-name" @click="selectCity(city)" v-line-clamp:20="1" v-for='(city,index) in cityHistory' :key="index">
+              {{city}}
+            </li>
+          </ul>
         </div>
-        <div class="form-title">定位/最近访问</div>
-        <ul class="recent flex wrap">
-          <li class="city-name" @click="selectCity(city)" v-line-clamp:20="1" v-for='(city,index) in cityHistory' :key="index">
-            {{city}}
-          </li>
-        </ul>
-      </div>
 
-      <div class="hot-city">
-        <div class="form-title">热门城市</div>
-        <ul class="flex wrap">
-          <li class="city-name" @click="selectCity(city)" v-for='(city,index) in hotCity' :key="index">
-            {{city}}
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="list">
-      <div class="node-letter" v-if='domHeight < scrollTop'>{{nodeLetter}}</div>
-      <div class="item" ref='domItem' v-for='(item,index) in cityData' :key='index'>
-        <div class="letter">{{item.code}}</div>
-        <div class="city" @click="selectCity(city)" v-for='(city,itemIndex) in item.cityList' :key='itemIndex'>
-          {{city}}
+        <div class="hot-city">
+          <div class="form-title">热门城市</div>
+          <ul class="flex wrap">
+            <li class="city-name" @click="selectCity(city)" v-for='(city,index) in hotCity' :key="index">
+              {{city}}
+            </li>
+          </ul>
         </div>
       </div>
-      <div class="letter-list" :class="{shade:addClass}">
-        <div class="index-letter" @touchstart='touchStart($event)' @touchmove="touchMove($event)" @touchend='touchEnd'>
-          <div class="item theme-color" @click="gotoIndex(i)" v-for='(item,i) in cityData' :key="i">
-            <b class="index-txt">{{item.code}}</b>
-            <i class="bubble" :class="{show:i == bubbleIsShow}">{{item.code}}</i>
+      <div class="list">
+        <div class="node-letter" v-show='height < scrollTop' :style="{top:scrollTop+54+'px'}">{{nodeLetter}}</div>
+        <van-cell-group v-for='(item,index) in cityData' :key='index'>
+          <div class="item" ref='domItem'>
+            <div class="letter">{{item.code}}</div>
+            <van-cell :title='city' @click="selectCity(city)" v-for='(city,itemIndex) in item.cityList' :key='itemIndex' clickable/>
+          </div>
+        </van-cell-group>
+        <div class="letter-list" :class="{shade:addClass}">
+          <div class="index-letter" @touchstart='touchStart($event)' @touchmove="touchMove($event)" @touchend='touchEnd'>
+            <div class="item theme-color" @click="gotoIndex(i)" v-for='(item,i) in cityData' :key="i">
+              <b class="index-txt">{{item.code}}</b>
+              <i class="bubble" :class="{show:i == bubbleIsShow}">{{item.code}}</i>
+            </div>
           </div>
         </div>
       </div>
@@ -59,16 +71,12 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from './../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
-import searchBar from './search/searchBar'
 import cityArray from './../lib/js/city.js'
 
 export default {
   name: 'city',
-  components: {
-    searchBar,
-  },
   computed: {
     ...mapGetters(['userPointState'])
   },
@@ -79,13 +87,15 @@ export default {
       scrollTop: '',
       cityData: cityArray,
       bubbleIsShow: null,
+      nodeIndex: 0,
       nodeLetter: 'A',
       addClass: false,
       hotCity: [],
-      domHeight: '',
       cityHistory: [],
       cityCounty: [],
-      isDevice: ''
+      keyword:'',
+      height:0,
+      list:[]
     }
   },
   created() {
@@ -97,17 +107,22 @@ export default {
         this.cityHistory = [...new Set(array)]
       }
     }
-
+    this.$nextTick(()=>{
+      this.height = this.$refs.domHeight.offsetHeight
+    })
     this.fetchData()
   },
-  mounted() {
-    this.device()
+  mounted () {
+    window.addEventListener('scroll', this.handleScroll)   
   },
   watch: {
-    '$router': 'fetchData'
+    '$router': 'fetchData',
+    keyword(val){
+      this.onSearch(val)
+    }
   },
   methods: {
-    ...mapActions(['getCityDistrict']),
+    ...mapActions(['getCityDistrict','searchCity']),
     fetchData() {
       axios.get('/book/Location/getHots').then(res => {
         if(res.data.status == 1){
@@ -115,25 +130,16 @@ export default {
         }
       })
     },
-    onScroll(e) {
-      this.scrollTop = e.target.scrollTop
-      this.domHeight = this.$refs.domHeight.offsetHeight
-      this.$refs.domItem.forEach((event, i) => {
-        if (e.target.scrollTop >= event.offsetTop) {
-          this.nodeLetter = this.cityData[i].code
-        }
+    handleScroll() {
+      this.scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      this.$nextTick(()=>{
+        this.$refs.domItem.forEach((event, i) => {
+            if( this.scrollTop >= event.offsetParent.offsetTop ){
+                this.nodeIndex = i
+                this.nodeLetter = this.cityData[i].code
+            }
+        })
       })
-    },
-    device() {
-      let u = navigator.userAgent, app = navigator.appVersion;
-      let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
-      let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-      if (isAndroid) {
-        this.isDevice = 'android'
-      }
-      if (isIOS) {
-        this.isDevice = 'ios'
-      }
     },
     gotoIndex(i) {
       this.$refs.domItem[i].scrollIntoView()
@@ -162,8 +168,8 @@ export default {
       this.getCityDistrict(products)
       this.cityHistory = [...new Set(this.cityHistory)]
       localStorage.setItem('cityHistory', this.cityHistory)
-      this.$emit('close')
       this.isSilde = false
+      this.$router.go(-1)
     },
     silde() {
       if (this.userPointState) {
@@ -177,33 +183,34 @@ export default {
         })
       }
       this.isSilde = !this.isSilde
+    },
+    onSearch(val){
+        let products = {
+            keywords: val,
+            type: '190102|190103|190104|190105',
+            location: this.userPointState.location,
+            city: '',
+            datatype:'poi'
+        }
+
+        this.searchCity(products).then(res=>{
+            this.list = res.resData
+        })
     }
   }
 }
 </script>
 <style scoped>
 .fixed {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 1001;
 }
 
-.fixed.ios {
-  position: sticky;
-}
-
-.city-list {
-  position: static;
-  top: 0;
-  height: 100%;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-}
-
 .bar {
   width: 100%;
-  background: #ddd;
+  background: #f7f7f7;
   line-height: 2.75rem /* 44/16 */;
 }
 
@@ -220,12 +227,14 @@ export default {
 .letter {
   padding-left: 0.625rem /* 10/16 */;
   height: 1.25rem /* 20/16 */;
+  line-height: 20px;
   background: #e4e7ed;
 }
 
-.node-letter {
-  position: sticky;
-  top: 2.75rem /* 44/16 */;
+.node-letter{
+  position: absolute;
+  z-index: 999;
+  width: 100%;
 }
 
 .city {
@@ -270,14 +279,14 @@ export default {
 
 .index-letter .item {
   display: block;
-  height: 1.5rem /* 24/16 */;
-  line-height: 1.5rem /* 24/16 */;
+  height: 1.25rem /* 20/16 */;
+  line-height: 1.25rem /* 20/16 */;
   position: relative;
 }
 
 b.index-txt {
-  width: 1.5rem /* 24/16 */;
-  height: 1.5rem /* 24/16 */;
+  width: 20px;
+  height: 20px;
   display: block;
   text-align: center;
   position: absolute;
@@ -353,7 +362,7 @@ i.bubble.show {
 .city-name {
   width: 3.75rem /* 60/16 */;
   text-align: center;
-  background: #fff;
+  background: #f7f7f7;
   height: 2rem /* 32/16 */;
   line-height: 2rem /* 32/16 */;
   margin-left: 0.625rem /* 10/16 */;
@@ -367,12 +376,8 @@ i.bubble.show {
 }
 
 .new-city {
-  background: #f2f2f2;
+  background: #fff;
   padding-top: 2.8125rem /* 45/16 */;
-}
-
-.new-city.ios {
-  padding-top: 0;
 }
 
 ul.recent li:first-child {
@@ -390,5 +395,11 @@ ul.recent li:first-child::before {
   -moz-osx-font-smoothing: grayscale;
   left: 0.625rem /* 10/16 */;
   color: #0084ff;
+}
+
+.list{
+  background: #fff;
+  overflow: hidden;
+  width: 100%;
 }
 </style>

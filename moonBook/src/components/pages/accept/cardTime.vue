@@ -49,7 +49,7 @@
               <span class="red" v-if="selectFees.gold_cut_price"> -￥{{selectFees.gold_cut_price}}</span> 
           </van-cell>
           <van-cell value-class='wm-coin' v-if="selectFees.gold_cut_price">
-            <div>已使用微美币抵扣<span class="red">{{selectFees.cut_off}}</span>的会员费</div>
+            <div>已使用微美币抵扣<span class="red">{{selectFees.cut_off}}%</span>的会员费</div>
             <div class="red">扣除{{selectFees.gold}}微美币,剩余{{selectFees.gold_remain}}微美币</div>
           </van-cell>
           <van-cell title="小计" size="large" :value="`￥${leves.price/100 + selectFees.price/100 - (selectFees.gold_cut_price||0)}`" />

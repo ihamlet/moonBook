@@ -152,12 +152,12 @@ export default {
   color: #c0c4cc;
   text-align: center;
   line-height: 6.25rem /* 100/16 */;
-  border: 0.125rem /* 2/16 */ dashed #ebeef5;
-  border-radius: 0.625rem /* 10/16 */;
 }
 
 .booth {
-  padding: 0.625rem /* 10/16 */;
+  position: fixed;
+  width: 100%;
+  bottom: 65px;
 }
 
 .btn-box {
@@ -171,9 +171,11 @@ export default {
 
 .footer-bar {
   position: fixed;
-  bottom: 0.625rem /* 10/16 */;
+  padding: 10px 0;
   width: 100%;
   z-index: 2010;
+  background: #fff;
+  bottom: 0;
 }
 
 .success {

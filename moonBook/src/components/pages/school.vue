@@ -44,13 +44,11 @@
 import axios from './../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
 import avatar from './../module/avatar'
-import searchBar from './../module/search/searchBar'
 import schoolCard from './../module/search/schoolCard'
 
 export default {
   name: 'edit-school',
   components: {
-    searchBar,
     schoolCard,
     avatar
   },

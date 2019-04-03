@@ -24,7 +24,7 @@
       </div>
 
       <van-popup v-model="show" position="bottom" get-container='#app'>
-        <van-field v-model="office" placeholder="填写职位" input-align='center'/>
+        <van-field label="填写职位" v-model="office" placeholder="职位信息" input-align='right'/>
         <van-picker :columns="jobList" @change="onChange" />
       </van-popup>
     </div>

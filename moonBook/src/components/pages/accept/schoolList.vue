@@ -10,13 +10,13 @@
     <div class="container" :class="$route.query.type">
       <van-tabs type="card" swipeable animated color='#0084ff' @change='changeTab'>
           <van-tab :title="list.title" v-for='(list,index) in tab' :key="index">
-              <div class="list" v-if='index == tabIndex'>
-                  <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad">
-                      <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" is-link class="flex flex-align" @click="select(item)">
-                          <schoolCard :item='item' searchType='wmSearchSchool'/>
-                      </van-cell>
-                  </van-list>
-              </div>
+            <div class="list" v-if='index == tabIndex'>
+              <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad">
+                  <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" is-link class="flex flex-align" @click="select(item)">
+                      <schoolCard :item='item' searchType='wmSearchSchool'/>
+                  </van-cell>
+              </van-list>
+            </div>
           </van-tab>
       </van-tabs>
     </div>
@@ -29,13 +29,11 @@
 import axios from './../../lib/js/api'
 
 import { mapActions,mapGetters } from 'vuex'
-import searchBar from './../../module/search/searchBar'
 import schoolCard from './../../module/search/schoolCard'
 
 export default {
   name: 'school-list',
   components: {
-    searchBar,
     schoolCard  
   },
   computed: {

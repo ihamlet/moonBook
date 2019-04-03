@@ -1,7 +1,7 @@
 <template>
     <div class="home page-padding">
         <div class="head-bar flex flex-align" :class="[themeBarSearch?'theme-background':'default-head-bar-background']">
-            <div class="left-btn" v-line-clamp:20="1" @click="cityListShow=true">
+            <div class="left-btn" v-line-clamp:20="1" @click="toCity">
                 <span v-if='userPointState'>{{userPointState.city}}</span>
                 <span v-else>定位中</span>
             </div>
@@ -51,26 +51,11 @@
             </van-button>
         </div>
 
-        <!-- 借阅卡办理页面 -->
-        <!-- <van-popup v-model="applyShow" class="page-popup" position="bottom" get-container='#app'>
-            <accept @close='applyShow = false' v-model='active' @stepActiveChange='active = 0'/>
-        </van-popup> -->
-
         <!-- 城市列表 -->
-        <van-popup v-model="cityListShow" class="page-popup" position="right" get-container='#app'>
-            <city @close='cityListShow = false' @show='searchShow=true'/>
-        </van-popup>
-
-        <!-- 城市列表搜索 -->
-        <van-popup v-model="searchShow" class="page-popup" get-container='#app'>
-            <city-list :prompt='prompt' @close="searchShow = false, cityListShow=false"/>
-        </van-popup>
-
-        <!-- 节日活动 中间的发布可能会改为活动页面 保留一下 -->
-
-        <!-- <van-popup class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' v-model="tipsShow" get-container='.home'>
-            <tips position='top'/>
+        <!-- <van-popup v-model="cityListShow" class="page-popup" position="right" get-container='#app'>
+            <city @close='cityListShow = false'/>
         </van-popup> -->
+
     </div>
 </template>
 <script>
@@ -84,9 +69,6 @@ import newsList from './../module/news'
 import videoList from './../module/video'
 import articleList from './../module/articleList'
 
-import city from './../module/city'
-import cityList from './../module/search/cityList'
-
 import tips from './../module/release/tips'
 
 export default {
@@ -97,8 +79,6 @@ export default {
         newsList,
         videoList,
         articleList,
-        city,
-        cityList,
         tips
     },
     computed: {
@@ -183,10 +163,12 @@ export default {
         },
         toNotice(){
             this.$router.push({
-                name:'notice',
-                query:{
-                    back: this.$route.name
-                }
+                name:'notice'
+            })
+        },
+        toCity(){
+            this.$router.push({
+                name:'city'
             })
         },
         formatNews(news){
