@@ -78,6 +78,12 @@ export default {
       selsetData: ''
     }
   },
+  watch: {
+    keyword(val){
+      this.tab[this.tabIndex].content = []
+      this.onSearch()
+    }
+  },
   methods: {
     onLoad() {
 
