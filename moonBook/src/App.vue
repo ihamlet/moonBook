@@ -230,7 +230,7 @@ body {
 .order-popup .content::before,
 .theme-switch .van-switch--on,
 .theme-background {
-  background: linear-gradient(135deg, #00bcd4, #409eff);
+  background: linear-gradient(135deg, #00bcd4, #0084ff);
 }
 
 .theme-switch .van-switch {
@@ -244,16 +244,16 @@ body.theme .van-dialog__confirm,
 body.theme .van-dialog__confirm:active,
 body.theme .head-bar-text,
 .theme-color {
-  color: #409eff;
+  color: #0084ff;
 }
 
 .theme-checkbox .van-checkbox__icon--checked .van-icon {
-  background-color: #409eff;
-  border-color: #409eff;
+  background-color: #0084ff;
+  border-color: #0084ff;
 }
 
 .theme-btn.van-button--plain.van-button--primary {
-  border: 0.0625rem /* 1/16 */ solid #409eff;
+  border: 0.0625rem /* 1/16 */ solid #0084ff;
 }
 
 .theme-btn.van-button--plain.van-button--primary,
@@ -945,7 +945,7 @@ i.iconfont.vip-1 {
 }
 
 .three-d-book-cover {
-  background: linear-gradient(135deg, #00bcd4, #409eff);
+  background: linear-gradient(135deg, #00bcd4, #0084ff);
   width: 6.875rem /* 110/16 */;
   margin: 0 auto;
   padding: 0.625rem 0;
@@ -1136,7 +1136,7 @@ i.iconfont.vip-1 {
   position: absolute;
   width: 1.875rem /* 30/16 */;
   height: 5px;
-  background:#409eff;
+  background:#0084ff;
   border-radius: .3125rem /* 5/16 */;
   bottom:0;
   left: 50%;

@@ -5,13 +5,13 @@
         <van-button class="theme-btn" round size="small" type="primary">捐书</van-button>
       </div>
     </van-nav-bar>
-    <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated :offsetTop="45" @change="onChangeTab" :ellipsis='false'>
+    <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated :offsetTop="45" @change="onChangeTab" :ellipsis='false'>
       <van-tab v-for="(list,index) in readArray" :key="index" :title="`${list.title}(${list.num})`">
         <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
               <van-notice-bar text="代还还有2本逾期，产生逾期费用4元，逾期为1元/本/天，从押金中扣除" left-icon="volume-o" v-if='list.title=="读过"||list.title=="在读"'/>
               <div class="tab-jianshu" v-if='list.title == "捐书"'>
-                  <van-tabs type="card" color='#409eff' @click="onClickTab">
+                  <van-tabs type="card" color='#0084ff' @click="onClickTab">
                     <van-tab :title="tabTitle" v-for='(tabTitle,tabTitleIndex) in donationTab' :key="tabTitleIndex"></van-tab>
                   </van-tabs>
               </div>
@@ -281,7 +281,7 @@ export default {
 }
 
 .amount-item.pitchOn {
-  color: #409eff;
+  color: #0084ff;
   font-weight: 700;
 }
 

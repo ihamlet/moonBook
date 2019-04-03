@@ -1,17 +1,16 @@
 <template>
   <div class="edit-school">
     <div class="fixed">
-      <van-nav-bar title="选择学校" />
-      <search-bar :prompt='prompt' @show='isListShow = true' />
+      <van-search placeholder="请输入学校名称" v-model="keyword" show-action shape="round" @search="onSearch">
+          <div class="theme-color" slot="action" @click="onSearch">
+            搜索
+          </div>
+      </van-search>
     </div>
     <div class="container" v-if='!isListShow'>
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <van-cell v-for="(item,index) in list" :key="index" is-link center @click="selectSchool(item)">
-          <div class="school-name" v-line-clamp:20="1">{{item.title}}</div>
-          <div class="school-address" v-line-clamp:20="1">
-            <span>{{item.addr}}</span>
-            <!-- <span v-if='item.address.length!=0'>{{item.address}}</span> -->
-          </div>
+          <schoolCard :item='item' :searchType='searchType'/>
         </van-cell>
       </van-list>
     </div>
@@ -22,10 +21,6 @@
         <van-button class="theme-btn" type="primary" size='small' @click="show = true">添加学校</van-button>
       </div>
     </div>
-
-    <van-popup v-model="isListShow" class="page-popup" :overlay="false">
-      <school-list :prompt='prompt' @close='isListShow = false' @select='selectSchool' />
-    </van-popup>
 
     <van-dialog v-model="show" show-cancel-button :before-close="beforeClose">
       <div class="dialog-title">添加学校</div>
@@ -50,13 +45,13 @@ import axios from './../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
 import avatar from './../module/avatar'
 import searchBar from './../module/search/searchBar'
-import schoolList from './../module/search/schoolList'
+import schoolCard from './../module/search/schoolCard'
 
 export default {
   name: 'edit-school',
   components: {
     searchBar,
-    schoolList,
+    schoolCard,
     avatar
   },
   computed: {
@@ -65,11 +60,12 @@ export default {
   data() {
     return {
       isListShow: false,
-      page: 0,
+      page: 1,
       loading: false,
       finished: false,
       list: [],
-      prompt: '搜索学校名称',
+      keyword:'',
+      searchType:'wmSearchSchool',
       schoolName: '',
       show: false,
       schoolTypeIndex: 0,
@@ -83,12 +79,17 @@ export default {
       }]
     }
   },
+  watch: {
+    keyword(val){
+      this.page = 1
+      this.list = []
+      this.onSearch(val)
+    }
+  },
   methods: {
-    ...mapActions(['getSchoolList', 'getUserData']),
+    ...mapActions(['getSchoolList', 'getUserData','getSearch']),
     onLoad() {
       let arr = this.userPointState.location.split(",")
-
-      this.page++
       let products = {
         page: this.page,
         location: this.userPointState.location,
@@ -100,6 +101,7 @@ export default {
         if (res.data.length) {
           this.list = this.list.concat(res.data)
           this.loading = false
+          this.page++
           if (this.list.length >= res.data.count) {
             this.finished = true
           }
@@ -248,6 +250,34 @@ export default {
     selectSchoolType(item, index) {
       this.schoolType = item.name
       this.schoolTypeIndex = index
+    },
+    onSearch(keyword){
+      if(keyword){
+        let arr = this.userPointState.location.split(",")
+
+        let data = {
+          keywords: keyword,
+          location: this.userPointState.location,
+          city: this.userPointState.city,
+          type: '141204|141203',
+          datatype:'poi',
+          lng: arr[0],
+          lat: arr[1]
+        }
+  
+        this.getSearch(data).then(res=>{
+          if(res.resData.length){
+            this.searchType = res.searchType
+            this.list = res.resData
+          }else{
+            this.page = 1
+            this.onLoad()
+          }
+        })
+      }else{
+        this.page = 1
+        this.onLoad()
+      }
     }
   }
 }
@@ -260,7 +290,7 @@ export default {
 }
 
 .container {
-  padding-top: 5.625rem /* 90/16 */;
+  padding-top: 54px;
 }
 
 .edit-school {

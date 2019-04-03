@@ -1,7 +1,7 @@
 <template>
   <div class="accept">
     <div v-if='$route.query.type != "page"'>
-      <van-steps :active="$route.meta.active" active-icon="success" active-color="#409EFF">
+      <van-steps :active="$route.meta.active" active-icon="success" active-color="#0084ff">
         <van-step>选择学校</van-step>
         <van-step>每天借书需求</van-step>
         <van-step>会员时间</van-step>

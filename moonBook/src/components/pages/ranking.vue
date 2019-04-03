@@ -11,10 +11,10 @@
           <card type='myInfo' :rankingData='tab[topTabIdx].content[secondTabIdx].content.myInfo' />
         </div>
       </div>
-      <van-tabs color='#409eff' :line-width='20' :line-height='4' swipeable animated @change="onTopTabClick">
+      <van-tabs color='#0084ff' :line-width='20' :line-height='4' swipeable animated @change="onTopTabClick">
         <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
           <div class="content" v-if='topTabIdx == index'>
-            <van-tabs color='#409eff' type="card" @disabled="onTabDisabledClick" @click="onTabClick">
+            <van-tabs color='#0084ff' type="card" @disabled="onTabDisabledClick" @click="onTabClick">
               <van-tab v-for="(item,itemIndex) in list.content" :disabled="item.disabled" :title="item.title" :key="itemIndex">
                 <van-cell-group v-if="item.content">
                   <van-cell v-for='(content,contentIndex) in item.content.list' :key="contentIndex" value-class='cell-value'
@@ -353,7 +353,7 @@ export default {
 
 .avatar {
   margin-right: 0.625rem /* 10/16 */;
-  border: 0.125rem /* 2/16 */ solid #409eff;
+  border: 0.125rem /* 2/16 */ solid #0084ff;
   border-radius: 50%;
   overflow: hidden;
 }

@@ -110,7 +110,7 @@ export default {
 }
 .w-tit-box span {
   display: block;
-  background: #409EFF;
+  background: #0084ff;
   width: 3px;
   height: 15px;
   margin-right: 5px;
@@ -131,8 +131,8 @@ export default {
 }
 
 .b-button {
-  border: 1px solid #409EFF;
-  color: #409EFF;
+  border: 1px solid #0084ff;
+  color: #0084ff;
   font-size: 15px;
   border-radius: 6px;
   margin-right: 20px;
@@ -148,7 +148,7 @@ export default {
 }
 
 .a-button.selection{
-  border-color: #409EFF;
+  border-color: #0084ff;
   background: #fff;
 }
 </style>
@@ -159,7 +159,7 @@ export default {
   border-color: #fff;
 }
 .theme-action-btn-r.van-button--danger{
-  background: linear-gradient(135deg, #00bcd4, #409eff);
+  background: linear-gradient(135deg, #00bcd4, #0084ff);
   border-color: transparent;
 }
 </style>

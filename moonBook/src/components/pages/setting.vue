@@ -1,11 +1,9 @@
 <template>
   <div class="baby-setting">
-    <van-nav-bar title="设置学校" />
-
+    <van-nav-bar title="设置学校" :border='false'/>
     <van-cell-group>
-      <div class="form-title">学校设置</div>
-      <van-field input-align='right' readonly center label="选择学校" v-model="setting.settingSchool" placeholder="请选择学校" @click="toSelectSchool" />
-      <van-field input-align='right' v-if='$route.query.registerType!="headmaster"' readonly center label="选择班级" v-model="setting.settingClass" placeholder="请选择班级" @click="toSelectClass" />
+      <van-cell is-link center title='学校' :label='setting.settingSchool' value='选择学校'  @click="toSelectSchool" />
+      <van-cell is-link center title='班级' :label='setting.settingClass' value='选择班级'  @click="toSelectClass" />
     </van-cell-group>
   </div>
 </template>

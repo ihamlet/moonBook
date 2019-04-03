@@ -8,7 +8,7 @@
                 <div class="name">阅亮书架</div>
                 <i class="iconfont vip-icon">&#xe70e;</i>
             </div>
-            <div class="user-info flex flex-align flex-justify">
+            <div class="user-info flex flex-align flex-justify" @click="toAccept">
                 <img  @error='imgError' :src="getAvatar(userDataState.avatar)"/>
                 <div class="user-name">{{userDataState.name}}</div>
                 <van-icon class="icon" name="arrow" />
@@ -18,18 +18,17 @@
       </div>
       <div class="container">
          <i class="iconfont">&#xe62d;</i>
-         <b>提升孩子阅读:</b>
-         <ul>
-            <li>有助于帮助孩子学习良好的生活习惯</li>
-            <li>有助于提高语言表达能力</li>
-            <li>有助于促进儿童品格的健康发展</li>
-         </ul>
+         <div class="title">邀请家人共同打造宝贝主页</div>
       </div>
     </div>
-    <div class="square-btn flex flex-align">
-      <van-button square class="theme-btn" plain type="primary" size="large" @click="toBabyHome">打造宝贝主页</van-button>
-      <van-button square class="theme-btn" type="primary" size="large" @click="toAccept">办理借阅卡</van-button>
-    </div>
+    <van-row class="square-btn" gutter="20" type="flex" justify="space-around">
+      <van-col span="16">
+        <van-button round class="theme-btn" plain type="primary" size="normal" @click="toBabyHome">打造宝贝主页</van-button>
+      </van-col>
+      <van-col span="16">
+        <van-button round class="theme-btn" type="primary" size="normal" @click="toAccept">办理借阅卡</van-button>
+      </van-col>
+    </van-row>
   </div>
 </template>
 <script>
@@ -175,7 +174,11 @@ export default {
     color: transparent;
 }
 
+.theme-btn{
+    width: 100%;
+}
+
 .square-btn{
-    padding:1.25rem /* 20/16 */;
+  padding: 1.25rem /* 20/16 */;
 }
 </style>

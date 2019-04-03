@@ -81,7 +81,7 @@ export default {
   .van-tabbar-item__icon
   i.iconfont,
 .footer-bar .van-tabbar-item.van-tabbar-item--active .van-tabbar-item__text {
-  background: linear-gradient(135deg, #00bcd4, #409eff);
+  background: linear-gradient(135deg, #00bcd4, #0084ff);
   -webkit-background-clip: text;
   color: transparent;
   display: block;

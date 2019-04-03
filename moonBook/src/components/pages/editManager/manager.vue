@@ -19,11 +19,12 @@
       <div class="office" v-if='jobList'>
         <div class="form-title">职位设置</div>
         <van-cell-group>
-          <van-field v-model="office" input-align='right' label="职位" readonly placeholder="请选择职位" @click="selectOffice" />
+          <van-field v-model="office" input-align='right' label="职位" readonly placeholder="班主任" @click="selectOffice" />
         </van-cell-group>
       </div>
 
       <van-popup v-model="show" position="bottom" get-container='#app'>
+        <van-field v-model="office" placeholder="填写职位" input-align='center'/>
         <van-picker :columns="jobList" @change="onChange" />
       </van-popup>
     </div>
@@ -63,11 +64,11 @@ export default {
       let array = []
 
       if (this.$route.query.registerType == 'teacher') {
-        array = ['带班老师', '信息老师', '生活老师', '班主任', '任课老师', '其他']
+        array = ['带班老师', '信息老师', '生活老师', '班主任', '任课老师']
       }
 
       if (this.$route.query.registerType == 'headmaster') {
-        array = ['校长', '副校长']
+        array = ['校长','副校长']
       }
       return array
     },

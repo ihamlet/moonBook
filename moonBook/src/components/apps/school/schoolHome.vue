@@ -29,7 +29,7 @@
         <read-list type='school' title='阅读榜' field='name' />
       </div>
       <div>
-        <van-tabs color='#409eff' :line-width='20' :line-height='4' animated swipeable>
+        <van-tabs color='#0084ff' :line-width='20' :line-height='4' animated swipeable>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
               <drying-list :school_id='$route.query.id' portal_name='学校主页' :key="$route.query.id"/>

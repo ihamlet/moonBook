@@ -1,7 +1,7 @@
 <template>
   <div class="read-guide">
     <van-nav-bar :title="$route.meta.title" right-text="书架" @click-right="onClickRight" :border='false'/>
-    <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab">
+    <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab">
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
         <div class="article">
           <div class="container">
@@ -144,7 +144,7 @@ export default {
   content: '';
   width: .25rem /* 4/16 */;
   height: .9375rem /* 15/16 */;
-  background: #409eff;
+  background: #0084ff;
   position: absolute;
   left: -10px;
   top: 50%;

@@ -389,6 +389,6 @@ ul.recent li:first-child::before {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   left: 0.625rem /* 10/16 */;
-  color: #409eff;
+  color: #0084ff;
 }
 </style>

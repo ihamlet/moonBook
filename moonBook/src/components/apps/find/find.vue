@@ -6,7 +6,7 @@
     </div>
     <div>
       <div class="container">
-        <van-tabs color='#409eff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab'>
+        <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content" v-if='index == indexTab'>
               <drying-list :cateId='list.cate_id' :sort='list.sort' type='find' :tid='$route.query.tid' :cid='$route.query.cid' :school_id='$route.query.school_id' :banji_id='$route.query.banji_id'/>
@@ -70,6 +70,10 @@ export default {
       freshList: [],
       topicList: []
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    to.meta.keepAlive = false //去掉页面数据缓存
+    next()
   },
   created() {
     this.fetchData()

@@ -8,7 +8,7 @@
     <div class="img-cover theme-background">
         <img v-if='cover || getImageList.length' :src='cover?cover:getImageList[0]'/>
     </div>
-    <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
+    <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
     <div class="img-list">
         <van-col span="6" v-for='(img,index) in getImageList' :key="index">
             <div class="img-grid" @click="topImg(img,index)">

@@ -3,7 +3,7 @@
     <van-search v-model="keyword" placeholder="请输入搜索关键词" show-action shape="round" @search="onSearch">
       <div slot="action" class="theme-color" @click="onSearch">搜索</div>
     </van-search>
-    <van-tabs color='#409eff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex" @click="onClick" @disabled='onClickDisabled'>
+    <van-tabs color='#0084ff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex" @click="onClick" @disabled='onClickDisabled'>
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index" :disabled='list.title=="筛选"'>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
@@ -204,6 +204,6 @@ export default {
   bottom: 0;
   width: 1.875rem /* 30/16 */;
   height: .1875rem /* 3/16 */;
-  background: #409EFF;
+  background: #0084ff;
 }
 </style>

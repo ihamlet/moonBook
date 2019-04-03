@@ -19,7 +19,7 @@
     </van-cell-group>
     <van-radio-group>
       <van-cell-group>
-        <van-cell value='校园设置' title-class='cell-school-title' :title='info.school_name' :label='info.class_name' center is-link @click="!isMainParent&&setSchool($route.query.type)" />
+        <van-cell value='校园设置' title-class='cell-school-title' :title='info.school_name' :label='formatBanjiTitle(info.banji_name)' center is-link @click="!isMainParent&&setSchool($route.query.type)" />
       </van-cell-group>
     </van-radio-group>
     <van-cell-group>
@@ -252,12 +252,16 @@ export default {
         }, 2000)
       } else {
         this.operationApi().then(res => {
-          this.$router.push({
-            name: 'baby-home',
-            query: {
-              id: res,
-            }
-          })
+          if(this.$route.query.type == 'register'){
+            this.show = true
+          }else{
+            this.$router.push({
+              name: 'baby-home',
+              query: {
+                id: res,
+              }
+            })
+          }
         })
       }
     },
@@ -384,6 +388,13 @@ export default {
             })
           })
         })
+      }
+    },
+    formatBanjiTitle(text){
+      if (text && text.indexOf('班') == -1) {
+        return text + '班'
+      } else {
+        return text
       }
     }
   }

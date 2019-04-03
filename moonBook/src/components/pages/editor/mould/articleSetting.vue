@@ -278,7 +278,7 @@ export default {
 
 .icon .iconfont{
   font-size: 1.25rem /* 20/16 */;
-  background: linear-gradient(135deg, #00bcd4, #409eff);
+  background: linear-gradient(135deg, #00bcd4, #0084ff);
   -webkit-background-clip: text;
   color: transparent;
 }

@@ -71,12 +71,13 @@ import SchoolList from '@/components/pages/accept/schoolList'
 import cardLevel from '@/components/pages/accept/cardLevel'
 import cardTime from '@/components/pages/accept/cardTime'
 
-
 //阅读指导
 import ReadGuide from '@/components/pages/guided/readGuide'
 //打卡记录
 import punchBack from '@/components/pages/punch/punchBack'
 import punchList from '@/components/pages/punch/punchList'
+
+import Manage from './manage'
 
 Vue.use(Router)
 
@@ -94,6 +95,7 @@ export default new Router({
       name: 'hello',
       component: Hello,
       children: [
+        ...Manage,
         {
           path: '/',
           name: 'home',

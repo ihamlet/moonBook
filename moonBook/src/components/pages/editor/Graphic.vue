@@ -10,7 +10,7 @@
         <van-button :loading='percent != 0' class="theme-btn" type="primary" size="small" @click="onClickRelease" round>发布</van-button>
       </div>
     </van-nav-bar>
-    <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #409eff)" />
+    <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
       
     <div class="textarea-module">
       <van-cell-group>

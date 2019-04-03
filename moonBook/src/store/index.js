@@ -178,6 +178,7 @@ const actions = {
         keyword: products.keywords,
         lng: products.lng,
         lat: products.lat,
+        schoolType: products.schoolType
       }
 
       let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${ data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`

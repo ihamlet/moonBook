@@ -56,7 +56,7 @@ export default {
           this.$notify({
             message: res.info,
             duration: 1000,
-            background: '#409EFF'
+            background: '#0084ff'
           })
           this.$router.push({ path: this.$route.query.redirect })
         } else {

@@ -268,7 +268,7 @@ export default {
 .info .name {
   font-size: 1.25rem /* 20/16 */;
   text-align: center;
-  margin-top: 0.625rem; /* 10/16 */
+  margin-top: 5px
 }
 
 .info .school {

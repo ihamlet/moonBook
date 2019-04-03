@@ -1,7 +1,7 @@
 <template>
   <div class="week-list">
     <van-nav-bar title="读书榜" />
-    <van-tabs color='#409eff' :line-width='20' :line-height='4' animated swipeable @change='onChange'>
+    <van-tabs color='#0084ff' :line-width='20' :line-height='4' animated swipeable @change='onChange'>
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" center title-class='cell-title'>

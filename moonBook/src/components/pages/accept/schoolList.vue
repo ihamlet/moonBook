@@ -1,35 +1,25 @@
 <template>
   <div class="school-list">
-    <div class="fixed-bar" v-if='$route.query.type!="page"'>
-      <search-bar prompt='搜索学校名称' @show='searchListShow = true' />
+    <div class="fixed" :class="$route.query.type">
+      <van-search placeholder="请输入学校名称" v-model="keyword" show-action shape="round" @search="onSearch">
+          <div class="theme-color" slot="action" @click="onSearch">
+            搜索
+          </div>
+      </van-search>
     </div>
-    <div class="container">
-    <van-tabs type="card" swipeable animated color='#409eff' @change='changeTab'>
-        <van-tab :title="list.title" v-for='(list,index) in tab' :key="index">
-            <div class="list" v-if='index == tabIndex'>
-                <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad">
-                    <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" is-link class="flex flex-align" @click="select(item)">
-                      <div class="item">
-                          <div class="school-info">
-                            <div class="school-name">
-                                {{item.title}}
-                            </div>
-                            <div class="school-address">
-                                <div class="addr"  v-line-clamp:20="1">{{item.addr}}</div>
-                                <div class="remark" v-if='$route.query.type=="page"'>
-                                  <van-tag mark type="primary" v-if='item.level&&item.level!="未定级"'>{{item.level}}</van-tag>
-                                  <span class="distance">距离:{{item.distance}}</span>
-                                </div>
-                            </div>
-                          </div>
-                      </div>
-                    </van-cell>
-                </van-list>
-            </div>
-        </van-tab>
-    </van-tabs>
-</div>
-
+    <div class="container" :class="$route.query.type">
+      <van-tabs type="card" swipeable animated color='#0084ff' @change='changeTab'>
+          <van-tab :title="list.title" v-for='(list,index) in tab' :key="index">
+              <div class="list" v-if='index == tabIndex'>
+                  <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad">
+                      <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" is-link class="flex flex-align" @click="select(item)">
+                          <schoolCard :item='item' searchType='wmSearchSchool'/>
+                      </van-cell>
+                  </van-list>
+              </div>
+          </van-tab>
+      </van-tabs>
+    </div>
     <van-popup v-model="searchListShow" class="page-popup">
       <search-list prompt='搜索学校名称' type='joinSchool' @close='searchListShow = false' @select='select' />
     </van-popup>
@@ -40,19 +30,20 @@ import axios from './../../lib/js/api'
 
 import { mapActions,mapGetters } from 'vuex'
 import searchBar from './../../module/search/searchBar'
-import searchList from './../../module/search/schoolList'
+import schoolCard from './../../module/search/schoolCard'
 
 export default {
   name: 'school-list',
   components: {
     searchBar,
-    searchList  
+    schoolCard  
   },
   computed: {
     ...mapGetters(['userDataState', 'userPointState'])
   },
   data() {
     return {
+      keyword:'',
       tab:[{
           title:'幼儿园',
           content:[],
@@ -71,8 +62,15 @@ export default {
       tabIndex: 0
     }
   },
+  watch: {
+    keyword(val){
+      this.page = 1
+      this.tab[this.tabIndex].content = []
+      this.onSearch(val)
+    }
+  },
   methods: {
-    ...mapActions(['getSchoolList']),
+    ...mapActions(['getSchoolList','getSearch']),
     changeTab(index){
         this.tabIndex = index
         this.page = 1
@@ -123,22 +121,49 @@ export default {
           this.$toast('该学校暂未有书架')
         }
       }
+    },
+    onSearch(keyword){
+      if(keyword){
+        let arr = this.userPointState.location.split(",")
+
+        let data = {
+          keywords: keyword,
+          city: this.userPointState.city,
+          lng: arr[0],
+          lat: arr[1],
+          schoolType: this.tab[this.tabIndex].title
+        }
+  
+        this.getSearch(data).then(res=>{
+          if(res.resData.length){
+            this.tab[this.tabIndex].content = res.resData
+          }else{
+            this.page = 1
+            this.onLoad()
+          }
+        })
+      }else{
+        this.page = 1
+        this.onLoad()
+      }
     }
   }
 }
 </script>
 <style scoped>
-.school-name {
-  color: #000000;
-  font-size: 1.0625rem /* 17/16 */;
-}
-
-.school-address {
-  color: #909399;
-}
-
 .list,
 .container{
     padding-top: .625rem /* 10/16 */;
+}
+
+.fixed.page{
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2019;
+}
+
+.container.page{
+  padding-top: 4.0625rem /* 65/16 */;
 }
 </style>
