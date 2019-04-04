@@ -82,7 +82,7 @@
         </van-tabs>
       </div>
       <div class="module" v-else>
-        <reading :list="lateBook"  moduleTitle="宝贝最近在读的书" />
+        <reading :list="lateBook"  moduleTitle="宝贝最近在读的书" :key="$route.query.id"/>
       </div>
     </div>
 

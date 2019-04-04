@@ -85,6 +85,10 @@ export default {
   created() {
     this.fetchData()
   },
+  beforeRouteLeave(to, from, next) {
+    to.meta.keepAlive = false //去掉页面数据缓存
+    next()
+  },
   watch: {
     '$router': 'fetchData'
   },

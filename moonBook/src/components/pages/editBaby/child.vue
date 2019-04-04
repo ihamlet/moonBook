@@ -321,19 +321,6 @@ export default {
         this.back()
       })
     },
-    // toSetting(info) {
-    //   this.operationApi().then(res => {
-    //     this.$router.push({
-    //       name: 'edit-setting',
-    //       query: {
-    //         id: res,
-    //         back: this.$route.name,
-    //         type: this.$route.query.type,
-    //         pageTitle: this.$route.query.pageTitle
-    //       }
-    //     })
-    //   })
-    // },
     onInput(checked) {
       if (checked) {
         let data = {
