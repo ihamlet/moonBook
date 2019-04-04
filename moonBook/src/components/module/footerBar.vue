@@ -7,13 +7,14 @@
       </van-tabbar-item>
     </van-tabbar>
 
-    <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' @click-overlay='show = false' :lock-scroll='false'>
-      <tips :isShow='show' position='bottom' @close='show = false'/>
+    <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
+      <tips :isShow='show' position='bottom' @close='closeTips'/>
     </van-popup>
   </div>
 </template>
 <script>
 import tips from './../module/release/tips'
+import { mapMutations,mapState } from 'vuex'
 
 export default {
   name: 'footer-bar',
@@ -21,10 +22,18 @@ export default {
   components: {
     tips
   },
+  computed: {
+    ...mapState(['releaseSwitch']),
+    show:{
+      get(){
+        return this.releaseSwitch
+      },
+      set(val){}
+    }
+  },
   data() {
     return {
-      active: 0,
-      show: false
+      active: 0
     }
   },
   created() {
@@ -33,10 +42,10 @@ export default {
   watch: {
     $route(to, from, next) {
       this.active = to.meta.tabActive
-      this.show = false
     }
   },
   methods: {
+    ...mapMutations(['setReleaseSwitch']),
     goPage(item) {
       let path = ''
       if (item.id) {
@@ -49,9 +58,12 @@ export default {
     },
     onClick(index) {
       if (index == 2) {
-        this.show = true
+        this.setReleaseSwitch(true)
       }
       this.active = this.$route.meta.tabActive
+    },
+    closeTips(){
+      this.setReleaseSwitch(false)
     }
   }
 }

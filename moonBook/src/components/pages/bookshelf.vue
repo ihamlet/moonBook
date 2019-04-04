@@ -28,12 +28,16 @@ import axios from './../lib/js/api'
 import bookCard from './../module/card/bookCard'
 import FilterList from './../module/mold/filterList'
 import { timeago } from './../lib/js/util'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'bookshelf',
   components: {
     bookCard,
     FilterList
+  },
+  computed: {
+    ...mapGetters(['userDataState'])
   },
   data() {
     return {
@@ -89,7 +93,8 @@ export default {
 
       let data = {
         params: {
-          page: this.page
+          page: this.page,
+          child_id: this.userDataState.child_id
         }
       }
 

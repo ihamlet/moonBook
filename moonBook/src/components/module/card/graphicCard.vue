@@ -17,10 +17,10 @@
             {{getTimeAgo(item.create_time)}} <span>{{title}}</span>
           </div>
         </div>
-        <div class="follow" v-if='!item.isMe&&item.user_id>0'>
+        <div class="follow" v-if='!item.isMe&&item.user_id>0&&type!="zoom"'>
            <van-button size="small" class="theme-btn" :plain='item.isSubscribe?true:false' type="primary" round @click="follow(item)">{{item.isSubscribe?'已关注':'关注'}}</van-button>
         </div>
-        <div v-if='type!="notice"' class="more" @click="more(item)"><i class="iconfont">&#xe6f7;</i></div>
+        <div v-if='moreBtn' class="more" @click="more(item)"><i class="iconfont">&#xe6f7;</i></div>
       </div>
 
       <media :item='item' type='card'/>
@@ -50,15 +50,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <van-popup v-model="shareShow" position='bottom' get-container='#app'>
-      <share @hide='shareShow = false' :postId='item.post_id' :item='item'/>
-    </van-popup> -->
-
-    <!-- 生成图片 -->
-    <!-- <van-popup v-model="imageShow" class="screenshot-popup" get-container='#app'>
-      <article-share :item='item' :userName='item.user.name' :qrImage='qrImage' @close='imageShow = false'/>
-    </van-popup> -->
   </div>
 </template>
 <script>
@@ -72,19 +63,46 @@ import { timeago } from './../../lib/js/util'
 
 export default {
   name: "graphic-card",
-  props: ["item", "type",'avatar','title'],
+  props:{
+    item:Object,
+    type:{
+      type:String,
+      default:''
+    },
+    avatar:{
+      type: String,
+      default:''
+    },
+    title:{
+      type: String,
+      default: ''
+    },
+    moreBtn:{
+      required: false,
+      type: Boolean,
+      default: true
+    }
+  },
   components: {
-    // share,
     taskCard,
     vipLevel,
     media
   },
+  // computed: {
+  //   isMoreShow(){
+  //     let boolean = true
+  //     if(this.more){
+  //       boolean = this.more
+  //     }
+
+  //     return boole
+  //   }
+  // },
   data() {
     return {
       imgIndex: 0,
       articleShow: false,
       shareShow:false,
-      // imageShow:false,
       qrImage:'',
       link:''
     }
@@ -110,15 +128,6 @@ export default {
     follow(item){
       this.$emit('follow',item)
     },
-    // share(item){
-    //   this.shareShow = true
-    //   this.link = `/article?id=${item.post_id}&type=${item.template_id}`
-    //   QRCode.toDataURL(this.link).then(url => {
-    //     this.qrImage = url
-    //   }).catch(err => {
-    //     console.log(err)
-    //   })
-    // },
     toBookZoom(item){
       this.$router.push({
         name:'zoom',

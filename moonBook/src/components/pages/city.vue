@@ -51,10 +51,12 @@
         </div>
       </div>
       <div class="list">
-        <div class="node-letter" v-show='height < scrollTop' :style="{top:scrollTop+54+'px'}">{{nodeLetter}}</div>
+        <div class="node-letter" v-show='height < scrollTop' :style="{top:scrollTop+54+'px'}">
+          <span>{{nodeLetter}}</span>
+        </div>
         <van-cell-group v-for='(item,index) in cityData' :key='index'>
           <div class="item" ref='domItem'>
-            <div class="letter">{{item.code}}</div>
+            <div class="letter"><span>{{item.code}}</span></div>
             <van-cell :title='city' @click="selectCity(city)" v-for='(city,itemIndex) in item.cityList' :key='itemIndex' clickable/>
           </div>
         </van-cell-group>
@@ -225,7 +227,6 @@ export default {
 
 .node-letter,
 .letter {
-  padding-left: 0.625rem /* 10/16 */;
   height: 1.25rem /* 20/16 */;
   line-height: 20px;
   background: #e4e7ed;
@@ -235,6 +236,12 @@ export default {
   position: absolute;
   z-index: 999;
   width: 100%;
+  transition: top 0.1s ease-out
+}
+
+.node-letter span,
+.letter span{
+  margin-left: .9375rem /* 15/16 */
 }
 
 .city {

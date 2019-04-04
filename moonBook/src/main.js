@@ -27,7 +27,8 @@ import 'vue-photo-preview/dist/skin.css'
 import './components/lib/js/wxAdapter'
 
 let options = {
-  fullscreenEl: false
+  fullscreenEl: false,
+  history: true
 }
 
 Vue.use(preview,options)

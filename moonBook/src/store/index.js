@@ -19,7 +19,8 @@ const state = {
   amapApiKey: '0522f462288e296eac959dbde42718ab',
   token: '',
   userPoint: '',
-  manager:''
+  manager:'',
+  releaseSwitch: false
 }
 
 const getters = {
@@ -89,6 +90,9 @@ const mutations = {
   },
   setToken(state, params) {
     state.token = params.data
+  },
+  setReleaseSwitch(state, params){
+    state.releaseSwitch = params
   }
 }
 
@@ -286,14 +290,14 @@ const actions = {
 
     setting.result.forEach(e=>{
       switch(e){
+        case 'apps-find':
+          data.to_find  = 1
+        break
         case 'baby-home':
           data.to_baby  = 1
         break
         case 'class-home':
           data.to_banji = 1   
-        break
-        case 'apps-find':
-          data.to_find  = 1
         break
       }
     })
@@ -303,6 +307,7 @@ const actions = {
         switch(res.data.status){
           case 1:
             localStorage.removeItem('grapicData') //清空浏览器缓存
+            context.commit('setReleaseSwitch',false)
           break
         }
 

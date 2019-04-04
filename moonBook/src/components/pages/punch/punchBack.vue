@@ -1,20 +1,26 @@
 <template>
   <div class="punch-list page-padding">
     <van-nav-bar :title="$route.meta.title" :border='false' />
+
+    <div class="booth">
+      <div class="ad-mould" @click="toActivity">
+        <img src="./../../../assets/banner/banner-activity.png" />
+      </div>
+    </div>
+
     <van-pull-refresh v-model="loading" @refresh="onRefresh">
       <div class="date-title">{{day}}</div>
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-        <van-cell v-for="(item,index) in list" :key="index" :is-link='item.book_id' center>
-          <cardPunch :item='item'/>
-        </van-cell>
+        <div class="list" v-if='list.length'>
+          <van-cell v-for="(item,index) in list" :key="index" :is-link='item.book_id' center>
+            <cardPunch :item='item'/>
+          </van-cell>
+        </div>
+        <div class="no-list" v-else>
+          尚无打卡图书
+        </div>
       </van-list>
     </van-pull-refresh>
-
-    <div class="booth">
-      <div class="ad-mould">
-        广告位
-      </div>
-    </div>
 
     <van-popup class="popup-punch" v-model="show" position="bottom" get-container="#app">
       <div class="book-info" v-if='bookInfo'>
@@ -28,9 +34,18 @@
       </div>
     </van-popup>
 
+    <van-popup class="popup-release" v-model="releaseShow" position="bottom" get-container="#app">
+        <div class="slogan">记录下这一刻，越分享越幸运</div>
+        <div class="release-box">
+          <div class="btn" v-for='(item,index) in releaseType' :key="index">
+            <div class="text">{{item.text}}</div>
+          </div>
+        </div>
+    </van-popup>
+
     <div class="footer-bar flex">
       <div class="btn-box">
-        <van-button class="btn theme-btn" type="primary" round size="normal" @click="comeBack">完成</van-button>
+        <van-button class="btn theme-btn" type="primary" round size="normal" @click="releaseShow = true">完成</van-button>
       </div>
       <div class="btn-box">
         <van-button class="btn theme-borrowing-btn" round type="primary" size="normal" @click="punch">继续打卡</van-button>
@@ -59,7 +74,18 @@ export default {
       bookInfo: '',
       page: 1,
       day: '',
-      show: false
+      show: false,
+      releaseShow: false,
+      releaseType:[{
+        icon:'',
+        text:'发图文'
+      },{
+        icon:'',
+        text:'拍小视频'
+      },{
+        icon:'',
+        text:'发视频'
+      }]
     }
   },
   methods: {
@@ -140,6 +166,9 @@ export default {
             return img
           }
       }
+    },
+    toActivity(){
+
     }
   }
 }
@@ -147,17 +176,9 @@ export default {
 <style scoped>
 .ad-mould {
   width: 100%;
-  height: 6.25rem /* 100/16 */;
   background: #fff;
   color: #c0c4cc;
   text-align: center;
-  line-height: 6.25rem /* 100/16 */;
-}
-
-.booth {
-  position: fixed;
-  width: 100%;
-  bottom: 65px;
 }
 
 .btn-box {
@@ -174,7 +195,6 @@ export default {
   padding: 10px 0;
   width: 100%;
   z-index: 2010;
-  background: #fff;
   bottom: 0;
 }
 

@@ -245,7 +245,7 @@ export default {
 }
 
 .user-info {
-  padding-top: 3.125rem /* 50/16 */;
+  padding-top: 45px;
   padding-bottom: 2.8125rem /* 45/16 */;
 }
 
@@ -268,7 +268,8 @@ export default {
 .info .name {
   font-size: 1.25rem /* 20/16 */;
   text-align: center;
-  margin-top: 5px
+  margin-top: 5px;
+  margin-bottom: 5px
 }
 
 .info .school {

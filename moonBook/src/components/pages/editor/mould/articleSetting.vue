@@ -87,20 +87,24 @@ export default {
     ...mapActions('articleSetting', ['addResult','addGroup','addTag']),
     fetchData() {
       let array = []
-      if (this.userDataState.child_id > 0) {
-        array.push({
-          title: '宝贝主页',
-          name: 'baby-home',
-          to: 1
-        })
-      }
 
-      if (this.userDataState.banji_id > 0) {
-        array.push({
-          title: '班级',
-          name: 'class-home',
-          to: 1
-        })
+      switch(true){
+        case this.userDataState.child_id > 0:
+          array.push({
+            title: '宝贝主页',
+            name: 'baby-home',
+            to: 1
+          })          
+        break
+        case this.userDataState.banji_id > 0:
+          array.push({
+            title: '班级',
+            name: 'class-home',
+            to: 1
+          })
+        break
+        default:
+          localStorage.removeItem('result')
       }
 
       array.push({
@@ -162,16 +166,6 @@ export default {
           }else{
             this.addTag(data[0])
           }
-        }
-      })
-
-      //获取机构标签
-      axios.get('/book/member/get_groups').then(res => {
-        switch (res.data.status) {
-          case 1:
-            this.groupList = res.data.data
-            this.addGroup(res.data.data[0])
-            break
         }
       })
     },

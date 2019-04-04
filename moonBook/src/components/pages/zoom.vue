@@ -21,7 +21,7 @@
                 <div class="text">粉丝</div>
               </div>
               <div class="data-box">
-                <div class="number">{{ userInfo.collect_count }}</div>
+                <div class="number">{{ userInfo.subscribe_num }}</div>
                 <div class="text">关注</div>
               </div>
               <div class="data-box">
@@ -29,8 +29,11 @@
                 <div class="text">获赞</div>
               </div>
             </div>
-            <van-button v-if='userDataState.user_id != userInfo.user_id' :plain="userInfo.subscribe_num == '1'" class="theme-btn"
-              type="primary" size="large" @click="follow(userInfo)">{{userInfo.subscribe_num == '0'?'加关注':'已关注'}}</van-button>
+            <div class="subscribe">
+              <van-button v-if='userDataState.user_id != userInfo.user_id' :plain="userInfo.is_subscribe?true:false" class="theme-btn" type="primary" size="small" @click="follow(userInfo)">
+                {{userInfo.is_subscribe?'已关注':'加关注'}}
+              </van-button>
+            </div>
           </div>
         </div>
       </div>
@@ -45,7 +48,7 @@
             <div class="no-list" v-if="list.length == 0">暂无内容</div>
             <div class="item" v-for="(item,index) in list" :key="index">
               <van-cell>
-                <graphic-card :item="item" @more='actionsheet'/>
+                <graphic-card :item="item" @more='actionsheet' type='zoom' :moreBtn='manage'/>
               </van-cell>
             </div>
           </div>
@@ -70,7 +73,18 @@ export default {
     reading
   },
   computed: {
-    ...mapGetters(['userDataState'])
+    ...mapGetters(['userDataState','managerState']),
+    manage() {
+      if (this.managerState) {
+        let boolean = false
+        this.managerState.forEach(element => {
+          if (element.item_relation == 'teacher') {
+            boolean = true
+          }
+        })
+        return boolean
+      }
+    }
   },
   data() {
     return {
@@ -88,16 +102,11 @@ export default {
       page: 1,
       show: false,
       actions: [
-      //   {
-      //   name: '编辑',
-      //   type: "edit",
-      //   index: 0
-      // },
        {
-        name: "删除",
-        type: "delete",
-        index: 1
-      }
+          name: "删除",
+          type: "delete",
+          index: 1
+        }
       ],
       postId: '',
       templateId:''
@@ -190,34 +199,6 @@ export default {
     },
     onSelect(item) {
         switch(item.index){
-          // case 0:
-          //     switch (this.templateId){
-          //       case '0':
-          //         this.$router.push({
-          //           name:'publishing',
-          //           query:{
-          //             post_id: this.postId,
-          //             template_id: this.templateId,
-          //             back: this.$route.name,
-          //             id: this.$route.query.id,
-          //             type: 'edit'
-          //           }
-          //         })
-          //       break
-          //       case '1':
-          //         this.$router.push({
-          //           name:'graphic',
-          //           query:{
-          //             post_id: this.postId,
-          //             template_id: this.templateId,
-          //             back: this.$route.name,
-          //             id: this.$route.query.id,
-          //             type: 'edit'
-          //           }
-          //         })
-          //       break
-          //     }
-          // break
           case 1:
             this.$dialog.confirm({
               title: '删除',
@@ -268,11 +249,11 @@ export default {
         "https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0";
     },
     follow(userInfo) {
-      userInfo.subscribe_num == '1' ? userInfo.subscribe_num = '0' : userInfo.subscribe_num = '1'
+      userInfo.is_subscribe = !userInfo.is_subscribe
       axios.get(`/book/MemberFollow/subscribe?user_id=${userInfo.user_id}`).then(res => {
         this.$toast.success(res.data.msg)
       })
-    },
+    }
   }
 };
 </script>
@@ -346,5 +327,14 @@ export default {
 
 .user-card {
   padding: 0.625rem /* 10/16 */ 0;
+}
+
+.subscribe{
+  margin-top: 10px;
+  padding: 0 15px;
+}
+
+.theme-btn{
+  width: 100%;
 }
 </style>

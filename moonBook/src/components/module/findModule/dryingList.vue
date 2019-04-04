@@ -57,11 +57,6 @@ export default {
       }]
       if (this.item.isMe) {
         arr.push(
-        // {
-        //   name: '编辑',
-        //   type: 'edit',
-        //   index: 0
-        // }, 
         {
           name: '删除',
           type: 'delete',
@@ -202,34 +197,6 @@ export default {
     },
     onSelect(item) {
       switch (item.index) {
-        // case 0:
-        //   switch (this.templateId) {
-        //     case '0':
-        //       this.$router.push({
-        //         name: 'publishing',
-        //         query: {
-        //           post_id: this.postId,
-        //           template_id: this.templateId,
-        //           back: this.$route.name,
-        //           id: this.$route.query.id,
-        //           type: 'edit'
-        //         }
-        //       })
-        //       break
-        //     case '1':
-        //       this.$router.push({
-        //         name: 'graphic',
-        //         query: {
-        //           post_id: this.postId,
-        //           template_id: this.templateId,
-        //           back: this.$route.name,
-        //           id: this.$route.query.id,
-        //           type: 'edit'
-        //         }
-        //       })
-        //       break
-        //   }
-        //   break
         case 1:
           this.$dialog.confirm({
             title: '删除',

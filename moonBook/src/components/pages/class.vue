@@ -15,17 +15,19 @@
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <div class="content" v-if='list.length'>
             <div v-for="(item,index) in list" size='large' :key="index" is-link @click='select(item)'>
-              <div class="year" v-if='isYearShow(item,index)'>{{item.year}}</div>
-              <van-cell is-link>
-                <div class="banji-cell flex flex-align">
-                  <div class="banji-name">
-                    {{formatBanjiTitle(item.title)}}
+              <div class="banji-item" v-if='item.year > "0"'>
+                <div class="year theme-color" v-if='isYearShow(item,index)'>{{item.year}}</div>
+                <van-cell is-link>
+                  <div class="banji-cell flex flex-align">
+                    <div class="banji-name">
+                      {{formatBanjiTitle(item.title)}}
+                    </div>
+                    <div class="add-value">
+                      {{item.student_count}}人已加入
+                    </div>
                   </div>
-                  <div class="add-value">
-                    {{item.student_count}}人已加入
-                  </div>
-                </div>
-              </van-cell>
+                </van-cell>
+              </div>
             </div>
 
           </div>
@@ -370,6 +372,7 @@ export default {
   background: #fff;
   height: 2.25rem /* 36/16 */;
   line-height: 2.25rem /* 36/16 */;
+  font-weight: 700;
 }
 
 .page-padding {
@@ -382,5 +385,9 @@ export default {
   line-height: 6.25rem /* 100/16 */;
   text-align: center;
   background: #fff;
+}
+
+.add-value{
+  color: #C0C4CC;
 }
 </style>

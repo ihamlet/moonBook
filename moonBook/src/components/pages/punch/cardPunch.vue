@@ -1,18 +1,15 @@
 <template>
-  <div class="card flex flex-align" @click="toBookDetails(item)">
-    <van-row gutter="10" type="flex" align="center">
-      <van-col span="6">
+  <div class="card" @click="toBookDetails(item)">
+    <div class="item flex flex-align">
         <div class="book-cover">
           <img class="lazy" v-lazy="thumb(item.book_photo)" />
         </div>
-      </van-col>
-      <van-col span='18'>
+ 
         <div class="book-info">
           <div class="title" v-line-clamp:20="2" >{{item.book_name}}</div>
           <div class="time">打卡时间：{{getTime(item.create_time)}}</div>
         </div>
-      </van-col>
-    </van-row>
+      </div>
   </div>
 </template>
 <script>
@@ -49,9 +46,17 @@ export default {
 }
 </script>
 <style scoped>
+.book-cover{
+  height: 4.375rem /* 70/16 */;
+  margin-right: .625rem /* 10/16 */;
+}
+
+.book-info{
+  flex: 3;
+}
+
 .book-cover img{
-  min-width: 70px;
-  min-height: 70px;
+  height: 4.375rem /* 70/16 */;
 }
 
 .time{

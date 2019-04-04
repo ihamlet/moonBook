@@ -285,7 +285,7 @@ export default {
                 this.$toast.success('发布成功')
               break
               case 0:
-                this.$toast(res.data.info)
+                this.$toast.fail('发布失败')
               break
             }
           })
