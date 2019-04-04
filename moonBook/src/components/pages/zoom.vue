@@ -1,6 +1,6 @@
 <template>
   <div class="zoom page-padding">
-    <van-nav-bar :zIndex="99" :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed/>
+    <van-nav-bar :zIndex="99" :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed :border='false'/>
     <div class="container">
       <div class="module">
         <div class="user-card flex flex-align" ref="userCrad">

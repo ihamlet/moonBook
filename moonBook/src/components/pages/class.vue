@@ -219,13 +219,17 @@ export default {
               name: 'edit-manager',
               query: {
                 registerType: 'teacher',
-                pageTitle: this.$route.query.pageTitle
+                pageTitle: this.$route.query.pageTitle,
+                back: this.$route.name
               }
             })
           }else{
             this.$toast.fail('加入失败')
             this.$router.replace({
-              name:'setting'
+              name:'setting',
+              query:{
+                back: this.$route.name
+              }
             })
           }
         })

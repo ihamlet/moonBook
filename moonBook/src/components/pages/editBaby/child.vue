@@ -15,7 +15,7 @@
     <van-cell-group>
       <van-field v-model="childInfo.name" :disabled='isMainParent' input-align='right' label="孩子姓名" placeholder="请输入孩子姓名" :error-message="errorMessage.name" />
       <van-field v-model="childInfo.birthday" :disabled='isMainParent' input-align='right' readonly label="孩子生日" placeholder="请选择日期" :error-message="errorMessage.birthday" @click="pickerShow = true" />
-      <van-field v-model="childInfo.relation_name" :disabled='isMainParent' input-align='right' label="您是孩子的？" placeholder="例如：爸爸" />
+      <van-field v-model="childInfo.relation_name" :disabled='isMainParent' input-align='right' readonly label="您是孩子的？" placeholder="例如：爸爸"  @click="parentShow = true"/>
     </van-cell-group>
     <van-radio-group>
       <van-cell-group>
@@ -47,6 +47,12 @@
     <!-- 日期选择器 -->
     <van-popup class="picker-popup" position="bottom" v-model="pickerShow" get-container='#app'>
       <van-datetime-picker title='日期选择' v-model="currentDate" type="date" :min-date="minDate" :max-date="maxDate" @confirm="pickerShow = false" @cancel='cancelPicker' />
+    </van-popup>
+
+    <!-- 家长类型选择器 -->
+    <van-popup class="picker-popup" position="bottom" v-model="parentShow" get-container='#app'>
+      <van-field v-model="childInfo.relation_name" input-align='right' label="您是孩子的？" placeholder="例如：爸爸"/>
+      <van-picker :columns="parentList" :default-index="0" @change='onParentChange'/>
     </van-popup>
 
     <!-- 提交编辑 -->
@@ -113,6 +119,8 @@ export default {
       },
       childId:'',
       sexType:['小王子','小公主'],
+      parentShow: false,
+      parentList:['','爸爸','妈妈','爷爷','奶奶','哥哥','姐姐'],
       errorMessage: {
         name: '',
         birthday: ''
@@ -396,6 +404,9 @@ export default {
       } else {
         return text
       }
+    },
+    onParentChange(picker, values){
+      this.childInfo.relation_name = values
     }
   }
 }

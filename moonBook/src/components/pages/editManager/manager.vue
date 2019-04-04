@@ -32,8 +32,8 @@
     <div class="verify" v-if='active == 1'>
       <van-cell-group>
         <van-cell title="提交时间" :value="getTime(managerData.update_time)"/>
-        <van-cell title="学校" :label="managerData.school_name" is-link center @click="toSchool"/>
-        <van-cell v-if='managerData.banji_name' title="班级" :label="formatBanjiTitle(managerData.banji_name)" is-link center @click="toBanji"/>
+        <van-cell title="学校" :label="managerData.school_name" center/>
+        <van-cell v-if='managerData.banji_name' title="班级" :label="formatBanjiTitle(managerData.banji_name)"/>
         <van-cell title="职务" :value="managerData.duty"/>
       </van-cell-group>
     </div>
@@ -124,12 +124,18 @@ export default {
         name: '捐书',
         iconClass: 'icon-shujia',
         routeLink: '/book/member/entry_donation'
-      }]
+      }],
+      renew: true
     }
   },
   created() {
     this.fetchData()
     this.office = this.managerData.duty
+  },
+  beforeRouteEnter:(to, from, next) => {
+    next(vm =>{
+      vm.backRouter(from.name)
+    })
   },
   watch: {
     '$router': 'fetchData',
@@ -149,6 +155,11 @@ export default {
   },
   methods: {
     ...mapActions(['getUserData']),
+    backRouter(routeName){
+      if(routeName == 'edit-class' || routeName == 'edit-school'){
+        this.renew = false
+      }
+    },
     fetchData() {
 
       let data
@@ -165,16 +176,20 @@ export default {
         if(res.data.status){
           this.managerData = res.data.data
 
-          switch(res.data.data.is_confirm){
-            case '0':
-              this.active = 1 //正在审核
-            break
-            case '1': //审核通过
-              this.active = 2
-            break
-            case '2': //审核被拒绝
-              this.active = 1
-            break
+          if(this.renew){
+            switch(res.data.data.is_confirm){
+              case '0': //正在审核
+                this.active = 1
+              break
+              case '1': //审核通过
+                this.active = 2
+              break
+              case '2': //审核被拒绝
+                this.active = 0
+              break
+            }
+          }else{
+            this.active = 0
           }
 
           this.schoolInfo = res.data.school
@@ -190,7 +205,7 @@ export default {
           cancelButtonText: '取消',
           showCancelButton: true
         }).then(() => {
-          this.$router.replace({
+          this.$router.push({
             name: 'edit-setting',
             query: {
               registerType: this.$route.query.registerType,
@@ -260,6 +275,7 @@ export default {
             this.loading = false
             if (res.data.status == 1) {
               this.active = 1
+              this.renew = true
               this.fetchData()
             }
           })

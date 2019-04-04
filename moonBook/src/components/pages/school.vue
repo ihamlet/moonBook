@@ -18,7 +18,7 @@
     <div class="add-school">
       <div class="fx-box flex flex-align">
         <div class="theme-color">没有你所在的学校？</div>
-        <van-button class="theme-btn" type="primary" size='small' @click="show = true">添加学校</van-button>
+        <van-button class="theme-btn" type="primary" size='small' @click="addSchool">添加学校</van-button>
       </div>
     </div>
 
@@ -219,7 +219,8 @@ export default {
               query: {
                 pageTitle: this.$route.query.pageTitle,
                 registerType: this.$route.query.registerType,
-                type: this.$route.query.type
+                type: this.$route.query.type,
+                back: this.$route.name
               }
             })
           }
@@ -275,6 +276,13 @@ export default {
       }else{
         this.page = 1
         this.onLoad()
+      }
+    },
+    addSchool(){
+      if(this.$route.query.registerType!='headmaster'){
+        this.show = true
+      }else{
+        location.href = 'https://fang.wmlife.net/kindergarten/index/register'
       }
     }
   }
