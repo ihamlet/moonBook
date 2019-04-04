@@ -9,7 +9,7 @@
       <van-tab v-for="(list,index) in readArray" :key="index" :title="`${list.title}(${list.num})`">
         <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-              <van-notice-bar text="代还还有2本逾期，产生逾期费用4元，逾期为1元/本/天，从押金中扣除" left-icon="volume-o" v-if='list.title=="读过"||list.title=="在读"'/>
+              <!-- <van-notice-bar text="代还还有2本逾期，产生逾期费用4元，逾期为1元/本/天，从押金中扣除" left-icon="volume-o" v-if='list.title=="读过"||list.title=="在读"'/> -->
               <div class="tab-jianshu" v-if='list.title == "捐书"'>
                   <van-tabs type="card" color='#0084ff' @click="onClickTab">
                     <van-tab :title="tabTitle" v-for='(tabTitle,tabTitleIndex) in donationTab' :key="tabTitleIndex"></van-tab>
@@ -154,6 +154,14 @@ export default {
       }
 
       return arr
+    },
+    rendStatus(){
+      let status
+
+      if(this.bookStatus.overdue_count > 0){
+        status = `待还还有${this.bookStatus.overdue_count}本逾期`
+      }
+
     }
   },
   data() {
@@ -176,7 +184,8 @@ export default {
         arr: ['一层', '二层', '三层', '四层', '五层', '六层']
       }],
       donationTab:['已捐书','待审核','未通过'],
-      selsetData: ''
+      selsetData: '',
+      bookStatus:{}
     }
   },
   created() {
@@ -195,6 +204,10 @@ export default {
 
       axios.get('/book/baby/getInfo',data).then(res => {
         this.childInfo = res.data.data
+      })
+
+      axios.get('/book/MemberBorrow/getMyBookStat').then(res=>{
+        this.bookStatus = res.data.data
       })
     },
     onClickRight() {
