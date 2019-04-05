@@ -14,10 +14,10 @@
       
     <div class="textarea-module">
       <van-cell-group>
-        <van-field class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="2" autosize />
+        <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="2" autosize />
         
         <div class="upload-module flex wrap">
-          <van-cell>
+          <van-cell :border='false'>
             <van-row gutter="4">
               <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
                 <div class="preview img-grid" :class="[item.thumb?'transparent':'']">
@@ -174,13 +174,7 @@ export default {
         default:
           if(this.ready){
             // 传上传张数
-            if(this.photoLength < 9){
-              this.selectImg(9)
-            }else{
-              this.$dialog.alert({
-                message: `<div class='text-center'>最多只能上传9张图片</div>`
-              })
-            } 
+            this.selectImg(9-this.photoLength)
           }else{
             this.$refs.selectPhoto.$refs.input.click()
           }

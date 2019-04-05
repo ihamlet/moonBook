@@ -46,6 +46,7 @@ import Editor from './editor'
 import Manage from './manage'
 import Accept from './accept'
 import Read from './read'
+import Flyers from './flyers'
 
 Vue.use(Router)
 
@@ -303,6 +304,7 @@ export default new Router({
       }]
     },
     ...Read,
+    ...Flyers,
     Manage,
     Editor,
     {

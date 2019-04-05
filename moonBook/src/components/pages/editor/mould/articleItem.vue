@@ -35,7 +35,25 @@ import { mapActions, mapState, mapMutations } from 'vuex'
  
 export default {
   name: 'article-item',
-  props: ['item','index','ossSign'],
+  props:{
+    item:{
+      type: Object,
+      default:{
+        index: 0,
+        photos: {},
+        text: ''
+      }
+    },
+    index:{
+      required: true,
+      type: Number
+    },
+    ossSign:{
+      required: true,
+      type: Object,
+      default:{}
+    }
+  },
   components: {
     Publishing
   },

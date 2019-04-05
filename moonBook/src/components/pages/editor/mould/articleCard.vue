@@ -16,7 +16,7 @@
           </div>
           <!-- 删除排序 -->
           <div class="operation">
-            <div class="delete" @click="deleteArticle(index)">
+            <div class="delete" @click="deleteArticle(item.index)">
               <i class="iconfont">&#xe651;</i>
             </div>
             <div class="sort handle">
@@ -78,7 +78,7 @@ export default {
           photos: e
         })
       })
-
+        
       return array
     }
   },
@@ -145,8 +145,8 @@ export default {
         }
       })
     },
-    deleteArticle(index) {
-      this.delete(index)
+    deleteArticle(i) {
+      this.grapicData.photos.splice(index,index+1)
     },
     select(item) {
       switch (item.index) {

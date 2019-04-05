@@ -5,19 +5,56 @@
         <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
     <router-view v-if="!$route.meta.keepAlive"></router-view>
+    <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='userTabBtn' />
   </div>
 </template>
 
 <script>
 import axios from './../src/components/lib/js/api'
+import footerBar from './components/module/footerBar'
 import { mapActions, mapGetters } from 'vuex'
 import './../src/components/lib/css/neat.css'
 import 'animate.css'
 
 export default {
   name: 'App',
+  components: {
+    footerBar
+  },
   computed: {
-    ...mapGetters(['userDataState'])
+    ...mapGetters(['userDataState']),
+    userTabBtn() {
+      let array = [
+        {
+          iconClass: 'icon-home',
+          name: '首页',
+          path: '/'
+        },
+        {
+          iconClass: 'icon-banji',
+          name: '班级',
+          path: 'class-home',
+          id: this.userDataState.banji_id
+        },
+        {
+          iconClass: 'icon-release',
+          name: '发布',
+          path: ''
+        },
+        {
+          iconClass: 'icon-crown',
+          name: '宝贝',
+          path: 'baby-home',
+          id: this.userDataState.child_id
+        },
+        {
+          iconClass: 'icon-people',
+          name: '我的',
+          path: 'my-home'
+        }
+      ]
+      return array
+    }
   },
   data () {
     const self = this

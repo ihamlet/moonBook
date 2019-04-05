@@ -8,53 +8,11 @@
         <router-view v-if="!$route.meta.keepAlive" />
       </div>
     </div>
-    <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='userTabBtn' />
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import footerBar from './../components/module/footerBar'
-
 export default {
-  name: 'apps-router-view',
-  components: {
-    footerBar,
-  },
-  computed: {
-    ...mapGetters(['userDataState']),
-    userTabBtn() {
-      let array = [
-        {
-          iconClass: 'icon-home',
-          name: '首页',
-          path: '/'
-        },
-        {
-          iconClass: 'icon-banji',
-          name: '班级',
-          path: 'class-home',
-          id: this.userDataState.banji_id,
-        },
-        {
-          iconClass: 'icon-release',
-          name: '发布',
-          path: ''
-        },
-        {
-          iconClass: 'icon-crown',
-          name: '宝贝',
-          path: 'baby-home',
-          id: this.userDataState.child_id
-        },
-        {
-          iconClass: 'icon-people',
-          name: '我的',
-          path: 'my-home'
-        }
-      ]
-      return array
-    }
-  }
+  name: 'apps-router-view'
 }
 </script>
 <style scoped>

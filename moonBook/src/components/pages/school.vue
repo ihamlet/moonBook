@@ -8,6 +8,7 @@
       </van-search>
     </div>
     <div class="container" v-if='!isListShow'>
+      
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <van-cell v-for="(item,index) in list" :key="index" is-link center @click="selectSchool(item)">
           <schoolCard :item='item' :searchType='searchType'/>
@@ -74,6 +75,13 @@ export default {
       }, {
         name: '幼儿园',
         index: 1
+      }],
+      tab:[{
+        title:'小学',
+        content:''
+      },{
+        title:'幼儿园',
+        content:''
       }]
     }
   },

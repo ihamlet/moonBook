@@ -1,11 +1,7 @@
 export default {
     namespaced: true,
     state:{
-        articleItem: [{
-            index:0,
-            photos:'',
-            text:''
-        }],
+        articleItem: [],
         title:'',
         cover:'',
         percentNum: 0,
@@ -22,7 +18,6 @@ export default {
                 let video = ''
                 let text = ''
 
-            
                 if(element.type == "image"){
                     img = `<img preview='1' data-pswp-uid='${i}' src='${element.photos.thumb}'></img>`
                 }    
@@ -69,16 +64,16 @@ export default {
             state.index = params
         },
         setAdd(state, params){
-            if(params.length){
-                state.articleItem.splice(state.index,0,params[params.length - 1])
-            }else{
-                state.articleItem.splice(state.index,0,params)
-            }
-
-            state.index++
+            state.articleItem = params
         },
         setDelete(state,params){
-            state.articleItem.splice(params, params + 1)
+            let index
+            state.articleItem.forEach((e,i) => {
+                if(e.index == params){
+                    index = i
+                }
+            })
+            state.articleItem.splice(index, index + 1)
         },
         setChange(state, params){
             state.articleItem.forEach(e =>{
