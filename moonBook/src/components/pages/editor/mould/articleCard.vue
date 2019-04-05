@@ -70,16 +70,16 @@ export default {
       }
     },
     cardList(){
-      let array = []
-      this.grapicData.photos.forEach((e, i) => {
-        array.push({
-          type: e.is_video == 0?'image':'video',
-          index: i,
-          photos: e
+        let array = []
+        this.grapicData.photos.forEach((e, i) => {
+          array.push({
+            type: e.is_video == 0?'image':'video',
+            index: i,
+            photos: e
+          })
         })
-      })
-        
-      return array
+
+        return array
     }
   },
   data() {

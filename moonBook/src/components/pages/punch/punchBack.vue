@@ -1,7 +1,5 @@
 <template>
   <div class="punch-list page-padding">
-    <van-nav-bar :title="$route.meta.title" :border='false' />
-
     <div class="booth">
       <div class="ad-mould" @click="toActivity">
         <img src="./../../../assets/banner/banner-activity.png" />
@@ -22,33 +20,29 @@
       </van-list>
     </van-pull-refresh>
 
-    <van-popup class="popup-punch" v-model="show" position="bottom" get-container="#app">
-      <div class="book-info" v-if='bookInfo'>
-        <div class="thumb">
-            <img class="lazy" v-lazy="thumb(bookInfo.thumb)" />
-        </div>
-        <div class="book-name">{{bookInfo.title}}</div>
-      </div>
-      <div class="success flex flex-justify">
-        <iconSuccess class="icon"/>
-      </div>
-    </van-popup>
-
     <van-popup class="popup-release" v-model="releaseShow" position="bottom" get-container="#app">
-        <div class="slogan">记录下这一刻，越分享越幸运</div>
-        <div class="release-box">
-          <div class="btn" v-for='(item,index) in releaseType' :key="index">
+        <video ref='video' src="https://activity-video.oss-cn-shanghai.aliyuncs.com/video/1" autoplay muted x-webkit-airplay="true" playsinline webkit-playsinline="true" x5-video-player-type="h5" ></video>
+        <!-- <div class="slogan-img">
+          <img src="./../../../assets/shareImg.png" />
+        </div>
+        <div class="release-box flex flex-align">
+          <div class="btn" :class="`an-${index} pulse animated`" v-for='(item,index) in releaseType' :key="index" @click="release">
+            <div class="btn-icon">
+              <div class="round-icon">
+                <div class="iconfont" :class="item.icon"></div>
+              </div>
+            </div>
             <div class="text">{{item.text}}</div>
           </div>
-        </div>
+        </div> -->
     </van-popup>
 
     <div class="footer-bar flex">
       <div class="btn-box">
-        <van-button class="btn theme-btn" type="primary" round size="normal" @click="releaseShow = true">完成</van-button>
+        <van-button class="btn theme-btn" type="primary" round size="normal" @click="releaseShow = !releaseShow">晒一晒</van-button>
       </div>
       <div class="btn-box">
-        <van-button class="btn theme-borrowing-btn" round type="primary" size="normal" @click="punch">继续打卡</van-button>
+        <van-button class="btn theme-borrowing-btn" round type="primary" size="normal">每日一读</van-button>
       </div>
     </div>
   </div>
@@ -56,14 +50,12 @@
 <script>
 import axios from './../../lib/js/api'
 import { mapActions } from 'vuex'
-import iconSuccess from './../../module/animate/iconSuccess'
 import cardPunch from './cardPunch'
 import { format } from './../../lib/js/util'
 
 export default {
   name: 'punchBack',
   components: {
-    iconSuccess,
     cardPunch
   },
   data() {
@@ -77,14 +69,13 @@ export default {
       show: false,
       releaseShow: false,
       releaseType:[{
-        icon:'',
-        text:'发图文'
+        icon:'icon-weibo',
+        text:'发图文',
+        index: 0
       },{
-        icon:'',
-        text:'拍小视频'
-      },{
-        icon:'',
-        text:'发视频'
+        icon:'icon-paishipin',
+        text:'拍小视频',
+        index: 1
       }]
     }
   },
@@ -125,24 +116,6 @@ export default {
         }
       })
     },
-    punch() {
-      this.scanQRcode({ id: this.$route.query.child_id }).then(res => {
-        switch (res.data.status) {
-          case 1:
-            this.onRefresh()
-            this.bookInfo = res.data.data.book
-            this.show = true
-            setTimeout(() => {
-                this.show = false
-            },4000)
-            break
-          case 0:
-            this.show = false
-            this.$toast(res.data.msg)
-            break
-        }
-      })
-    },
     onRefresh() {
       this.page = 1
       this.onLoad().then(() => {
@@ -169,6 +142,29 @@ export default {
     },
     toActivity(){
 
+    },
+    release(){
+      switch (index) {
+        case 0:
+          this.$router.push({
+            name: 'graphic',
+            query: {
+              back: this.$route.name,
+              id: this.$route.query.id
+            }
+          })
+          break
+        case 1:
+          this.$router.push({
+            name: 'graphic',
+            query: {
+              back: this.$route.name,
+              id: this.$route.query.id,
+              upVideo:1
+            }
+          })
+          break
+      }
     }
   }
 }
@@ -194,7 +190,7 @@ export default {
   position: fixed;
   padding: 10px 0;
   width: 100%;
-  z-index: 2010;
+  z-index: 9999;
   bottom: 0;
 }
 
@@ -219,5 +215,61 @@ export default {
 
 .popup-punch{
   border-radius: .625rem /* 10/16 */ .625rem /* 10/16 */ 0 0;
+}
+
+.slogan{
+  height: 2.875rem /* 46/16 */;
+  text-align: center;
+  line-height: 2.875rem /* 46/16 */;
+}
+
+.btn-icon,
+.text{
+  text-align: center;
+}
+
+.text{
+  font-size: .875rem /* 14/16 */;
+}
+
+.release-box{
+  padding: 1.25rem /* 20/16 */ 0;
+}
+
+.slogan-img{
+  width: 280px;
+  margin: 20px auto;
+}
+
+.round-icon{
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  line-height: 45px;
+  margin:0 auto;
+  border-radius: 50%;
+}
+
+.round-icon .iconfont{
+  font-size: 26px;
+  color: #fff;
+}
+
+.release-box .btn:nth-child(1) .round-icon{
+  background-image: linear-gradient(to top, #c471f5 0%, #fa71cd 100%);
+}
+
+.release-box .btn:nth-child(2) .round-icon{
+  background-image: linear-gradient(to right, #f78ca0 0%, #f9748f 19%, #fd868c 60%, #fe9a8b 100%);
+}
+
+.popup-release{
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.text{
+  margin-top: .625rem /* 10/16 */;
 }
 </style>

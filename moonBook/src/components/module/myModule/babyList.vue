@@ -14,7 +14,7 @@
         <div class="item module" v-for="(list,index) in childrenList" :key="index">
           <div class="card-top-bar">
             <van-nav-bar :title="`${list.name}`" right-text="编辑" :left-text="list.banji_name?list.banji_name:'班级'" @click-left="onClickLeft(list)"
-              @click-right="onClickRight(list)" />
+              @click-right="onClickRight(list)" :border='false'/>
           </div>
           <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
             <div class="volume">
@@ -52,7 +52,6 @@ export default {
   props: ['childrenList'],
   components: {
     numberGrow,
-    // addClass,
     avatar
   },
   computed: {

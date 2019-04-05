@@ -64,7 +64,7 @@ export default {
             state.index = params
         },
         setAdd(state, params){
-            state.articleItem = params
+            state.articleItem.splice(params.index, params.index + 1, params)
         },
         setDelete(state,params){
             let index

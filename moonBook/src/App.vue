@@ -154,6 +154,26 @@ textarea {
   content: '\e606'
 }
 
+.icon-weibo::before {
+  content: '\e6d6';
+}
+
+.icon-wenzhang::before {
+  content: '\e976';
+}
+
+.icon-paishipin::before {
+  content: '\e62a';
+}
+
+.icon-shipin::before {
+  content: '\e62b';
+}
+
+.icon-tiwen::before {
+  content: '\e62c';
+}
+
 .wrap {
   flex-wrap: wrap;
 }

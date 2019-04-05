@@ -6,11 +6,6 @@
         <div class="name">{{list.name}}</div>
       </div>
     </div>
-    <!-- <div class="media-input" v-show="false">
-      <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
-      <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
-      <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
-    </div> -->
     <div class="close-btn" @click="$emit('close')" v-if='position != "top"' :class="[isShow?'rotateIn animated':'']">
       <i class="iconfont">&#xe647;</i>
     </div>
@@ -23,7 +18,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'tips',
-  props: ['position', 'isShow'],
+  props: ['position','isShow'],
   computed: {
     ...mapGetters(['managerState'])
   },
@@ -48,17 +43,7 @@ export default {
         name: '发视频',
         type: 'video',
         icon: 'icon-shipin'
-      }, {
-        name: '文章',
-        type: 'article',
-        icon: 'icon-wenzhang'
-      } 
-      // ,{
-      //   name: '发提问',
-      //   type: 'question',
-      //   icon: 'icon-tiwen'
-      // }
-      ]
+      }]
     }
   },
   created() {
@@ -124,121 +109,11 @@ export default {
 
           break
       }
-    },
-    // onRead(file) {
-    //   let array = []
-    //   if (file.length) {
-    //     array = file
-    //   } else {
-    //     array.push(file)
-    //   }
-    // }
-
-      // 先发布图片 @王伟
-      // 
-      // let f = () => {
-      //   return new Promise((resolve, reject) => {
-      //     array.forEach((element, index) => {
-      //       if (this.photoLength < 9) {
-      //         this.photoLength++
-      //         this.grapicData.photos.isLoading = true
-      //         compress(element.content, 1200, 0.8, 'blob').then(val => {
-      //           val.toBlob((blob) => {
-      //             this.upOssPhoto(blob, element.file, element.content).then(() => {
-      //               index === array.length - 1 && resolve()
-      //             })
-      //           })
-      //         })
-      //       } else {
-      //         this.$dialog.alert({
-      //           message: '最多只能上传9张图片'
-      //         })
-      //       }
-      //     })
-      //   })
-      // }
-
-      // f().then(() => {
-      //   this.$router.push({
-      //     name: 'graphic',
-      //     query: {
-      //       back: this.$route.name,
-      //       id: this.$route.query.id
-      //     }
-      //   })
-      // })
-    // },
-    // doUpload(e) {
-    //   let file = e.target.files[0]
-    //   let type = e.target.dataset.type
-    //   this.upOssMedia(type, file).then(() => {
-    //     this.$router.push({
-    //       name: 'graphic',
-    //       query: {
-    //         back: this.$route.name,
-    //         id: this.$route.query.id
-    //       }
-    //     })
-    //   })
-    // },
-    // upOssMedia(type, file) {
-    //   if (!this.ossSign) {
-    //     alert('未能获取上传参数')
-    //   }
-
-    //   let url = this.ossSign.host.replace('http:', 'https:')
-    //   let data = new FormData()
-    //   let key = this.ossSign.dir + '/' + Date.now() + file.name
-    //   let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
-
-    //   data.append('key', key)
-    //   data.append('OSSAccessKeyId', this.ossSign.accessid)
-    //   data.append('policy', this.ossSign.policy)
-    //   data.append('success_action_status', 200)
-    //   data.append('signature', this.ossSign.signature)
-    //   data.append('file', file)
-
-    //   return axios({
-    //     url: url,
-    //     data: data,
-    //     method: 'post',
-    //     onUploadProgress: p => {
-    //       this.percent = Math.floor(100 * (p.loaded / p.total))
-    //     }
-    //   }).then((res) => {
-    //     this.grapicData.photos.push({
-    //       media: true,
-    //       is_audio: type == 'audio' ? 1 : 0,
-    //       is_video: type == 'video' ? 1 : 0,
-    //       photo: path,
-    //       thumb: `${path}?x-oss-process=video/snapshot,t_6000,f_jpg,w_0,h_0,m_fast`
-    //     })
-    //   })
-    // }
+    }
   }
 }
 </script>
 <style scoped>
-.icon-weibo::before {
-  content: '\e6d6';
-}
-
-.icon-wenzhang::before {
-  content: '\e976';
-}
-
-.icon-paishipin::before {
-  content: '\e62a';
-}
-
-.icon-shipin::before {
-  content: '\e62b';
-}
-
-.icon-tiwen::before {
-  content: '\e62c';
-}
-
 .tips.bottom .icon-weibo::before {
   color: #7197e7;
 }
