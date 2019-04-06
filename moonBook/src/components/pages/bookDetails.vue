@@ -30,11 +30,11 @@
           </van-row>
         </div>
       </div>
-      <div class="module" v-if='freshList.length > 0'>
-        <freshList :list='freshList' cid="child_id" avatar="child_avatar" routerName="baby-home" name="child_name" />
+      <div class="module" v-if='freshList.length'>
+        <freshList :list='freshList' cid="child_id" avatar="child_avatar" routerName="baby-home" name="child_name" :key="$route.query.id"/>
       </div>
       <div>
-        <comment :item='details' type='bookDetails'/>
+        <comment :item='details' type='bookDetails' :key="$route.query.id"/>
       </div>
     </div>
   </div>
@@ -101,15 +101,21 @@ export default {
       e.target.src = require('@/assets/img/no-cover.jpg')
     },
     fetchData() {
-      axios.get(`/book/ShelfBook/getInfo?book_id=${this.$route.query.id}`).then(res => {
+      let data = {
+        params:{
+          book_id:this.$route.query.id
+        }
+      }
+
+      axios.get('/book/ShelfBook/getInfo', data).then(res => {
         if(res.data.status == 1){
           this.details = res.data.data
         }
       })
 
-      axios.get(`/book/ShelfBookChild/getList?book_id=${this.$route.query.id}`).then(res => {
+      axios.get('/book/ShelfBookChild/getList', data).then(res => {
         if(res.data.status == 1){
-          this.freshList = res.data.data
+          this.freshList = Array.from(new Set(res.data.data))
         }
       })
     },

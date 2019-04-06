@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="module card-top">
-        <read-list title='阅读榜' type='banji' field='avatar' />
+        <read-list title='阅读榜' type='banji' field='avatar' :key="classInfo.banji_id"/>
       </div>
       <div class="module">
         <notice type='banji' />
@@ -157,11 +157,17 @@ export default {
       }]
     }
   },
+  //进入该页面
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.qrcode()
       vm.request()
     })
+  },
+  //离开该页面去掉页面数据缓存
+  beforeRouteLeave(to, from, next) {
+    to.meta.keepAlive = false
+    next()
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)

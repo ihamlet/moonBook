@@ -44,7 +44,6 @@
 
     <!-- 分类设置、同步、设置机构标签 -->
     <articleSetting type='mould'/>
-    <van-actionsheet v-model="actionShow" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="actionShow = false" />
     <div class="media-input" v-show="false">
       <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
@@ -100,13 +99,6 @@ export default {
       mediaContent: [],
       percent: 0,
       photoLength: 0,
-      actions: [{
-        name: '保存草稿',
-        type: 'save'
-      }, {
-        name: '不保存',
-        type: 'noSave'
-      }],
       videoThumb:'',
       typeUpload:''
     }
@@ -114,8 +106,9 @@ export default {
   created() {
     this.fetchData()
   },
+  //去掉页面数据缓存
   beforeRouteLeave(to, from, next) {
-    to.meta.keepAlive = false //去掉页面数据缓存
+    to.meta.keepAlive = false 
     next()
   },
   watch: {
@@ -296,7 +289,10 @@ export default {
       let file = e.target.files[0]
       let type = e.target.dataset.type
       let formData = new FormData()
-      let maxSize = 1024 * 1024 * 3
+      //  动态获取视频截取大小以获取视频封面
+      let size = e.target.files[0].size/1024/1024/2
+      let sizeVal = size > 3 ? 3 : size
+      let maxSize = 1024 * 1024 * sizeVal
       let blob = file.slice(0, maxSize)
 
       formData.append('file',blob,file.name)
@@ -311,7 +307,7 @@ export default {
           this.percent = Math.floor(100 * (p.loaded / p.total))
         }
       }).then( res => {
-         let info = res.data.data
+          let info = res.data.data
           this.grapicData.photos.push({
             thumb: info.thumb,
             height: info.height,
@@ -319,11 +315,17 @@ export default {
             rotate: info.rotate,
             duration: Math.floor(info.duration) || 10
           })
+
         this.upOssMedia(type, file)
         this.percent = 0
       })
     },
     upOssMedia(type, file) {
+      //截取视频为15M体积的视频 应该够10s
+      let newFileVideo = file.slice(0, 1024*1024*15)
+
+      console.log(Exif)
+
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
@@ -338,7 +340,7 @@ export default {
       data.append('policy', this.ossSign.policy)
       data.append('success_action_status', 200)
       data.append('signature', this.ossSign.signature)
-      data.append('file', file)
+      data.append('file', newFileVideo, file.name)
 
       axios({
         url: url,

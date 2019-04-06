@@ -51,13 +51,6 @@ import Flyers from './flyers'
 Vue.use(Router)
 
 export default new Router({
-  scrollBehavior (to, from, savedPosition) {
-    if (savedPosition) {
-      return savedPosition
-    } else {
-      return { x: 0, y: 0 }
-    }
-  },
   routes: [
     {
       path: '',
@@ -312,5 +305,12 @@ export default new Router({
       name: '404', //404 路由必须置于 routes 数组末尾
       component: Error
     }
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 })
