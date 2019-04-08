@@ -19,8 +19,7 @@
 
           <!-- 正文播放 -->
           <div class="player-windows" v-else>
-            <video :src='videoItem.photo' :poster='videoItem.thumb' controls muted x-webkit-airplay="true" playsinline
-              webkit-playsinline="true" x5-video-player-type="h5"></video>
+            <video style="object-fit:fill" :src='videoItem.photo' :poster='videoItem.thumb' controls x-webkit-airplay="true" playsinline webkit-playsinline="true" loop="loop"></video>
           </div>
         </div>
       </div>
@@ -58,6 +57,7 @@
 <script>
 import userCard from './../mold/userCard'
 import { formatTime } from './../../lib/js/util'
+import './../../../../static/ckplayer/ckplayer/ckplayer'
 
 export default {
   name: 'media',

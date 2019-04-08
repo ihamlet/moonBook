@@ -42,8 +42,8 @@
       <apps :appsList='appsList'/>
     </div>
 
-    <div class="footer-bar">
-      <van-button class="theme-btn" square type="primary" size="large" :loading='loading'  @click="setStep">{{btnText}}</van-button> 
+    <div class="footer-bar" v-if='active != 2'>
+      <van-button class="theme-btn" square type="primary" size="large" :loading='loading' @click="setStep">{{btnText}}</van-button> 
     </div>
   </div>
 </template>

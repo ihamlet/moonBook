@@ -82,6 +82,11 @@ export default {
             boolean = true
           }
         })
+
+        if(this.userInfo.id == this.$route.query.id){
+          boolean = true
+        }
+
         return boolean
       }
     }

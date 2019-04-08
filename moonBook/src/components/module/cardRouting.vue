@@ -18,7 +18,6 @@
       </div>
       <div class="container">
          <i class="iconfont">&#xe62d;</i>
-         <div class="title">邀请家人共同打造宝贝主页</div>
       </div>
     </div>
     <van-row class="square-btn" gutter="20" type="flex" justify="space-around">
@@ -71,6 +70,8 @@ export default {
             id: this.childId
           }
       })
+
+      localStorage.removeItem('childInfo')
     }
   }
 }
@@ -166,7 +167,7 @@ export default {
 
 .container .iconfont{
     position: absolute;
-    top: -.3125rem /* 5/16 */;
+    top: -.625rem /* 10/16 */;
     font-size: 3.125rem /* 50/16 */;
     right: .625rem /* 10/16 */;
     background: linear-gradient(0, #E91E63,#FF5722 );

@@ -2,7 +2,11 @@
   <div class="punch-list page-padding">
     <div class="booth">
       <div class="ad-mould" @click="toActivity">
-        <img src="./../../../assets/banner/banner-activity.png" />
+       <van-swipe :autoplay="3000" indicator-color="white" :height='130'>
+          <van-swipe-item v-for="(image, index) in banner" :key="index">
+            <img :src="image" />
+          </van-swipe-item>
+        </van-swipe>
       </div>
     </div>
 
@@ -21,20 +25,7 @@
     </van-pull-refresh>
 
     <van-popup class="popup-release" v-model="releaseShow" position="bottom" get-container="#app">
-        <video ref='video' src="https://activity-video.oss-cn-shanghai.aliyuncs.com/video/1" autoplay muted x-webkit-airplay="true" playsinline webkit-playsinline="true" x5-video-player-type="h5" ></video>
-        <!-- <div class="slogan-img">
-          <img src="./../../../assets/shareImg.png" />
-        </div>
-        <div class="release-box flex flex-align">
-          <div class="btn" :class="`an-${index} pulse animated`" v-for='(item,index) in releaseType' :key="index" @click="release">
-            <div class="btn-icon">
-              <div class="round-icon">
-                <div class="iconfont" :class="item.icon"></div>
-              </div>
-            </div>
-            <div class="text">{{item.text}}</div>
-          </div>
-        </div> -->
+        <videoList />
     </van-popup>
 
     <div class="footer-bar flex">
@@ -42,7 +33,7 @@
         <van-button class="btn theme-btn" type="primary" round size="normal" @click="releaseShow = !releaseShow">晒一晒</van-button>
       </div>
       <div class="btn-box">
-        <van-button class="btn theme-borrowing-btn" round type="primary" size="normal">每日一读</van-button>
+        <van-button class="btn theme-borrowing-btn" round type="primary" size="normal" @click="toGraphic">跟拍</van-button>
       </div>
     </div>
   </div>
@@ -51,12 +42,14 @@
 import axios from './../../lib/js/api'
 import { mapActions } from 'vuex'
 import cardPunch from './cardPunch'
+import videoList from './../video/videoList'
 import { format } from './../../lib/js/util'
 
 export default {
   name: 'punchBack',
   components: {
-    cardPunch
+    cardPunch,
+    videoList
   },
   data() {
     return {
@@ -76,11 +69,27 @@ export default {
         icon:'icon-paishipin',
         text:'拍小视频',
         index: 1
-      }]
+      }],
+      banner:[
+        require('@/assets/banner/banner-1.jpg'),
+        require('@/assets/banner/banner-2.jpg'),
+        require('@/assets/banner/banner-3.jpg'),
+      ]
     }
+  },
+  created () {
+    this.fetchData()
+  },
+  watch: {
+    '$router':'fetchData'
   },
   methods: {
     ...mapActions('openWX', ['scanQRcode']),
+    fetchData(){
+      axios.get('book/api/ads').then(res=>{
+        console.log(res)
+      })
+    },
     onLoad() {
       this.day = format(new Date(), 'yyyy-MM-dd')
 
@@ -165,6 +174,16 @@ export default {
           })
           break
       }
+    },
+    toGraphic(){
+      this.$router.push({
+        name: 'graphic',
+        query: {
+          back: this.$route.name,
+          id: this.$route.query.id,
+          cate_id: 133
+        }
+      })
     }
   }
 }

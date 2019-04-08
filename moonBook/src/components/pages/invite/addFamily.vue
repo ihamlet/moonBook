@@ -1,6 +1,5 @@
 <template>
   <div class="add-family">
-    <van-nav-bar :border='false' title="邀请"/>
     <div class="pictorial">
       <div class="tips" v-show='is_mine'>点击发送给家人 邀请加入</div>
       <div class="logo">
@@ -66,7 +65,7 @@ export default {
     let self = this //this指向到vue实例
     this.$nextTick(()=>{
       let data = {
-        item: this.item,
+        item: self.item,
         success(){
           self.$router.push({
             name:'baby-home',
@@ -143,7 +142,7 @@ export default {
 
 .pictorial {
   width: 100%;
-  height: calc(100vh - 45px);
+  height: 100vh;
   background-image: url('./../../../assets/img/share-bg.jpg');
   background-size: cover;
   background-position: bottom;
@@ -176,16 +175,16 @@ export default {
   line-height: 1.75rem /* 28/16 */;
   border-radius: .5rem /* 8/16 */;
   right: .625rem /* 10/16 */;
-  top: 50px;
+  top: 30px;
 }
 
 .tips::before{
   content: '';
   position: absolute;
   border-right:0 solid transparent;
-	border-left: 30px solid transparent;
-  border-bottom:50px solid#000;
-  top: -50px;
+	border-left: 15px solid transparent;
+  border-bottom: 30px solid#000;
+  top: -30px;
   right: .5rem /* 8/16 */;
   opacity: .7;
 }

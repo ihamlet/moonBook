@@ -50,6 +50,10 @@
         阅读打卡
       </van-button>
     </div>
+
+    <div class="release" @click="toGraphic">
+      <div class="text">课堂阅读发布</div>
+    </div>
   </div>
 </template>
 <script>
@@ -397,6 +401,17 @@ export default {
     },
     toManage(){
       location.href = '/SchoolManage'
+    },
+    toGraphic(){
+      this.$router.push({
+        name: 'graphic',
+        query: {
+          back: this.$route.name,
+          id: this.$route.query.id,
+          upVideo:1,
+          cate_id:116
+        }
+      })
     }
   }
 }
@@ -478,5 +493,26 @@ export default {
 
 .splitter{
   margin: 0 .3125rem /* 5/16 */;
+}
+
+.release{
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  background: linear-gradient(127deg, #ff765c, #ff23b3);
+  color: #fff;
+  border-radius: 50%;
+  position: fixed;
+  right: 20px;
+  bottom: 100px;
+}
+
+.release .text{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  font-size: 13px;
+  width: 50px;
 }
 </style>

@@ -47,6 +47,7 @@ import Manage from './manage'
 import Accept from './accept'
 import Read from './read'
 import Flyers from './flyers'
+import Coupon from './coupon'
 
 Vue.use(Router)
 
@@ -298,6 +299,7 @@ export default new Router({
     },
     ...Read,
     ...Flyers,
+    ...Coupon,
     Manage,
     Editor,
     {

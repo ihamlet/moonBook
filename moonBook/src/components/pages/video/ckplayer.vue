@@ -60,7 +60,8 @@ export default {
         debug: true,
         drag: 'start',
         seek: 0,
-        video: []
+        video: [],
+        autoplay:true
       },
       styleObject:{
         position:'fixed',

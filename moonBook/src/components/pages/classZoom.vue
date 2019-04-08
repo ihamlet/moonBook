@@ -34,12 +34,13 @@ export default {
     ...mapGetters(['managerState']),
     manage() {
       if(this.managerState){
-        let boolean
+        let boolean = false
         this.managerState.forEach(element => {
           if (this.$route.query.id == element.id && element.item_relation != 'parent'){
             boolean = true
           }
         })
+        
         return boolean
       }
     },

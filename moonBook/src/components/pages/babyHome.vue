@@ -659,7 +659,9 @@ export default {
         switch(res.data.status){
           case 1:
             this.getUserData()
-            this.$toast('已设为当前宝贝')
+            if(!this.childInfo.is_mine){
+              this.$toast('已设为当前宝贝')
+            }
           break
           case 0:
             this.$toast.fail(res.data.data.msg)

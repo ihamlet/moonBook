@@ -88,25 +88,27 @@ export default {
     fetchData() {
       let array = []
 
-      switch(true){
-        case this.userDataState.child_id > 0:
+     
+        if(this.userDataState.child_id){
           array.push({
             title: '宝贝主页',
             name: 'baby-home',
             to: 1
-          })          
-        break
-        case this.userDataState.banji_id > 0:
+          })     
+        }
+
+        if(this.userDataState.banji_id){
           array.push({
             title: '班级',
             name: 'class-home',
             to: 1
           })
-        break
-        default:
+        }
+     
+        if(!this.userDataState.banji_id && !this.userDataState.child_id){
           localStorage.removeItem('result')
-      }
-
+        }
+    
       array.push({
         title: '发现',
         name: 'apps-find',
@@ -161,10 +163,21 @@ export default {
           })
           this.topicList = data
           //从localStorage 获取 分类信息
-          if(localStorage.getItem('tag')){
-            this.addTag(JSON.parse(localStorage.getItem('tag')))
+
+          if(this.$route.query.cate_id){
+            cateArray.forEach(element=>{
+              element.children.forEach(e=>{
+                if(e.cate_id == this.$route.query.cate_id){
+                  this.addTag(e)
+                }
+              })
+            })
           }else{
-            this.addTag(data[0])
+            if(localStorage.getItem('tag')){
+              this.addTag(JSON.parse(localStorage.getItem('tag')))
+            }else{
+              this.addTag(data[0])
+            }
           }
         }
       })

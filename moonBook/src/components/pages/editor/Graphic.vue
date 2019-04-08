@@ -324,8 +324,6 @@ export default {
       //截取视频为15M体积的视频 应该够10s
       let newFileVideo = file.slice(0, 1024*1024*15)
 
-      console.log(Exif)
-
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }

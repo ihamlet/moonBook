@@ -27,7 +27,6 @@ export default {
                         src='${element.photos.photo}' 
                         poster='${element.photos.thumb}'
                         controls
-                        muted
                         x-webkit-airplay="true" 
                         playsinline 
                         webkit-playsinline="true"

@@ -1,9 +1,8 @@
 <template>
   <div class="verify-list">
-    <van-nav-bar :title="$route.meta.title"/>
     <div class="container">
       <div class="theme-background">
-        <family />
+        <family :key="$route.query.id" v-if="isRouterAlive"/>
       </div>
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
@@ -14,8 +13,10 @@
                   </div>
                   <div class="name">{{item.parent_name}}</div>
               </div>
-              <div class="btn">
-                  <van-button class="theme-btn" size='small' type="primary" round @click="by(item)">通过</van-button>
+              <div class="btn-box"  v-if='!item.is_manager'>
+                <div class="btn">
+                  <van-button class="theme-btn" size='small' type="primary" round @click="by(item)" :plain='!item.show_check'>{{item.show_check?'通过':'请出'}}</van-button>
+                </div>
               </div>
           </van-cell>
 
@@ -30,26 +31,30 @@
 <script>
 import axios from './../../lib/js/api'
 import family from './../../module/myModule/family'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'verifyList',
   components: {
     family
   },
+  computed: {
+    ...mapGetters(['userDataState'])
+  },
   data() {
     return {
       list: [],
       loading: false,
       finished: false,
-      count:0
+      count:0,
+      isRouterAlive: true
     }
   },
   methods: {
     onLoad(){
       let data = {
         params:{
-          child_id: this.$route.query.id,
-          is_close: 1
+          child_id: this.$route.query.id
         }
       }
 
@@ -71,13 +76,38 @@ export default {
         })
     },
     by(item){
+      if(item.show_check){
         axios.get(`/book/babyParent/check?id=${item.id}`).then(res=>{
             if(res.data.status == 1){
               this.$toast.success('通过审核')
+              this.reload()
               this.onLoad()
             }
         })
-    }
+      }else{
+        let data = {
+          params:{
+            child_id: this.$route.query.id,
+            parent_id: item.parent_id
+          }
+        }
+
+        axios.get('/book/baby/remove_parent',data).then(res=>{
+          switch (res.data.status) {
+            case 1:
+              this.$toast(res.data.msg)
+              this.reload()
+              this.onLoad()
+            break
+          }
+        })
+      }
+
+    },
+    reload () {
+     this.isRouterAlive = false
+     this.$nextTick(() => (this.isRouterAlive = true))
+    }   
   }
 }
 </script>
@@ -100,5 +130,9 @@ export default {
   line-height: 18.75rem /* 300/16 */;
   background: #fff;
   color: #C0C4CC;
+}
+
+.btn{
+  margin-left: 10px
 }
 </style>

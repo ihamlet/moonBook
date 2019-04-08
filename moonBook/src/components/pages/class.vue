@@ -14,7 +14,7 @@
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <div class="content" v-if='list.length'>
-            <div v-for="(item,index) in list" size='large' :key="index" is-link @click='select(item)'>
+            <div v-for="(item,index) in list" size='large' :key="index" is-link @click='select(item,index)'>
               <div class="banji-item" v-if='item.year > "0"'>
                 <div class="year theme-color" v-if='isYearShow(item,index)'>{{item.year}}</div>
                 <van-cell is-link>
@@ -52,6 +52,14 @@
         <van-field v-model="className" label="班级名称" placeholder="请输入班级名称" input-align='right' />
       </van-cell-group>
     </van-dialog>
+
+    <van-dialog v-model="showCode" show-cancel-button :before-close="codeBeforeClose">
+      <div class="dialog-title">请输入邀请码</div>
+      <van-cell-group>
+        <van-field v-model="code" label="邀请码" placeholder="请输入邀请码" input-align='right' />
+      </van-cell-group>
+    </van-dialog>
+
   </div>
 </template>
 <script>
@@ -93,7 +101,10 @@ export default {
       childInfo: '',
       schoolName: '',
       className: '',
-      show: false
+      code:'',
+      show: false,
+      showCode: false,
+      itemIndex:0,
     }
   },
   created() {
@@ -175,6 +186,33 @@ export default {
         this.$router.go(-1)
       }
     },
+    codeBeforeClose(action, done){
+      if (action === 'confirm') {
+        if(this.code){
+          if(this.list[this.itemIndex].invite_code == this.code){
+            let BabyJoinBanjiBdind = {
+              params: {
+                banji_id: this.list[this.itemIndex].banji_id,
+                child_id: this.$route.query.id
+              }
+            }
+
+            this.babyJoin(BabyJoinBanjiBdind)
+          }
+        }else{
+          let BabyJoinBanjiBdind = {
+            params: {
+              banji_id: this.list[this.itemIndex].banji_id,
+              child_id: this.$route.query.id
+            }
+          }
+
+          this.babyJoin(BabyJoinBanjiBdind)
+        }
+      } else {
+        done()
+      }
+    },
     select(item, itemIndex) {
       if (this.$route.query.registerType) {
         let SchoolTeacherBind = {
@@ -192,7 +230,13 @@ export default {
           }
         }
 
-        this.babyJoin(BabyJoinBanjiBdind)
+        if(item.invite_code){
+          this.showCode = true
+          this.itemIndex = itemIndex
+        }else{
+          this.babyJoin(BabyJoinBanjiBdind)
+        }
+        
       }
     },
     babyJoin(data){

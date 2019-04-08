@@ -52,7 +52,8 @@ export default {
 
       let data = {
         params: {
-          child_id: this.$route.query.id
+          child_id: this.$route.query.id,
+          is_close: 0
         }
       }
 
@@ -63,49 +64,15 @@ export default {
           break
         }
       })
-
-      let ParentListData = {
-        params: {
-          child_id: data.params.child_id,
-          is_close: 1
-        }
-      }
-
-      axios.get(wmLifeGetBabyParent, ParentListData).then(res => {
-        switch(res.data.status){
-          case 1:
-            let array = res.data.data
-
-            array.forEach((element, i) => {
-              if (this.userDataState.id == element.parent_id) {
-                array.splice(i, 1)
-              }
-            })
-
-            this.count = array.length
-          break
-        }
-
-      })
     },
     toFamily() {
-      if (this.count > 0) {
-        this.$router.push({
-          name: 'verify-list',
-          query: {
-            id: this.$route.query.id,
-            back: this.$route.name,
-          }
-        })
-      } else {
-        this.$router.push({
-          name: 'add-family',
-          query: {
-            id: this.$route.query.id,
-            back: this.$route.name
-          }
-        })
-      }
+      this.$router.push({
+        name: 'add-family',
+        query: {
+          id: this.$route.query.id,
+          back: this.$route.name
+        }
+      })
     },
     getAvatar(img) {
       let pos = img.indexOf('http://')

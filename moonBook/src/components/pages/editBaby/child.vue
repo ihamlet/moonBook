@@ -1,6 +1,6 @@
 <template>
   <div class="add-child  page-padding">
-    <van-nav-bar :title="$route.query.type!='edit'?'添加宝贝':'编辑宝贝'" :right-text="$route.query.type=='edit'?'删除':''" @click-right="onClickRight('delete')" />
+    <van-nav-bar :title="$route.query.type!='edit'?'添加宝贝':'编辑宝贝'" :right-text="$route.query.type=='edit'?'注销':''" @click-right="onClickRight('delete')" />
     <div class="avatar-uploader">
       <van-uploader :after-read="onRead">
         <div class="prompt" v-if='!childInfo.avatar'>
@@ -40,7 +40,7 @@
       <vue-cropper class="theme-cropper" ref="cropper" :img="option.img" :output-size="option.size" :output-type="option.outputType"
         :info="true" :full="option.full" :can-move="option.canMove" :can-move-box="option.canMoveBox" :fixed-box="option.fixedBox"
         :original="option.original" :auto-crop="option.autoCrop" :auto-crop-width="option.autoCropWidth"
-        :auto-crop-height="option.autoCropHeight" :center-box="option.centerBox" :fixed='option.fixed'></vue-cropper>
+        :auto-crop-height="option.autoCropHeight" :center-box="option.centerBox" :fixed='option.fixed' :enlarge='.3'></vue-cropper>
       <van-button class="theme-btn" type="primary" :loading='cropperLoading' @click="getCropData" round>完成截图</van-button>
     </van-popup>
 
@@ -115,7 +115,7 @@ export default {
         gender: 1,
         avatar: '',
         birthday: '',
-        relation_name: '',
+        relation_name: ''
       },
       childId:'',
       sexType:['小王子','小公主'],
@@ -148,6 +148,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     to.meta.keepAlive = false //去掉页面数据缓存
+    localStorage.setItem('childInfo', JSON.stringify(this.childInfo))
     next()
   },
   created() {
@@ -260,6 +261,7 @@ export default {
         }, 2000)
       } else {
         this.operationApi().then(res => {
+          this.childId = res
           if(this.$route.query.type == 'register'){
             this.show = true
           }else{
@@ -362,14 +364,12 @@ export default {
     onClickRight(type) {
       if (type == 'delete') {
         this.$dialog.alert({
-          message: `<div class='text-center'>确定要删除吗？</div>`,
+          message: `<div class='text-center'>确定要注销吗？</div>`,
           confirmButtonText: '取消',
           cancelButtonText: '确认',
           showCancelButton: true
         }).then(() => {
-          this.$router.push({
-            name: 'my-home'
-          })
+          this.$router.go(-1)
         }).catch(() => {
           let data = {
             params:{
@@ -378,9 +378,7 @@ export default {
           }
           axios.get('/book/baby/del',data).then(res => {
             this.getUserData()
-            this.$router.push({
-              name: 'my-home'
-            })
+            this.$router.go(-1)
           })
         })
       }
