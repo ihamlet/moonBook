@@ -87,7 +87,7 @@ export default {
     }
   },
   data() {
-    let self = this
+    let u = navigator.userAgent
     return {
       show: false,
       actionShow: false,
@@ -95,6 +95,8 @@ export default {
         text: '',
         photos: []
       },
+      isAndroid: u.indexOf('Android') > -1 || u.indexOf('Adr') > -1, //安卓终端
+      isIOS: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), // ios终端
       ossSign: '',
       mediaContent: [],
       percent: 0,
@@ -291,7 +293,15 @@ export default {
       let formData = new FormData()
       //  动态获取视频截取大小以获取视频封面
       let size = e.target.files[0].size/1024/1024/2
-      let sizeVal = size > 3 ? 3 : size
+
+      let sizeVal
+
+      if(this.isIOS){
+        sizeVal = 3
+      }else{
+        sizeVal = size > 3 ? 3 : size
+      }
+
       let maxSize = 1024 * 1024 * sizeVal
       let blob = file.slice(0, maxSize)
 
