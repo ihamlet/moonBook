@@ -8,7 +8,7 @@
                     <van-button round class="theme-btn animated rubberBand" type="primary" size="large" @click="toRegistered">注册成为老师</van-button>
                 </div>
                 <div class="btn-box share">
-                    <van-button round class="theme-btn animated rubberBand" type="primary" size="large" @click="share">分享到'家长群'、'班级群'</van-button>
+                    <van-button round class="theme-btn animated rubberBand" type="primary" size="large" @click="toStudent">分享到'家长群'、'班级群'</van-button>
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@ export default {
                 }
             })
         },
-        share(){
+        toStudent(){
             this.$router.push({
                 name:'flyersStudent'
             })
