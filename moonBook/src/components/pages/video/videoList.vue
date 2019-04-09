@@ -63,7 +63,7 @@ export default {
         onChange(index){
             this.current = index
             console.log(this.player)
-            this.player.videoPlay()
+            this.player.playOrPause()
         }
     }
 }

@@ -143,44 +143,48 @@ export default {
       if(this.$route.query.type != 'preview'){
         this.getUserData().then(res => {
           if(res.id!= null){
-            if(res.child_id == '0'){
+            if(!res.teacher_school_id){
+              if(res.child_id == '0'){
+                  this.$dialog.confirm({
+                    title: '添加宝贝',
+                    message: '请添加您的宝贝，掌握孩子阅读数据',
+                    confirmButtonText:'添加',
+                    cancelButtonText:'稍后',
+                    showCancelButton: true
+                  }).then(() => {
+                    this.$router.push({
+                      name: 'edit-child',
+                      query: {
+                        type: 'add',
+                        pageTitle: '添加宝贝'
+                      }
+                    })
+                    localStorage.removeItem('childInfo')
+                  }).catch(() => {
+                    this.backRouter()
+                  })
+              }else if(res.school_id == '0'){
                 this.$dialog.confirm({
-                  title: '添加宝贝',
-                  message: '请添加您的宝贝，掌握孩子阅读数据',
+                  title: '加入学校',
+                  message: '请加入学校，掌握学校动态',
                   confirmButtonText:'添加',
                   cancelButtonText:'稍后',
                   showCancelButton: true
                 }).then(() => {
                   this.$router.push({
-                    name: 'edit-child',
+                    name: 'edit-school',
                     query: {
                       type: 'add',
-                      pageTitle: '添加宝贝'
+                      enter: 'my-home',
+                      id: res.child_id
                     }
                   })
-                  localStorage.removeItem('childInfo')
                 }).catch(() => {
                   this.backRouter()
                 })
-            }else if(res.school_id == '0'){
-              this.$dialog.confirm({
-                title: '加入学校',
-                message: '请加入学校，掌握学校动态',
-                confirmButtonText:'添加',
-                cancelButtonText:'稍后',
-                showCancelButton: true
-              }).then(() => {
-                this.$router.push({
-                  name: 'edit-school',
-                  query: {
-                    type: 'add',
-                    enter: 'my-home',
-                    id: res.child_id
-                  }
-                })
-              }).catch(() => {
-                this.backRouter()
-              })
+              }else{
+                this.getSchoolInfo()
+              }
             }else{
               this.getSchoolInfo()
             }

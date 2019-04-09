@@ -22,7 +22,7 @@ export default {
         name: '学校主页',
         pathName: 'apps-school',
         params: {
-          id: this.userDataState.school_id,
+          id:  this.userDataState.school_id > 0?this.userDataState.school_id:this.userDataState.teacher_school_id,
         },        
         href: false
       }, {
