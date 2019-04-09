@@ -20,6 +20,18 @@ export default {
     data () {
         let u = navigator.userAgent
         return {
+            // videoObject: {
+            //     container: '#video',
+            //     variable: 'player',
+            //     loaded: 'loadedHandler',
+            //     loop: false,
+            //     config: '',
+            //     debug: true,
+            //     drag: 'start',
+            //     seek: 0,
+            //     video: []
+            // }
+
             current: 0,
             isAndroid: u.indexOf('Android') > -1 || u.indexOf('Adr') > -1, //安卓终端
             isIOS: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), // ios终端
