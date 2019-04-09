@@ -23,7 +23,7 @@
         <div v-if='moreBtn' class="more" @click="more(item)"><i class="iconfont">&#xe6f7;</i></div>
       </div>
 
-      <media :item='item' type='card'/>
+      <media :item='item' type='card' :key="$route.query.id"/>
 
       <div class="temp-type flex flex-align">
         <van-tag color='#ad0000' class="school-tag"  v-line-clamp:20="1" type="success" size="medium" plain v-if='item.school_id > 0'>

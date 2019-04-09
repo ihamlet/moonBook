@@ -10,7 +10,7 @@
       <!-- <adLabel :item='item' v-if='item.ad_label'/> -->
       <div class="main">
         <div class="media-content">
-          <media :item='item' type='details'/>
+          <media :item='item' type='details' :key="$route.query.id"/>
         </div>
       </div>
     </article>

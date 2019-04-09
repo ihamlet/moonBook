@@ -75,7 +75,7 @@ export default {
       headBar: false,
       imgIndex: '',
       qrImage:'',
-      item: ''
+      item: {}
     }
   },
   created() {

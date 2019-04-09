@@ -18,8 +18,8 @@
           </div>
 
           <!-- 正文播放 -->
-          <div class="player-windows" v-else>
-            <video style="object-fit:fill" :src='videoItem.photo' :poster='videoItem.thumb' controls x-webkit-airplay="true" playsinline webkit-playsinline="true" loop="loop"></video>
+          <div class="video-box" :class="videoItem.rotate == 90?'rotate':''" ref='videoDom' v-else>
+            <div id="video"></div>
           </div>
         </div>
       </div>
@@ -61,7 +61,21 @@ import './../../../../static/ckplayer/ckplayer/ckplayer'
 
 export default {
   name: 'media',
-  props: ['item', 'type'],
+  props:{
+    item:{
+      type: Object,
+      default:{
+        photos:[]
+      }
+    },
+    type:{
+      type:String,
+      default:''
+    }
+  },
+  components: {
+    userCard
+  },
   computed: {
     grid() {
       let num
@@ -73,10 +87,43 @@ export default {
         num = 8
       }
       return num
+    },
+    player() {
+      let obj = this.videoObject
+      let array = this.item.photos
+      let videoArray = []
+
+      array.forEach(element => {
+        if(element.is_video == 1){
+          videoArray.push([element.photo])
+          obj.poster = element.thumb
+        }
+      })
+
+      obj.video = videoArray
+
+      return new ckplayer(obj)
     }
   },
-  components: {
-    userCard
+  data () {
+    return {
+      videoObject: {
+        container: '#video',
+        variable: 'player',
+        loaded: 'loadedHandler',
+        loop: false,
+        config: '',
+        debug: true,
+        drag: 'start',
+        seek: 0,
+        video: []
+      }
+    }
+  },
+  updated () {
+    this.$nextTick(()=>{
+      this.player
+    })
   },
   methods: {
     toArticle() {
@@ -163,6 +210,9 @@ export default {
   position: static;
 }
 
+.video-box.rotate{
+  width: 230px;
+}
 
 </style>
 <style>
