@@ -5,7 +5,7 @@
         <div class="footer-bar">
             <div class="footer-btn flex flex-align">
                 <div class="btn-box registered">
-                    <van-button round class="theme-btn animated rubberBand" type="primary" size="large" @click="toBabyHome">注册成为老师</van-button>
+                    <van-button round class="theme-btn animated rubberBand" type="primary" size="large" @click="toRegistered">注册成为老师</van-button>
                 </div>
                 <div class="btn-box share">
                     <van-button round class="theme-btn animated rubberBand" type="primary" size="large" @click="share">分享到'家长群'、'班级群'</van-button>
@@ -53,12 +53,19 @@ export default {
     },
     methods: {
         ...mapActions('openWX',['share']),
-        toBabyHome(){
+        toRegistered(){
             this.$router.push({
-                name:'baby-home',
+                name:'edit-manager',
                 query:{
-                    id: this.userDataState.child_id
+                    pageTitle: '老师注册',
+                    registerType:'teacher',
+                    type:'add'
                 }
+            })
+        },
+        share(){
+            this.$router.push({
+                name:'flyersStudent'
             })
         }
     }

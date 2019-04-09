@@ -10,12 +10,13 @@
     </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions,mapGetters } from 'vuex'
 import wx from "weixin-js-sdk"
 
 export default {
     name:'flyersStudent',
     computed: {
+        ...mapGetters(['userDataState']),
         item(){
             let data = {
                 cate_name:'阅读活动',
