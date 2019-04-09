@@ -44,16 +44,23 @@
 
     <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" />
 
-    <div class="punch" v-if='classInfo.is_my_baby_banji'>
-      <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
-        <i class="iconfont">&#xe60a;</i>
-        阅读打卡
-      </van-button>
+    <div class="footer-bar">
+      <div class="footer-btn flex flex-align">
+        <van-button v-if='classInfo.is_my_baby_banji' @click="punch" class="punch-btn theme-btn" round size="normal" type="primary">
+          <i class="iconfont">&#xe60a;</i>
+          阅读打卡
+        </van-button>
+      
+        <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
+          <i class="iconfont">&#xe664;</i>
+          课堂阅读发布
+        </van-button>
+      </div>
     </div>
 
-    <div class="release" @click="toGraphic">
-      <div class="text">课堂阅读发布</div>
-    </div>
+    <!-- <div class="release" @click="toGraphic">
+      <div class="text"></div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -183,6 +190,7 @@ export default {
       if(this.$route.query.type != 'preview'){
         this.getUserData().then(res => {
           if (res.id != null) {
+            if(!res.teacher_banji_id){
               if( res.child_id == '0'){
                 this.$dialog.confirm({
                   title: '添加宝贝',
@@ -245,6 +253,9 @@ export default {
                 }else{
                   this.getClassInfo()
                 }
+            }else{
+              this.getClassInfo()
+            }
           } else {
             this.$toast.fail('获取信息失败')
             this.$router.push({
@@ -514,5 +525,20 @@ export default {
   transform: translate3d(-50%, -50%, 0);
   font-size: 13px;
   width: 50px;
+}
+
+.punch-btn{
+  background: linear-gradient(90deg, #ff765c, #ff23b3);
+}
+
+.footer-bar{
+  position: fixed;
+  bottom: 70px;
+  width: 100%;
+}
+
+.footer-btn{
+  padding: 0 10px;
+  justify-content: space-between;
 }
 </style>
