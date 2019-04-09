@@ -1,17 +1,19 @@
 <template>
-  <div class="calendar">
-    <div class="container" :class="[pack?'pack':'open']">
-      <div class="month">
+<div id="calendar">
+    <!-- 年份 月份 -->
+    <div class="month">
         <ul class="flex flex-align">
-          <li class="arrow" @click="pickPre(currentYear,currentMonth)">❮</li>
-          <li class="year-month" @click="pickYear(currentYear,currentMonth)">
-            <span class="choose-year">{{ currentYear }}年</span>
-            <span class="choose-month">{{ currentMonth }}月</span>
-          </li>
-          <li class="arrow" @click="pickNext(currentYear,currentMonth)">❯</li>
+            <!--点击会触发pickpre函数，重新刷新当前日期 @click(vue v-on:click缩写) -->
+            <li class="arrow" @click="pickPre(currentYear,currentMonth)">❮</li>
+            <li class="year-month">
+                <span class="choose-year">{{ currentYear }}年</span>
+                <span class="choose-month">{{ currentMonth }}月</span>
+            </li>
+            <li class="arrow" @click="pickNext(currentYear,currentMonth)">❯</li>
         </ul>
-      </div>
-      <ul class="weekdays flex flex-align">
+    </div>
+    <!-- 星期 -->
+    <ul class="weekdays flex flex-align">
         <li>一</li>
         <li>二</li>
         <li>三</li>
@@ -19,35 +21,26 @@
         <li>五</li>
         <li>六</li>
         <li>日</li>
-      </ul>
+    </ul>
+    <!-- 日期 -->
+    <ul class="days">
+        <!-- 核心 v-for循环 每一次循环用<li>标签创建一天 -->
+        <li  v-for="(dayobject,dayobjectIndex) in days" :key="dayobjectIndex">
+            <!--本月-->
+            <!--如果不是本月  改变类名加灰色-->
 
-      <transition name="fade" mode="out-in">
-        <ul class="days" v-if="pack" key="month">
-          <li v-for="(dayobject,index) in days" :key="index">
             <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
+
+            <!--如果是本月  还需要判断是不是这一天-->
             <span v-else>
-              <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()"
-                class="active">{{ dayobject.day.getDate() }}</span>
-              <span v-else>{{ dayobject.day.getDate() }}</span>
+          <!--今天  同年同月同日-->
+                <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
+                <span v-else>{{ dayobject.day.getDate() }}</span>
             </span>
-          </li>
-        </ul>
-        <ul class="days" v-else key="week">
-          <li v-for="(dayobject,index) in days" :key="index" v-if="Math.ceil((index+1)/7) == calendarData">
-            <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
-            <span v-else>
-              <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()"
-                class="active">{{ dayobject.day.getDate() }}</span>
-              <span v-else>{{ dayobject.day.getDate() }}</span>
-            </span>
-          </li>
-        </ul>
-      </transition>
-    </div>
-    <div class="drop-down" @click="slide">
-      <i class="iconfont" :class="[pack?'rotate':'']">&#xe608;</i>
-    </div>
-  </div>
+
+        </li>
+    </ul>
+</div>
 </template>
 <script>
 import { format } from './../../lib/js/util' 
@@ -67,91 +60,95 @@ export default {
   created() {
     this.initData(null)
   },
-  computed: {
-    calendarData() {
-      return Math.ceil((Date.now() - this.days[0].day.getTime()) / 86400000 / 7)
-    }
-  },
+  // computed: {
+  //   calendarData() {
+  //     return Math.ceil((Date.now() - this.days[0].day.getTime()) / 86400000 / 7)
+  //   }
+  // },
   methods: {
-    initData(cur) {
-      let leftcount = 0
-      let date
-      if (cur) {
-        date = new Date(cur)
-      } else {
-        let now = new Date()
-        let d = new Date(format(now,'yyyy-MM-dd'))
-        d.setDate(35)
-        date = new Date(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1))
-      }
-      this.currentDay = date.getDate()
-      this.currentYear = date.getFullYear()
-      this.currentMonth = date.getMonth()
+    initData: function(cur) {
+      var leftcount=0; //存放剩余数量
+      var date;
 
-      this.currentWeek = date.getDay()
+
+      if (cur) {
+          date = new Date(cur);
+      } else {
+          var now=new Date();
+          var d = new Date(this.formatDate(now.getFullYear() , now.getMonth() , 1));
+          d.setDate(35);
+          date = new Date(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+      }
+      this.currentDay = date.getDate();
+      this.currentYear = date.getFullYear();
+      this.currentMonth = date.getMonth() + 1;
+
+      this.currentWeek = date.getDay(); // 1...6,0
       if (this.currentWeek == 0) {
-        this.currentWeek = 7
+          this.currentWeek = 7;
       }
-      let str = this.formatDate(
-        this.currentYear,
-        this.currentMonth,
-        this.currentDay
-      )
-      this.days.length = 0
-      for (let i = this.currentWeek - 1; i >= 0; i--) {
-        let d = new Date(str)
-        d.setDate(d.getDate() - i)
-        let dayobject = {}
-        dayobject.day = d
-        this.days.push(dayobject)
+      var str = this.formatDate(this.currentYear , this.currentMonth, this.currentDay);
+      this.days.length = 0;
+      // 今天是周日，放在第一行第7个位置，前面6个
+      //初始化本周
+      for (var i = this.currentWeek - 1; i >= 0; i--) {
+          var d = new Date(str);
+          d.setDate(d.getDate() - i);
+          var dayobject={}; //用一个对象包装Date对象  以便为以后预定功能添加属性
+          dayobject.day=d;
+          this.days.push(dayobject);//将日期放入data 中的days数组 供页面渲染使用
+
+
       }
-      for (let i = 1; i <= 35 - this.currentWeek; i++) {
-        let d = new Date(str)
-        d.setDate(d.getDate() + i)
-        let dayobject = {}
-        dayobject.day = d
-        this.days.push(dayobject)
+      //其他周
+      for (var i = 1; i <= 35 - this.currentWeek; i++) {
+          var d = new Date(str);
+          d.setDate(d.getDate() + i);
+          var dayobject={};
+          dayobject.day=d;
+          this.days.push(dayobject);
       }
-    },
-    pickPre(year, month) {
-      let d = new Date(this.formatDate(year, month, 1))
-      d.setDate(0)
-      this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1))
-      this.pack = true
-    },
-    pickNext(year, month) {
-      let d = new Date(this.formatDate(year, month, 1))
-      d.setDate(35)
-      this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1))
-      this.pack = true
-    },
-    pickYear(year, month) {
-      // alert(year + "," + month)
-    },
-    formatDate(year, month, day) {
-      let y = year
-      let m = month
-      if (m < 10) m = "0" + m
-      let d = day
-      if (d < 10) d = "0" + d
-      return y + "/" + m + "/" + d
-    },
-    slide() {
-      this.pack = !this.pack
-      this.initData()
-    }
+
+  },
+  pickPre: function(year, month) {
+
+      // setDate(0); 上月最后一天
+      // setDate(-1); 上月倒数第二天
+      // setDate(dx) 参数dx为 上月最后一天的前后dx天
+      var d = new Date(this.formatDate(year , month , 1));
+      d.setDate(0);
+      this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+  },
+  pickNext: function(year, month) {
+      var d = new Date(this.formatDate(year , month , 1));
+      d.setDate(35);
+      this.initData(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+  },
+  pickYear: function(year, month) {
+      alert(year + "," + month);
+  },
+
+  // 返回 类似 2016-01-02 格式的字符串
+  formatDate: function(year,month,day){
+      var y = year;
+      var m = month;
+      if(m<10) m = "0" + m;
+      var d = day;
+      if(d<10) d = "0" + d;
+      return y+"-"+m+"-"+d
+  },
   }
 }
 </script>
 <style scoped>
-.calendar {
+#calendar {
   background: transparent;
   color: #fff;
   position: relative;
   box-shadow: 0 1.875rem /* 30/16 */ 2.5rem /* 40/16 */ -0.625rem /* 10/16 */ rgba(0, 0, 0, 0.3);
 }
 
-.calendar .drop-down {
+#calendar .drop-down {
   position: absolute;
   width: 3.75rem /* 60/16 */;
   height: 1.5rem /* 24/16 */;
@@ -167,11 +164,11 @@ export default {
   background: transparent;
 }
 
-.calendar .month ul li.arrow {
+#calendar .month ul li.arrow {
   flex: 1;
 }
 
-.calendar .month ul li.arrow,
+#calendar .month ul li.arrow,
 .year-month {
   text-align: center;
 }

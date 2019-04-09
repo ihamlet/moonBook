@@ -76,9 +76,8 @@ export default {
       }
 
       array.push({
-        name:'学校地图',
-        subname:'周边学校',
-        type:'toMap'
+        name:'学校列表',
+        type:'toSchoolList'
       })
 
       return array
@@ -254,11 +253,11 @@ export default {
             }
           })
         break
-        case 'toMap':
+        case 'toSchoolList':
           this.$router.push({
-            name: 'school-map',
+            name: 'AcceptSchoolList',
             query:{
-              type:'preview'
+              type:'page'
             }
           })
         break

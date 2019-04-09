@@ -34,7 +34,6 @@ import My from '@/components/My'
 
 import AppsFind from '@/components/apps/find/find'
 import AppsSchool from '@/components/apps/school/schoolHome'
-import SchoolMap from '@/components/apps/school/schoolMap'
 
 import Register from '@/components/pages/register'
 import City from '@/components/pages/city'
@@ -237,13 +236,6 @@ export default new Router({
           title: '学校主页',
           isFooterBar: false,
           keepAlive: true
-        }
-      },{
-        path:'/school-map',
-        name:'school-map',
-        component: SchoolMap,
-        meta:{
-          isFooterBar: false,
         }
       }]
     },{

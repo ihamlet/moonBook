@@ -92,16 +92,13 @@ export default {
       let obj = this.videoObject
       let array = this.item.photos
       let videoArray = []
-
       array.forEach(element => {
         if(element.is_video == 1){
           videoArray.push([element.photo])
           obj.poster = element.thumb
         }
       })
-
       obj.video = videoArray
-
       return new ckplayer(obj)
     }
   },
