@@ -34,7 +34,10 @@ export default {
           iconClass: 'icon-banji',
           name: '班级',
           path: 'class-home',
-          id: this.userDataState.banji_id > 0?this.userDataState.banji_id:this.userDataState.teacher_banji_id
+          id: this.userDataState.banji_id > 0?this.userDataState.banji_id:this.userDataState.teacher_banji_id,
+          banji_name: this.userDataState.banji_name,
+          school_id: this.userDataState.school_id,
+          school_name: this.userDataState.school_name
         },
         {
           iconClass: 'icon-release',
@@ -627,9 +630,11 @@ img.lazy[lazy='error'],
   height: 100vh;
 }
 
-.card-popup {
-  width: 15.625rem /* 250/16 */;
+.card-popup.van-popup{
+  width: 100%;
+  height: 100vh;
   overflow: hidden;
+  transform: translate3d(-50%,-50%,0) scale(0.7);
 }
 
 .page-popup-layer {
@@ -692,7 +697,6 @@ img.lazy[lazy='error'],
 }
 
 .explain {
-  font-size: .8125rem /* 13/16 */;
   color: #bbb;
 }
 
@@ -826,7 +830,7 @@ i.iconfont.rotate {
 }
 
 .school-name {
-  font-size: 1rem /* 16/16 */;
+  font-size: 17px;
   color: #303133;
 }
 
@@ -1131,8 +1135,7 @@ i.iconfont.vip-1 {
 
 .dialog-title{
   text-align: center;
-  line-height: 2.875rem /* 46/16 */;
-  height: 2.875rem /* 46/16 */;
+  padding: 20px 0;
 }
 
 .photo-upload {

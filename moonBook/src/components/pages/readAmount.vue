@@ -46,6 +46,7 @@
 import axios from './../lib/js/api'
 import FilterList from './../module/mold/filterList'
 import bookCard from './../module/card/bookCard'
+import { mapGetters } from 'vuex'
 
 export default {
   name: "readAmount",

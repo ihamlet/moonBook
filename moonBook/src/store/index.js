@@ -29,8 +29,7 @@ const getters = {
       return state.userData
     } else {
       if (localStorage.getItem('userData')) {
-        state.userData = JSON.parse(localStorage.getItem('userData'))
-        return state.userData
+        return JSON.parse(localStorage.getItem('userData'))
       }
     }
   },
@@ -54,8 +53,7 @@ const getters = {
       return state.userPoint
     } else {
       if (Cookies.get('userPoint')) {
-        state.userPoint = JSON.parse(Cookies.get('userPoint'))
-        return state.userPoint
+        return JSON.parse(Cookies.get('userPoint'))
       }
     }
   },

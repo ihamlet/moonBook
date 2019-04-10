@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <van-popup v-model="show" class="plate-card">
+    <van-popup v-model="show" class="card-popup">
       <qr-code :classInfo="classInfo" :qrImage="qrImage" type='classHome' @close='show = false' />
     </van-popup>
 
@@ -52,14 +52,14 @@
             阅读打卡
           </van-button>
         </div>
-        <div class="btn contain" :class="isReleaseShow?'show':'hide'">
+        <div class="btn contain" v-else :class="isReleaseShow?'show':'hide'">
           <van-button @click="isReleaseShow = !isReleaseShow" class="theme-btn" round size="normal" type="primary">
             <i class="iconfont" v-if='isReleaseShow'>&#xe647;</i>
             <i class="iconfont" v-else>&#xe664;</i>
             {{!isReleaseShow?'课堂阅读发布':''}}
           </van-button>
 
-
+   
             <div class="release-list" v-show='isReleaseShow'>
               <div class="btn-item" @click="toGraphic('weibo')">
                 <i class="iconfont icon-weibo"></i>
@@ -74,10 +74,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <div class="release" @click="toGraphic">
-      <div class="text"></div>
-    </div> -->
   </div>
 </template>
 <script>
@@ -208,7 +204,7 @@ export default {
       if(this.$route.query.type != 'preview'){
         this.getUserData().then(res => {
           if (res.id != null) {
-            if(!res.teacher_banji_id){
+            if(res.teacher_banji_id == '0'){
               if( res.child_id == '0'){
                 this.$dialog.confirm({
                   title: '添加宝贝',
@@ -221,7 +217,11 @@ export default {
                     name: 'edit-child',
                     query: {
                       type: 'add',
-                      pageTitle: '添加宝贝'
+                      pageTitle: '添加宝贝',
+                      banji_id: this.$route.query.id,
+                      school_id: this.$route.query.school_id,
+                      banji_name: this.$route.query.banji_name,
+                      school_name: this.$route.query.school_name
                     }
                   })
 
@@ -352,18 +352,19 @@ export default {
       if (item.type == 'banji') {
 
         this.hackReset = false
-        this.isSelectBabyShow = false
-
         this.$nextTick(() => {
           this.hackReset = true
           this.request()
         })
 
+        this.isSelectBabyShow = false
+
         this.$router.push({
           name: 'class-home',
           query: {
             id: item.id,
-            back: this.$route.name
+            back: this.$route.name,
+            school_id: item.school_id
           }
         })
       } else if (item.type == 'school') {
@@ -429,7 +430,7 @@ export default {
       })
     },
     toManage(){
-      location.href = '/SchoolManage'
+      location.href = `/SchoolManage?banji_id=${this.$route.query.id}`
     },
     toGraphic(type){
       switch(type){
@@ -513,11 +514,6 @@ export default {
   font-size: 1.875rem /* 30/16 */;
 }
 
-.plate-card {
-  width: 15.625rem /* 250/16 */;
-  overflow: hidden;
-}
-
 .punch {
   z-index: 101;
 }
@@ -567,6 +563,7 @@ export default {
   position: fixed;
   bottom: 70px;
   width: 100%;
+  z-index: 10;
 }
 
 .contain{

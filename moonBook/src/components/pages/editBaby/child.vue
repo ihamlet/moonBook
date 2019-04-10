@@ -86,7 +86,7 @@ export default {
     cardRouting
   },
   computed: {
-    ...mapGetters(['userDataState']),
+    ...mapGetters(['userDataState','userPointState']),
     isMainParent(){
        let b = false    
       if(this.info){
@@ -120,7 +120,7 @@ export default {
       childId:'',
       sexType:['小王子','小公主'],
       parentShow: false,
-      parentList:['','爸爸','妈妈','爷爷','奶奶','哥哥','姐姐'],
+      parentList:['','爸爸','妈妈','爷爷','奶奶','外公','外婆'],
       errorMessage: {
         name: '',
         birthday: ''
@@ -193,9 +193,14 @@ export default {
             if (res.data.data.is_current_child == 1 || this.userDataState.child_id == this.$route.query.id) {
               this.settingSurrent = true
             }
-
             this.info = res.data.data
           })
+        }
+      }else{
+        this.info = {
+          banji_name: this.$route.query.banji_name,
+          school_name: this.$route.query.school_name,
+          main_parent_id: this.userDataState.id
         }
       }
     },
@@ -271,6 +276,9 @@ export default {
                 id: res,
               }
             })
+
+            this.babyJoinSchool(res)
+            this.babyJoinBanji(res)
           }
         })
       }
@@ -392,6 +400,38 @@ export default {
     },
     onParentChange(picker, values){
       this.childInfo.relation_name = values
+    },
+    babyJoinSchool(childId) {
+
+      let location = this.userPointState.location.split(',')
+
+      let data = {
+          params: {
+            child_id: childId,
+            school_id: this.$route.query.school_id,
+            school_name: this.$route.query.school_name,
+            cityname: this.userPointState.city,
+            lat: location[1],
+            lng: location[0],
+          }
+        }
+
+      axios.get('/book/babySchool/bind', data).then(res => {
+
+      })
+    }, 
+    babyJoinBanji(childId){
+
+      let data = {
+        params:{
+          banji_id: this.$route.query.banji_id,
+          child_id: childId
+        }
+      }
+
+      axios.get('/book/baby/join_banji', data).then(res => {
+      
+      })
     }
   }
 }

@@ -46,10 +46,11 @@ export default {
   },
   methods: {
     ...mapMutations(['setReleaseSwitch']),
+    ...mapMutations('openWX',['clearImg']),
     goPage(item) {
       let path = ''
       if (item.id) {
-        path = `${item.path}?id=${item.id}`
+        path = `${item.path}?id=${item.id}&school_id=${item.school_id}&banji_name=${item.banji_name}&school_name=${item.school_name}`
       } else {
         path = item.path
       }
@@ -59,6 +60,7 @@ export default {
     onClick(index) {
       if (index == 2) {
         this.setReleaseSwitch(true)
+        this.clearImg()
       }
       this.active = this.$route.meta.tabActive
     },

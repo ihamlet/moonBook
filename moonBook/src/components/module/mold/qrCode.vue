@@ -25,8 +25,7 @@
                 <img :src="qrImage" alt="二维码">
               </div>
               <div class="explain">
-                <span> — 长按识别二维码进入 — </span>
-                <span> © 阅亮书架 </span>
+                <span> — 长按识别二维码加入班级 — </span>
               </div>
             </div>
             <round />
@@ -35,7 +34,7 @@
 
         <div class="container" ref="imageWrapper" :class="[type=='classHome'?'plate':'']" v-if="type=='classHome'">
           <div class="img-bg">
-            <img src="./../../../assets/img/qc-bg-img.png" alt="" srcset="" />
+            <img src="./../../../assets/img/qc-bg-img.png" />
           </div>
           <div class="card flex flex-align">
             <div class="class-card">
@@ -51,7 +50,6 @@
           </div>
           <div class="explain">
             <span> — 长按识别二维码进入 — </span>
-            <span> © 阅亮书架 </span>
           </div>
         </div>
       </slot>
@@ -60,7 +58,7 @@
 
 
     <div class="popup-btn">
-      <van-button class="theme-btn" :loading='isLoading' size="large" square :disabled='isDisabled' type="primary" @click="toImage">
+      <van-button class="theme-btn" :loading='isLoading' size="normal" square :disabled='isDisabled' type="primary" @click="toImage">
         {{dataURL?'长按上图保存分享':'正在为您生成图片'}}
       </van-button>
     </div>
@@ -114,13 +112,13 @@ export default {
         }else{
           clearInterval(this.timer)
           this.timer = null
-          this.toImage()
+          // this.toImage()
         }
 		  },500)
     },
     toImage() {
       this.isLoading = true
-        domtoimage.toSvg(this.$refs.imageWrapper).then(dataUrl => {
+        domtoimage.toJpeg(this.$refs.imageWrapper,{quality: 1}).then(dataUrl => {
           this.dataURL = dataUrl
           this.isLoading = false
           this.isDisabled = true
@@ -143,18 +141,17 @@ export default {
 </script>
 <style scoped>
 .baby-info {
-  display: grid;
   padding: 1.875rem /* 30/16 */ 0;
 }
 
 .avatar {
   margin: 0 auto;
+  width: 80px;
 }
 
 .label,
 .school {
   text-align: center;
-  font-size: 0.8125rem /* 13/16 */;
 }
 
 .avatar img{
@@ -170,20 +167,21 @@ export default {
 }
 
 .name {
-  margin-top: 0.3125rem /* 5/16 */;
+  margin-top: 20px;
   text-align: center;
   color: #303133;
+  font-size: 18px;
 }
 
 .code-img {
   width: 100%;
-  padding: 1.25rem /* 20/16 */ 0;
+  padding: 50px 0;
   margin: 0 auto;
 }
 
 .code-img img {
-  width: 7.5rem /* 120/16 */;
-  height: 7.5rem /* 120/16 */;
+  width: 150px;
+  height: 150px;
   margin:  0 auto;
 }
 
@@ -200,7 +198,6 @@ export default {
 }
 
 .explain {
-  display: grid;
   text-align: center;
   color: #303133;
 }
@@ -241,14 +238,23 @@ export default {
 }
 
 .card {
-  padding: 0.3125rem /* 5/16 */ 1.25rem; /* 20/16 */;
   justify-content: space-between;
   z-index: 1;
   position: relative;
+  height: 100%;
+  transform:scale(1.2)
+}
+
+.img-bg{
+  width: 100%;
 }
 
 .container.plate{
   background: #fff;
+}
+
+.container{
+  height: 100%;
 }
 
 .plate .class-card {
@@ -293,7 +299,18 @@ span.people {
 .fade-leave-active {
   transition: opacity 0.2s;
 }
+
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+
+.theme-btn{
+  width: 100%;
+}
+
+.popup-btn{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 </style>

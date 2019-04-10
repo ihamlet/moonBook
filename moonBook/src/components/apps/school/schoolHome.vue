@@ -142,7 +142,7 @@ export default {
       if(this.$route.query.type != 'preview'){
         this.getUserData().then(res => {
           if(res.id!= null){
-            if(!res.teacher_school_id){
+            if(res.teacher_school_id == '0'){
               if(res.child_id == '0'){
                   this.$dialog.confirm({
                     title: '添加宝贝',
@@ -155,7 +155,11 @@ export default {
                       name: 'edit-child',
                       query: {
                         type: 'add',
-                        pageTitle: '添加宝贝'
+                        pageTitle: '添加宝贝',
+                        banji_id: this.$route.query.id,
+                        school_id: this.$route.query.school_id,
+                        banji_name: this.$route.query.banji_name,
+                        school_name: this.$route.query.school_name
                       }
                     })
                     localStorage.removeItem('childInfo')
@@ -329,7 +333,7 @@ export default {
       })
     },
     toManage(){
-      location.href = '/SchoolManage'
+      location.href = `/SchoolManage?school_id=${this.$route.query.id}`
     }
   }
 }

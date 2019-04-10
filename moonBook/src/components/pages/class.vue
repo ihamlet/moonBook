@@ -53,13 +53,15 @@
       </van-cell-group>
     </van-dialog>
 
-    <van-dialog v-model="showCode" show-cancel-button :before-close="codeBeforeClose">
+    <van-dialog v-model="showCode" show-cancel-button cancelButtonText='忽略' :showConfirmButton='false' :before-close="codeBeforeClose">
       <div class="dialog-title tips"> 
-        <span>邀请码</span> 
-        <span class="prompt-text">没有邀请码请直接点确认即可直接加入班级</span>
+        <span class="prompt-text">填入邀请码直接进入班级，若忽略请等待审核</span>
       </div>
       <van-cell-group>
-        <van-field v-model="code" label="邀请码" placeholder="请输入邀请码" input-align='right' />
+        <div class="flex flex-align">
+          <van-field class="field" v-model="code" placeholder="请输入邀请码"/> 
+          <van-button type="primary" square size='normal' class="theme-btn" @click="verification">确 认</van-button>
+        </div>
       </van-cell-group>
     </van-dialog>
 
@@ -190,29 +192,17 @@ export default {
       }
     },
     codeBeforeClose(action, done){
-      if (action === 'confirm') {
-        if(this.code){
-          if(this.list[this.itemIndex].invite_code == this.code){
-            let BabyJoinBanjiBdind = {
-              params: {
-                banji_id: this.list[this.itemIndex].banji_id,
-                child_id: this.$route.query.id
-              }
-            }
-
-            this.babyJoin(BabyJoinBanjiBdind)
-          }
-        }else{
-          let BabyJoinBanjiBdind = {
-            params: {
-              banji_id: this.list[this.itemIndex].banji_id,
-              child_id: this.$route.query.id
-            }
-          }
-
-          this.babyJoin(BabyJoinBanjiBdind)
+      let BabyJoinBanjiBdind = {
+        params: {
+          banji_id: this.list[this.itemIndex].banji_id,
+          child_id: this.$route.query.id
         }
+      }
+
+      if (action === 'confirm') {
+
       } else {
+        this.babyJoin(BabyJoinBanjiBdind)
         done()
       }
     },
@@ -245,7 +235,7 @@ export default {
     babyJoin(data){
         axios.get('/book/baby/join_banji', data).then(res => {
           if (res.data.status == 1) {
-            this.$toast.success(res.data.msg)
+            this.$toast('成功提交申请')
             this.$router.replace({
               name: 'edit-child',
               query:{
@@ -327,6 +317,17 @@ export default {
         return false
       } else {
         return true
+      }
+    },
+    verification(){
+      if(this.code && this.code.length){
+        if(this.list[this.itemIndex].invite_code.toLowerCase() == this.code.toLowerCase()){
+          this.babyJoin(BabyJoinBanjiBdind)
+        }
+      }else{
+        if(this.list[this.itemIndex].invite_code.toLowerCase() != this.code.toLowerCase()){
+          this.$toast('邀请码不正确')
+        }
       }
     }
   }
@@ -429,7 +430,6 @@ export default {
 .no-content {
   width: 100%;
   height: 6.25rem /* 100/16 */;
-  line-height: 6.25rem /* 100/16 */;
   text-align: center;
   background: #fff;
 }
@@ -438,14 +438,23 @@ export default {
   color: #C0C4CC;
 }
 
-.dialog-title.tips{
-  display: grid;
-  line-height: 0;
-  padding-top: 30px;
+.prompt-text{
+  font-size: 20px;
+  width: 300px;
+  text-align: left;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .prompt-text{
-  color: red;
-  font-size: 13px;
+  margin-top: 5px;
+}
+
+.field{
+  flex: 2
+}
+
+.theme-btn{
+  flex: 1
 }
 </style>

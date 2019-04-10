@@ -34,7 +34,7 @@ export default {
 
 .round-1{
     right: -2rem;
-    bottom: -4rem;
+    bottom: 0;
     background-image: linear-gradient( 135deg, #ABDCFF 10%, #0396FF 100%);
     box-shadow:0 0 1.25rem /* 20/16 */ #0396FF;
     animation: Swaying2 8s linear infinite;
@@ -42,7 +42,7 @@ export default {
 
 .round-2{
     left: -1rem;
-    bottom: 0;
+    bottom: 40px;
     background-image: linear-gradient( 135deg, #FEB692 10%, #EA5455 100%);
     box-shadow:0 .3125rem /* 5/16 */ 1.25rem /* 20/16 */ #EA5455;
     animation: Swaying2 8s linear infinite;

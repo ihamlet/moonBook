@@ -384,7 +384,7 @@ i.bubble.show {
 
 .new-city {
   background: #fff;
-  padding-top: 2.8125rem /* 45/16 */;
+  padding-top: 50px;
 }
 
 ul.recent li:first-child {

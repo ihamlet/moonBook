@@ -2,16 +2,16 @@
   <div class="edit-school">
     <div class="fixed">
       <van-search placeholder="请输入学校名称" v-model="keyword" show-action shape="round" @search="onSearch">
-          <div class="theme-color" slot="action" @click="onSearch">
-            搜索
-          </div>
+        <div class="theme-color" slot="action" @click="onSearch">
+          搜索
+        </div>
       </van-search>
     </div>
     <div class="container" v-if='!isListShow'>
-      
+
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <van-cell v-for="(item,index) in list" :key="index" is-link center @click="selectSchool(item)">
-          <schoolCard :item='item' :searchType='searchType'/>
+          <schoolCard :item='item' :searchType='searchType' />
         </van-cell>
       </van-list>
     </div>
@@ -32,7 +32,8 @@
             <div class="school-type">学校类型</div>
             <div class="select-type flex flex-align">
               <div class="select-btn" v-for='(item,index) in shcoolType' :key="index" @click="selectSchoolType(item,index)">
-                <van-button size="small" class="theme-btn" type="primary" :plain='schoolTypeIndex==index?false:true' round>{{item.name}}</van-button>
+                <van-button size="small" class="theme-btn" type="primary" :plain='schoolTypeIndex==index?false:true'
+                  round>{{item.name}}</van-button>
               </div>
             </div>
           </div>
@@ -63,8 +64,8 @@ export default {
       loading: false,
       finished: false,
       list: [],
-      keyword:'',
-      searchType:'wmSearchSchool',
+      keyword: '',
+      searchType: 'wmSearchSchool',
       schoolName: '',
       show: false,
       schoolTypeIndex: 0,
@@ -76,24 +77,24 @@ export default {
         name: '幼儿园',
         index: 1
       }],
-      tab:[{
-        title:'小学',
-        content:''
-      },{
-        title:'幼儿园',
-        content:''
+      tab: [{
+        title: '小学',
+        content: ''
+      }, {
+        title: '幼儿园',
+        content: ''
       }]
     }
   },
   watch: {
-    keyword(val){
+    keyword(val) {
       this.page = 1
       this.list = []
       this.onSearch(val)
     }
   },
   methods: {
-    ...mapActions(['getSchoolList', 'getUserData','getSearch']),
+    ...mapActions(['getSchoolList', 'getUserData', 'getSearch']),
     onLoad() {
       let arr = this.userPointState.location.split(",")
       let products = {
@@ -124,26 +125,26 @@ export default {
         let data = {
           title: this.schoolName,
           school_type: this.schoolType,
-          city:this.userPointState.city
+          city: this.userPointState.city
         }
 
         axios.post('/book/school/edit_school', data).then(res => {
           switch (res.data.status) {
             case 1:
-                let bindData = {
-                  params:{
-                    child_id:this.$route.query.id,
-                    school_id:res.data.data.school_id
-                  }
+              let bindData = {
+                params: {
+                  child_id: this.$route.query.id,
+                  school_id: res.data.data.school_id
                 }
+              }
 
               if (this.$route.query.registerType == 'headmaster') {
                 bindData.params.is_master = 1
               }
 
-              if(this.$route.query.registerType){
+              if (this.$route.query.registerType) {
                 this.thearchJoin(bindData)
-              }else{
+              } else {
                 this.babyJoin(bindData)
               }
               done()
@@ -207,59 +208,59 @@ export default {
         this.babyJoin(data)
       }
     },
-    thearchJoin(data){
-        axios.get('/book/SchoolTeacher/bind', data).then(res => {
-          if (this.$route.query.registerType == 'teacher') {
-            this.$router.replace({
-              name: 'edit-class',
-              query: {
-                id: this.$route.query.id,
-                school_id: res.data.data.school_id,
-                pageTitle: this.$route.query.pageTitle,
-                registerType: this.$route.query.registerType,
-                back: this.$route.query.back,
-                type: this.$route.query.type
-              }
-            })
-          } else {
-            this.$router.replace({
-              name: 'edit-manager',
-              query: {
-                pageTitle: this.$route.query.pageTitle,
-                registerType: this.$route.query.registerType,
-                type: this.$route.query.type,
-                back: this.$route.name
-              }
-            })
-          }
-        })
+    thearchJoin(data) {
+      axios.get('/book/SchoolTeacher/bind', data).then(res => {
+        if (this.$route.query.registerType == 'teacher') {
+          this.$router.replace({
+            name: 'edit-class',
+            query: {
+              id: this.$route.query.id,
+              school_id: res.data.data.school_id,
+              pageTitle: this.$route.query.pageTitle,
+              registerType: this.$route.query.registerType,
+              back: this.$route.query.back,
+              type: this.$route.query.type
+            }
+          })
+        } else {
+          this.$router.replace({
+            name: 'edit-manager',
+            query: {
+              pageTitle: this.$route.query.pageTitle,
+              registerType: this.$route.query.registerType,
+              type: this.$route.query.type,
+              back: this.$route.name
+            }
+          })
+        }
+      })
     },
-    babyJoin(data){
-        axios.get('/book/babySchool/bind', data).then(res => {
-          if (res.data.status) {
-            this.$toast.success('加入学校成功')
-            this.$router.push({
-              name: 'edit-class',
-              query: {
-                id: this.$route.query.id,
-                school_id: res.data.data.school_id,
-                back: this.$route.query.back,
-                type: this.$route.query.type,
-              }
-            })
-            this.getUserData()
-          } else {
-            this.$toast.fail('操作失败')
-            this.$router.go(-1)
-          }
-        })
+    babyJoin(data) {
+      axios.get('/book/babySchool/bind', data).then(res => {
+        if (res.data.status) {
+          this.$toast.success('加入学校成功')
+          this.$router.push({
+            name: 'edit-class',
+            query: {
+              id: this.$route.query.id,
+              school_id: res.data.data.school_id,
+              back: this.$route.query.back,
+              type: this.$route.query.type,
+            }
+          })
+          this.getUserData()
+        } else {
+          this.$toast.fail('操作失败')
+          this.$router.go(-1)
+        }
+      })
     },
     selectSchoolType(item, index) {
       this.schoolType = item.name
       this.schoolTypeIndex = index
     },
-    onSearch(keyword){
-      if(keyword){
+    onSearch(keyword) {
+      if (keyword) {
         let arr = this.userPointState.location.split(",")
 
         let data = {
@@ -267,29 +268,29 @@ export default {
           location: this.userPointState.location,
           city: this.userPointState.city,
           type: '141204|141203',
-          datatype:'poi',
+          datatype: 'poi',
           lng: arr[0],
           lat: arr[1]
         }
-  
-        this.getSearch(data).then(res=>{
-          if(res.resData.length){
+
+        this.getSearch(data).then(res => {
+          if (res.resData.length) {
             this.searchType = res.searchType
             this.list = res.resData
-          }else{
+          } else {
             this.page = 1
             this.onLoad()
           }
         })
-      }else{
+      } else {
         this.page = 1
         this.onLoad()
       }
     },
-    addSchool(){
-      if(this.$route.query.registerType!='headmaster'){
+    addSchool() {
+      if (this.$route.query.registerType != 'headmaster') {
         this.show = true
-      }else{
+      } else {
         location.href = 'https://fang.wmlife.net/kindergarten/index/register'
       }
     }
