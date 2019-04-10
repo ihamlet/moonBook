@@ -54,9 +54,12 @@
     </van-dialog>
 
     <van-dialog v-model="showCode" show-cancel-button :before-close="codeBeforeClose">
-      <div class="dialog-title">邀请码</div>
+      <div class="dialog-title tips"> 
+        <span>邀请码</span> 
+        <span class="prompt-text">没有邀请码请直接点确认即可直接加入班级</span>
+      </div>
       <van-cell-group>
-        <van-field v-model="code" label="邀请码" placeholder="没有邀请码直接点确认" input-align='right' />
+        <van-field v-model="code" label="邀请码" placeholder="请输入邀请码" input-align='right' />
       </van-cell-group>
     </van-dialog>
 
@@ -433,5 +436,16 @@ export default {
 
 .add-value{
   color: #C0C4CC;
+}
+
+.dialog-title.tips{
+  display: grid;
+  line-height: 0;
+  padding-top: 30px;
+}
+
+.prompt-text{
+  color: red;
+  font-size: 13px;
 }
 </style>
