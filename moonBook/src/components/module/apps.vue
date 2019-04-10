@@ -2,7 +2,7 @@
   <div class="apps">
     <div class="app-list flex">
       <div class="app-item" v-for='(item,index) in appList' :key="index" @click="toPath(item)">
-        <div class="icon iconfont" :class="[item.iconClass,item.iconClass == 'icon-find'?'swing animated':'']"></div>
+        <div class="icon iconfont" :class="[item.iconClass,item.iconClass == 'icon-find'?'jackInTheBox animated':'']"></div>
         <div class="app-name">{{item.name}}</div>
       </div>
     </div>

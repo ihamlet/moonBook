@@ -1,6 +1,6 @@
 <template>
   <div class="add-child">
-    <van-nav-bar :title="$route.query.pageTitle" :border='false'/>
+    <van-nav-bar :title="$route.query.pageTitle" :border='false' :right-text="active==2?'重新注册':''" @click-right="active = 0"/>
 
     <van-steps :active="active" active-icon="success" active-color="#38f">
       <van-step>注册申请</van-step>
@@ -42,7 +42,7 @@
       <apps :appsList='appsList'/>
     </div>
 
-    <div class="footer-bar" v-if='active != 2'>
+    <div class="footer-bar">
       <van-button class="theme-btn" square type="primary" size="large" :loading='loading' @click="setStep">{{btnText}}</van-button> 
     </div>
   </div>
@@ -148,7 +148,7 @@ export default {
           this.btnText = '修改申请'
         break
         case 2:
-          this.btnText = '修改申请'
+          this.btnText = this.$route.query.registerType == 'teacher'?'前往班级':'前往学校'
         break
       }
     }
@@ -284,7 +284,24 @@ export default {
           this.active = 0
         break
         case 2:
-          this.active = 0
+          switch(this.$route.query.registerType){
+            case 'teacher':
+              this.$router.push({
+                name:'class-home',
+                query:{
+                  id: this.managerData.banji_id
+                }
+              })
+            break
+            case 'headmaster':
+              this.$router.push({
+                name:'apps-school',
+                query:{
+                  id: this.managerData.school_id
+                }
+              })
+            break
+          }
         break
       }
     },

@@ -114,26 +114,6 @@ export default {
 }
 </script>
 <style scoped>
-.tips.bottom .icon-weibo::before {
-  color: #7197e7;
-}
-
-.tips.bottom .icon-wenzhang::before {
-  color: #35c7da;
-}
-
-.tips.bottom .icon-paishipin::before {
-  color: #ec736e;
-}
-
-.tips.bottom .icon-shipin::before {
-  color: #6ddea7;
-}
-
-.tips.bottom .icon-tiwen::before {
-  color: #f5c944;
-}
-
 .tips.top {
   width: 6.25rem /* 100/16 */;
   background: rgba(0, 0, 0, 0.8);

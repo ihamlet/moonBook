@@ -30,10 +30,10 @@
 
     <div class="footer-bar flex">
       <div class="btn-box">
-        <van-button class="btn theme-btn" type="primary" round size="normal" @click="releaseShow = !releaseShow">晒一晒</van-button>
+        <van-button class="btn theme-btn" type="primary" round size="normal" @click="releaseShow = !releaseShow">看一看</van-button>
       </div>
       <div class="btn-box">
-        <van-button class="btn theme-borrowing-btn" round type="primary" size="normal" @click="toGraphic">跟拍</van-button>
+        <van-button class="btn theme-borrowing-btn" round type="primary" size="normal" @click="toGraphic">晒一晒</van-button>
       </div>
     </div>
   </div>

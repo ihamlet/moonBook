@@ -46,15 +46,32 @@
 
     <div class="footer-bar">
       <div class="footer-btn flex flex-align">
-        <van-button v-if='classInfo.is_my_baby_banji' @click="punch" class="punch-btn theme-btn" round size="normal" type="primary">
-          <i class="iconfont">&#xe60a;</i>
-          阅读打卡
-        </van-button>
-      
-        <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
-          <i class="iconfont">&#xe664;</i>
-          课堂阅读发布
-        </van-button>
+        <div class="btn" v-if='classInfo.is_my_baby_banji'>
+          <van-button @click="punch" class="punch-btn theme-btn" round size="normal" type="primary">
+            <i class="iconfont">&#xe60a;</i>
+            阅读打卡
+          </van-button>
+        </div>
+        <div class="btn contain" :class="isReleaseShow?'show':'hide'">
+          <van-button @click="isReleaseShow = !isReleaseShow" class="theme-btn" round size="normal" type="primary">
+            <i class="iconfont" v-if='isReleaseShow'>&#xe647;</i>
+            <i class="iconfont" v-else>&#xe664;</i>
+            {{!isReleaseShow?'课堂阅读发布':''}}
+          </van-button>
+
+
+            <div class="release-list" v-show='isReleaseShow'>
+              <div class="btn-item" @click="toGraphic('weibo')">
+                <i class="iconfont icon-weibo"></i>
+                <span>发图文</span>
+              </div>
+              <div class="btn-item" @click="toGraphic('video')">
+                <i class="iconfont icon-paishipin"></i>
+                <span>拍视频</span>
+              </div>
+            </div>
+
+        </div>
       </div>
     </div>
 
@@ -165,7 +182,8 @@ export default {
         name: '班级交流',
         iconClass: 'icon-jiaoliu',
         path: 'apps-find',
-      }]
+      }],
+      isReleaseShow: false
     }
   },
   //进入该页面
@@ -413,16 +431,30 @@ export default {
     toManage(){
       location.href = '/SchoolManage'
     },
-    toGraphic(){
-      this.$router.push({
-        name: 'graphic',
-        query: {
-          back: this.$route.name,
-          id: this.$route.query.id,
-          upVideo:1,
-          cate_id:116
-        }
-      })
+    toGraphic(type){
+      switch(type){
+        case 'weibo':
+          this.$router.push({
+            name: 'graphic',
+            query: {
+              back: this.$route.name,
+              id: this.$route.query.id,
+              cate_id:116
+            }
+          })
+        break
+        case 'video':
+          this.$router.push({
+            name: 'graphic',
+            query: {
+              back: this.$route.name,
+              id: this.$route.query.id,
+              upVideo:1,
+              cate_id:116
+            }
+          })
+        break
+      }
     }
   }
 }
@@ -537,8 +569,55 @@ export default {
   width: 100%;
 }
 
-.footer-btn{
-  padding: 0 10px;
-  justify-content: space-between;
+.contain{
+  position: relative;
+}
+
+.contain.show .iconfont{
+  margin-right: 0;
+}
+
+.contain.show .theme-btn{
+  margin: auto;
+  position: absolute;
+  right: 30px;
+}
+
+.release-list{
+  position: absolute;
+  right: 30px;
+  bottom: 0;
+  width: 46px;
+  background: #fff;
+  padding: 10px 0 50px;
+  z-index: -1;
+  border-radius: 46px;
+  box-shadow: 0 5px 30px rgba(0, 171, 225, 0.3)
+}
+
+.btn-item{
+  display: grid;
+  text-align: center;
+  margin: .625rem /* 10/16 */ 0;
+}
+
+.btn-item .iconfont{
+  font-size: 26px;
+}
+
+.btn-item span{
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.btn{
+  flex: 1;
+  height: 45px;
+}
+
+.btn .theme-btn{
+  margin: 0 auto;
+  display: block;
+  transition: all 2s;
 }
 </style>

@@ -1208,4 +1208,24 @@ i.iconfont.vip-1 {
 .page-loading.van-toast{
   background-color: rgba(0, 0, 0, 0.3);
 }
+
+.icon-weibo::before {
+  color: #7197e7;
+}
+
+.icon-wenzhang::before {
+  color: #35c7da;
+}
+
+.icon-paishipin::before {
+  color: #ec736e;
+}
+
+.icon-shipin::before {
+  color: #6ddea7;
+}
+
+.icon-tiwen::before {
+  color: #f5c944;
+}
 </style>
