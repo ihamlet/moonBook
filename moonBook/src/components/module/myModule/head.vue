@@ -5,7 +5,7 @@
         <i class="iconfont">&#xe60e;</i>
       </div>
       <div class="head-bar-icon bar-right" slot="right">
-        <i class="iconfont" @click="signIn">&#xe609;</i>
+        <i class="iconfont" @click="toCalendar">&#xe609;</i>
       </div>
     </van-nav-bar>
     <div class="user-info flex flex-justify">
@@ -30,52 +30,17 @@
             <vipLevel :level='userInfo.card_level' animate='1'/>
           </div>
         </div>
-        <!-- <div class="service flex flex-align" v-if="userInfo.card_level != '0'">
-          <div class="data-flow" @click="$router.push({name:'card-list'})">
-            <i class="iconfont" :class="`vip-${userInfo.card_level}`">&#xe604;</i>
-            <b class="card-name" v-line-clamp:20="1">{{userInfo.card_name}}</b>
-          </div>
-          <div class="data-flow read" @click="toBorrowList(0)">
-            <span class="data-name">读过</span>
-            <span class="number">
-              {{userInfo.borrow_count}}
-            </span>
-          </div>
-          <div class="data-flow reading" @click="toBorrowList(1)">
-            <span class="data-name">在读</span>
-            <span class="number">
-              {{userInfo.borrowing_count}}
-            </span>
-          </div>
-          <div class="data-flow collection" @click="toBorrowList(2)">
-            <span class="data-name">收藏</span>
-            <span class="number">
-              {{userInfo.collect_count}}
-            </span>
-          </div>
-          <div class="data-flow abrasion" @click="toBorrowList(3)">
-            <span class="data-name">破损</span>
-            <span class="number">
-              {{userInfo.broken_count}}
-            </span>
-          </div>
-        </div> -->
         <div class="no-service flex flex-align flex-justify" v-else @click="toAccept">您还没有办理借阅卡?
           <div class="theme-color">前往办卡</div>
           <i class="iconfont">&#xe61b;</i>
         </div>
       </div>
     </div>
-
-    <van-popup v-model="punchShow" class="page-popup page-punch" position="right">
-      <punch @close="closePunch" />
-    </van-popup>
   </div>
 </template>
 <script>
-import axios from "./../../lib/js/api";
-import numberGrow from "./../../module/animate/numberGrow";
-import punch from "./../../module/punch";
+import axios from "./../../lib/js/api"
+import numberGrow from "./../../module/animate/numberGrow"
 import avatar from './../avatar'
 import vipLevel from './../../module/animate/svg/vipLevel'
 
@@ -83,7 +48,6 @@ export default {
   name: "cardHead",
   components: {
     numberGrow,
-    punch,
     avatar,
     vipLevel
   },
@@ -96,35 +60,37 @@ export default {
       active: 0,
       punchShow: false,
       applyShow: false
-    };
+    }
   },
   mounted() {
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll)
   },
   methods: {
     handleScroll() {
-      this.getDomHeight();
+      this.getDomHeight()
       let scrollTop =
         window.pageYOffset ||
         document.documentElement.scrollTop ||
-        document.body.scrollTop;
-      this.scrollTop = scrollTop;
+        document.body.scrollTop
+      this.scrollTop = scrollTop
       if (this.domHeight < this.scrollTop) {
-        this.fixedHeaderBar = false;
+        this.fixedHeaderBar = false
       } else {
-        this.fixedHeaderBar = true;
+        this.fixedHeaderBar = true
       }
     },
     getDomHeight() {
       if (this.$refs.head) {
-        this.domHeight = this.$refs.head.offsetHeight / 2;
+        this.domHeight = this.$refs.head.offsetHeight / 2
       }
     },
     onClickLeft() {
-      this.$router.push({ name: "card-list" });
+      this.$router.push({ name: "card-list" })
     },
-    signIn() {
-      this.punchShow = true;
+    toCalendar() {
+      this.$router.push({
+        name:'calendar'
+      })
     },
     toAccept() {
       this.$router.push({
@@ -132,35 +98,24 @@ export default {
       })
     },
     onAccpetPage() {
-      this.applyShow = false;
+      this.applyShow = false
     },
     onStepActiveChange(val) {
-      this.active = val;
+      this.active = val
     },
-    closePunch() {
-      this.punchShow = false;
-    },
-    // toBorrowList(num) {
-    //   this.$router.push({
-    //     name: "borrow-list",
-    //     query: {
-    //       tabActive: num
-    //     }
-    //   });
-    // },
     getAvatar(img) {
       if (!img) {
-        return img;
+        return img
       }
 
-      let pos = img.indexOf("http://");
-      let result;
+      let pos = img.indexOf("http://")
+      let result
       if (pos === 0) {
-        result = img.replace("http:", "https:");
+        result = img.replace("http:", "https:")
       } else {
-        result = img;
+        result = img
       }
-      return result;
+      return result
     },
     toBabyHome() {
       this.$router.push({
@@ -172,7 +127,7 @@ export default {
       })
     }
   }
-};
+}
 </script>
 <style scoped>
 .head {
@@ -186,13 +141,13 @@ export default {
 
 @keyframes bg-generator {
   0% {
-    background-position: 0% 84%;
+    background-position: 0% 84%
   }
   50% {
-    background-position: 100% 17%;
+    background-position: 100% 17%
   }
   100% {
-    background-position: 0% 84%;
+    background-position: 0% 84%
   }
 }
 
@@ -214,7 +169,7 @@ export default {
 }
 
 .borrow-card i.iconfont {
-  font-size: 1.875rem /* 30/16 */;
+  font-size: 1.875rem /* 30/16 */
 }
 
 .avatar img {
@@ -231,7 +186,7 @@ export default {
 .avatar img,
 .children-avatar {
   border-radius: 50%;
-  border: 0.1875rem /* 3/16 */ solid rgba(255, 255, 255, .5);
+  border: 0.1875rem /* 3/16 */ solid rgba(255, 255, 255, .5)
 }
 
 .children-avatar {
@@ -269,7 +224,7 @@ export default {
   font-size: 1.25rem /* 20/16 */;
   text-align: center;
   margin-top: 5px;
-  margin-bottom: 5px
+  margin-bottom: 5px;
 }
 
 .info .school {
@@ -309,11 +264,11 @@ export default {
 }
 
 /* .data-flow .number {
-  font-size: 1.875rem;
+  font-size: 1.875rem
 } */
 
 /* .data-flow .card-name {
-  font-size: x-small;
+  font-size: x-small
 } */
 
 .theme-color {

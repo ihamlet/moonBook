@@ -1,46 +1,50 @@
 <template>
-<div id="calendar">
-    <!-- 年份 月份 -->
-    <div class="month">
-        <ul class="flex flex-align">
-            <!--点击会触发pickpre函数，重新刷新当前日期 @click(vue v-on:click缩写) -->
-            <li class="arrow" @click="pickPre(currentYear,currentMonth)">❮</li>
-            <li class="year-month">
-                <span class="choose-year">{{ currentYear }}年</span>
-                <span class="choose-month">{{ currentMonth }}月</span>
+  <div class="calendar-page">
+    <div id="calendar">
+        <div class="month">
+            <ul class="flex flex-align">
+                <li class="arrow" @click="pickPre(currentYear,currentMonth)">❮</li>
+                <li class="year-month">
+                    <span class="choose-year">{{ currentYear }}年</span>
+                    <span class="choose-month">{{ currentMonth }}月</span>
+                </li>
+                <li class="arrow" @click="pickNext(currentYear,currentMonth)">❯</li>
+            </ul>
+        </div>
+        <ul class="weekdays flex flex-align">
+            <li>一</li>
+            <li>二</li>
+            <li>三</li>
+            <li>四</li>
+            <li>五</li>
+            <li>六</li>
+            <li>日</li>
+        </ul>
+        <ul class="days">
+            <li  v-for="(dayobject,dayobjectIndex) in days" :key="dayobjectIndex">
+                <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
+                <span v-else>
+                    <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
+                    <span v-else>{{ dayobject.day.getDate() }}</span>
+                </span>
+
             </li>
-            <li class="arrow" @click="pickNext(currentYear,currentMonth)">❯</li>
         </ul>
     </div>
-    <!-- 星期 -->
-    <ul class="weekdays flex flex-align">
-        <li>一</li>
-        <li>二</li>
-        <li>三</li>
-        <li>四</li>
-        <li>五</li>
-        <li>六</li>
-        <li>日</li>
-    </ul>
-    <!-- 日期 -->
-    <ul class="days">
-        <!-- 核心 v-for循环 每一次循环用<li>标签创建一天 -->
-        <li  v-for="(dayobject,dayobjectIndex) in days" :key="dayobjectIndex">
-            <!--本月-->
-            <!--如果不是本月  改变类名加灰色-->
+    <div class="banner">
+      <van-swipe :autoplay="3000" indicator-color="white" :height='130'>
+        <van-swipe-item v-for="(image, index) in banner" :key="index">
+          <img :src="image" />
+        </van-swipe-item>
+      </van-swipe>
+    </div>
 
-            <span v-if="dayobject.day.getMonth()+1 != currentMonth" class="other-month">{{ dayobject.day.getDate() }}</span>
-
-            <!--如果是本月  还需要判断是不是这一天-->
-            <span v-else>
-          <!--今天  同年同月同日-->
-                <span v-if="dayobject.day.getFullYear() == new Date().getFullYear() && dayobject.day.getMonth() == new Date().getMonth() && dayobject.day.getDate() == new Date().getDate()" class="active">{{ dayobject.day.getDate() }}</span>
-                <span v-else>{{ dayobject.day.getDate() }}</span>
-            </span>
-
-        </li>
-    </ul>
-</div>
+    <div class="footer-bar">
+      <div class="check-in">
+      <van-button class="theme-btn" type="primary" size="normal" round>今日签到</van-button>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import { format } from './../../lib/js/util' 
@@ -54,22 +58,21 @@ export default {
       currentYear: 1970,
       currentWeek: 1,
       days: [],
-      pack: false
+      pack: false,
+      banner:[
+        require('@/assets/banner/banner-1.jpg'),
+        require('@/assets/banner/banner-2.jpg'),
+        require('@/assets/banner/banner-3.jpg'),
+      ]
     }
   },
   created() {
     this.initData(null)
   },
-  // computed: {
-  //   calendarData() {
-  //     return Math.ceil((Date.now() - this.days[0].day.getTime()) / 86400000 / 7)
-  //   }
-  // },
   methods: {
     initData: function(cur) {
       var leftcount=0; //存放剩余数量
       var date;
-
 
       if (cur) {
           date = new Date(cur);
@@ -142,10 +145,12 @@ export default {
 </script>
 <style scoped>
 #calendar {
-  background: transparent;
+  background: linear-gradient(to right, #ff5858, #f857a6); 
   color: #fff;
   position: relative;
-  box-shadow: 0 1.875rem /* 30/16 */ 2.5rem /* 40/16 */ -0.625rem /* 10/16 */ rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1.25rem 1.875rem rgba(248, 87, 163, 0.26);
+  z-index: 10;
+  border-radius:0 0 10px 10px;
 }
 
 #calendar .drop-down {
@@ -162,6 +167,10 @@ export default {
 
 .scroll-x {
   background: transparent;
+}
+
+#calendar .month ul{
+  height: 45px;
 }
 
 #calendar .month ul li.arrow {
@@ -202,7 +211,7 @@ ul.days li {
 .active {
   position: relative;
   font-weight: 700;
-  color: #de4313;
+  color: #f857a6;
   z-index: 1;
 }
 
@@ -226,5 +235,27 @@ ul.days li {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+
+.banner{
+  padding: 0 10px;
+}
+
+.footer-bar{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.check-in{
+  padding: 10px 20px;
+}
+
+.theme-btn{
+  width: 100%;
+}
+
+.check-in .theme-btn{
+  background: linear-gradient(to right, #ff5858, #f857a6);
 }
 </style>

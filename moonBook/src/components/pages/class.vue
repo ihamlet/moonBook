@@ -54,9 +54,9 @@
     </van-dialog>
 
     <van-dialog v-model="showCode" show-cancel-button :before-close="codeBeforeClose">
-      <div class="dialog-title">请输入邀请码</div>
+      <div class="dialog-title">邀请码</div>
       <van-cell-group>
-        <van-field v-model="code" label="邀请码" placeholder="请输入邀请码" input-align='right' />
+        <van-field v-model="code" label="邀请码" placeholder="没有邀请码直接点确认" input-align='right' />
       </van-cell-group>
     </van-dialog>
 

@@ -89,6 +89,7 @@ export default {
       return num
     },
     player() {
+      
       let obj = this.videoObject
       let array = this.item.photos
       let videoArray = []

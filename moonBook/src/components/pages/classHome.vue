@@ -606,7 +606,7 @@ export default {
 }
 
 .btn-item span{
-  font-size: 13px;
+  font-size: small;
   margin-top: 5px;
 }
 

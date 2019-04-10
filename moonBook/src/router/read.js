@@ -6,6 +6,7 @@ import ReadAmount from '@/components/pages/readAmount'
 import ReadGuide from '@/components/pages/guided/readGuide'
 import punchBack from '@/components/pages/punch/punchBack'
 import punchList from '@/components/pages/punch/punchList'
+import Calendar from '@/components/module/mold/calendar'
 
 let readRouter = [{
     path: '/bookshelf',
@@ -80,6 +81,14 @@ let readRouter = [{
     component: ReadStat,
     meta: {
       title: '阅读统计',
+      isFooterBar: false
+    }
+  },{
+    path: '/calendar',
+    name: 'calendar',
+    component: Calendar,
+    meta: {
+      title: '阅读日历',
       isFooterBar: false
     }
   }]

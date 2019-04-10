@@ -228,8 +228,7 @@ export default {
             if (res.data.data.like == '1') {
               item.zan_num = res.data.data.like
               this.$toast.success({
-                className: 'zan-icon toast-icon',
-                message: '点赞成功'
+                className: 'zan-icon toast-icon'
               })
             }
           }
@@ -250,8 +249,7 @@ export default {
           if (res.data.data) {
             item.collect_num = res.data.data.collect_num
             this.$toast.success({
-              className: 'shoucang-icon toast-icon',
-              message: '收藏成功'
+              className: 'shoucang-icon toast-icon'
             })
           }
         }
@@ -269,6 +267,7 @@ export default {
           this.prompt = '写评论'
         }
         this.show = true
+
         this.$nextTick(() => {
           this.$refs.field.focus()
         })
