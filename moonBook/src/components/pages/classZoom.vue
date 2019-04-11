@@ -21,7 +21,6 @@
 <script>
 import axios from './../lib/js/api'
 import graphicCard from './../module/card/graphicCard'
-import qrCode from "./../module/mold/qrCode"
 import { mapGetters } from 'vuex'
 
 export default {

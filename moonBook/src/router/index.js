@@ -40,6 +40,8 @@ import City from '@/components/pages/city'
 
 import Dialog from '@/components/pages/dialog/dialog'
 
+import Share from '@/components/pages/share'
+
 import Edit from './edit'
 import Editor from './editor'
 import Manage from './manage'
@@ -198,6 +200,15 @@ export default new Router({
           }
         }
       ]
+    },
+    {
+      path: '/share',
+      name: 'share',
+      component: Share,
+      meta: {
+        title: '二维码分享',
+        isFooterBar: false,
+      }
     },
     {
       path: '/article',

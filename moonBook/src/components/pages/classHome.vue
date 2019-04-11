@@ -13,12 +13,12 @@
         <div class="class-name">{{formatBanjiTitle(classInfo.title)}}</div>
         <div class="flex flex-align">
           <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
-          <span class="splitter">|</span>
+          <span class="splitter">•</span>
           <div class="class-people">{{`${classInfo.grade_name?classInfo.grade_name:''}班`}}（{{classInfo.student_count}}人）</div>
         </div>
       </div>
-      <div class="qrcode" @click="show = true">
-        <i class="iconfont">&#xe622;</i>
+      <div class="qrcode" @click="toPageCodeShare">
+        <van-button plain size="small" round class="theme-plain" type="primary">邀请家长</van-button>
       </div>
     </div>
     <div class="container">
@@ -37,10 +37,6 @@
         <class-zoom type='template' :banji_id='classInfo.banji_id' :key="classInfo.banji_id"/>
       </div>
     </div>
-
-    <van-popup v-model="show" class="card-popup">
-      <qr-code :classInfo="classInfo" :qrImage="qrImage" type='classHome' @close='show = false' />
-    </van-popup>
 
     <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" />
 
@@ -74,18 +70,27 @@
         </div>
       </div>
     </div>
+
+    <van-dialog v-model="showCode" show-cancel-button :showConfirmButton='false' cancelButtonText='找老师要邀请码' :before-close="codeBeforeClose">
+      <div class="dialog-title tips"> 
+        <span class="prompt-text">填写邀请码进入班级</span>
+      </div>
+      <van-cell-group>
+        <div class="flex flex-align">
+          <van-field class="dialog-field" v-model="code" placeholder="请填写邀请码" input-align='center'/> 
+          <van-button type="primary" square size='normal' class="dialog-btn theme-btn" @click="verification">进入班级</van-button>
+        </div>
+      </van-cell-group>
+    </van-dialog>
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
-import Cookies from 'js-cookie'
 
 import { mapGetters, mapActions } from 'vuex'
-import QRCode from 'qrcode'
 import classZoom from './../pages/classZoom'
 import readList from './../module/classModule/readList'
 import reading from './../module/reading'
-import qrCode from './../module/mold/qrCode'
 import apps from './../module/myModule/apps'
 import notice from './../module/classModule/notice'
 
@@ -94,7 +99,6 @@ export default {
   components: {
     classZoom,
     reading,
-    qrCode,
     readList,
     notice,
     apps
@@ -126,7 +130,7 @@ export default {
       if (this.classInfo.is_my_baby_banji) {
         this.managerState.forEach(element => {
           if(element.id == this.$route.query.id){
-            childName = element.child_name
+            childName = element.child_name || ''
           }
         })
 
@@ -179,13 +183,15 @@ export default {
         iconClass: 'icon-jiaoliu',
         path: 'apps-find',
       }],
-      isReleaseShow: false
+      isReleaseShow: false,
+      showCode:false,
+      childInfo:'',
+      code:''
     }
   },
   //进入该页面
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.qrcode()
       vm.request()
     })
   },
@@ -289,7 +295,8 @@ export default {
       if(this.$route.query.id && this.$route.query.id!=''){
         let data = {
             params:{
-              banji_id: this.$route.query.id
+              banji_id: this.$route.query.id,
+              child_id: this.userDataState.child_id
             }
           }
 
@@ -299,13 +306,17 @@ export default {
           }
         })
         this.getCate()
+        this.getChildInfo()
       }
     },
-    qrcode() {
-      QRCode.toDataURL(window.location.href).then(url => {
-        this.qrImage = url
-      }).catch(err => {
-        console.error(err)
+    toPageCodeShare(){
+      this.$router.push({
+        name:'share',
+        query:{
+          fullPath: this.$route.fullPath,
+          banji_id: this.$route.query.id,
+          invite_code: this.classInfo.invite_code
+        }
       })
     },
     handleScroll() {
@@ -429,6 +440,22 @@ export default {
         }
       })
     },
+    getChildInfo(){
+        let data = {
+          params:{
+            child_id: this.userDataState.child_id
+          }
+        }
+
+      axios.get('/book/baby/getInfo',data).then(res => {
+        if (res.data.status == 1) {
+          this.childInfo = res.data.data
+          if(this.childInfo.is_banji_confirm == '0'){
+            this.showCode = true
+          }
+        }
+      })
+    },
     toManage(){
       location.href = `/SchoolManage?banji_id=${this.$route.query.id}`
     },
@@ -456,13 +483,59 @@ export default {
           })
         break
       }
+    },
+    // 宝贝加入班级邀请码
+    codeBeforeClose(action, done){
+      let BabyJoinBanjiBdind = {
+        params: {
+          banji_id: this.$route.query.id,
+          child_id: this.userDataState.child_id,
+          invite_code: this.code
+        }
+      }
+
+      if (action === 'confirm') {
+      } else {
+        this.$router.go(-1)
+      }
+    },
+    verification(){
+      let BabyJoinBanjiBdind = {
+        params: {
+          banji_id: this.$route.query.id,
+          child_id: this.userDataState.child_id,
+          invite_code: this.code
+        }
+      }
+
+      if(this.code && this.code.length){
+        if(this.classInfo.invite_code == this.code){
+          this.babyJoin(BabyJoinBanjiBdind)
+        }else{
+          this.$toast('邀请码不正确')
+        }
+      }else{
+        this.$toast('请输入邀请码')
+      }
+    },
+    babyJoin(data){
+      axios.get('/book/baby/join_banji', data).then(res => {
+        if (res.data.status == 1) {
+          this.getUserData()
+        } else {
+          this.$toast.fail('加入失败')
+          this.$router.replace({
+            name:'my-home'
+          })
+        }
+      })
     }
   }
 }
 </script>
 <style scoped>
 .school {
-  text-align: left;
+  text-align: left
 }
 
 .school,
@@ -483,11 +556,6 @@ export default {
 .class-info {
   color: #fff;
   flex: 4;
-}
-
-.qrcode {
-  flex: 1;
-  text-align: right;
 }
 
 .class-avatar {
@@ -516,14 +584,6 @@ export default {
 
 .punch {
   z-index: 101;
-}
-
-.qrcode {
-  color: #fff;
-}
-
-.qrcode i.iconfont {
-  font-size: 1.625rem /* 26/16 */;
 }
 
 .module {

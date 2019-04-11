@@ -15,7 +15,7 @@
         </van-list>
     </van-pull-refresh>
 
-    <div class="footer-bar">
+    <!-- <div class="footer-bar">
       <div class="btn">
         <van-button round class="theme-btn" type="primary" size="normal" @click="shareShow = true">分 享</van-button>
       </div>
@@ -25,7 +25,7 @@
       <div class="share-img">
         <img src="./../../../assets/img/shareWord.png" />
       </div>
-    </van-popup>
+    </van-popup> -->
   </div>
 </template>
 <script>

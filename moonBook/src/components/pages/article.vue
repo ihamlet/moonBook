@@ -42,8 +42,6 @@
 </template>
 <script>
 import axios from './../lib/js/api'
-
-import QRCode from "qrcode"
 import articleOperation from './../module/mold/articleOperation'
 import comment from './../module/comment'
 import articleContent from './../module/articleContent'
@@ -75,7 +73,9 @@ export default {
       headBar: false,
       imgIndex: '',
       qrImage:'',
-      item: {}
+      item: {
+        photos:[]
+      }
     }
   },
   created() {

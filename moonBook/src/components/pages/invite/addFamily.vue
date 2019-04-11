@@ -3,10 +3,10 @@
     <div class="pictorial">
       <div class="tips" v-show='is_mine'>点击发送给家人 邀请加入</div>
       <div class="logo">
-        <img src="./../../../assets/img/logo.png"/>
+        <img src="./../../../assets/img/logo.png" />
       </div>
       <div class="child-info" v-show='!is_mine'>
-        <div class="avatar" >
+        <div class="avatar">
           <img :src="babyInfo.avatar" />
         </div>
         <div class="name">
@@ -26,23 +26,23 @@
 
       <div class="text">{{is_mine?'邀请家人一起参与宝贝阅读，记录成长':'与家人一起参与宝贝阅读，记录成长'}}</div>
 
-      <van-button class="theme-btn" v-if='!is_mine' type="primary" size="normal" @click="addFamily">加  入</van-button>
+      <van-button class="theme-btn" v-if='!is_mine' type="primary" size="normal" @click="addFamily" square>加 入</van-button>
       <div class="copyright" v-if='is_mine'>© 阅亮书架</div>
     </div>
   </div>
 </template>
 <script>
-import Cookies from 'js-cookie'
 import axios from './../../lib/js/api'
 import { mapActions } from 'vuex'
+import wx from 'weixin-js-sdk'
 
 export default {
   name: 'add-family',
   computed: {
-    item(){
+    item() {
       let data = {
-        cate_name:'邀请',
-        details:'阅亮书架，与家人一起参与宝贝阅读，记录成长',
+        cate_name: '邀请',
+        details: '阅亮书架，与家人一起参与宝贝阅读，记录成长',
         title: `${this.babyInfo.name}邀请您加入家庭主页`,
         imgUrl: location.origin + this.babyInfo.avatar
       }
@@ -53,44 +53,46 @@ export default {
   data() {
     return {
       isLoading: false,
-      shareShow:false,
+      shareShow: false,
       is_mine: true,
-      babyInfo:''
+      babyInfo: ''
     }
   },
-  created () {
+  created() {
     this.fetchData()
   },
-  updated () {
-    let self = this //this指向到vue实例
-    this.$nextTick(()=>{
-      let data = {
-        item: self.item,
-        success(){
-          self.$router.push({
-            name:'baby-home',
-            query:{
-              id: self.$route.query.id
-            }
-          })
+  mounted() {
+    let self = this
+    wx.ready(() => {
+      this.$nextTick(() => {
+        let data = {
+          item: self.item,
+          success() {
+            self.$router.push({
+              name: 'baby-home',
+              query: {
+                id: self.$route.query.id
+              }
+            })
+          }
         }
-      }
-      this.share(data)
+        this.share(data)
+      })
     })
   },
   watch: {
-    '$router':'fetchData'
+    '$router': 'fetchData'
   },
   methods: {
-    ...mapActions('openWX',['share']),
-    fetchData(){
+    ...mapActions('openWX', ['share']),
+    fetchData() {
       let data = {
-        params:{
-          child_id:this.$route.query.id
+        params: {
+          child_id: this.$route.query.id
         }
       }
-      axios.get('/book/baby/getInfo',data).then(res=>{
-        if(res.data.status = 1){
+      axios.get('/book/baby/getInfo', data).then(res => {
+        if (res.data.status = 1) {
           this.is_mine = res.data.data.is_mine
           this.babyInfo = res.data.data
         }
@@ -98,36 +100,36 @@ export default {
     },
     addFamily() {
       let data = {
-        params:{
-          child_id:this.$route.query.id
+        params: {
+          child_id: this.$route.query.id
         }
       }
 
-        axios.get('/book/babyParent/join',data).then(res => {
-          this.isLoading = true
-          if(res.status == 1){
-            this.$toast(res.data.msg)
-            this.toRouter()
-            this.isLoading = false
-          }else{
-            this.$toast(res.data.msg)
-            this.toRouter()
-            this.isLoading = false
-          }
-        })
+      axios.get('/book/babyParent/join', data).then(res => {
+        this.isLoading = true
+        if (res.status == 1) {
+          this.$toast(res.data.msg)
+          this.toRouter()
+          this.isLoading = false
+        } else {
+          this.$toast(res.data.msg)
+          this.toRouter()
+          this.isLoading = false
+        }
+      })
     },
-    toRouter(){
-      if(this.$route.query.back){
+    toRouter() {
+      if (this.$route.query.back) {
         this.$router.push({
-          name:this.$route.query.back,
-          query:{
+          name: this.$route.query.back,
+          query: {
             id: this.$route.query.id,
           }
         })
-      }else{
+      } else {
         this.$router.push({
-            name:'home'
-        })  
+          name: 'home'
+        })
       }
     }
   }
@@ -135,7 +137,7 @@ export default {
 </script>
 <style scoped>
 .btn {
-  padding:1.25rem /* 20/16 */ 0.625rem /* 10/16 */;
+  padding: 1.25rem /* 20/16 */ 0.625rem /* 10/16 */;
   position: relative;
   z-index: 999;
 }
@@ -159,68 +161,75 @@ export default {
   font-size: 0.8125rem /* 13/16 */;
 }
 
-.logo{
+.logo {
   width: 10rem /* 160/16 */;
   padding-top: 8.125rem /* 130/16 */;
   margin: 0 auto;
 }
 
-.tips{
+.tips {
   position: absolute;
   z-index: 10;
-  background: rgba(0, 0,0, .7);
+  background: rgba(0, 0, 0, 0.7);
   color: #fff;
-  padding: .625rem /* 10/16 */ 1.25rem /* 20/16 */;
+  padding: 0.625rem /* 10/16 */ 1.25rem /* 20/16 */;
   height: 1.75rem /* 28/16 */;
   line-height: 1.75rem /* 28/16 */;
-  border-radius: .5rem /* 8/16 */;
-  right: .625rem /* 10/16 */;
+  border-radius: 0.5rem /* 8/16 */;
+  right: 0.625rem /* 10/16 */;
   top: 30px;
 }
 
-.tips::before{
+.tips::before {
   content: '';
   position: absolute;
-  border-right:0 solid transparent;
-	border-left: 15px solid transparent;
+  border-right: 0 solid transparent;
+  border-left: 15px solid transparent;
   border-bottom: 30px solid#000;
   top: -30px;
-  right: .5rem /* 8/16 */;
-  opacity: .7;
+  right: 0.5rem /* 8/16 */;
+  opacity: 0.7;
 }
 
-.head-list{
+.head-list {
   margin: 0 auto;
 }
 
-.head-list img{
+.head-list img {
   height: 4.375rem /* 70/16 */;
 }
 
-.head-box{
+.head-box {
   margin-top: 1.5625rem /* 25/16 */;
-  margin-bottom: .625rem /* 10/16 */;
+  margin-bottom: 0.625rem /* 10/16 */;
 }
 
-.text{
+.text {
   text-align: center;
   color: #007fff;
 }
 
-.avatar img{
-  width: 3.75rem /* 60/16 */;
-  height: 3.75rem /* 60/16 */;
-  border: .1875rem /* 3/16 */ solid #fff;
+.avatar{
+  width: 66px;
+  margin: 10px auto;
+}
+
+.avatar img {
+  width: 60px;
+  height: 60px;
+  border: 3px solid #fff;
   border-radius: 50%;
-  margin:  1.25rem /* 20/16 */ auto .625rem /* 10/16 */ auto;
+  margin: 20px auto 0.625rem 10px auto;
   display: block;
 }
 
-.name{
+.name {
   text-align: center;
+  font-size: 18px;
+  font-weight: 700;
 }
 
-.theme-btn{
+.theme-btn {
   position: fixed;
   width: 100%;
   bottom: 0;

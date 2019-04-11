@@ -30,7 +30,7 @@
           <div class="label">{{childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
         </div>
-        <div class="qr-code" @click="showQrcode=true">
+        <div class="qrcode" @click="toPageCodeShare">
           <i class="iconfont">&#xe622;</i>
         </div>
       </div>
@@ -88,10 +88,6 @@
 
     <slogan v-if="!childInfo.is_mine"/>
 
-    <van-popup v-model="showQrcode" class="card-popup">
-      <qr-code :qrImage="qrImage" type="babyHome" :label="childInfo.title" :childInfo="childInfo" @close="showQrcode = false" />
-    </van-popup>
-
     <div class="punch" v-if='childInfo.is_mine'>
       <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
         <i class="iconfont">&#xe60a;</i>
@@ -134,12 +130,9 @@
 </template>
 <script>
 import axios from "./../lib/js/api"
-import Cookies from 'js-cookie'
 import { mapActions, mapGetters } from 'vuex'
 import { format, timeago } from "./../lib/js/util.js"
-import QRCode from "qrcode"
 import wave from "./../module/animate/anWave"
-import qrCode from "./../module/mold/qrCode"
 import avatar from "./../module/avatar"
 import reading from "./../module/reading"
 import graphicCard from "./../module/card/graphicCard"
@@ -151,7 +144,6 @@ export default {
   name: "baby-home",
   components: {
     wave,
-    qrCode,
     reading,
     avatar,
     graphicCard,
@@ -235,7 +227,6 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.qrcode()
       vm.request()
     })
   },
@@ -372,11 +363,12 @@ export default {
         })
       }
     },
-    qrcode() {
-      QRCode.toDataURL(window.location.href).then(url => {
-        this.qrImage = url
-      }).catch(err => {
-        console.error(err)
+    toPageCodeShare(){
+      this.$router.push({
+        name:'share',
+        query:{
+          child_id: this.$route.query.id
+        }
       })
     },
     handleScroll() {
@@ -677,46 +669,6 @@ export default {
         }
       })
     }
-    // toTaskLinkPage() {
-    //   window.location.href = '/book/TushuDonation/intro'
-    // }
-    // 倒计时开始
-    // StartCountDown() {
-    //     let mydate = new Date()
-    //     mydate.setMinutes(mydate.getMinutes() + this.limittime)
-    //     this.settime=mydate
-
-    //     let time = setInterval(() => {
-    //         if (this.flag == true) {
-    //             clearInterval(time)
-    //         }
-    //         this.timeDown()
-    //     }, 100)
-    // },
-    // 进行倒计时
-    // timeDown() {
-    //   const endTime = new Date(this.endTime)
-    //   const nowTime = new Date()
-    //   let leftTime = parseInt((endTime.getTime() - nowTime.getTime()) / 1000)
-    //   let d = parseInt(leftTime / (24 * 60 * 60))
-    //   let h = this.formate(parseInt(leftTime / (60 * 60) % 24))
-    //   let m = this.formate(parseInt(leftTime / 60 % 60))
-    //   let s = this.formate(parseInt(leftTime % 60))
-    //   if (leftTime <= 0) {
-    //       this.flag = true
-    //       console.log("时间到")
-    //   }
-    //   this.keepTime = `${h}:${m}:${s}`
-
-    //   console.log(this.keepTime)
-    // },
-    // formate(time) {
-    //   if (time >= 10) {
-    //       return time
-    //   } else {
-    //       return `0${time}`
-    //   }
-    // }
   }
 }
 
@@ -776,19 +728,6 @@ export default {
 .school {
   text-align: left;
   color: #fff;
-}
-
-.add-praise,
-.qr-code {
-  flex: 0.8;
-  text-align: right;
-}
-
-.add-praise i.iconfont,
-.qr-code i.iconfont {
-  font-size: 1.5rem /* 24/16 */;
-  color: #fff;
-  text-shadow: 0 0.125rem /* 2/16 */ 0.375rem /* 6/16 */ rgba(0, 0, 0, 0.1);
 }
 
 .follow .theme-btn {

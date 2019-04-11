@@ -1,10 +1,6 @@
 <template>
   <div class="readstat page-padding">
-    <van-nav-bar :zIndex='99' :class="fixedHeaderBar?'theme-nav':''" :title="fixedHeaderBar?$route.meta.title:childInfo.name" fixed @click-right="show = true">
-      <!-- <div class="head-bar-text" slot="left">
-        <van-icon name="arrow-left" />
-        <span class="text">{{$route.query.back?'返回':'我的'}}</span>
-      </div> -->
+    <van-nav-bar :zIndex='99' :class="fixedHeaderBar?'theme-nav':''" :border='false' :title="fixedHeaderBar?$route.meta.title:childInfo.name" fixed @click-right="show = true">
       <div class="head-bar-icon" slot="right">
         <i class="iconfont">&#xe635;</i>
       </div>

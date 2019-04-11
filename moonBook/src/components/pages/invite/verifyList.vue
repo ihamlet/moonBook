@@ -7,17 +7,21 @@
       <div class="list">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <van-cell v-for="(item,index) in list" :key="index" center>
-              <div class="title flex flex-align" slot="title">
-                  <div class="avatar">
-                    <img :src="item.avatar" :alt="item.parent_name" />
-                  </div>
-                  <div class="name">{{item.parent_name}}</div>
-              </div>
-              <div class="btn-box"  v-if='!item.is_manager'>
-                <div class="btn">
-                  <van-button class="theme-btn" size='small' type="primary" round @click="by(item)" :plain='!item.show_check'>{{item.show_check?'通过':'请出'}}</van-button>
+            <div class="title flex flex-align" slot="title">
+                <div class="avatar">
+                  <img :src="item.avatar" :alt="item.parent_name" />
                 </div>
+                <div class="name">{{item.parent_name}}</div>
+            </div>
+            <div class="btn-box"  v-if='!item.is_manager'>
+              <div class="btn" v-if='item.parent_id != userDataState.id'>
+                <van-button class="theme-btn" size='small' type="primary" round @click="by(item)" :plain='item.show_check'>{{item.show_check?'通过':'请出'}}</van-button>
               </div>
+              <div class="btn" v-else-if='item.is_close == "0"'>
+                <van-button class="theme-btn" size='small' type="primary" round @click="out" :plain='item.show_check'>退出</van-button>
+              </div>
+            </div>
+            <div class="type" v-else>群主</div>
           </van-cell>
 
           <div class="no-content" v-if='count == 0'>
@@ -31,7 +35,7 @@
 <script>
 import axios from './../../lib/js/api'
 import family from './../../module/myModule/family'
-import { mapGetters } from 'vuex'
+import { mapGetters,mapActions } from 'vuex'
 
 export default {
   name: 'verifyList',
@@ -51,16 +55,22 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['getUserData']),
     onLoad(){
       let data = {
         params:{
-          child_id: this.$route.query.id
+          child_id: this.$route.query.id,
+          is_delete: 0
         }
       }
 
       axios.get('/book/babyParent/getList',data).then(res => {
         this.count = res.data.count
+
+        console.log(res.data.data,res.data.count)
+
         this.list = res.data.data
+
         this.loading = false
         if (this.list.length >= res.data.count) {
           this.finished = true
@@ -76,7 +86,7 @@ export default {
         })
     },
     by(item){
-      if(item.show_check){
+      if(item.show_check&&item.parent_id != this.userDataState.id){
         axios.get(`/book/babyParent/check?id=${item.id}`).then(res=>{
             if(res.data.status == 1){
               this.$toast.success('通过审核')
@@ -101,8 +111,29 @@ export default {
             break
           }
         })
-      }
 
+        console.log('请出后宝贝列表没有更新','接口：/baby/getList，可能接口缓存时间较长')
+      }
+    },
+    out(){
+      this.$dialog.alert({
+        message: `<div class='text-center'>确定要退出家庭吗</div>`,
+        confirmButtonText: '取消',
+        cancelButtonText: '确认',
+        showCancelButton: true
+      }).then(() => {
+        done()
+      }).catch(() => {
+        let data = {
+          params:{
+            child_id:this.$route.query.id
+          }
+        }
+        axios.get('/book/baby/del',data).then(res => {
+          this.getUserData()
+          this.$router.go(-1)
+        })
+      })
     },
     reload () {
      this.isRouterAlive = false

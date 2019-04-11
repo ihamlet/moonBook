@@ -20,7 +20,7 @@
         </div>
         <div class="no-list" v-else>
           尚无打卡图书
-        </div>
+        </div>  
       </van-list>
     </van-pull-refresh>
 

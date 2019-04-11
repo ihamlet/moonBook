@@ -26,7 +26,7 @@ export default {
             let data = {
                 cate_name:'阅读活动',
                 details:`${this.userDataState.name}邀您一起参与"起点阅读月活动"`,
-                title: '起点阅读，阅读月活动开始啦！'
+                title: '【老师篇】起点阅读，阅读月活动开始啦！'
             }
 
             return data

@@ -50,7 +50,11 @@ export default {
     goPage(item) {
       let path = ''
       if (item.id) {
-        path = `${item.path}?id=${item.id}&school_id=${item.school_id}&banji_name=${item.banji_name}&school_name=${item.school_name}`
+        if(item.path == 'class-home'){
+          path = `${item.path}?id=${item.id}&school_id=${item.school_id}&banji_name=${item.banji_name}&school_name=${item.school_name}`
+        }else{
+          path = `${item.path}?id=${item.id}`
+        }
       } else {
         path = item.path
       }

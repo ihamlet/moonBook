@@ -201,7 +201,7 @@ export default {
 
 .user-info {
   padding-top: 45px;
-  padding-bottom: 2.8125rem /* 45/16 */;
+  padding-bottom: 50px;
 }
 
 .info {

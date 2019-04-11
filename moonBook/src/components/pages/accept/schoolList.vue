@@ -10,13 +10,16 @@
     <div class="container" :class="$route.query.type">
       <van-tabs type="card" swipeable animated color='#0084ff' @change='changeTab'>
           <van-tab :title="list.title" v-for='(list,index) in tab' :key="index">
-            <div class="list" v-if='index == tabIndex'>
-              <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad">
-                  <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" is-link class="flex flex-align" @click="select(item)">
-                      <schoolCard :item='item' searchType='wmSearchSchool'/>
-                  </van-cell>
-              </van-list>
-            </div>
+            <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
+              <div class="list" v-if="list.content.length">
+                <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" is-link class="flex flex-align" @click="select(item)">
+                    <schoolCard :item='item' searchType='wmSearchSchool'/>
+                </van-cell>
+              </div>
+              <div class="no-list" v-else>
+                尚未成功定位  <span class="theme-color" @click="toCity">城市选择</span> 
+              </div>
+            </van-list>
           </van-tab>
       </van-tabs>
     </div>
@@ -27,7 +30,6 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-
 import { mapActions,mapGetters } from 'vuex'
 import schoolCard from './../../module/search/schoolCard'
 
@@ -44,9 +46,11 @@ export default {
       keyword:'',
       tab:[{
           title:'幼儿园',
+          typeCode:'141204',
           content:[],
       },{
           title:'小学',
+          typeCode:'141203',
           content:[]
       }],
       list: [],
@@ -65,7 +69,10 @@ export default {
       this.page = 1
       this.tab[this.tabIndex].content = []
       this.onSearch(val)
-    }
+    },
+    userPointState(){
+      this.onLoad()
+    },
   },
   methods: {
     ...mapActions(['getSchoolList','getSearch']),
@@ -129,7 +136,8 @@ export default {
           city: this.userPointState.city,
           lng: arr[0],
           lat: arr[1],
-          schoolType: this.tab[this.tabIndex].title
+          schoolType: this.tab[this.tabIndex].title,
+          type: this.tab[this.tabIndex].typeCode
         }
   
         this.getSearch(data).then(res=>{
@@ -144,6 +152,11 @@ export default {
         this.page = 1
         this.onLoad()
       }
+    },
+    toCity(){
+      this.$router.push({
+        name:'city'
+      })
     }
   }
 }

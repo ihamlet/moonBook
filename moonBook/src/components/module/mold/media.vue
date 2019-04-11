@@ -89,18 +89,19 @@ export default {
       return num
     },
     player() {
-      
-      let obj = this.videoObject
-      let array = this.item.photos
-      let videoArray = []
-      array.forEach(element => {
-        if(element.is_video == 1){
-          videoArray.push([element.photo])
-          obj.poster = element.thumb
-        }
-      })
-      obj.video = videoArray
-      return new ckplayer(obj)
+      if(this.item.photos.length){
+        let obj = this.videoObject
+        let array = this.item.photos
+        let videoArray = []
+        array.forEach(element => {
+          if(element.is_video == 1){
+            videoArray = element.photo
+            obj.poster = element.thumb
+          }
+        })
+        obj.video = videoArray
+        return new ckplayer(obj)
+      }
     }
   },
   data () {

@@ -13,6 +13,7 @@
 import axios from './../src/components/lib/js/api'
 import footerBar from './components/module/footerBar'
 import { mapActions, mapGetters } from 'vuex'
+import wx from 'weixin-js-sdk'
 import './../src/components/lib/css/neat.css'
 import 'animate.css'
 
@@ -81,6 +82,11 @@ export default {
   created () {
     this.fetchData()
     this.wxConfig()
+    
+    this.wxGetLocation().then(res=>{
+      let location = `${res.longitude},${res.latitude}`
+      this.center = location
+    })
   },
   watch: {
     center(val){
@@ -92,7 +98,7 @@ export default {
     '$route': 'fetchData'
   },
   methods: {
-    ...mapActions('openWX',['wxConfig']),
+    ...mapActions('openWX',['wxConfig','wxGetLocation']),
     ...mapActions(['getUserData','getMsg','getUserLocation','getManager']),
     fetchData(){
       let products = {
@@ -1230,5 +1236,23 @@ i.iconfont.vip-1 {
 
 .icon-tiwen::before {
   color: #f5c944;
+}
+
+.qrcode {
+  flex: 1;
+  text-align: right;
+  color: #fff;
+}
+
+.qrcode i.iconfont {
+  font-size: 1.625rem /* 26/16 */;
+}
+
+.dialog-field{
+  flex: 2
+}
+
+.dialog-btn{
+  flex: 1
 }
 </style>

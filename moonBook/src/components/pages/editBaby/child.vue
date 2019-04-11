@@ -115,12 +115,12 @@ export default {
         gender: 1,
         avatar: '',
         birthday: '',
-        relation_name: ''
+        relation_name: '妈妈'
       },
       childId:'',
       sexType:['小王子','小公主'],
       parentShow: false,
-      parentList:['','爸爸','妈妈','爷爷','奶奶','外公','外婆'],
+      parentList:['妈妈','爸爸','爷爷','奶奶','舅舅','姑姑','小姨','外公','外婆'],
       errorMessage: {
         name: '',
         birthday: ''
