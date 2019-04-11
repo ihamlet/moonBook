@@ -64,7 +64,7 @@ export default {
       if (item.id) {
         if(item.path == 'class-home'){
           if(this.managerBanji.length){
-            path = `${item.path}?id=${this.managerBanji[0].id}`
+            path = `${item.path}?id=${this.managerBanji[0].id}&school_id=${this.managerBanji[0].school_id}&banji_name=${this.formatBanjiTitle(this.managerBanji[0].name)}&school_name=${this.managerBanji[0].school_name}`
           }else{
             path = `${item.path}?id=${item.id}&school_id=${item.school_id}&banji_name=${item.banji_name}&school_name=${item.school_name}`
           }
@@ -86,6 +86,13 @@ export default {
     },
     closeTips(){
       this.setReleaseSwitch(false)
+    },
+    formatBanjiTitle(text) {
+      if (text && text.indexOf('班') == -1) {
+        return text + '班'
+      } else {
+        return text
+      }
     }
   }
 }

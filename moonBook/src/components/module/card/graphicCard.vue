@@ -6,7 +6,7 @@
           <img :src="getAvatar(avatar)" alt="宝贝头像" />
         </div>  
         <div class="avatar" v-else @click="item.user_id > 0 && toBookZoom(item)">
-          <img :src="getAvatar(item.user.avatar)" :alt="item.user.name">
+          <img :src="getAvatar(item.user.avatar)" :alt="item.user.name" @error='imgError'> 
         </div>
         <div class="info">
           <div class="name flex flex-align">
@@ -174,6 +174,9 @@ export default {
     },
     more(item){
       this.$emit('more',item)
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     }
   }
 }

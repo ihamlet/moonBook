@@ -1,5 +1,9 @@
 <template>
   <div class="share">
+    <div class="code-number">
+      <div class="title">邀请码</div>
+      <div>{{$route.query.invite_code}}</div>
+    </div>
     <div class="code-img">
         <img class="qr-img" :src="codeImgURL" />
     </div>
@@ -48,5 +52,9 @@ export default {
 
 .code-img{
   margin: 0 auto;
+}
+
+.code-number{
+  text-align: center;
 }
 </style>

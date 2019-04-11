@@ -12,9 +12,9 @@
             <div class="scroll-item" v-for='(list,index) in babyList' :key="index">
                 <div class="baby-item-card" @click="onSelectBaby(list)" :class="$route.query.id == list.id?'active':''">
                 <div class="avatar" v-if="list.avatar">
-                    <img :src="list.avatar" @error="imgError" :alt="childInfo.name">  
+                    <img :src="list.avatar" @error="imgError" />  
                 </div>
-                <avatar :gender="childInfo.sex" size='small' avatarClass='border' v-else />
+                <avatar size='small' avatarClass='border' v-else />
                 <div class="child-name" v-line-clamp:20="1">{{list.name}}</div>
                 </div>
             </div>
@@ -27,34 +27,23 @@ import { mapGetters,mapActions } from 'vuex'
 
 export default {
     name:'select-child',
-    props: ['babyList','childInfo'],
+    props: ['babyList','invite_code'],
     computed: {
       ...mapGetters(['userDataState'])
     },
     methods: {
         ...mapActions(["getUserData"]),
-        onInput() {
-            let data = {
-                params:{
-                child_id:this.$route.query.id
-                }
-            }
-
+        onInput(data) {
             axios.get('/book/MemberChild/top',data).then(res => {
                 switch(res.data.status){
-                case 1:
-                    this.getUserData()
-                    if(!this.childInfo.is_mine){
-                    this.$toast('已设为当前宝贝')
-                    }
-                break
-                case 0:
-                    this.$toast.fail(res.data.data.msg)
-                break
+                  case 1:
+                      this.getUserData()
+                  break
                 }
             })
         },
         addBaby(){
+            localStorage.removeItem('childInfo')
             this.$router.push({
                 name: 'edit-child',
                 query: {
@@ -64,13 +53,20 @@ export default {
                     id: this.$route.query.id,
                     banji_name: this.$route.query.banji_name,
                     school_name: this.$route.query.school_name,
-                    main_parent_id: this.userDataState.id
+                    main_parent_id: this.userDataState.id,
+                    invite_code: this.invite_code
                 }
             })
         },
         onSelectBaby(item) {
-            this.$emit('onPageRefresh',item)
-            this.onInput()
+            this.$emit('onSelect',item)
+            let data = {
+                params:{
+                  child_id: item.id
+                }
+            }
+
+            this.onInput(data)
         },
         imgError(e) {
             e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'

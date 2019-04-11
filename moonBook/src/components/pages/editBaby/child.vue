@@ -1,6 +1,6 @@
 <template>
   <div class="add-child  page-padding">
-    <van-nav-bar :title="$route.query.type!='edit'?'添加宝贝':'编辑宝贝'" :right-text="$route.query.type=='edit'?'注销':''" @click-right="onClickRight('delete')" />
+    <van-nav-bar :title="$route.query.pageTitle" :right-text="$route.query.type=='edit'?'注销':''" @click-right="onClickRight('delete')" />
     <div class="avatar-uploader">
       <van-uploader :after-read="onRead">
         <div class="prompt" v-if='!childInfo.avatar'>
@@ -12,6 +12,13 @@
         </div>
       </van-uploader>
     </div>
+    <div class="join-info" v-if='$route.query.formType'>
+      <div class="child-name">{{childInfo.name}}</div>
+    
+      <van-cell title="学校" size='large' :value="$route.query.school_name" />
+      <van-cell title="班级" size='large' :value="$route.query.banji_name" />
+    </div>
+    <div class="form" v-else>
     <van-cell-group>
       <van-field v-model="childInfo.name" :disabled='isMainParent' input-align='right' label="孩子姓名" placeholder="请输入孩子姓名" :error-message="errorMessage.name" />
       <van-field v-model="childInfo.birthday" :disabled='isMainParent' input-align='right' readonly label="孩子生日" placeholder="请选择日期" :error-message="errorMessage.birthday" @click="pickerShow = true" />
@@ -54,6 +61,8 @@
       <van-field v-model="childInfo.relation_name" input-align='right' label="您是孩子的？" placeholder="例如：爸爸"/>
       <van-picker :columns="parentList" :default-index="0" @change='onParentChange'/>
     </van-popup>
+
+  </div>
 
     <!-- 提交编辑 -->
     <div class="form-submit" v-if="$route.query.type=='edit'">
@@ -239,7 +248,7 @@ export default {
     operationApi(id) {
 
       if (id) {
-        this.childInfo.id = id
+        this.childInfo.id = id || this.$route.query.id
       }
     
       return new Promise((resolve, reject) => {
@@ -270,15 +279,19 @@ export default {
           if(this.$route.query.type == 'register'){
             this.show = true
           }else{
-            this.$router.push({
-              name: 'baby-home',
-              query: {
-                id: res,
-              }
-            })
-
             this.babyJoinSchool(res)
             this.babyJoinBanji(res)
+
+            if(this.$route.query.formType){
+              this.$router.go(-1)
+            }else{
+              this.$router.push({
+                name: 'baby-home',
+                query: {
+                  id: res,
+                }
+              })
+            }
           }
         })
       }
@@ -421,11 +434,11 @@ export default {
       })
     }, 
     babyJoinBanji(childId){
-
       let data = {
         params:{
           banji_id: this.$route.query.banji_id,
-          child_id: childId
+          child_id: childId,
+          invite_code: this.$route.query.invite_code
         }
       }
 
@@ -443,6 +456,13 @@ export default {
 
 .form-submit .theme-btn{
   width: 100%;
+}
+
+.child-name{
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 700;
 }
 </style>
 

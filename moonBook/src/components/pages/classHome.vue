@@ -71,7 +71,7 @@
       </div>
     </div>
 
-    <van-dialog v-model="showCode" show-cancel-button :showConfirmButton='false'  cancelButtonText='返回'  :before-close="codeBeforeClose">
+    <!-- <van-dialog v-model="showCode" show-cancel-button :showConfirmButton='false'  cancelButtonText='返回'  :before-close="codeBeforeClose">
       <div class="dialog-title tips"> 
         <span class="prompt-text">填写邀请码进入班级</span>
       </div>
@@ -81,10 +81,11 @@
           <van-button type="primary" square size='normal' class="dialog-btn theme-btn" @click="verification">进入班级</van-button>
         </div>
       </van-cell-group>
-    </van-dialog>
+    </van-dialog> -->
 
-    <van-popup v-model="showSelectBaby">
-      <selectBaby :babyList='babyList' @onSelectBaby='refreshPage'/>
+    <van-popup v-model="isSelectBabyShow" position="bottom" :close-on-click-overlay='false'>
+      <van-nav-bar title="选择要加入该班级的宝贝" left-text="发现" left-arrow @click-left="onClickLeft"/>
+      <selectBaby :babyList='babyList' :invite_code='classInfo.invite_code' @onSelect='selectChild'/>
     </van-popup>
   </div>
 </template>
@@ -122,7 +123,7 @@ export default {
             type: element.item_type,
             school_id: element.school_id,
             school_name: element.school_name,
-            banji_name: element.banji_name,
+            banji_name: this.formatBanjiTitle(element.name),
             banji_id: element.banji_id
           }
 
@@ -192,10 +193,11 @@ export default {
         path: 'apps-find',
       }],
       isReleaseShow: false,
-      showCode:false,
-      code:'',
+      // showCode:false,
+      // code:'',
+      // childInfo:'',
       babyList:[],
-      showSelectBaby:false
+      isSelectBabyShow:false
     }
   },
   //进入该页面
@@ -300,6 +302,21 @@ export default {
         this.getClassInfo()
       }
     },
+    // getChildInfo(){
+    //   let data = {
+    //     params:{
+    //       child_id: this.userDataState.child_id
+    //     }
+    //   }
+    //   axios.get('/book/baby/getInfo',data).then(res => {
+    //     if (res.data.status == 1) {
+    //       this.childInfo = res.data.data
+    //       if(this.childInfo.is_banji_confirm == '0'){
+    //         this.showCode = true
+    //       }
+    //     }
+    //   })
+    // },
     getClassInfo(){
       if(this.$route.query.id && this.$route.query.id!=''){
         let data = {
@@ -315,12 +332,10 @@ export default {
           }
         })
         this.getCate() 
-
         if(this.classInfo.show_child_join){
-          this.showSelectBaby = true
           this.getChildList()
+          this.isSelectBabyShow = true
         }
-        
       }
     },
     toPageCodeShare(){
@@ -465,9 +480,6 @@ export default {
       }
       axios.get('/book/baby/getList',babyListData).then(res => {
         this.babyList = res.data.data
-        if(res.data.data.length){
-          this.showSelectBaby = true
-        }
       })
     },
     toManage(){
@@ -499,45 +511,63 @@ export default {
       }
     },
     // 宝贝加入班级邀请码
-    codeBeforeClose(action, done){
-      if (action != 'confirm') {
-        this.$router.go(-1)
-        done()
-      }
-    },
-    verification(){
-      let BabyJoinBanjiBdind = {
-        params: {
-          banji_id: this.$route.query.id,
-          child_id: this.userDataState.child_id,
-          invite_code: this.code
-        }
-      }
+    // codeBeforeClose(action, done){
+    //   if (action != 'confirm') {
+    //     this.$router.go(-1)
+    //     done()
+    //   }
+    // },
+    // verification(){
+    //   let BabyJoinBanjiBdind = {
+    //     params: {
+    //       banji_id: this.$route.query.id,
+    //       child_id: this.userDataState.child_id,
+    //       invite_code: this.code
+    //     }
+    //   }
 
-      if(this.code && this.code.length){
-        if(this.classInfo.invite_code == this.code){
-          this.babyJoin(BabyJoinBanjiBdind)
-        }else{
-          this.$toast('邀请码不正确')
-        }
-      }else{
-        this.$toast('请输入邀请码')
-      }
-    },
-    babyJoin(data){
-      axios.get('/book/baby/join_banji', data).then(res => {
-        if (res.data.status == 1) {
-          this.getUserData()
-        } else {
-          this.$toast.fail('加入失败')
-          this.$router.replace({
-            name:'my-home'
-          })
+    //   if(this.code && this.code.length){
+    //     if(this.classInfo.invite_code == this.code){
+    //       this.babyJoin(BabyJoinBanjiBdind)
+    //     }else{
+    //       this.$toast('邀请码不正确')
+    //     }
+    //   }else{
+    //     this.$toast('请输入邀请码')
+    //   }
+    // },
+    // babyJoin(data){
+    //   axios.get('/book/baby/join_banji', data).then(res => {
+    //     if (res.data.status == 1) {
+    //       this.getUserData()
+    //     } else {
+    //       this.$toast.fail('加入失败')
+    //       this.$router.replace({
+    //         name:'my-home'
+    //       })
+    //     }
+    //   })
+    // },
+    selectChild(item){
+      this.$router.push({
+        name:'edit-child',
+        query:{
+          type:'add',
+          formType:'select_banji',
+          pageTitle:'加入班级',
+          id: item.id,
+          banji_name: this.$route.query.banji_name,
+          school_name: this.$route.query.school_name,
+          banji_id: this.$route.query.id,
+          school_id: this.$route.query.school_id,
+          invite_code: this.classInfo.invite_code
         }
       })
     },
-    refreshPage(){
-
+    onClickLeft(){
+      this.$router.push({
+        name:'apps-find'
+      })
     }
   }
 }
@@ -685,5 +715,11 @@ export default {
   margin: 0 auto;
   display: block;
   transition: all 2s;
+}
+
+.title{
+  text-align: center;
+  height: 45px;
+  line-height: 45px
 }
 </style>
