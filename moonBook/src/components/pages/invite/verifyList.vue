@@ -15,19 +15,24 @@
             </div>
             <div class="btn-box"  v-if='!item.is_manager'>
               <div class="btn" v-if='item.parent_id != userDataState.id'>
-                <van-button class="theme-btn" size='small' type="primary" round @click="by(item)" :plain='item.show_check'>{{item.show_check?'通过':'请出'}}</van-button>
+                <van-button class="theme-btn" size='small' type="primary" round @click="by(item)" plain v-if='item.show_check'>通过</van-button>
+                <van-button class="theme-btn" size='small' type="primary" round @click="by(item)" v-if='item.show_remove'>请出</van-button>
               </div>
               <div class="btn" v-else-if='item.is_close == "0"'>
                 <van-button class="theme-btn" size='small' type="primary" round @click="out" :plain='item.show_check'>退出</van-button>
               </div>
             </div>
             <div class="type" v-else>群主</div>
+            <div class="state" v-if="item.show_wait">请等待审核通过</div>
           </van-cell>
 
           <div class="no-content" v-if='count == 0'>
             暂无审核... <span class="theme-color" @click="onClickRight"> 邀请家人 </span>
           </div>
         </van-list>
+      </div>
+      <div class="footer-bar">
+       <van-button square class="theme-btn" type="primary" @click="toFind">发现更多</van-button>
       </div>
     </div>
   </div>
@@ -67,8 +72,6 @@ export default {
       axios.get('/book/babyParent/getList',data).then(res => {
         this.count = res.data.count
 
-        console.log(res.data.data,res.data.count)
-
         this.list = res.data.data
 
         this.loading = false
@@ -86,33 +89,34 @@ export default {
         })
     },
     by(item){
-      if(item.show_check&&item.parent_id != this.userDataState.id){
-        axios.get(`/book/babyParent/check?id=${item.id}`).then(res=>{
+      switch (true){
+        case item.show_check:
+          axios.get(`/book/babyParent/check?id=${item.id}`).then(res=>{
             if(res.data.status == 1){
               this.$toast.success('通过审核')
               this.reload()
               this.onLoad()
             }
-        })
-      }else{
-        let data = {
-          params:{
-            child_id: this.$route.query.id,
-            parent_id: item.parent_id
+          })
+        break
+        case item.show_remove:
+          let data = {
+            params:{
+              child_id: this.$route.query.id,
+              parent_id: item.parent_id
+            }
           }
-        }
 
-        axios.get('/book/baby/remove_parent',data).then(res=>{
-          switch (res.data.status) {
-            case 1:
-              this.$toast(res.data.msg)
-              this.reload()
-              this.onLoad()
-            break
-          }
-        })
-
-        console.log('请出后宝贝列表没有更新','接口：/baby/getList，可能接口缓存时间较长')
+          axios.get('/book/baby/remove_parent',data).then(res=>{
+            switch (res.data.status) {
+              case 1:
+                this.$toast(res.data.msg)
+                this.reload()
+                this.onLoad()
+              break
+            }
+          })
+        break
       }
     },
     out(){
@@ -138,7 +142,12 @@ export default {
     reload () {
      this.isRouterAlive = false
      this.$nextTick(() => (this.isRouterAlive = true))
-    }   
+    },
+    toFind(){
+      this.$router.push({
+        name:'apps-find'
+      })
+    }
   }
 }
 </script>
@@ -165,5 +174,15 @@ export default {
 
 .btn{
   margin-left: 10px
+}
+
+.footer-bar{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.footer-bar .theme-btn{
+  width: 100%;
 }
 </style>

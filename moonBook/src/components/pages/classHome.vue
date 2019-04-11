@@ -10,14 +10,14 @@
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">
-        <div class="class-name">{{formatBanjiTitle(classInfo.title)}}</div>
         <div class="flex flex-align">
-          <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
-          <span class="splitter">•</span>
-          <div class="class-people">{{`${classInfo.grade_name?classInfo.grade_name:''}班`}}（{{classInfo.student_count}}人）</div>
+            <div class="class-name">{{formatBanjiTitle(classInfo.title)}}</div>
+            <span class="splitter">•</span>
+            <div class="class-people">{{`${classInfo.grade_name?classInfo.grade_name:''}班`}}（{{classInfo.student_count}}人）</div>
         </div>
+        <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>  
       </div>
-      <div class="qrcode" @click="toPageCodeShare">
+      <div class="qrcode" @click="toPageCodeShare" v-if='manage'>
         <van-button plain size="small" round class="theme-plain" type="primary">邀请家长</van-button>
       </div>
     </div>
@@ -71,7 +71,7 @@
       </div>
     </div>
 
-    <van-dialog v-model="showCode" show-cancel-button :showConfirmButton='false' cancelButtonText='找老师要邀请码' :before-close="codeBeforeClose">
+    <van-dialog v-model="showCode" show-cancel-button :showConfirmButton='false'  cancelButtonText='返回'  :before-close="codeBeforeClose">
       <div class="dialog-title tips"> 
         <span class="prompt-text">填写邀请码进入班级</span>
       </div>
@@ -82,6 +82,10 @@
         </div>
       </van-cell-group>
     </van-dialog>
+
+    <van-popup v-model="showSelectBaby">
+      <selectBaby :babyList='babyList' @onSelectBaby='refreshPage'/>
+    </van-popup>
   </div>
 </template>
 <script>
@@ -93,6 +97,7 @@ import readList from './../module/classModule/readList'
 import reading from './../module/reading'
 import apps from './../module/myModule/apps'
 import notice from './../module/classModule/notice'
+import selectBaby from './../module/selectChild'
 
 export default {
   name: "class-home",
@@ -101,7 +106,8 @@ export default {
     reading,
     readList,
     notice,
-    apps
+    apps,
+    selectBaby
   },
   computed: {
     ...mapGetters(['userDataState', 'managerState']),
@@ -109,16 +115,18 @@ export default {
       let array = []
       if (this.managerState) {
         this.managerState.forEach(element => {
-          if(element.item_relation !='parent'){
-            let data = {
-              name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
-              subname: `${element.duty}-${element.desc}`,
-              id: element.id,
-              type: element.item_type
-            }
-
-            array.push(data)
+          let data = {
+            name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
+            subname: `${element.duty}-${element.desc}`,
+            id: element.id,
+            type: element.item_type,
+            school_id: element.school_id,
+            school_name: element.school_name,
+            banji_name: element.banji_name,
+            banji_id: element.banji_id
           }
+
+          array.push(data)
         })
       }
 
@@ -185,8 +193,9 @@ export default {
       }],
       isReleaseShow: false,
       showCode:false,
-      childInfo:'',
-      code:''
+      code:'',
+      babyList:[],
+      showSelectBaby:false
     }
   },
   //进入该页面
@@ -305,8 +314,13 @@ export default {
             this.classInfo = res.data.data
           }
         })
-        this.getCate()
-        this.getChildInfo()
+        this.getCate() 
+
+        if(this.classInfo.show_child_join){
+          this.showSelectBaby = true
+          this.getChildList()
+        }
+        
       }
     },
     toPageCodeShare(){
@@ -375,7 +389,9 @@ export default {
           query: {
             id: item.id,
             back: this.$route.name,
-            school_id: item.school_id
+            school_id: item.school_id,
+            school_name: item.school_name,
+            banji_name: item.banji_name
           }
         })
       } else if (item.type == 'school') {
@@ -440,19 +456,17 @@ export default {
         }
       })
     },
-    getChildInfo(){
-        let data = {
-          params:{
-            child_id: this.userDataState.child_id
-          }
+    getChildList(){
+      let babyListData = {
+        params:{
+          sort:'old',
+          user_id: this.userDataState.id
         }
-
-      axios.get('/book/baby/getInfo',data).then(res => {
-        if (res.data.status == 1) {
-          this.childInfo = res.data.data
-          if(this.childInfo.is_banji_confirm == '0'){
-            this.showCode = true
-          }
+      }
+      axios.get('/book/baby/getList',babyListData).then(res => {
+        this.babyList = res.data.data
+        if(res.data.data.length){
+          this.showSelectBaby = true
         }
       })
     },
@@ -486,17 +500,9 @@ export default {
     },
     // 宝贝加入班级邀请码
     codeBeforeClose(action, done){
-      let BabyJoinBanjiBdind = {
-        params: {
-          banji_id: this.$route.query.id,
-          child_id: this.userDataState.child_id,
-          invite_code: this.code
-        }
-      }
-
-      if (action === 'confirm') {
-      } else {
+      if (action != 'confirm') {
         this.$router.go(-1)
+        done()
       }
     },
     verification(){
@@ -529,13 +535,16 @@ export default {
           })
         }
       })
+    },
+    refreshPage(){
+
     }
   }
 }
 </script>
 <style scoped>
 .school {
-  text-align: left
+  text-align: left;
 }
 
 .school,
@@ -555,7 +564,7 @@ export default {
 
 .class-info {
   color: #fff;
-  flex: 4;
+  flex: 3;
 }
 
 .class-avatar {

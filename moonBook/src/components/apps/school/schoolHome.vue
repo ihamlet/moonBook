@@ -70,7 +70,6 @@ export default {
             id: element.id,
             type: element.item_type
           }
-
           array.push(data)
         })
       }

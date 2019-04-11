@@ -14,7 +14,7 @@
 </template>
 <script>
 import tips from './../module/release/tips'
-import { mapMutations,mapState } from 'vuex'
+import { mapMutations,mapState,mapGetters } from 'vuex'
 
 export default {
   name: 'footer-bar',
@@ -24,11 +24,23 @@ export default {
   },
   computed: {
     ...mapState(['releaseSwitch']),
+    ...mapGetters(['managerState']),
     show:{
       get(){
         return this.releaseSwitch
       },
       set(val){}
+    },
+    managerBanji(){
+      let array = []
+      if(this.managerState){
+        this.managerState.forEach(element => {
+            if(element.item_relation == 'teacher' && element.item_type == 'banji'){
+              array.push(element)
+            }
+        })
+      }
+      return array
     }
   },
   data() {
@@ -51,7 +63,11 @@ export default {
       let path = ''
       if (item.id) {
         if(item.path == 'class-home'){
-          path = `${item.path}?id=${item.id}&school_id=${item.school_id}&banji_name=${item.banji_name}&school_name=${item.school_name}`
+          if(this.managerBanji.length){
+            path = `${item.path}?id=${this.managerBanji[0].id}`
+          }else{
+            path = `${item.path}?id=${item.id}&school_id=${item.school_id}&banji_name=${item.banji_name}&school_name=${item.school_name}`
+          }
         }else{
           path = `${item.path}?id=${item.id}`
         }

@@ -1255,4 +1255,8 @@ i.iconfont.vip-1 {
 .dialog-btn{
   flex: 1
 }
+
+.dialog-footer{
+  padding: 10px 20px;
+}
 </style>

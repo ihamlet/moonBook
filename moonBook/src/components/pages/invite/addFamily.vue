@@ -34,7 +34,6 @@
 <script>
 import axios from './../../lib/js/api'
 import { mapActions } from 'vuex'
-import wx from 'weixin-js-sdk'
 
 export default {
   name: 'add-family',
@@ -61,23 +60,20 @@ export default {
   created() {
     this.fetchData()
   },
-  mounted() {
-    let self = this
-    wx.ready(() => {
-      this.$nextTick(() => {
-        let data = {
-          item: self.item,
-          success() {
-            self.$router.push({
-              name: 'baby-home',
-              query: {
-                id: self.$route.query.id
-              }
-            })
-          }
+  updated(){
+    this.$nextTick(() => {
+      let data = {
+        item: this.item,
+        success() {
+          self.$router.push({
+            name: 'baby-home',
+            query: {
+              id: self.$route.query.id
+            }
+          })
         }
-        this.share(data)
-      })
+      }
+      this.share(data)
     })
   },
   watch: {

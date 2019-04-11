@@ -30,9 +30,9 @@
           <div class="label">{{childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
         </div>
-        <div class="qrcode" @click="toPageCodeShare">
+        <!-- <div class="qrcode" @click="toPageCodeShare">
           <i class="iconfont">&#xe622;</i>
-        </div>
+        </div> -->
       </div>
       <wave />
     </div>
@@ -104,27 +104,7 @@
     <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app' />
     <!-- 切换孩子 -->
     <van-actionsheet v-model="isSelectBabyShow" title='切换宝贝'>
-      <div class="scroll-x" :class="babyList.length < 4?'align-items':''">
-        <div class="flex">
-           <div class="scroll-item">
-              <div class="baby-item-card add" @click="addBaby">
-                <div class="avatar">
-                  <i class="iconfont">&#xe727;</i>
-                </div>
-                <div class="child-name">添加宝贝</div>
-              </div>
-           </div>
-          <div class="scroll-item" v-for='(list,index) in babyList' :key="index">
-              <div class="baby-item-card" @click="onSelectBaby(list)" :class="$route.query.id == list.id?'active':''">
-                <div class="avatar" v-if="list.avatar">
-                  <img :src="list.avatar" @error="imgError" :alt="childInfo.name">  
-                </div>
-                <avatar :gender="childInfo.sex" size='small' avatarClass='border' v-else />
-                <div class="child-name" v-line-clamp:20="1">{{list.name}}</div>
-              </div>
-          </div>
-        </div>
-      </div>
+      <selectChild :babyList='babyList' :childInfo='childInfo' @onSelectBaby='refreshPage'/>
     </van-actionsheet>
   </div>
 </template>
@@ -139,6 +119,7 @@ import graphicCard from "./../module/card/graphicCard"
 import classShow from './../module/classModule/classShow'
 import metro from './../module/mold/metro'
 import slogan from './../module/slogan'
+import selectChild from './../module/selectChild'
 
 export default {
   name: "baby-home",
@@ -149,7 +130,8 @@ export default {
     graphicCard,
     classShow,
     metro,
-    slogan
+    slogan,
+    selectChild
   },
   computed: {
     ...mapGetters(['managerState', 'userDataState']),
@@ -668,6 +650,24 @@ export default {
           id: this.$route.query.id
         }
       })
+    },
+    refreshPage(item){
+      this.hackReset = false
+      this.isSelectBabyShow = false
+
+      this.$nextTick(() => {
+          this.hackReset = true
+          this.request()
+          this.onRefresh()
+      })
+
+      this.$router.push({
+      name: 'baby-home',
+          query: {
+              id: item.id,
+              back: this.$route.name
+          }
+      })
     }
   }
 }
@@ -816,65 +816,6 @@ export default {
   position: absolute;
   top: 0.3125rem /* 5/16 */;
   right: -0.625rem /* 10/16 */;
-}
-
-.scroll-x{
-  padding:1.25rem /* 20/16 */ 0 1.25rem /* 20/16 */ 1.25rem /* 20/16 */;
-}
-
-.baby-item-card .avatar img{
-  width: 3.125rem /* 50/16 */;
-  height: 3.125rem /* 50/16 */;
-  margin: 0 auto;
-  display: block;
-}
-
-.baby-item-card .avatar,
-.baby-item-card .avatar img{
-  border-radius: 50%;
-}
-
-.baby-item-card.active .child-name{
-  font-weight: 700;
-}
-
-.baby-item-card .child-name{
-  text-align: center;
-  font-size: .9375rem /* 15/16 */;
-  padding: 0 .125rem /* 2/16 */;
-  margin-top: .3125rem /* 5/16 */;
-}
-
-.baby-item-card.add .avatar{
-  width: 3.125rem /* 50/16 */;
-  height: 3.125rem /* 50/16 */;
-  text-align: center;
-  line-height: 3.125rem /* 50/16 */;
-  border: .0625rem /* 1/16 */ dashed #DCDFE6;
-  margin:0 auto;
-}
-
-.baby-item-card.add .avatar i.iconfont{
-  font-size: 1.75rem /* 28/16 */;
-  color: #C0C4CC;
-}
-
-.baby-item-card.add .child-name{
-  color: #909399; 
-  font-size: .8125rem /* 13/16 */;
-}
-
-.align-items{
-  justify-content:center
-}
-
-.active{
-  transform: scale(1.1)
-}
-
-.scroll-item{
-  width: 3.75rem /* 60/16 */;
-  margin-right: .625rem /* 10/16 */;
 }
 </style>
 <style>

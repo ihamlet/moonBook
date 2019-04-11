@@ -74,7 +74,7 @@ export default {
 
         let data = {
           title: title || products.item.title,
-          link: location.href,
+          link: location.href.replace('#','/?#'),
           desc: desc,
           imgUrl: products.item.imgUrl || context.state.logo,
           success: products.success
