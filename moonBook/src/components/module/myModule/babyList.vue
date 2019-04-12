@@ -13,7 +13,7 @@
         <div class="module-title">我的宝贝</div>
         <div class="item module" v-for="(list,index) in childrenList" :key="index">
           <div class="card-top-bar">
-            <van-nav-bar :title="`${list.name}`" right-text="编辑" :left-text="list.banji_name?list.banji_name:'班级'" @click-left="onClickLeft(list)"
+            <van-nav-bar :title="`${list.name}`" right-text="编辑" :left-text="list.banji_name?formatBanjiTitle(list.banji_name):'班级'" @click-left="onClickLeft(list)"
               @click-right="onClickRight(list)" :border='false'/>
           </div>
           <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
@@ -128,7 +128,14 @@ export default {
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
-    }
+    },
+    formatBanjiTitle(text) {
+      if (text && text.indexOf('班') == -1) {
+        return text + '班'
+      } else {
+        return text
+      }
+    },
   }
 }
 </script>

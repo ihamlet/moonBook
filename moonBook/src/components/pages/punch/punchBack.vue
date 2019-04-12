@@ -30,10 +30,10 @@
 
     <div class="footer-bar flex">
       <div class="btn-box">
-        <van-button class="btn theme-btn" type="primary" round size="normal" @click="releaseShow = !releaseShow">看一看</van-button>
+        <van-button class="btn theme-btn" type="primary" round size="normal" @click="toGraphic">晒一晒</van-button>
       </div>
       <div class="btn-box">
-        <van-button class="btn theme-borrowing-btn" round type="primary" size="normal" @click="toGraphic">晒一晒</van-button>
+        <van-button class="btn theme-borrowing-btn" round type="primary" size="normal" @click="toSpecialPunch">看一看</van-button>
       </div>
     </div>
   </div>
@@ -86,7 +86,12 @@ export default {
   methods: {
     ...mapActions('openWX', ['scanQRcode']),
     fetchData(){
-      axios.get('book/api/ads').then(res=>{
+      let data = {
+        params:{
+          site_name:'打卡阅读'
+        }
+      }
+      axios.get('book/api/ads',data).then(res=>{
         console.log(res)
       })
     },
@@ -151,6 +156,11 @@ export default {
     },
     toActivity(){
 
+    },
+    toSpecialPunch(){
+      this.$router.push({
+        name:'specialPunch'
+      })
     },
     release(){
       switch (index) {

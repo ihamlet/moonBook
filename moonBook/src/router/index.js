@@ -49,6 +49,7 @@ import Accept from './accept'
 import Read from './read'
 import Flyers from './flyers'
 import Coupon from './coupon'
+import Special from './special'
 
 Vue.use(Router)
 
@@ -303,6 +304,7 @@ export default new Router({
     ...Read,
     ...Flyers,
     ...Coupon,
+    ...Special,
     Manage,
     Editor,
     {

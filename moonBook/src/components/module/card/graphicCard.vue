@@ -14,7 +14,7 @@
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
-            {{getTimeAgo(item.create_time)}} <span>{{title}}</span>
+            {{getTimeAgo(item.create_time)}} <span v-if='item.sign_days!="0"'>{{`坚持阅读打卡${item.sign_days}天`}}</span>
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0&&type!="zoom"'>
@@ -26,10 +26,9 @@
       <media :item='item' type='card' :key="$route.query.id"/>
 
       <div class="temp-type flex flex-align">
-        <van-tag color='#ad0000' class="school-tag"  v-line-clamp:20="1" type="success" size="medium" plain v-if='item.school_id > 0'>
-          <div @click="toSchoolHome(item.school_id)">{{item.schoolName}}</div>
+        <van-tag color='#ad0000' class="school-tag"  v-line-clamp:20="1" type="success" size="large" plain v-if='item.card_school_id > 0'>
+          <div @click="toSchoolHome(item)">{{item.card_school_name}}</div>
         </van-tag>
-         <van-tag color="#ffe1e1" text-color="#ad0000" size="medium" v-if='item.cate_name'>#{{item.cate_name}} </van-tag>
       </div>
 
       <div class="task" v-if='$route.query.tid == 5'>
@@ -64,7 +63,12 @@ import { timeago } from './../../lib/js/util'
 export default {
   name: "graphic-card",
   props:{
-    item:Object,
+    item:{
+      type: Object,
+      default:{
+        photos:[]
+      }
+    },
     type:{
       type:String,
       default:''
@@ -136,12 +140,12 @@ export default {
         }
       })
     },
-    toSchoolHome(id){
-      if(id > 0){
+    toSchoolHome(item){
+      if(item.card_school_id > 0){
         this.$router.push({
           name:'apps-school',
           query:{
-            id:id,
+            id: item.card_school_id,
             back: this.$route.name,
             backPageName: this.$route.meta.title
           }
@@ -252,7 +256,7 @@ export default {
 }
 
 .school-tag{
-  max-width: 6.25rem /* 100/16 */;
+  max-width: 150px;
   margin-right: .625rem /* 10/16 */;
 }
 

@@ -1,10 +1,20 @@
 <template>
   <div class="share">
-    <div class="tips" v-if='!$route.query.show_child_join'>点击发送给家长或家庭群 邀请家长加入班级</div>
+    <div class="tips" v-if='!$route.query.show_child_join'>点击发送到家庭群或家长 邀请家长加入班级</div>
     <div class="share-cover">
       <img :src="backgroundImg[randomNum]" />
     </div>
     <div class="share-info flex flex-align">
+      <div class="join-btn" @click="toClassHome">
+        <div class="join-banji theme-background">
+          <i class="iconfont">&#xe612;</i>
+        </div>
+        <div class="join-text theme-color">
+          <i class="iconfont">&#xe657;</i> 
+          加入班级
+        </div>
+      </div>
+
       <div class="code-number">
         <div class="title">班级邀请码</div>
         <div class="number">{{$route.query.invite_code}}</div>
@@ -87,6 +97,17 @@ export default {
       }).catch(err => {
         console.error(err)
       })
+    },
+    toClassHome(){
+      this.$router.push({
+        name:'class-home',
+        query:{
+          id: this.$route.query.banji_id,
+          banji_name: this.$route.query.banji_name,
+          school_name: this.$route.query.school_name,
+          school_id: this.$route.query.school_id
+        }
+      })
     }
   }
 }
@@ -125,8 +146,8 @@ export default {
   justify-content: space-between;
   background: #fff;
   height: 200px;
-  overflow: hidden;
   padding: 0 20px;
+  position: relative;
 }
 
 .code-description{
@@ -177,5 +198,52 @@ export default {
   top: -30px;
   right: 0.5rem /* 8/16 */;
   opacity: 0.7;
+}
+
+.join-btn{
+  position: absolute;
+  top: -23px;
+  z-index: 10;
+}
+
+.join-banji{
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 46px;
+}
+
+.join-banji i.iconfont{
+  font-size: 24px;
+  color: #fff;
+}
+
+.join-text{
+  width: 100px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 46px;
+  line-height: 46px;
+  background: #fff;
+  padding:0 0 0 56px;
+  z-index: -1;
+  border-radius: 46px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding-left: 70px;
+}
+
+.join-text .iconfont{
+  position: absolute;
+  animation: fell 2s ease-in-out infinite;
+  display: block;
+}
+
+@keyframes fell
+{
+  0% {left: 45px;}
+  50% {left: 55px;}
+  100% {left: 45px;}
 }
 </style>

@@ -26,7 +26,7 @@
 
     </div>
 
-    <div class="media img" v-if='item.template_id == "1"'>
+    <div class="media img" v-if='item.template_id == "1"&&item.photos'>
       <div :class="[item.photos.length == 4?'layout-4':'']">
         <van-row :gutter="4">
           <van-col :span="grid" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
@@ -34,7 +34,7 @@
               v-if='photo&&photo.is_video==0 && photo.is_audio == 0'>
               <img class="img-preview" :class="[photo.height/photo.width > 2?'long':'']" :src="photo.thumb" :large="photo.photo"
                 :preview='type=="card"?false:photo.post_id' />
-              <van-tag class="photo-tag" type="primary" v-if='photo.height/photo.width > 1&&type=="card"'>长图</van-tag>
+              <van-tag class="photo-tag" type="primary" v-if='photo.height/photo.width > 1.4&&type=="card"&&photoIndex==0'>长图</van-tag>
             </div>
           </van-col>
         </van-row>
@@ -89,10 +89,10 @@ export default {
       return num
     },
     player() {
-      if(this.item.photos.length){
+      if(this.item.photos&&this.item.photos.length){
         let obj = this.videoObject
         let array = this.item.photos
-        let videoArray = []
+        let videoArray = ''
         array.forEach(element => {
           if(element.is_video == 1){
             videoArray = element.photo
@@ -100,6 +100,7 @@ export default {
           }
         })
         obj.video = videoArray
+        
         return new ckplayer(obj)
       }
     }
@@ -115,7 +116,7 @@ export default {
         debug: true,
         drag: 'start',
         seek: 0,
-        video: []
+        video: ''
       }
     }
   },

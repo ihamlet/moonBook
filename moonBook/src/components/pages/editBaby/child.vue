@@ -447,7 +447,7 @@ export default {
 </script>
 <style>
 .add-child .van-cell__title.cell-school-title {
-  flex: 4;
+  flex: 3;
 }
 
 .form-submit .theme-btn{

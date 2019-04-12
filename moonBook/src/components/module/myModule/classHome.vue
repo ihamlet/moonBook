@@ -1,7 +1,7 @@
 <template>
   <div class="module-card">
     <van-cell-group>
-      <van-cell :value="selectPrompt.prompt" is-link center @click="toClassHome">
+      <van-cell :value="formatBanjiTitle(selectPrompt.prompt)" is-link center @click="toClassHome">
         <div class="icon" slot="icon">
           <i class="iconfont">&#xe802;</i>
         </div>
@@ -76,6 +76,13 @@ export default {
             }
           })
           break
+      }
+    },
+    formatBanjiTitle(text) {
+      if (text && text.indexOf('班') == -1) {
+        return text + '班'
+      } else {
+        return text
       }
     }
   }

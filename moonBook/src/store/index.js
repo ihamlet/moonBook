@@ -13,7 +13,7 @@ Vue.use(Vuex)
 const state = {
   slogan: '阅读照亮人生',
   logo:`${location.origin}/Public/lib/bookshelf/img/logo.png`,
-  userData: {},
+  userData: '',
   msgLength: 1,
   tabBtn: [],
   amapApiKey: '0522f462288e296eac959dbde42718ab',

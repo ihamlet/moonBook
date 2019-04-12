@@ -331,8 +331,8 @@ export default {
             this.classInfo = res.data.data
           }
         })
-        this.getCate() 
-        if(this.$route.query.show_child_join == 1){
+        this.getCate()
+        if(this.classInfo.show_child_join){
           this.getChildList()
           this.isSelectBabyShow = true
         }

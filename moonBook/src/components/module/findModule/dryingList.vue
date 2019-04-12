@@ -8,7 +8,7 @@
           <div class="item" v-for="(item,index) in list" :key="index" @click="setItem(item)" v-else>
             <van-cell>
               <div class="content">
-                <graphic-card :item="item" @follow="follow" @more='actionsheet' :title='item.school_role'/>
+                <graphic-card :item="item" @follow="follow" @more='actionsheet'/>
               </div>
             </van-cell>
           </div>
