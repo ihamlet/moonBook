@@ -117,8 +117,8 @@ export default {
       minHour: 10,
       maxHour: 20,
       minDate: new Date(format(new Date(), 'yyyy') - 20, 0, 0),
-      maxDate: new Date(format(new Date(), 'yyyy') - 1, 0),
-      currentDate: new Date(format(new Date(), 'yyyy') - 2, 0, 0),
+      maxDate: new Date(format(new Date(), 'yyyy'), 0),
+      currentDate: new Date(format(new Date(), 'yyyy'), 0),
       childInfo: {
         name: '',
         gender: 1,
