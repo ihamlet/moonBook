@@ -261,9 +261,7 @@ export default {
       })
     },
     submit(set) {
-      if (!this.childInfo.avatar) {
-        this.$toast.fail('请上传头像')
-      }else if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
+      if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
         this.errorMessage.name = '请正确填写孩子的姓名'
         setTimeout(() => {
           this.errorMessage.name = ''
@@ -298,9 +296,7 @@ export default {
     },
     setSchool(set){
       if(set == 'add' || set == 'register'){
-        if (!this.childInfo.avatar) {
-          this.$toast.fail('请上传头像')
-        }else if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
+        if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
           this.errorMessage.name = '请正确填写孩子的姓名'
           setTimeout(() => {
             this.errorMessage.name = ''
