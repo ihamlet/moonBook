@@ -216,7 +216,7 @@ function formatTime(a) {
   return ok
 }
 
-// 判断是否有html标签
+// 过滤html标签
 function checkHtml(htmlStr) {
   let reg = /<[^>]+>/g
   return reg.test(htmlStr)

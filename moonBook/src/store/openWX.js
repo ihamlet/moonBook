@@ -67,7 +67,7 @@ export default {
   
         if (template_id == "0" && products.item.hasvideo != "1") {
           title = `【阅亮书架】#${products.item.cate.cate_name}#${products.item.title}`
-          desc = context.state.slogan
+          desc = products.item.details.replace(/<[^>]+>/g,"") || context.state.slogan
         } else {
           desc = products.item.hasvideo == "1"? `[小视频]${context.state.slogan}`: products.item.details
         }
@@ -76,7 +76,7 @@ export default {
           title: title || products.item.title,
           link: location.href.replace('#','/?#'),
           desc: desc,
-          imgUrl: products.item.imgUrl || context.state.logo,
+          imgUrl: products.item.imgUrl || products.item.cover || context.state.logo,
           success: products.success
         }
 

@@ -84,7 +84,7 @@
     </van-dialog> -->
 
     <van-popup v-model="isSelectBabyShow" position="bottom" :close-on-click-overlay='false'>
-      <van-nav-bar title="选择要加入该班级的宝贝" left-text="发现" left-arrow @click-left="onClickLeft"/>
+      <van-nav-bar title="请选择要加入该班级的宝贝" left-text="发现" left-arrow @click-left="onClickLeft"/>
       <selectBaby :babyList='babyList' :invite_code='classInfo.invite_code' @onSelect='selectChild'/>
     </van-popup>
   </div>
@@ -332,7 +332,7 @@ export default {
           }
         })
         this.getCate() 
-        if(this.classInfo.show_child_join){
+        if(this.$route.query.show_child_join == 1){
           this.getChildList()
           this.isSelectBabyShow = true
         }
@@ -342,9 +342,12 @@ export default {
       this.$router.push({
         name:'share',
         query:{
-          fullPath: this.$route.fullPath,
+          fullPath: `${location.href}&invite_code=${this.classInfo.invite_code}&show_child_join=${this.classInfo.show_child_join?0:1}`,
           banji_id: this.$route.query.id,
-          invite_code: this.classInfo.invite_code
+          invite_code: this.classInfo.invite_code,
+          school_name: this.$route.query.school_name,
+          banji_name: this.$route.query.banji_name,
+          show_child_join: this.classInfo.show_child_join
         }
       })
     },

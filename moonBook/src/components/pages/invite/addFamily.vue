@@ -41,7 +41,7 @@ export default {
     item() {
       let data = {
         cate_name: '邀请',
-        details: '阅亮书架，与家人一起参与宝贝阅读，记录成长',
+        details:`与家人一起陪伴${this.babyInfo.name}的成长，参与阅读。让阅亮书架成为孩子进步的阶梯。`,
         title: `${this.babyInfo.name}邀请您加入家庭主页`,
         imgUrl: location.origin + this.babyInfo.avatar
       }
@@ -60,10 +60,11 @@ export default {
   created() {
     this.fetchData()
   },
-  updated(){
-    this.$nextTick(() => {
+  updated(){   
+    const self = this
+    self.$nextTick(() => {
       let data = {
-        item: this.item,
+        item: self.item,
         success() {
           self.$router.push({
             name: 'baby-home',
@@ -73,7 +74,7 @@ export default {
           })
         }
       }
-      this.share(data)
+      self.share(data)
     })
   },
   watch: {

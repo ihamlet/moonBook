@@ -66,7 +66,7 @@ export default {
           if(this.managerBanji.length){
             path = `${item.path}?id=${this.managerBanji[0].id}&school_id=${this.managerBanji[0].school_id}&banji_name=${this.formatBanjiTitle(this.managerBanji[0].name)}&school_name=${this.managerBanji[0].school_name}`
           }else{
-            path = `${item.path}?id=${item.id}&school_id=${item.school_id}&banji_name=${item.banji_name}&school_name=${item.school_name}`
+            path = `${item.path}?id=${item.id}`
           }
         }else{
           path = `${item.path}?id=${item.id}`
