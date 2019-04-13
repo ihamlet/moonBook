@@ -119,8 +119,10 @@ export default {
     httpsImg(){
       this.$nextTick(()=>{
         let imgs = document.getElementsByTagName('img')
-        for(let i = 0 ; i < imgs.length ; i ++){ 
-          imgs[i].src = imgs[i].src.replace('http:', 'https:')
+        for(let i = 0 ; i < imgs.length ; i ++){
+          if(imgs[i].src.indexOf(location.origin) == -1){
+            imgs[i].src = imgs[i].src.replace('http:', 'https:')
+          }
         }
       })
     }
@@ -1101,7 +1103,6 @@ i.iconfont.vip-1 {
   padding-bottom: 150%;
 }
 
-
 .cover img,
 .img-preview {
   position: absolute;
@@ -1277,12 +1278,21 @@ i.iconfont.vip-1 {
 
 .release-footer-bar{
   position: fixed;
-  bottom: 50px;
+  bottom: 70px;
   width: 100%;
 }
 
-.theme-btn{
+.release-footer-bar .theme-btn{
   margin: 0 auto;
   display: block;
+}
+
+.tips-popup.van-popup{
+  transform: none;
+  background-color: transparent;
+  bottom: 0;
+  left: 0;
+  overflow-y: initial;
+  width: 100%;
 }
 </style>

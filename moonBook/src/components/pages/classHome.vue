@@ -46,7 +46,12 @@
         阅读打卡
       </van-button>
     </div>
-
+    <div class="release-footer-bar" v-else>
+      <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
+        <i class="iconfont">&#xe664;</i>
+        # 课堂故事
+      </van-button>
+    </div>
 
     <!-- <div class="footer-bar">
       <div class="footer-btn flex flex-align">
@@ -100,7 +105,7 @@
 <script>
 import axios from './../lib/js/api'
 
-import { mapGetters, mapActions } from 'vuex'
+import {mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import classZoom from './../pages/classZoom'
 import readList from './../module/classModule/readList'
 import reading from './../module/reading'
@@ -116,10 +121,11 @@ export default {
     readList,
     notice,
     apps,
-    selectBaby
+    selectBaby,
   },
   computed: {
     ...mapGetters(['userDataState', 'managerState']),
+    ...mapState(['releaseSwitch']),
     actions() {
       let array = []
       if (this.managerState) {
@@ -186,24 +192,22 @@ export default {
       }, {
         name: '阅读',
         iconClass: 'icon-yuedu',
-        path: 'apps-find',
+        path: 'apps-find'
       }, {
         name: '才艺',
         iconClass: 'icon-caiyi',
-        path: 'apps-find',
+        path: 'apps-find'
       }, {
         name: '荣誉',
         iconClass: 'icon-rongyu',
-        path: 'apps-find',
+        path: 'apps-find'
       }, {
         name: '班级交流',
         iconClass: 'icon-jiaoliu',
-        path: 'apps-find',
+        path: 'apps-find'
       }],
       isReleaseShow: false,
-      // showCode:false,
-      // code:'',
-      // childInfo:'',
+      isBtnShow: false,
       babyList:[],
       isSelectBabyShow:false
     }
@@ -222,9 +226,15 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
   },
+  created () {
+    this.$nextTick(()=>{
+      this.isBtnShow = true
+    })
+  },
   methods: {
     ...mapActions('openWX',['scanQRcode']),
     ...mapActions(['getUserData']),
+    ...mapMutations(['setReleaseSwitch']),
     request() {
       if(this.$route.query.type != 'preview'){
         this.getUserData().then(res => {
@@ -410,16 +420,23 @@ export default {
 
         this.isSelectBabyShow = false
 
+
+        let data = {
+          id: item.id,
+          back: this.$route.name,
+          school_id: item.school_id,
+          school_name: item.school_name,
+          banji_name: item.banji_name,
+        }
+
+        this.manage?data.tag_id = 141 : data.cate_id = 116
+
         this.$router.push({
           name: 'class-home',
-          query: {
-            id: item.id,
-            back: this.$route.name,
-            school_id: item.school_id,
-            school_name: item.school_name,
-            banji_name: item.banji_name
-          }
+          query: data
         })
+
+
       } else if (item.type == 'school') {
         this.$router.push({
           name: 'apps-school',
@@ -469,11 +486,12 @@ export default {
             data.forEach(element => {
               if (e.name == element.cate_name) {
                 params = {
-                  cid: element.cate_id,
+                  tag_id: element.cate_id,
                   pageTitle: element.cate_name,
                   banji_id: this.$route.query.id,
                   back: this.$route.name,
-                  id: this.$route.query.id
+                  id: this.$route.query.id,
+                  back: this.$route.name
                 }
               }
             })
@@ -496,31 +514,29 @@ export default {
     toManage(){
       location.href = `/SchoolManage?banji_id=${this.$route.query.id}`
     },
-    toGraphic(type){
-      switch(type){
-        case 'weibo':
-          this.$router.push({
-            name: 'graphic',
-            query: {
-              back: this.$route.name,
-              id: this.$route.query.id,
-              cate_id:116
-            }
-          })
-        break
-        case 'video':
-          this.$router.push({
-            name: 'graphic',
-            query: {
-              back: this.$route.name,
-              id: this.$route.query.id,
-              upVideo:1,
-              cate_id:116
-            }
-          })
-        break
-      }
-    },
+    // toGraphic(type){
+    //   switch(type){
+    //     case 'weibo':
+    //       this.$router.push({
+    //         name: 'graphic',
+    //         query: {
+    //           back: this.$route.name,
+    //           id: this.$route.query.id
+    //         }
+    //       })
+    //     break
+    //     case 'video':
+    //       this.$router.push({
+    //         name: 'graphic',
+    //         query: {
+    //           back: this.$route.name,
+    //           id: this.$route.query.id,
+    //           upVideo:1
+    //         }
+    //       })
+    //     break
+    //   }
+    // },
     // 宝贝加入班级邀请码
     // codeBeforeClose(action, done){
     //   if (action != 'confirm') {
@@ -642,41 +658,6 @@ export default {
 
 .splitter{
   margin: 0 .3125rem /* 5/16 */;
-}
-
-.release{
-  width: 60px;
-  height: 60px;
-  text-align: center;
-  background: linear-gradient(127deg, #ff765c, #ff23b3);
-  color: #fff;
-  border-radius: 50%;
-  position: fixed;
-  right: 20px;
-  bottom: 100px;
-}
-
-.release .text{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  font-size: 13px;
-  width: 50px;
-}
-
-.contain{
-  position: relative;
-}
-
-.contain.show .iconfont{
-  margin-right: 0;
-}
-
-.contain.show .theme-btn{
-  margin: auto;
-  position: absolute;
-  right: 30px;
 }
 
 .title{

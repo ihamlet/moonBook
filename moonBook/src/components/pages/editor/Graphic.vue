@@ -224,9 +224,10 @@ export default {
           let data = {
             details: this.grapicData.text,
             template_id: 1,
-            photos: this.grapicData.photos
+            photos: this.grapicData.photos,
+            tags: this.$route.query.tags || ''
           }
-  
+
           if(this.$route.query.back == 'baby-home'){
             data.child_id = this.$route.query.id
           }

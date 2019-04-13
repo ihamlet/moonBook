@@ -39,10 +39,6 @@ export default {
         name: '拍小视频',
         type: 'shootVideo',
         icon: 'icon-paishipin'
-      }, {
-        name: '发视频',
-        type: 'video',
-        icon: 'icon-shipin'
       }]
     }
   },
@@ -68,47 +64,57 @@ export default {
       localStorage.removeItem('grapicData')
       switch (index) {
         case 0:
-          this.$router.push({
-            name: 'graphic',
-            query: {
-              back: this.$route.name,
-              id: this.$route.query.id
-            }
-          })
+          this.releaseWebo()
           break
         case 1:
-          this.$router.push({
-            name: 'graphic',
-            query: {
-              back: this.$route.name,
-              id: this.$route.query.id,
-              upVideo:1
-            }
-          })
+          this.releaseVideo()
           break
-        case 2:
-          this.$router.push({
-            name: 'graphic',
-            query: {
-              back: this.$route.name,
-              id: this.$route.query.id,
-              upVideo:2
-            }
-          })
-          break
-        case 3:
-          this.$router.push({
-            name: 'beautifulArticle',
-            query: {
-              back: this.$route.name,
-              id: this.$route.query.id
-            }
-          })
-          break
-        case 4:
+        // case 2:
+        //   this.$router.push({
+        //     name: 'graphic',
+        //     query: {
+        //       back: this.$route.name,
+        //       id: this.$route.query.id,
+        //       upVideo:2
+        //     }
+        //   })
+        //   break
+        // case 3:
+        //   this.$router.push({
+        //     name: 'beautifulArticle',
+        //     query: {
+        //       back: this.$route.name,
+        //       id: this.$route.query.id
+        //     }
+        //   })
+        //   break
+        // case 4:
 
-          break
+        //   break
       }
+    },
+    releaseWebo(){
+      this.$router.push({
+        name: 'graphic',
+        query: {
+          back: this.$route.query.back || this.$route.name,
+          id: this.$route.query.id,
+          cate_id: this.$route.query.cate_id,
+          tag_id: this.$route.query.tag_id
+        }
+      })
+    },
+    releaseVideo(){
+      this.$router.push({
+        name: 'graphic',
+        query: {
+          back: this.$route.query.back || this.$route.name,
+          id: this.$route.query.id,
+          upVideo:1,
+          cate_id: this.$route.query.cate_id,
+          tag_id: this.$route.query.tag_id
+        }
+      })
     }
   }
 }
@@ -163,12 +169,12 @@ export default {
 }
 
 .tips.bottom .tips-list {
-  width: 17.5rem /* 280/16 */;
+  width: 240px;
   margin: 0 auto;
   padding: .9375rem /* 15/16 */;
   background: #fff;
   border-radius: .625rem /* 10/16 */;
-  box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.1);
 }
 
 .tips.bottom .btn {

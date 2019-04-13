@@ -318,7 +318,7 @@ export default {
             data.forEach(element => {
               if(e.name == element.cate_name){
                 params = {
-                  cid: element.cate_id,
+                  tag_id: element.cate_id,
                   pageTitle: element.cate_name,
                   school_id: this.$route.query.id,
                   id: this.$route.query.id,

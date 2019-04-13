@@ -1,7 +1,7 @@
 <template>
   <div class="find page-padding">
     <van-nav-bar :border='false' :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title"/>
-      <div class="module" v-if='!$route.query.cid'>
+      <div class="module" v-if='isFreshListShow'>
         <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname"/>
       </div>
     <div>
@@ -16,10 +16,13 @@
       </div>
     </div>
     <div class="release-footer-bar">
-      <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary">
-            <i class="iconfont">&#xe664;</i>
-            课堂阅读发布
+      <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
+        <i class="iconfont">&#xe664;</i>
+        发 布
       </van-button>
+      <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
+        <tips :isShow='show' position='bottom' @close='setReleaseSwitch(false)' />
+      </van-popup>
     </div>
   </div>
 </template>
@@ -27,16 +30,35 @@
 import axios from './../../lib/js/api'
 import freshList from './../../module/findModule/freshList'
 import dryingList from './../../module/findModule/dryingList'
-import { mapGetters } from 'vuex'
+import tips from './../../module/release/tips'
+import { mapGetters,mapMutations,mapState } from 'vuex'
 
 export default {
   name: 'find',
   components: {
     freshList,
-    dryingList
+    dryingList,
+    tips
   },
   computed: {
+    ...mapState(['releaseSwitch']),
     ...mapGetters(['managerState']),
+    isFreshListShow(){
+      let boolean = true
+      if(!this.$route.query.cate_id||!this.$route.query.tag_id){
+        boolean = false
+      }
+
+      return boolean
+    },
+    show:{
+      get(){
+        return this.releaseSwitch
+      },
+      set(val){
+        this.setReleaseSwitch(val)
+      }
+    },
     tab(){
       let array = []
       if(this.$route.query.cid){
@@ -82,18 +104,17 @@ export default {
     to.meta.keepAlive = false //去掉页面数据缓存
     next()
   },
-  updated () {
+  created() {
+    this.fetchData()
     this.$nextTick(()=>{
       this.isBtnShow = true
     })
-  },
-  created() {
-    this.fetchData()
   },
   watch: {
     '$router': 'fetchData'
   },
   methods: {
+    ...mapMutations(['setReleaseSwitch']),
     fetchData() {
       let data = {
         params:{
@@ -117,7 +138,8 @@ export default {
       axios.get('/book/schoolArticleCate/getList',data).then(res => {
           this.cateList = res.data[0].children
       })
-    }
+    },
+
   }
 }
 </script>

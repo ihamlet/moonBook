@@ -246,7 +246,6 @@ export default {
 }
 
 .school-tag{
-  max-width: 160px;
   margin-right: .625rem /* 10/16 */;
 }
 

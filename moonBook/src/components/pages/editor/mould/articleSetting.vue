@@ -138,11 +138,11 @@ export default {
         }
       }
 
-      if (this.$route.query.back == 'class-home' || this.$route.query.back_name == 'class-home') {
+      if (this.$route.query.back == 'class-home') {
         data.params.portal_name = '班级主页'
       }
 
-      if (this.$route.query.back == 'apps-school' || this.$route.query.back_name == 'apps-school') {
+      if (this.$route.query.back == 'apps-school') {
         data.params.portal_name = '学校主页'
       }
 
@@ -164,13 +164,19 @@ export default {
           this.topicList = data
           //从localStorage 获取 分类信息
 
-          if(this.$route.query.cate_id){
+          if(this.$route.query.cate_id || this.$route.query.tag_id){
             cateArray.forEach(element=>{
-              element.children.forEach(e=>{
-                if(e.cate_id == this.$route.query.cate_id){
-                  this.addTag(e)
+              if(this.$route.query.tag_id){
+                if(element.cate_id == this.$route.query.tag_id){
+                  this.addTag(element)
                 }
-              })
+              }else{
+                element.children.forEach(e=>{
+                  if(e.cate_id == this.$route.query.cate_id){
+                    this.addTag(e)
+                  }
+                })
+              }
             })
           }else{
             if(localStorage.getItem('tag')){

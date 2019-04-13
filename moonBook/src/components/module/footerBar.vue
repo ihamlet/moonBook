@@ -8,13 +8,15 @@
     </van-tabbar>
 
     <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
-      <tips :isShow='show' position='bottom' @close='closeTips'/>
+      <tips :isShow='show' position='bottom' @close='setReleaseSwitch(false)'/>
     </van-popup>
   </div>
 </template>
 <script>
 import tips from './../module/release/tips'
 import { mapMutations,mapState,mapGetters } from 'vuex'
+import { buildQuery } from './../lib/js/util'
+import qs from 'qs'
 
 export default {
   name: 'footer-bar',
@@ -29,7 +31,9 @@ export default {
       get(){
         return this.releaseSwitch
       },
-      set(val){}
+      set(val){
+        this.setReleaseSwitch(val)
+      }
     },
     managerBanji(){
       let array = []
@@ -64,7 +68,15 @@ export default {
       if (item.id) {
         if(item.path == 'class-home'){
           if(this.managerBanji.length){
-            path = `${item.path}?id=${this.managerBanji[0].id}&school_id=${this.managerBanji[0].school_id}&banji_name=${this.formatBanjiTitle(this.managerBanji[0].name)}&school_name=${this.managerBanji[0].school_name}`
+            let data = {
+              id:this.managerBanji[0].id || 0,
+              school_id:this.managerBanji[0].school_id,
+              banji_name: this.formatBanjiTitle(this.managerBanji[0].name),
+              school_name: this.managerBanji[0].school_name,
+              cate_id: 116
+            }
+            let params = qs.stringify(data)
+            path = `${item.path}?${params}`
           }else{
             path = `${item.path}?id=${item.id}`
           }
@@ -83,9 +95,6 @@ export default {
         this.clearImg()
       }
       this.active = this.$route.meta.tabActive
-    },
-    closeTips(){
-      this.setReleaseSwitch(false)
     },
     formatBanjiTitle(text) {
       if (text && text.indexOf('班') == -1) {
@@ -198,17 +207,5 @@ export default {
 }
 .icon-releasefill::before {
   content: '\e728';
-}
-
-
-</style>
-<style>
-.footer-bar .tips-popup.van-popup{
-  transform: none;
-  background-color: transparent;
-  bottom: 0;
-  left: 0;
-  overflow-y: initial;
-  width: 100%;
 }
 </style>

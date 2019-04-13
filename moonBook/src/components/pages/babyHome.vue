@@ -611,7 +611,9 @@ export default {
               query:{
                 id: this.$route.query.id,
                 child_id: this.$route.query.id,
-                back: this.$route.name
+                back: this.$route.name,
+                cate_id: 133,
+                tags:'阅读打卡'
               }
             })
           break

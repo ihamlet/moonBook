@@ -20,26 +20,32 @@
     </van-tabs>
 
     <div class="release-footer-bar">
-      <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary">
-            <i class="iconfont">&#xe664;</i>
-            打卡发布
+      <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
+        <i class="iconfont">&#xe664;</i>
+        打卡后发布
       </van-button>
-    </div>  
+      <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
+        <tips :isShow='show' position='bottom' @close='setReleaseSwitch(false)' />
+      </van-popup>
+    </div>
   </div>
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapGetters } from 'vuex'
+import { mapGetters,mapMutations,mapState } from 'vuex'
 import { format } from './../../lib/js/util'
 import graphicCard from './../../module/card/graphicCard'
+import tips from './../../module/release/tips'
 
 export default {
   name: 'special-punch',
   components: {
-    graphicCard  
+    graphicCard,
+    tips
   },
   computed: {
     ...mapGetters(['userDataState']),
+    ...mapState(['releaseSwitch']),
     classYear() {
       let date = new Date()
       let month = date.getMonth() + 1
@@ -74,6 +80,14 @@ export default {
       })
 
       return array
+    },
+    show:{
+      get(){
+        return this.releaseSwitch
+      },
+      set(val){
+        this.setReleaseSwitch(val)
+      }
     }
   },
   data() {
@@ -83,20 +97,25 @@ export default {
       tabIndex: 0,
       loading: false,
       finished: false,
-      page:1
+      page:1,
+      isBtnShow: true
     }
   },
   created() {
     this.fetchData()
+    this.$nextTick(()=>{
+      this.isBtnShow = true
+    })
   },
   watch: {
     '$router': 'fetchData'
   },
   methods: {
+    ...mapMutations(['setReleaseSwitch']),
     fetchData() {
       let data = {
         params: {
-          school_id: this.userDataState.school_id,
+          school_id: this.userDataState.school_id || this.userDataState.teacher_school_id,
           year: this.classYear,
           sort: 'post_num'
         }
@@ -130,6 +149,8 @@ export default {
                     } else {
                         this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
                     }
+
+                    this.$forceUpdate()
                     this.page++
                     this.loading = false
                     if (this.tab[this.tabIndex].content >= res.data.count) {
@@ -152,6 +173,7 @@ export default {
       }
     },
     onRefresh(){
+      console.log('onRefresh')
       this.page = 1
       this.getList().then(() => {
         this.loading = false
@@ -161,6 +183,7 @@ export default {
       this.tabIndex = index
       this.page = 1
       this.onRefresh()
+      console.log(index)
     }
   }
 }

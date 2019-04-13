@@ -30,26 +30,46 @@
 
     <div class="footer-bar flex">
       <div class="btn-box">
-        <van-button class="btn theme-btn" type="primary" round size="normal" @click="toGraphic">晒一晒</van-button>
+        <van-button class="btn theme-btn" type="primary" round size="normal" @click="setReleaseSwitch(true)">晒一晒</van-button>
       </div>
       <div class="btn-box">
         <van-button class="btn theme-borrowing-btn" round type="primary" size="normal" @click="toSpecialPunch">看一看</van-button>
       </div>
     </div>
+
+
+    <div class="release-footer-bar">
+      <van-popup v-model="showTips" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
+        <tips :isShow='showTips' position='bottom' @close='setReleaseSwitch(false)' />
+      </van-popup>
+    </div>
   </div>
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapActions } from 'vuex'
+import { mapActions,mapState,mapMutations } from 'vuex'
 import cardPunch from './cardPunch'
 import videoList from './../video/videoList'
 import { format } from './../../lib/js/util'
+import tips from './../../module/release/tips'
 
 export default {
   name: 'punchBack',
   components: {
     cardPunch,
-    videoList
+    videoList,
+    tips
+  },
+  computed: {
+    ...mapState(['releaseSwitch']),
+    showTips:{
+      get(){
+        return this.releaseSwitch
+      },
+      set(val){
+        this.setReleaseSwitch(val)
+      }
+    }
   },
   data() {
     return {
@@ -85,6 +105,7 @@ export default {
   },
   methods: {
     ...mapActions('openWX', ['scanQRcode']),
+    ...mapMutations(['setReleaseSwitch']),
     fetchData(){
       let data = {
         params:{
@@ -159,31 +180,12 @@ export default {
     },
     toSpecialPunch(){
       this.$router.push({
-        name:'specialPunch'
+        name:'specialPunch',
+        query:{
+          cate_id: this.$route.query.cate_id,
+          tags: this.$route.query.tags
+        }
       })
-    },
-    release(){
-      switch (index) {
-        case 0:
-          this.$router.push({
-            name: 'graphic',
-            query: {
-              back: this.$route.name,
-              id: this.$route.query.id
-            }
-          })
-          break
-        case 1:
-          this.$router.push({
-            name: 'graphic',
-            query: {
-              back: this.$route.name,
-              id: this.$route.query.id,
-              upVideo:1
-            }
-          })
-          break
-      }
     },
     toGraphic(){
       this.$router.push({
@@ -191,7 +193,8 @@ export default {
         query: {
           back: this.$route.name,
           id: this.$route.query.id,
-          cate_id: 133
+          cate_id: this.$route.query.cate_id,
+          tags: this.$route.query.tags
         }
       })
     }

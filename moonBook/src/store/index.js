@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import axios from './../components/lib/js/api'
 import fetchJsonp from 'fetch-jsonp'
 import Cookies from 'js-cookie'
+import qs from 'qs'
 
 import beautifulArticle from './BeautifulArticle'
 import articleSetting from './articleSetting'
@@ -129,8 +130,8 @@ const actions = {
       Key: context.state.amapApiKey,
       location: products.location
     }
-
-    let amapApiLink = `https://restapi.amap.com/v3/geocode/regeo?output=json&location=${data.location}&key=${data.Key}`
+  
+    let amapApiLink = `https://restapi.amap.com/v3/geocode/regeo?output=json&${qs.stringify(data)}`
 
     fetchJsonp(amapApiLink).then(response => {
         return response.json()
@@ -183,7 +184,7 @@ const actions = {
       school_type: products.schoolType
     }
 
-    let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${ data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
+    let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?${qr.stringify(data)}`
     let WMlifeSearchSchoolLink = '/book/school/getList'
 
     return new Promise((resolve, reject) => {
@@ -217,7 +218,7 @@ const actions = {
       datatype: products.datatype
     }
 
-    let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?key=${data.Key}&keywords=${data.keywords}&type=${data.type}&location=${ data.location}&city=${data.city}&citylimit=${data.citylimit}&datatype=${data.datatype}`
+    let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?${qr.stringify(data)}`
     return new Promise((resolve, reject) => {
       fetchJsonp(amapApiLink).then(response => {
         return response.json()
@@ -240,7 +241,7 @@ const actions = {
       extensions: 'base'
     }
 
-    let amamApiLink = `https://restapi.amap.com/v3/config/district?key=${data.Key}&keywords=${data.keywords}&subdistrict=${data.subdistrict}&extensions=${data.extensions}&type=${data.type}&location=${data.location}&datatype=${data.datatype}`
+    let amamApiLink = `https://restapi.amap.com/v3/config/district?${qr.stringify(data)}`
 
     return new Promise((resolve, reject) => {
       fetchJsonp(amamApiLink)

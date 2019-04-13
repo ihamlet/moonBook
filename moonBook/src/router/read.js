@@ -53,7 +53,6 @@ let readRouter = [{
     component: punchBack,
     meta: {
       title: '打卡成功',
-      keepAlive: true,
       isFooterBar: false
     }
   },
