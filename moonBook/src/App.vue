@@ -87,6 +87,12 @@ export default {
       let location = `${res.longitude},${res.latitude}`
       this.center = location
     })
+
+    this.httpsImg()
+  },
+  beforeUpdate () {
+    // 将网站所有img标签设置为 https
+    this.httpsImg()
   },
   watch: {
     center(val){
@@ -108,6 +114,15 @@ export default {
       this.getUserData()
       this.getManager()
       this.getMsg(products)
+      this.httpsImg()
+    },
+    httpsImg(){
+      this.$nextTick(()=>{
+        let imgs = document.getElementsByTagName('img')
+        for(let i = 0 ; i < imgs.length ; i ++){ 
+          imgs[i].src = imgs[i].src.replace('http:', 'https:')
+        }
+      })
     }
   }
 }
@@ -1258,5 +1273,16 @@ i.iconfont.vip-1 {
 
 .dialog-footer{
   padding: 10px 20px;
+}
+
+.release-footer-bar{
+  position: fixed;
+  bottom: 50px;
+  width: 100%;
+}
+
+.theme-btn{
+  margin: 0 auto;
+  display: block;
 }
 </style>

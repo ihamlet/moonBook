@@ -12,7 +12,7 @@
             </div>
             <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else @click="toZoom">
               <div class="avatar" v-if='item.user'>
-                <img :src="getAvatar(item.user.avatar)" :alt="item.user.username" @error='imgError'>
+                <img :src="item.user.avatar" :alt="item.user.username" @error='imgError'>
               </div>
               <div class="name" v-if='item.user'>{{item.user.username}}</div>
               <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
@@ -137,16 +137,6 @@ export default {
     },
     onScrollDomShow(bl){
       this.themeBarSearch = bl
-    },
-    getAvatar(img) {
-        let pos = img.indexOf('http://')
-        let result
-        if(pos === 0) {
-            result = img.replace('http:', 'https:')
-        } else {
-            result = img
-        }
-        return result
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'

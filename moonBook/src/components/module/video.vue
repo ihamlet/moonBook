@@ -23,7 +23,7 @@
               <div class="user-info flex flex-align">
                 <div class="user-data flex flex-align">
                   <div class="avatar">
-                    <img :src="getAvatar(item.user.avatar)" />
+                    <img :src="item.user.avatar" />
                   </div>
                   <div class="name" v-line-clamp:20="1">
                     {{item.user.name}}
@@ -108,17 +108,6 @@ export default {
       })
 
       this.$emit('refresh')
-    },
-    getAvatar(img) {
-      if(!img) return img
-      let pos = img.indexOf('http://')
-      let result
-      if (pos === 0) {
-        result = img.replace('http:', 'https:')
-      } else {
-        result = img
-      }
-      return result
     }
   }
 }

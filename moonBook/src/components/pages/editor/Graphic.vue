@@ -3,7 +3,7 @@
     <van-nav-bar :border='false' fixed>
       <div class="user-info" slot='title'>
         <div class="avatar">
-          <img :src="getAvatar(userDataState.avatar)" />
+          <img :src="userDataState.avatar" />
         </div>
       </div>
       <div class="head-bar-btn theme-color" slot="right">
@@ -398,20 +398,6 @@ export default {
         })
         this.percent = 0
       })
-    },
-    getAvatar(img) {
-      if (!img) {
-        return img
-      }
-
-      let pos = img.indexOf('http://')
-      let result
-      if (pos === 0) {
-        result = img.replace('http:', 'https:')
-      } else {
-        result = img
-      }
-      return result
     }
   }
 }

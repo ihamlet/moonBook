@@ -10,7 +10,7 @@
               <van-cell v-for="(item,index) in list" :key="index">
                 <div class="flex flex-algin">
                   <div class="avatar">
-                      <img :src="getAvatar(item.sender_avatar)" @error='imgError' />
+                      <img :src="item.sender_avatar" @error='imgError' />
                   </div>
                   <div class="content">
                     <div class="intro title">{{item.intro}}</div>
@@ -81,16 +81,6 @@ export default {
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
-    },
-    getAvatar(img) {
-      let pos = img.indexOf('http://')
-      let result
-      if(pos === 0) {
-         result = img.replace('http:', 'https:')
-      } else {
-         result = img
-      }
-      return result
     }
   }
 }

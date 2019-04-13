@@ -12,11 +12,11 @@
       <div class="info">
         <i class="iconfont" v-if='children'>&#xe668;</i>
         <div class="avatar" v-if='userInfo.avatar'>
-          <img :src="getAvatar(userInfo.avatar)" :alt="userInfo.name">
+          <img :src="userInfo.avatar" :alt="userInfo.name">
         </div>
         <avatar v-else size='medium' avatarClass='border' />
         <div class="children-info" v-if='children' @click="toBabyHome">
-          <img class="children-avatar" :src="getAvatar(children.avatar)" :alt="children.name">
+          <img class="children-avatar" :src="children.avatar" :alt="children.name">
         </div>
         <div class="name">{{userInfo.name}}</div>
       </div>
@@ -102,20 +102,6 @@ export default {
     },
     onStepActiveChange(val) {
       this.active = val
-    },
-    getAvatar(img) {
-      if (!img) {
-        return img
-      }
-
-      let pos = img.indexOf("http://")
-      let result
-      if (pos === 0) {
-        result = img.replace("http:", "https:")
-      } else {
-        result = img
-      }
-      return result
     },
     toBabyHome() {
       this.$router.push({

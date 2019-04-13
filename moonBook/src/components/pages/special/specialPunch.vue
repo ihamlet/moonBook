@@ -2,9 +2,9 @@
   <div class="special-punch">
     <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab">
       <van-tab v-for="(list,index) in tab" :key="index" :title='list.title'>
-        <van-pull-refresh v-model="loading" @refresh="onRefresh"  v-if='index == tabIndex'>
-            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-                <div class="list" v-if='list.content.length'>
+        <van-pull-refresh v-model="loading" @refresh="onRefresh">
+            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad"  v-if='index == tabIndex'>
+                <div class="list" v-if='list.content'>
                     <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
                         <van-cell>
                             <graphicCard :item='item'/>
@@ -18,6 +18,13 @@
         </van-pull-refresh>
       </van-tab>
     </van-tabs>
+
+    <div class="release-footer-bar">
+      <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary">
+            <i class="iconfont">&#xe664;</i>
+            打卡发布
+      </van-button>
+    </div>  
   </div>
 </template>
 <script>
@@ -52,18 +59,15 @@ export default {
 
       array.push({
         title:'推荐',
-        level: 1,
-        content: []
+        level: 1
       },{
         title:'全校',
-        content: []
       })
 
       this.banjiList.forEach(element => {
         let data = {
           title: this.formatBanjiTitle(element.title),
-          banji_id: element.banji_id,
-          content: []
+          banji_id: element.banji_id
         }
 
         array.push(data)
@@ -106,6 +110,9 @@ export default {
       })
     },
     onLoad(){
+      this.getList()
+    },
+    getList(){
         let data = {
             params:{
                 banji_id:this.tab[this.tabIndex].banji_id,
@@ -146,7 +153,7 @@ export default {
     },
     onRefresh(){
       this.page = 1
-      this.onLoad().then(() => {
+      this.getList().then(() => {
         this.loading = false
       })
     },
@@ -159,4 +166,5 @@ export default {
 }
 </script>
 <style scoped>
+
 </style>

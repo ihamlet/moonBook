@@ -2,7 +2,7 @@
   <div class="user-card">
     <div class="flex flex-align" ref="userCard" v-if='item.user'>
       <div class="avatar" @click="toZoom">
-        <img :src="getAvatar(item.user.avatar)" :alt="item.user.username" @error='imgError'>
+        <img :src="item.user.avatar" :alt="item.user.username" @error='imgError'>
       </div>
       <div class="flex flex-align handle-card">
         <div class="info">
@@ -46,16 +46,6 @@ export default {
           this.$toast.success(res.data.msg)
         })
       }
-    },
-    getAvatar(img) {
-      let pos = img.indexOf('http://')
-      let result
-      if (pos === 0) {
-        result = img.replace('http:', 'https:')
-      } else {
-        result = img
-      }
-      return result
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'

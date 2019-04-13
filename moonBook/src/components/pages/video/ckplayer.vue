@@ -10,7 +10,7 @@
             <div class="user-info-bar" slot="title">
               <div class="info flex flex-align" v-if='item.user'>
                 <div class="avatar">
-                  <img :src="getAvatar(item.user.avatar)" />
+                  <img :src="item.user.avatar" />
                 </div>
                 <div class="promulgator flex flex-align">
                   <div class="name" v-line-clamp:20="1">{{item.user.username||''}}</div>
@@ -142,16 +142,6 @@ export default {
           name: 'apps-find'
         })
       }
-    },
-    getAvatar(img) {
-      let pos = img.indexOf('http://')
-      let result
-      if (pos === 0) {
-        result = img.replace('http:', 'https:')
-      } else {
-        result = img
-      }
-      return result
     },
     timeAgo(time) {
       return timeago(time * 1000)

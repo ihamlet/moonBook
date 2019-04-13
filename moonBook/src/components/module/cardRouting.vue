@@ -9,7 +9,7 @@
                 <i class="iconfont vip-icon">&#xe70e;</i>
             </div>
             <div class="user-info flex flex-align flex-justify" @click="toAccept">
-                <img  @error='imgError' :src="getAvatar(userDataState.avatar)"/>
+                <img  @error='imgError' :src="userDataState.avatar"/>
                 <div class="user-name">{{userDataState.name}}</div>
                 <van-icon class="icon" name="arrow" />
             </div>
@@ -47,16 +47,6 @@ export default {
   methods: {
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
-    },
-    getAvatar(img) {
-      let pos = img.indexOf('http://')
-      let result
-      if(pos === 0) {
-         result = img.replace('http:', 'https:')
-      } else {
-         result = img
-      }
-      return result
     },
     toAccept() {
       this.$router.push({

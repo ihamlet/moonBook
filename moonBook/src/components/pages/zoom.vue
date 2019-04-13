@@ -6,7 +6,7 @@
         <div class="user-card flex flex-align" ref="userCrad">
           <div class="info">
             <div class="avatar">
-              <img :src="getAvatar(userInfo.avatar)" :alt="userInfo.name" @error="imgError">
+              <img :src="userInfo.avatar" :alt="userInfo.name" @error="imgError">
             </div>
             <div class="name" v-line-clamp:20="1">{{userInfo.name}}</div>
           </div>
@@ -234,20 +234,6 @@ export default {
             this.show = false
           break
         }
-    },
-    getAvatar(img) {
-      if (!img) {
-        return img;
-      }
-
-      let pos = img.indexOf("http://");
-      let result;
-      if (pos === 0) {
-        result = img.replace("http:", "https:");
-      } else {
-        result = img;
-      }
-      return result;
     },
     imgError(e) {
       e.target.src =

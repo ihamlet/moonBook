@@ -40,7 +40,15 @@
 
     <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" />
 
-    <div class="footer-bar">
+    <div class="punch" v-if='classInfo.is_my_baby_banji'>
+      <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
+        <i class="iconfont">&#xe60a;</i>
+        阅读打卡
+      </van-button>
+    </div>
+
+
+    <!-- <div class="footer-bar">
       <div class="footer-btn flex flex-align">
         <div class="btn" v-if='classInfo.is_my_baby_banji'>
           <van-button @click="punch" class="punch-btn theme-btn" round size="normal" type="primary">
@@ -69,7 +77,7 @@
 
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- <van-dialog v-model="showCode" show-cancel-button :showConfirmButton='false'  cancelButtonText='返回'  :before-close="codeBeforeClose">
       <div class="dialog-title tips"> 
@@ -329,13 +337,13 @@ export default {
         axios.get('/book/SchoolBanji/getInfo',data).then(res => {
           if(res.data.status == 1){
             this.classInfo = res.data.data
+            if(!this.classInfo.is_my_baby_banji&&!this.manage){
+              this.getChildList()
+              this.isSelectBabyShow = true
+            }
           }
         })
         this.getCate()
-        if(this.classInfo.show_child_join){
-          this.getChildList()
-          this.isSelectBabyShow = true
-        }
       }
     },
     toPageCodeShare(){
@@ -657,17 +665,6 @@ export default {
   width: 50px;
 }
 
-.punch-btn{
-  background: linear-gradient(90deg, #ff765c, #ff23b3);
-}
-
-.footer-bar{
-  position: fixed;
-  bottom: 70px;
-  width: 100%;
-  z-index: 10;
-}
-
 .contain{
   position: relative;
 }
@@ -680,44 +677,6 @@ export default {
   margin: auto;
   position: absolute;
   right: 30px;
-}
-
-.release-list{
-  position: absolute;
-  right: 30px;
-  bottom: 0;
-  width: 46px;
-  background: #fff;
-  padding: 10px 0 50px;
-  z-index: -1;
-  border-radius: 46px;
-  box-shadow: 0 5px 30px rgba(0, 171, 225, 0.3)
-}
-
-.btn-item{
-  display: grid;
-  text-align: center;
-  margin: .625rem /* 10/16 */ 0;
-}
-
-.btn-item .iconfont{
-  font-size: 26px;
-}
-
-.btn-item span{
-  font-size: small;
-  margin-top: 5px;
-}
-
-.btn{
-  flex: 1;
-  height: 45px;
-}
-
-.btn .theme-btn{
-  margin: 0 auto;
-  display: block;
-  transition: all 2s;
 }
 
 .title{

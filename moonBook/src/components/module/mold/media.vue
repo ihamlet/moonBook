@@ -32,9 +32,9 @@
           <van-col :span="grid" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
             <div class="img-grid" :class="[item.photos.length == 1&&photo.height/photo.width > 1?'long':'',item.photos.length == 1&&type=='details'?'alone':'']"
               v-if='photo&&photo.is_video==0 && photo.is_audio == 0'>
-              <img class="img-preview" :class="[photo.height/photo.width > 2?'long':'']" :src="photo.thumb" :large="photo.photo"
+              <img class="img-preview" :class="[photo.height/photo.width > 2?'long':'']" :src="photo.thumb.replace('http:', 'https:')" :large="photo.photo"
                 :preview='type=="card"?false:photo.post_id' />
-              <van-tag class="photo-tag" type="primary" v-if='photo.height/photo.width > 1.4&&type=="card"&&photoIndex==0'>长图</van-tag>
+              <van-tag class="photo-tag" type="primary" v-if='photo.height/photo.width > 2&&type=="card"&&photoIndex < 1'>长图</van-tag>
             </div>
           </van-col>
         </van-row>

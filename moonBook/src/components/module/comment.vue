@@ -12,7 +12,7 @@
         <van-cell v-for="(contentItem,index) in list" :key="index">
           <div class="user-card flex flex-align">
             <div class="avatar" @click="toZoom(contentItem)">
-              <img :src="getAvatar(contentItem.avatar)" :alt="contentItem.username" />
+              <img :src="contentItem.avatar" :alt="contentItem.username" />
             </div>
             <div class="user-data">
               <span class="user-name">{{contentItem.username}}</span>
@@ -67,7 +67,7 @@
         <div class="bar-padding flex flex-align">
           <div class="input-box flex flex-align" @click="showField()">
             <div class="input-box-avatar avatar">
-              <img :src="getAvatar(userDataState.avatar)" />
+              <img :src="userDataState.avatar" />
             </div>
             <span>写评论</span>
           </div>
@@ -274,20 +274,6 @@ export default {
 
         type == 'reply' ? this.score = false : this.score = true
       }
-    },
-    getAvatar(img) {
-      if (!img) {
-        return img
-      }
-
-      let pos = img.indexOf('http://')
-      let result
-      if (pos === 0) {
-        result = img.replace('http:', 'https:')
-      } else {
-        result = img
-      }
-      return result
     },
     timeAgo(time) {
       return timeago(time * 1000)

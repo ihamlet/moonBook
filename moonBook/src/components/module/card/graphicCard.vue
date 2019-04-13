@@ -3,10 +3,10 @@
     <div class="container">
       <div class="user-card flex flex-align">
         <div class="avatar" v-if="type=='babyHome'">
-          <img :src="getAvatar(avatar)" alt="宝贝头像" />
+          <img :src="avatar" alt="宝贝头像" />
         </div>  
         <div class="avatar" v-else @click="item.user_id > 0 && toBookZoom(item)">
-          <img :src="getAvatar(item.user.avatar)" :alt="item.user.name" @error='imgError'> 
+          <img :src="item.user.avatar" :alt="item.user.name" @error='imgError'> 
         </div>
         <div class="info">
           <div class="name flex flex-align">
@@ -14,7 +14,7 @@
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
-            {{getTimeAgo(item.create_time)}} <span v-if='item.sign_days!="0"'>{{`坚持阅读打卡${item.sign_days}天`}}</span>
+            {{getTimeAgo(item.create_time)}} <span v-if='item.sign_days!="0"'>{{`打卡第${item.sign_days}天`}}</span>
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0&&type!="zoom"'>
@@ -26,8 +26,8 @@
       <media :item='item' type='card' :key="$route.query.id"/>
 
       <div class="temp-type flex flex-align">
-        <van-tag color='#ad0000' class="school-tag"  v-line-clamp:20="1" type="success" size="large" plain v-if='item.card_school_id > 0'>
-          <div @click="toSchoolHome(item)">{{item.card_school_name}}</div>
+        <van-tag color='#ad0000' class="school-tag"  v-line-clamp:20="1" type="success" size="large" plain v-if='item.user_school_id > 0'>
+          <div @click="toSchoolHome(item)">{{item.user_school_name}}</div>
         </van-tag>
       </div>
 
@@ -141,11 +141,11 @@ export default {
       })
     },
     toSchoolHome(item){
-      if(item.card_school_id > 0){
+      if(item.user_school_id > 0){
         this.$router.push({
           name:'apps-school',
           query:{
-            id: item.card_school_id,
+            id: item.user_school_id,
             back: this.$route.name,
             backPageName: this.$route.meta.title
           }
@@ -165,16 +165,6 @@ export default {
     },
     getTimeAgo(time){
       return timeago(time*1000)
-    },
-    getAvatar(img) {
-      let pos = img.indexOf('http://')
-      let result
-      if(pos === 0) {
-         result = img.replace('http:', 'https:')
-      } else {
-         result = img
-      }
-      return result
     },
     more(item){
       this.$emit('more',item)
@@ -256,7 +246,7 @@ export default {
 }
 
 .school-tag{
-  max-width: 150px;
+  max-width: 160px;
   margin-right: .625rem /* 10/16 */;
 }
 

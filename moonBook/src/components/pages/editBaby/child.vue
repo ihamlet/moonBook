@@ -279,7 +279,7 @@ export default {
           }else{
             this.babyJoinSchool(res)
             this.babyJoinBanji(res)
-
+      
             if(this.$route.query.formType){
               this.$router.go(-1)
             }else{
@@ -422,12 +422,14 @@ export default {
             cityname: this.userPointState.city,
             lat: location[1],
             lng: location[0],
+            amap_id: '',
+            typecode: ''
           }
         }
 
-      axios.get('/book/babySchool/bind', data).then(res => {
 
-      })
+        axios.get('/book/babySchool/bind', data).then(res => {})
+    
     }, 
     babyJoinBanji(childId){
       let data = {
@@ -438,9 +440,7 @@ export default {
         }
       }
 
-      axios.get('/book/baby/join_banji', data).then(res => {
-      
-      })
+      axios.get('/book/baby/join_banji', data).then(res => { })
     }
   }
 }

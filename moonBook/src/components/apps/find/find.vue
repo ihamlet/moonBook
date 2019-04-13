@@ -1,9 +1,9 @@
 <template>
   <div class="find page-padding">
     <van-nav-bar :border='false' :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title"/>
-    <div class="module" v-if='!$route.query.cid'>
-       <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname"/>
-    </div>
+      <div class="module" v-if='!$route.query.cid'>
+        <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname"/>
+      </div>
     <div>
       <div class="container">
         <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab'>
@@ -14,6 +14,12 @@
           </van-tab>
         </van-tabs>
       </div>
+    </div>
+    <div class="release-footer-bar">
+      <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary">
+            <i class="iconfont">&#xe664;</i>
+            课堂阅读发布
+      </van-button>
     </div>
   </div>
 </template>
@@ -68,12 +74,18 @@ export default {
       indexTab:1,
       cateList: '',
       freshList: [],
-      topicList: []
+      topicList: [],
+      isBtnShow: false
     }
   },
   beforeRouteLeave(to, from, next) {
     to.meta.keepAlive = false //去掉页面数据缓存
     next()
+  },
+  updated () {
+    this.$nextTick(()=>{
+      this.isBtnShow = true
+    })
   },
   created() {
     this.fetchData()

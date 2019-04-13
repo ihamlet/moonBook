@@ -4,7 +4,7 @@
       <div class="family-list flex flex-align" slot="title">
         <div class="flex flex-align">
           <div class="avatar" v-for='(item,index) in list' :key="index" @click="toDialog">
-            <img :src="getAvatar(item.avatar)" v-if='index < 6' />
+            <img :src="item.avatar" v-if='index < 6' />
           </div>
         </div>
         <div class="invite">
@@ -73,16 +73,6 @@ export default {
           back: this.$route.name
         }
       })
-    },
-    getAvatar(img) {
-      let pos = img.indexOf('http://')
-      let result
-      if (pos === 0) {
-        result = img.replace('http:', 'https:')
-      } else {
-        result = img
-      }
-      return result
     },
     toDialog() {
       this.$router.push({
