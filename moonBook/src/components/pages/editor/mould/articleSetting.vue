@@ -1,6 +1,6 @@
 <template>
   <div class="article-setting">
-    <van-nav-bar v-if='type!="mould"' :title="$route.meta.title" />
+    <!-- <van-nav-bar v-if='type!="mould"' :title="$route.meta.title" /> -->
     <van-cell title-class='theme-color' title="#选择分类" :value="tag.cate_name" is-link arrow-direction="down" @click="show = true" />
     <van-cell v-if='tag.cate_id!="99"&&tag.cate_id!="124"' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
     
@@ -9,19 +9,20 @@
         <div class="form-title">同步到</div>
         <van-cell-group>
           <van-cell v-for="(item,index) in resultList" clickable :key="index" :title="item.title" @click="toggle(index)">
-            <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" />
+            <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" :disabled='item.name == $route.query.back'/>
           </van-cell>
         </van-cell-group>
       </van-checkbox-group>
     </van-popup>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
-      <topic-list @close='show = false' @select='selectTag' type='edit' :topicList='topicList' />
+      <topic-list @close='show = false' @select='selectTag' :topicList='topicList' :tagIndex='tagIndex' :cateIndex='cateIndex'/>
     </van-popup>
 
-    <div class="footer-bar" v-if='type!="mould"'>
+    <!-- 仿美篇要用到 -->
+    <!-- <div class="footer-bar" v-if='type!="mould"'>
       <van-button class="theme-btn" square size="normal" type="primary" :loading='loading' @click="onClickRelease">发 布</van-button>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -32,7 +33,7 @@ import { contains } from './../../../lib/js/util'
 
 export default {
   name: 'article-setting',
-  props: ['type'],
+  // props: ['type'], // 仿美篇要用到
   components: {
     topicList
   },
@@ -62,7 +63,9 @@ export default {
       groupList: [],
       resultList: [],
       topicList: [],
-      settingResult: []
+      settingResult: [],
+      tagIndex:0,
+      cateIndex:0
     }
   },
   created() {
@@ -88,26 +91,25 @@ export default {
     fetchData() {
       let array = []
 
-     
-        if(this.userDataState.child_id){
-          array.push({
-            title: '宝贝主页',
-            name: 'baby-home',
-            to: 1
-          })     
-        }
+      if(this.userDataState.child_id > 0){
+        array.push({
+          title: '宝贝主页',
+          name: 'baby-home',
+          to: 1
+        })     
+      }
 
-        if(this.userDataState.banji_id){
-          array.push({
-            title: '班级',
-            name: 'class-home',
-            to: 1
-          })
-        }
+      if(this.userDataState.banji_id > 0){
+        array.push({
+          title: '班级',
+          name: 'class-home',
+          to: 1
+        })
+      }
      
-        if(!this.userDataState.banji_id && !this.userDataState.child_id){
-          localStorage.removeItem('result')
-        }
+        // if(!this.userDataState.banji_id && !this.userDataState.child_id){
+        //   localStorage.removeItem('result')
+        // }
     
       array.push({
         title: '发现',
@@ -122,13 +124,12 @@ export default {
         arr.push(e.name)
       })
       
-      //从localStorage 中获取用户选择的同步信息
-      if(localStorage.getItem('result')){
+      this.settingResult = arr
+      this.addResult(arr)
+      
+      if(localStorage.getItem('result')&&!arr.includes(this.$route.query.back)){
         this.settingResult = JSON.parse(localStorage.getItem('result'))
         this.addResult(this.settingResult)
-      }else{
-        this.settingResult = arr
-        this.addResult(arr)
       }
 
       // 获取文章分类
@@ -165,14 +166,17 @@ export default {
           //从localStorage 获取 分类信息
 
           if(this.$route.query.cate_id || this.$route.query.tag_id){
-            cateArray.forEach(element=>{
+            cateArray.forEach((element,tagIndex)=>{
               if(this.$route.query.tag_id){
                 if(element.cate_id == this.$route.query.tag_id){
+                  this.tagIndex = tagIndex
                   this.addTag(element)
                 }
               }else{
-                element.children.forEach(e=>{
+                element.children.forEach((e,cateIndex)=>{
                   if(e.cate_id == this.$route.query.cate_id){
+                    this.tagIndex = tagIndex
+                    this.cateIndex = cateIndex
                     this.addTag(e)
                   }
                 })
@@ -198,79 +202,81 @@ export default {
        this.addTag(tag)
        localStorage.setItem('tag',JSON.stringify(tag))
     },
-    onClickRelease(){
-      if (!this.getArticleContent.length) {
-        if (this.$route.query.back && this.$route.name!='home') {
-          this.$router.push({
-            name: this.$route.query.back,
-            query: {
-              id:  this.$route.query.id
-            }
-          })
-        }
-      } else {
-          let data = {
-            details: this.getArticleContent,
-            template_id: 0,
-            cover: this.cover?this.cover:this.getImageList[0],
-            title: this.title
-          }
+
+    // 仿美篇要用到
+    // onClickRelease(){
+    //   if (!this.getArticleContent.length) {
+    //     if (this.$route.query.back && this.$route.name!='home') {
+    //       this.$router.push({
+    //         name: this.$route.query.back,
+    //         query: {
+    //           id:  this.$route.query.id
+    //         }
+    //       })
+    //     }
+    //   } else {
+    //       let data = {
+    //         details: this.getArticleContent,
+    //         template_id: 0,
+    //         cover: this.cover?this.cover:this.getImageList[0],
+    //         title: this.title
+    //       }
   
-          if(this.$route.query.back == 'baby-home'){
-            data.child_id = this.$route.query.id
-          }
+    //       if(this.$route.query.back == 'baby-home'){
+    //         data.child_id = this.$route.query.id
+    //       }
 
-          if(this.$route.query.back == 'class-home'){
-            data.banji_id = this.$route.query.id
-          }
+    //       if(this.$route.query.back == 'class-home'){
+    //         data.banji_id = this.$route.query.id
+    //       }
           
-          if(this.$route.query.back == 'apps-school'){
-            data.school_id = this.$route.query.id
-          }
+    //       if(this.$route.query.back == 'apps-school'){
+    //         data.school_id = this.$route.query.id
+    //       }
 
-          this.loading = true
+    //       this.loading = true
 
-          this.release(data).then(res=>{
-            this.loading = false
-            switch(res){
-              case 1:
-                switch(true){
-                  case contains(this.result,'apps-find'):
-                    this.$router.replace('/apps-find')
-                  break
-                  case contains(this.result,'baby-home'):
-                    this.$router.replace({
-                      name:'baby-home',
-                      query:{
-                        id: this.userDataState.child_id
-                      }
-                    })
-                  break
-                  case contains(this.result,'class-home'):
-                    this.$router.replace({
-                      name:'class-home',
-                      query:{
-                        id: this.userDataState.banji_id
-                      }
-                    })
-                  break
-                  default:
-                    this.$router.replace({
-                      name:'zoom',
-                      query:{
-                        id: this.userDataState.user_id
-                      }
-                    })
-                }
-                this.$toast.success('发布成功')
-              break
-              case 0:
-                this.$toast(res.data.info)
-              break
-            }
-          })
-      }
-    }
+    //       this.release(data).then(res=>{
+    //         this.loading = false
+    //         switch(res){
+    //           case 1:
+    //             switch(true){
+    //               case this.result.includes('apps-find'):
+    //                 this.$router.replace('/apps-find')
+    //               break
+    //               case this.result.includes('baby-home'):
+    //                 this.$router.replace({
+    //                   name:'baby-home',
+    //                   query:{
+    //                     id: this.userDataState.child_id
+    //                   }
+    //                 })
+    //               break
+    //               case this.result.includes('class-home'):
+    //                 this.$router.replace({
+    //                   name:'class-home',
+    //                   query:{
+    //                     id: this.userDataState.banji_id
+    //                   }
+    //                 })
+    //               break
+    //               default:
+    //                 this.$router.replace({
+    //                   name:'zoom',
+    //                   query:{
+    //                     id: this.userDataState.user_id
+    //                   }
+    //                 })
+    //             }
+    //             this.$toast.success('发布成功')
+    //           break
+    //           case 0:
+    //             this.$toast(res.data.info)
+    //           break
+    //         }
+    //     })
+    //   }
+    // }
   }
 }
 </script>

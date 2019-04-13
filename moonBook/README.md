@@ -1,7 +1,8 @@
 # moonbook
 
 > A Vue.js project 
-> http://localhost/book/babySchool/bind 报错 高德地图ID不能为空 
+> 新版本的高德地图因为更新  center现在改为数组导致地理位置获取不正确  这个真的把我坑惨了
+> 基础注册 会跳到旧版 拿我老婆手机试了
 
 ## Build Setup
 

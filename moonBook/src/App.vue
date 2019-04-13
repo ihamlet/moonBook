@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-amap :center="center" :plugin="plugin" v-show='false' />
+    <el-amap vid="amap" :center="center" :plugin="plugin" v-show='false' />
     <keep-alive>
         <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
@@ -63,15 +63,16 @@ export default {
   data () {
     const self = this
     return {
-      center: '114.085947,22.547',
+      center: [114.085947,22.547],
       plugin:[{
           timeout:1000,
           pName: 'Geolocation',
+          enableHighAccuracy: true,
           events: {
               init:(map)=>{
                   map.getCurrentPosition( (status, result) => {
                   if (result && result.position) {
-                        self.center = `${result.position.lng},${result.position.lat}`
+                        self.center = [result.position.lng,result.position.lat]
                       }
                   })
               }
@@ -84,7 +85,7 @@ export default {
     this.wxConfig()
     
     this.wxGetLocation().then(res=>{
-      let location = `${res.longitude},${res.latitude}`
+      let location = [res.longitude,res.latitude]
       this.center = location
     })
 

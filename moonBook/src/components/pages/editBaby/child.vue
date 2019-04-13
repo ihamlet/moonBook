@@ -20,8 +20,8 @@
     </div>
     <div class="form" v-else>
     <van-cell-group>
-      <van-field v-model="childInfo.name" :disabled='isMainParent' input-align='right' label="孩子姓名" placeholder="请输入孩子姓名" :error-message="errorMessage.name" />
-      <van-field v-model="childInfo.birthday" :disabled='isMainParent' input-align='right' readonly label="孩子生日" placeholder="请选择日期" :error-message="errorMessage.birthday" @click="pickerShow = true" />
+      <van-field v-model="childInfo.name" size='large' :disabled='isMainParent' input-align='right' label="孩子姓名" placeholder="请输入孩子姓名" :error-message="errorMessage.name" />
+      <van-field v-model="childInfo.birthday" size='large' :disabled='isMainParent' input-align='right' readonly label="孩子生日" placeholder="请选择日期" :error-message="errorMessage.birthday" @click="pickerShow = true" />
       <van-field v-model="childInfo.relation_name" :disabled='isMainParent' input-align='right' readonly label="您是孩子的？" placeholder="例如：爸爸"  @click="parentShow = true"/>
     </van-cell-group>
     <van-radio-group>
@@ -58,8 +58,8 @@
 
     <!-- 家长类型选择器 -->
     <van-popup class="picker-popup" position="bottom" v-model="parentShow" get-container='#app'>
+      <van-picker :columns="parentList" :default-index="0" @change='onParentChange' show-toolbar title="您是孩子的？"  @cancel="cancelPicker" @confirm="parentShow = false"/>
       <van-field v-model="childInfo.relation_name" input-align='right' label="您是孩子的？" placeholder="例如：爸爸"/>
-      <van-picker :columns="parentList" :default-index="0" @change='onParentChange'/>
     </van-popup>
 
   </div>
@@ -242,6 +242,8 @@ export default {
     },
     cancelPicker() {
       this.childInfo.birthday = ''
+      this.childInfo.relation_name = '妈妈'
+      this.parentShow = false
       this.pickerShow = false
     },
     // 孩子添加编辑API

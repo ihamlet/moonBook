@@ -57,7 +57,7 @@ import axios from './../../lib/js/api'
 import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import topicList from './../../module/release/topicList'
 import articleSetting from './mould/articleSetting'
-import { compress,checkHtml,contains } from './../../lib/js/util'
+import { compress,checkHtml } from './../../lib/js/util'
 
 export default {
   name: 'graphic',
@@ -245,10 +245,10 @@ export default {
               case 1:
                 this.clearImg()
                 switch(true){
-                  case contains(this.result,'apps-find'):
+                  case this.result.includes('apps-find'):
                     this.$router.replace('/apps-find')
                   break
-                  case contains(this.result,'baby-home'):
+                  case this.result.includes('baby-home'):
                     this.$router.replace({
                       name:'baby-home',
                       query:{
@@ -256,7 +256,7 @@ export default {
                       }
                     })
                   break
-                  case contains(this.result,'class-home'):
+                  case this.result.includes('class-home'):
                     this.$router.replace({
                       name:'class-home',
                       query:{

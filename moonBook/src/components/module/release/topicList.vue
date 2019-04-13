@@ -9,18 +9,19 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'topic-list',
-  props: ['type','topicList'],
+  props: ['type','topicList','tagIndex','cateIndex'],
   computed: {
     ...mapGetters(['managerState']),
     column(){
       let column = [{
         values: this.topicList,
-        className: 'column1'
+        className: 'column1',
+        defaultIndex: this.tagIndex
       },
       {
-        values:[],
+        values: this.tagIndex == 0?this.topicList[0].children:[],
         className: 'column2',
-        defaultIndex: 1
+        defaultIndex: this.cateIndex
       }]
       
       return column
@@ -30,6 +31,9 @@ export default {
     return {
       topicIndex: 0
     }
+  },
+  created () {
+    this.onCateChange()
   },
   methods: {
     onCateChange(picker, cate, cid) {

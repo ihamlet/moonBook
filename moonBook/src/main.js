@@ -49,7 +49,7 @@ VueAMap.initAMapApiLoader({
   // 高德key
   key: 'fa9f5ec66e1591d348fd0d4b8edd809a',
   // 插件集合 （插件按需引入）
-  plugin: ['AMap.Geolocation', 'AMap.Scale']
+  plugin: ['AMap.Geolocation']
 })
 
 Vue.config.productionTip = false

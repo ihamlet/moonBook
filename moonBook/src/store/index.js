@@ -122,13 +122,14 @@ const actions = {
     })
   },
   getUserLocation(context, products) {
+  
     let cityInfo = {
-      location: products.location
+      location: products.location.join(",")
     }
 
     let data = {
       Key: context.state.amapApiKey,
-      location: products.location
+      location: products.location.join(",")
     }
   
     let amapApiLink = `https://restapi.amap.com/v3/geocode/regeo?output=json&${qs.stringify(data)}`
