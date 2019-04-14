@@ -9,7 +9,7 @@
                 <i class="iconfont vip-icon">&#xe70e;</i>
             </div>
             <div class="user-info flex flex-align flex-justify" @click="toAccept">
-                <img  @error='imgError' :src="userDataState.avatar"/>
+                <img  @error='imgError' :src="userDataState.avatar" v-http2https/>
                 <div class="user-name">{{userDataState.name}}</div>
                 <van-icon class="icon" name="arrow" />
             </div>

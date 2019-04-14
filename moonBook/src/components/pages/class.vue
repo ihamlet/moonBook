@@ -4,7 +4,7 @@
     <div class="container">
       <div class="baby-info flex flex-justify" v-if='$route.query.registerType!="teacher"'>
         <div class="avatar flex" v-if='childInfo'>
-          <img :src="childInfo.avatar" :alt="childInfo.name">
+          <img :src="childInfo.avatar" v-http2https>
         </div>
         <avatar v-else />
         <div class="name">{{childInfo.name}}（{{childInfo.age}}岁）</div>

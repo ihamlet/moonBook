@@ -88,12 +88,6 @@ export default {
       let location = [res.longitude,res.latitude]
       this.center = location
     })
-
-    this.httpsImg()
-  },
-  beforeUpdate () {
-    // 将网站所有img标签设置为 https
-    this.httpsImg()
   },
   watch: {
     center(val){
@@ -104,6 +98,9 @@ export default {
     },
     '$route': 'fetchData'
   },
+  // updated () {
+  //   this.httpsImg()
+  // },
   methods: {
     ...mapActions('openWX',['wxConfig','wxGetLocation']),
     ...mapActions(['getUserData','getMsg','getUserLocation','getManager']),
@@ -115,18 +112,17 @@ export default {
       this.getUserData()
       this.getManager()
       this.getMsg(products)
-      this.httpsImg()
     },
-    httpsImg(){
-      this.$nextTick(()=>{
-        let imgs = document.getElementsByTagName('img')
-        for(let i = 0 ; i < imgs.length ; i ++){
-          if(imgs[i].src.indexOf(location.origin) == -1){
-            imgs[i].src = imgs[i].src.replace('http:', 'https:')
-          }
-        }
-      })
-    }
+    // httpsImg(){
+    //   this.$nextTick(()=>{
+    //     let imgs = document.getElementsByTagName('img')
+    //     for(let i = 0 ; i < imgs.length ; i ++){
+    //       if(imgs[i].src.indexOf(location.origin) == -1){
+    //         imgs[i].src = imgs[i].src.replace('http:', 'https:')
+    //       }
+    //     }
+    //   })
+    // }
   }
 }
 </script>

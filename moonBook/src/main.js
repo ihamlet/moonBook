@@ -62,3 +62,14 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+
+//设置一个全局指令
+Vue.directive('http2https', {
+  // 当被绑定的元素插入到 DOM 中时……
+  inserted(el){
+    if(el.src.indexOf(location.origin) == -1){
+      el.src = el.src.replace('http:', 'https:')
+    }
+  }
+})

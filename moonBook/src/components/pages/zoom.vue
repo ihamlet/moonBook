@@ -6,7 +6,7 @@
         <div class="user-card flex flex-align" ref="userCrad">
           <div class="info">
             <div class="avatar">
-              <img :src="userInfo.avatar" :alt="userInfo.name" @error="imgError">
+              <img :src="userInfo.avatar" @error="imgError" v-http2https>
             </div>
             <div class="name" v-line-clamp:20="1">{{userInfo.name}}</div>
           </div>

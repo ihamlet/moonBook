@@ -23,7 +23,7 @@
               <div class="user-info flex flex-align">
                 <div class="user-data flex flex-align">
                   <div class="avatar">
-                    <img :src="item.user.avatar" />
+                    <img :src="item.user.avatar" v-http2https/>
                   </div>
                   <div class="name" v-line-clamp:20="1">
                     {{item.user.name}}

@@ -22,7 +22,7 @@
                     <van-row :gutter="5" class="article-cover" v-else>
                       <van-col :span='24'>
                         <div class="img-grid">
-                          <img class="img-preview" :src="item.cover.replace('http:', 'https:')" />
+                          <img class="img-preview" :src="item.cover"  v-http2https/>
                         </div>
                       </van-col>
                     </van-row>

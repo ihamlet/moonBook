@@ -10,7 +10,7 @@
               <van-cell v-for="(item,index) in list" :key="index">
                 <div class="flex flex-algin">
                   <div class="avatar">
-                      <img :src="item.sender_avatar" @error='imgError' />
+                      <img :src="item.sender_avatar" @error='imgError' v-http2https/>
                   </div>
                   <div class="content">
                     <div class="intro title">{{item.intro}}</div>

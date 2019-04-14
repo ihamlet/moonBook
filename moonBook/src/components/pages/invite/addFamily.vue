@@ -7,7 +7,7 @@
       </div>
       <div class="child-info" v-show='!is_mine'>
         <div class="avatar">
-          <img :src="babyInfo.avatar" />
+          <img :src="babyInfo.avatar" v-http2https/>
         </div>
         <div class="name">
           {{babyInfo.name}}

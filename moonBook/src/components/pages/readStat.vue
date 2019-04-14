@@ -16,7 +16,7 @@
         </div>
         <div class="content">
           <div class="avatar" v-if="childInfo.avatar">
-            <img :src="childInfo.avatar" alt="宝贝头像"  @error="imgError">
+            <img :src="childInfo.avatar" alt="宝贝头像"  @error="imgError" v-http2https>
           </div>
           <avatar :gender="childInfo.sex" size='small' v-else />
           <div class="name flex flex-align">

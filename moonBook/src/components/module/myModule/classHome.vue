@@ -7,7 +7,7 @@
         </div>
         <div class="title flex flex-align" slot="title">
           <div class="avatar">
-            <img :src="children.avatar" :alt="children.child_name" />
+            <img :src="children.avatar" :alt="children.child_name" v-http2https/>
           </div>
           {{children.name}}
         </div>

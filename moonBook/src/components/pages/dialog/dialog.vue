@@ -7,7 +7,7 @@
     <div class="release">
       <div class="release-warp flex">
         <div class="avatar">
-          <img :src="userDataState.avatar" />
+          <img :src="userDataState.avatar" v-http2https/>
         </div>
         <div class="field">
           <van-field v-model="message" type="textarea" placeholder="请输入留言" rows="1" autosize />

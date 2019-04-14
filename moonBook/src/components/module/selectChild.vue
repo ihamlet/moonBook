@@ -12,7 +12,7 @@
             <div class="scroll-item" v-for='(list,index) in babyList' :key="index">
                 <div class="baby-item-card" @click="onSelectBaby(list)" :class="$route.query.id == list.id?'active':''">
                 <div class="avatar" v-if="list.avatar">
-                    <img :src="list.avatar" @error="imgError" />  
+                    <img :src="list.avatar" @error="imgError" v-http2https/>  
                 </div>
                 <avatar size='small' avatarClass='border' v-else />
                 <div class="child-name" v-line-clamp:20="1">{{list.name}}</div>

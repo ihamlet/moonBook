@@ -1,7 +1,7 @@
 <template>
   <div class="article page-padding">
     <div class="cover" v-if='item.template_id == 0&&item.cover'>
-      <img :src="item.cover" />
+      <img :src="item.cover"  v-http2https/>
     </div>
     <div class="page-container">
       <van-nav-bar :border='false' :class="item.cover&&item.template_id == 0&&!themeBarSearch?'theme-nav':''" fixed :zIndex='100'>
@@ -12,7 +12,7 @@
             </div>
             <div class="head-bar-title-conent flex flex-align flex-justify" key="2" v-else @click="toZoom">
               <div class="avatar" v-if='item.user'>
-                <img :src="item.user.avatar" :alt="item.user.username" @error='imgError'>
+                <img :src="item.user.avatar" :alt="item.user.username" @error='imgError' v-http2https>
               </div>
               <div class="name" v-if='item.user'>{{item.user.username}}</div>
               <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>

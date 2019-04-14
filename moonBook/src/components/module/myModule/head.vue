@@ -12,11 +12,11 @@
       <div class="info">
         <i class="iconfont" v-if='children'>&#xe668;</i>
         <div class="avatar" v-if='userInfo.avatar'>
-          <img :src="userInfo.avatar" :alt="userInfo.name">
+          <img :src="userInfo.avatar" v-http2https>
         </div>
         <avatar v-else size='medium' avatarClass='border' />
         <div class="children-info" v-if='children' @click="toBabyHome">
-          <img class="children-avatar" :src="children.avatar" :alt="children.name">
+          <img class="children-avatar" :src="children.avatar" v-http2https>
         </div>
         <div class="name">{{userInfo.name}}</div>
       </div>

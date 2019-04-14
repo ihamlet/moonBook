@@ -19,7 +19,7 @@ export default {
         defaultIndex: this.tagIndex
       },
       {
-        values: this.tagIndex == 0?this.topicList[0].children:[],
+        values: this.topicList[this.tagIndex].children,
         className: 'column2',
         defaultIndex: this.cateIndex
       }]
@@ -33,7 +33,7 @@ export default {
     }
   },
   created () {
-    this.onCateChange()
+    console.log(this.column)
   },
   methods: {
     onCateChange(picker, cate, cid) {

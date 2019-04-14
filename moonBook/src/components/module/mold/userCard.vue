@@ -2,7 +2,7 @@
   <div class="user-card">
     <div class="flex flex-align" ref="userCard" v-if='item.user'>
       <div class="avatar" @click="toZoom">
-        <img :src="item.user.avatar" :alt="item.user.username" @error='imgError'>
+        <img :src="item.user.avatar" :alt="item.user.username" @error='imgError' v-http2https>
       </div>
       <div class="flex flex-align handle-card">
         <div class="info">

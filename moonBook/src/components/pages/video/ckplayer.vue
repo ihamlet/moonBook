@@ -10,7 +10,7 @@
             <div class="user-info-bar" slot="title">
               <div class="info flex flex-align" v-if='item.user'>
                 <div class="avatar">
-                  <img :src="item.user.avatar" />
+                  <img :src="item.user.avatar" v-http2https/>
                 </div>
                 <div class="promulgator flex flex-align">
                   <div class="name" v-line-clamp:20="1">{{item.user.username||''}}</div>

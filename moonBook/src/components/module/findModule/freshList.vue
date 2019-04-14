@@ -3,7 +3,7 @@
     <div class="content scroll-x" :class="type" v-if='list.length > 0'>
       <div class="scroll-item" v-for="(item,index) in list" :key="index" @click="toZoom(item)">
         <div class="avatar">
-          <img v-if="item[avatar]" @error='imgError' :src="item[avatar]" :alt="item[name]">
+          <img v-if="item[avatar]" @error='imgError' :src="item[avatar]" :alt="item[name]" v-http2https>
         </div>
         <div class="name" v-line-clamp:20="2">
           {{item[name]}}

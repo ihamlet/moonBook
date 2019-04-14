@@ -12,7 +12,7 @@
         <van-cell v-for="(contentItem,index) in list" :key="index">
           <div class="user-card flex flex-align">
             <div class="avatar" @click="toZoom(contentItem)">
-              <img :src="contentItem.avatar" :alt="contentItem.username" />
+              <img :src="contentItem.avatar" v-http2https/>
             </div>
             <div class="user-data">
               <span class="user-name">{{contentItem.username}}</span>
@@ -67,7 +67,7 @@
         <div class="bar-padding flex flex-align">
           <div class="input-box flex flex-align" @click="showField()">
             <div class="input-box-avatar avatar">
-              <img :src="userDataState.avatar" />
+              <img :src="userDataState.avatar" v-http2https/>
             </div>
             <span>写评论</span>
           </div>

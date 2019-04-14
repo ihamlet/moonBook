@@ -45,7 +45,7 @@ export default {
     ...mapGetters(['managerState']),
     isFreshListShow(){
       let boolean = true
-      if(!this.$route.query.cate_id||!this.$route.query.tag_id){
+      if(this.$route.query.cate_id || this.$route.query.tag_id){
         boolean = false
       }
 
@@ -61,16 +61,16 @@ export default {
     },
     tab(){
       let array = []
-      if(this.$route.query.cid){
+      if(this.$route.query.tag_id){
         array.push({
           title:'全部',
-          cate_id: this.$route.query.cid
+          tag_id: this.$route.query.tag_id
         })
         if(this.cateList){
           this.cateList.forEach(element => {
             let data = {
               title: element.cate_name,
-              cate_id: element.cate_id
+              tag_id: element.tag_id
             }
 
             array.push(data)
@@ -118,7 +118,7 @@ export default {
     fetchData() {
       let data = {
         params:{
-          tid: this.$route.query.tid || ''
+          tid: this.$route.query.tag_id || ''
         }
       }
 
@@ -131,7 +131,7 @@ export default {
     getCate(){
       let data = {
         params:{
-          cate_id:this.$route.query.cid
+          cate_id: this.$route.query.tag_id
         }
       }
 

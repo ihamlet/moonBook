@@ -3,7 +3,7 @@
     <van-nav-bar :border='false' fixed>
       <div class="user-info" slot='title'>
         <div class="avatar">
-          <img :src="userDataState.avatar" />
+          <img :src="userDataState.avatar" v-http2https/>
         </div>
       </div>
       <div class="head-bar-btn theme-color" slot="right">

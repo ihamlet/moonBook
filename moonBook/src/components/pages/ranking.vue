@@ -24,7 +24,7 @@
                     </div>
                     <div class="title flex flex-align" slot="title">
                       <div class="avatar" :class="content.rank < 4?'rank':''" v-if='content.babyInfo.avatar'>
-                        <img :src="content.babyInfo.avatar" @error='imgError' :alt="content.babyInfo.name" />
+                        <img :src="content.babyInfo.avatar" @error='imgError' v-http2https/>
                       </div>
                       <div class="info">
                         <span class="name">{{content.babyInfo.name}}</span>

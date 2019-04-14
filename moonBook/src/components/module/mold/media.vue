@@ -2,8 +2,7 @@
   <div class="container" id='media' @click="toArticle" :class="$route.name == 'article'?'article':''">
     <div class="title" v-if='type=="card"&&item.template_id=="0"' v-line-clamp:20="2">{{item.title}}</div>
 
-    <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?2:0" :class="item.template_id == 0?'content':''"
-      v-html='item.details'></div>
+    <div class="text" ref='textContent' v-line-clamp:20="type == 'card'?2:0" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
     <!-- 视频  -->
     <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"'>
       <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
@@ -32,7 +31,7 @@
           <van-col :span="grid" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
             <div class="img-grid" :class="[item.photos.length == 1&&photo.height/photo.width > 1?'long':'',item.photos.length == 1&&type=='details'?'alone':'']"
               v-if='photo&&photo.is_video==0 && photo.is_audio == 0'>
-              <img class="img-preview" :class="[photo.height/photo.width > 2?'long':'']" :src="photo.thumb.replace('http:', 'https:')" :large="photo.photo"
+              <img class="img-preview" :class="[photo.height/photo.width > 2?'long':'']" :src="photo.thumb" :large="photo.photo"
                 :preview='type=="card"?false:photo.post_id' />
               <van-tag class="photo-tag" type="primary" v-if='photo.height/photo.width > 2&&type=="card"&&photoIndex < 1'>长图</van-tag>
             </div>
@@ -42,7 +41,7 @@
     </div>
 
     <div class="media img long-article-thumb" v-if='item.template_id == "0"&&type == "card"&&item.cover&&item.hasvideo!="1"'>
-      <img :src="item.cover || item.photos[0].thumb" />
+      <img :src="item.cover || item.photos[0].thumb"  v-http2https/>
       <van-tag class="photo-tag" type="primary">文章</van-tag>
     </div>
 
@@ -123,6 +122,14 @@ export default {
   updated () {
     this.$nextTick(()=>{
       this.player
+      this.$nextTick(()=>{
+        let imgs = document.getElementsByTagName('img')
+        for(let i = 0 ; i < imgs.length ; i ++){
+          if(imgs[i].src.indexOf(location.origin) == -1){
+            imgs[i].src = imgs[i].src.replace('http:', 'https:')
+          }
+        }
+      })
     })
   },
   methods: {

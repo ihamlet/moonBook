@@ -4,7 +4,7 @@
       <div class="family-list flex flex-align" slot="title">
         <div class="flex flex-align">
           <div class="avatar" v-for='(item,index) in list' :key="index" @click="toDialog">
-            <img :src="item.avatar" v-if='index < 6' />
+            <img :src="item.avatar" v-if='index < 6' v-http2https/>
           </div>
         </div>
         <div class="invite">

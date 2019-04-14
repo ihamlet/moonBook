@@ -69,14 +69,15 @@ export default {
           title = `【阅亮书架】#${products.item.cate.cate_name}#${products.item.title}`
           desc = products.item.details.replace(/<[^>]+>/g,"") || context.state.slogan
         } else {
-          desc = products.item.hasvideo == "1"? `[小视频]${context.state.slogan}`: products.item.details
+          title = '阅亮书架'
+          desc = products.item.hasvideo == "1"? `[小视频]${products.item.details?products.item.details:context.state.slogan}`: products.item.details
         }
 
         let data = {
           title: title || products.item.title,
           link: location.href.replace('#','/?#'),
           desc: desc,
-          imgUrl: products.item.imgUrl || products.item.cover || context.state.logo,
+          imgUrl: products.item.imgUrl || context.state.logo || products.item.cover,
           success: products.success
         }
 

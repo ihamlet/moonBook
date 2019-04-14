@@ -15,7 +15,7 @@
               {{item[field]}}
             </div>
             <div class="avatar" v-else-if='item[field]' @click="toBabyHome(item)">
-              <img :src="item[field]" @error='imgError'/>
+              <img :src="item[field]" @error='imgError' v-http2https/>
             </div>
           </div>
         </div>

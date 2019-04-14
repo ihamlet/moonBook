@@ -54,6 +54,16 @@ export default {
       tabIndex: 0
     }
   },
+  updated () {
+    this.$nextTick(()=>{
+      let imgs = document.getElementsByTagName('img')
+      for(let i = 0 ; i < imgs.length ; i ++){
+        if(imgs[i].src.indexOf(location.origin) == -1){
+          imgs[i].src = imgs[i].src.replace('http:', 'https:')
+        }
+      }
+    })
+  },
   methods: {
     onLoad() {
       //获取图书列表

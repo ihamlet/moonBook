@@ -6,7 +6,7 @@
       </div>
       <div class="title flex flex-align" slot="title">
         <div class="avatar" v-if='rankingData.info.avatar'>
-          <img :src="rankingData.info.avatar" @error='imgError' :alt="rankingData.info.name" />
+          <img :src="rankingData.info.avatar" @error='imgError' v-http2https/>
         </div>
         <div class="info">
           <span class="name">{{rankingData.info.name}}</span>

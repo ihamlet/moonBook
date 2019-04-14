@@ -3,10 +3,10 @@
     <div class="container">
       <div class="user-card flex flex-align">
         <div class="avatar" v-if="type=='babyHome'">
-          <img :src="avatar" alt="宝贝头像" />
+          <img :src="avatar" />
         </div>  
         <div class="avatar" v-else @click="item.user_id > 0 && toBookZoom(item)">
-          <img :src="item.user.avatar" :alt="item.user.name" @error='imgError'> 
+          <img :src="item.user.avatar" :alt="item.user.name" @error='imgError' v-http2https> 
         </div>
         <div class="info">
           <div class="name flex flex-align">
@@ -26,7 +26,7 @@
       <media :item='item' type='card' :key="$route.query.id"/>
 
       <div class="temp-type flex flex-align">
-        <van-tag color='#ad0000' class="school-tag"  v-line-clamp:20="1" type="success" size="large" plain v-if='item.user_school_id > 0'>
+        <van-tag color='#0084ff' class="school-tag"  v-line-clamp:20="1" type="success" size="large" plain v-if='item.user_school_id > 0'>
           <div @click="toSchoolHome(item)">{{item.user_school_name}}</div>
         </van-tag>
       </div>

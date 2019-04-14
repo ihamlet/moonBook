@@ -10,7 +10,7 @@
                 <svg-ranking :ranking="item.rank" />
               </div>
               <div class="avatar" v-if="item.avatar">
-                <img :src="item.avatar" :alt="item.name" />
+                <img :src="item.avatar" :alt="item.name" v-http2https/>
               </div>
               <avatar class="avatar" :gender="item.sex" v-else />
               <div class="name">

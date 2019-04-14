@@ -9,7 +9,7 @@
           <van-cell v-for="(item,index) in list" :key="index" center>
             <div class="title flex flex-align" slot="title">
                 <div class="avatar">
-                  <img :src="item.avatar" :alt="item.parent_name" />
+                  <img :src="item.avatar" :alt="item.parent_name" v-http2https/>
                 </div>
                 <div class="name">{{item.parent_name}}</div>
             </div>
