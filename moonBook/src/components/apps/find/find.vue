@@ -9,7 +9,7 @@
         <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content" v-if='index == indexTab'>
-              <drying-list :cateId='list.cate_id' :sort='list.sort' type='find' :tid='$route.query.tid' :cid='$route.query.cid' :school_id='$route.query.school_id' :banji_id='$route.query.banji_id'/>
+              <drying-list :cateId='list.cate_id' :sort='list.sort' type='find' :tagId='$route.query.tag_id' :school_id='$route.query.school_id' :banji_id='$route.query.banji_id'/>
             </div>
           </van-tab>
         </van-tabs>
@@ -64,13 +64,13 @@ export default {
       if(this.$route.query.tag_id){
         array.push({
           title:'全部',
-          tag_id: this.$route.query.tag_id
+          cate_id: this.$route.query.tag_id
         })
         if(this.cateList){
           this.cateList.forEach(element => {
             let data = {
               title: element.cate_name,
-              tag_id: element.tag_id
+              cate_id: element.cate_id
             }
 
             array.push(data)

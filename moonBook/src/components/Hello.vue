@@ -28,6 +28,10 @@ export default {
       startPageShow:true
     }
   },
+  beforeRouteLeave(to, from, next) {
+    to.meta.keepAlive = false
+    next()
+  },
   created () {
     if(localStorage.getItem('access')){
       this.startPageShow = !localStorage.getItem('access')

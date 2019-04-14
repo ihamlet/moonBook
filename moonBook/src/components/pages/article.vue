@@ -78,6 +78,14 @@ export default {
       }
     }
   },
+  beforeRouteLeave(to, from, next) {
+    if (to.name == "apps-find" || to.name == 'home') {
+      to.meta.keepAlive = true
+    } else {
+      to.meta.keepAlive = false
+    }
+    next()
+  },
   created() {
     this.fetchData()    
   },

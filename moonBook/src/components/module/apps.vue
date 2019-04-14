@@ -36,7 +36,7 @@ export default {
         name: '育儿专栏',
         pathName: 'apps-find',
         params: {
-          cid: 37,
+          tag_id: 37,
           pageTitle: '育儿专栏'
         },
         href: false
@@ -51,18 +51,13 @@ export default {
         name: '教育',
         pathName: 'apps-find',
         params: {
-          cid: 134,
+          tag_id: 134,
           pageTitle: '教育'
         },
         href: false
       }]
 
       return array
-    }
-  },
-  data() {
-    return {
-
     }
   },
   methods: {
@@ -72,7 +67,8 @@ export default {
       } else {
         this.$router.push({
           name: item.pathName,
-          query: item.params
+          query: item.params,
+
         })
       }      
     }

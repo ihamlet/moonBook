@@ -35,7 +35,7 @@ export default {
     slogan,
     graphicCard
   },
-  props: ['sort', 'tid', 'school_id', 'type', 'portal_name', 'cid', 'banji_id','cateId'],
+  props: ['sort', 'tagId', 'school_id', 'type', 'portal_name', 'banji_id','cateId'],
   computed: {
     ...mapGetters(['userToken', 'managerState','userDataState']),
     manage() {
@@ -134,7 +134,7 @@ export default {
         params: {
           page: this.page,
           sort: this.sort,
-          tid: this.tid,
+          tag_id: this.tagId,
           route: this.type,
           cate_id: this.cid,
           banji_id: this.banji_id
