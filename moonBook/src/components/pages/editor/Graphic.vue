@@ -244,34 +244,41 @@ export default {
             switch(res){
               case 1:
                 this.clearImg()
-                switch(true){
-                  case this.result.includes('apps-find'):
-                    this.$router.replace('/apps-find')
-                  break
-                  case this.result.includes('baby-home'):
-                    this.$router.replace({
-                      name:'baby-home',
-                      query:{
-                        id: this.userDataState.child_id
-                      }
-                    })
-                  break
-                  case this.result.includes('class-home'):
-                    this.$router.replace({
-                      name:'class-home',
-                      query:{
-                        id: this.userDataState.banji_id
-                      }
-                    })
-                  break
-                  default:
-                    this.$router.replace({
-                      name:'zoom',
-                      query:{
-                        id: this.userDataState.user_id
-                      }
-                    })
+
+                if(this.$route.query.back == 'home' || this.$route.query.back == 'my-home'){
+                  this.$router.replace('/apps-find')
+                }else{
+                  this.$router.go(-1)
                 }
+                
+                // switch(true){
+                //   case this.result.includes('apps-find'):
+                //     this.$router.replace('/apps-find')
+                //   break
+                //   case this.result.includes('baby-home'):
+                //     this.$router.replace({
+                //       name:'baby-home',
+                //       query:{
+                //         id: this.userDataState.child_id
+                //       }
+                //     })
+                //   break
+                //   case this.result.includes('class-home'):
+                //     this.$router.replace({
+                //       name:'class-home',
+                //       query:{
+                //         id: this.userDataState.banji_id
+                //       }
+                //     })
+                //   break
+                //   default:
+                //     this.$router.replace({
+                //       name:'zoom',
+                //       query:{
+                //         id: this.userDataState.user_id
+                //       }
+                //     })
+                // }
                 this.$toast.success('发布成功')
               break
               case 0:

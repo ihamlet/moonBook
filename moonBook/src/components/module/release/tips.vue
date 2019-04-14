@@ -100,7 +100,8 @@ export default {
           back: this.$route.query.back || this.$route.name,
           id: this.$route.query.id,
           cate_id: this.$route.query.cate_id,
-          tag_id: this.$route.query.tag_id
+          tag_id: this.$route.query.tag_id,
+          tags: this.$route.query.tags
         }
       })
     },
@@ -112,7 +113,8 @@ export default {
           id: this.$route.query.id,
           upVideo:1,
           cate_id: this.$route.query.cate_id,
-          tag_id: this.$route.query.tag_id
+          tag_id: this.$route.query.tag_id,
+          tags: this.$route.query.tags
         }
       })
     }

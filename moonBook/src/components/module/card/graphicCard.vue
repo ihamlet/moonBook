@@ -26,8 +26,11 @@
       <media :item='item' type='card' :key="$route.query.id"/>
 
       <div class="temp-type flex flex-align">
-        <van-tag color='#0084ff' class="school-tag"  v-line-clamp:20="1" type="success" size="large" plain v-if='item.user_school_id > 0'>
+        <van-tag color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.user_school_id > 0'>
           <div @click="toSchoolHome(item)">{{item.user_school_name}}</div>
+        </van-tag>
+        <van-tag color='#0084ff' class="cate"  size="large" plain>
+            {{item.cate_name}}
         </van-tag>
       </div>
 

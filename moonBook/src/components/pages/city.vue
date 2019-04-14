@@ -317,7 +317,7 @@ i.bubble {
   display: none;
   font-size: 1.5rem /* 24/16 */;
   font-style: normal;
-  font-weight: 200;
+  font-weight: 700;
 }
 
 i.bubble::before {
