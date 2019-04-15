@@ -10,7 +10,7 @@
         <div class="volume flex flex-justify">
           阅读量
           <div class="flex">
-            <div class="number">{{childInfo.read_count}}</div>
+            <div class="number">{{childInfo.sign_read_count}}</div>
             <div class="unit">本</div>
           </div>
         </div>
@@ -27,7 +27,7 @@
         <div class="volume flex flex-justify">
           坚持阅读
           <div class="flex">
-            <div class="number">{{childInfo.insist_days}}</div>
+            <div class="number">{{childInfo.sign_days}}</div>
             <div class="unit">天</div>
           </div>
         </div>

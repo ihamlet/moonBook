@@ -6,6 +6,7 @@ import ReadAmount from '@/components/pages/readAmount'
 import ReadGuide from '@/components/pages/guided/readGuide'
 import punchBack from '@/components/pages/punch/punchBack'
 import punchList from '@/components/pages/punch/punchList'
+import punchSpeed from '@/components/pages/punch/punchSpeed'
 import Calendar from '@/components/module/mold/calendar'
 
 let readRouter = [{
@@ -53,6 +54,15 @@ let readRouter = [{
     component: punchBack,
     meta: {
       title: '打卡成功',
+      isFooterBar: false
+    }
+  },
+  {
+    path:'/punchSpeed',
+    name:'punchSpeed',
+    component: punchSpeed,
+    meta:{
+      title: '打卡进度',
       isFooterBar: false
     }
   },

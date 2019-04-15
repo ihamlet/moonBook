@@ -2,7 +2,7 @@
   <div class="punch-list page-padding">
     <div class="booth">
       <div class="ad-mould" @click="toActivity">
-       <van-swipe :autoplay="3000" indicator-color="white" :height='130'>
+        <van-swipe :autoplay="3000" indicator-color="white" :height='130'>
           <van-swipe-item v-for="(image, index) in banner" :key="index">
             <img :src="image" />
           </van-swipe-item>
@@ -11,21 +11,23 @@
     </div>
 
     <van-pull-refresh v-model="loading" @refresh="onRefresh">
-      <div class="date-title">{{day}}</div>
+      <van-nav-bar right-text="阅读进度" @click-right="onClickRight" :border='false'>
+        <div class="date-title" slot="title">{{day}}</div>
+      </van-nav-bar>
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <div class="list" v-if='list.length'>
           <van-cell v-for="(item,index) in list" :key="index" :is-link='item.book_id' center>
-            <cardPunch :item='item'/>
+            <cardPunch :item='item' />
           </van-cell>
         </div>
         <div class="no-list" v-else>
           尚无打卡图书
-        </div>  
+        </div>
       </van-list>
     </van-pull-refresh>
 
     <van-popup class="popup-release" v-model="releaseShow" position="bottom" get-container="#app">
-        <videoList />
+      <videoList />
     </van-popup>
 
     <div class="footer-bar flex">
@@ -37,9 +39,9 @@
       </div>
     </div>
 
-
     <div class="release-footer-bar">
-      <van-popup v-model="showTips" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
+      <van-popup v-model="showTips" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar'
+        :lock-scroll='false'>
         <tips :isShow='showTips' position='bottom' @close='setReleaseSwitch(false)' />
       </van-popup>
     </div>
@@ -47,7 +49,7 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapActions,mapState,mapMutations } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 import cardPunch from './cardPunch'
 import videoList from './../video/videoList'
 import { format } from './../../lib/js/util'
@@ -62,11 +64,11 @@ export default {
   },
   computed: {
     ...mapState(['releaseSwitch']),
-    showTips:{
-      get(){
+    showTips: {
+      get() {
         return this.releaseSwitch
       },
-      set(val){
+      set(val) {
         this.setReleaseSwitch(val)
       }
     }
@@ -81,38 +83,39 @@ export default {
       day: '',
       show: false,
       releaseShow: false,
-      releaseType:[{
-        icon:'icon-weibo',
-        text:'发图文',
+      releaseType: [{
+        icon: 'icon-weibo',
+        text: '发图文',
         index: 0
-      },{
-        icon:'icon-paishipin',
-        text:'拍小视频',
+      }, {
+        icon: 'icon-paishipin',
+        text: '拍小视频',
         index: 1
       }],
-      banner:[
+      banner: [
         require('@/assets/banner/banner-1.jpg'),
         require('@/assets/banner/banner-2.jpg'),
         require('@/assets/banner/banner-3.jpg'),
       ]
     }
   },
-  created () {
+  created() {
     this.fetchData()
   },
   watch: {
-    '$router':'fetchData'
+    '$router': 'fetchData'
   },
   methods: {
     ...mapActions('openWX', ['scanQRcode']),
     ...mapMutations(['setReleaseSwitch']),
-    fetchData(){
+    fetchData() {
       let data = {
-        params:{
-          site_name:'打卡阅读'
+        params: {
+          site_name: '打卡阅读',
+          school_id:''
         }
       }
-      axios.get('book/api/ads',data).then(res=>{
+      axios.get('book/api/ads', data).then(res => {
         console.log(res)
       })
     },
@@ -160,34 +163,34 @@ export default {
     comeBack() {
       this.$router.push({
         name: this.$route.query.back,
-        query:{
-          id:this.$route.query.id
+        query: {
+          id: this.$route.query.id
         }
       })
     },
     thumb(img) {
       if (img) {
-          let hostMatch = img.match(/https?:\/\/(.+?)\//)
-          if (hostMatch) {
-            return `/book/api/remotePic?url=${img}`
-          } else {
-            return img
-          }
+        let hostMatch = img.match(/https?:\/\/(.+?)\//)
+        if (hostMatch) {
+          return `/book/api/remotePic?url=${img}`
+        } else {
+          return img
+        }
       }
     },
-    toActivity(){
+    toActivity() {
 
     },
-    toSpecialPunch(){
+    toSpecialPunch() {
       this.$router.push({
-        name:'specialPunch',
-        query:{
+        name: 'specialPunch',
+        query: {
           cate_id: this.$route.query.cate_id,
           tags: this.$route.query.tags
         }
       })
     },
-    toGraphic(){
+    toGraphic() {
       this.$router.push({
         name: 'graphic',
         query: {
@@ -195,6 +198,14 @@ export default {
           id: this.$route.query.id,
           cate_id: this.$route.query.cate_id,
           tags: this.$route.query.tags
+        }
+      })
+    },
+    onClickRight(){
+      this.$router.push({
+        name:'punchSpeed',
+        query:{
+          id: this.$route.query.id
         }
       })
     }
@@ -231,77 +242,83 @@ export default {
   margin-bottom: 3.75rem /* 60/16 */;
 }
 
-.thumb{
+.thumb {
   width: 5rem /* 80/16 */;
   height: 5rem /* 80/16 */;
-  margin: .625rem /* 10/16 */ auto;
+  margin: 0.625rem /* 10/16 */ auto;
 }
 
-.book-name{
+.book-name {
   text-align: center;
 }
 
-.book-info{
+.book-info {
   margin-bottom: 1.25rem /* 20/16 */;
 }
 
-.popup-punch{
-  border-radius: .625rem /* 10/16 */ .625rem /* 10/16 */ 0 0;
+.popup-punch {
+  border-radius: 0.625rem /* 10/16 */ 0.625rem /* 10/16 */ 0 0;
 }
 
-.slogan{
+.slogan {
   height: 2.875rem /* 46/16 */;
   text-align: center;
   line-height: 2.875rem /* 46/16 */;
 }
 
 .btn-icon,
-.text{
+.text {
   text-align: center;
 }
 
-.text{
-  font-size: .875rem /* 14/16 */;
+.text {
+  font-size: 0.875rem /* 14/16 */;
 }
 
-.release-box{
+.release-box {
   padding: 1.25rem /* 20/16 */ 0;
 }
 
-.slogan-img{
+.slogan-img {
   width: 280px;
   margin: 20px auto;
 }
 
-.round-icon{
+.round-icon {
   width: 45px;
   height: 45px;
   text-align: center;
   line-height: 45px;
-  margin:0 auto;
+  margin: 0 auto;
   border-radius: 50%;
 }
 
-.round-icon .iconfont{
+.round-icon .iconfont {
   font-size: 26px;
   color: #fff;
 }
 
-.release-box .btn:nth-child(1) .round-icon{
+.release-box .btn:nth-child(1) .round-icon {
   background-image: linear-gradient(to top, #c471f5 0%, #fa71cd 100%);
 }
 
-.release-box .btn:nth-child(2) .round-icon{
-  background-image: linear-gradient(to right, #f78ca0 0%, #f9748f 19%, #fd868c 60%, #fe9a8b 100%);
+.release-box .btn:nth-child(2) .round-icon {
+  background-image: linear-gradient(
+    to right,
+    #f78ca0 0%,
+    #f9748f 19%,
+    #fd868c 60%,
+    #fe9a8b 100%
+  );
 }
 
-.popup-release{
+.popup-release {
   width: 100%;
   height: 100vh;
   overflow: hidden;
 }
 
-.text{
-  margin-top: .625rem /* 10/16 */;
+.text {
+  margin-top: 0.625rem /* 10/16 */;
 }
 </style>

@@ -5,7 +5,7 @@
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
             <div class='content' v-if='list.length'>
                 <van-cell v-for="(item,index) in list" :key="index" >
-                    <div class="date-title" v-if='timediff(item,index)'>第{{item.day}}天</div>
+                    <div class="date-title" v-if='timediff(item,index)'>{{item.create_date.split(' ')[0]}}</div>
                     <cardPunch :item='item'/>
                 </van-cell>
             </div>
@@ -116,9 +116,11 @@ export default {
         return true
       }
 
+      let timeDay = this.list[index-1].create_date.split(' ')[0]
+
       if(index){
-        let timeHistory = this.list[index-1].day
-        let time = item.day
+        let timeHistory = timeDay
+        let time = timeDay
         if(timeHistory == time){
           return false
         }else{

@@ -47,7 +47,7 @@
           <span class="bar-title">打卡数量</span>
         </div>
         <div class="bar-item diary" @click="toReadStat">
-          <span class="number">{{childInfo.insist_days}}</span>
+          <span class="number">{{childInfo.sign_days}}</span>
           <span class="bar-title">坚持天数</span>
         </div>
         <div class="bar-item praise" @click="toInformation">
