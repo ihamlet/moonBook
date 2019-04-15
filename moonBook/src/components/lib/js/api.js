@@ -3,11 +3,16 @@
 直接使用cookies
 */
 
-import axios from 'axios'
+import axios from 'axios-extra'
 import router from '@/router/index'
 import Cookies from 'js-cookie'
 
 // axios.defaults.timeout = 5000
+axios.defaults.maxConcurrent = 1
+axios.defaults.queueOptions = {
+    retry: 3,
+    retryIsJump: true
+}
 
 axios.interceptors.request.use(
     config => {

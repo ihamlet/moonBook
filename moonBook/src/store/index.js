@@ -185,7 +185,7 @@ const actions = {
       school_type: products.schoolType
     }
 
-    let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?${qr.stringify(data)}`
+    let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?${qs.stringify(data)}`
     let WMlifeSearchSchoolLink = '/book/school/getList'
 
     return new Promise((resolve, reject) => {
@@ -219,7 +219,7 @@ const actions = {
       datatype: products.datatype
     }
 
-    let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?${qr.stringify(data)}`
+    let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?${qs.stringify(data)}`
     return new Promise((resolve, reject) => {
       fetchJsonp(amapApiLink).then(response => {
         return response.json()
@@ -242,7 +242,7 @@ const actions = {
       extensions: 'base'
     }
 
-    let amamApiLink = `https://restapi.amap.com/v3/config/district?${qr.stringify(data)}`
+    let amamApiLink = `https://restapi.amap.com/v3/config/district?${qs.stringify(data)}`
 
     return new Promise((resolve, reject) => {
       fetchJsonp(amamApiLink)
@@ -275,7 +275,7 @@ const actions = {
   //文章发布
   release(context, products){
     let setting = context.state.articleSetting
-    let data={
+    let data = {
       cate_id: setting.tag.cate_id,
       ad_label: setting.group.group_name,
       details: products.details,
@@ -285,7 +285,8 @@ const actions = {
       child_id: products.child_id,
       banji_id: products.banji_id,
       school_id: products.school_id,
-      title: products.title
+      title: products.title,
+      tags: products.tags
     }
 
     setting.result.forEach(e=>{

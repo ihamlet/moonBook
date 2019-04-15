@@ -1,6 +1,6 @@
 <template>
   <div class="topic-list">
-    <van-picker show-toolbar title='选择分类' :columns="column" value-key='cate_name' @change="onCateChange" @cancel='$emit("close")' @confirm='onConfirm'/>
+    <van-picker ref='picker' show-toolbar title='选择分类' :columns="column" value-key='cate_name' @change="onCateChange" @cancel='close'  @confirm='$emit("confirm")'/>
   </div>
 </template>
 <script>
@@ -19,7 +19,7 @@ export default {
         defaultIndex: this.tagIndex
       },
       {
-        values: this.topicList[this.tagIndex].children,
+        values: this.topicList[this.tagIndex]?this.topicList[this.tagIndex].children:[],
         className: 'column2',
         defaultIndex: this.cateIndex
       }]
@@ -27,21 +27,16 @@ export default {
       return column
     }
   },
-  data() {
-    return {
-      topicIndex: 0
-    }
-  },
-  created () {
-    console.log(this.column)
-  },
   methods: {
     onCateChange(picker, cate, cid) {
       picker.setColumnValues(1, cate[0].children)
       this.$emit('select',cate[cid])
     },
-    onConfirm(){
-      this.type == 'edit'?this.$emit("close"):this.$emit('confirm')
+    close(){
+      this.$refs.picker.setColumnValues(1,this.column[1].values)
+      this.$refs.picker.setColumnIndex(0,0)
+      this.$refs.picker.setColumnIndex(1,0)
+      this.$emit("close")
     }
   }
 }

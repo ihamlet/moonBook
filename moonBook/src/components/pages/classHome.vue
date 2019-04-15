@@ -339,8 +339,7 @@ export default {
       if(this.$route.query.id && this.$route.query.id!=''){
         let data = {
             params:{
-              banji_id: this.$route.query.id,
-              child_id: this.userDataState.child_id
+              banji_id: this.$route.query.id
             }
           }
 
@@ -576,6 +575,8 @@ export default {
     //   })
     // },
     selectChild(item){
+      console.log(this.$route.query.banji_name,this.$route.query.school_name)
+
       this.$router.push({
         name:'edit-child',
         query:{

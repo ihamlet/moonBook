@@ -16,7 +16,7 @@
     </van-popup>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
-      <topic-list @close='show = false' @select='selectTag' :topicList='topicList' :tagIndex='tagIndex' :cateIndex='cateIndex'/>
+      <topic-list @close='closeTopic' @confirm='show = false'  @select='selectTag' :topicList='topicList' :tagIndex='tagIndex' :cateIndex='cateIndex'/>
     </van-popup>
 
     <!-- 仿美篇要用到 -->
@@ -202,6 +202,10 @@ export default {
        this.addTag(tag)
        localStorage.setItem('tag',JSON.stringify(tag))
     },
+    closeTopic(){
+      this.addTag(this.topicList[this.tagIndex])
+      this.show = false
+    }
 
     // 仿美篇要用到
     // onClickRelease(){

@@ -13,7 +13,7 @@
     <div class="header" ref="head" :class="[childInfo.gendor==1?'theme-background':'background']">
       <div class="baby-info flex flex-align">
         <div class="avatar" v-if="childInfo.avatar" @click="toEditorBaby">
-          <img class="avatar-img" :src="childInfo.avatar" @error="imgError" v-http2https>  
+          <img class="avatar-img" :src="childInfo.avatar" @error="imgError" v-http2https>    
         </div>
         <avatar :gender="childInfo.sex" size='small' avatarClass='border' v-else />
         <div class="baby-data" @click="toEditorBaby">

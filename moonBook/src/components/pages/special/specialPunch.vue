@@ -173,7 +173,6 @@ export default {
       }
     },
     onRefresh(){
-      console.log('onRefresh')
       this.page = 1
       this.getList().then(() => {
         this.loading = false
@@ -183,7 +182,6 @@ export default {
       this.tabIndex = index
       this.page = 1
       this.onRefresh()
-      console.log(index)
     }
   }
 }

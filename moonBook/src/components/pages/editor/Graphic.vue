@@ -14,8 +14,7 @@
       
     <div class="textarea-module">
       <van-cell-group>
-        <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" placeholder="记录孩子成长的每一天！" rows="2" autosize />
-        
+        <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" :placeholder="icon" rows="2" autosize />
         <div class="upload-module flex wrap">
           <van-cell :border='false'>
             <van-row gutter="4">
@@ -89,6 +88,7 @@ export default {
   data() {
     let u = navigator.userAgent
     return {
+      icon:'\ue658\ue65f\ue65e\ue661\ue659\ue65a\ue65b\ue655\ue660\ue662',
       show: false,
       actionShow: false,
       grapicData: {
@@ -102,7 +102,8 @@ export default {
       percent: 0,
       photoLength: 0,
       videoThumb:'',
-      typeUpload:''
+      typeUpload:'',
+      routeBackFind:['home','my-home','punch-back','special-punch','specialPunch']
     }
   },
   created() {
@@ -225,7 +226,7 @@ export default {
             details: this.grapicData.text,
             template_id: 1,
             photos: this.grapicData.photos,
-            tags: this.$route.query.tags || ''
+            tags: this.$route.query.tags
           }
 
           if(this.$route.query.back == 'baby-home'){
@@ -245,7 +246,9 @@ export default {
               case 1:
                 this.clearImg()
 
-                if(this.$route.query.back == 'home' || this.$route.query.back == 'my-home'){
+                console.log(this.routeBackFind.includes(this.$route.query.back))
+
+                if(this.routeBackFind.includes(this.$route.query.back)){
                   this.$router.replace('/apps-find')
                 }else{
                   this.$router.go(-1)

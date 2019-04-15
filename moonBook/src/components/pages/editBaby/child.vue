@@ -58,10 +58,9 @@
 
     <!-- 家长类型选择器 -->
     <van-popup class="picker-popup" position="bottom" v-model="parentShow" get-container='#app'>
-      <van-picker :columns="parentList" :default-index="0" @change='onParentChange' show-toolbar title="您是孩子的？"  @cancel="cancelPicker" @confirm="parentShow = false"/>
-      <van-field v-model="childInfo.relation_name" input-align='right' label="您是孩子的？" placeholder="例如：爸爸"/>
+      <van-picker ref='parentPicker' :visible-item-count='3' :columns="parentList" :default-index="0" @change='onParentChange' show-toolbar title="您是孩子的？"  @cancel="cancelPicker" @confirm="parentShow = false"/>
+      <van-field size='large' v-model="childInfo.relation_name" input-align='right' label="填写身份" placeholder="例如：爸爸"/>
     </van-popup>
-
   </div>
 
     <!-- 提交编辑 -->
@@ -245,6 +244,7 @@ export default {
       this.childInfo.relation_name = '妈妈'
       this.parentShow = false
       this.pickerShow = false
+      this.$refs.parentPicker.setColumnIndex(0,0)
     },
     // 孩子添加编辑API
     operationApi(id) {

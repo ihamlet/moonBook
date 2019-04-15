@@ -3,10 +3,10 @@
     <div class="container">
       <div class="user-card flex flex-align">
         <div class="avatar" v-if="type=='babyHome'">
-          <img :src="avatar" />
+          <img :src="avatar" @error='imgError' v-http2https/>
         </div>  
         <div class="avatar" v-else @click="item.user_id > 0 && toBookZoom(item)">
-          <img :src="item.user.avatar" :alt="item.user.name" @error='imgError' v-http2https> 
+          <img :src="item.user.avatar" @error='imgError' v-http2https>
         </div>
         <div class="info">
           <div class="name flex flex-align">
@@ -14,7 +14,7 @@
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
-            {{getTimeAgo(item.create_time)}} <span v-if='item.sign_days!="0"'>{{`坚持打卡:${item.sign_days}天`}}</span>
+            {{getTimeAgo(item.create_time)}} <span v-if='item.sign_days!="0"'>{{`坚持打卡${item.sign_days}天`}}</span>
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0&&type!="zoom"'>
@@ -26,12 +26,16 @@
       <media :item='item' type='card' :key="$route.query.id"/>
 
       <div class="temp-type flex flex-align">
-        <van-tag color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.user_school_id > 0'>
-          <div @click="toSchoolHome(item)">{{item.user_school_name}}</div>
-        </van-tag>
-        <van-tag color='#0084ff' class="cate"  size="large" plain>
-            {{item.cate_name}}
-        </van-tag>
+        <div class="temp-list flex flex-align">
+          <van-tag color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.user_school_id > 0'>
+            <div @click="toSchoolHome(item)">{{item.user_school_name.replace(userPointState.city,'')}}</div>
+          </van-tag>
+          <van-tag color='#0084ff' class="cate"  size="large" plain>
+              {{item.cate_name}}
+          </van-tag>
+        </div>
+
+        <div class="tags theme-color" v-if='item.tags'># {{item.tags}}</div>
       </div>
 
       <div class="task" v-if='$route.query.tid == 5'>
@@ -62,6 +66,7 @@ import share from './../mold/share'
 import taskCard from './taskCard'
 import media from './../mold/media'
 import { timeago } from './../../lib/js/util'
+import { mapGetters } from 'vuex'
 
 export default {
   name: "graphic-card",
@@ -95,16 +100,9 @@ export default {
     vipLevel,
     media
   },
-  // computed: {
-  //   isMoreShow(){
-  //     let boolean = true
-  //     if(this.more){
-  //       boolean = this.more
-  //     }
-
-  //     return boole
-  //   }
-  // },
+  computed: {
+    ...mapGetters(['userPointState'])
+  },
   data() {
     return {
       imgIndex: 0,
@@ -258,5 +256,6 @@ export default {
 
 .temp-type{
   padding: .3125rem /* 5/16 */ 0;
+  justify-content: space-between;
 }
 </style>
