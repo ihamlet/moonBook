@@ -261,6 +261,15 @@ function videoParse(file) {
   })
 }
 
+// 数组去重
+function arrayUnique(arr, name) {
+  var hash = {}
+  return arr.reduce(function (item, next) {
+    hash[next[name]] ? '' : hash[next[name]] = true && item.push(next)
+    return item
+  }, [])
+}
+
 export {
   GetDistance,
   format,
@@ -273,5 +282,6 @@ export {
   checkHtml,
   group,
   contains,
-  videoParse
+  videoParse,
+  arrayUnique
 }

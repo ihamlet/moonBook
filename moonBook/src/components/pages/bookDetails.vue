@@ -44,6 +44,7 @@ import axios from './../lib/js/api'
 import freshList from './../module/findModule/freshList'
 import comment from './../module/comment'
 import { mapActions } from 'vuex'
+import { arrayUnique } from './../lib/js/util'
 
 export default {
   name: 'book-details',
@@ -115,7 +116,7 @@ export default {
 
       axios.get('/book/ShelfBookChild/getList', data).then(res => {
         if(res.data.status == 1){
-          this.freshList = Array.from(new Set(res.data.data))
+          this.freshList = arrayUnique(res.data.data,'user_id')
         }
       })
     },

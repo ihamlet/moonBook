@@ -96,7 +96,8 @@ export default {
         this.$router.push({
           name:'edit-school',
           query:{
-            id: list.id
+            id: list.id,
+            school_name: list.school_name
           }
         })
       }else if(list.banji_id == 0){
@@ -104,7 +105,8 @@ export default {
           name:'edit-class',
           query:{
             id: list.id,
-            school_id: list.school_id
+            school_id: list.school_id,
+            school_name: list.school_name
           }
         })
       }else{

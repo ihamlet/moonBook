@@ -289,14 +289,24 @@ export default {
           this.childId = res
           this.joinSchool(res)
           this.joinBanji(res)
+          
+          if(this.$route.query.back == 'class-home'){
+            this.$router.replace({
+              name:this.$route.query.back,
+              query:{
+                id: this.$route.query.banji_id
+              }
+            })
+          }else{
+            this.$router.replace({
+              name: 'baby-home',
+              query:{
+                id: res
+              }
+            })
+          }
+
           this.getUserData()
-  
-          this.$router.replace({
-            name:'baby-home',
-            query:{
-              id: res
-            }
-          })
         })
       }
     },
@@ -310,18 +320,29 @@ export default {
             school_id: this.$route.query.school_id || this.info.school_id,
             school_name: this.$route.query.school_name || this.info.school_name, 
             banji_id: this.$route.query.banji_id || this.info.banji_id,
-            banji_name: this.$route.query.banji_name || this.info.banji_name
+            banji_name: this.formatBanjiTitle(this.$route.query.banji_name || this.info.banji_name )
           }
         })
     },
     edit() {
       this.operationApi(this.$route.query.id).then(res => {
         if (res) {
+          this.joinSchool(res)
+          this.joinBanji(res)
+
+          this.$router.replace({
+            name:'baby-home',
+            query:{
+              id: this.$route.query.id
+            }
+          })
+
+          this.getUserData()
+
           this.$toast.success('修改成功')
         } else {
           this.$toast.fail('修改失败')
         }    
-        this.back()
       })
     },
     onInput(checked) {
@@ -347,20 +368,6 @@ export default {
     },
     selectSexType(item,index){
       this.sexTypeIndex = index
-    },
-    back(){
-        if(this.$route.query.back){
-          this.$router.push({
-            name: this.$route.query.back,
-            query:{
-              id: this.$route.query.id
-            }
-          })
-        }else{
-          this.$router.push({
-            name:'my-home'
-          })
-        }
     },
     onClickRight(type) {
       if (type == 'delete') {

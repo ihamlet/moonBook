@@ -96,7 +96,7 @@
     </van-dialog> -->
 
     <van-popup v-model="isSelectBabyShow" position="bottom" :close-on-click-overlay='false'>
-      <van-nav-bar title="请选择要加入该班级的宝贝" left-text="发现" left-arrow @click-left="onClickLeft"/>
+      <van-nav-bar title="请选择要加入该班级的宝贝" :left-text="babyList[0]&&babyList[0].name" left-arrow @click-left="onClickLeft"/>
       <selectBaby :babyList='babyList' :invite_code='classInfo.invite_code' @onSelect='selectChild'/>
     </van-popup>
   </div>
@@ -250,12 +250,8 @@ export default {
                   this.$router.push({
                     name: 'edit-child',
                     query: {
+                      ...this.$route.query,
                       type: 'add',
-                      pageTitle: '添加宝贝',
-                      banji_id: this.$route.query.id,
-                      school_id: this.$route.query.school_id,
-                      banji_name: this.$route.query.banji_name,
-                      school_name: this.$route.query.school_name
                     }
                   })
 
@@ -295,6 +291,7 @@ export default {
                       query: {
                         id: res.child_id,
                         back: 'class-home',
+                        school_name: res.school_name,
                         school_id: res.school_id,
                         type: 'add'
                       }
@@ -345,8 +342,8 @@ export default {
         axios.get('/book/SchoolBanji/getInfo',data).then(res => {
           if(res.data.status == 1){
             this.classInfo = res.data.data
+            this.getChildList()
             if(!this.classInfo.is_my_baby_banji&&!this.manage){
-              this.getChildList()
               this.isSelectBabyShow = true
             }
           }
@@ -593,7 +590,10 @@ export default {
     },
     onClickLeft(){
       this.$router.push({
-        name:'apps-find'
+        name:'baby-home',
+        query:{
+          id: this.babyList[0].id
+        }
       })
     }
   }

@@ -210,6 +210,7 @@ export default {
       } else {
         let BabyJoinBanjiBdind = {
           params: {
+            child_id: this.$route.query.id,
             banji_id: item.banji_id,
             banji_name: item.title,
             invite_code: this.code
@@ -224,6 +225,20 @@ export default {
         }
         
       }
+    },
+    babyJoin(data){
+      axios.get('/book/baby/join_banji', data).then(res => {
+        if (res.data.status == 1) {
+          this.$toast('成功提交申请')
+          this.$router.go(-1)
+          this.getUserData()
+        } else {
+          this.$toast.fail('加入失败')
+          this.$router.replace({
+            name:'my-home'
+          })
+        }
+      })
     },
     onLoad() {
       let data = {

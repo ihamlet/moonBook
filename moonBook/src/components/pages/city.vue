@@ -12,7 +12,7 @@
     <div class="content" v-if='list.length'>
       <div class="list">
         <van-cell-group>
-          <van-cell :title="item.name" v-for='(item,index) in list' :key="index" @click="selectCity(item.name)" clickable center/>
+          <van-cell :border='false'  :title="item.name" v-for='(item,index) in list' :key="index" @click="selectCity(item.name)" clickable center/>
         </van-cell-group>
       </div>
     </div>
