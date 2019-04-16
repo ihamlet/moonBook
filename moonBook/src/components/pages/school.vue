@@ -3,15 +3,29 @@
     <div class="fixed">
       <van-search placeholder="请输入学校名称" v-model="keyword" show-action shape="round" @search="onSearch">
         <div class="theme-color" slot="action" @click="onSearch">
-          搜索
+          {{addSchool?'添加':'搜索'}}
         </div>
       </van-search>
     </div>
     <div class="container" v-if='!isListShow'>
 
+      <van-cell-group>
+        <van-cell>
+          <div class="flex flex-align type-select">
+            <div class="school-type">学校类型</div>
+            <div class="select-type flex flex-align">
+              <div class="select-btn" v-for='(item,index) in shcoolType' :key="index" @click="selectSchoolType(item,index)">
+                <van-button size="small" class="theme-btn" type="primary" :plain='schoolTypeIndex==index?false:true'
+                  round>{{item.name}}</van-button>
+              </div>
+            </div>
+          </div>
+        </van-cell>
+      </van-cell-group>
+
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <van-cell v-for="(item,index) in list" :key="index" is-link center @click="selectSchool(item)">
-          <schoolCard :item='item' :searchType='searchType' />
+          <schoolCard :item='item' :searchType='item.school_id > 0 ? "wmSearchSchool":"amapSearchSchool"'/>
         </van-cell>
       </van-list>
     </div>
@@ -19,11 +33,11 @@
     <div class="add-school">
       <div class="fx-box flex flex-align">
         <div class="theme-color">没有你所在的学校？</div>
-        <van-button class="theme-btn" type="primary" size='small' @click="addSchool">添加学校</van-button>
+        <van-button class="theme-btn" type="primary" size='small' @click="toAddSchool">{{addSchool?'搜索学校':'添加学校'}}</van-button>
       </div>
     </div>
 
-    <van-dialog v-model="show" show-cancel-button :before-close="beforeClose">
+    <!-- <van-dialog v-model="show" show-cancel-button :before-close="beforeClose">
       <div class="dialog-title">添加学校</div>
       <van-cell-group>
         <van-field v-model="schoolName" label="学校名称" placeholder="请输入学校名称" input-align='right' />
@@ -39,7 +53,7 @@
           </div>
         </van-cell>
       </van-cell-group>
-    </van-dialog>
+    </van-dialog> -->
   </div>
 </template>
 <script>
@@ -59,22 +73,22 @@ export default {
   },
   data() {
     return {
+      addSchool: false,
       isListShow: false,
       page: 1,
       loading: false,
       finished: false,
       list: [],
       keyword: '',
-      searchType: 'wmSearchSchool',
       schoolName: '',
       show: false,
       schoolTypeIndex: 0,
-      schoolType: '小学',
+      type:'幼儿园',
       shcoolType: [{
-        name: '小学',
+        name: '幼儿园',
         index: 0,
       }, {
-        name: '幼儿园',
+        name: '小学',
         index: 1
       }],
       tab: [{
@@ -101,7 +115,8 @@ export default {
         page: this.page,
         location: this.userPointState.location,
         lng: arr[0],
-        lat: arr[1]
+        lat: arr[1],
+        school_type: this.type
       }
 
       this.getSchoolList(products).then(res => {
@@ -117,7 +132,6 @@ export default {
           this.loading = false
           this.finished = true
         }
-
       })
     },
     beforeClose(action, done) {
@@ -256,8 +270,11 @@ export default {
       })
     },
     selectSchoolType(item, index) {
-      this.schoolType = item.name
+      this.type = item.name
       this.schoolTypeIndex = index
+      this.page = 1
+      this.list = []
+      this.onLoad()
     },
     onSearch(keyword) {
       if (keyword) {
@@ -267,15 +284,15 @@ export default {
           keywords: keyword,
           location: this.userPointState.location,
           city: this.userPointState.city,
-          type: '141204|141203',
+          type: this.addSchool?141204:141203,
           datatype: 'poi',
           lng: arr[0],
           lat: arr[1]
         }
 
         this.getSearch(data).then(res => {
-          if (res.resData.length) {
-            this.searchType = res.searchType
+          if (res.resData) {
+            this.page = 1
             this.list = res.resData
           } else {
             this.page = 1
@@ -287,9 +304,16 @@ export default {
         this.onLoad()
       }
     },
-    addSchool() {
+    toAddSchool() {
       if (this.$route.query.registerType != 'headmaster') {
-        this.show = true
+        this.addSchool = !this.addSchool
+        if(this.addSchool){
+          this.page = 1
+          this.list = []
+        }else{
+          this.page = 1
+          this.onLoad()
+        }
       } else {
         location.href = 'https://fang.wmlife.net/kindergarten/index/register'
       }

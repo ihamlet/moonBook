@@ -39,7 +39,7 @@
 
     </div>
 
-    <div class="add-school">
+    <div class="add-school" v-if='!list'>
       <div class="fx-box flex flex-align">
         <div class="theme-color">没有你所在的班级？</div>
         <van-button class="theme-btn" type="primary" size='small' round @click="show = true">添加班级</van-button>
@@ -64,7 +64,6 @@
         </div>
       </van-cell-group>
     </van-dialog>
-
   </div>
 </template>
 <script>
@@ -119,7 +118,7 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
-    ...mapActions(['getUserData']),
+    ...mapActions(['getUserData','managerState']),
     fetchData() {
 
         this.schoolName = this.$route.query.school_name
@@ -134,8 +133,7 @@ export default {
           if (res.data.status == 1) {
             this.childInfo = res.data.data
           }
-        })
-      
+        })    
     },
     beforeClose(action, done) {
       if (action === 'confirm') {
@@ -245,7 +243,8 @@ export default {
         params: {
           page: this.page,
           limit: 20,
-          school_id: this.$route.query.school_id
+          school_id: this.$route.query.school_id,
+          year: this.classYear
         }
       }
       axios.get(`/book/SchoolBanji/getList`, data).then(res => {
@@ -253,8 +252,9 @@ export default {
           case 1: 
           if(res.data.count == 0){
             this.show = true
+            this.page = 1
             this.loading = false
-            this.finished = false
+            this.finished = true
           }else{
             this.page++
             this.list = this.list.concat(res.data.data)

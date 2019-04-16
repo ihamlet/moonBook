@@ -1,8 +1,9 @@
-import EditChild from "@/components/pages/editBaby/child";
-import EditSchool from "@/components/pages/school";
-import EditClass from "@/components/pages/class";
-import EditStting from "@/components/pages/setting";
-import EditManager from "@/components/pages/editManager/manager";
+import EditChild from "@/components/pages/editBaby/child"
+import EditSchool from "@/components/pages/school"
+import EditClass from "@/components/pages/class"
+import EditStting from "@/components/pages/setting"
+import EditManager from "@/components/pages/editManager/manager"
+
 
 let editRouter = [
   {
