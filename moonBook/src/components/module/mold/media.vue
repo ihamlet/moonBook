@@ -2,7 +2,7 @@
   <div class="container" id='media' @click="toArticle" :class="$route.name == 'article'?'article':''">
     <div class="title" v-if='type=="card"&&item.template_id=="0"' v-line-clamp:20="2">{{item.title}}</div>
 
-    <div class="text" ref='textContent' v-if='item.details' v-line-clamp:20="type == 'card'?2:0" :class="item.template_id == 0?'content':''" v-html='`<span class="theme-color tags">${item.tags?`#${item.tags}#`:""}</span>${item.details}`'></div>
+    <div class="text" ref='textContent' v-if='item.details' v-line-clamp:20="type == 'card'?2:0" :class="item.template_id == 0?'content':''" v-html='details'></div>
     <!-- 视频  -->
     <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"'>
       <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
@@ -76,6 +76,15 @@ export default {
     userCard
   },
   computed: {
+    details(){
+      let content
+      if(this.item.tags){
+        content = `<span class='theme-color tags'>#${this.item.tags}#</span>${this.item.details}`
+      }else{
+        content = this.item.details
+      }
+      return content
+    },
     grid() {
       let num
       if (this.item.photos.length == 4) {
