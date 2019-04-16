@@ -82,7 +82,6 @@ export default {
           this.$router.push({
             name: 'edit-child',
             query: {
-              pageTitle: '添加宝贝',
               type: 'register',
               back: this.$route.name
             }
@@ -94,7 +93,6 @@ export default {
           this.$router.push({
             name: 'edit-manager',
             query: {
-              pageTitle: `${role.name}注册`,
               registerType: role.type,
               type: 'add'
             }

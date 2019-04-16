@@ -109,7 +109,7 @@ export default {
       code:'',
       show: false,
       showCode: false,
-      itemIndex:0,
+      itemIndex:0
     }
   },
   created() {
@@ -121,24 +121,8 @@ export default {
   methods: {
     ...mapActions(['getUserData']),
     fetchData() {
-      if (this.$route.query.registerType) {
-        axios.get('/book/SchoolTeacher/getMine').then(res => {
-          if (res.data.status == 1) {
-            this.schoolName = res.data.data.school_name
-          }
-        })
-      } else {
-        let SchoolInfoData = {
-          params: {
-            school_id: this.$route.query.school_id
-          }
-        }
 
-        axios.get('/book/school/get_info', SchoolInfoData).then(res => {
-          if (res.data.status == 1) {
-            this.schoolName = res.data.data.title
-          }
-        })
+        this.schoolName = this.$route.query.school_name
 
         let ChildByUserData = {
           params: {
@@ -151,7 +135,7 @@ export default {
             this.childInfo = res.data.data
           }
         })
-      }
+      
     },
     beforeClose(action, done) {
       if (action === 'confirm') {
@@ -165,21 +149,25 @@ export default {
           switch (res.data.status) {
             case 1:
               if(this.$route.registerType == 'teacher'){
-                let SchoolTeacherBind = {
-                  params: {
-                    banji_id: res.data.data.banji_id
+                this.$router.replace({
+                  name: 'edit-manager',
+                  query: {
+                    ...this.$route.query,
+                    banji_name: item.title,
+                    banji_id: item.banji_id,
+                    back: this.$route.name
                   }
-                }
-                this.teacherJoin(SchoolTeacherBind)
+                })
               }else{
-                let BabyJoinBanjiBdind = {
-                  params: {
+                this.$router.replace({
+                  name: 'edit-child',
+                  query:{
+                    ...this.$route.query,
                     banji_id: res.data.data.banji_id,
-                    child_id: this.$route.query.id
+                    child_id: this.$route.query.id,
+                    id: this.$route.query.id
                   }
-                }
-
-                this.babyJoin(BabyJoinBanjiBdind)
+                })
               }
               break
             case 0:
@@ -192,16 +180,17 @@ export default {
       }
     },
     codeBeforeClose(action, done){
-      let BabyJoinBanjiBdind = {
-        params: {
-          banji_id: this.list[this.itemIndex].banji_id,
-          child_id: this.$route.query.id,
-          invite_code: this.code
-        }
-      }
-
       if (action === 'confirm') {
-        this.babyJoin(BabyJoinBanjiBdind)
+        let BabyJoinBanjiBdind = {
+          ...this.$route.query,
+          banji_id:this.list[this.itemIndex].banji_id,
+          banji_name:this.list[this.itemIndex].title,
+          invite_code:this.code,
+        }
+        this.$router.replace({
+          name:'edit-child',
+          query: BabyJoinBanjiBdind
+        })
         done()
       } else {
         done()
@@ -209,18 +198,20 @@ export default {
     },
     select(item, itemIndex) {
       if (this.$route.query.registerType) {
-        let SchoolTeacherBind = {
-          params: {
-            banji_id: item.banji_id
+        this.$router.replace({
+          name: 'edit-manager',
+          query: {
+            ...this.$route.query,
+            banji_name: item.title,
+            banji_id: item.banji_id,
+            back: this.$route.name
           }
-        }
-
-        this.teacherJoin(SchoolTeacherBind)
+        })
       } else {
         let BabyJoinBanjiBdind = {
           params: {
             banji_id: item.banji_id,
-            child_id: this.$route.query.id,
+            banji_name: item.title,
             invite_code: this.code
           }
         }
@@ -233,47 +224,6 @@ export default {
         }
         
       }
-    },
-    babyJoin(data){
-        axios.get('/book/baby/join_banji', data).then(res => {
-          if (res.data.status == 1) {
-            this.$toast('成功提交申请')
-            this.$router.replace({
-              name: 'edit-child',
-              query:{
-                id: this.$route.query.id
-              }
-            })
-            this.getUserData()
-          } else {
-            this.$toast.fail('加入失败')
-            this.$router.replace({
-              name:'my-home'
-            })
-          }
-        })
-    },
-    teacherJoin(data){
-        axios.get('/book/SchoolTeacher/bind_banji', data).then(res => {
-          if (res.data.status == 1) {
-            this.$router.replace({
-              name: 'edit-manager',
-              query: {
-                registerType: 'teacher',
-                pageTitle: this.$route.query.pageTitle,
-                back: this.$route.name
-              }
-            })
-          }else{
-            this.$toast.fail('加入失败')
-            this.$router.replace({
-              name:'setting',
-              query:{
-                back: this.$route.name
-              }
-            })
-          }
-        })
     },
     onLoad() {
       let data = {

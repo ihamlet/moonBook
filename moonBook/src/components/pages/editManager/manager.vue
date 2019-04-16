@@ -1,6 +1,6 @@
 <template>
   <div class="add-child">
-    <van-nav-bar :title="$route.query.pageTitle" :border='false' :right-text="active==2?'重新注册':''" @click-right="active = 0"/>
+    <van-nav-bar :title="pageTitle" :border='false' :right-text="active==2?'重新注册':''" @click-right="active = 0"/>
 
     <van-steps :active="active" active-icon="success" active-color="#38f">
       <van-step>注册申请</van-step>
@@ -24,8 +24,8 @@
       </div>
 
       <van-popup v-model="show" position="bottom" get-container='#app'>
-        <van-field label="填写职位" v-model="office" placeholder="职位信息" input-align='right'/>
-        <van-picker :columns="jobList" @change="onChange" />
+        <van-picker :columns="jobList" @change="onChange"  title="选择职位" @cancel="onCancel" @confirm="show = false"/>
+        <van-field size='large' label="填写职位" v-model="office" placeholder="职位信息" input-align='right'/>
       </van-popup>
     </div>
 
@@ -86,6 +86,11 @@ export default {
       }
 
       return msg
+    },
+    pageTitle(){
+      let title
+      this.$route.query.registerType == 'teacher'?title = '老师注册':title = '校长注册'
+      return title   
     }
   },
   data() {
@@ -162,8 +167,10 @@ export default {
     },
     fetchData() {
 
-      let data
+      this.managerData.school_name = this.$route.query.school_name
+      this.managerData.banji_name = this.$route.query.banji_name
 
+      let data
       if (this.$route.query.registerType == 'headmaster') {
         data = {
           params: {
@@ -171,15 +178,13 @@ export default {
           }
         }
       }
-
       axios.get('/book/SchoolTeacher/getMine', data).then(res => {
         if(res.data.status){
-          this.managerData = res.data.data
-
           if(this.renew){
             switch(res.data.data.is_confirm){
               case '0': //正在审核
                 this.active = 1
+                this.managerData = res.data.data
               break
               case '1': //审核通过
                 this.active = 2
@@ -208,8 +213,11 @@ export default {
           this.$router.push({
             name: 'edit-setting',
             query: {
-              registerType: this.$route.query.registerType,
-              pageTitle: this.$route.query.pageTitle
+              ...this.$route.query,
+              school_name: this.managerData.school_name,
+              school_id: this.managerData.school_id,
+              banji_name: this.formatBanjiTitle(this.managerData.banji_name),
+              banji_id: this.managerData.banji_id
             }
           })
         }).catch(() => {
@@ -219,8 +227,11 @@ export default {
         this.$router.push({
           name: 'edit-setting',
           query: {
-            registerType: this.$route.query.registerType,
-            pageTitle: this.$route.query.pageTitle
+            ...this.$route.query,
+            school_name: this.managerData.school_name,
+            school_id: this.managerData.school_id,
+            banji_name: this.formatBanjiTitle(this.managerData.banji_name),
+            banji_id: this.managerData.banji_id
           }
         })
       }
@@ -272,8 +283,8 @@ export default {
           data.params.duty = this.office
           
           axios.get('/book/SchoolTeacher/bind', data).then(res => {
-            this.loading = false
             if (res.data.status == 1) {
+              this.loading = false
               this.active = 1
               this.renew = true
               this.fetchData()
@@ -332,6 +343,9 @@ export default {
       } else {
         return text
       }
+    },
+    onCancel(){
+
     }
   }
 }

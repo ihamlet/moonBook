@@ -35,45 +35,46 @@ export default {
   },
   methods: {
     fetchData() {
-      if (this.$route.query.registerType) {
-        let data
 
-        if (this.$route.query.registerType == 'headmaster') {
-          data = {
-            params: {
-              is_master: 1
-            }
-          }
-        }
+      // if(this.$route.query.id){
+      //   let childParams = {
+      //     child_id:this.$route.query.id
+      //   }
 
-        axios.get('/book/SchoolTeacher/getMine', data).then(res => {
-          if(res.data.status == 1){
-            this.school_id = res.data.data.school_id
-            this.setting.settingSchool = res.data.data.school_name
-            this.setting.settingClass = this.formatBanjiTitle(res.data.data.banji_name)
-          }
-        })
-      } else {
-        axios.get(`/book/family/getChildByUser?child_id=${this.$route.query.id}`).then(res => {
-          if (res.data.status == 1) {
-            this.child_id = res.data.data.id
-            this.school_id = res.data.data.school_id
-            this.childName = res.data.data.name
-            this.setting.settingClass = res.data.data.banji_name
-            this.setting.settingSchool = res.data.data.school_name
-          }
-        })
-      }
+      //   axios.get('/book/family/getChildByUser',childParams).then(res => {
+      //     switch(res.data.status){
+      //       case 1:
+      //         this.setting.settingClass = this.formatBanjiTitle(res.data.data.banji_name)
+      //         this.setting.settingSchool = res.data.data.school_name
+      //       break
+      //     }
+      //   })
+      // }else{
+      //   let data = {
+      //     params: {
+      //       is_master: 1
+      //     }   
+      //   }
+
+      //   axios.get('/book/SchoolTeacher/getMine', data).then(res => {
+      //     switch(res.data.status){
+      //       case 1:
+      //         this.setting.settingSchool = res.data.data.school_name
+      //         this.setting.settingClass = this.formatBanjiTitle(res.data.data.banji_name)
+      //       break
+      //     }
+      //   })
+      // }
+
+      this.setting.settingClass = this.$route.query.banji_name
+      this.setting.settingSchool = this.$route.query.school_name
     },
     toSelectSchool() {
       this.$router.replace({
         name: 'edit-school',
         query: {
-          id: this.child_id,
           back: this.$route.name,
-          type: this.$route.query.type,
-          pageTitle: this.$route.query.pageTitle,
-          registerType: this.$route.query.registerType
+          ...this.$route.query
         }
       })     
     },
@@ -81,12 +82,8 @@ export default {
       this.$router.replace({
         name: 'edit-class',
         query: {
-          id: this.child_id,
-          school_id: this.school_id,
           back: this.$route.name,
-          type: this.$route.query.type,
-          pageTitle: this.$route.query.pageTitle,
-          registerType: this.$route.query.registerType
+          ...this.$route.query
         }
       })
     },

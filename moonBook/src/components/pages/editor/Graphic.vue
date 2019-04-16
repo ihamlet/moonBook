@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="head-bar-btn theme-color" slot="right">
-        <van-button :loading='percent != 0' class="theme-btn" type="primary" size="small" @click="onClickRelease" round>发布</van-button>
+        <van-button :loading='percent != 0' :disabled='releaseLoading'  class="theme-btn" type="primary" size="small" @click="onClickRelease" round>发布</van-button>
       </div>
     </van-nav-bar>
     <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
@@ -83,7 +83,8 @@ export default {
         }
       }
       return boolean
-    }
+    },
+    
   },
   data() {
     let u = navigator.userAgent
@@ -103,7 +104,8 @@ export default {
       photoLength: 0,
       videoThumb:'',
       typeUpload:'',
-      routeBackFind:['home','my-home','punch-back','special-punch','specialPunch']
+      routeBackFind:['home','my-home','punch-back','special-punch','specialPunch'],
+      releaseLoading: false,
     }
   },
   created() {
@@ -241,47 +243,20 @@ export default {
             data.school_id = this.$route.query.id
           }
 
+          this.releaseLoading = true
+
           this.release(data).then(res=>{
             switch(res){
               case 1:
                 this.clearImg()
 
-                console.log(this.routeBackFind.includes(this.$route.query.back))
+                this.releaseLoading = false
 
                 if(this.routeBackFind.includes(this.$route.query.back)){
                   this.$router.replace('/apps-find')
                 }else{
                   this.$router.go(-1)
                 }
-                
-                // switch(true){
-                //   case this.result.includes('apps-find'):
-                //     this.$router.replace('/apps-find')
-                //   break
-                //   case this.result.includes('baby-home'):
-                //     this.$router.replace({
-                //       name:'baby-home',
-                //       query:{
-                //         id: this.userDataState.child_id
-                //       }
-                //     })
-                //   break
-                //   case this.result.includes('class-home'):
-                //     this.$router.replace({
-                //       name:'class-home',
-                //       query:{
-                //         id: this.userDataState.banji_id
-                //       }
-                //     })
-                //   break
-                //   default:
-                //     this.$router.replace({
-                //       name:'zoom',
-                //       query:{
-                //         id: this.userDataState.user_id
-                //       }
-                //     })
-                // }
                 this.$toast.success('发布成功')
               break
               case 0:

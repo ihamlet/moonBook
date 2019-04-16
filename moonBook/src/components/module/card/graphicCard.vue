@@ -24,7 +24,6 @@
       </div>
 
       <media :item='item' type='card' :key="$route.query.id"/>
-      <van-tag mark color='#ff765c' size="large" v-if='item.tags'>#{{item.tags}}</van-tag>
       <div class="temp-type flex flex-align">
         <div class="temp-list flex flex-align">
           <van-tag color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.user_school_id > 0'>
@@ -35,7 +34,6 @@
           </van-tag>
         </div>
       </div>
-
       <div class="task" v-if='$route.query.tid == 5'>
         <task-card />
       </div>

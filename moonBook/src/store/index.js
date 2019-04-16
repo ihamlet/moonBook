@@ -311,7 +311,6 @@ const actions = {
             context.commit('setReleaseSwitch',false)
           break
         }
-
         resolve(res.data.status)
       })
     })

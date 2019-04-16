@@ -153,10 +153,17 @@ textarea {
 }
 
 .toast-icon .van-icon.van-icon-success,
-.van-field__control::placeholder,
 .iconfont {
   font-family: 'iconfont' !important;
   font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+.van-field__control::placeholder{
+  font-family: 'iconfont' !important;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -846,8 +853,8 @@ i.iconfont.rotate {
   padding: 1.25rem /* 20/16 */ 0.625rem /* 10/16 */;
 }
 
-.van-field__error-message {
-  text-align: right;
+.form .van-field__error-message {
+  text-align: right !important;
 }
 
 .silde {

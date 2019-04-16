@@ -12,8 +12,7 @@
       <div class="class-info">
         <div class="flex flex-align">
             <div class="class-name">{{formatBanjiTitle(classInfo.title)}}</div>
-            <span class="splitter">•</span>
-            <div class="class-people">{{`${classInfo.grade_name?classInfo.grade_name:''}班`}}（{{classInfo.student_count}}人）</div>
+            <div class="class-people">（{{classInfo.student_count}}人）</div>
         </div>
         <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>  
       </div>

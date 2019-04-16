@@ -162,17 +162,16 @@ export default {
     },
     selectSchool(item) {
       let data
-      if (item.school_id > '0') {
+      if (item.school_id > 0) {
         data = {
-          params: {
-            school_id: item.school_id,
-            school_name: item.title,
-            cityname: this.userPointState.city,
-            lat: item.lat,
-            lng: item.lng,
-            amap_id: item.amap_id,
-            typecode: item.typecode
-          }
+           ...this.$route.query,
+          school_id: item.school_id,
+          school_name: item.title,
+          cityname: this.userPointState.city,
+          lat: item.lat,
+          lng: item.lng,
+          amap_id: item.amap_id,
+          typecode: item.typecode
         }
       } else {
         let cityname = ''
@@ -186,26 +185,27 @@ export default {
         let location = item.location.split(',')
 
         data = {
-          params: {
-            school_name: item.name,
-            amap_id: item.id,
-            lat: location[1],
-            lng: location[0],
-            cityname: cityname || '',
-            typecode: item.typecode
-          }
+           ...this.$route.query,
+          school_name: item.name,
+          amap_id: item.id,
+          lat: location[1],
+          lng: location[0],
+          cityname: cityname || '',
+          typecode: item.typecode
         }
       }
 
       if (this.$route.query.registerType == 'headmaster') {
-        data.params.is_master = 1
-      }
-
-      if (this.$route.query.registerType) {
-        this.thearchJoin(data)
-      } else {
-        data.params.child_id = this.$route.query.id
-        this.babyJoin(data)
+        data.is_master = 1,
+        this.$router.replace({
+          name:'edit-manager',
+          query: data
+        })
+      }else{ 
+       this.$router.replace({
+          name:'edit-class',
+          query: data
+        })
       }
     },
     thearchJoin(data) {

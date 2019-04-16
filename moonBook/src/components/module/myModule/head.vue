@@ -5,7 +5,7 @@
         <i class="iconfont">&#xe60e;</i>
       </div>
       <div class="head-bar-icon bar-right" slot="right">
-        <i class="iconfont" @click="toCalendar">&#xe609;</i>
+        <i class="iconfont" @click="toHelp">&#xe618;</i>
       </div>
     </van-nav-bar>
     <div class="user-info flex flex-justify">
@@ -87,11 +87,14 @@ export default {
     onClickLeft() {
       this.$router.push({ name: "card-list" })
     },
-    toCalendar() {
-      this.$router.push({
-        name:'calendar'
-      })
+    toHelp(){
+      location.href = '/book/manual/user'
     },
+    // toCalendar() {
+    //   this.$router.push({
+    //     name:'calendar'
+    //   })
+    // },
     toAccept() {
       this.$router.push({
         name:'AcceptSchoolList'

@@ -1,6 +1,6 @@
 <template>
   <div class="add-child  page-padding">
-    <van-nav-bar :title="$route.query.pageTitle" :right-text="$route.query.type=='edit'?'注销':''" @click-right="onClickRight('delete')" />
+    <van-nav-bar :title="pageTitle" :right-text="$route.query.type=='edit'?'注销':''" @click-right="onClickRight('delete')" />
     <div class="avatar-uploader">
       <van-uploader :after-read="onRead">
         <div class="prompt" v-if='!childInfo.avatar'>
@@ -103,6 +103,11 @@ export default {
         }
       }
       return b
+    },
+    pageTitle(){
+      let title
+      this.$route.query.type != 'edit'?title = '添加宝贝' : title='编辑宝贝'
+      return title
     }
   },
   data() {
@@ -181,8 +186,8 @@ export default {
       if (localStorage['childInfo']) {
         this.childInfo = JSON.parse(localStorage['childInfo'])
       }
-      
-      if(this.$route.query.type!='add'){
+
+      if(this.$route.query.type =='edit'){
         if(this.$route.query.id){
           let getChildByUserData = {
             params:{
@@ -201,11 +206,18 @@ export default {
             if (res.data.data.is_current_child == 1 || this.userDataState.child_id == this.$route.query.id) {
               this.settingSurrent = true
             }
-            this.info = res.data.data
+
+            this.info = {
+              banji_name: this.$route.query.banji_name || res.data.data.banji_name,
+              banji_id: this.$route.query.banji_id || res.data.data.banji_id,
+              school_name: this.$route.query.school_name || res.data.data.school_name,
+              school_id: this.$route.query.school_id || res.data.data.school_id,
+              main_parent_id: this.userDataState.id
+            }
           })
         }
       }else{
-        this.info = {
+       this.info = {
           banji_name: this.$route.query.banji_name,
           school_name: this.$route.query.school_name,
           main_parent_id: this.userDataState.id
@@ -248,11 +260,10 @@ export default {
     },
     // 孩子添加编辑API
     operationApi(id) {
-
       if (id) {
         this.childInfo.id = id || this.$route.query.id
       }
-    
+
       return new Promise((resolve, reject) => {
         axios.post('/book/baby/edit', this.childInfo).then(res => {
           if (res.data.status) {
@@ -276,61 +287,32 @@ export default {
       } else {
         this.operationApi().then(res => {
           this.childId = res
-          if(this.$route.query.type == 'register'){
-            this.show = true
-          }else{
-            this.babyJoinSchool(res)
-            this.babyJoinBanji(res)
-      
-            if(this.$route.query.formType){
-              this.$router.go(-1)
-            }else{
-              this.$router.push({
-                name: 'baby-home',
-                query: {
-                  id: res,
-                }
-              })
+          this.joinSchool(res)
+          this.joinBanji(res)
+          this.getUserData()
+  
+          this.$router.replace({
+            name:'baby-home',
+            query:{
+              id: res
             }
-          }
+          })
         })
       }
     },
-    setSchool(set){
-      if(set == 'add' || set == 'register'){
-        if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
-          this.errorMessage.name = '请正确填写孩子的姓名'
-          setTimeout(() => {
-            this.errorMessage.name = ''
-          }, 2000)
-        } else if (this.childInfo.birthday == '') {
-          this.errorMessage.birthday = '请填写孩子的生日'
-          setTimeout(() => {
-            this.errorMessage.birthday = ''
-          }, 2000)
-        } else {
-          this.operationApi().then(res => {
-            this.$router.push({
-              name: 'edit-setting',
-              query: {
-                id: res,
-                back: this.$route.name,
-                type: this.$route.query.type
-              }
-            })
-            localStorage.setItem('childInfo', JSON.stringify(this.childInfo))
-          })
-        }
-      }else{
+    setSchool(){ 
         this.$router.push({
           name: 'edit-setting',
           query: {
+            ...this.$route.query,
             id: this.$route.query.id,
             back: this.$route.name,
-            type: this.$route.query.type
+            school_id: this.$route.query.school_id || this.info.school_id,
+            school_name: this.$route.query.school_name || this.info.school_name, 
+            banji_id: this.$route.query.banji_id || this.info.banji_id,
+            banji_name: this.$route.query.banji_name || this.info.banji_name
           }
         })
-      }
     },
     edit() {
       this.operationApi(this.$route.query.id).then(res => {
@@ -412,10 +394,8 @@ export default {
     onParentChange(picker, values){
       this.childInfo.relation_name = values
     },
-    babyJoinSchool(childId) {
-
+    joinSchool(childId) {
       let location = this.userPointState.location.split(',')
-
       let data = {
           params: {
             child_id: childId,
@@ -428,12 +408,10 @@ export default {
             typecode: ''
           }
         }
-
-
         axios.get('/book/babySchool/bind', data).then(res => {})
     
     }, 
-    babyJoinBanji(childId){
+    joinBanji(childId){
       let data = {
         params:{
           banji_id: this.$route.query.banji_id,
