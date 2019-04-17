@@ -1,5 +1,5 @@
 <template>
-  <div class="article page-padding">
+  <div class="article page-padding" v-if='hackReset'>
     <div class="cover" v-if='item.template_id == 0&&item.cover'>
       <img :src="item.cover" v-http2https/>
     </div>
@@ -30,11 +30,16 @@
           <userCard :item='item' v-if='item.template_id != "0"'/>
         </div>
         <div class="module">
-          <article-content :item='item' @onScrollDomShow='onScrollDomShow'/>
+          <article-content :item='item' @onScrollDomShow='onScrollDomShow' :key="$route.query.id"/>
+          <div class="article-card" v-if='post' @click="toArticle">
+            <van-cell>
+              <articleCard :item='post' :key="$route.query.id"/>
+            </van-cell>
+          </div>
           <articleOperation :item='item'/>
         </div>
         <div>
-          <comment :item='item' include='include'/>
+          <comment :item='item' include='include' :key="$route.query.id"/>
         </div>
       </div>
     </div>
@@ -44,6 +49,7 @@
 import axios from './../lib/js/api'
 import articleOperation from './../module/mold/articleOperation'
 import articleContent from './../module/articleContent'
+import articleCard from './../module/card/articleCard'
 import comment from './../module/comment'
 import media from './../module/mold/media'
 import vipLevel from './../module/animate/svg/vipLevel'
@@ -58,13 +64,23 @@ export default {
     vipLevel,
     userCard,
     articleContent,
+    articleCard,
     articleOperation,
   },
   computed: {
     ...mapState(['slogan','logo']),
     ...mapGetters(['userDataState']),
     ...mapState('beautifulArticle',['cover','title']),
-    ...mapGetters('beautifulArticle',['getArticleContent','getImageList'])
+    ...mapGetters('beautifulArticle',['getArticleContent','getImageList']),
+    post(){
+      let content
+      if(this.item.extra){
+        content = JSON.parse(this.item.extra)
+      }else{
+        content = ''
+      }
+      return content
+    }
   },
   data() {
     return {
@@ -77,7 +93,8 @@ export default {
       qrImage:'',
       item: {
         photos:[]
-      }
+      },
+      hackReset:true
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -149,6 +166,20 @@ export default {
 
       axios.get('/book/MemberFollow/subscribe',data).then(res=>{
           this.$toast.success(res.data.msg)
+      })
+    },
+    toArticle(){
+      this.$router.push({
+        name:'article',
+        query:{
+          ...this.$route.query,
+          id: this.post.post_id
+        }
+      })
+      this.hackReset = false
+      this.$nextTick(() => {
+        this.hackReset = true
+        this.fetchData()
       })
     }
   }

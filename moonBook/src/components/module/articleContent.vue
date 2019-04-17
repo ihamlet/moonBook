@@ -19,7 +19,6 @@
 <script>
 import media from './../module/mold/media'
 import userCard from './../module/mold/userCard'
-// import adLabel from './../module/mold/adLabel'
 
 export default {
   name: 'article-content',
@@ -27,7 +26,6 @@ export default {
   components: {
     media,
     userCard,
-    // adLabel
   },
   data () {
     return {
@@ -58,7 +56,7 @@ export default {
 .media-content{
   margin-bottom: .625rem /* 10/16 */;
   text-align: justify;
-  min-height: 12.5rem /* 200/16 */;
+  min-height: 100px;
 }
 
 .title {

@@ -2,7 +2,7 @@
     <van-cell class="article-card" :border='false' is-link center>
         <div class="flex flex-align">
             <div class="article-cover">
-                <img v-if='item.cover' :src="item.cover">
+                <img v-if='item.cover' :src="item.cover" v-http2https>
             </div>
             <div class="details">
                 <div class="content" v-line-clamp:20="2">{{details}}</div>
@@ -19,9 +19,9 @@ export default {
         item:{
             type: Object,
             default:{
-                cover:'',
+                cover: '',
                 photos:[],
-                details:''
+                details: ''
             }
         }
     },

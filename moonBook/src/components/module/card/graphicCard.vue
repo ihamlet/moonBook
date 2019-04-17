@@ -24,6 +24,9 @@
       </div>
 
       <media :item='item' type='card' :key="$route.query.id"/>
+      <div class="article-card" v-if='post' @click="toArticle(post)">
+        <articleCard :item='post'/>
+      </div>
       <div class="temp-type flex flex-align">
         <div class="temp-list flex flex-align">
           <van-tag color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.user_school_id > 0'>
@@ -61,6 +64,7 @@ import vipLevel from './../animate/svg/vipLevel'
 import share from './../mold/share'
 import taskCard from './taskCard'
 import media from './../mold/media'
+import articleCard from './../card/articleCard'
 import { timeago } from './../../lib/js/util'
 import { mapGetters } from 'vuex'
 
@@ -94,10 +98,15 @@ export default {
   components: {
     taskCard,
     vipLevel,
+    articleCard,
     media
   },
   computed: {
-    ...mapGetters(['userPointState'])
+    ...mapGetters(['userPointState']),
+    post(){
+      let content = JSON.parse(this.item.extra)
+      return content
+    }
   },
   data() {
     return {
@@ -115,7 +124,7 @@ export default {
         item.zan_num = res.data.data.like
       })
     },
-    toArticle(item,point){
+    toArticle(item){
       this.$router.push({
         name:'article',
         query:{
@@ -253,5 +262,9 @@ export default {
 .temp-type{
   padding: .3125rem /* 5/16 */ 0;
   justify-content: space-between;
+}
+
+.article-card{
+  margin-bottom: 10px;
 }
 </style>

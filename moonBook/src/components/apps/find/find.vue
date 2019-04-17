@@ -2,7 +2,7 @@
   <div class="find page-padding">
     <van-nav-bar :border='false' :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title"/>
       <div class="module" v-if='isFreshListShow'>
-        <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname"/>
+        <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname" :key="$route.query.tag_id"/>
       </div>
     <div>
       <div class="container">

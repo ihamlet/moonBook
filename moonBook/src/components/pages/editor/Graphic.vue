@@ -164,7 +164,7 @@ export default {
 
         axios.get('/book/SchoolArticle/detail',articleDetailData).then(res => {
           if(res.data.status == 1){
-            this.post = res.data.data.post
+            res.data.data.post.extra?this.post = JSON.parse(res.data.data.post.extra):this.post = res.data.data.post
           }
         })
       }
@@ -273,10 +273,18 @@ export default {
           this.release(data).then(res=>{
             switch(res){
               case 1:
+
+                if(this.post){
+                  let commentData = {
+                    post_id: this.post.post_id,
+                    contents: '收录了这篇文章',
+                  }
+
+                  axios.post('/book/SchoolArticleComment/edit?ajax=1', commentData).then(res => {})
+                }
+
                 this.clearImg()
-
                 this.releaseLoading = false
-
                 if(this.routeBackFind.includes(this.$route.query.back)){
                   this.$router.replace('/apps-find')
                 }else{
