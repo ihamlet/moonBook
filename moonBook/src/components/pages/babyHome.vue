@@ -30,9 +30,9 @@
           <div class="label">{{childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
         </div>
-        <!-- <div class="qrcode" @click="toPageCodeShare">
-          <i class="iconfont">&#xe622;</i>
-        </div> -->
+        <div class="qrcode" v-if='childInfo.banji_id > 0'>
+          <van-button plain size="small" round class="theme-plain" type="primary" @click="toClassHome">{{formatBanjiTitle(childInfo.banji_name)}}</van-button>
+        </div>
       </div>
       <wave />
     </div>
@@ -415,20 +415,21 @@ export default {
         this.loading = false
       })
     },
-    toClassHome(childInfo) {
-      if (childInfo.banji_id > '0') {
+    toClassHome() {
+      if (this.childInfo.banji_id > 0) {
         this.$router.push({
           name: "class-home",
           query: {
-            id: childInfo.banji_id
+            id: this.childInfo.banji_id
           }
         })
       } else {  
         this.$router.push({
           name: "class-home",
           query: {
-            id: childInfo.child_id,
-            schoolId: childInfo.school_id
+            id: this.childInfo.child_id,
+            school_id: this.childInfo.school_id,
+            school_name: this.childInfo.school_name,
           }
         })
       }
@@ -666,8 +667,8 @@ export default {
       this.$router.push({
       name: 'baby-home',
           query: {
-              id: item.id,
-              back: this.$route.name
+            id: item.id,
+            back: this.$route.name
           }
       })
     }
@@ -715,7 +716,7 @@ export default {
 }
 
 .baby-data {
-  flex: 4;
+  flex: 3;
 }
 
 .list {

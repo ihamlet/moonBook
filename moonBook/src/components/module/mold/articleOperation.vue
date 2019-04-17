@@ -5,12 +5,12 @@
         <van-button class="theme-btn tuijian" round size="normal" type="primary" @click="recommend"> <i class="iconfont">&#xe668;</i> 推荐</van-button>
       </div>
       <div class="flex-btn" v-if='isBtnShow'>
-        <van-button class="theme-btn shoulu" round size="normal" type="primary" @click="selectChildren"> <i class="iconfont">&#xe6ea;</i> 收录</van-button>
+        <van-button class="theme-btn shoulu" round size="normal" type="primary" @click="selectChildren"> <i class="iconfont">&#xe6ea;</i>收录</van-button>
       </div>
     </div>
 
     <van-popup v-model="childShow" position='bottom'  get-container='#app'>
-      <van-picker show-toolbar :columns="children" value-key='name' @change="onChange" title='收录到' @confirm='selectChild' @cancel='childShow = false'/>
+      <van-picker show-toolbar :visible-item-count='4' :columns="children" value-key='name' @change="onChange" title='收录到宝贝' @confirm='selectChild' @cancel='childShow = false'/>
     </van-popup>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
@@ -99,7 +99,6 @@ export default {
         }
       })
 
-
       let cateListData = {
         params:{
           portal_name:'宝贝主页'
@@ -157,28 +156,34 @@ export default {
     },
     selectConfirm(){
       let data = {
-        params:{
-          post_id: this.item.post_id,
-          child_id: this.childId || '',
-          cate_id: this.cateId || ''
-        }
+        child_id: this.childId || '',
+        cate_id: this.cateId || ''
       }
 
-      axios.get('/book/SchoolArticle/copy',data).then(res=>{
-        if(res.data.status == 1){
-          let CommentData = {
-            post_id: this.$route.query.id,
-            contents: '收录了这篇文章'
-          }
-          axios.post('/book/SchoolArticleComment/edit?ajax=1',CommentData).then(res => {
-            if(res.data.status == 1){
-              this.$toast.success('收录成功')
-            }
-          })
-        }else{
-          this.$toast.fail('操作失败')
+
+      this.$router.push({
+        name:'graphic',
+        query:{
+          ...this.$route.query,
+          ...data
         }
       })
+
+      // axios.get('/book/SchoolArticle/copy',data).then(res=>{
+      //   if(res.data.status == 1){
+      //     let CommentData = {
+      //       post_id: this.$route.query.id,
+      //       contents: '收录了这篇文章'
+      //     }
+      //     axios.post('/book/SchoolArticleComment/edit?ajax=1',CommentData).then(res => {
+      //       if(res.data.status == 1){
+      //         this.$toast.success('收录成功')
+      //       }
+      //     })
+      //   }else{
+      //     this.$toast.fail('操作失败')
+      //   }
+      // })
 
       this.show = false
     },

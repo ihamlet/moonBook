@@ -22,7 +22,7 @@
     <van-cell-group>
       <van-field v-model="childInfo.name" size='large' :disabled='isMainParent' input-align='right' label="孩子姓名" placeholder="请输入孩子姓名" :error-message="errorMessage.name" />
       <van-field v-model="childInfo.birthday" size='large' :disabled='isMainParent' input-align='right' readonly label="孩子生日" placeholder="请选择日期" :error-message="errorMessage.birthday" @click="pickerShow = true" />
-      <van-field v-model="childInfo.relation_name" :disabled='isMainParent' input-align='right' readonly label="您是孩子的？" placeholder="例如：爸爸"  @click="parentShow = true"/>
+      <van-field v-model="childInfo.relation_name" :disabled='isMainParent' input-align='right' readonly label="您是孩子的？" placeholder="例如：爸爸"  @click="isParentShow"/>
     </van-cell-group>
     <van-radio-group>
       <van-cell-group>
@@ -56,10 +56,10 @@
       <van-datetime-picker title='日期选择' v-model="currentDate" type="date" :min-date="minDate" :max-date="maxDate" @confirm="pickerShow = false" @cancel='cancelPicker' />
     </van-popup>
 
-    <!-- 家长类型选择器 -->
+    <!-- 家长身份选择器 -->
     <van-popup class="picker-popup" position="bottom" v-model="parentShow" get-container='#app'>
-      <van-picker ref='parentPicker' :visible-item-count='3' :columns="parentList" :default-index="0" @change='onParentChange' show-toolbar title="您是孩子的？"  @cancel="cancelPicker" @confirm="parentShow = false"/>
-      <van-field size='large' v-model="childInfo.relation_name" input-align='right' label="填写身份" placeholder="例如：爸爸"/>
+      <van-picker ref='parentPicker' :visible-item-count='3' :columns="parentList" :default-index="0" @change='onParentChange' show-toolbar title="您是孩子的？"  @cancel="cancelPicker" @confirm="confimPicker"/>
+      <van-field size='large' v-model="writeRelation" input-align='right' label="填写身份" placeholder="例如：爸爸"/>
     </van-popup>
   </div>
 
@@ -130,6 +130,7 @@ export default {
         birthday: '',
         relation_name: '妈妈'
       },
+      writeRelation:'',
       childId:'',
       sexType:['小王子','小公主'],
       parentShow: false,
@@ -315,6 +316,7 @@ export default {
           name: 'edit-setting',
           query: {
             ...this.$route.query,
+            ...this.childInfo,
             id: this.$route.query.id,
             back: this.$route.name,
             school_id: this.$route.query.school_id || this.info.school_id,
@@ -428,6 +430,16 @@ export default {
       }
 
       axios.get('/book/baby/join_banji', data).then(res => { })
+    },
+    isParentShow(){
+      this.parentShow = true
+      this.writeRelation = ''
+    },
+    confimPicker(){
+      if(this.writeRelation){
+        this.childInfo.relation_name = this.writeRelation
+      }
+      this.parentShow = false
     }
   }
 }

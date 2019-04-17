@@ -2,7 +2,7 @@
   <van-row gutter="20">
     <van-col span="7">
       <div class="book-cover">
-        <img  class="lazy" v-lazy="thumb(item.book_photo)"/>
+        <img  :src="thumb(item.book_photo)" @error="imgError"/>
         <div class="is-read flex flex-justify" v-if='item.is_read == 1'>
           <span class="read-text">已 读</span>
           <i class="iconfont">&#xe6b3;</i>
@@ -51,11 +51,13 @@ export default {
   },
   methods: {
     thumb(img) {
-      let hostMatch = img.match(/https?:\/\/(.+?)\//)
-      if (hostMatch) {
-        return `/book/api/remotePic?url=${img}`
-      } else {
-        return img
+      if(img){
+        let hostMatch = img.match(/https?:\/\/(.+?)\//)
+        if (hostMatch) {
+          return `/book/api/remotePic?url=${img}`
+        } else {
+          return img
+        }
       }
     },
     listening(item) {
@@ -107,6 +109,9 @@ export default {
       if(item.borrow_id){
         location.href = `/book/MemberBookBroken/add/borrow_id/${item.borrow_id}?back_url=${encodeURIComponent(location.href)}`
       }
+    },
+    imgError(e) {
+      e.target.src = require('@/assets/img/no-cover.jpg')
     }
   }
 }

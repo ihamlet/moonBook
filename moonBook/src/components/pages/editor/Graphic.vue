@@ -10,12 +10,17 @@
         <van-button :loading='percent != 0' :disabled='releaseLoading'  class="theme-btn" type="primary" size="small" @click="onClickRelease" round>发布</van-button>
       </div>
     </van-nav-bar>
-    <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
-      
+
     <div class="textarea-module">
+      <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
       <van-cell-group>
         <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" :placeholder="icon" rows="2" autosize />
-        <div class="upload-module flex wrap">
+        <div class="article-card" v-if='post'>
+          <van-cell v-if='post'>
+            <articleCard :item='post'/>
+          </van-cell>
+        </div>
+        <div class="upload-module flex wrap" v-else>
           <van-cell :border='false'>
             <van-row gutter="4">
               <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
@@ -56,13 +61,15 @@ import axios from './../../lib/js/api'
 import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import topicList from './../../module/release/topicList'
 import articleSetting from './mould/articleSetting'
+import articleCard from './../../module/card/articleCard'
 import { compress,checkHtml } from './../../lib/js/util'
 
 export default {
   name: 'graphic',
   components: {
     topicList,
-    articleSetting
+    articleSetting,
+    articleCard
   },
   computed: {
     ...mapState('openWX',['ready','imgList']),
@@ -106,6 +113,7 @@ export default {
       typeUpload:'',
       routeBackFind:['home','my-home','punch-back','special-punch','specialPunch'],
       releaseLoading: false,
+      post:''
     }
   },
   created() {
@@ -144,6 +152,22 @@ export default {
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
       })
+
+      //如果路由存在文章ID 说明是转发文章 这里根据id来获取文章详情
+      if(this.$route.query.id){
+        let articleDetailData = {
+          params:{
+            ajax:1,
+            id:this.$route.query.id
+          }
+        }
+
+        axios.get('/book/SchoolArticle/detail',articleDetailData).then(res => {
+          if(res.data.status == 1){
+            this.post = res.data.data.post
+          }
+        })
+      }
 
       //判断路由自动触发小视频 视频
       if(this.$route.query.upVideo){

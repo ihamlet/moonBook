@@ -13,7 +13,7 @@
             <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
               <div class="list" v-if="list.content.length">
                 <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" is-link class="flex flex-align" @click="select(item)">
-                    <schoolCard :item='item' searchType='wmSearchSchool'/>
+                    <schoolCard :item='item' :searchType='item.school_id > 0? "wmSearchSchool":"amapSearchSchool"'/>
                 </van-cell>
               </div>
               <div class="no-list" v-else>

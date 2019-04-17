@@ -2,8 +2,8 @@
   <div class="baby-setting">
     <van-nav-bar title="设置学校" :border='false'/>
     <van-cell-group>
-      <van-cell is-link center title='学校' :label='setting.settingSchool' value='选择学校'  @click="toSelectSchool" />
-      <van-cell is-link center title='班级' v-if='$route.query.registerType!="headmaster"' :label='setting.settingClass' value='选择班级'  @click="toSelectClass" />
+      <van-cell is-link center title='学校' size='large' :label='setting.settingSchool' value='选择学校'  @click="toSelectSchool" />
+      <van-cell is-link center title='班级' size='large' v-if='$route.query.registerType!="headmaster"' :label='setting.settingClass' value='选择班级'  @click="toSelectClass" />
     </van-cell-group>
   </div>
 </template>

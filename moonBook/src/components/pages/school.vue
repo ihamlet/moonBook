@@ -3,7 +3,7 @@
     <div class="fixed">
       <van-search placeholder="请输入学校名称" v-model="keyword" show-action shape="round" @search="onSearch">
         <div class="theme-color" slot="action" @click="onSearch">
-          {{addSchool?'添加':'搜索'}}
+          搜索
         </div>
       </van-search>
     </div>
@@ -15,8 +15,7 @@
             <div class="school-type">学校类型</div>
             <div class="select-type flex flex-align">
               <div class="select-btn" v-for='(item,index) in shcoolType' :key="index" @click="selectSchoolType(item,index)">
-                <van-button size="small" class="theme-btn" type="primary" :plain='schoolTypeIndex==index?false:true'
-                  round>{{item.name}}</van-button>
+                <van-button size="small" class="theme-btn" type="primary" :plain='schoolTypeIndex==index?false:true' round>{{item.name}}</van-button>
               </div>
             </div>
           </div>
@@ -29,31 +28,6 @@
         </van-cell>
       </van-list>
     </div>
-
-    <div class="add-school">
-      <div class="fx-box flex flex-align">
-        <div class="theme-color">没有你所在的学校？</div>
-        <van-button class="theme-btn" type="primary" size='small' @click="toAddSchool">{{addSchool?'搜索学校':'添加学校'}}</van-button>
-      </div>
-    </div>
-
-    <!-- <van-dialog v-model="show" show-cancel-button :before-close="beforeClose">
-      <div class="dialog-title">添加学校</div>
-      <van-cell-group>
-        <van-field v-model="schoolName" label="学校名称" placeholder="请输入学校名称" input-align='right' />
-        <van-cell>
-          <div class="flex flex-align type-select">
-            <div class="school-type">学校类型</div>
-            <div class="select-type flex flex-align">
-              <div class="select-btn" v-for='(item,index) in shcoolType' :key="index" @click="selectSchoolType(item,index)">
-                <van-button size="small" class="theme-btn" type="primary" :plain='schoolTypeIndex==index?false:true'
-                  round>{{item.name}}</van-button>
-              </div>
-            </div>
-          </div>
-        </van-cell>
-      </van-cell-group>
-    </van-dialog> -->
   </div>
 </template>
 <script>
@@ -73,7 +47,6 @@ export default {
   },
   data() {
     return {
-      addSchool: false,
       isListShow: false,
       page: 1,
       loading: false,
@@ -284,7 +257,7 @@ export default {
           keywords: keyword,
           location: this.userPointState.location,
           city: this.userPointState.city,
-          type: this.addSchool?141204:141203,
+          type: this.schoolTypeIndex == 0?141204:141203,
           datatype: 'poi',
           lng: arr[0],
           lat: arr[1]
@@ -302,20 +275,6 @@ export default {
       } else {
         this.page = 1
         this.onLoad()
-      }
-    },
-    toAddSchool() {
-      if (this.$route.query.registerType != 'headmaster') {
-        this.addSchool = !this.addSchool
-        if(this.addSchool){
-          this.page = 1
-          this.list = []
-        }else{
-          this.page = 1
-          this.onLoad()
-        }
-      } else {
-        location.href = 'https://fang.wmlife.net/kindergarten/index/register'
       }
     }
   }

@@ -1,34 +1,48 @@
 <template>
   <div class="read-guide">
-    <van-nav-bar :title="$route.meta.title" right-text="书架" @click-right="onClickRight" :border='false'/>
-    <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab">
-      <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-        <div class="article">
-          <div class="container">
-            <div class="article-title">{{list.articleTitle}}</div>
-            <div class="content" v-html='list.article'></div>
-            <van-button class="theme-btn" type="primary" plain hairline size='normal'>阅读全文</van-button>
-          </div>
-        </div>
-        <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
-            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-                <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
-                    <bookCard :item='item' type='guide'/>
-                </van-cell>
-            </van-list>
-        </van-pull-refresh>
-      </van-tab>
-    </van-tabs>
+    <div class="banner">
+      <i class="iconfont">&#xe62d;</i>
+      <div class="bg-black flex flex-justify">
+        <van-button plain round class="theme-plain" type="primary" @click="toBookShelf">前往书架</van-button>
+      </div>
+    </div>
+    <van-pull-refresh v-model="loading" @refresh="onRefresh">
+      <div class="tab">
+        <van-tabs color='#0084ff' :line-width='20' :line-height='4' swipeable animated @change="onChangeTab">
+          <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
+
+                <div class="article" v-if='list.article&&index == tabIndex'>
+                  <div class="content">
+                    <div class="article-title">{{list.articleTitle}}</div>
+                    <media :item='list.article'/>
+                    <!-- <van-button class="theme-btn" type="primary" plain hairline size='normal'>阅读全文</van-button> -->
+                  </div>
+                </div>
+    
+              <!-- <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad"  v-if='index == tabIndex'>
+                  <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
+                      <bookCard :item='item' type='guide'/>
+                  </van-cell>
+              </van-list> -->
+          </van-tab>
+        </van-tabs>
+      </div>
+    </van-pull-refresh>
+    <div class="slogan">
+      {{$store.state.slogan}}
+    </div>
   </div>
 </template>
 <script>
 import axios from './../../lib/js/api'
 import bookCard from './../../module/card/bookCard'
+import media from './../../module/mold/media'
 
 export default {
   name: 'read-guide',
   components: {
-    bookCard  
+    bookCard,
+    media
   },
   data() {
     return {
@@ -64,7 +78,16 @@ export default {
       }
     })
   },
+  created () {
+    this.fetchData()
+  },
+  watch: {
+    '$router':'fetchData'
+  },
   methods: {
+    fetchData(){
+      this.onRefresh()
+    },
     onLoad() {
       //获取图书列表
       let bookList = {
@@ -86,7 +109,7 @@ export default {
               axios.get('/book/SchoolArticle/detail',articleData).then(res=>{
                   switch(res.data.status){
                     case 1:
-                      this.tab[this.tabIndex].article = res.data.data.post.details
+                      this.tab[this.tabIndex].article = res.data.data.post
                       this.tab[this.tabIndex].articleTitle = res.data.data.post.title
                     break
                   }
@@ -110,11 +133,12 @@ export default {
               this.page = 1
               this.loading = false
               this.finished = true
+              this.tab[this.tabIndex].content = []
             break
         }
       })
     },
-    onClickRight() {
+    toBookShelf() {
       this.$router.push({
         name: 'bookshelf'
       })
@@ -127,38 +151,29 @@ export default {
     },
     onChangeTab(index) {
       this.tabIndex = index
+      this.page = 1
+      this.tab[this.tabIndex].content = []
       this.onRefresh()
     }
   }
 }
 </script>
 <style scoped>
-.article{
-  padding: .625rem /* 10/16 */;
-}
-
 .container{
  background: #fff; 
- padding: .625rem /* 10/16 */;
+ padding:20px;
  border-radius: .625rem /* 10/16 */;
 }
 
 .article-title{
-  margin-bottom: .625rem /* 10/16 */;
-  font-size: 1.25rem /* 20/16 */;
+  font-size: 20px;
   position: relative;
   font-weight: 700;
-}
-
-.article-title::before{
-  content: '';
-  width: .25rem /* 4/16 */;
-  height: .9375rem /* 15/16 */;
-  background: #0084ff;
-  position: absolute;
-  left: -10px;
-  top: 50%;
-  transform: translate3d(0, -50%, 0);
+  text-align: center;
+  height: 46px;
+  line-height: 46px;
+  padding-top: 20px;
+  color: #303133;
 }
 
 .theme-btn{
@@ -168,5 +183,59 @@ export default {
 .content{
   font-size: 1.125rem /* 18/16 */;
   padding-bottom: 1.25rem /* 20/16 */;
+}
+
+.banner{
+  width: 100%;
+  height: 300px;
+  background-image: url('./../../../assets/img/guide.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: fixed;
+  top: 0;
+}
+
+.bg-black{
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .4);
+}
+
+.tab{
+  margin-top: 140px;
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  min-height: 200px;
+}
+
+.theme-plain{
+  margin-top: 50px;
+}
+
+.slogan{
+  text-align: center;
+  height: 100px;
+  line-height: 100px;
+}
+
+.banner .iconfont{
+  font-size: 60px;
+  position: absolute;
+  color: #F44336;
+  top: -10px;
+}
+</style>
+<style>
+blockquote{
+  background: #F2F6FC;
+  padding: 10px;
+  color: #909399;
+  margin-bottom: 30px;
+  text-align: justify;
+}
+
+strong{
+  margin-bottom: 20px;
 }
 </style>

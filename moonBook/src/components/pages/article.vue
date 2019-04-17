@@ -43,8 +43,9 @@
 <script>
 import axios from './../lib/js/api'
 import articleOperation from './../module/mold/articleOperation'
-import comment from './../module/comment'
 import articleContent from './../module/articleContent'
+import comment from './../module/comment'
+import media from './../module/mold/media'
 import vipLevel from './../module/animate/svg/vipLevel'
 import userCard from './../module/mold/userCard'
 import { mapState, mapGetters,mapActions } from 'vuex'
@@ -52,10 +53,11 @@ import { mapState, mapGetters,mapActions } from 'vuex'
 export default {
   name: 'detailsArticle',
   components: {
-    articleContent,
+    media,
     comment,
     vipLevel,
     userCard,
+    articleContent,
     articleOperation,
   },
   computed: {
@@ -108,27 +110,6 @@ export default {
   methods: {
     ...mapActions('openWX',['share']),
     fetchData() {
-      if(this.$route.query.type == 'preview'){
-        this.item = {
-          details:this.getArticleContent,
-          create_time: Math.floor(new Date().getTime()/1000),
-          views:'999+',
-          title: this.title,
-          template_id:'0',
-          cover: this.getImageList[0] || this.cover,
-          user:{
-            avatar: this.userDataState.avatar,
-            username: this.userDataState.name,
-            user_id: this.userDataState.id
-          },
-          card_level:{
-            level: this.userDataState.card_level
-          },
-          school:{
-            title: this.userDataState.school_name
-          }
-        } 
-      }else{
         let articleDetailData = {
           params:{
             ajax:1,
@@ -141,7 +122,6 @@ export default {
             this.item = res.data.data.post
           }
         })
-      }
     },
     onScrollDomShow(bl){
       this.themeBarSearch = bl

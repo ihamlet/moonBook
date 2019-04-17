@@ -12,8 +12,7 @@
       <van-radio-group>
         <div class="form-title">学校设置</div>
         <van-cell-group>
-          <van-cell value='设置' :title="managerData.school_name" :label='formatBanjiTitle(managerData.banji_name)' title-class='cell-school-title'
-            center is-link @click="toSetting(managerData)" />
+          <van-cell value='设置' :title="managerData.school_name" size='large' :label='formatBanjiTitle(managerData.banji_name)' title-class='cell-school-title' center is-link @click="toSetting(managerData)" />
         </van-cell-group>
       </van-radio-group>
       <div class="office" v-if='jobList'>
@@ -24,8 +23,8 @@
       </div>
 
       <van-popup v-model="show" position="bottom" get-container='#app'>
-        <van-picker :columns="jobList" @change="onChange"  title="选择职位" @cancel="onCancel" @confirm="show = false"/>
-        <van-field size='large' label="填写职位" v-model="office" placeholder="职位信息" input-align='right'/>
+        <van-picker ref='officePicker' :columns="jobList" @change="onChange"  title="选择职位" @cancel="onClose" @confirm="onConfirm" show-toolbar :visible-item-count='3'/>
+        <van-field size='large' label="填写职位" v-model="writeOffice" placeholder="职位信息" input-align='right'/>
       </van-popup>
     </div>
 
@@ -64,7 +63,7 @@ export default {
       let array = []
 
       if (this.$route.query.registerType == 'teacher') {
-        array = ['带班老师', '信息老师', '生活老师', '班主任', '任课老师']
+        array = ['班主任', '带班老师', '生活老师']
       }
 
       if (this.$route.query.registerType == 'headmaster') {
@@ -96,6 +95,7 @@ export default {
   data() {
     return {
       office: '',
+      writeOffice: '',
       show: false,
       submitLoading: false,
       managerData: {
@@ -166,10 +166,6 @@ export default {
       }
     },
     fetchData() {
-
-      this.managerData.school_name = this.$route.query.school_name
-      this.managerData.banji_name = this.$route.query.banji_name
-
       let data
       if (this.$route.query.registerType == 'headmaster') {
         data = {
@@ -196,6 +192,12 @@ export default {
           }else{
             this.active = 0
           }
+
+
+          this.managerData.school_name = this.$route.query.school_name || res.data.data.school_name
+          this.managerData.banji_name = this.$route.query.banji_name || res.data.data.banji_name
+          this.managerData.school_id = this.$route.query.school_id || res.data.data.school_id
+          this.managerData.banji_id = this.$route.query.banji_id || res.data.data.banji_id
 
           this.schoolInfo = res.data.school
           this.office = res.data.data.duty
@@ -237,11 +239,8 @@ export default {
       }
     },
     selectOffice() {
-      if (this.managerData.school_id > 0) {
-        this.show = true
-      } else {
-        this.$toast('您需要选择学校，才可以选择所在学校中的职位。感谢您的辛劳付出。')
-      }
+      this.writeOffice = ''
+      this.show = true
     },
     onChange(picker, value, index) {
       if (this.managerData.is_confirm == 1) {
@@ -266,13 +265,7 @@ export default {
           this.loading = true
           let data = {
             params: {
-              school_id: this.managerData.school_id,
-              school_name: this.managerData.school_name,
-              cityname: this.schoolInfo.cityname,
-              lat: this.schoolInfo.lat,
-              lng: this.schoolInfo.lng,
-              amap_id: this.schoolInfo.amap_id,
-              typecode: this.managerData.typecode
+              ...this.$route.query
             }
           }
 
@@ -344,8 +337,15 @@ export default {
         return text
       }
     },
-    onCancel(){
-
+    onClose(){
+      this.$refs.officePicker.setColumnValue(0,0)
+      this.show = false
+    },
+    onConfirm(){
+      if(this.writeOffice){
+        this.office = this.writeOffice
+      }
+      this.show = false
     }
   }
 }

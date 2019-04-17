@@ -3,8 +3,8 @@
     <van-nav-bar :border='false' fixed :title="schoolName" />
     <div class="container">
       <div class="baby-info flex flex-justify" v-if='$route.query.registerType!="teacher"'>
-        <div class="avatar flex" v-if='childInfo'>
-          <img :src="childInfo.avatar" v-http2https>
+        <div class="avatar flex" v-if='avatar'>
+          <img :src="avatar" v-http2https>
         </div>
         <avatar v-else />
         <div class="name">{{childInfo.name}}（{{childInfo.age}}岁）</div>
@@ -94,6 +94,16 @@ export default {
       }
 
       return time
+    },
+    avatar(){
+      let imgAvatar
+      if(this.$route.query.type == 'type'){
+        imgAvatar = childInfo.avatar
+      }else{
+        imgAvatar = this.$route.query.avatar
+      }
+
+      return imgAvatar
     }
   },
   data() {
@@ -120,20 +130,12 @@ export default {
   methods: {
     ...mapActions(['getUserData','managerState']),
     fetchData() {
-
         this.schoolName = this.$route.query.school_name
-
-        let ChildByUserData = {
-          params: {
-            child_id: this.$route.query.id
-          }
+        this.childInfo = {
+          name: this.$route.query.name,
+          age: this.$route.query.age,
+          avatar: this.$route.query.avatar
         }
-
-        axios.get('/book/family/getChildByUser', ChildByUserData).then(res => {
-          if (res.data.status == 1) {
-            this.childInfo = res.data.data
-          }
-        })    
     },
     beforeClose(action, done) {
       if (action === 'confirm') {

@@ -101,11 +101,11 @@
         <div class="comment-content flex">
           <div class="field-box">
             <van-cell-group>
-              <van-field v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
+              <van-field size='large' v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
             </van-cell-group>
           </div>
           <div class="submit-btn theme-color">
-            <van-button class="theme-btn" round :loading="isLoading" size="large" type="primary" @click="submit">发送</van-button>
+            <van-button class="theme-btn" round :loading="isLoading" size="large" type="primary" @click="submit">发 布</van-button>
           </div>
         </div>
       </van-popup>
@@ -432,11 +432,6 @@ export default {
 
 .reply-contents {
   color: #606266;
-}
-
-.theme-btn {
-  height: 2.75rem /* 44/16 */;
-  line-height: 2.75rem /* 44/16 */;
 }
 
 .input-box-avatar,

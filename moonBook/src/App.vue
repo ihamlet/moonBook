@@ -413,7 +413,7 @@ body.theme .head-bar-text,
 }
 
 .module {
-  margin-bottom: .125rem /* 2/16 */;
+  margin-bottom: 1px;
   background: #fff;
 }
 

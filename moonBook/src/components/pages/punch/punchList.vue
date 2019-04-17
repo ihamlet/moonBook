@@ -120,7 +120,7 @@ export default {
 
       if(index){
         let timeHistory = timeDay
-        let time = timeDay
+        let time = item.create_date.split(' ')[0]
         if(timeHistory == time){
           return false
         }else{
