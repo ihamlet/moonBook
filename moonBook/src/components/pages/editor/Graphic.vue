@@ -154,11 +154,11 @@ export default {
       })
 
       //如果路由存在文章ID 说明是转发文章 这里根据id来获取文章详情
-      if(this.$route.query.id){
+      if(this.$route.query.post_id){
         let articleDetailData = {
           params:{
             ajax:1,
-            id:this.$route.query.id
+            id:this.$route.query.post_id
           }
         }
 

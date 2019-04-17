@@ -29,7 +29,7 @@ export default {
     },
     computed: {
         details(){
-            let content = ''
+            let content = `${this.item.baby_name}在阅亮书架`
             if(this.item.hasvideo == '0'){
                 if(this.item.template_id == 0){
                     content = this.item.title

@@ -165,7 +165,7 @@ export default {
         name:'graphic',
         query:{
           ...this.$route.query,
-          ...data
+          post_id: this.$route.query.id
         }
       })
 
