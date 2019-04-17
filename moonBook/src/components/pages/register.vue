@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <van-nav-bar :title="$route.meta.title" fixed :zIndex='99'>
-      <div class="icon-right" slot="right">
+      <div class="icon-right" slot="right" @click="toHelp">
         <i class="iconfont">&#xe618;</i>
       </div>
     </van-nav-bar>
@@ -107,6 +107,9 @@ export default {
     },
     toWmPage(){
       location.href = 'https://fang.wmlife.net/kindergarten/index/register'
+    },
+    toHelp(){
+      location.href = '/book/manual/user'
     }
   }
 }
