@@ -265,7 +265,7 @@ export default {
           this.loading = true
           let data = {
             params: {
-              ...this.$route.query
+              ...this.managerData
             }
           }
 
