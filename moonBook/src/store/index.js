@@ -286,7 +286,8 @@ const actions = {
       banji_id: products.banji_id,
       school_id: products.school_id,
       title: products.title,
-      tags: products.tags
+      tags: products.tags,
+      extra: products.extra
     }
 
     setting.result.forEach(e=>{

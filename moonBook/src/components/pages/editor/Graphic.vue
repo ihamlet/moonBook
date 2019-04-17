@@ -16,7 +16,7 @@
       <van-cell-group>
         <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" :placeholder="icon" rows="2" autosize />
         <div class="article-card" v-if='post'>
-          <van-cell v-if='post'>
+          <van-cell @click="toArticle">
             <articleCard :item='post'/>
           </van-cell>
         </div>
@@ -252,7 +252,8 @@ export default {
             details: this.grapicData.text,
             template_id: 1,
             photos: this.grapicData.photos,
-            tags: this.$route.query.tags
+            tags: this.$route.query.tags,
+            extra: this.post
           }
 
           if(this.$route.query.back == 'baby-home'){
@@ -407,6 +408,14 @@ export default {
           width: img.width || 0
         })
         this.percent = 0
+      })
+    },
+    toArticle(){
+      this.$router.push({
+        name:'article',
+        query:{
+          ...this.$route.query
+        }
       })
     }
   }
