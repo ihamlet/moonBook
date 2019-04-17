@@ -30,7 +30,7 @@
           <div class="label">{{childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
         </div>
-        <div class="qrcode" v-if='childInfo.banji_id > 0'>
+        <div class="to-banji-btn" v-if='childInfo.banji_id > 0'>
           <van-button plain size="small" round class="theme-plain" type="primary" @click="toClassHome">{{formatBanjiTitle(childInfo.banji_name)}}</van-button>
         </div>
       </div>
@@ -819,6 +819,11 @@ export default {
   position: absolute;
   top: 0.3125rem /* 5/16 */;
   right: -0.625rem /* 10/16 */;
+}
+
+.to-banji-btn{
+  position: absolute;
+  right: 20px;
 }
 </style>
 <style>
