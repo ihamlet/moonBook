@@ -2,16 +2,18 @@
     <van-cell class="article-card" :border='false' is-link center>
         <div class="flex flex-align">
             <div class="article-cover">
-                <img v-if='item.cover' :src="item.cover" v-http2https>
+                <img v-if='item.cover' :src="item.cover">
             </div>
             <div class="details">
-                <div class="content" v-line-clamp:20="2">{{details}}</div>
+                <div class="content" v-line-clamp:20="2"> 
+                    {{details}}
+                </div>
             </div>
         </div>   
     </van-cell>
 </template>
 <script>
-import { checkHtml } from './../../lib/js/util'
+import { checkHtml,formatTime } from './../../lib/js/util'
 
 export default {
     name:'article-card',
@@ -28,13 +30,22 @@ export default {
     computed: {
         details(){
             let content = ''
-            if(this.item.template_id == 0){
-                content = this.item.title
+            if(this.item.hasvideo == '0'){
+                if(this.item.template_id == 0){
+                    content = this.item.title
+                }else{
+                    checkHtml(this.item.details)?content:content = this.item.details
+                }
             }else{
-                checkHtml(this.item.details)?content:content = this.item.details
+                content = `${this.item.baby_name}的小视频  ${this.getDuration(this.item.photos[0].duration)}`
             }
 
             return content
+        }
+    },
+    methods: {
+        getDuration(time) {
+            return formatTime(time)
         }
     }
 }
