@@ -14,7 +14,7 @@
               <div class="avatar" v-if='item.user'>
                 <img :src="item.user.avatar" :alt="item.user.username" @error='imgError' v-http2https>
               </div>
-              <div class="name" v-if='item.user' v-line-clamp:20="1">{{item.user.username}}</div>
+              <div class="name" v-if='item.user'>{{item.user.username}}</div>
               <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
             </div>
           </transition>
