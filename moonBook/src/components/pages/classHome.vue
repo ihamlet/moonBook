@@ -95,10 +95,10 @@
       </van-cell-group>
     </van-dialog> -->
 
-    <van-popup v-model="isSelectBabyShow" position="bottom" :close-on-click-overlay='false'>
+    <!-- <van-popup v-model="isSelectBabyShow" position="bottom" :close-on-click-overlay='false'>
       <van-nav-bar title="请选择要加入该班级的宝贝" :left-text="babyList[0]&&babyList[0].name" left-arrow @click-left="onClickLeft"/>
       <selectBaby :babyList='babyList' :invite_code='classInfo.invite_code' @onSelect='selectChild'/>
-    </van-popup>
+    </van-popup> -->
   </div>
 </template>
 <script>
@@ -342,25 +342,30 @@ export default {
         axios.get('/book/SchoolBanji/getInfo',data).then(res => {
           if(res.data.status == 1){
             this.classInfo = res.data.data
-            this.getChildList()
-            if(!this.classInfo.is_my_baby_banji&&!this.manage){
-              this.isSelectBabyShow = true
-            }
+            // this.getChildList()
+            // if(!this.classInfo.is_my_baby_banji&&!this.manage){
+            //   this.isSelectBabyShow = true
+            // }
           }
         })
         this.getCate()
       }
     },
     toPageCodeShare(){
+
+      let data = {
+        school_id: this.classInfo.school_id,
+        school_name: this.classInfo.school_name,
+        invite_code: this.classInfo.invite_code,
+        banji_id: this.classInfo.banji_id,
+        banji_name:  this.formatBanjiTitle(this.classInfo.title),
+        user_id: this.userDataState.user_id
+      }
+
       this.$router.push({
         name:'share',
         query:{
-          fullPath: `${location.href}&invite_code=${this.classInfo.invite_code}&show_child_join=${this.classInfo.show_child_join?0:1}`,
-          banji_id: this.$route.query.id,
-          invite_code: this.classInfo.invite_code,
-          school_name: this.$route.query.school_name,
-          banji_name: this.$route.query.banji_name,
-          show_child_join: this.classInfo.show_child_join
+          ...data
         }
       })
     },
@@ -495,17 +500,17 @@ export default {
         }
       })
     },
-    getChildList(){
-      let babyListData = {
-        params:{
-          sort:'old',
-          user_id: this.userDataState.id
-        }
-      }
-      axios.get('/book/baby/getList',babyListData).then(res => {
-        this.babyList = res.data.data
-      })
-    },
+    // getChildList(){
+    //   let babyListData = {
+    //     params:{
+    //       sort:'old',
+    //       user_id: this.userDataState.id
+    //     }
+    //   }
+    //   axios.get('/book/baby/getList',babyListData).then(res => {
+    //     this.babyList = res.data.data
+    //   })
+    // },
     toManage(){
       location.href = `/SchoolManage?banji_id=${this.$route.query.id}`
     },
@@ -570,32 +575,32 @@ export default {
     //     }
     //   })
     // },
-    selectChild(item){
-      console.log(this.$route.query.banji_name,this.$route.query.school_name)
+    // selectChild(item){
+    //   console.log(this.$route.query.banji_name,this.$route.query.school_name)
 
-      this.$router.push({
-        name:'edit-child',
-        query:{
-          type:'add',
-          formType:'select_banji',
-          pageTitle:'加入班级',
-          id: item.id,
-          banji_name: this.$route.query.banji_name,
-          school_name: this.$route.query.school_name,
-          banji_id: this.$route.query.id,
-          school_id: this.$route.query.school_id,
-          invite_code: this.classInfo.invite_code
-        }
-      })
-    },
-    onClickLeft(){
-      this.$router.push({
-        name:'baby-home',
-        query:{
-          id: this.babyList[0].id
-        }
-      })
-    }
+    //   this.$router.push({
+    //     name:'edit-child',
+    //     query:{
+    //       type:'add',
+    //       formType:'select_banji',
+    //       pageTitle:'加入班级',
+    //       id: item.id,
+    //       banji_name: this.$route.query.banji_name,
+    //       school_name: this.$route.query.school_name,
+    //       banji_id: this.$route.query.id,
+    //       school_id: this.$route.query.school_id,
+    //       invite_code: this.classInfo.invite_code
+    //     }
+    //   })
+    // },
+    // onClickLeft(){
+    //   this.$router.push({
+    //     name:'baby-home',
+    //     query:{
+    //       id: this.babyList[0].id
+    //     }
+    //   })
+    // }
   }
 }
 </script>

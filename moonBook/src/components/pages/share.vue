@@ -1,6 +1,6 @@
 <template>
   <div class="share">
-    <div class="tips" v-if='!$route.query.show_child_join'>点击发送到家庭群或家长 邀请家长加入班级</div>
+    <div class="tips" v-if='pathData.user_id == userDataState.user_id'>点击发送到家庭群或家长 邀请家长加入班级</div>
     <div class="share-cover">
       <img :src="backgroundImg[randomNum]" />
     </div>
@@ -17,14 +17,14 @@
 
       <div class="code-number">
         <div class="title">班级邀请码</div>
-        <div class="number">{{$route.query.invite_code}}</div>
+        <div class="number">{{pathData.invite_code}}</div>
 
         <div class="school-info">
           <div class="school-name" v-line-clamp:20="2">
-            {{$route.query.school_name}}
+            {{pathData.school_name}}
           </div>
           <div class="banji-name">
-            {{$route.query.banji_name}}
+            {{pathData.banji_name}}
           </div>
         </div> 
       </div>
@@ -39,6 +39,7 @@
 import axios from './../lib/js/api'
 import QRcode from 'qrcode'
 import { mapGetters,mapActions } from 'vuex'
+import qs from 'qs'
 
 export default {
   name: 'share',
@@ -64,7 +65,8 @@ export default {
         require('@/assets/banjiShare/class-share-2.png'),
         require('@/assets/banjiShare/class-share-3.png'),
         require('@/assets/banjiShare/class-share-4.png'),
-      ]
+      ],
+      pathData: this.$route.query
     }
   },
   updated(){   
@@ -92,7 +94,7 @@ export default {
       this.qrcode()
     },
     qrcode() {
-      let link = decodeURIComponent(this.$route.query.fullPath)
+      let link = `${location.origin}?${qs.stringify(this.$route.query)}`
       QRcode.toDataURL(link).then(url => {
         this.codeImgURL = url
       }).catch(err => {
@@ -100,24 +102,24 @@ export default {
       })
     },
     toClassHome(){
-      this.$router.push({
-        name:'class-home',
-        query:{
-          ...this.$route.query
-        }
-      })
-
-      this.joinSchool(this.userDataState.child_id)
-      this.joinBanji(this.userDataState.child_id)
-      this.getUserData()
+      this.joinSchool(this.userDataState.child_id).then(this.joinBanji(this.userDataState.child_id).then(this.getUserData().then(
+        () => this.$router.push({
+              name:'class-home',
+              query:{
+                ...this.pathData,
+                id: this.pathData.banji_id
+              }
+            }))
+        )
+      )
     },
     joinSchool(childId) {
       let location = this.userPointState.location.split(',')
       let data = {
           params: {
             child_id: childId,
-            school_id: this.$route.query.school_id,
-            school_name: this.$route.query.school_name,
+            school_id: this.pathData.school_id,
+            school_name: this.pathData.school_name,
             cityname: this.userPointState.city,
             lat: location[1],
             lng: location[0],
@@ -125,19 +127,18 @@ export default {
             typecode: ''
           }
         }
-        axios.get('/book/babySchool/bind', data).then(res => {})
-    
+        return axios.get('/book/babySchool/bind', data).then(res => {})
     }, 
     joinBanji(childId){
       let data = {
         params:{
-          banji_id: this.$route.query.banji_id,
-          child_id: childId,
-          invite_code: this.$route.query.invite_code
+          banji_id: this.pathData.banji_id,
+          invite_code: this.pathData.invite_code,
+          child_id: childId
         }
       }
 
-      axios.get('/book/baby/join_banji', data).then(res => { })
+      return axios.get('/book/baby/join_banji', data).then(res => { })
     }
   }
 }

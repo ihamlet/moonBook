@@ -121,10 +121,7 @@ const actions = {
           iconClass: 'icon-banji',
           name: '班级',
           path: 'class-home',
-          id: res.data.teacher_banji_id > 0?res.data.teacher_banji_id:res.data.banji_id,
-          banji_name: res.data.teacher_banji_id > 0?res.data.teacher_banji_name:res.data.banji_name,
-          school_id:res.data.teacher_school_id > 0? res.data.teacher_school_id:res.data.school_id,
-          school_name: res.data.teacher_school_id > 0?res.data.teacher_school_name:res.data.school_name
+          id: res.data.teacher_banji_id > 0?res.data.teacher_banji_id:res.data.banji_id
         },
         {
           iconClass: 'icon-release',

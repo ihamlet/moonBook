@@ -288,26 +288,28 @@ export default {
       } else {
         this.operationApi().then(res => {
           this.childId = res
-          this.joinSchool(res)
-          this.joinBanji(res)
-          
-          if(this.$route.query.back == 'class-home'){
-            this.$router.replace({
-              name:this.$route.query.back,
-              query:{
-                id: this.$route.query.banji_id
-              }
-            })
-          }else{
-            this.$router.replace({
-              name: 'baby-home',
-              query:{
-                id: res
-              }
-            })
-          }
-
-          this.getUserData()
+          this.joinSchool(res).then(
+            this.joinBanji(res).then(
+                this.getUserData().then(()=>{
+                  if(this.$route.query.back == 'class-home'){
+                    this.$router.replace({
+                      name:this.$route.query.back,
+                      query:{
+                        id: this.$route.query.banji_id
+                      }
+                    })
+                  }else{
+                    this.$router.replace({
+                      name: 'baby-home',
+                      query:{
+                        id: res
+                      }
+                    })
+                  }
+                }
+              )
+            )
+          )
         })
       }
     },
@@ -329,18 +331,16 @@ export default {
     edit() {
       this.operationApi(this.$route.query.id).then(res => {
         if (res) {
-          this.joinSchool(res)
-          this.joinBanji(res)
-
-          this.$router.replace({
-            name:'baby-home',
-            query:{
-              id: this.$route.query.id
-            }
-          })
-
-          this.getUserData()
-
+          this.joinSchool(res).then(
+            this.joinBanji(res).then(
+              this.getUserData).then(()=>this.$router.replace({
+                name:'baby-home',
+                query:{
+                  id: this.$route.query.id
+                }
+              })
+            )
+          )
           this.$toast.success('修改成功')
         } else {
           this.$toast.fail('修改失败')
@@ -417,7 +417,7 @@ export default {
             typecode: ''
           }
         }
-        axios.get('/book/babySchool/bind', data).then(res => {})
+        return axios.get('/book/babySchool/bind', data).then(res => {})
     
     }, 
     joinBanji(childId){
@@ -429,7 +429,7 @@ export default {
         }
       }
 
-      axios.get('/book/baby/join_banji', data).then(res => { })
+      return axios.get('/book/baby/join_banji', data).then(res => { })
     },
     isParentShow(){
       this.parentShow = true

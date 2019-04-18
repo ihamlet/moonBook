@@ -34,17 +34,6 @@ export default {
       set(val){
         this.setReleaseSwitch(val)
       }
-    },
-    managerBanji(){
-      let array = []
-      if(this.managerState){
-        this.managerState.forEach(element => {
-            if(element.item_relation == 'teacher' && element.item_type == 'banji'){
-              array.push(element)
-            }
-        })
-      }
-      return array
     }
   },
   data() {
@@ -66,23 +55,7 @@ export default {
     goPage(item) {
       let path = ''
       if (item.id) {
-        if(item.path == 'class-home'){
-          if(this.managerBanji.length){
-            let data = {
-              id:this.managerBanji[0].id || 0,
-              school_id:this.managerBanji[0].school_id,
-              banji_name: this.formatBanjiTitle(this.managerBanji[0].name),
-              school_name: this.managerBanji[0].school_name,
-              cate_id: 116
-            }
-            let params = qs.stringify(data)
-            path = `${item.path}?${params}`
-          }else{
-            path = `${item.path}?id=${item.id}`
-          }
-        }else{
-          path = `${item.path}?id=${item.id}`
-        }
+        path = `${item.path}?id=${item.id}`
       } else {
         path = item.path
       }
