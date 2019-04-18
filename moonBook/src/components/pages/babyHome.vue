@@ -255,25 +255,6 @@ export default {
             switch(res.data.status){
               case 1:
                 this.babyList = res.data.data
-
-                let array = res.data.data
-                array.forEach(element => {
-                  if(element.id != this.$route.query.id){
-                    let babyBorrowGetListData = {
-                      params:{
-                        page:1,
-                        limit:20,
-                        child_id:this.$route.query.id
-                      }
-                    }
-
-                    axios.get('/book/BabyBorrow/getList',babyBorrowGetListData).then(res => {
-                      if (res.status == 200) {
-                        this.lateBook = res.data.data
-                      }
-                    })
-                  }
-                })
               break
             }
           })
@@ -303,8 +284,24 @@ export default {
             }
           }
           axios.get('/book/baby/getInfo',data).then(res => {
-            if (res.data.status == 1) {
-              this.childInfo = res.data.data
+              if (res.data.status == 1) {
+                this.childInfo = res.data.data
+
+              if(!res.data.data.is_mine){
+                let babyBorrowGetListData = {
+                  params:{
+                    page:1,
+                    limit:20,
+                    child_id:this.$route.query.id
+                  }
+                }
+
+                axios.get('/book/BabyBorrow/getList',babyBorrowGetListData).then(res => {
+                  if (res.status == 200) {
+                    this.lateBook = res.data.data
+                  }
+                })
+              }
             }
           })
         } else{
