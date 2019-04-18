@@ -112,6 +112,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios.get('/book/memberUser/getInfo').then(res => {
         resolve(res.data)
+        console.log(res.data)
         let tabArray = [{
           iconClass: 'icon-home',
           name: '首页',
