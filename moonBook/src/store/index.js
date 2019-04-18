@@ -335,7 +335,8 @@ const actions = {
       school_id: products.school_id,
       title: products.title,
       tags: products.tags,
-      extra: products.extra
+      extra: products.extra,
+      to_school: 1 //发送到学校
     }
 
     setting.result.forEach(e=>{

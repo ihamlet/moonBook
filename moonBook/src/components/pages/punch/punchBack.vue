@@ -1,9 +1,9 @@
 <template>
   <div class="punch-list page-padding">
     <div class="booth">
-      <div class="ad-mould" @click="toActivity">
+      <div class="ad-mould">
         <van-swipe :autoplay="3000" indicator-color="white" :height='130'>
-          <van-swipe-item v-for="(image, index) in banner" :key="index">
+          <van-swipe-item v-for="(image, index) in banner" :key="index" @click="toAdvertising">
             <img :src="image" />
           </van-swipe-item>
         </van-swipe>
@@ -12,7 +12,7 @@
 
     <van-pull-refresh v-model="loading" @refresh="onRefresh">
       <!-- right-text="阅读进度" @click-right="onClickRight" -->
-      <van-nav-bar :border='false'>
+      <van-nav-bar :border='false' right-text="阅读进度" @click-right="onClickRight">
         <div class="date-title" slot="title">{{day}}</div>
       </van-nav-bar>
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
@@ -179,8 +179,11 @@ export default {
         }
       }
     },
-    toActivity() {
+    toActivity(){
 
+    },
+    toAdvertising(){
+      
     },
     toSpecialPunch() {
       this.$router.push({
