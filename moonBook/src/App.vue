@@ -5,7 +5,7 @@
         <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
     <router-view v-if="!$route.meta.keepAlive"></router-view>
-    <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='userTabBtn' />
+    <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='getTabBtn' />
   </div>
 </template>
 
@@ -23,42 +23,7 @@ export default {
     footerBar
   },
   computed: {
-    ...mapGetters(['userDataState']),
-    userTabBtn() {
-      let array = [
-        {
-          iconClass: 'icon-home',
-          name: '首页',
-          path: '/'
-        },
-        {
-          iconClass: 'icon-banji',
-          name: '班级',
-          path: 'class-home',
-          id: this.userDataState.banji_id > 0?this.userDataState.banji_id:this.userDataState.teacher_banji_id,
-          banji_name: this.userDataState.banji_name,
-          school_id: this.userDataState.school_id,
-          school_name: this.userDataState.school_name
-        },
-        {
-          iconClass: 'icon-release',
-          name: '发布',
-          path: ''
-        },
-        {
-          iconClass: 'icon-crown',
-          name: '宝贝',
-          path: 'baby-home',
-          id: this.userDataState.child_id
-        },
-        {
-          iconClass: 'icon-people',
-          name: '我的',
-          path: 'my-home'
-        }
-      ]
-      return array
-    }
+    ...mapGetters(['userDataState','getTabBtn'])
   },
   data () {
     const self = this
@@ -77,7 +42,8 @@ export default {
                   })
               }
           }
-      }]
+      }],
+      userTabBtn:[]
     }
   },
   created () {
@@ -98,9 +64,6 @@ export default {
     },
     '$route': 'fetchData'
   },
-  // updated () {
-  //   this.httpsImg()
-  // },
   methods: {
     ...mapActions('openWX',['wxConfig','wxGetLocation']),
     ...mapActions(['getUserData','getMsg','getUserLocation','getManager']),
@@ -112,17 +75,7 @@ export default {
       this.getUserData()
       this.getManager()
       this.getMsg(products)
-    },
-    // httpsImg(){
-    //   this.$nextTick(()=>{
-    //     let imgs = document.getElementsByTagName('img')
-    //     for(let i = 0 ; i < imgs.length ; i ++){
-    //       if(imgs[i].src.indexOf(location.origin) == -1){
-    //         imgs[i].src = imgs[i].src.replace('http:', 'https:')
-    //       }
-    //     }
-    //   })
-    // }
+    }
   }
 }
 </script>

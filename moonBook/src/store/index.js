@@ -69,7 +69,15 @@ const getters = {
       return (state.token = data)
     }
   },
-  
+  getTabBtn: state => {
+    if (state.tabBtn) {
+      return state.tabBtn
+    } else {
+      if (localStorage.getItem('tabBtn')) {
+        return JSON.parse(localStorage.getItem('tabBtn'))
+      }
+    }
+  }
 }
 
 const mutations = {
@@ -92,6 +100,10 @@ const mutations = {
   },
   setReleaseSwitch(state, params){
     state.releaseSwitch = params
+  },
+  setTabBtn(state, params){
+    localStorage.setItem('tabBtn', JSON.stringify(params.data))
+    state.tabBtn = params.data
   }
 }
 
@@ -100,9 +112,45 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios.get('/book/memberUser/getInfo').then(res => {
         resolve(res.data)
+        let tabArray = [{
+          iconClass: 'icon-home',
+          name: '首页',
+          path: '/'
+        },
+        {
+          iconClass: 'icon-banji',
+          name: '班级',
+          path: 'class-home',
+          id: res.data.teacher_banji_id > 0?res.data.teacher_banji_id:res.data.banji_id,
+          banji_name: res.data.teacher_banji_id > 0?res.data.teacher_banji_name:res.data.banji_name,
+          school_id:res.data.teacher_school_id > 0? res.data.teacher_school_id:res.data.school_id,
+          school_name: res.data.teacher_school_id > 0?res.data.teacher_school_name:res.data.school_name
+        },
+        {
+          iconClass: 'icon-release',
+          name: '发布',
+          path: ''
+        },
+        {
+          iconClass: 'icon-crown',
+          name: '宝贝',
+          path: 'baby-home',
+          id: res.data.child_id
+        },
+        {
+          iconClass: 'icon-people',
+          name: '我的',
+          path: 'my-home'
+        }]
+
         context.commit('setUserData', {
           data: res.data
         })
+
+        context.commit('setTabBtn', {
+          data: tabArray
+        })
+
       })
     })
   },

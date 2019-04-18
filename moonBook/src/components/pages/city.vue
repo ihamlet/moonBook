@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="content" v-if='list.length'>
-      <div class="list">
+      <div class="list search-list">
         <van-cell-group>
           <van-cell :border='false'  :title="item.name" v-for='(item,index) in list' :key="index" @click="selectCity(item.name)" clickable center/>
         </van-cell-group>
@@ -96,6 +96,7 @@ export default {
       cityHistory: [],
       cityCounty: [],
       keyword:'',
+      searchList: false,
       height:0,
       list:[]
     }
@@ -337,10 +338,6 @@ i.bubble.show {
   display: block;
 }
 
-.hot-city {
-  padding-bottom: 0.625rem /* 10/16 */;
-}
-
 .district {
   background: #fff;
 }
@@ -384,7 +381,7 @@ i.bubble.show {
 
 .new-city {
   background: #fff;
-  padding-top: 50px;
+  padding-top: 55px;
 }
 
 ul.recent li:first-child {
@@ -408,5 +405,9 @@ ul.recent li:first-child::before {
   background: #fff;
   overflow: hidden;
   width: 100%;
+}
+
+.search-list{
+  padding-top: 53px;
 }
 </style>
