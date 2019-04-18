@@ -186,6 +186,10 @@ export default {
             switch(res.data.data.is_confirm){
               case '0': //正在审核
                 this.active = 1
+                this.managerData = {
+                  ...res.data.data,
+                  ...this.$route.query
+                }
               break
               case '1': //审核通过
                 this.active = 2
@@ -198,9 +202,9 @@ export default {
             this.active = 0
           }
 
-          this.office = res.data.data.duty
-          this.managerData.duty = res.data.data.duty
-          this.managerData.update_time = res.data.data.update_time
+          // this.office = res.data.data.duty
+          // this.managerData.duty = res.data.data.duty
+          // this.managerData.update_time = res.data.data.update_time
         }
       })
     },
@@ -265,7 +269,8 @@ export default {
           this.loading = true
           let data = {
             params: {
-              ...this.managerData
+              ...this.managerData,
+              ...this.$route.query
             }
           }
 
