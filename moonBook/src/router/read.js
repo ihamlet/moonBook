@@ -6,8 +6,10 @@ import ReadAmount from '@/components/pages/readAmount'
 import ReadGuide from '@/components/pages/guided/readGuide'
 import punchBack from '@/components/pages/punch/punchBack'
 import punchList from '@/components/pages/punch/punchList'
+import advertisingDetails from '@/components/pages/punch/advertisingDetails'
 import punchSpeed from '@/components/pages/punch/punchSpeed'
 import Calendar from '@/components/module/mold/calendar'
+
 
 let readRouter = [{
     path: '/bookshelf',
@@ -98,6 +100,14 @@ let readRouter = [{
     component: Calendar,
     meta: {
       title: '阅读日历',
+      isFooterBar: false
+    }
+  },{
+    path: '/advertisingDetails',
+    name: 'advertisingDetails',
+    component: advertisingDetails,
+    meta: {
+      title: '广告详情',
       isFooterBar: false
     }
   }]

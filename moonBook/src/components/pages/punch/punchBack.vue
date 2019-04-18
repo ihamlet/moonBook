@@ -11,8 +11,8 @@
     </div>
 
     <van-pull-refresh v-model="loading" @refresh="onRefresh">
-      <!-- right-text="阅读进度" @click-right="onClickRight" -->
-      <van-nav-bar :border='false' right-text="阅读进度" @click-right="onClickRight">
+      <van-nav-bar :border='false' right-text="" @click-right="onClickRight">  
+         <!-- 阅读进度 -->
         <div class="date-title" slot="title">{{day}}</div>
       </van-nav-bar>
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
@@ -179,11 +179,14 @@ export default {
         }
       }
     },
-    toActivity(){
-
-    },
     toAdvertising(){
-      
+      console.log('广告详情')
+      // this.$router.push({
+      //   name:'advertisingDetails',
+      //   query:{
+      //     id: this.$route.query.id
+      //   }
+      // })
     },
     toSpecialPunch() {
       this.$router.push({
@@ -205,14 +208,15 @@ export default {
         }
       })
     },
-    // onClickRight(){
-    //   this.$router.push({
-    //     name:'punchSpeed',
-    //     query:{
-    //       id: this.$route.query.id
-    //     }
-    //   })
-    // }
+    onClickRight(){
+      console.log('阅读进度')
+      // this.$router.push({
+      //   name:'punchSpeed',
+      //   query:{
+      //     id: this.$route.query.child_id
+      //   }
+      // })
+    }
   }
 }
 </script>

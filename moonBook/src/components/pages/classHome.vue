@@ -4,9 +4,9 @@
       <div class="head-bar-title" slot="title" @click="cutover">
         {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="managerState.length > 1 && actions != null">&#xe608;</i>
       </div>
-      <div class="head-bar-text" slot='right' v-if='manage' @click="toManage">
+      <!-- <div class="head-bar-text" slot='right' v-if='manage' @click="toManage">
         <span class="text">管理班级</span>
-      </div>
+      </div> -->
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">

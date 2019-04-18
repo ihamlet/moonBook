@@ -166,6 +166,12 @@ export default {
       }
     },
     fetchData() {
+
+      this.managerData.school_name = this.$route.query.school_name 
+      this.managerData.banji_name = this.$route.query.banji_name
+      this.managerData.school_id = this.$route.query.school_id
+      this.managerData.banji_id = this.$route.query.banji_id 
+
       let data
       if (this.$route.query.registerType == 'headmaster') {
         data = {
@@ -180,7 +186,6 @@ export default {
             switch(res.data.data.is_confirm){
               case '0': //正在审核
                 this.active = 1
-                this.managerData = res.data.data
               break
               case '1': //审核通过
                 this.active = 2
@@ -193,14 +198,9 @@ export default {
             this.active = 0
           }
 
-
-          this.managerData.school_name = this.$route.query.school_name || res.data.data.school_name
-          this.managerData.banji_name = this.$route.query.banji_name || res.data.data.banji_name
-          this.managerData.school_id = this.$route.query.school_id || res.data.data.school_id
-          this.managerData.banji_id = this.$route.query.banji_id || res.data.data.banji_id
-
-          this.schoolInfo = res.data.school
           this.office = res.data.data.duty
+          this.managerData.duty = res.data.data.duty
+          this.managerData.update_time = res.data.data.update_time
         }
       })
     },
