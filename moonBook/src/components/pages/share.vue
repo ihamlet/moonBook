@@ -94,7 +94,7 @@ export default {
       this.qrcode()
     },
     qrcode() {
-      let link = `${location.origin}/?#${qs.stringify(this.$route.query)}`
+      let link = `${location.href.replace('/#','/?#')}`
       QRcode.toDataURL(link).then(url => {
         this.codeImgURL = url
       }).catch(err => {
