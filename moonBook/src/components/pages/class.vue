@@ -419,13 +419,13 @@ export default {
 
 .prompt-text{
   font-size: 18px;
-  width: 300px;
   text-align: left;
   margin: 0 auto;
   text-align: center;
+  margin-top: 5px
 }
 
-.prompt-text{
-  margin-top: 5px;
+.prompt{
+  color:red
 }
 </style>

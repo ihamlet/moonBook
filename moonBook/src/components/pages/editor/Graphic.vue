@@ -43,9 +43,10 @@
             </van-row>
           </van-cell>
         </div>
+
+        <div class="prompt-text" v-if='$route.query.upVideo == 1'>请上传18秒内的视频</div>
       </van-cell-group>
     </div>
-
     <!-- 分类设置、同步、设置机构标签 -->
     <articleSetting type='mould'/>
     <div class="media-input" v-show="false">
@@ -522,6 +523,12 @@ export default {
 
 .textarea-module{
   padding-top: 2.8125rem /* 45/16 */;
+}
+
+.prompt-text{
+  color: red;
+  background: #fff;
+  padding-left: 15px;
 }
 </style>
 <style>
