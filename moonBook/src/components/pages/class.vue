@@ -55,11 +55,12 @@
 
     <van-dialog v-model="showCode" show-cancel-button confirmButtonText='忽略' cancelButtonText='重新选择' :before-close="codeBeforeClose">
       <div class="dialog-title tips"> 
-        <span class="prompt-text">填写邀请码直接进入班级</span>
+        <div class="prompt-text">填写邀请码直接进入班级</div>
+        <div class="prompt">点击忽略请等待老师审核通过</div>
       </div>
       <van-cell-group>
         <div class="flex flex-align">
-          <van-field class="dialog-field" v-model="code" placeholder="点击忽略请等待老师审核通过" input-align='center'/> 
+          <van-field class="dialog-field" v-model="code" placeholder="请填写邀请码" input-align='center'/> 
           <van-button type="primary" square size='normal' class="dialog-btn theme-btn" @click="verification">进入班级</van-button>
         </div>
       </van-cell-group>
