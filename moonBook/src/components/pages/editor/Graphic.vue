@@ -44,7 +44,7 @@
           </van-cell>
         </div>
 
-        <div class="prompt-text" v-if='$route.query.upVideo == 1'>请上传18秒内的视频</div>
+        <div class="prompt-text" v-if='$route.query.upVideo'>请上传15秒视频</div>
       </van-cell-group>
     </div>
     <!-- 分类设置、同步、设置机构标签 -->
@@ -526,7 +526,7 @@ export default {
 }
 
 .prompt-text{
-  color: red;
+  color: #E6A23C;
   background: #fff;
   padding-left: 15px;
 }
