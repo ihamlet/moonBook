@@ -43,7 +43,7 @@ export default {
     avatar
   },
   computed: {
-    ...mapGetters(['userPointState', 'userPointState']),
+    ...mapGetters(['userPointState']),
   },
   data() {
     return {

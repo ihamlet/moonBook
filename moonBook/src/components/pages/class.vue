@@ -186,7 +186,7 @@ export default {
           ...this.$route.query,
           banji_id:this.list[this.itemIndex].banji_id,
           banji_name:this.list[this.itemIndex].title,
-          invite_code:this.code || this.list[this.itemIndex].invite_code,
+          invite_code:this.code || this.list[this.itemIndex].invite_code
         }
         this.$router.replace({
           name:'edit-child',

@@ -43,7 +43,7 @@ import { mapGetters,mapActions } from 'vuex'
 export default {
   name: 'share',
   computed: {
-    ...mapGetters(['userDataState']),
+    ...mapGetters(['userDataState','userPointState']),
     item() {
       let data = {
         cate_name: '邀请',
@@ -86,6 +86,7 @@ export default {
     '$router':'fetchData'
   },
   methods: {
+    ...mapActions(['getUserData']),
     ...mapActions('openWX', ['share']),
     fetchData(){
       this.qrcode()
@@ -102,12 +103,41 @@ export default {
       this.$router.push({
         name:'class-home',
         query:{
-          id: this.$route.query.banji_id,
-          banji_name: this.$route.query.banji_name,
-          school_name: this.$route.query.school_name,
-          school_id: this.$route.query.school_id
+          ...this.$route.query
         }
       })
+
+      this.joinSchool(this.userDataState.child_id)
+      this.joinBanji(this.userDataState.child_id)
+      this.getUserData()
+    },
+    joinSchool(childId) {
+      let location = this.userPointState.location.split(',')
+      let data = {
+          params: {
+            child_id: childId,
+            school_id: this.$route.query.school_id,
+            school_name: this.$route.query.school_name,
+            cityname: this.userPointState.city,
+            lat: location[1],
+            lng: location[0],
+            amap_id: '',
+            typecode: ''
+          }
+        }
+        axios.get('/book/babySchool/bind', data).then(res => {})
+    
+    }, 
+    joinBanji(childId){
+      let data = {
+        params:{
+          banji_id: this.$route.query.banji_id,
+          child_id: childId,
+          invite_code: this.$route.query.invite_code
+        }
+      }
+
+      axios.get('/book/baby/join_banji', data).then(res => { })
     }
   }
 }
