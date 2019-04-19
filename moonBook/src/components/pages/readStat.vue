@@ -64,7 +64,7 @@
       </div>
       <div class="gutter gap">
         <van-cell-group>
-          <van-cell size='large'>
+          <!-- <van-cell size='large'>
             <div class="text flex flex-justify">本月比上月阅读<span class="data">增长了24本</span></div>
           </van-cell>
           <van-cell size='large'>
@@ -72,7 +72,7 @@
               <div class="content l">本月上传内容<span class="data">{{childInfo.month_post_count}}篇</span></div>
               <div class="content r"><span class="data">{{childInfo.zan_count}}人</span>点赞</div>
             </div>
-          </van-cell>
+          </van-cell> -->
           <van-cell size='large'>
             <div class="text flex flex-justify">影响<span class="data">{{childInfo.fluent_count}}人</span> 阅读了<span class="data">{{childInfo.fluent_read_count}} 本</span>图书</div>
           </van-cell>

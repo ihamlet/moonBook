@@ -180,7 +180,7 @@ export default {
       }
     },
     toAdvertising(){
-      console.log('广告详情')
+      console.log('广告详情','advertisingDetails')
       // this.$router.push({
       //   name:'advertisingDetails',
       //   query:{
