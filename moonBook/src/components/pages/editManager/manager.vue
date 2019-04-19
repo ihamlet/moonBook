@@ -1,6 +1,6 @@
 <template>
   <div class="add-child">
-    <van-nav-bar :title="pageTitle" :border='false' :right-text="active==2?'重新注册':''" @click-right="active = 0"/>
+    <van-nav-bar :title="pageTitle" :border='false' :right-text="active==2?'重新注册':''" @click-right="renewReg"/>
 
     <van-steps :active="active" active-icon="success" active-color="#38f">
       <van-step>注册申请</van-step>
@@ -23,7 +23,7 @@
       </div>
 
       <van-popup v-model="show" position="bottom" get-container='#app'>
-        <van-picker ref='officePicker' :columns="jobList" @change="onChange"  title="选择职位" @cancel="onClose" @confirm="onConfirm" show-toolbar :visible-item-count='3'/>
+        <van-picker ref='officePicker' :columns="jobList" @change="onChange" title="选择职位" @cancel="onClose" @confirm="onConfirm" show-toolbar :visible-item-count='3'/>
         <van-field size='large' label="填写职位" v-model="writeOffice" placeholder="职位信息" input-align='right'/>
       </van-popup>
     </div>
@@ -209,27 +209,6 @@ export default {
       })
     },
     toSetting(managerData) {
-      if (managerData.is_confirm == 1) {
-        this.$dialog.alert({
-          message: '您的注册表单已经通过审核，修改将会重新提交表单进行审核，您确定要修改吗？',
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          showCancelButton: true
-        }).then(() => {
-          this.$router.push({
-            name: 'edit-setting',
-            query: {
-              ...this.$route.query,
-              school_name: this.managerData.school_name,
-              school_id: this.managerData.school_id,
-              banji_name: this.formatBanjiTitle(this.managerData.banji_name),
-              banji_id: this.managerData.banji_id
-            }
-          })
-        }).catch(() => {
-          // on cancel
-        })
-      } else {
         this.$router.push({
           name: 'edit-setting',
           query: {
@@ -240,28 +219,13 @@ export default {
             banji_id: this.managerData.banji_id
           }
         })
-      }
     },
     selectOffice() {
       this.writeOffice = ''
       this.show = true
     },
     onChange(picker, value, index) {
-      if (this.managerData.is_confirm == 1) {
-        this.$dialog.alert({
-          message: '您的注册表单已经通过审核，修改将会重新提交表单进行审核，您确定要修改吗？',
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          showCancelButton: true
-        }).then(() => {
-          this.office = value
-
-        }).catch(() => {
-          this.show = false
-        })
-      } else {
-        this.office = value
-      }
+      this.office = value
     },
     setStep(){
       switch(this.active){
@@ -298,7 +262,7 @@ export default {
               this.$router.push({
                 name:'class-home',
                 query:{
-                  id: this.managerData.banji_id
+                  id: this.userDataState.teacher_banji_id
                 }
               })
             break
@@ -306,7 +270,7 @@ export default {
               this.$router.push({
                 name:'apps-school',
                 query:{
-                  id: this.managerData.school_id
+                  id: this.userDataState.teacher_school_id
                 }
               })
             break
@@ -351,6 +315,18 @@ export default {
         this.office = this.writeOffice
       }
       this.show = false
+    },
+    renewReg(){
+      this.$dialog.alert({
+        message: '您的注册表单已经通过审核，重新注册表单将会重新提交，您确定要重新注册吗？',
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        showCancelButton: true
+      }).then(() => {
+        this.active = 0
+      }).catch(() => {
+        // on cancel
+      })
     }
   }
 }

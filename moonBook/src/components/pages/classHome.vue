@@ -270,7 +270,7 @@ export default {
                   this.$router.push({
                     name: 'edit-school',
                     query: {
-                      type: 'add',
+                      type: 'edit',
                       enter: 'my-home',
                       id: res.child_id
                     }
@@ -293,7 +293,7 @@ export default {
                         back: 'class-home',
                         school_name: res.school_name,
                         school_id: res.school_id,
-                        type: 'add'
+                        type: 'edit'
                       }
                     })
                   }).catch(() => {

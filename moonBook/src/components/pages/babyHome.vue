@@ -208,6 +208,7 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
+    to.meta.keepAlive = false
     next(vm => {
       vm.request()
     })

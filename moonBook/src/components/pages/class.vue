@@ -134,7 +134,7 @@ export default {
         this.schoolName = this.$route.query.school_name
         this.childInfo = {
           name: this.$route.query.name,
-          age: this.$route.query.age,
+          age: this.$route.query.age || 0,
           avatar: this.$route.query.avatar
         }
     },

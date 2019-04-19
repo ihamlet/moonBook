@@ -137,7 +137,8 @@ export default {
       parentList:['妈妈','爸爸','爷爷','奶奶','舅舅','姑姑','小姨','外公','外婆'],
       errorMessage: {
         name: '',
-        birthday: ''
+        birthday: '',
+        school:''
       },
       pickerShow: false,
       cropperShow: false,
@@ -285,31 +286,27 @@ export default {
         setTimeout(() => {
           this.errorMessage.birthday = ''
         }, 2000)
-      } else {
-        this.operationApi().then(res => {
-          this.childId = res
-          this.joinSchool(res).then(
-            this.joinBanji(res).then(
-                this.getUserData().then(()=>{
-                  if(this.$route.query.back == 'class-home'){
-                    this.$router.replace({
-                      name:this.$route.query.back,
-                      query:{
-                        id: this.$route.query.banji_id
-                      }
-                    })
-                  }else{
-                    this.$router.replace({
-                      name: 'baby-home',
-                      query:{
-                        id: res
-                      }
-                    })
-                  }
+      }else{
+        this.submitLoading = true
+        this.operationApi().then(res=>{
+          axios.all([this.joinSchool(res),this.joinBanji(res),this.getUserData()]).then(()=>{
+            this.submitLoading = false
+            if(this.$route.query.back == 'class-home'){
+              this.$router.replace({
+                name:this.$route.query.back,
+                query:{
+                  id: this.$route.query.banji_id
                 }
-              )
-            )
-          )
+              })
+            }else{
+              this.$router.replace({
+                name: 'baby-home',
+                query:{
+                  id: res
+                }
+              })
+            }
+          })
         })
       }
     },
@@ -329,22 +326,17 @@ export default {
         })
     },
     edit() {
-      this.operationApi(this.$route.query.id).then(res => {
-        if (res) {
-          this.joinSchool(res).then(
-            this.joinBanji(res).then(
-              this.getUserData).then(()=>this.$router.replace({
-                name:'baby-home',
-                query:{
-                  id: this.$route.query.id
-                }
-              })
-            )
-          )
-          this.$toast.success('修改成功')
-        } else {
-          this.$toast.fail('修改失败')
-        }    
+      this.submitLoading = true
+      this.operationApi(this.$route.query.id).then(res=>{
+        axios.all([this.joinSchool(res),this.joinBanji(res),this.getUserData()]).then(()=>{
+          this.submitLoading = false
+          this.$router.replace({
+            name:'baby-home',
+            query:{
+              id:this.$route.query.id
+            }
+          })
+        })
       })
     },
     onInput(checked) {
@@ -404,32 +396,38 @@ export default {
       this.childInfo.relation_name = values
     },
     joinSchool(childId) {
-      let location = this.userPointState.location.split(',')
-      let data = {
-          params: {
-            child_id: childId,
-            school_id: this.$route.query.school_id,
-            school_name: this.$route.query.school_name,
-            cityname: this.userPointState.city,
-            lat: location[1],
-            lng: location[0],
-            amap_id: '',
-            typecode: ''
+      if(this.$route.query.school_id > 0) {
+        let location = this.userPointState.location.split(',')
+        let data = {
+            params: {
+              child_id: childId,
+              school_id: this.$route.query.school_id,
+              school_name: this.$route.query.school_name,
+              cityname: this.userPointState.city,
+              lat: location[1],
+              lng: location[0],
+              amap_id: '',
+              typecode: ''
+            }
           }
-        }
-        return axios.get('/book/babySchool/bind', data).then(res => {})
-    
+          return axios.get('/book/babySchool/bind', data)
+      } else {
+        return Promise.reolve
+      }
     }, 
     joinBanji(childId){
-      let data = {
-        params:{
-          banji_id: this.$route.query.banji_id,
-          child_id: childId,
-          invite_code: this.$route.query.invite_code
+      if(this.$route.query.banji_id > 0) {
+        let data = {
+              params:{
+                banji_id: this.$route.query.banji_id,
+                child_id: childId,
+                invite_code: this.$route.query.invite_code
+              }
         }
-      }
-
-      return axios.get('/book/baby/join_banji', data).then(res => { })
+        return axios.get('/book/baby/join_banji', data)
+      } else {
+        return Promise.reolve
+      } 
     },
     isParentShow(){
       this.parentShow = true

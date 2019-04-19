@@ -34,13 +34,13 @@ export default {
     methods: {
         ...mapActions(["getUserData"]),
         onInput(data) {
-            axios.get('/book/MemberChild/top',data).then(res => {
-                switch(res.data.status){
-                  case 1:
-                      this.getUserData()
-                  break
-                }
-            })
+          axios.get('/book/MemberChild/top',data).then(res => {
+              switch(res.data.status){
+                case 1:
+                  this.getUserData()
+                break
+              }
+          })
         },
         addBaby(){
             localStorage.removeItem('childInfo')
