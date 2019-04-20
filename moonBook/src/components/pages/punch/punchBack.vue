@@ -50,7 +50,7 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapActions, mapState, mapMutations } from 'vuex'
+import { mapActions, mapState, mapMutations, mapGetters } from 'vuex'
 import cardPunch from './cardPunch'
 import videoList from './../video/videoList'
 import { format } from './../../lib/js/util'
@@ -64,6 +64,7 @@ export default {
     tips
   },
   computed: {
+    ...mapGetters(['userDataState']),
     ...mapState(['releaseSwitch']),
     showTips: {
       get() {
@@ -113,10 +114,10 @@ export default {
       let data = {
         params: {
           site_name: '打卡阅读',
-          school_id:''
+          school_id: this.userDataState.school_id
         }
       }
-      axios.get('book/api/ads', data).then(res => {
+      axios.get('/book/api/ads', data).then(res => {
         console.log(res)
       })
     },

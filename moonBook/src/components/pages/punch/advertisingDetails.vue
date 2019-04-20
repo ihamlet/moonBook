@@ -62,13 +62,13 @@ export default {
   data() {
     return {
       show: false,
-      detailsCard: true,
+      detailsCard: false,
       process:['领奖时间','领奖地点','出示兑换券','商家核销','领取奖品']
     }
   },
   created() {
     setTimeout(() => {
-      this.show = false
+      this.show = true
     }, 1000)
   },
   methods: {
@@ -85,6 +85,9 @@ export default {
     },
     toPopupList(){
         console.log('卡券列表','popupList')
+        this.$router.push({
+          name:'popupList'
+        })
     }
   }
 }
@@ -133,8 +136,7 @@ export default {
   height: 20px;
   border-radius: 50%;
   background: linear-gradient(135deg, #00bcd4, #0084ff);
-  bottom: 50%;
-  top: 50%;
+  bottom: -20%;
   transform: translate3d(0, -50%, 0);
 }
 

@@ -7,7 +7,9 @@ import ReadGuide from '@/components/pages/guided/readGuide'
 import punchBack from '@/components/pages/punch/punchBack'
 import punchList from '@/components/pages/punch/punchList'
 import advertisingDetails from '@/components/pages/punch/advertisingDetails'
+import popupList from '@/components/pages/punch/popupList'
 import punchSpeed from '@/components/pages/punch/punchSpeed'
+import writeOff from '@/components/pages/punch/writeOff'
 import Calendar from '@/components/module/mold/calendar'
 
 
@@ -108,6 +110,22 @@ let readRouter = [{
     component: advertisingDetails,
     meta: {
       title: '广告详情',
+      isFooterBar: false
+    }
+  },{
+    path:'/popupList',
+    name:'popupList',
+    component: popupList,
+    meta:{
+      title:'卡券列表',
+      isFooterBar: false
+    }
+  },{
+    path:'/writeOff',
+    name:'writeOff',
+    component: writeOff,
+    meta:{
+      title:'核销',
       isFooterBar: false
     }
   }]
