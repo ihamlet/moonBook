@@ -14,14 +14,10 @@
 <script>
 import axios from './../../lib/js/api'
 import { compress } from './../../lib/js/util'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'tips',
-  props: ['position','isShow'],
-  computed: {
-    ...mapGetters(['managerState'])
-  },
+  props: ['position','isShow','cate'],
   data() {
     return {
       percent: 0,
@@ -97,11 +93,10 @@ export default {
       this.$router.push({
         name: 'graphic',
         query: {
+          ...this.$route.query,
           back: this.$route.query.back || this.$route.name,
-          id: this.$route.query.id,
-          cate_id: this.$route.query.cate_id,
-          tag_id: this.$route.query.tag_id,
-          tags: this.$route.query.tags
+          tag_id: this.cate?'':this.$route.query.tag_id,
+          cate_id: this.$route.query.cate_id?this.$route.query.cate_id:this.cate?this.cate.cate_id:'',
         }
       })
     },
@@ -109,12 +104,11 @@ export default {
       this.$router.push({
         name: 'graphic',
         query: {
+          ...this.$route.query,
           back: this.$route.query.back || this.$route.name,
-          id: this.$route.query.id,
-          upVideo:1,
-          cate_id: this.$route.query.cate_id,
-          tag_id: this.$route.query.tag_id,
-          tags: this.$route.query.tags
+          tag_id: this.cate?'':this.$route.query.tag_id,
+          cate_id: this.$route.query.cate_id?this.$route.query.cate_id:this.cate?this.cate.cate_id:'',
+          upVideo:1
         }
       })
     }

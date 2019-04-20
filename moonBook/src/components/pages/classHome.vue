@@ -2,7 +2,7 @@
   <div class="class-home page-padding" v-if='hackReset'>
     <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed :border='false'>
       <div class="head-bar-title" slot="title" @click="cutover">
-        {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="managerState.length > 1 && actions != null">&#xe608;</i>
+        {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="userDataState.teacher_school_id > 0">&#xe608;</i>
       </div>
       <!-- <div class="head-bar-text" slot='right' v-if='manage' @click="toManage">
         <span class="text">管理班级</span>
@@ -14,9 +14,9 @@
             <div class="class-name">{{formatBanjiTitle(classInfo.title)}}</div>
             <div class="class-people">（{{classInfo.student_count}}人）</div>
         </div>
-        <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>  
+        <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
       </div>
-      <div class="qrcode" @click="toPageCodeShare" v-if='manage'>
+      <div class="qrcode" @click="toPageCodeShare" v-if='userDataState.teacher_school_id'>
         <van-button plain size="small" round class="theme-plain" type="primary">邀请家长</van-button>
       </div>
     </div>
@@ -51,54 +51,6 @@
         # 课堂故事
       </van-button>
     </div>
-
-    <!-- <div class="footer-bar">
-      <div class="footer-btn flex flex-align">
-        <div class="btn" v-if='classInfo.is_my_baby_banji'>
-          <van-button @click="punch" class="punch-btn theme-btn" round size="normal" type="primary">
-            <i class="iconfont">&#xe60a;</i>
-            阅读打卡
-          </van-button>
-        </div>
-        <div class="btn contain" v-else :class="isReleaseShow?'show':'hide'">
-          <van-button @click="isReleaseShow = !isReleaseShow" class="theme-btn" round size="normal" type="primary">
-            <i class="iconfont" v-if='isReleaseShow'>&#xe647;</i>
-            <i class="iconfont" v-else>&#xe664;</i>
-            {{!isReleaseShow?'课堂阅读发布':''}}
-          </van-button>
-
-   
-            <div class="release-list" v-show='isReleaseShow'>
-              <div class="btn-item" @click="toGraphic('weibo')">
-                <i class="iconfont icon-weibo"></i>
-                <span>发图文</span>
-              </div>
-              <div class="btn-item" @click="toGraphic('video')">
-                <i class="iconfont icon-paishipin"></i>
-                <span>拍视频</span>
-              </div>
-            </div>
-
-        </div>
-      </div>
-    </div> -->
-
-    <!-- <van-dialog v-model="showCode" show-cancel-button :showConfirmButton='false'  cancelButtonText='返回'  :before-close="codeBeforeClose">
-      <div class="dialog-title tips"> 
-        <span class="prompt-text">填写邀请码进入班级</span>
-      </div>
-      <van-cell-group>
-        <div class="flex flex-align">
-          <van-field class="dialog-field" v-model="code" placeholder="请填写邀请码" input-align='center'/> 
-          <van-button type="primary" square size='normal' class="dialog-btn theme-btn" @click="verification">进入班级</van-button>
-        </div>
-      </van-cell-group>
-    </van-dialog> -->
-
-    <!-- <van-popup v-model="isSelectBabyShow" position="bottom" :close-on-click-overlay='false'>
-      <van-nav-bar title="请选择要加入该班级的宝贝" :left-text="babyList[0]&&babyList[0].name" left-arrow @click-left="onClickLeft"/>
-      <selectBaby :babyList='babyList' :invite_code='classInfo.invite_code' @onSelect='selectChild'/>
-    </van-popup> -->
   </div>
 </template>
 <script>
@@ -162,17 +114,6 @@ export default {
       }
 
       return str
-    },
-    manage() {
-      if (this.managerState) {
-        let boolean = false
-        this.managerState.forEach(element => {
-          if (this.$route.query.id == element.id && element.item_relation != 'parent') {
-            boolean = true
-          }
-        })
-        return boolean
-      }
     }
   },
   data() {
@@ -316,21 +257,6 @@ export default {
         this.getClassInfo()
       }
     },
-    // getChildInfo(){
-    //   let data = {
-    //     params:{
-    //       child_id: this.userDataState.child_id
-    //     }
-    //   }
-    //   axios.get('/book/baby/getInfo',data).then(res => {
-    //     if (res.data.status == 1) {
-    //       this.childInfo = res.data.data
-    //       if(this.childInfo.is_banji_confirm == '0'){
-    //         this.showCode = true
-    //       }
-    //     }
-    //   })
-    // },
     getClassInfo(){
       if(this.$route.query.id && this.$route.query.id!=''){
         let data = {
@@ -342,10 +268,6 @@ export default {
         axios.get('/book/SchoolBanji/getInfo',data).then(res => {
           if(res.data.status == 1){
             this.classInfo = res.data.data
-            // this.getChildList()
-            // if(!this.classInfo.is_my_baby_banji&&!this.manage){
-            //   this.isSelectBabyShow = true
-            // }
           }
         })
         this.getCate()
@@ -429,7 +351,7 @@ export default {
           banji_name: item.banji_name,
         }
 
-        this.manage?data.tag_id = 141 : data.cate_id = 116
+        this.userDataState.teacher_school_id > 0 ? data.tag_id = 141 : data.cate_id = 116
 
         this.$router.push({
           name: 'class-home',
@@ -472,12 +394,10 @@ export default {
           cateArray.forEach(element => {
             if (element.access_level == 0) {
               data.push(element)
-            } else {
-              this.managerState.forEach(e => {
-                if ((this.$route.query.id == e.banji_id || this.$route.query.id == e.school_id) && e.item_relation != 'parent') {
-                  data.push(element)
-                }
-              })
+            } else if(this.userDataState.teacher_school_id > 0){
+              if(this.userDataState.teacher_school_id == this.$route.query.id || this.userDataState.teacher_banji_id == this.$route.query.id){
+                data.push(element)  
+              }
             }
           })
 
@@ -500,107 +420,9 @@ export default {
         }
       })
     },
-    // getChildList(){
-    //   let babyListData = {
-    //     params:{
-    //       sort:'old',
-    //       user_id: this.userDataState.id
-    //     }
-    //   }
-    //   axios.get('/book/baby/getList',babyListData).then(res => {
-    //     this.babyList = res.data.data
-    //   })
-    // },
     toManage(){
       location.href = `/SchoolManage?banji_id=${this.$route.query.id}`
-    },
-    // toGraphic(type){
-    //   switch(type){
-    //     case 'weibo':
-    //       this.$router.push({
-    //         name: 'graphic',
-    //         query: {
-    //           back: this.$route.name,
-    //           id: this.$route.query.id
-    //         }
-    //       })
-    //     break
-    //     case 'video':
-    //       this.$router.push({
-    //         name: 'graphic',
-    //         query: {
-    //           back: this.$route.name,
-    //           id: this.$route.query.id,
-    //           upVideo:1
-    //         }
-    //       })
-    //     break
-    //   }
-    // },
-    // 宝贝加入班级邀请码
-    // codeBeforeClose(action, done){
-    //   if (action != 'confirm') {
-    //     this.$router.go(-1)
-    //     done()
-    //   }
-    // },
-    // verification(){
-    //   let BabyJoinBanjiBdind = {
-    //     params: {
-    //       banji_id: this.$route.query.id,
-    //       child_id: this.userDataState.child_id,
-    //       invite_code: this.code
-    //     }
-    //   }
-
-    //   if(this.code && this.code.length){
-    //     if(this.classInfo.invite_code == this.code){
-    //       this.babyJoin(BabyJoinBanjiBdind)
-    //     }else{
-    //       this.$toast('邀请码不正确')
-    //     }
-    //   }else{
-    //     this.$toast('请输入邀请码')
-    //   }
-    // },
-    // babyJoin(data){
-    //   axios.get('/book/baby/join_banji', data).then(res => {
-    //     if (res.data.status == 1) {
-    //       this.getUserData()
-    //     } else {
-    //       this.$toast.fail('加入失败')
-    //       this.$router.replace({
-    //         name:'my-home'
-    //       })
-    //     }
-    //   })
-    // },
-    // selectChild(item){
-    //   console.log(this.$route.query.banji_name,this.$route.query.school_name)
-
-    //   this.$router.push({
-    //     name:'edit-child',
-    //     query:{
-    //       type:'add',
-    //       formType:'select_banji',
-    //       pageTitle:'加入班级',
-    //       id: item.id,
-    //       banji_name: this.$route.query.banji_name,
-    //       school_name: this.$route.query.school_name,
-    //       banji_id: this.$route.query.id,
-    //       school_id: this.$route.query.school_id,
-    //       invite_code: this.classInfo.invite_code
-    //     }
-    //   })
-    // },
-    // onClickLeft(){
-    //   this.$router.push({
-    //     name:'baby-home',
-    //     query:{
-    //       id: this.babyList[0].id
-    //     }
-    //   })
-    // }
+    }
   }
 }
 </script>

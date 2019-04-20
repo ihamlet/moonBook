@@ -21,7 +21,7 @@
         发 布
       </van-button>
       <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
-        <tips :isShow='show' position='bottom' @close='setReleaseSwitch(false)' />
+        <tips :isShow='show' position='bottom' @close='setReleaseSwitch(false)' :cate='cateList[indexTab -1]'/>
       </van-popup>
     </div>
   </div>
@@ -138,8 +138,7 @@ export default {
       axios.get('/book/schoolArticleCate/getList',data).then(res => {
           this.cateList = res.data[0].children
       })
-    },
-
+    }
   }
 }
 </script>

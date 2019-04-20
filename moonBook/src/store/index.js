@@ -333,7 +333,7 @@ const actions = {
       title: products.title,
       tags: products.tags,
       extra: products.extra,
-      to_school: 1 //发送到学校
+      to_school: 1
     }
 
     setting.result.forEach(e=>{
@@ -349,6 +349,8 @@ const actions = {
         break
       }
     })
+
+    console.log(context)
 
     return new Promise((resolve, reject) => {
       axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {

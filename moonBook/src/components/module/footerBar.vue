@@ -26,7 +26,8 @@ export default {
   },
   computed: {
     ...mapState(['releaseSwitch']),
-    ...mapGetters(['managerState']),
+    ...mapState('articleSetting',['tag']),
+    ...mapGetters(['userDataState']),
     show:{
       get(){
         return this.releaseSwitch
@@ -53,10 +54,22 @@ export default {
     ...mapMutations(['setReleaseSwitch']),
     ...mapMutations('openWX',['clearImg']),
     goPage(item) {
-      let path = ''
-      if (item.id) {
-        path = `${item.path}?id=${item.id}`
-      } else {
+      let path
+      if(item.id){
+        if(item.path == 'class-home'){
+          if(this.userDataState.teacher_banji_id > 0){
+            let routeData = {
+              id: item.id,
+              cate_id: 116,
+            }
+            path = `${item.path}?${qs.stringify(routeData)}`
+          }else{
+            path = `${item.path}?id=${item.id}`
+          }
+        }else{
+          path = `${item.path}?id=${item.id}`
+        }
+      }else{
         path = item.path
       }
 

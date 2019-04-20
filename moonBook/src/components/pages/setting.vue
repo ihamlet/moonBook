@@ -35,37 +35,6 @@ export default {
   },
   methods: {
     fetchData() {
-
-      // if(this.$route.query.id){
-      //   let childParams = {
-      //     child_id:this.$route.query.id
-      //   }
-
-      //   axios.get('/book/family/getChildByUser',childParams).then(res => {
-      //     switch(res.data.status){
-      //       case 1:
-      //         this.setting.settingClass = this.formatBanjiTitle(res.data.data.banji_name)
-      //         this.setting.settingSchool = res.data.data.school_name
-      //       break
-      //     }
-      //   })
-      // }else{
-      //   let data = {
-      //     params: {
-      //       is_master: 1
-      //     }   
-      //   }
-
-      //   axios.get('/book/SchoolTeacher/getMine', data).then(res => {
-      //     switch(res.data.status){
-      //       case 1:
-      //         this.setting.settingSchool = res.data.data.school_name
-      //         this.setting.settingClass = this.formatBanjiTitle(res.data.data.banji_name)
-      //       break
-      //     }
-      //   })
-      // }
-
       this.setting.settingClass = this.$route.query.banji_name
       this.setting.settingSchool = this.$route.query.school_name
     },
@@ -79,13 +48,17 @@ export default {
       })     
     },
     toSelectClass() {
-      this.$router.replace({
-        name: 'edit-class',
-        query: {
-          back: this.$route.name,
-          ...this.$route.query
-        }
-      })
+      if(this.$route.query.school_id > 0){
+        this.$router.replace({
+          name: 'edit-class',
+          query: {
+            back: this.$route.name,
+            ...this.$route.query
+          }
+        })
+      }else{
+        this.$toast.fail('请选择学校')
+      }
     },
     formatBanjiTitle(text){
       if (text && text.indexOf('班') == -1) {

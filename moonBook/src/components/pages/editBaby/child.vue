@@ -14,7 +14,6 @@
     </div>
     <div class="join-info" v-if='$route.query.formType'>
       <div class="child-name">{{childInfo.name}}</div>
-    
       <van-cell title="学校" size='large' :value="$route.query.school_name" />
       <van-cell title="班级" size='large' :value="$route.query.banji_name" />
     </div>

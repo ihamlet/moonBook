@@ -41,7 +41,7 @@ export default {
     ...mapState('articleSetting', ['result','group','tag']),
     ...mapState('beautifulArticle',['cover','title']),
     ...mapGetters('beautifulArticle',['getArticleContent','getImageList']),
-    ...mapGetters(['userDataState', 'managerState']),
+    ...mapGetters(['userDataState']),
     synchronous() {
       let array = []
       this.resultList.forEach(element => {
@@ -99,18 +99,14 @@ export default {
         })     
       }
 
-      if(this.userDataState.banji_id > 0){
+      if(this.userDataState.banji_id > 0 || this.userDataState.teacher_school_id > 0){
         array.push({
-          title: '班级',
+          title: `${this.userDataState.teacher_banji_id == this.$route.query.id || this.userDataState.teacher_school_id == this.$route.query.id?'管理的':'宝贝的'}班级`,
           name: 'class-home',
           to: 1
         })
       }
      
-        // if(!this.userDataState.banji_id && !this.userDataState.child_id){
-        //   localStorage.removeItem('result')
-        // }
-    
       array.push({
         title: '发现',
         name: 'apps-find',
@@ -154,16 +150,11 @@ export default {
           cateArray.forEach(element => {
             if (element.access_level == 0) {
               data.push(element)
-            } else {
-              this.managerState.forEach(e => {
-                if ((this.$route.query.id == e.banji_id || this.$route.query.id == e.school_id) && e.item_relation != 'parent') {
-                  data.push(element)
-                }
-              })
+            } else if(this.userDataState.teacher_school_id == this.$route.query.id || this.userDataState.teacher_banji_id == this.$route.query.id){
+              data.push(element)
             }
           })
           this.topicList = data
-          //从localStorage 获取 分类信息
 
           if(this.$route.query.cate_id || this.$route.query.tag_id){
             cateArray.forEach((element,tagIndex)=>{
