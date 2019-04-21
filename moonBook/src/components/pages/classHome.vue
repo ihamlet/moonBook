@@ -327,7 +327,7 @@ export default {
       })
     },
     cutover() {
-      if (this.managerState.length > 1 && this.actions != null) {
+      if (this.userDataState.teacher_school_id > 0) {
         this.actionsheetShow = true
       }
     },
