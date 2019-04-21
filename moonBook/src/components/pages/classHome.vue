@@ -16,7 +16,7 @@
         </div>
         <div class="school" v-line-clamp:20="1">{{classInfo.school_name}}</div>
       </div>
-      <div class="qrcode" @click="toPageCodeShare" v-if='userDataState.teacher_school_id'>
+      <div class="qrcode" @click="toPageCodeShare" v-if='userDataState.teacher_banji_id == $route.query.id'>
         <van-button plain size="small" round class="theme-plain" type="primary">邀请家长</van-button>
       </div>
     </div>
@@ -179,7 +179,8 @@ export default {
       if(this.$route.query.type != 'preview'){
         this.getUserData().then(res => {
           if (res.id != null) {
-            if(res.teacher_banji_id == '0'){
+            //这样园长就不用添加宝贝了
+            if(res.teacher_school_id == '0'){
               if( res.child_id == '0'){
                 this.$dialog.confirm({
                   title: '添加宝贝',
