@@ -43,8 +43,6 @@
             </van-row>
           </van-cell>
         </div>
-
-        <div class="prompt-text" v-if='$route.query.upVideo'>请上传15秒视频</div>
       </van-cell-group>
     </div>
     <!-- 分类设置、同步、设置机构标签 -->
@@ -342,7 +340,7 @@ export default {
             height: info.height,
             width: info.width,
             rotate: info.rotate,
-            duration: Math.floor(info.duration) || 10
+            duration: Math.floor(info.duration) || 15
           })
 
         this.upOssMedia(type, file)
@@ -350,13 +348,20 @@ export default {
       })
     },
     upOssMedia(type, file) {
-      //截取视频为15M体积的视频 应该够10s
-      let newFileVideo = file.slice(0, 1024*1024*15)
+      // 视频截取
+      let size
+      if(this.isIOS){
+        size = 1024*1024*15
+      }else{
+        size = Math.floor(file.size/this.grapicData.photos[0].duration)*40
+      }
 
+      let duration = Math.floor(file.size/size*2) || 15
+
+      let newFileVideo = file.slice(0, size)
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
-
       let url = this.ossSign.host.replace('http:', 'https:')
       let data = new FormData()
       let key = this.ossSign.dir + '/' + Date.now() + file.name
@@ -380,6 +385,7 @@ export default {
         this.grapicData.photos[0].is_audio =  type == 'audio' ? 1 : 0
         this.grapicData.photos[0].is_video =  type == 'video' ? 1 : 0
         this.grapicData.photos[0].photo = path
+        this.grapicData.photos[0].duration = duration
         this.percent = 0
       })
     },
