@@ -328,8 +328,8 @@ const actions = {
       cover: products.cover,
       photos: products.photos,
       child_id: products.child_id,
-      banji_id: products.banji_id,
-      school_id: products.school_id,
+      banji_id: products.banji_id || context.getters.userDataState.teacher_banji_id,
+      school_id: products.school_id || context.getters.userDataState.teacher_school_id,
       title: products.title,
       tags: products.tags,
       extra: products.extra,
@@ -349,9 +349,7 @@ const actions = {
         break
       }
     })
-
-    console.log(context)
-
+    
     return new Promise((resolve, reject) => {
       axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
         switch(res.data.status){

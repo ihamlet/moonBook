@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="head-bar-btn theme-color" slot="right">
-        <van-button :loading='percent != 0' :disabled='releaseLoading'  class="theme-btn" type="primary" size="small" @click="onClickRelease" round>发布</van-button>
+        <van-button :loading='percent != 0'  class="theme-btn" type="primary" size="small" @click="onClickRelease" round>发布</van-button>
       </div>
     </van-nav-bar>
 
@@ -71,7 +71,8 @@ export default {
   },
   computed: {
     ...mapState('openWX',['ready','imgList']),
-    ...mapState('articleSetting', ['result','group','tag']),
+    ...mapState('articleSetting', ['group','tag']),
+    ...mapGetters('articleSetting',['getResult']),
     ...mapGetters(['userDataState','managerState']),
     imagesLength() {
       return this.grapicData.photos.length
@@ -88,8 +89,7 @@ export default {
         }
       }
       return boolean
-    },
-    
+    }
   },
   data() {
     let u = navigator.userAgent
@@ -109,8 +109,6 @@ export default {
       photoLength: 0,
       videoThumb:'',
       typeUpload:'',
-      routeBackFind:['home','my-home','punch-back','special-punch','specialPunch'],
-      releaseLoading: false,
       post:''
     }
   },
@@ -266,8 +264,6 @@ export default {
             data.school_id = this.$route.query.id
           }
 
-          this.releaseLoading = true
-
           this.release(data).then(res=>{
             switch(res){
               case 1:
@@ -282,13 +278,25 @@ export default {
                 }
 
                 this.clearImg()
-                this.releaseLoading = false
-                if(this.routeBackFind.includes(this.$route.query.back)){
-                  this.$router.replace('/apps-find')
-                }else{
-                  this.$router.go(-1)
-                }
                 this.$toast.success('发布成功')
+
+                if(this.getResult[0]!=''){
+                  this.$router.replace({
+                    name: this.getResult[0],
+                    query:{
+                      ...this.$route.query,
+                      id: this.getResult[0] == 'baby-home'?this.userDataState.child_id:this.userDataState.teacher_banji_id > 0?this.userDataState.teacher_banji_id:this.userDataState.banji_id
+                    }
+                  })
+                }else{
+                   this.$router.replace({
+                    name: 'apps-find',
+                    query:{
+                      ...this.$route.query
+                    }
+                  })
+                }
+                
               break
               case 0:
                 this.$toast.fail('发布失败')
@@ -349,16 +357,10 @@ export default {
     },
     upOssMedia(type, file) {
       // 视频截取
-      let size
-      if(this.isIOS){
-        size = 1024*1024*15
-      }else{
-        size = Math.floor(file.size/this.grapicData.photos[0].duration)*40
-      }
+      let size = 40
+      let intercept = Math.floor(file.size/this.grapicData.photos[0].duration)
 
-      let duration = Math.floor(file.size/size*2) || 15
-
-      let newFileVideo = file.slice(0, size)
+      let newFileVideo = file.slice(0, size*intercept)
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
@@ -385,7 +387,6 @@ export default {
         this.grapicData.photos[0].is_audio =  type == 'audio' ? 1 : 0
         this.grapicData.photos[0].is_video =  type == 'video' ? 1 : 0
         this.grapicData.photos[0].photo = path
-        this.grapicData.photos[0].duration = duration
         this.percent = 0
       })
     },

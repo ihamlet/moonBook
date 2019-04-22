@@ -1,12 +1,14 @@
 export default {
     namespaced: true,
     state:{
-        result:[],
+        result:['apps-find'],
         tag:'',
         group:''
     },
     getters:{
-
+        getResult: state => {
+           return state.result.sort((a,b)=>a == 'apps-find' ? -1 : 1)
+        }
     },
     mutations:{
         setResult(state,params){

@@ -9,7 +9,7 @@
         <div class="form-title">同步到</div>
         <van-cell-group>
           <van-cell v-for="(item,index) in resultList" clickable :key="index" :title="item.title" @click="toggle(index)">
-            <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" :disabled='item.name == $route.query.back'/>
+            <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes"/>
           </van-cell>
         </van-cell-group>
       </van-checkbox-group>
@@ -91,7 +91,13 @@ export default {
     fetchData() {
       let array = []
 
-      if(this.userDataState.child_id > 0){
+       array.push({
+        title: '发现',
+        name: 'apps-find',
+        to: 1
+      })
+     
+     if(this.userDataState.child_id > 0){
         array.push({
           title: '宝贝主页',
           name: 'baby-home',
@@ -107,12 +113,6 @@ export default {
         })
       }
      
-      array.push({
-        title: '发现',
-        name: 'apps-find',
-        to: 1
-      })
-
       this.resultList = array
       //   设置默认
       let arr = []
@@ -184,6 +184,7 @@ export default {
       })
     },
     toggle(index) {
+      this.addResult(this.settingResult)
       this.$refs.checkboxes[index].toggle()
     },
     onChangeGroup(picker, values) {

@@ -1,93 +1,169 @@
 <template>
   <div class="advertising-details">
-    <div class="ad-container">
-      <img src="https://moonbook.oss-cn-beijing.aliyuncs.com/advertising-1" />
-    </div>
+    <div class="ad-container" v-html='details.intro'></div>
 
     <van-popup v-model="show" position='bottom' :overlay="false" :lock-scroll='false'>
-      <van-nav-bar title="卡券领取" right-text="更多奖品" @click-right="toAdList" :border='false'/>
+      <van-nav-bar title="卡券领取" right-text="更多奖品" @click-right="toProgress" :border='false' />
       <div class="prize-card flex flex-column">
         <div class="prize-content">
-          <div class="name">乐贝机器人活动中心</div>
+          <div class="name">{{details.shop_name}}</div>
           <div class="title">
-            乐高课程卡4课时，价值240元
+            {{details.title}},价值{{details.price/100}}元
           </div>
         </div>
         <div class="prize-bar">
-          <van-button round size="normal" class="theme-btn" type="primary" @click="receive">领兑换券</van-button>
+          <van-button round size="normal" :loading="picking" class="theme-btn" type="primary" @click="receive">领兑换券</van-button>
         </div>
         <div class="prompt-text">领券后商家客服或许会与您联系</div>
       </div>
     </van-popup>
 
     <van-popup v-model="detailsCard" class="popup-details">
-      <van-nav-bar title="恭喜领取成功" :border='false' @click-right='onClickRight'>
-          <div class="close-btn" slot="right">
-              <i class="iconfont">&#xe683;</i>
-          </div>
+      <van-nav-bar :title="successful?'恭喜领取成功':'领取失败'" :border='false' @click-right='onClickRight'>
+        <div class="close-btn" slot="right">
+          <i class="iconfont">&#xe683;</i>
+        </div>
       </van-nav-bar>
-      <div class="container">
+      <div class="container" v-if='successful'>
         <div class="card-head"></div>
         <div class="card-title">领取规则</div>
         <div class="details flex flex-column">
-            <div class="cell process">
-                <ul>
-                    <li v-for='(item,index) in process' :key="index">
-                        <van-tag type="success" plain>{{item}}</van-tag>
-                    </li>
-                </ul>
+          <div class="cell process">
+            <ul>
+              <li v-for='(item,index) in process' :key="index">
+                <van-tag type="success" plain>{{item}}</van-tag>
+              </li>
+            </ul>
+          </div>
+          <div class="cell info">
+            <div class="time theme-color"><b>领奖时间</b>2019/03/12-{{details.expire_date}}</div>
+            <div class="address theme-color">
+              <van-swipe :autoplay="3000" :show-indicators='false'>
+                <van-swipe-item v-for='(item,itemIndex) in addrList' :key="itemIndex">
+                  <div class="shop-info" >
+                    <b>领奖地点</b>
+                    <span class="shop-name">
+                      {{item[0]}}
+                    </span>
+                    <span class="shop-addr">
+                      {{item[1]}}
+                    </span>
+                    <span class="shop-tell">
+                      {{item[2]}}
+                    </span>
+                  </div>
+                </van-swipe-item>
+              </van-swipe>
             </div>
-            <div class="cell info">
-                <div class="time theme-color"><b>领奖时间</b>2019/03/12-2019/04/12</div>
-                <div class="address theme-color"><b>领奖地点</b>黄石港区黄石大道786号微美大厦2楼天婴母婴店</div>
-            </div>
-            <div class="cell theway">
-                <b>领奖方式</b>你所选择的奖品需要到领奖地点核销，并又商家发放奖品。你所领取的兑换券在首页-我的-钱包-卡券中，核销过程请出示兑换券，由商家扫码进行核销。
-            </div>
+          </div>
+          <div class="cell theway">
+            <b>领奖方式</b>你所选择的奖品需要到领奖地点核销，并又商家发放奖品。你所领取的兑换券在首页-我的-钱包-卡券中，核销过程请出示兑换券，由商家扫码进行核销。
+          </div>
         </div>
-      </div>
-      <div class="draw-btn">
+
+        <div class="draw-btn">
           <van-button round size="normal" class="theme-btn" type="primary" @click="toPopupList">查看兑换券</van-button>
-      </div>
+        </div>
 
         <div class="cell statement">
-            <b>声明</b>本活动奖品有第三方商家提供，阅亮书架平台不对奖品质保负责。
+          <b>声明</b>本活动奖品有第三方商家提供，阅亮书架平台不对奖品质保负责。
         </div>
+      </div>
+      <div class="container" v-else>
+        <div class="content">
+          <div class="hint">您打卡还未满21天，无法领取</div>
+          <div class="point">继续加油，坚持下去</div>
+        </div>
+        <div class="draw-btn">
+          <van-button round size="normal" class="theme-btn" type="primary" @click="toProgress">查看我的打卡进度</van-button>
+        </div> 
+      </div>
     </van-popup>
   </div>
 </template>
 <script>
+import axios from '@/components/lib/js/api'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'advertisingDetails',
   data() {
     return {
       show: false,
       detailsCard: false,
-      process:['领奖时间','领奖地点','出示兑换券','商家核销','领取奖品']
+      process: ['领奖时间', '领奖地点', '出示兑换券', '商家核销', '领取奖品'],
+      picking: false,
+      successful: false,
+      coupon_id: this.$route.query.coupon_id || 0,
+      details:''
+    }
+  },
+  computed: {
+    ...mapGetters(['userDataState']),
+    addrList(){
+      let arr = []
+      arr = this.details.addr.split(/\n/)
+      let newArr = []
+      arr.forEach((element,i) => {
+        if(element.trim().length){
+          newArr.push(element)
+        }
+      })
+      let result = []
+      for(let i=0,len=newArr.length; i<len; i+=3){
+          result.push(newArr.slice(i,i+3))
+      }
+      return result  
     }
   },
   created() {
-    setTimeout(() => {
-      this.show = true
-    }, 1000)
+    this.fetchData()
+  },
+  watch: {
+    '$router':'fetchData'
   },
   methods: {
-    onClickRight() {
-        this.detailsCard = false,
-        this.show = true
-    },
-    receive(){
-        this.detailsCard = true,
-        this.show = false
-    },
-    toAdList(){
+    fetchData(){
+      let data = {
+        params: {
+          coupon_id: this.$route.query.coupon_id
+        }
+      }
 
+      axios.get('/book/member/get_coupon',data).then(res=>{
+        switch(res.data.status){
+          case 1:
+            this.show = true
+            this.details = res.data.data
+          break
+        }
+      })
     },
-    toPopupList(){
-        console.log('卡券列表','popupList')
-        this.$router.push({
-          name:'popupList'
-        })
+    onClickRight() {
+      this.detailsCard = false
+      this.show = true
+    },
+    receive() {
+      this.picking = true
+      return axios(`/book/member/pick_coupon?coupon_id=${this.coupon_id}`).then((res) => {
+        this.picking = false
+        this.detailsCard = true
+        switch(res.data.status){
+          case 1:
+            this.successful = true
+          break
+        }
+      })
+    },
+    toPopupList() {
+      this.$router.push({
+        name: 'popupList'
+      })
+    },
+    toProgress() {
+      this.$router.replace({
+        name:'punchSpeed'
+      })
     }
   }
 }
@@ -106,7 +182,7 @@ export default {
 }
 
 .prize-bar {
-  padding: 10px;
+  padding: 10px 20px;
 }
 
 .theme-btn {
@@ -145,7 +221,7 @@ export default {
 }
 
 .advertising-details {
-  padding-bottom: 200px;
+  padding-bottom: 220px;
 }
 
 .prompt-text {
@@ -170,57 +246,105 @@ export default {
   border-radius: 20px;
 }
 
-.card-head{
-    background-image: url('./../../../assets/img/coupon.png');
-    height: 64px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: 0;
+.card-head {
+  background-image: url('./../../../assets/img/coupon.png');
+  height: 60px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 0;
 }
 
-.card-title{
-    text-align: center;
-    font-weight: 700;
-    color: #303133;
-    margin: 10px 0;
+.card-title {
+  text-align: center;
+  font-weight: 700;
+  color: #303133;
+  margin: 10px 0;
 }
 
-.details{
-    padding: 0 15px;
+.details {
+  padding: 0 15px;
 }
 
 .theway,
-.statement{
-    text-align: justify;
+.statement {
+  text-align: justify;
 }
 
-.statement{
-    font-size: 12px;
-    color: #c0c4cc;
-    padding: 0 15px;
+.statement {
+  font-size: 12px;
+  color: #c0c4cc;
+  padding: 0 15px;
 }
 
-b{
-    margin-right: 5px;
+b {
+  margin-right: 5px;
 }
 
-.process ul li{
-    float: left;
-    margin-top: 5px;
-    margin-right: 5px;
+.process ul li {
+  float: left;
+  margin-top: 5px;
+  margin-right: 5px;
 }
 
-.close-btn .iconfont{
-    font-size: 20px;
-    color: #F56C6C;
+.close-btn .iconfont {
+  font-size: 20px;
+  color: #f56c6c;
 }
 
-.cell{
-    margin-bottom: 10px;
+.cell {
+  margin-bottom: 10px;
 }
 
-.draw-btn{
-    padding: 0 15px;
-    margin-bottom: 10px;
+.theway{
+  font-size: 13px;
+}
+
+.draw-btn {
+  padding: 0 15px;
+  margin-bottom: 10px;
+}
+
+.big-body {
+  min-height: 250px;
+  text-align: center;
+}
+.pick-msg-title {
+  font-size: 20px;
+  margin-top: 40px;
+}
+
+.pick-msg-tip {
+  font-size: 18px;
+  margin-top: 15px;
+  margin-bottom: 40px;
+}
+
+.progress-btn {
+  background: #e73071 linear-gradient(135deg, #eb6f9c, #e73071);
+  border: none;
+}
+
+.tool {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 99;
+}
+
+.hint,
+.point{
+  text-align: center;
+}
+
+.point{
+  background: linear-gradient(90deg, #00C2AB,#3E94FF);
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.content{
+  padding: 30px 0 50px;
 }
 </style>

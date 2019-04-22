@@ -729,6 +729,7 @@ export default {
 .school {
   text-align: left;
   color: #fff;
+  max-width: 75%;
 }
 
 .follow .theme-btn {

@@ -2,9 +2,11 @@
   <div class="punch-list page-padding">
     <div class="booth">
       <div class="ad-mould">
-        <van-swipe :autoplay="3000" indicator-color="white" :height='130'>
-          <van-swipe-item v-for="(image, index) in banner" :key="index" @click="toAdvertising">
-            <img :src="image" />
+        <van-swipe :autoplay="3000" indicator-color="white" :height='120'>
+          <van-swipe-item v-for="(ad, index) in banner" :key="index" @click="toAdvertising(ad)">
+            <div class="card-banner">
+              <img :src="ad.photo" />
+            </div>
           </van-swipe-item>
         </van-swipe>
       </div>
@@ -94,11 +96,7 @@ export default {
         text: '拍小视频',
         index: 1
       }],
-      banner: [
-        require('@/assets/banner/banner-1.jpg'),
-        require('@/assets/banner/banner-2.jpg'),
-        require('@/assets/banner/banner-3.jpg'),
-      ]
+      banner: []
     }
   },
   created() {
@@ -114,11 +112,19 @@ export default {
       let data = {
         params: {
           site_name: '打卡阅读',
-          school_id: this.userDataState.school_id
+          school_id: this.userDataState.teacher_school_id > 0 ? this.userDataState.teacher_school_id : this.userDataState.school_id
         }
       }
       axios.get('/book/api/ads', data).then(res => {
-        console.log(res)
+        switch(res.data.status){
+          case 1:
+            res.data.data.forEach(element => {
+              if(element.photo!=null){
+                this.banner.push(element)
+              }
+            })
+            break
+        }
       })
     },
     onLoad() {
@@ -180,14 +186,10 @@ export default {
         }
       }
     },
-    toAdvertising(){
-      console.log('广告详情','advertisingDetails')
-      // this.$router.push({
-      //   name:'advertisingDetails',
-      //   query:{
-      //     id: this.$route.query.id
-      //   }
-      // })
+    toAdvertising(ad){
+      if(ad.link_url&&ad.link_url != null){
+        this.$router.push(ad.link_url)
+      }
     },
     toSpecialPunch() {
       this.$router.push({
@@ -222,11 +224,17 @@ export default {
 }
 </script>
 <style scoped>
+.booth{
+  padding:10px;
+  background: #fff;
+}
+
 .ad-mould {
   width: 100%;
-  background: #fff;
   color: #c0c4cc;
   text-align: center;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .btn-box {
@@ -329,5 +337,19 @@ export default {
 
 .text {
   margin-top: 0.625rem /* 10/16 */;
+}
+
+.card-banner{
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.card-banner img{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 </style>

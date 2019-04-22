@@ -70,7 +70,7 @@ export default {
           desc = products.item.details.replace(/<[^>]+>/g,"") || context.state.slogan
         } else {
           title = '阅亮书架'
-          desc = products.item.hasvideo == "1"? `[小视频]${products.item.details?products.item.details:context.state.slogan}`: products.item.details
+          desc = products.item.hasvideo == "1"? `[小视频]${products.item.details.replace(/<[^>]+>/g,"").length?products.item.details:context.state.slogan}`: products.item.details
         }
 
         let data = {

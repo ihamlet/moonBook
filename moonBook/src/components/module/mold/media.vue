@@ -26,7 +26,7 @@
     </div>
 
     <div class="media img" v-if='item.template_id == "1"&&item.photos'>
-      <div :class="[item.photos.length == 4?'layout-4':'']">
+      <div :class="[type=='card'?`layout-${item.photos.length}`:'']">
         <van-row :gutter="4">
           <van-col :span="grid" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
             <div class="img-grid" :class="[item.photos.length == 1&&photo.height/photo.width > 1?'long':'',item.photos.length == 1&&type=='details'?'alone':'']"
@@ -70,6 +70,10 @@ export default {
     type:{
       type:String,
       default:''
+    },
+    coverShow:{
+      type:Boolean,
+      default: true
     }
   },
   components: {
@@ -87,7 +91,7 @@ export default {
     },
     grid() {
       let num
-      if (this.item.photos.length == 4) {
+      if (this.item.photos.length == 4 || this.item.photos.length == 2) {
         num = 12
       } else if (this.item.photos.length == 1 && this.type == 'details') {
         num = 24
@@ -177,8 +181,9 @@ export default {
   margin: 0.625rem /* 10/16 */ 0;
 }
 
+.layout-2,
 .layout-4 {
-  width: 60%;
+  width: 61.8%;
 }
 
 .text {

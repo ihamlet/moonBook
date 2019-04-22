@@ -100,9 +100,7 @@
         </div>
         <div class="comment-content flex">
           <div class="field-box">
-            <van-cell-group>
-              <van-field size='large' v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
-            </van-cell-group>
+              <van-field :border='false' size='large' v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
           </div>
           <div class="submit-btn theme-color">
             <van-button class="theme-btn" round :loading="isLoading" size="large" type="primary" @click="submit">发 布</van-button>

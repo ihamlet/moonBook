@@ -86,14 +86,12 @@ export default {
           }
 
           this.loading = false
-
           this.page++
 
           if (this.list.length >= res.data.count) {
             this.finished = true
           }
         }
-
       })
     },
     toArticle(item) {

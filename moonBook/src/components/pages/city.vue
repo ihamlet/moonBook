@@ -11,9 +11,7 @@
     </div>
     <div class="content" v-if='list.length'>
       <div class="list search-list">
-        <van-cell-group>
-          <van-cell :border='false'  :title="item.name" v-for='(item,index) in list' :key="index" @click="selectCity(item.name)" clickable center/>
-        </van-cell-group>
+        <van-cell :border='false'  :title="item.name" v-for='(item,index) in list' :key="index" @click="selectCity(item.name)" clickable center/>
       </div>
     </div>
     <div class="content" v-else>

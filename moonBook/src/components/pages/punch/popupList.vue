@@ -1,37 +1,71 @@
 <template>
   <div class="popup-list">
     <van-nav-bar :title="$route.meta.title" />
-    <div class="list">
-      <div class="popup-card flex flex-align">
-        <div class="card">
-          <div class="title">阅读月领奖券</div>
-          <div class="name" v-line-clamp:20="1">
-            乐高课程卡4课时，价值240元
+
+    <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+      <van-cell v-for="(item,itemIndex) in list" :key="itemIndex" :border='false' @click="toWriteOff(item)">
+        <div class="flex flex-align">
+          <div class="card">
+            <div class="title" v-line-clamp:20="1">{{item.coupon.title}}</div>
+            <div class="name" v-line-clamp:20="1">
+              {{item.coupon.shop_name}}
+            </div>
+            <div class="time">{{item.coupon.bg_date}}-{{item.coupon.expire_date}}</div>
           </div>
-          <div class="time">2019/03/12-2019/04/12</div>
-        </div>
-        <div class="status flex flex-justify" v-if='isUse' @click="onUseClick">
-          <div class="make">
-            立即<br />使用
+          <div class="status flex flex-justify" v-if='isUse'>
+            <div class="make">
+              立即<br />使用
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </van-cell>
+    </van-list>
   </div>
 </template>
 <script>
+import axios from './../../lib/js/api'
+
 export default {
   name: 'popup-list',
   data() {
     return {
-      isUse: true
+      isUse: true,
+      loading: false,
+      finished: false,
+      page: 1,
+      list: []
     }
   },
   methods: {
-    onUseClick() {
-      console.log('卡券核销', 'writeOff')
+    onLoad(){
+      let data = {
+        page:1
+      }
+
+      axios.get('/book/member/get_coupon_downloads', data).then(res=>{
+        switch (res.data.status) {
+          case 1:
+            if(this.page = 1){
+              this.list = res.data.data
+            }else{
+              this.list = this.list.concat(res.data.data)
+            }
+            this.page++
+            this.loading = false
+            if(this.list >= res.data.count){
+              this.finished = true
+            }
+          break
+        }
+      })
+    },
+    toWriteOff(item){
       this.$router.push({
-        name: 'writeOff'
+        name:'writeOff',
+        query:{
+          ...item.coupon,
+          download_id:item.download_id
+        }
       })
     }
   }

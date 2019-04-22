@@ -30,14 +30,14 @@ export default {
             }
         },
         toBookDetails(item) {
-            if (item.book_id) {
-                this.$router.push({
-                name: 'book-details',
-                query: {
-                    id: item.book_id
-                }
-                })
-            }
+          if (item.book_id) {
+            this.$router.push({
+            name: 'book-details',
+              query: {
+                id: item.book_id
+              }
+            })
+          }
         },
         getTime(time){
             return format(time*1000,'HH:mm:ss')

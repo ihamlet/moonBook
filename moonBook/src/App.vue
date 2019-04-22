@@ -1242,6 +1242,7 @@ i.iconfont.vip-1 {
   position: fixed;
   bottom: 70px;
   width: 100%;
+  z-index: 10;
 }
 
 .release-footer-bar .theme-btn{
