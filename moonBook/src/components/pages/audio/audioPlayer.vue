@@ -1,12 +1,13 @@
 <template>
   <div class="audio-player"  v-if='audioList.length'>
-    <audio ref="audio" @pause="onPause" @play="onPlay" @timeupdate="onTimeupdate" @loadedmetadata="onLoadedmetadata"  :src="audioList[audioIndex].photos[0].photo" controls="controls" hidden></audio>
+    <audio ref="audio" @pause="onPause" @play="onPlay" @ended='onEnded' @timeupdate="onTimeupdate" @loadedmetadata="onLoadedmetadata"  :src="audioList[audioIndex].photos[0].photo" controls="controls" hidden></audio>
 
     <div class="audio-container">
       <div class="disc" :class="audio.playing?'turn':''">
         <img :src="audioList[audioIndex].cover" />
       </div>
-      <div class="square" :style="{backgroundImage:`url(${audioList[audioIndex].cover})`}">
+      <div class="square">
+        <img class="cover" :src="audioList[audioIndex].cover" />
         <div class="bg-black"></div>
       </div>
       <div class="control">
@@ -120,7 +121,10 @@ export default {
         })
     },
     next(){
-        return this.audioIndex < this.count?this.audioIndex++:this.audioIndex=0            
+       this.audioIndex < this.count?this.audioIndex++:this.audioIndex=0
+       this.$nextTick(()=>{
+            this.play()
+        })            
     },
     startPlayOrPause() {
         return this.audio.playing ? this.pause() : this.play()
@@ -136,6 +140,9 @@ export default {
     },
     onPlay(){
         this.audio.playing = true
+    },
+    onEnded(){
+        this.next()
     },
     onLoadedmetadata(res){
         this.audio.maxTime = parseInt(res.target.duration)
@@ -210,11 +217,19 @@ export default {
 .square {
   width: 100%;
   height: 80vh;
-  background-size: cover;
-  background-repeat: no-repeat;
-  border-radius: 0 0 50vh 50vh;
-  background-position: center;
+  position: relative;
   overflow: hidden;
+  border-radius: 0 0 80vh 80vh
+}
+
+.cover{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    background: inherit;
+    filter: blur(4px);
 }
 
 .disc,
@@ -228,10 +243,11 @@ export default {
   position: absolute;
   left: 50%;
   bottom: 50%;
-  margin-left: -90px;
+  margin-left: -95px;
   overflow: hidden;
   border: 10px solid rgba(0, 0, 0, 0.5);
   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+  z-index: 10;
 }
 
 .disc img {
@@ -244,13 +260,15 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.6);
-  -webkit-backdrop-filter: saturate(180%) blur(1.25rem);
+  position: absolute;
+  z-index: 2;
 }
 
 .control {
   position: absolute;
   bottom: 60px;
   width: 100%;
+  z-index: 10;
 }
 
 .btn-list {
