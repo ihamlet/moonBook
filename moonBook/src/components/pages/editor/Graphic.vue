@@ -12,7 +12,7 @@
     </van-nav-bar>
 
     <div class="textarea-module">
-      <van-progress v-if='percent!=0&&percent!=100' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
+      <van-progress v-if='percent!=0&&percent!=100&&!progressIsShow' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
       <van-cell-group>
         <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" :placeholder="icon" rows="2" autosize />
         <div class="article-card" v-if='post'>
@@ -52,6 +52,14 @@
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
       <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
     </div>
+
+
+    <van-popup v-model="progressIsShow" class="progress-popup">
+      <div class="progress">
+        <div class="upload-upload">视频正在上传中...</div>
+        <van-progress v-if='percent!=0' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
+      </div>
+    </van-popup>
   </div>
 </template>
 <script>
@@ -109,7 +117,8 @@ export default {
       photoLength: 0,
       videoThumb:'',
       typeUpload:'',
-      post:''
+      post:'',
+      progressIsShow: false
     }
   },
   created() {
@@ -339,7 +348,8 @@ export default {
         data: formData,
         method: 'post',
         onUploadProgress: p => {
-          this.percent = Math.floor(100 * (p.loaded / p.total))
+          this.progressIsShow = true
+          this.percent = 1
         }
       }).then( res => {
           let info = res.data.data
@@ -352,15 +362,9 @@ export default {
           })
 
         this.upOssMedia(type, file)
-        this.percent = 0
       })
     },
     upOssMedia(type, file) {
-      // 视频截取
-      let size = 40
-      let intercept = Math.floor(file.size/this.grapicData.photos[0].duration)
-
-      let newFileVideo = file.slice(0, size*intercept)
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
@@ -374,7 +378,7 @@ export default {
       data.append('policy', this.ossSign.policy)
       data.append('success_action_status', 200)
       data.append('signature', this.ossSign.signature)
-      data.append('file', newFileVideo, file.name)
+      data.append('file', file)
 
       axios({
         url: url,
@@ -388,6 +392,7 @@ export default {
         this.grapicData.photos[0].is_video =  type == 'video' ? 1 : 0
         this.grapicData.photos[0].photo = path
         this.percent = 0
+        this.progressIsShow = false
       })
     },
     upOssPhoto(blob, file, base64) {
@@ -536,6 +541,21 @@ export default {
   color: #E6A23C;
   background: #fff;
   padding-left: 15px;
+}
+
+.progress-popup{
+  background: transparent;
+  width: 100%;
+  height: 70vh;
+}
+
+.upload-upload{
+  margin-bottom: 20px;
+}
+
+.progress{
+  color: #fff;
+  text-align: center;
 }
 </style>
 <style>

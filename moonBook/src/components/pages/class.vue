@@ -7,7 +7,7 @@
           <img :src="avatar" v-http2https>
         </div>
         <avatar v-else />
-        <div class="name">{{childInfo.name}}（{{childInfo.age}}岁）</div>
+        <div class="name">{{childInfo.name}}（{{childInfo.age || age}}岁）</div>
         <round class="bg-round" />
       </div>
       <div class="title">{{list.length?'请选择班级':''}} </div>
@@ -105,6 +105,13 @@ export default {
       }
 
       return imgAvatar
+    },
+    age(){
+      let date = new Date()
+      let month = date.getMonth() + 1
+      let year = date.getFullYear() 
+      let birthdayYear = this.$route.query.birthday.substring(0,4)
+      return year-birthdayYear
     }
   },
   data() {

@@ -27,13 +27,13 @@
         </div>
       </div>
       <div class="module card-top">
-        <read-list title='阅读榜' type='banji' field='avatar' :key="classInfo.banji_id"/>
+        <read-list title='阅读榜' type='banji' field='avatar' :key="$route.query.id"/>
       </div>
       <div class="module">
-        <notice type='banji' />
+        <notice type='banji' :key="$route.query.id"/>
       </div>
       <div>
-        <class-zoom type='template' :banji_id='classInfo.banji_id' :key="classInfo.banji_id"/>
+        <class-zoom type='template' :banji_id='$route.query.id' :key="$route.query.id"/>
       </div>
     </div>
 

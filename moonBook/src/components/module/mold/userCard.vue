@@ -95,7 +95,6 @@ export default {
 }
 
 .user-card .article-info {
-  margin-top: 0.3125rem /* 5/16 */;
   color: #909399;
   font-size: 0.8125rem /* 13/16 */;
 }

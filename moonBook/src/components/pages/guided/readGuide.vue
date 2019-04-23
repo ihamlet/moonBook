@@ -227,7 +227,7 @@ export default {
 }
 </style>
 <style>
-blockquote{
+.content blockquote{
   background: #F2F6FC;
   padding: 10px;
   color: #909399;

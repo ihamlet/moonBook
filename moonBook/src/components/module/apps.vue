@@ -28,9 +28,9 @@ export default {
       }, {
         iconClass: 'icon-story',
         name: '听故事',
-        pathName: '404',
+        pathName: 'audioPlayer',
         params: '',
-        href: '/book/story/jlf'
+        // href: '/book/story/jlf'
       }, {
         iconClass: 'icon-yuer',
         name: '育儿专栏',

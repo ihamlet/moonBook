@@ -296,7 +296,7 @@ export default {
       })
     },
     isShare() {
-      if (this.$route.query.type != 'preview') {
+      if(this.$route.query.type != 'preview') {
         this.shareShow = true
       }
     }

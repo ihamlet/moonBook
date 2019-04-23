@@ -50,6 +50,7 @@ import Read from './read'
 import Flyers from './flyers'
 import Coupon from './coupon'
 import Special from './special'
+import Audio from './audio'
 
 Vue.use(Router)
 
@@ -305,6 +306,7 @@ export default new Router({
     ...Flyers,
     ...Coupon,
     ...Special,
+    ...Audio,
     Manage,
     Editor,
     {

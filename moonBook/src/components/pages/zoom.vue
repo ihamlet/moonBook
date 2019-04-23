@@ -1,61 +1,68 @@
 <template>
   <div class="zoom page-padding">
-    <van-nav-bar :zIndex="99" :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed :border='false'/>
-    <div class="container">
-      <div class="module">
-        <div class="user-card flex flex-align" ref="userCrad">
-          <div class="info">
-            <div class="avatar">
-              <img :src="userInfo.avatar" v-http2https @error="imgError"/>
+    <van-nav-bar :class="fixedHeaderBar?'theme-nav':''" :zIndex="99" :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed :border='false'/>
+    <div class="zoom-head">
+      <div class="bg-black"></div>
+    </div>
+    <div class="page-container">
+      <van-pull-refresh v-model="loading" @refresh="onRefresh">
+        <div class="container">
+          <div class="module">
+            <div class="user-card flex flex-align" ref="userCrad">
+              <div class="info flex flex-align">
+                <div class="avatar">
+                  <img :src="userInfo.avatar" v-http2https @error="imgError"/>
+                </div>
+                <div class="name" v-line-clamp:20="1">{{userInfo.name}}</div>
+              </div>
+              <div class="social">
+                <div class="flex flex-align">
+                  <div class="data-box">
+                    <div class="number">{{ userInfo.post_num }}</div>
+                    <div class="text">发布</div>
+                  </div>
+                  <div class="data-box">
+                    <div class="number">{{ userInfo.fans_count }}</div>
+                    <div class="text">粉丝</div>
+                  </div>
+                  <div class="data-box">
+                    <div class="number">{{ userInfo.subscribe_num }}</div>
+                    <div class="text">关注</div>
+                  </div>
+                  <div class="data-box">
+                    <div class="number">{{ userInfo.zan_count }}</div>
+                    <div class="text">获赞</div>
+                  </div>
+                </div>
+                <div class="subscribe">
+                  <!-- :plain="userInfo.is_subscribe?true:false" -->
+                  <van-button v-if='userDataState.user_id != userInfo.user_id' class="theme-btn" type="primary" round @click="follow(userInfo)" >
+                    {{userInfo.is_subscribe?'已关注':'关注ta'}}
+                  </van-button>
+                </div>
+              </div>
             </div>
-            <div class="name" v-line-clamp:20="1">{{userInfo.name}}</div>
           </div>
-          <div class="social">
-            <div class="flex flex-align">
-              <div class="data-box">
-                <div class="number">{{ userInfo.post_num }}</div>
-                <div class="text">发布</div>
+
+          <div class="module">
+            <reading :list="lateBook" moduleTitle="宝贝最近在读" />
+          </div>
+
+          <div>
+            <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
+              <div class="list">
+                <div class="no-list" v-if="list.length == 0">暂无内容</div>
+                <div class="item" v-for="(item,index) in list" :key="index">
+                  <van-cell>
+                    <graphic-card :item="item" @more='actionsheet' type='zoom' :moreBtn='manage'/>
+                  </van-cell>
+                </div>
               </div>
-              <div class="data-box">
-                <div class="number">{{ userInfo.fans_count }}</div>
-                <div class="text">粉丝</div>
-              </div>
-              <div class="data-box">
-                <div class="number">{{ userInfo.subscribe_num }}</div>
-                <div class="text">关注</div>
-              </div>
-              <div class="data-box">
-                <div class="number">{{ userInfo.zan_count }}</div>
-                <div class="text">获赞</div>
-              </div>
-            </div>
-            <div class="subscribe">
-              <van-button v-if='userDataState.user_id != userInfo.user_id' :plain="userInfo.is_subscribe?true:false" class="theme-btn" type="primary" size="small" @click="follow(userInfo)">
-                {{userInfo.is_subscribe?'已关注':'加关注'}}
-              </van-button>
-            </div>
+            </van-list>
           </div>
         </div>
-      </div>
-
-      <div class="module">
-        <reading :list="lateBook" moduleTitle="宝贝最近在读" />
-      </div>
-
-      <div>
-        <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
-          <div class="list">
-            <div class="no-list" v-if="list.length == 0">暂无内容</div>
-            <div class="item" v-for="(item,index) in list" :key="index">
-              <van-cell>
-                <graphic-card :item="item" @more='actionsheet' type='zoom' :moreBtn='manage'/>
-              </van-cell>
-            </div>
-          </div>
-        </van-list>
-      </div>
+      </van-pull-refresh>
     </div>
-
     <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
   </div>
 </template>
@@ -75,20 +82,17 @@ export default {
   computed: {
     ...mapGetters(['userDataState','managerState']),
     manage() {
+      let boolean = false
       if (this.managerState) {
-        let boolean = false
         this.managerState.forEach(element => {
           if (element.item_relation == 'teacher') {
             boolean = true
           }
         })
-
-        if(this.userInfo.id == this.$route.query.id){
-          boolean = true
-        }
-
-        return boolean
+      }else if(this.userInfo.id == this.$route.query.id){
+        boolean = true
       }
+      return boolean
     }
   },
   data() {
@@ -153,6 +157,12 @@ export default {
         })
       }
     },
+    onRefresh(){
+      this.page = 1
+      this.onLoad().then(()=>{
+        this.loading = false
+      })
+    },
     handleScroll() {
       this.getDomHeight();
       let scrollTop =
@@ -181,7 +191,7 @@ export default {
           }
         }
 
-        axios.get('/book/SchoolArticle/getList',data).then(res => {
+       return axios.get('/book/SchoolArticle/getList',data).then(res => {
           if(res.data.status == 1){
             this.page++
             this.list = this.list.concat(res.data.data)
@@ -236,48 +246,64 @@ export default {
         }
     },
     imgError(e) {
-      e.target.src =
-        "https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0";
+      e.target.src = "https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0";
     },
     follow(userInfo) {
       userInfo.is_subscribe = !userInfo.is_subscribe
-      axios.get(`/book/MemberFollow/subscribe?user_id=${userInfo.user_id}`).then(res => {
-        this.$toast.success(res.data.msg)
+      let data = {
+        params:{
+          user_id:userInfo.user_id
+        }
+      }
+
+      axios.get('/book/MemberFollow/subscribe',data).then(res => {
+        switch(res.data.status){
+          case 1:
+            if(userInfo.is_subscribe){
+              userInfo.fans_count++
+              this.$toast.success({
+                className: 'shoucang-icon toast-icon'
+              })
+            }else{
+              userInfo.fans_count--
+            }
+          break
+        }
       })
     }
   }
 };
 </script>
 <style scoped>
-.container {
-  margin-top: 2.875rem /* 46/16 */;
+.container{
+  background: #f2f6fc;
+  margin-top: 130px;
 }
 
-.info {
-  display: inline-grid;
-  text-align: center;
+.zoom-head{
+  height: 200px;
 }
 
 .avatar img {
   width: 3.75rem /* 60/16 */;
   height: 3.75rem /* 60/16 */;
   border-radius: 50%;
-}
-
-.info {
-  padding: 0.625rem /* 10/16 */ 0;
-  flex: 1;
+  border: 5px solid #fff;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
+  background: #f2f6fc;
 }
 
 .social {
-  flex: 3;
-  padding: 0 0.625rem /* 10/16 */;
+  flex: 1;
+  padding:15px 0 10px;
 }
 
 .name {
   color: #303133;
-  margin-top: 0.3125rem /* 5/16 */;
-  padding: 0 .3125rem /* 5/16 */;
+  margin-left: 10px;
+  margin-top: 30px;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .data-box {
@@ -317,15 +343,45 @@ export default {
 }
 
 .user-card {
-  padding: 0.625rem /* 10/16 */ 0;
+  padding-top: 40px;
+  position: relative;
+}
+
+.user-card .info{
+  position: absolute;
+  left: 13px;
+  top: -30px;
+  text-align: center;
+  flex: 1;
 }
 
 .subscribe{
-  margin-top: 10px;
-  padding: 0 15px;
+  position: absolute;
+  right: 15px;
+  top: -13px;
+}
+
+.subscribe .theme-btn{
+  background: linear-gradient(135deg, #FFC107, #FF9800);
 }
 
 .theme-btn{
   width: 100%;
+}
+
+.zoom-head{
+  width: 100%;
+  height: 300px;
+  background: url('./../../assets/read-amount.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: fixed;
+  top: 0;
+}
+
+.bg-black{
+  background: rgba(0, 0, 0, .3);
+  width: 100%;
+  height: 100%;
 }
 </style>
