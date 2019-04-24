@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    <div class="slogn">
+    <div class="slogan">
       {{$store.state.slogan}}
     </div>
   </div>

@@ -41,6 +41,11 @@
           </div>
         </div>
       </div>
+
+      <div class="down">
+        <i class="iconfont">&#xe6c4;</i>
+        <span class="introduction">查看简介</span>
+      </div>
     </div>
     <div class="container">
       <van-nav-bar :border='false' title="故事简介"/>
@@ -56,7 +61,11 @@
     <van-popup v-model="show" position="bottom">
         <div class="list scroll-y">
             <div class="item" v-for='(item,index) in audioList' :key="index" @click="selectItem(item,index)">
-                <van-cell :title-class='index==audioIndex?"active":""' :title="item.title" is-link center/>
+              <van-cell :title-class='index==audioIndex?"active":""' :title="item.title" is-link center>
+                <div class="icon" slot='icon' v-if='index==audioIndex'>
+                  <i class="iconfont">&#xe639;</i>
+                </div>
+              </van-cell>
             </div>
         </div>
     </van-popup>
@@ -216,7 +225,7 @@ export default {
 
 .square {
   width: 100%;
-  height: 80vh;
+  height: 100vh;
   position: relative;
   overflow: hidden;
 }
@@ -265,7 +274,7 @@ export default {
 
 .control {
   position: absolute;
-  bottom: 60px;
+  bottom: 80px;
   width: 100%;
   z-index: 10;
 }
@@ -335,7 +344,6 @@ export default {
 }
 
 .container{
-    margin-top: 20px;
     padding-bottom: 30px;
 }
 
@@ -362,7 +370,7 @@ export default {
 
 .progress-bar,
 .slider-fill{
-  height: 5px;
+  height: 2px;
   position: relative;
 }
 
@@ -376,17 +384,51 @@ export default {
     height: 15px;
     border-radius: 50%;
     background: #fff;
-    top: -5px;
+    top: -6px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .turn{
-    animation:3s linear infinite CDturn
+    animation:5s linear infinite CDturn
+}
+
+.icon{
+  background: linear-gradient(127deg, #ff9800, #e91e63);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-right: 5px;
+}
+
+.down{
+  position: absolute;
+  bottom: 0;
+  z-index: 11;
+  width: 100%;
+  text-align: center;
+  animation:2s linear infinite downIcon;
+  display: grid;
+  opacity: 0.5;
+}
+
+.down i.iconfont{
+  font-size: 28px;
+  color: #fff;
+}
+
+.introduction{
+  font-size: 12px;
+  color: #fff;
 }
 
 @keyframes CDturn{
     from{transform:rotate(0deg)}
     to{transform:rotate(360deg)}
+}
+
+@keyframes downIcon{
+    0%{height: 30px}
+    50%{height: 58px}
+    100%{height: 30px}
 }
 </style>
 <style>

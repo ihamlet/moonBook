@@ -39,7 +39,7 @@
       <van-button class="theme-btn" square size="large" type="primary" @click="toAccept">办理借阅卡</van-button>
     </div>
 
-    <div class="slogn">
+    <div class="slogan">
       <slogan />
     </div>
   </div>

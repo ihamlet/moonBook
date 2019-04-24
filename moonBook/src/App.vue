@@ -1259,7 +1259,7 @@ i.iconfont.vip-1 {
   width: 100%;
 }
 
-.slogn{
+.slogan{
   text-align: center;
   color: #c0c4cc;
   font-size: 13px;
