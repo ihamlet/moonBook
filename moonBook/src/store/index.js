@@ -92,7 +92,7 @@ const mutations = {
     state.msgLength = params.data
   },
   setUserPoint(state, params) {
-    Cookies.set('userPoint', params.data, { expires: 7 })
+    Cookies.set('userPoint', JSON.stringify(params.data), { expires: 7 })
     state.userPoint = params.data
   },
   setToken(state, params) {

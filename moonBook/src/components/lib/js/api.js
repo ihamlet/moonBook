@@ -5,9 +5,6 @@
 
 import axios from 'axios-extra'
 import router from '@/router/index'
-import Cookies from 'vue-cookie'
-
-console.log(Cookies)
 
 // axios.defaults.timeout = 5000
 axios.defaults.maxConcurrent = 1
@@ -15,20 +12,6 @@ axios.defaults.queueOptions = {
     retry: 3,
     retryIsJump: true
 }
-
-axios.interceptors.request.use(
-    config => {
-        let token = Cookies.get('WWW_TOKEN')
-        if (token) {
-            config.headers.Authorization = `token ${token}`
-        }
-        return config
-    },
-    err => {
-        return Promise.reject(err)
-    }
-)
-
 
 // http request 拦截器
 axios.interceptors.response.use(
