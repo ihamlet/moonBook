@@ -3,7 +3,7 @@
     <div class="ad-container" v-html='details.intro'></div>
     <div class="footer-bar">
       <div class="bar">
-        <van-button round class="theme-btn" type="primary" @click="show = true"> 
+        <van-button round class="theme-btn" type="primary" @click="show = true" size="large"> 
           <i class="iconfont">&#xe68b;</i>  
           领取卡券
         </van-button>
@@ -199,6 +199,7 @@ export default {
 
 .theme-btn {
   width: 100%;
+  box-shadow: 0 5px 10px rgba(0, 132, 255, 0.3)
 }
 
 .title {

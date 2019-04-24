@@ -194,7 +194,7 @@ b {
 .rule {
   background: #fff;
   padding: 20px;
-  border-top:2px dashed #F2F6FC;
+  border-top:3px dashed #F2F6FC;
 }
 
 .write {
@@ -212,5 +212,7 @@ b {
   font-size: 13px;
 }
 
-
+.theway{
+  text-align: justify;
+}
 </style>
