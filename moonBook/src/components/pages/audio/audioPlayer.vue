@@ -405,7 +405,7 @@ export default {
   z-index: 11;
   width: 100%;
   text-align: center;
-  animation:2s linear infinite downIcon;
+  animation:2s cubic-bezier(0.4, 0, 1, 1) infinite downIcon;
   display: grid;
   opacity: 0.5;
 }

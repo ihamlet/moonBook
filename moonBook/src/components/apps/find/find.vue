@@ -4,7 +4,7 @@
       <div class="module" v-if='isFreshListShow'>
         <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname" :key="$route.query.tag_id"/>
       </div>
-    <div>
+    <div class="warp">
       <div class="container">
         <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">

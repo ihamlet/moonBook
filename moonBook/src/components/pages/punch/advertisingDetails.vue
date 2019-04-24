@@ -1,9 +1,17 @@
 <template>
-  <div class="advertising-details">
+  <div :class="show?'advertising-details':''">
     <div class="ad-container" v-html='details.intro'></div>
+    <div class="footer-bar">
+      <div class="bar">
+        <van-button round class="theme-btn" type="primary" @click="show = true"> 
+          <i class="iconfont">&#xe68b;</i>  
+          领取卡券
+        </van-button>
+      </div>
+    </div>
 
     <van-popup v-model="show" position='bottom' :overlay="false" :lock-scroll='false'>
-      <van-nav-bar title="卡券领取" right-text="更多奖品" @click-right="toProgress" :border='false' />
+      <van-nav-bar title="卡券领取" right-text="更多奖品" left-text="收起" @click-left="show = false" @click-right="toProgress" :border='false'/>
       <div class="prize-card flex flex-column">
         <div class="prize-content">
           <div class="name">{{details.shop_name}}</div>
@@ -71,7 +79,7 @@
       </div>
       <div class="container" v-else>
         <div class="content">
-          <div class="hint">您打卡还未满21天，无法领取</div>
+          <div class="hint">{{msg}}</div>
           <div class="point">继续加油，坚持下去</div>
         </div>
         <div class="draw-btn">
@@ -95,7 +103,8 @@ export default {
       picking: false,
       successful: false,
       coupon_id: this.$route.query.coupon_id || 0,
-      details:''
+      details:'',
+      msg:''
     }
   },
   computed: {
@@ -135,6 +144,9 @@ export default {
           case 1:
             this.show = true
             this.details = res.data.data
+          break
+          case 0:
+            this.msg = res.data.msg
           break
         }
       })
@@ -346,5 +358,15 @@ b {
 
 .content{
   padding: 30px 0 50px;
+}
+
+.footer-bar{
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+.bar{
+  padding: 10px;
 }
 </style>

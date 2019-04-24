@@ -6,6 +6,10 @@
       </div>
       <div class="head-bar-icon bar-right" slot="right">
         <i class="iconfont" @click="toHelp">&#xe618;</i>
+        <i class="iconfont coupon" @click="toPopupList">&#xe68b;</i>
+        <div class="tips" v-if='couponCount > 0'>
+          <van-tag round type="danger">{{couponCount}}</van-tag>
+        </div>
       </div>
     </van-nav-bar>
     <div class="user-info flex flex-justify">
@@ -51,7 +55,7 @@ export default {
     avatar,
     vipLevel
   },
-  props: ["userInfo", "children"],
+  props: ["userInfo", "children",'couponCount'],
   data() {
     return {
       domHeight: 0,
@@ -113,6 +117,11 @@ export default {
           id: this.children.id,
           back: this.$route.name
         }
+      })
+    },
+    toPopupList(){
+      this.$router.push({
+        name:'popupList'
       })
     }
   }
@@ -260,6 +269,16 @@ export default {
   font-size: x-small
 } */
 
+.head-bar-icon{
+  position: relative;
+}
+
+.tips{
+  position: absolute;
+  right: -10px;
+  top: -10px;
+}
+
 .theme-color {
   margin: 0 0.3125rem /* 5/16 */;
 }
@@ -282,5 +301,9 @@ export default {
 
 .card-name{
   font-weight: 700;
+}
+
+.coupon{
+  margin-left: 15px;
 }
 </style>

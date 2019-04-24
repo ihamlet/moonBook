@@ -91,8 +91,7 @@ export default {
   },
   methods: {
     qrcode() {
-      let link = `${location.origin}/book/shangjia/coupon_check/?#download_id=${this.$route.query.download_id}`
-      console.log(link)
+      let link = `${location.origin}/book/shangjia/coupon_check?download_id=${this.$route.query.download_id}`
       QRcode.toDataURL(link).then(url => {
         this.codeImgURL = url
       }).catch(err => {
@@ -159,7 +158,7 @@ export default {
 
 .code {
   width: 100%;
-  height: 200px;
+  overflow: hidden;
   background: #fff;
 }
 
@@ -200,6 +199,8 @@ b {
 
 .write {
   text-align: center;
+  height: 46px;
+  line-height: 46px;
 }
 
 .cell {

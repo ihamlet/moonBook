@@ -1,6 +1,6 @@
 <template>
   <div class="my page-padding">
-    <card-head :userInfo='userDataState' :children='children[0]'/>
+    <card-head :userInfo='userDataState' :children='children[0]' :couponCount='couponCount'/>
     <div class="gutter gap">
       <apps :appsList='appsList' v-if='isTeacher == 1 || isHeaderTeacher == 1' />
     </div>
@@ -41,6 +41,7 @@ export default {
   },
   data() {
     return {
+      couponCount:0,
       children: '',
       zoomCard: '',
       isTeacher: 0,
@@ -115,6 +116,10 @@ export default {
         }else{
            this.$toast.fail('获取数据失败')
         }
+      })
+
+      axios.get('/book/member/get_coupon_downloads').then(res=>{
+        this.couponCount = res.data.count
       })
     }
   }
