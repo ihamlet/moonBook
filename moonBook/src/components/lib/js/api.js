@@ -5,7 +5,9 @@
 
 import axios from 'axios-extra'
 import router from '@/router/index'
-import Cookies from 'js-cookie'
+import Cookies from 'vue-cookie'
+
+console.log(Cookies)
 
 // axios.defaults.timeout = 5000
 axios.defaults.maxConcurrent = 1

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from './../components/lib/js/api'
 import fetchJsonp from 'fetch-jsonp'
-import Cookies from 'js-cookie'
+import Cookies from 'vue-cookie'
 import qs from 'qs'
 
 import beautifulArticle from './BeautifulArticle'

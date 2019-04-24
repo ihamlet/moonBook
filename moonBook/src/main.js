@@ -3,6 +3,7 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VueCookie from 'vue-cookie'
 import App from './App'
 import router from './router'
 import store from './store/index'
@@ -45,6 +46,8 @@ Vue.use(Lazyload, {
 
 Vue.use(lineClamp)
 Vue.use(VueAMap)
+Vue.use(VueCookie)
+
 VueAMap.initAMapApiLoader({
   // 高德key
   key: 'fa9f5ec66e1591d348fd0d4b8edd809a',

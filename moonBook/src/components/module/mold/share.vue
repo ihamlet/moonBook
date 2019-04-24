@@ -37,7 +37,6 @@
   </div>
 </template>
 <script>
-import Cookies from 'js-cookie'
 import { mapGetters } from 'vuex'
 import axios from './../../lib/js/api'
 import topicList from './../../module/release/topicList'

@@ -64,7 +64,6 @@
   </div>
 </template>
 <script>
-import Cookies from 'js-cookie'
 import axios from './../../lib/js/api'
 
 export default {
@@ -121,8 +120,7 @@ export default {
     },
     pay() {
       this.payLoading = true
-
-      Cookies.set('payLink', location.href)
+      this.$cookies.set('payLink', location.href)
       location.href = `/book/memberCard/buycard?level_id=${this.$route.query.leveId}&fee_id=${this.feeId}&is_auto=1&url=${encodeURIComponent(location.href)}`
     }
   }
