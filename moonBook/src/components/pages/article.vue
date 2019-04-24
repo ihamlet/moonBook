@@ -38,7 +38,7 @@
           </div>
           <articleOperation :item='item'/>
         </div>
-        <div>
+        <div class="comment" ref='commentDom'>
           <comment :item='item' include='include' :key="$route.query.id"/>
         </div>
       </div>
@@ -106,7 +106,7 @@ export default {
     next()
   },
   created() {
-    this.fetchData()    
+    this.fetchData()
   },
   //数据加载完成后执行该方法
   updated (){

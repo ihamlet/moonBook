@@ -131,7 +131,8 @@ export default {
           id: item.post_id,
           type: item.template_id,
           back: this.$route.name,
-          back_id: this.$route.query.id
+          back_id: this.$route.query.id,
+          point: 'comments'
         }
       })
     },

@@ -97,12 +97,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_7k8q8rhnpxq.eot');
-  src: url('//at.alicdn.com/t/font_893274_7k8q8rhnpxq.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_7k8q8rhnpxq.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_7k8q8rhnpxq.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_7k8q8rhnpxq.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_7k8q8rhnpxq.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_vbjco2zmdw8.eot');
+  src: url('//at.alicdn.com/t/font_893274_vbjco2zmdw8.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_vbjco2zmdw8.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_vbjco2zmdw8.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_vbjco2zmdw8.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_vbjco2zmdw8.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,

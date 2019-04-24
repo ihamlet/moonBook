@@ -1,7 +1,11 @@
 <template>
   <div class="find page-padding">
-    <van-nav-bar :border='false' :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title"/>
-      <div class="module" v-if='isFreshListShow'>
+    <van-nav-bar :border='false' :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title">
+      <!-- <div class="brand-btn" slot='right' v-if='!$route.query.tag_id'>
+        榜单 <i class="iconfont">&#xe666;</i>
+      </div> -->
+    </van-nav-bar>
+    <div class="module" v-if='isFreshListShow'>
         <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname" :key="$route.query.tag_id"/>
       </div>
     <div class="warp">
@@ -143,5 +147,14 @@ export default {
 }
 </script>
 <style scoped>
+.brand-btn{
+  background-image: linear-gradient(137deg,#FFC107 0%, #FF5722 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.brand-btn .iconfont{
+  font-size: 25px;
+}
 </style>
 

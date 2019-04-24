@@ -162,6 +162,14 @@ export default {
 
       axios.get('/book/SchoolArticleComment/getList', data).then(res => {
         if (res.data.status == 1) {
+
+          if(this.$route.query.point == 'comments'){
+            this.$nextTick(()=>{
+              this.toScroll()
+              this.toTopAndComment = false
+            })
+          }
+
           this.listLength = res.data.count
           let array = res.data.data
           this.loading = false
@@ -278,9 +286,10 @@ export default {
     },
     toScroll() {
       this.toTopAndComment = !this.toTopAndComment
-      let domScrollTop = this.$refs.comment.offsetTop
       if (this.toTopAndComment) {
-        window.scrollTo(0, domScrollTop)
+        this.$refs.comment.scrollIntoView({
+          behavior:'smooth'
+        })
       } else {
         window.scrollTo(0, 0)
       }

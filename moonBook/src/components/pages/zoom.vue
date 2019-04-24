@@ -1,6 +1,6 @@
 <template>
   <div class="zoom page-padding">
-    <van-nav-bar :class="fixedHeaderBar?'theme-nav':''" :zIndex="99" :title="fixedHeaderBar?$route.meta.title:`${userInfo.name}的空间`" fixed :border='false'/>
+    <van-nav-bar :class="fixedHeaderBar?'theme-nav':''" :zIndex="99" :title="fixedHeaderBar?$route.meta.title:`${userInfo.name?userInfo.name:''}的空间`" fixed :border='false'/>
     <div class="zoom-head">
       <div class="bg-black"></div>
     </div>
