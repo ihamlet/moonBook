@@ -193,7 +193,7 @@ b {
 
 .rule {
   background: #fff;
-  padding: 20px;
+  padding:0 20px 20px;
   border-top:3px dashed #F2F6FC;
 }
 
