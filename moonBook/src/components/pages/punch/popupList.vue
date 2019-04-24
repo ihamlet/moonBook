@@ -104,7 +104,6 @@ export default {
 
 .card {
   flex: 1;
-  padding: 10px;
 }
 
 .status {

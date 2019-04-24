@@ -219,7 +219,6 @@ export default {
   height: 80vh;
   position: relative;
   overflow: hidden;
-  border-radius: 0 0 80vh 80vh
 }
 
 .cover{
@@ -243,7 +242,7 @@ export default {
   position: absolute;
   left: 50%;
   bottom: 50%;
-  margin-left: -95px;
+  margin-left: -100px;
   overflow: hidden;
   border: 10px solid rgba(0, 0, 0, 0.5);
   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
@@ -287,14 +286,17 @@ export default {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: linear-gradient(127deg, #ff9800, #e91e63);
-  box-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
+  background: #fff;
   text-align: center;
   line-height: 60px;
 }
 
 .player-btn i.iconfont {
   font-size: 35px;
+  background: linear-gradient(127deg, #ff9800, #e91e63);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 0.0625rem /* 1/16 */ 0.375rem /* 6/16 */ rgba(233, 30, 99, 0.3);
 }
 
 .player-btn,
@@ -310,8 +312,9 @@ export default {
 }
 
 .btn-list,
-.progress-bar {
-  width: 260px;
+.progress-bar,
+.title{
+  width: 80%;
 }
 
 .progress-bar {
@@ -321,7 +324,6 @@ export default {
 }
 
 .title {
-  width: 260px;
   color: #fff;
   text-align: center;
   margin: 20px auto;

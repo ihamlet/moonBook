@@ -1,6 +1,6 @@
 <template>
   <div class="punch-speed">
-    <van-nav-bar title="21天打卡奖品" :border='false' />
+    <van-nav-bar title="14天打卡奖品" :border='false' />
     <div class="baby-card">
       <van-cell>
         <div class="info-card flex flex-align">
@@ -13,12 +13,12 @@
             </div>
           </div>
           <div class="days">
-            {{childInfo.sign_days}}/21天
+            {{childInfo.sign_days}}/14天
           </div>
         </div>
 
         <div class="label">
-          完成21天打卡即可获取奖品
+          完成14天打卡即可获取奖品
         </div>
       </van-cell>
 

@@ -1258,4 +1258,10 @@ i.iconfont.vip-1 {
   overflow-y: initial;
   width: 100%;
 }
+
+.slogn{
+  text-align: center;
+  color: #c0c4cc;
+  font-size: 13px;
+}
 </style>
