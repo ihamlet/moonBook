@@ -164,10 +164,7 @@ export default {
         if (res.data.status == 1) {
 
           if(this.$route.query.point == 'comments'){
-            this.$nextTick(()=>{
-              this.toScroll()
-              this.toTopAndComment = false
-            })
+            this.$refs.comment.scrollIntoView()
           }
 
           this.listLength = res.data.count
@@ -208,9 +205,7 @@ export default {
             this.onLoad()
             this.$toast.success(res.data.info)
             this.isLoading = false
-
-            this.toTopAndComment = false
-            this.toScroll() // 滚动到指定位置
+            this.$refs.comment.scrollIntoView()
           } else {
             this.$toast.fail(res.data.info)
           }
