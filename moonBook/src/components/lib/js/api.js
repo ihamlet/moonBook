@@ -3,15 +3,15 @@
 直接使用cookies
 */
 
-import axios from 'axios-extra'
+import axios from 'axios'
 import router from '@/router/index'
 
 // axios.defaults.timeout = 5000
-axios.defaults.maxConcurrent = 1
-axios.defaults.queueOptions = {
-    retry: 3,
-    retryIsJump: true
-}
+// axios.defaults.maxConcurrent = 1
+// axios.defaults.queueOptions = {
+//     retry: 3,
+//     retryIsJump: true
+// }
 
 // http request 拦截器
 axios.interceptors.response.use(
