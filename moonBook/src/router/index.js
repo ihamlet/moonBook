@@ -42,6 +42,8 @@ import Dialog from '@/components/pages/dialog/dialog'
 
 import Share from '@/components/pages/share'
 
+import Search from '@/components/module/search/searchPage'
+
 import Edit from './edit'
 import Editor from './editor'
 import Manage from './manage'
@@ -73,6 +75,14 @@ export default new Router({
         },
         Accept,
         ...Edit,
+        {
+          path:'/search',
+          name:'search',
+          component: Search,
+          meta: {
+            isFooterBar: false,
+          }
+        },
         {
           path: '/city',
           name: 'city',

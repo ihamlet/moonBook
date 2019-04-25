@@ -75,7 +75,7 @@ export default {
       }
     },
     toBookDetails(item) {
-      this.$router.push({
+      this.$router.replace({
         name: 'book-details',
         query: {
           id: item.book_id
@@ -98,8 +98,7 @@ export default {
           if(item.is_collect){
             this.$toast.success({
               className: 'like-icon toast-icon',
-              duration: '800',
-              message: '喜欢'
+              duration: '800'
             })
           }
         }

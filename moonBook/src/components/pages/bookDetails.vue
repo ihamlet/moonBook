@@ -1,6 +1,6 @@
 <template>
   <div class="book-details page-padding">
-    <van-nav-bar fixed>
+    <van-nav-bar fixed :border='false'>
       <div class="head-bar-title" slot="title">
         <transition name="slide-fade" mode="out-in">
           <div key="1" v-if='!themeBarSearch'>{{$route.meta.title}}</div>

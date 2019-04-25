@@ -304,6 +304,7 @@ export default {
   margin-top: 30px;
   font-size: 18px;
   font-weight: 700;
+  max-width: 50%;
 }
 
 .data-box {
@@ -358,7 +359,7 @@ export default {
 .subscribe{
   position: absolute;
   right: 15px;
-  top: -13px;
+  top: -20px;
 }
 
 .subscribe .theme-btn{

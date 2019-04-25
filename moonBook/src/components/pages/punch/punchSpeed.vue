@@ -31,7 +31,7 @@
             <van-cell :border='false'>
               <div class="top-bar flex flex-align">
                 <div class="title" v-line-clamp:20="1">{{item.title}}</div>
-                <div class="num">奖品数量：{{item.downloads}}/{{item.num}}</div>
+                <div class="num">奖品数量：{{item.remains}}/{{item.num}}</div>
               </div>
               <div class="sponsor">
                 <img class="lazy" v-lazy="item.photo" />

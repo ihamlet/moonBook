@@ -390,7 +390,7 @@ export default {
           if (this.page == 1) {
             this.tab[this.tabIndex].content = res.data.data
           } else {
-            this.tab[this.tabIndex].content = this.list.concat(res.data.data)
+            this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
           }
           this.page++
           this.loading = false
@@ -398,6 +398,7 @@ export default {
             this.finished = true
           }
         }else{
+          this.page = 1
           this.tab[this.tabIndex].content = []
           this.loading = false
           this.finished = true

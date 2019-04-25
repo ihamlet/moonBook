@@ -42,14 +42,14 @@
         </div>
       </div>
 
-      <div class="down">
+      <div class="down" @click="toScrollAetails">
         <i class="iconfont">&#xe6c4;</i>
         <span class="introduction">查看简介</span>
       </div>
     </div>
     <div class="container">
       <van-nav-bar :border='false' title="故事简介"/>
-      <div class="details">
+      <div class="details" ref='details'>
         {{audioList[audioIndex].details}}
       </div>
     </div>
@@ -201,7 +201,12 @@ export default {
     },
     changeCurrentTime(index){
         this.$refs.audio.currentTime = parseInt(index / 100 * this.audio.maxTime)
-    }
+    },
+    toScrollAetails(){
+      this.$refs.details.scrollIntoView({
+        behavior:'smooth'
+    })
+  },
   },
   filters: {
         transPlayPause(value) {

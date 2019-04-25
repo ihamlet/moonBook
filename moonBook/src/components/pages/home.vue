@@ -5,7 +5,7 @@
                 <span v-if='userPointState'>{{userPointState.city}}</span>
                 <span v-else>定位中</span>
             </div>
-            <div class="search-bar"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
+            <div class="search-bar" @click="toSearch"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
             <div class="right-btn">
                 <span class="notice-badge">
                     <i class="iconfont" @click="toNotice">{{MsgLengthState>0?'&#xe623;':'&#xe798;'}}</i>
@@ -169,6 +169,11 @@ export default {
         toCity(){
             this.$router.push({
                 name:'city'
+            })
+        },
+        toSearch(){
+            this.$router.push({
+                name:'search'
             })
         },
         formatNews(news){

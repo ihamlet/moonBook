@@ -145,9 +145,6 @@ export default {
             this.show = true
             this.details = res.data.data
           break
-          case 0:
-            this.msg = res.data.msg
-          break
         }
       })
     },
@@ -157,9 +154,16 @@ export default {
     },
     receive() {
       this.picking = true
-      return axios(`/book/member/pick_coupon?coupon_id=${this.coupon_id}`).then((res) => {
+      let data = {
+        params:{
+          coupon_id:this.coupon_id
+        }
+      }
+
+      return axios('/book/member/pick_coupon',data).then(res => {
         this.picking = false
         this.detailsCard = true
+        this.msg = res.data.msg
         switch(res.data.status){
           case 1:
             this.successful = true

@@ -1,7 +1,6 @@
 <template>
   <div class="popup-list">
     <van-nav-bar :title="$route.meta.title" />
-
     <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
       <div class="item-card" v-for="(item,itemIndex) in list" :key="itemIndex">
         <div class="content" v-if='list.length'>
@@ -63,7 +62,7 @@ export default {
             }
             this.page++
             this.loading = false
-            if(this.list >= res.data.count){
+            if(this.list.length >= res.data.count){
               this.finished = true
             }
           break

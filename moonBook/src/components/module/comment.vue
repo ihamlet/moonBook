@@ -67,7 +67,7 @@
         <div class="bar-padding flex flex-align">
           <div class="input-box flex flex-align" @click="showField()">
             <div class="input-box-avatar avatar">
-              <img :src="userDataState.avatar" v-http2https/>
+              <img :src="userDataState.avatar" v-http2https @error='imgError'/>
             </div>
             <span>写评论</span>
           </div>
@@ -149,11 +149,16 @@ export default {
       score: false
     }
   },
+  watch: {
+    item(val){
+      this.onLoad()
+    }
+  },
   methods: {
-    onLoad() {
+    onLoad(id) {
       let data = {
         params: {
-          post_id: this.$route.query.id || this.$route.query.back_id,
+          post_id: this.item.post_id,
           page: this.page,
           limit: 10,
           sort: 'new'
@@ -186,7 +191,7 @@ export default {
     submit() {
       this.isLoading = true
       let data = {
-        post_id: this.$route.query.id,
+        post_id: this.item.post_id,
         contents: this.message,
         tags: this.item.ad_label
       }
@@ -303,6 +308,9 @@ export default {
       if(this.$route.query.type != 'preview') {
         this.shareShow = true
       }
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     }
   }
 }
