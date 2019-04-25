@@ -11,6 +11,10 @@
     <div class="container">
       <div class="module">
         <div class="book-card" ref='bookCard'>
+          <div class="tag">
+              <van-tag v-if='details.is_read' mark type="success" size="large">已读</van-tag>
+              <van-tag v-else mark type="danger" size="large">未读</van-tag>
+          </div>
           <van-row gutter="10">
             <van-col span="9">
               <div class="book-thumb">
@@ -211,5 +215,11 @@ export default {
 
 .container{
   padding-top: 2.8125rem /* 45/16 */;
+}
+
+.tag{
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 </style>

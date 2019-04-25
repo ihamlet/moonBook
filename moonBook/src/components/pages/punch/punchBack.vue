@@ -13,7 +13,7 @@
     </div>
 
     <van-pull-refresh v-model="loading" @refresh="onRefresh">
-      <van-nav-bar :border='false' right-text="" @click-right="onClickRight">  
+      <van-nav-bar :border='false' right-text="打卡进度" @click-right="onClickRight">  
          <!-- 阅读进度 -->
         <div class="date-title" slot="title">{{day}}</div>
       </van-nav-bar>
@@ -96,7 +96,8 @@ export default {
         text: '拍小视频',
         index: 1
       }],
-      banner: []
+      banner: [],
+      extra:''
     }
   },
   created() {
@@ -141,6 +142,7 @@ export default {
       return axios.get('/book/member/get_read_sign_list', data).then(res => {
         switch (res.data.status) {
           case 1:
+            this.extra = res.data.data[0]
             if (this.page == 1) {
               this.list = res.data.data
             } else {
@@ -212,13 +214,9 @@ export default {
       })
     },
     onClickRight(){
-      console.log('阅读进度')
-      // this.$router.push({
-      //   name:'punchSpeed',
-      //   query:{
-      //     id: this.$route.query.child_id
-      //   }
-      // })
+      this.$router.push({
+        name:'punchSpeed'
+      })
     }
   }
 }
