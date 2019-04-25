@@ -1264,4 +1264,10 @@ i.iconfont.vip-1 {
   color: #c0c4cc;
   font-size: 13px;
 }
+
+.listening i.iconfont{
+  font-size: 1.75rem /* 28/16 */;
+  color: #f02b2b;
+  display: block;
+}
 </style>

@@ -189,10 +189,4 @@ export default {
   background: #fff;
   border-radius: .3125rem /* 5/16 */;
 }
-
-.listening i.iconfont{
-  font-size: 1.75rem /* 28/16 */;
-  color: #f02b2b;
-  display: block;
-}
 </style>

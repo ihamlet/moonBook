@@ -17,7 +17,7 @@
                 <img :src="details.thumb" @error="imgError($event,details)" />
               </div>
             </van-col>
-            <van-col span="15">
+            <van-col span="14">
               <div class="content">
                 <div class="title" v-line-clamp:20="2">{{details.title}}</div>
                 <van-rate v-model="star" disabled disabled-color='#ffd21e'/>
@@ -28,6 +28,11 @@
               </div>
             </van-col>
           </van-row>
+          <van-col span="1">
+            <div class="listening" @click="listening(item)">
+              <i class="iconfont">&#xe617;</i>
+            </div>
+          </van-col>
         </div>
       </div>
       <div class="module" v-if='freshList.length'>
@@ -131,6 +136,20 @@ export default {
       } else {
         this.themeBarSearch = false
       }
+    },
+    listening(item){
+      let p = /（.+?）/
+      let pureTitle = item.book_name.replace(p, '')
+      let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
+      let isRead = localStorage.getItem('bookRead_' + item.book_id)
+      if (!isRead) {
+        axios.get('/book/story/updateRead').then(res => {
+          localStorage.setItem('bookRead_' + item.book_id, true)
+          location.href = url
+        })
+      } else {
+        location.href = url
+      }
     }
   }
 }
@@ -151,6 +170,17 @@ export default {
 .book-card {
   padding: 1.25rem /* 20/16 */;
   background: #fff;
+  position: relative;
+}
+
+.listening{
+  position: absolute;
+  right: 15px;
+  top:10px;
+}
+
+.listening i.iconfont{
+  font-size: 26px;
 }
 
 .book-thumb {
