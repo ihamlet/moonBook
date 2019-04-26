@@ -185,7 +185,7 @@ export default {
         })
       }
       
-      if(this.$route.query.book_id){
+      if(this.$route.query.book_id > 0){
         let bookDetailData = {
           params:{
             ajax:1,
@@ -205,6 +205,14 @@ export default {
             }
           }
         })
+      }else{
+        this.post = {
+          cover: this.$store.state.logo, //logo 图片链接
+          title: '自选图书', //内容
+          post_id: 0,
+          details: `${this.userDataState.child_name}宝贝${this.$route.query.tags?`参与了${this.$route.query.tags}活动`:''}`, //副标题
+          type: '图书',
+        }    
       }
 
       //判断路由自动触发小视频 视频
