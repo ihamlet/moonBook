@@ -200,7 +200,7 @@ export default {
               cover: bookData.thumb || this.$store.state.logo, //logo 图片链接
               title: bookData.title, //内容
               post_id: bookData.tushu_id || 0,
-              details: `${this.userDataState.child_name}宝贝${this.$route.query.tags?`参与了${this.$route.query.tags}活动`:''}`, //副标题
+              details: `${this.userDataState.child_name}宝贝${this.$route.query.tags?`正在参与${this.$route.query.tags}活动`:''}`, //副标题
               type: '图书',
             }
           }
@@ -210,7 +210,7 @@ export default {
           cover: this.$store.state.logo, //logo 图片链接
           title: '自选图书', //内容
           post_id: 0,
-          details: `${this.userDataState.child_name}宝贝${this.$route.query.tags?`参与了${this.$route.query.tags}活动`:''}`, //副标题
+          details: `${this.userDataState.child_name}宝贝${this.$route.query.tags?`正在参与${this.$route.query.tags}活动`:''}`, //副标题
           type: '图书',
         }    
       }
