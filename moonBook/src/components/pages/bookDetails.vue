@@ -33,7 +33,7 @@
             </van-col>
           </van-row>
           <van-col span="1">
-            <div class="listening" @click="listening(item)">
+            <div class="listening" @click="listening(details)">
               <i class="iconfont">&#xe617;</i>
             </div>
           </van-col>
@@ -146,14 +146,14 @@ export default {
         this.themeBarSearch = false
       }
     },
-    listening(item){
+    listening(details){
       let p = /（.+?）/
-      let pureTitle = item.book_name.replace(p, '')
+      let pureTitle = details.title.replace(p, '')
       let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
-      let isRead = localStorage.getItem('bookRead_' + item.book_id)
+      let isRead = localStorage.getItem('bookRead_' + details.tushu_id)
       if (!isRead) {
         axios.get('/book/story/updateRead').then(res => {
-          localStorage.setItem('bookRead_' + item.book_id, true)
+          localStorage.setItem('bookRead_' + details.tushu_id, true)
           location.href = url
         })
       } else {
