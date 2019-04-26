@@ -97,6 +97,7 @@ export default {
           back: this.$route.query.back || this.$route.name,
           tag_id: this.cate?'':this.$route.query.tag_id,
           cate_id: this.$route.query.cate_id?this.$route.query.cate_id:this.cate?this.cate.cate_id:'',
+          book_id: this.bookId
         }
       })
     },
@@ -108,6 +109,7 @@ export default {
           back: this.$route.query.back || this.$route.name,
           tag_id: this.cate?'':this.$route.query.tag_id,
           cate_id: this.$route.query.cate_id?this.$route.query.cate_id:this.cate?this.cate.cate_id:'',
+          book_id: this.bookId,
           upVideo:1
         }
       })

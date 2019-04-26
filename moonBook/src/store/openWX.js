@@ -81,7 +81,7 @@ export default {
           title: title || products.item.title,
           link: location.href.replace('#','/?#'),
           desc: desc,
-          imgUrl: products.item.imgUrl || products.item.cover || context.state.logo,
+          imgUrl: products.item.imgUrl||products.item.cover?products.item.cover:context.state.logo,
           success: products.success
         }
 
