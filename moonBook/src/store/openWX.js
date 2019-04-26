@@ -70,7 +70,7 @@ export default {
         let template_id = products.item.template_id?products.item.template_id:"1"
   
         if (template_id == "0") {
-          title = `【阅亮书架】#${products.item.cate.cate_name}#${products.item.title}`
+          title = `【阅亮书架】${products.item.cate.cate_name?`#${products.item.cate.cate_name}#`:''}${products.item.title}`
           desc = products.item.details.replace(/<[^>]+>/g,"") || context.state.slogan
         } else {
           title = '阅亮书架'

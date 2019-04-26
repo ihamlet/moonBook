@@ -20,7 +20,7 @@
 import axios from './../../lib/js/api'
 import cardPunch from './cardPunch'
 import { format,timeago } from './../../lib/js/util'
-import { mapActions } from 'vuex'
+import { mapActions,mapState } from 'vuex'
 
 export default {
   name: 'punch-list',
@@ -28,6 +28,7 @@ export default {
     cardPunch  
   },
   computed: {
+    ...mapState('openWX',['ready']),
     item(){
       let data = {
         cate_name:'打卡',
@@ -47,8 +48,8 @@ export default {
       shareShow: false
     }
   },
-  updated (){
-    this.$nextTick(()=>{
+  watch:{
+    ready(){
       let data = {
         item: this.item,
         success(){
@@ -57,7 +58,7 @@ export default {
       }
 
       this.share(data)
-    })
+    }
   },
   methods: {
     ...mapActions('openWX',['share','scanQRcode']),

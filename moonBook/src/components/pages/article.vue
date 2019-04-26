@@ -69,9 +69,8 @@ export default {
   },
   computed: {
     ...mapState(['slogan','logo']),
+    ...mapState('openWX',['ready']),
     ...mapGetters(['userDataState']),
-    ...mapState('beautifulArticle',['cover','title']),
-    ...mapGetters('beautifulArticle',['getArticleContent','getImageList']),
     post(){
       let content
       if(this.item.extra){
@@ -107,29 +106,21 @@ export default {
   },
   created() {
     this.fetchData()
-    this.shareArticle()
-  },
-  //数据加载完成后执行该方法
-  updated (){
-    this.shareArticle()
   },
   watch: {
-    '$router': 'fetchData'
-  },
-  methods: {
-    ...mapActions('openWX',['share']),
-    shareArticle(){
-      this.$nextTick(()=>{
+    '$router': 'fetchData',
+    ready(){
         let data = {
           item: this.item,
           success(){
             console.log('微信分享')
           }
         }
-
         this.share(data)
-      })
-    },
+    }
+  },
+  methods: {
+    ...mapActions('openWX',['share']),
     fetchData() {
         this.$toast.loading()
 

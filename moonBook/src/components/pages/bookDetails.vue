@@ -54,6 +54,7 @@ import freshList from './../module/findModule/freshList'
 import comment from './../module/comment'
 import { mapActions } from 'vuex'
 import { arrayUnique } from './../lib/js/util'
+import { mapState } from 'vuex'
 
 export default {
   name: 'book-details',
@@ -62,6 +63,7 @@ export default {
     comment
   },
   computed: {
+    ...mapState('openWX',['ready']),
     star(){
       let num = 3
       if(this.details){
@@ -80,8 +82,8 @@ export default {
       themeBarSearch: false,
     }
   },
-  updated (){
-    this.$nextTick(()=>{
+  watch: {
+    ready(){
       let data = {
         item: this.details,
         success(){
@@ -90,7 +92,7 @@ export default {
       }
 
       this.share(data)
-    })
+    }
   },
   created() {
     this.fetchData()

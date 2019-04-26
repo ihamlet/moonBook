@@ -36,7 +36,7 @@ import { timeago } from './../../lib/js/util'
 import videoList from './../../module/video'
 import comment from './../../module/comment'
 import './../../../../static/ckplayer/ckplayer/ckplayer'
-import { mapActions } from 'vuex'
+import { mapActions,mapState } from 'vuex'
 
 export default {
   name: 'ckplayer',
@@ -45,6 +45,7 @@ export default {
     comment
   },
   computed: {
+    ...mapState('openWX',['ready']),
     player() {
       return new ckplayer(this.videoObject)
     }
@@ -84,8 +85,9 @@ export default {
       this.player
     })
   },
-  updated (){
-    this.$nextTick(()=>{
+  watch: {
+    "$router": 'fetchData',
+    ready(){
       let data = {
         item: this.item,
         success(){
@@ -94,10 +96,7 @@ export default {
       }
 
       this.share(data)
-    })
-  },
-  watch: {
-    "$router": 'fetchData'
+    }
   },
   methods: {
     ...mapActions('openWX',['share']),
