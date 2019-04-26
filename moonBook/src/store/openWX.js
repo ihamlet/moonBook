@@ -9,7 +9,8 @@ export default {
     logo: `${location.origin}/Public/lib/bookshelf/img/logo.png`,
     ready: "",
     imgList:[],
-    resultStr:''
+    resultStr:'',
+    readSign:''
   },
   getters: {
 
@@ -41,6 +42,9 @@ export default {
     //发布完了清除数据
     clearImg(state){
       state.imgList = []
+    },
+    setReadSign(state,params){
+      state.readSign = params.data
     }
   },
   actions: {
@@ -77,7 +81,7 @@ export default {
           title: title || products.item.title,
           link: location.href.replace('#','/?#'),
           desc: desc,
-          imgUrl: products.item.imgUrl || context.state.logo || products.item.cover,
+          // imgUrl: products.item.imgUrl || context.state.logo || products.item.cover,
           success: products.success
         }
 
@@ -138,6 +142,9 @@ export default {
               }
               
               axios.post('/book/member/read_sign',data).then(res=>{
+                context.commit('setReadSign', {
+                  data: res
+                })
                 resolve(res)
               })
             }

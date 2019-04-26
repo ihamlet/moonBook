@@ -15,12 +15,7 @@
       <van-progress v-if='percent!=0&&percent!=100&&!progressIsShow' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
       <van-cell-group>
         <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" :placeholder="icon" rows="2" autosize />
-        <div class="article-card" v-if='post'>
-          <van-cell @click="toArticle">
-            <articleCard :item='post'/>
-          </van-cell>
-        </div>
-        <div class="upload-module flex wrap" v-else>
+        <div class="upload-module flex wrap">
           <van-cell :border='false'>
             <van-row gutter="4">
               <van-col :span="8" v-for='(item,index) in grapicData.photos' :key="index">
@@ -41,6 +36,11 @@
                 </div>
               </van-col>
             </van-row>
+          </van-cell>
+        </div>
+        <div class="article-card">
+          <van-cell>
+            <articleCard :item='post' :detailsId='post.post_id' @toDetails='toArticle'/>
           </van-cell>
         </div>
       </van-cell-group>
@@ -169,7 +169,40 @@ export default {
 
         axios.get('/book/SchoolArticle/detail',articleDetailData).then(res => {
           if(res.data.status == 1){
-            res.data.data.post.extra?this.post = JSON.parse(res.data.data.post.extra):this.post = res.data.data.post
+            if(res.data.data.post.extra){
+              this.post = JSON.parse(res.data.data.post.extra)
+            }else{
+              let postData = res.data.data.post
+              this.post = {
+                cover: postData.cover || this.$store.state.logo, //logo 图片链接
+                title: postData.template_id == 1?`${postData.user.username}的宝贝在阅亮书架`:postData.title, //内容
+                post_id: postData.post_id || 0,
+                details: postData.details, //副标题
+                type: postData.hasvideo == 1?'视频':'图文',
+              }
+            }
+          }
+        })
+      }
+      
+      if(this.$route.query.book_id){
+        let bookDetailData = {
+          params:{
+            ajax:1,
+            book_id: this.$route.query.book_id
+          }
+        }
+
+        axios.get('/book/ShelfBook/getInfo',bookDetailData).then(res=>{
+          if(res.data.status == 1){
+            let bookData = res.data.data
+            this.post = {
+              cover: bookData.thumb || this.$store.state.logo, //logo 图片链接
+              title: bookData.title, //内容
+              post_id: bookData.tushu_id || 0,
+              details: `${this.userDataState.child_name}宝贝${this.$route.query.tags?`参与了${this.$route.query.tags}活动`:''}`, //副标题
+              type: '图书',
+            }
           }
         })
       }
@@ -430,11 +463,12 @@ export default {
         this.percent = 0
       })
     },
-    toArticle(){
+    toArticle(data){
       this.$router.push({
-        name:'article',
+        name:data.routeName,
         query:{
-          ...this.$route.query
+          ...this.$route.query,
+          id: data.detailsId
         }
       })
     }

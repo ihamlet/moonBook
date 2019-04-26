@@ -15,7 +15,6 @@
             <img :src="item.cover" alt="视频封面" />
             <van-tag class="duration" size="medium" color="rgba(0,0,0,.5)">{{getDuration(videoItem.duration)}}</van-tag>
           </div>
-
           <!-- 正文播放 -->
           <div class="video-box" :class="videoItem.rotate == 90?'rotate':''" ref='videoDom' v-else>
             <div id="video"></div>

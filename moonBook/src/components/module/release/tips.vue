@@ -17,7 +17,7 @@ import { compress } from './../../lib/js/util'
 
 export default {
   name: 'tips',
-  props: ['position','isShow','cate'],
+  props: ['position','isShow','cate','bookId'],
   data() {
     return {
       percent: 0,

@@ -24,8 +24,8 @@
       </div>
 
       <media :item='item' type='card' :key="$route.query.id"/>
-      <div class="article-card" v-if='post' @click="toArticle(post)">
-        <articleCard :item='post'/>
+      <div class="article-card" v-if='post'>
+        <articleCard :item='post' :detailsId='post.post_id' @toDetails='toArticleShare'/>
       </div>
       <div class="temp-type flex flex-align">
         <div class="temp-list flex flex-align">
@@ -133,6 +133,14 @@ export default {
           back: this.$route.name,
           back_id: this.$route.query.id,
           point: 'comments'
+        }
+      })
+    },
+    toArticleShare(data){
+      this.$router.push({
+        name:data.routeName,
+        query:{
+          id:data.detailsId
         }
       })
     },

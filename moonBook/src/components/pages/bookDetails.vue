@@ -21,7 +21,7 @@
                 <img :src="details.thumb" @error="imgError($event,details)" />
               </div>
             </van-col>
-            <van-col span="14">
+            <van-col span="13">
               <div class="content">
                 <div class="title" v-line-clamp:20="2">{{details.title}}</div>
                 <van-rate v-model="star" disabled disabled-color='#ffd21e'/>

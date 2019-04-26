@@ -47,7 +47,7 @@
         </div>
       </div>
       <div class="gutter gap">
-        <van-nav-bar title="阅读排名" right-text="排行榜" @click-right="toRanking" />
+        <van-nav-bar title="阅读排名" right-text="排行榜" @click-right="toRanking" :border='false'/>
         <div class="ranking">
           <div class="ranking-content flex flex-align">
             <div class="circle flex flex-justify" v-for='(list,index) in ranking' :key="index">

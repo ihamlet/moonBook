@@ -45,7 +45,7 @@
     <div class="release-footer-bar">
       <van-popup v-model="showTips" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar'
         :lock-scroll='false'>
-        <tips :isShow='showTips' position='bottom' @close='setReleaseSwitch(false)' />
+        <tips :isShow='showTips' position='bottom' @close='setReleaseSwitch(false)' :bookId='extra.book_id'/>
       </van-popup>
     </div>
   </div>
@@ -198,18 +198,9 @@ export default {
         name: 'specialPunch',
         query: {
           cate_id: this.$route.query.cate_id,
-          tags: this.$route.query.tags
-        }
-      })
-    },
-    toGraphic() {
-      this.$router.push({
-        name: 'graphic',
-        query: {
-          back: this.$route.name,
-          id: this.$route.query.id,
-          cate_id: this.$route.query.cate_id,
-          tags: this.$route.query.tags
+          tags: this.$route.query.tags,
+          book_id: this.extra.book_id,
+          
         }
       })
     },

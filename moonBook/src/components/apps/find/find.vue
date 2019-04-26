@@ -1,10 +1,6 @@
 <template>
   <div class="find page-padding">
-    <van-nav-bar :border='false' :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title">
-      <!-- <div class="brand-btn" slot='right' v-if='!$route.query.tag_id'>
-        榜单 <i class="iconfont">&#xe666;</i>
-      </div> -->
-    </van-nav-bar>
+    <van-nav-bar :border='false' :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title" />
     <div class="module" v-if='isFreshListShow'>
         <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname" :key="$route.query.tag_id"/>
       </div>
@@ -20,7 +16,7 @@
       </div>
     </div>
     <div class="release-footer-bar">
-      <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
+      <van-button class="theme-btn theme-release" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
         <i class="iconfont">&#xe664;</i>
         发 布
       </van-button>

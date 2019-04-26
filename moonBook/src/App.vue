@@ -1270,4 +1270,9 @@ i.iconfont.vip-1 {
   color: #f02b2b;
   display: block;
 }
+
+.theme-btn.theme-release{
+  background: linear-gradient(135deg, #FFC107, #FF9800);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3)
+}
 </style>

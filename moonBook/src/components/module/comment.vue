@@ -124,7 +124,7 @@ import { timeago } from './../lib/js/util'
 
 export default {
   name: 'comment',
-  props: ['item', 'include', 'type'],
+  props: ['item', 'include', 'type','postId'],
   computed: {
     ...mapGetters(['userToken', 'userDataState'])
   },
@@ -158,7 +158,7 @@ export default {
     onLoad(id) {
       let data = {
         params: {
-          post_id: this.item.post_id,
+          post_id: this.postId,
           page: this.page,
           limit: 10,
           sort: 'new'
@@ -169,7 +169,9 @@ export default {
         if (res.data.status == 1) {
 
           if(this.$route.query.point == 'comments'){
-            this.$refs.comment.scrollIntoView()
+            this.$nextTick(()=>{
+              this.$refs.comment.scrollIntoView()
+            }) 
           }
 
           this.listLength = res.data.count

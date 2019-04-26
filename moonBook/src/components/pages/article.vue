@@ -31,15 +31,15 @@
         </div>
         <div class="module">
           <article-content :item='item' @onScrollDomShow='onScrollDomShow' :key="$route.query.id"/>
-          <div class="article-card" v-if='post' @click="toArticle">
+          <div class="article-card" v-if='post'>
             <van-cell>
-              <articleCard :item='post' :key="$route.query.id"/>
+              <articleCard :item='post' :key="$route.query.id" @toDetails='toArticle'/>
             </van-cell>
           </div>
           <articleOperation :item='item'/>
         </div>
         <div class="comment" ref='commentDom'>
-          <comment :item='item' include='include' :key="$route.query.id"/>
+          <comment :item='item' include='include' :key="$route.query.id" :postId='item.post_id'/>
         </div>
       </div>
     </div>
@@ -107,26 +107,32 @@ export default {
   },
   created() {
     this.fetchData()
+    this.shareArticle()
   },
   //数据加载完成后执行该方法
   updated (){
-    this.$nextTick(()=>{
-      let data = {
-        item: this.item,
-        success(){
-          console.log('微信分享')
-        }
-      }
-
-      this.share(data)
-    })
+    this.shareArticle()
   },
   watch: {
     '$router': 'fetchData'
   },
   methods: {
     ...mapActions('openWX',['share']),
+    shareArticle(){
+      this.$nextTick(()=>{
+        let data = {
+          item: this.item,
+          success(){
+            console.log('微信分享')
+          }
+        }
+
+        this.share(data)
+      })
+    },
     fetchData() {
+        this.$toast.loading()
+
         let articleDetailData = {
           params:{
             ajax:1,
@@ -136,6 +142,7 @@ export default {
 
         axios.get('/book/SchoolArticle/detail',articleDetailData).then(res => {
           if(res.data.status == 1){
+            this.$toast.clear()
             this.item = res.data.data.post
           }
         })
@@ -168,15 +175,17 @@ export default {
           this.$toast.success(res.data.msg)
       })
     },
-    toArticle(){
-      this.$router.push({
-        name:'article',
+    toArticle(data){
+      this.hackReset = false
+
+      this.$router.replace({
+        name:data.routeName,
         query:{
           ...this.$route.query,
           id: this.post.post_id
         }
       })
-      this.hackReset = false
+      
       this.$nextTick(() => {
         this.hackReset = true
         this.fetchData()
