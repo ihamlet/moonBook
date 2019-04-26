@@ -125,7 +125,7 @@ export default {
       })
     },
     toArticle(item){
-      this.$router.replace({
+      this.$router.push({
         name:'article',
         query:{
           id: item.post_id,
