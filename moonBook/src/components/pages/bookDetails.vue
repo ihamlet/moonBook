@@ -82,18 +82,6 @@ export default {
       themeBarSearch: false,
     }
   },
-  watch: {
-    ready(){
-      let data = {
-        item: this.details,
-        success(){
-          console.log('微信分享')
-        }
-      }
-
-      this.share(data)
-    }
-  },
   created() {
     this.fetchData()
   },
@@ -101,14 +89,29 @@ export default {
     to.meta.keepAlive = false //去掉页面数据缓存
     next()
   },
+  updated(){
+    this.wxShare()
+  },
   watch: {
-    '$router': 'fetchData'
+    '$router': 'fetchData',
+    ready(){
+      this.wxShare()
+    }
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
   },
   methods: {
     ...mapActions('openWX',['share']),
+    wxShare(){
+      let data = {
+        item: this.details,
+        success(){
+          console.log('微信分享')
+        }
+      }
+      this.share(data)
+    },
     imgError(e) {
       e.target.src = require('@/assets/img/no-cover.jpg')
     },

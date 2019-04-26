@@ -85,9 +85,18 @@ export default {
       this.player
     })
   },
+  updated(){
+    this.wxShare()
+  },
   watch: {
     "$router": 'fetchData',
     ready(){
+      this.wxShare()
+    }
+  },
+  methods: {
+    ...mapActions('openWX',['share']),
+    wxShare(){
       let data = {
         item: this.item,
         success(){
@@ -96,10 +105,7 @@ export default {
       }
 
       this.share(data)
-    }
-  },
-  methods: {
-    ...mapActions('openWX',['share']),
+    },
     fetchData() {
       return axios.get(`/book/SchoolArticle/detail?ajax=1&id=${this.$route.query.id}`).then(res => {
         if (res.data.status == 1) {

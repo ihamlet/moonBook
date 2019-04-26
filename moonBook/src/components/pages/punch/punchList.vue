@@ -48,8 +48,17 @@ export default {
       shareShow: false
     }
   },
+  updated(){
+    this.wxShare()
+  },
   watch:{
     ready(){
+      this.wxShare()
+    }
+  },
+  methods: {
+    ...mapActions('openWX',['share','scanQRcode']),
+    wxShare(){
       let data = {
         item: this.item,
         success(){
@@ -58,10 +67,7 @@ export default {
       }
 
       this.share(data)
-    }
-  },
-  methods: {
-    ...mapActions('openWX',['share','scanQRcode']),
+    },
     onLoad() {
       let data = {
         params: {
