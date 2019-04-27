@@ -24,17 +24,17 @@
       </div>
 
       <media :item='item' type='card' :key="$route.query.id"/>
-      <div class="article-card" v-if='post'>
+      <div class="article-card" v-if='post&&post.sign_read_count'>
         <articleCard :item='post' :detailsId='post.post_id' @toDetails='toArticleShare'/>
       </div>
       <div class="temp-type flex flex-align">
         <div class="temp-list flex flex-align">
-          <van-tag color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.user_school_id > 0'>
+          <van-tag round color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.user_school_id > 0'>
             <div @click="toSchoolHome(item)">{{item.user_school_name}}</div>
           </van-tag>
-          <van-tag color='#0084ff' class="cate" size="large" plain v-if='item.cate_name'>
-              {{item.cate_name}}
-          </van-tag>
+          <div class="cate theme-color" size="large" plain v-if='item.tags' @click='toPopupHelp'>
+              #{{item.tags}}#
+          </div>
         </div>
       </div>
       <div class="task" v-if='$route.query.tid == 5'>
@@ -186,6 +186,11 @@ export default {
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    toPopupHelp(){
+      this.$router.push({
+        name:'popupHelp'
+      })
     }
   }
 }

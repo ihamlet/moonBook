@@ -613,7 +613,8 @@ export default {
                 child_id: this.$route.query.id,
                 back: this.$route.name,
                 cate_id: 133,
-                tags:'阅读打卡'
+                tags:'阅读打卡',
+                ...res.data.data.state_data
               }
             })
           break

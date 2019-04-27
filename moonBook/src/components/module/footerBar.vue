@@ -61,13 +61,14 @@ export default {
             let routeData = {
               id: item.id,
               cate_id: 116,
+              tags: `${this.userDataState.banji_name}班`
             }
             path = `${item.path}?${qs.stringify(routeData)}`
           }else{
-            path = `${item.path}?id=${item.id}`
+            path = `${item.path}?id=${item.id}&tags=${this.userDataState.banji_name}班`
           }
-        }else{
-          path = `${item.path}?id=${item.id}`
+        }else if(item.path == 'baby-home'){
+          path = `${item.path}?id=${item.id}&tags=宝贝主页`
         }
       }else{
         path = item.path

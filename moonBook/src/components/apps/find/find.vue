@@ -1,9 +1,9 @@
 <template>
   <div class="find page-padding">
     <van-nav-bar :border='false' :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title" />
-    <div class="module" v-if='isFreshListShow'>
+    <!-- <div class="module" v-if='isFreshListShow'>
         <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname" :key="$route.query.tag_id"/>
-      </div>
+      </div> -->
     <div class="warp">
       <div class="container">
         <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab'>
@@ -28,7 +28,7 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import freshList from './../../module/findModule/freshList'
+// import freshList from './../../module/findModule/freshList'
 import dryingList from './../../module/findModule/dryingList'
 import tips from './../../module/release/tips'
 import { mapGetters,mapMutations,mapState } from 'vuex'
@@ -36,7 +36,7 @@ import { mapGetters,mapMutations,mapState } from 'vuex'
 export default {
   name: 'find',
   components: {
-    freshList,
+    // freshList,
     dryingList,
     tips
   },

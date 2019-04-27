@@ -4,9 +4,9 @@
       <div class="head-bar-title" slot="title" @click="cutover">
         {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="userDataState.teacher_school_id > 0">&#xe608;</i>
       </div>
-      <div class="head-bar-text" slot='right' v-if='true' @click="toManage">
+      <!-- <div class="head-bar-text" slot='right' v-if='true' @click="toManage">
         <span class="text">管理班级</span>
-      </div>
+      </div> -->
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">
@@ -48,7 +48,7 @@
     <div class="release-footer-bar" v-else>
       <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
         <i class="iconfont">&#xe664;</i>
-        # 课堂故事
+        课堂故事
       </van-button>
     </div>
   </div>
@@ -318,7 +318,8 @@ export default {
                 child_id: this.userDataState.child_id,
                 tags: '阅读打卡',
                 back: this.$route.name,
-                punchType:'banji'
+                punchType:'banji',
+                ...res.data.data.stat_data
               }
             })
           break

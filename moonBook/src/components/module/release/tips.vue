@@ -65,28 +65,6 @@ export default {
         case 1:
           this.releaseVideo()
           break
-        // case 2:
-        //   this.$router.push({
-        //     name: 'graphic',
-        //     query: {
-        //       back: this.$route.name,
-        //       id: this.$route.query.id,
-        //       upVideo:2
-        //     }
-        //   })
-        //   break
-        // case 3:
-        //   this.$router.push({
-        //     name: 'beautifulArticle',
-        //     query: {
-        //       back: this.$route.name,
-        //       id: this.$route.query.id
-        //     }
-        //   })
-        //   break
-        // case 4:
-
-        //   break
       }
     },
     releaseWebo(){

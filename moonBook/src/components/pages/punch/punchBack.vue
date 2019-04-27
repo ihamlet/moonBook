@@ -200,9 +200,10 @@ export default {
       this.$router.push({
         name: 'specialPunch',
         query: {
+          ...this.$route.query,
           cate_id: this.$route.query.cate_id,
           tags: this.$route.query.tags,
-          book_id: this.extra.book_id,
+          book_id: this.extra.book_id
         }
       })
     },

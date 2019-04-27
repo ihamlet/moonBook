@@ -8,6 +8,7 @@ import punchBack from '@/components/pages/punch/punchBack'
 import punchList from '@/components/pages/punch/punchList'
 import advertisingDetails from '@/components/pages/punch/advertisingDetails'
 import popupList from '@/components/pages/punch/popupList'
+import popupHelp from '@/components/pages/punch/punchHelp'
 import punchSpeed from '@/components/pages/punch/punchSpeed'
 import writeOff from '@/components/pages/punch/writeOff'
 import Calendar from '@/components/module/mold/calendar'
@@ -69,6 +70,10 @@ let readRouter = [{
       title: '打卡进度',
       isFooterBar: false
     }
+  },{
+    path:'/popupHelp',
+    name:'popupHelp',
+    component: popupHelp
   },
   {
     path: '/punch-list',

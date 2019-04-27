@@ -38,7 +38,7 @@
             </van-row>
           </van-cell>
         </div>
-        <div class="article-card">
+        <div class="article-card" v-if='post&&post.sign_read_count'>
           <van-cell>
             <articleCard :item='post' :detailsId='post.post_id' @toDetails='toArticle'/>
           </van-cell>
@@ -174,22 +174,20 @@ export default {
             }else{
               let postData = res.data.data.post
               this.post = {
-                cover: postData.cover || '', //logo 图片链接
-                title: postData.template_id == 1?this.$store.state.slogan:postData.title, //内容
+                title: postData.template_id == 1?'':postData.title, //内容
                 post_id: postData.post_id || 0,
-                details: postData.details, //副标题
-                type: postData.hasvideo == 1?'视频':'图文',
+                sign_read_count: this.$route.query.sign_read_count
               }
             }
           }
         })
       }
       
-      if(this.$route.query.book_id > 0){
+      if(this.$route.query.book_id && this.$route.query.book_id > 0){
         let bookDetailData = {
           params:{
             ajax:1,
-            book_id: this.$route.query.book_id
+            book_id: this.$route.query.book_id,
           }
         }
 
@@ -197,21 +195,17 @@ export default {
           if(res.data.status == 1){
             let bookData = res.data.data
             this.post = {
-              cover: bookData.thumb, //logo 图片链接
               title: bookData.title, //内容
               post_id: bookData.tushu_id || 0,
-              details: '阅读打卡', //副标题
-              type: '图书',
+              sign_read_count: this.$route.query.sign_read_count
             }
           }
         })
       }else{
         this.post = {
-          cover:'', //logo 图片链接
           title: '自选图书', //内容
           post_id: 0,
-          details: '阅读打卡', //副标题
-          type: '图书',
+          sign_read_count: this.$route.query.sign_read_count
         }    
       }
 

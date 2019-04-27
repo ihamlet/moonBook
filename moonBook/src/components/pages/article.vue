@@ -31,7 +31,7 @@
         </div>
         <div class="module">
           <article-content :item='item' @onScrollDomShow='onScrollDomShow' :key="$route.query.id"/>
-          <div class="article-card" v-if='post'>
+          <div class="article-card" v-if='post&&post.sign_read_count'>
             <van-cell>
               <articleCard :item='post' :key="$route.query.id" @toDetails='toArticle'/>
             </van-cell>

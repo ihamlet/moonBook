@@ -1,21 +1,14 @@
 <template>
     <div class="cell">
         <div class="share-cell flex flex-align">
-            <div class="details flex flex-align" @click="toDetails">
-                <div class="article-cover" v-if='item.cover'>
-                    <img :src="item.cover">
-                    <van-tag color="#7232dd" mark class="tag">{{item.type}}</van-tag>
+            <div class="details flex flex-align">
+                <div class="info" @click="toDetails" v-if='detailsId > 0'>
+                    <div class="theme-color" v-line-clamp:20="1">{{item.title}}</div>
                 </div>
-                <div class="info">
-                    <div class="title" v-line-clamp:20="1">{{item.title}}</div>
-                    <div class="content" v-line-clamp:20="1"> 
-                        {{details}}
-                    </div>
+                <div class='punches theme-color'>
+                    累计{{item.sign_read_count}}本
                 </div>
             </div>
-            <!-- <div class="punches theme-color" v-if='item.type=="图书"'>
-                累计30本
-            </div> -->
         </div>
     </div>
 </template>
@@ -74,24 +67,26 @@ export default {
 }
 
 .info{
-   flex: 1;
+   flex: 2;
    padding-left: 10px;
+   font-size: 18px;
 }
 
 .details{
-    flex: 3;
+    flex: 5;
 }
 
 .cell{
     background: #F2F6FC;
+    height: 32px;
+    line-height: 32px;
 }
 
 .punches{
     padding-right: 10px;
-    margin-left: 10px;
-    font-size: 12px;
     flex: 1;
     text-align: right;
+    font-size: 13px;
 }
 
 .share-cell{
