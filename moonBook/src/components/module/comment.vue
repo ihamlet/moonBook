@@ -73,16 +73,16 @@
           </div>
           <div class="btn-icon flex flex-align">
             <div class="btn" @click="toScroll">
-              <van-tag class="num-tag" v-if='listLength > 1' round type="danger">{{listLength > 1000?'999+':listLength}}</van-tag>
+              <van-tag class="num-tag" v-if='listLength > 0' round type="danger">{{listLength > 1000?'999+':listLength}}</van-tag>
               <i class="iconfont">&#xe731;</i>
             </div>
             <div class="btn" @click="addPraise(item)">
-              <van-tag class="num-tag" v-if='item.zan_num > 1' round type="danger">{{item.zan_num > 1000?'999+':item.zan_num}}</van-tag>
+              <van-tag class="num-tag" v-if='item.zan_num > 0' round type="danger">{{item.zan_num > 1000?'999+':item.zan_num}}</van-tag>
               <i class="iconfont highlight rotateInDownLeft animated" v-if="item.isZan">&#xe6e3;</i>
               <i class="iconfont" v-else>&#xe644;</i>
             </div>
             <div class="btn" @click="addCollect(item)" v-if='include != "include"'>
-              <van-tag class="num-tag" v-if='item.collect_num > 1' round type="danger">{{item.collect_num > 1000?'999+':item.collect_num}}</van-tag>
+              <van-tag class="num-tag" v-if='item.collect_num > 0' round type="danger">{{item.collect_num > 1000?'999+':item.collect_num}}</van-tag>
               <i class="iconfont star highlight swing animated" v-if="item.isShoucang">&#xe64b;</i>
               <i class="iconfont" v-else> &#xe64c;</i>
             </div>
@@ -233,8 +233,14 @@ export default {
 
         axios.get('/book/SchoolArticle/zan', data).then(res => {
           if (res.data.status == 1) {
+
+            if(item.isZan){
+              item.zan_num++
+            }else{
+              item.zan_num--
+            }
+
             if (res.data.data.like == '1') {
-              item.zan_num = res.data.data.like
               this.$toast.success({
                 className: 'zan-icon toast-icon'
               })

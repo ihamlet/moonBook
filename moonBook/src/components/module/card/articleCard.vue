@@ -1,18 +1,23 @@
 <template>
-    <van-cell class="article-card" :border='false' is-link center @click="toDetails">
-        <div class="flex flex-align">
-            <div class="article-cover">
-                <img v-if='item.cover' :src="item.cover">
-                <van-tag color="#7232dd" mark class="tag">{{item.type}}</van-tag>
-            </div>
-            <div class="details">
-                <div class="title" v-line-clamp:20="1">{{item.title}}</div>
-                <div class="content" v-line-clamp:20="1"> 
-                    {{details}}
+    <div class="cell">
+        <div class="share-cell flex flex-align">
+            <div class="details flex flex-align" @click="toDetails">
+                <div class="article-cover" v-if='item.cover'>
+                    <img :src="item.cover">
+                    <van-tag color="#7232dd" mark class="tag">{{item.type}}</van-tag>
+                </div>
+                <div class="info">
+                    <div class="title" v-line-clamp:20="1">{{item.title}}</div>
+                    <div class="content" v-line-clamp:20="1"> 
+                        {{details}}
+                    </div>
                 </div>
             </div>
-        </div>   
-    </van-cell>
+            <!-- <div class="punches theme-color" v-if='item.type=="图书"'>
+                累计30本
+            </div> -->
+        </div>
+    </div>
 </template>
 <script>
 import { checkHtml,formatTime } from './../../lib/js/util'
@@ -35,10 +40,9 @@ export default {
 </script>
 <style scoped>
 .article-cover{
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     background: #fff;
-    margin-right: 10px;
     position: relative;
 }
 
@@ -47,6 +51,7 @@ export default {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    background: #fff;
 }
 
 .tag{
@@ -59,11 +64,37 @@ export default {
     background: #f8f8f8;
 }
 
-.details{
-    flex: 1;
-}
-
 .content{
     color: #909399;
+    font-size: 12px;
+}
+
+.title{
+    font-size: 14px;
+}
+
+.info{
+   flex: 1;
+   padding-left: 10px;
+}
+
+.details{
+    flex: 3;
+}
+
+.cell{
+    background: #F2F6FC;
+}
+
+.punches{
+    padding-right: 10px;
+    margin-left: 10px;
+    font-size: 12px;
+    flex: 1;
+    text-align: right;
+}
+
+.share-cell{
+    justify-content: space-between;
 }
 </style>

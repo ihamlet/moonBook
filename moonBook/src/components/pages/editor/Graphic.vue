@@ -174,8 +174,8 @@ export default {
             }else{
               let postData = res.data.data.post
               this.post = {
-                cover: postData.cover || this.$store.state.logo, //logo 图片链接
-                title: postData.template_id == 1?`${postData.user.username}的宝贝在阅亮书架`:postData.title, //内容
+                cover: postData.cover || '', //logo 图片链接
+                title: postData.template_id == 1?this.$store.state.slogan:postData.title, //内容
                 post_id: postData.post_id || 0,
                 details: postData.details, //副标题
                 type: postData.hasvideo == 1?'视频':'图文',
@@ -197,20 +197,20 @@ export default {
           if(res.data.status == 1){
             let bookData = res.data.data
             this.post = {
-              cover: bookData.thumb || this.$store.state.logo, //logo 图片链接
+              cover: bookData.thumb, //logo 图片链接
               title: bookData.title, //内容
               post_id: bookData.tushu_id || 0,
-              details: `${this.userDataState.child_name}宝贝${this.$route.query.tags?`正在参与${this.$route.query.tags}活动`:''}`, //副标题
+              details: '阅读打卡', //副标题
               type: '图书',
             }
           }
         })
       }else{
         this.post = {
-          cover: this.$store.state.logo, //logo 图片链接
+          cover:'', //logo 图片链接
           title: '自选图书', //内容
           post_id: 0,
-          details: `${this.userDataState.child_name}宝贝${this.$route.query.tags?`正在参与${this.$route.query.tags}活动`:''}`, //副标题
+          details: '阅读打卡', //副标题
           type: '图书',
         }    
       }

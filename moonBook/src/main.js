@@ -15,6 +15,11 @@ import VueAMap from 'vue-amap'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 
+//elementUI
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+
+
 // 懒加载
 import { Lazyload } from 'vant'
 
@@ -31,6 +36,8 @@ let options = {
   fullscreenEl: false,
   history: true
 }
+
+Vue.use(ElementUI)
 
 Vue.use(preview,options)
 

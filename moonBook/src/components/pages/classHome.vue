@@ -4,9 +4,9 @@
       <div class="head-bar-title" slot="title" @click="cutover">
         {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="userDataState.teacher_school_id > 0">&#xe608;</i>
       </div>
-      <!-- <div class="head-bar-text" slot='right' v-if='manage' @click="toManage">
+      <div class="head-bar-text" slot='right' v-if='true' @click="toManage">
         <span class="text">管理班级</span>
-      </div> -->
+      </div>
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">
@@ -316,7 +316,9 @@ export default {
               query:{
                 id: this.$route.query.id,
                 child_id: this.userDataState.child_id,
-                back: this.$route.name 
+                tags: '阅读打卡',
+                back: this.$route.name,
+                punchType:'banji'
               }
             })
           break
@@ -422,7 +424,12 @@ export default {
       })
     },
     toManage(){
-      location.href = `/SchoolManage?banji_id=${this.$route.query.id}`
+      this.$router.push({
+        name:'classSetting',
+        query:{
+          id: this.$route.query.id
+        }
+      })
     }
   }
 }

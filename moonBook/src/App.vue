@@ -1263,6 +1263,8 @@ i.iconfont.vip-1 {
   text-align: center;
   color: #c0c4cc;
   font-size: 13px;
+  height: 50px;
+  line-height: 50px;
 }
 
 .listening i.iconfont{

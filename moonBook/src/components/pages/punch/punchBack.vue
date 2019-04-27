@@ -142,7 +142,10 @@ export default {
       return axios.get('/book/member/get_read_sign_list', data).then(res => {
         switch (res.data.status) {
           case 1:
-            this.extra = res.data.data[0]
+            this.extra = {
+              book_id:0,
+              ...res.data.data[0]
+            }
             if (this.page == 1) {
               this.list = res.data.data
             } else {
