@@ -66,6 +66,11 @@ export default {
               this.finished = true
             }
           break
+          case 0:
+            this.list = []
+            this.loading = false
+            this.finished = true
+          break
         }
       })
     },
