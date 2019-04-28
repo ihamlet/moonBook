@@ -267,6 +267,7 @@ export default {
 
 .school-tag{
   margin-right: .625rem /* 10/16 */;
+  max-width: 180px;
 }
 
 .vip-highlight{

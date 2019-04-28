@@ -56,19 +56,34 @@ export default {
     goPage(item) {
       let path
       if(item.id){
+        let routeData
         if(item.path == 'class-home'){
           if(this.userDataState.teacher_banji_id > 0){
-            let routeData = {
+            routeData = {
               id: item.id,
               cate_id: 116,
-              tags: `${this.userDataState.banji_name}班`
+              tags: `${this.userDataState.teacher_banji_name?`${this.userDataState.teacher_banji_name}班`:'班级主页'}`,
+              home_type:'banji'
             }
             path = `${item.path}?${qs.stringify(routeData)}`
           }else{
-            path = `${item.path}?id=${item.id}&tags=${this.userDataState.banji_name}班`
+            routeData  = {
+              id:item.id,
+              tags:`${this.userDataState.banji_name}班`,
+              home_type:'banji'
+            }
+
+            path = `${item.path}?${qs.stringify(routeData)}`
           }
         }else if(item.path == 'baby-home'){
-          path = `${item.path}?id=${item.id}&tags=宝贝主页`
+
+          routeData  = {
+            id:item.id,
+            tags:'宝贝主页',
+            home_type:'baby'
+          }
+
+          path = `${item.path}?${qs.stringify(routeData)}`
         }
       }else{
         path = item.path

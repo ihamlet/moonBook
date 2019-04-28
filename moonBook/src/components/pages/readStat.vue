@@ -1,6 +1,7 @@
 <template>
   <div class="readstat page-padding">
-    <van-nav-bar :zIndex='99' :class="fixedHeaderBar?'theme-nav':''" :border='false' :title="fixedHeaderBar?$route.meta.title:childInfo.name" fixed @click-right="show = true">
+    <van-nav-bar :zIndex='99' :class="fixedHeaderBar?'theme-nav':''" :border='false' :title="fixedHeaderBar?$route.meta.title:childInfo.name"
+      fixed @click-right="show = true">
       <div class="head-bar-icon" slot="right">
         <i class="iconfont">&#xe635;</i>
       </div>
@@ -16,7 +17,7 @@
         </div>
         <div class="content">
           <div class="avatar" v-if="childInfo.avatar">
-            <img :src="childInfo.avatar" alt="宝贝头像"  @error="imgError" v-http2https>
+            <img :src="childInfo.avatar" alt="宝贝头像" @error="imgError" v-http2https>
           </div>
           <avatar :gender="childInfo.sex" size='small' v-else />
           <div class="name flex flex-align">
@@ -46,8 +47,19 @@
           </div>
         </div>
       </div>
+
       <div class="gutter gap">
-        <van-nav-bar title="阅读排名" right-text="排行榜" @click-right="toRanking" :border='false'/>
+        <div class="learning">
+          <div class="title">学习力超过了：</div>
+          <div class="learning-circle flex flex-align">
+            <van-circle v-model="currentRate" :rate="86" :speed="100" size="80px" color="#2196f3" layer-color="#ebedf0" :stroke-width="60"/>
+             <span class="num">86%</span>的小朋友
+          </div>
+        </div>
+      </div>
+
+      <div class="gutter gap">
+        <van-nav-bar title="阅读排名" right-text="排行榜" @click-right="toRanking" :border='false' />
         <div class="ranking">
           <div class="ranking-content flex flex-align">
             <div class="circle flex flex-justify" v-for='(list,index) in ranking' :key="index">
@@ -64,17 +76,9 @@
       </div>
       <div class="gutter gap">
         <van-cell-group>
-          <!-- <van-cell size='large'>
-            <div class="text flex flex-justify">本月比上月阅读<span class="data">增长了24本</span></div>
-          </van-cell>
           <van-cell size='large'>
-            <div class="text flex flex-justify">
-              <div class="content l">本月上传内容<span class="data">{{childInfo.month_post_count}}篇</span></div>
-              <div class="content r"><span class="data">{{childInfo.zan_count}}人</span>点赞</div>
-            </div>
-          </van-cell> -->
-          <van-cell size='large'>
-            <div class="text flex flex-justify">影响<span class="data">{{childInfo.fluent_count}}人</span> 阅读了<span class="data">{{childInfo.fluent_read_count}} 本</span>图书</div>
+            <div class="text flex flex-justify">影响<span class="data">{{childInfo.fluent_count}}人</span> 阅读了<span class="data">{{childInfo.fluent_read_count}}
+                本</span>图书</div>
           </van-cell>
         </van-cell-group>
       </div>
@@ -83,9 +87,9 @@
     <div class="gutter gap">
       <van-button class="theme-btn" round size="large" type="primary" @click="show = true">分享</van-button>
     </div>
-    
+
     <van-popup v-model="show" class="rank-share-popup" get-container='#app'>
-      <rank-share :childInfo='childInfo' @close='show = false'/>
+      <rank-share :childInfo='childInfo' @close='show = false' />
     </van-popup>
 
     <slogan />
@@ -106,13 +110,19 @@ export default {
     slogan,
     rankShare
   },
+  computed: {
+    text() {
+      return this.currentRate.toFixed(0) + '%'
+    }
+  },
   data() {
     return {
       childInfo: '',
       ranking: [],
       fixedHeaderBar: true,
       domHeight: "",
-      show: false
+      show: false,
+      currentRate:85
     }
   },
   mounted() {
@@ -215,7 +225,7 @@ export default {
   background: linear-gradient(-135deg, #2196f3, #00bcd4);
 }
 
-.avatar img{
+.avatar img {
   width: 3.75rem /* 60/16 */;
   height: 3.75rem /* 60/16 */;
   border-radius: 50%;
@@ -292,6 +302,7 @@ export default {
   height: 3.75rem /* 60/16 */;
   background: #fff;
   box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
 .container {
@@ -397,11 +408,38 @@ export default {
   margin: 0 0.625rem /* 10/16 */;
 }
 
-.rank-share-popup{
+.rank-share-popup {
   width: 18.75rem /* 300/16 */;
 }
 
-.tag{
-  margin-left: .3125rem /* 5/16 */;
+.tag {
+  margin-left: 0.3125rem /* 5/16 */;
+}
+
+.learning{
+  padding:0 15px 20px 15px;
+  background: #fff;
+}
+
+.title{
+  height: 48px;
+  line-height: 48px;
+}
+
+.num{
+  font-size: 40px;
+  margin: 0 15px;
+  color: #2196f3;
+}
+
+.learning-circle{
+  justify-content: center;
+}
+</style>
+<style>
+.learning .van-circle .van-circle__text{
+  font-size: 30px;
+  font-weight: 700;
+  color: #2196f3;
 }
 </style>

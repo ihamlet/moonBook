@@ -176,7 +176,8 @@ export default {
               this.post = {
                 title: postData.template_id == 1?'':postData.title, //内容
                 post_id: postData.post_id || 0,
-                sign_read_count: this.$route.query.sign_read_count
+                sign_read_count: this.$route.query.sign_read_count,
+                type:'post'
               }
             }
           }
@@ -197,7 +198,8 @@ export default {
             this.post = {
               title: bookData.title, //内容
               post_id: bookData.tushu_id || 0,
-              sign_read_count: this.$route.query.sign_read_count
+              sign_read_count: this.$route.query.sign_read_count,
+              type:'book'
             }
           }
         })
@@ -205,7 +207,8 @@ export default {
         this.post = {
           title: '自选图书', //内容
           post_id: 0,
-          sign_read_count: this.$route.query.sign_read_count
+          sign_read_count: this.$route.query.sign_read_count,
+          type:'book'
         }    
       }
 

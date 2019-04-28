@@ -2,10 +2,10 @@
     <div class="cell">
         <div class="share-cell flex flex-align">
             <div class="details flex flex-align">
-                <div class="info" @click="toDetails" v-if='detailsId > 0'>
+                <div class="info" @click="toDetails" v-if='detailsId&&detailsId > 0'>
                     <div class="theme-color" v-line-clamp:20="1">{{item.title}}</div>
                 </div>
-                <div class='punches theme-color'>
+                <div class='punches theme-color' @click="toReadStat">
                     累计{{item.sign_read_count}}本
                 </div>
             </div>
@@ -14,19 +14,29 @@
 </template>
 <script>
 import { checkHtml,formatTime } from './../../lib/js/util'
+import { mapGetters } from 'vuex'
 
 export default {
     name:'article-card',
     props: ['item','detailsId'],
     computed: {
+        ...mapGetters(['userDataState']),
         details(){
             return checkHtml(this.item.details)?this.item.details.replace(/<[^>]+>/g,""):this.item.details
         }
     },
     methods: {
         toDetails(){
-            let routerName = this.item.type == '图书'?'book-details':'article'
+            let routerName = this.item.type == 'book'?'book-details':'article'
             this.$emit('toDetails',{routeName:routerName,detailsId:this.detailsId})
+        },
+        toReadStat(){
+            this.$router.push({
+                name:'readStat',
+                query:{
+                   id: this.userDataState.child_id
+                }
+            })
         }
     }
 }
