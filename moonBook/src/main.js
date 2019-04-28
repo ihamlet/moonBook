@@ -45,7 +45,7 @@ Vue.use(Vuex)
 Vue.use(Vant)
 Vue.use(Lazyload, {
   preLoad: 1,
-  error: require('@/assets/img/no-cover.jpg'),
+  error: 'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/no-cover.jpg',
   loading: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
   attempt: 3,
   lazyComponent:true

@@ -3,7 +3,7 @@
     <div class="pictorial">
       <div class="tips" v-show='is_mine'>点击发送给家人 邀请加入</div>
       <div class="logo">
-        <img src="./../../../assets/img/logo.png" />
+        <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/logo.png" />
       </div>
       <div class="child-info" v-show='!is_mine'>
         <div class="avatar">
@@ -18,9 +18,9 @@
       </div>
       <div class="head-box flex flex-justify">
         <div class="head-list flex flex-align">
-          <img src="./../../../assets/img/head1.png" />
-          <img src="./../../../assets/img/head2.png" />
-          <img src="./../../../assets/img/head3.png" />
+          <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/head1.png" />
+          <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/head2.png" />
+          <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/head3.png" />
         </div>
       </div>
 
@@ -61,21 +61,19 @@ export default {
     this.fetchData()
   },
   updated(){   
-    const self = this
-    self.$nextTick(() => {
-      let data = {
-        item: self.item,
-        success() {
-          self.$router.push({
-            name: 'baby-home',
-            query: {
-              id: self.$route.query.id
-            }
-          })
-        }
+    const self = this 
+    let data = {
+      item: self.item,
+      success() {
+        self.$router.push({
+          name: 'baby-home',
+          query: {
+            id: self.$route.query.id
+          }
+        })
       }
-      self.share(data)
-    })
+    }
+    self.share(data)
   },
   watch: {
     '$router': 'fetchData'
@@ -142,7 +140,7 @@ export default {
 .pictorial {
   width: 100%;
   height: 100vh;
-  background-image: url('./../../../assets/img/share-bg.jpg');
+  background-image: url('https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/share-bg.jpg');
   background-size: cover;
   background-position: bottom;
 }

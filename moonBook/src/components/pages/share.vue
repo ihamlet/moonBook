@@ -60,11 +60,11 @@ export default {
       codeImgURL:'',
       randomNum: Math.floor(Math.random()*5),
       backgroundImg:[
-        require('@/assets/banjiShare/class-share-0.png'),
-        require('@/assets/banjiShare/class-share-1.png'),
-        require('@/assets/banjiShare/class-share-2.png'),
-        require('@/assets/banjiShare/class-share-3.png'),
-        require('@/assets/banjiShare/class-share-4.png'),
+        'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/banjiShare/class-share-0.png',
+        'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/banjiShare/class-share-1.png',
+        'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/banjiShare/class-share-2.png',
+        'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/banjiShare/class-share-3.png',
+        'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/banjiShare/class-share-4.png',
       ],
       pathData: this.$route.query
     }

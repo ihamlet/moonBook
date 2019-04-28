@@ -264,7 +264,7 @@ export default {
 }
 
 .card-head {
-  background-image: url('./../../../assets/img/coupon.png');
+  background-image: url('https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/coupon.png');
   height: 60px;
   background-size: cover;
   background-repeat: no-repeat;

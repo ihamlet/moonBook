@@ -9,7 +9,7 @@
                             <div class="sub">书架</div>
                             <van-button class="theme-button" type="info" round size="small">立即查看</van-button>
                         </div>
-                        <img class="bg-img book-shelf" src="./../../../assets/img/book-shelf.png"/>
+                        <img class="bg-img book-shelf" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/book-shelf.png"/>
                         <div class="circle"></div>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                             <van-button class="theme-button" type="info" round size="small">立即查看</van-button>
                         </div>
                     </div>
-                    <img class="bg-img book-task" src="./../../../assets/img/task.png"/>
+                    <img class="bg-img book-task" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/task.png"/>
                     <div class="circle"></div>
                 </div>
             </van-col>

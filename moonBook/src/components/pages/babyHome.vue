@@ -73,7 +73,7 @@
                   </div>
                 </div>
                 <div class="no-content" v-else>
-                  <img src="./../../assets/img/noData.png" />
+                  <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/noData.png" />
                   暂无记录
                 </div>
               </van-pull-refresh>

@@ -188,7 +188,7 @@ export default {
 .banner{
   width: 100%;
   height: 300px;
-  background-image: url('./../../../assets/img/guide.png');
+  background-image: url('https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/guide.png');
   background-repeat: no-repeat;
   background-size: cover;
   position: fixed;

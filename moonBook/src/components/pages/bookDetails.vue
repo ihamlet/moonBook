@@ -113,7 +113,7 @@ export default {
       this.share(data)
     },
     imgError(e) {
-      e.target.src = require('@/assets/img/no-cover.jpg')
+      e.target.src = 'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/no-cover.jpg'
     },
     fetchData() {
       let data = {

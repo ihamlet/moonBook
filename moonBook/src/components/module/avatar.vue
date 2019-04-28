@@ -1,7 +1,7 @@
 <template>
     <div class="avatar-default" :class="[size,avatarClass]">
-        <img v-if="gender==1" src="./../../assets/img/boy-avatar.png" alt="默认男孩头像" />
-        <img v-else src="./../../assets/img/girl-avatar.png" alt="默认女孩头像" />
+        <img v-if="gender==1" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/boy-avatar.png" alt="默认男孩头像" />
+        <img v-else src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/girl-avatar.png" alt="默认女孩头像" />
     </div>
 </template>
 <script>

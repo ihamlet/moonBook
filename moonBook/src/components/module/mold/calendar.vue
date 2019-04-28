@@ -60,9 +60,9 @@ export default {
       days: [],
       pack: false,
       banner:[
-        require('@/assets/banner/banner-1.jpg'),
-        require('@/assets/banner/banner-2.jpg'),
-        require('@/assets/banner/banner-3.jpg'),
+        'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/banner/banner-1.jpg',
+        'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/banner/banner-2.jpg',
+        'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/banner/banner-3.jpg',
       ]
     }
   },

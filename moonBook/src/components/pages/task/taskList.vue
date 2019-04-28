@@ -43,12 +43,12 @@ export default {
         page:1,
         childInfo:'',
         level:[
-            require('@/assets/img/task/0.png'),
-            require('@/assets/img/task/1.png'),
-            require('@/assets/img/task/2.png'),
-            require('@/assets/img/task/3.png'),
-            require('@/assets/img/task/4.png'),
-            require('@/assets/img/task/5.png'),
+            'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/task/0.png',
+            'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/task/1.png',
+            'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/task/2.png',
+            'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/task/3.png',
+            'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/task/4.png',
+            'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/task/5.png',
         ]
     }
   },

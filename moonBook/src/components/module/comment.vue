@@ -111,7 +111,7 @@
 
     <van-popup v-model="shareShow" get-container='#app' class="share-popup">
       <div class="share-img">
-        <img src="./../../assets/img/shareWord.png" />
+        <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/shareWord.png" />
       </div>
     </van-popup>
   </div>

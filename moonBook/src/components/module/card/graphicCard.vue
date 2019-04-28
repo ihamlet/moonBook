@@ -32,7 +32,7 @@
           <van-tag round color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.user_school_id > 0'>
             <div @click="toSchoolHome(item)">{{item.user_school_name}}</div>
           </van-tag>
-          <div class="cate theme-color" size="large" plain v-if='item.tags' @click='toPopupHelp'>
+          <div class="cate theme-color" size="large" plain v-if='item.tags' @click='toPopupHelp(item)'>
               #{{item.tags}}#
           </div>
         </div>
@@ -187,9 +187,20 @@ export default {
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
-    toPopupHelp(){
+    toPopupHelp(item){
+      let type = 'baby'
+
+      if(item.tags == '宝贝主页'){
+        type = 'baby'
+      }else{
+        type = 'read'
+      }
+
       this.$router.push({
-        name:'popupHelp'
+        name:'popupHelp',
+        query:{
+          type: type
+        }
       })
     }
   }

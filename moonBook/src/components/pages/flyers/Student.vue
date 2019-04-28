@@ -29,7 +29,7 @@ export default {
     },
     data () {
         return {
-            posterImg: require('@/assets/flyers/flyers-student.png'),
+            posterImg: 'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/flyers/flyers-student.png',
             userInfo:''
         }
     },

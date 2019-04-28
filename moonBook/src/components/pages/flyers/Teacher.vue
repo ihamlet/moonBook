@@ -34,7 +34,7 @@ export default {
     },
     data () {
         return {
-            posterImg: require('@/assets/flyers/flyer-teacher.png')
+            posterImg: 'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/flyers/flyer-teacher.png'
         }
     },
     mounted (){

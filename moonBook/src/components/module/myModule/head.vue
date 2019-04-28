@@ -28,7 +28,7 @@
     <div class="card">
       <div class="borrow-card">
         <div class="library-card flex flex-align" v-if="userInfo.card_level != '0'" @click="onClickLeft">
-          <img class="logo" src="./../../../assets/img/logo.png" />
+          <img class="logo" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/logo.png" />
           <div class="card-info flex flex-align">
             <div class="card-name">{{userInfo.card_name}}</div>
             <vipLevel :level='userInfo.card_level' animate='1'/>

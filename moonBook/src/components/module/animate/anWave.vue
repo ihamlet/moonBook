@@ -25,7 +25,7 @@ export default {
   z-index: 12;
   left: 0;
   bottom: -.0625rem /* 1/16 */;
-  background: url('./../../../assets/img/wave1.png') 0 0 repeat-x;
+  background: url('https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/wave1.png') 0 0 repeat-x;
 }
 
 .wave1{
