@@ -50,7 +50,7 @@
 import svgRanking from './../module/animate/svg/ranking'
 import card from './../module/ranking/card'
 import slogan from './../module/slogan'
-import { mapActions } from 'vuex'
+import { mapActions,mapGetters } from 'vuex'
 
 
 // 王伟  排行榜
@@ -75,6 +75,9 @@ export default {
     svgRanking,
     card,
     slogan
+  },
+  computed: {
+    ...mapGetters(['userDataState'])
   },
   data() {
     return {
@@ -249,8 +252,9 @@ export default {
         }
       }
 
-      this.getUserData().then(res => {
-        data.params.banji_id = res.banji_id
+
+        data.params.banji_id = this.userDataState.banji_id
+        data.params.child_id = this.userDataState.child_id
         axios.get('/book/SchoolTushuBorrow/getRank', data).then(res => {
           toast.clear()
           if (res.data.status === 1) {
@@ -259,7 +263,7 @@ export default {
             this.$toast(res.data.msg)
           }
         })
-      })
+   
     },
     onChange(picker, value, index) {
       this.time = value

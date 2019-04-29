@@ -27,6 +27,11 @@ export default {
     height: 3.125rem /* 50/16 */;
 }
 
+.avatar-default.x-small img{
+    width: 36px;
+    height: 36px;
+}
+
 .avatar-default.big img{
     width: 6.25rem /* 100/16 */;
     height: 6.25rem /* 100/16 */;

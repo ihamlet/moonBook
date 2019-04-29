@@ -53,8 +53,7 @@
       <input type="file" accept="video/*" capture="camcorder" ref='fileVideo' data-type='video' hidden @change='doUpload'>
     </div>
 
-
-    <van-popup v-model="progressIsShow" class="progress-popup">
+    <van-popup v-model="progressIsShow" class="progress-popup" :close-on-click-overlay='false'>
       <div class="progress">
         <div class="upload-upload">视频正在上传中...</div>
         <van-progress v-if='percent!=0' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
@@ -312,7 +311,7 @@ export default {
           }
 
           this.release(data).then(res=>{
-            switch(res){
+            switch(res.data.status){
               case 1:
 
                 if(this.post){
@@ -346,7 +345,7 @@ export default {
                 
               break
               case 0:
-                this.$toast.fail('发布失败')
+                this.$toast.fail(res.data.msg)
               break
             }
           })

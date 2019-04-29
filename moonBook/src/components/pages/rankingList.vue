@@ -3,8 +3,10 @@
     <van-nav-bar title="榜单" />
     <div class="list">
         <div class="item flex flex-align" v-for='(item,index) in list' :key="index" @click="toRankingPage(item)">
+          <div class="cell-info">
             <i class="iconfont">{{item.icon}}</i>
             <div class="name">{{item.name}}</div>
+          </div>
         </div>
     </div>
   </div>
@@ -20,7 +22,7 @@ export default {
   data() {
     return {
       list: [{
-        name: '阅读榜',
+        name: '阅读之星榜',
         routeName: 'ranking',
         icon:'\ue666'
       }, {

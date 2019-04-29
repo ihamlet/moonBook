@@ -15,6 +15,12 @@
 
         <van-cell-group>
           <div class="form-title">办卡</div>
+          <van-cell is-link center title='办理老师卡' label="老师卡更实惠" @click="toTeacherAccept" v-if='userDataState.teacher_school_id > 0'>
+            <div class="icon-accept" slot="icon">
+              <i class="iconfont teacher-card">&#xe66c;</i>
+            </div>
+          </van-cell>
+
           <van-cell is-link center title='办理借书卡' label="放学借上学还" @click="toAccept">
             <div class="icon-accept" slot="icon">
               <i class="iconfont accept-card">&#xe620;</i>
@@ -33,11 +39,15 @@
 </template>
 <script>
 import slogan from './../module/slogan'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'register',
   components: {
     slogan
+  },
+  computed: {
+    ...mapGetters(['userDataState'])
   },
   data() {
     return {
@@ -105,6 +115,9 @@ export default {
         name:'AcceptSchoolList'
       })
     },
+    toTeacherAccept(){
+      location.href = `/book/SchoolTeacher/card_apply?school_id=${this.userDataState.teacher_school_id}`
+    },
     toWmPage(){
       location.href = 'https://fang.wmlife.net/kindergarten/index/register'
     },
@@ -154,6 +167,7 @@ export default {
 }
 
 .accept-card,
+.teacher-card,
 .icon.iconfont {
   font-size: 1.75rem /* 28/16 */;
 }
@@ -164,14 +178,21 @@ export default {
   bottom: 0;
 }
 
+.teacher-card,
 .icon-accept{
   margin-right: .625rem /* 10/16 */;
 }
 
+.iconfont.teacher-card{
+  background: linear-gradient(90deg, #FFEB3B,#FF9800);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
 .iconfont.accept-card{
-    background: linear-gradient(90deg, #D400FF,#FF320A);
-    -webkit-background-clip: text;
-    color: transparent;
+  background: linear-gradient(90deg, #D400FF,#FF320A);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .fixed-button{

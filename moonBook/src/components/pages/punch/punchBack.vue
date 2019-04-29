@@ -112,9 +112,9 @@ export default {
   },
   created() {
     this.fetchData()
-    setTimeout(() => {
-      this.animateShow = true
-    },2000)
+    // setTimeout(() => {
+    //   this.animateShow = true
+    // },2000)
   },
   watch: {
     '$router': 'fetchData'

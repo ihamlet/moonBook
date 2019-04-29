@@ -3,9 +3,10 @@
     <van-tabs class="tab-content" v-model="active" background="inherit" :line-width='20' :line-height='4' color="#fff" title-active-color="#fff" title-inactive-color="#fff" @click="onClickTab">
       <van-tab v-for='(list,index) in tabs' :key="index" :title='list.title'>
         <div class="tabs-wrap">
-          <van-tabs class="child-tab" type="card" color="rgba(255,255,255,.3)" swipeable animated title-active-color="#2cadc2" title-inactive-color="#49e5b4" @change='onChangeTab'>
+          <van-tabs v-if='index == active' class="child-tab" type="card" color="#2cadc2" swipeable animated title-active-color="#fff" title-inactive-color="#2cadc2" @change='onChangeTab'>
             <van-tab v-for='(item,itemIndex) in newTab[index]' :key="itemIndex" :title='item.title'>
               <div class="list-content">
+                <div class="title-name" v-if='itemIndex == 0 || itemIndex == 1 || itemIndex == 2'  v-line-clamp:20="1">{{item.name}}</div>
                 <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
                   <van-cell v-for="(child,childIndex) in rankList" :key="childIndex">
                     <div class="icon" slot="icon">
@@ -14,10 +15,13 @@
                     <div class="child-info flex flex-align">
                       <div class="info flex flex-align">
                         <div class="avatar">
-                          <img :src='child.avatar'/>
+                          <img :src='child.avatar' v-if='child.avatar' @error="imgError"/>
+                          <avatar v-else size='x-small'/>
                         </div>
-                        <div class="name">
-                          {{child.name}}
+                        <div class="info">
+                          <div class="name">{{child.name}}</div>
+                          <div class="banji" v-if='itemIndex == 1'>{{formatBanjiTitle(child.banji_name)}}</div>
+                          <div class="school" v-if='itemIndex == 2'>{{child.school_name}}</div>
                         </div>
                       </div>
                       <div class="num">
@@ -37,28 +41,33 @@
 <script>
 import axios from './../../../../src/components/lib/js/api'
 import svgRanking from './../../../components/module/animate/svg/ranking'
+import avatar from './../../../components/module/avatar'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'memberRanking',
   components: {
-    svgRanking
+    svgRanking,
+    avatar
   },
   computed: {
     ...mapGetters(['userDataState']),
     newTab() {
       let array = [{
         title: '同班',
+        name: this.formatBanjiTitle(this.userDataState.banji_name),
         params:{
           banji_id: this.userDataState.banji_id
         }
       }, {
         title: '同园',
+        name: this.userDataState.school_name,
         params:{
           school_id: this.userDataState.school_id
         }
       }, {
         title: '同城',
+        name: this.userDataState.city_name,
         params:{
           city_name: this.userDataState.city_name
         }
@@ -126,6 +135,16 @@ export default {
       this.onLoad().then(()=>{
         this.loading = false
       })
+    },
+    formatBanjiTitle(text){
+      if (text && text.indexOf('班') == -1) {
+        return text + '班'
+      } else {
+        return text
+      }
+    },
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     }
   }
 }
@@ -179,6 +198,13 @@ export default {
 
 .num{
   font-size: 24px;
+}
+
+.title-name{
+  text-align: center;
+  height: 46px;
+  line-height: 46px;
+  color: #fff;
 }
 </style>
 <style>
