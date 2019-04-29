@@ -1,9 +1,13 @@
 <template>
   <div class="find page-padding">
-    <van-nav-bar :border='false' :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title" />
-    <!-- <div class="module" v-if='isFreshListShow'>
+    <van-nav-bar :border='false' :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title" @click-right="toMemberRanking">
+      <div class="right-icon" slot="right" v-if='!$route.query.pageTitle'>
+        <van-button class="theme-btn theme-release" type="primary" size="small" round><i class="iconfont">&#xe667;</i>排行榜</van-button>
+      </div>
+    </van-nav-bar>
+    <div class="module" v-if='isFreshListShow'>
         <freshList :list='freshList' cid="user_id" avatar="avatar" routerName='zoom' name="nickname" :key="$route.query.tag_id"/>
-      </div> -->
+    </div>
     <div class="warp">
       <div class="container">
         <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab'>
@@ -28,7 +32,7 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-// import freshList from './../../module/findModule/freshList'
+import freshList from './../../module/findModule/freshList'
 import dryingList from './../../module/findModule/dryingList'
 import tips from './../../module/release/tips'
 import { mapGetters,mapMutations,mapState } from 'vuex'
@@ -36,7 +40,7 @@ import { mapGetters,mapMutations,mapState } from 'vuex'
 export default {
   name: 'find',
   components: {
-    // freshList,
+    freshList,
     dryingList,
     tips
   },
@@ -137,6 +141,11 @@ export default {
 
       axios.get('/book/schoolArticleCate/getList',data).then(res => {
           this.cateList = res.data[0].children
+      })
+    },
+    toMemberRanking(){
+      this.$router.push({
+        name:'RankingList'
       })
     }
   }

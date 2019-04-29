@@ -11,6 +11,8 @@
     </div>
 </template>
 <script>
+import './lib/css/common.css'
+
 export default {
     name:'manage'
 }

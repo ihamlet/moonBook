@@ -55,7 +55,6 @@ export default {
 
 .avatar {
   margin-right: 0.625rem /* 10/16 */;
-  flex: 1;
 }
 
 .avatar img {

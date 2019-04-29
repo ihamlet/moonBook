@@ -1,5 +1,6 @@
 import BorrowList from '@/components/pages/borrowList'
 import Bookshelf from '@/components/pages/bookshelf'
+import RankingList from '@/components/pages/rankingList'
 import Ranking from '@/components/pages/ranking'
 import ReadStat from '@/components/pages/readStat'
 import ReadAmount from '@/components/pages/readAmount'
@@ -90,6 +91,15 @@ let readRouter = [{
     component: Ranking,
     meta: {
       title: '阅读榜',
+      isFooterBar: false,
+      keepAlive: true
+    }
+  },{
+    path: '/RankingList',
+    name: 'RankingList',
+    component: RankingList,
+    meta: {
+      title: '榜单列表',
       isFooterBar: false,
       keepAlive: true
     }

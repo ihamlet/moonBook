@@ -11,14 +11,13 @@
           <card type='myInfo' :rankingData='tab[topTabIdx].content[secondTabIdx].content.myInfo' />
         </div>
       </div>
-      <van-tabs color='#0084ff' :line-width='20' :line-height='4' swipeable animated @change="onTopTabClick">
+      <van-tabs color='#0084ff'    @change="onTopTabClick">
         <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
           <div class="content" v-if='topTabIdx == index'>
             <van-tabs color='#0084ff' type="card" @disabled="onTabDisabledClick" @click="onTabClick">
               <van-tab v-for="(item,itemIndex) in list.content" :disabled="item.disabled" :title="item.title" :key="itemIndex">
                 <van-cell-group v-if="item.content">
-                  <van-cell v-for='(content,contentIndex) in item.content.list' :key="contentIndex" value-class='cell-value'
-                    title-class='cell-title' :value='`${content.read_count}本`' size='large' center @click="toPage(content)">
+                  <van-cell v-for='(content,contentIndex) in item.content.list' :key="contentIndex" value-class='cell-value' title-class='cell-title' :value='`${content.read_count}本`' size='large' center @click="toPage(content)">
                     <div class="icon" slot="icon">
                       <svg-ranking :ranking="content.rank" />
                     </div>
@@ -388,7 +387,7 @@ export default {
 }
 
 .ranking-page .van-cell__title.cell-title {
-  flex: 4;
+  flex: 3;
 }
 </style>
 

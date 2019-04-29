@@ -55,6 +55,7 @@ export default {
           url: location.href.split('#')[0]
         })
         .then(res => {
+          // res.data.debug = true
           wx.config(res.data)
           wx.ready(() => {
             console.log("ready")
@@ -64,7 +65,7 @@ export default {
     },
     //分享
     share(context, products) {
-      if(context.state.ready){      
+      if(context.state.ready){     
         let title
         let desc
         let template_id = products.item.template_id?products.item.template_id:"1"
@@ -94,62 +95,67 @@ export default {
     },
     //图片接口
     selectImg(context, products){
-      wx.chooseImage({
-          count: products,
-          sizeType: ['compressed'],
-          sourceType: ['album', 'camera'], 
-          success(res){
-              let localIds = res.localIds 
-              let i = 0 
-              let length = localIds.length
-              function upload(){
-                  wx.uploadImage({
-                    localId: localIds[i],
-                    isShowProgressTips: 1, 
-                    success(res){
-                      i++
-                      let data = {
-                        params:{
-                          id:res.serverId
+      if(context.state.ready){     
+        wx.chooseImage({
+            count: products,
+            sizeType: ['compressed'],
+            sourceType: ['album', 'camera'], 
+            success(res){
+                let localIds = res.localIds 
+                let i = 0 
+                let length = localIds.length
+                function upload(){
+                    wx.uploadImage({
+                      localId: localIds[i],
+                      isShowProgressTips: 1, 
+                      success(res){
+                        i++
+                        let data = {
+                          params:{
+                            id:res.serverId
+                          }
+                        }
+                        axios.get('/book/file/upload_weixin_img',data).then(res=>{
+                          switch(res.data.status){
+                              case 1:
+                                context.commit('setImg',res.data.data)
+                              break
+                          }
+                        })
+                        if (i < length) {
+                          upload()
                         }
                       }
-                      axios.get('/book/file/upload_weixin_img',data).then(res=>{
-                        switch(res.data.status){
-                            case 1:
-                              context.commit('setImg',res.data.data)
-                            break
-                        }
-                      })
-                      if (i < length) {
-                        upload()
-                      }
-                    }
-                })
-              }
-              upload()
-          }
-      })
-    },
-    scanQRcode(context, products){
-      return new Promise((resolve, reject) => {
-        wx.scanQRCode({
-          needResult: 1,
-          scanType: ["barCode"],
-            success(res) {
-              let data = {
-                child_id: products.id,
-                isbn: res.resultStr
-              }
-              
-              axios.post('/book/member/read_sign',data).then(res=>{
-                context.commit('setReadSign', {
-                  data: res
-                })
-                resolve(res)
-              })
+                  })
+                }
+                upload()
             }
         })
-      })
+      }
+    },
+    scanQRcode(context, products){
+      if(context.state.ready){
+        // alert('微信扫码')
+        return new Promise((resolve, reject) => {
+          wx.scanQRCode({
+            needResult: 1,
+            scanType: ["barCode"],
+              success(res) {
+                let data = {
+                  child_id: products.id,
+                  isbn: res.resultStr
+                }
+                
+                axios.post('/book/member/read_sign',data).then(res=>{
+                  context.commit('setReadSign', {
+                    data: res
+                  })
+                  resolve(res)
+                })
+              }
+          })
+        })
+      }
     },
     wxGetLocation(){
       return new Promise((resolve, reject) => {

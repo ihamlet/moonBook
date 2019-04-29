@@ -7,7 +7,7 @@
       <div class="refresh">
         <!-- 通过keep-alive 缓存页面 -->
         <keep-alive>
-          <router-view v-if="$route.meta.keepAlive" />
+            <router-view v-if="$route.meta.keepAlive" />
         </keep-alive>
         <router-view v-if="!$route.meta.keepAlive"></router-view>
       </div>

@@ -44,6 +44,8 @@ import Share from '@/components/pages/share'
 
 import Search from '@/components/module/search/searchPage'
 
+import Iframe from '@/cloud/iframe' //外部引入
+
 import Edit from './edit'
 import Editor from './editor'
 import Manage from './manage'
@@ -75,6 +77,11 @@ export default new Router({
         },
         Accept,
         ...Edit,
+        {
+          path:'/Iframe',
+          name:'iframe',
+          component: Iframe
+        },
         {
           path:'/search',
           name:'search',

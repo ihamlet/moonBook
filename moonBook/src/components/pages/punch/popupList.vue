@@ -43,7 +43,8 @@ export default {
       loading: false,
       finished: false,
       page: 1,
-      list: []
+      list: [],
+      count:0
     }
   },
   methods: {
@@ -55,13 +56,13 @@ export default {
       axios.get('/book/member/get_coupon_downloads', data).then(res=>{
         switch (res.data.status) {
           case 1:
-            if(this.page = 1){
-              this.list = res.data.data
-            }else{
-              this.list = this.list.concat(res.data.data)
-            }
-            this.page++
+            this.list = res.data.data
+
+            this.count = res.data.count
+            
             this.loading = false
+            this.page++
+           
             if(this.list.length >= res.data.count){
               this.finished = true
             }

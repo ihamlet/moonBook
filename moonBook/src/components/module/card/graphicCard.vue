@@ -73,8 +73,10 @@ export default {
   props:{
     item:{
       type: Object,
-      default:{
-        photos:[]
+      default(){
+        return {
+          photos:[]
+        }
       }
     },
     type:{

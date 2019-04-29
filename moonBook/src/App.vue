@@ -62,7 +62,7 @@ export default {
         }
         this.getUserLocation(products)
     },
-    '$route': 'fetchData'
+    '$route': 'fetchData' 
   },
   methods: {
     ...mapActions('openWX',['wxConfig','wxGetLocation']),
@@ -97,12 +97,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_vbjco2zmdw8.eot');
-  src: url('//at.alicdn.com/t/font_893274_vbjco2zmdw8.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_vbjco2zmdw8.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_vbjco2zmdw8.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_vbjco2zmdw8.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_vbjco2zmdw8.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_rlkof8a51e.eot');
+  src: url('//at.alicdn.com/t/font_893274_rlkof8a51e.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_rlkof8a51e.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_rlkof8a51e.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_rlkof8a51e.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_rlkof8a51e.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,
@@ -1275,6 +1275,6 @@ i.iconfont.vip-1 {
 
 .theme-btn.theme-release{
   background: linear-gradient(135deg, #FFC107, #FF9800);
-  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3)
+  box-shadow: 0 2px 6px rgba(255, 152, 0, 0.2)
 }
 </style>

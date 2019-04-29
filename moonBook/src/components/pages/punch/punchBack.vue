@@ -43,11 +43,18 @@
     </div>
 
     <div class="release-footer-bar">
-      <van-popup v-model="showTips" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar'
-        :lock-scroll='false'>
+      <van-popup v-model="showTips" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
         <tips :isShow='showTips' position='bottom' @close='setReleaseSwitch(false)' :bookId='extra.book_id'/>
       </van-popup>
     </div>
+
+    <van-popup class="animate-popup" v-model="animateShow">
+      <van-icon class="close-icon" name="close" @click="animateShow = false"/>
+      <trophy/>
+      <div class="share flex flex-justify">
+        <van-button class="share-btn theme-plain" round plain type="primary">分享成绩</van-button>
+      </div>
+    </van-popup>
   </div>
 </template>
 <script>
@@ -57,13 +64,15 @@ import cardPunch from './cardPunch'
 import videoList from './../video/videoList'
 import { format } from './../../lib/js/util'
 import tips from './../../module/release/tips'
+import trophy from './../../module/animate/trophy'
 
 export default {
   name: 'punchBack',
   components: {
     cardPunch,
     videoList,
-    tips
+    tips,
+    trophy
   },
   computed: {
     ...mapGetters(['userDataState']),
@@ -86,6 +95,7 @@ export default {
       page: 1,
       day: '',
       show: false,
+      animateShow: false,
       releaseShow: false,
       releaseType: [{
         icon: 'icon-weibo',
@@ -102,12 +112,14 @@ export default {
   },
   created() {
     this.fetchData()
+    setTimeout(() => {
+      this.animateShow = true
+    },2000)
   },
   watch: {
     '$router': 'fetchData'
   },
   methods: {
-    ...mapActions('openWX', ['scanQRcode']),
     ...mapMutations(['setReleaseSwitch']),
     fetchData() {
       let data = {
@@ -242,7 +254,7 @@ export default {
   position: fixed;
   padding: 10px 0;
   width: 100%;
-  z-index: 9999;
+  z-index: 10;
   bottom: 0;
 }
 
@@ -343,5 +355,24 @@ export default {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.animate-popup{
+  width: 300px;
+  height: 300px;
+  background: transparent;
+}
+
+.share-btn{
+  position: absolute;
+  bottom: 0;
+}
+
+.close-icon{
+  position: absolute;
+  right: 10px;
+  font-size: 30px;
+  color: #fff;
+  z-index: 10;
 }
 </style>

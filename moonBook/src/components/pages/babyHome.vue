@@ -110,7 +110,7 @@
 </template>
 <script>
 import axios from "./../lib/js/api"
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters,mapState } from 'vuex'
 import { format, timeago } from "./../lib/js/util.js"
 import wave from "./../module/animate/anWave"
 import avatar from "./../module/avatar"
@@ -185,6 +185,7 @@ export default {
       loading: false,
       finished: false,
       releasePageShow: false,
+      punchLoading: true,
       page: 1,
       tabIndex: 0,
       tab: [{
@@ -204,7 +205,8 @@ export default {
       postId: '',
       templateId: '',
       activityCount: '',
-      tid:12
+      tid:12,
+
     }
   },
   beforeRouteEnter(to, from, next) {

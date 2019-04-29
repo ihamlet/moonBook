@@ -120,7 +120,6 @@ export default {
     },
     pay() {
       this.payLoading = true
-      this.$cookies.set('payLink', location.href)
       location.href = `/book/memberCard/buycard?level_id=${this.$route.query.leveId}&fee_id=${this.feeId}&is_auto=1&url=${encodeURIComponent(location.href)}`
     }
   }
@@ -170,7 +169,7 @@ export default {
 .focus::after {
   content: '月';
   bottom: -0.125rem /* 2/16 */;
-  right: 0.9375rem /* 15/16 */;
+  right: 15;
 }
 
 .price {
