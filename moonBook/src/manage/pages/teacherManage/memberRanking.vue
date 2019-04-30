@@ -6,8 +6,8 @@
           <van-tabs v-if='index == active' class="child-tab" type="card" color="#2cadc2" swipeable animated title-active-color="#fff" title-inactive-color="#2cadc2" @change='onChangeTab'>
             <van-tab v-for='(item,itemIndex) in newTab[index]' :key="itemIndex" :title='item.title'>
               <div class="list-content">
-                <div class="title-name" v-if='itemIndex == 0 || itemIndex == 1 || itemIndex == 2'  v-line-clamp:20="1">{{item.name}}</div>
-                <van-list class="ranking-list" v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+                <div class="title-name" v-line-clamp:20="1">{{itemIndex == 3?'全平台':item.name}}</div>
+                <van-list class="ranking-list" :class="itemIndex == 3?'ranking-total':''" v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
                   <div class="child-ranking-list"  v-for="(child,childIndex) in rankList" :key="childIndex">
                     <div class="rank-top" v-if='childIndex < 3' :class="`top-${childIndex}`">
                       <div class="icon">
@@ -24,7 +24,7 @@
                         <div class="info flex flex-align">
                           <div class="avatar">
                             <img :src='child.avatar' v-if='child.avatar' @error="imgError"/>
-                            <avatar v-else size='x-small'/>
+                            <avatar v-else size='x-small' />
                           </div>
                           <div class="info">
                             <div class="name">{{child.name}}</div>
@@ -272,14 +272,14 @@ export default {
   color: #303133;
 }
 
-.ranking-list{
-  padding-top: 120px;
-}
-
 .icon{
   position: absolute;
   top: -15px;
   left: 10px;
+}
+
+.ranking-list{
+  padding-top: 125px;
 }
 </style>
 <style>
