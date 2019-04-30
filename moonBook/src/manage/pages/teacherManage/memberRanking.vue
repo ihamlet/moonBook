@@ -33,7 +33,8 @@
                           </div>
                         </div>
                         <div class="num">
-                          {{child.sign_days}}
+                          {{index == 0?child.sign_days:child.sign_read_count}}
+                          <span class="unit">{{index==0?'天':'本'}}</span>
                         </div>
                       </div>
                     </van-cell>
@@ -280,6 +281,10 @@ export default {
 
 .ranking-list{
   padding-top: 125px;
+}
+
+.unit{
+  font-size: 13px;
 }
 </style>
 <style>
