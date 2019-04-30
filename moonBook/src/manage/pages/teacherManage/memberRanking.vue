@@ -7,39 +7,37 @@
             <van-tab v-for='(item,itemIndex) in newTab[index]' :key="itemIndex" :title='item.title'>
               <div class="list-content">
                 <div class="title-name" v-if='itemIndex == 0 || itemIndex == 1 || itemIndex == 2'  v-line-clamp:20="1">{{item.name}}</div>
-                <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+                <van-list class="ranking-list" v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
                   <div class="child-ranking-list"  v-for="(child,childIndex) in rankList" :key="childIndex">
-                    <div class="top-ranking">
-                      <div class="top-1">
+                    <div class="rank-top" v-if='childIndex < 3' :class="`top-${childIndex}`">
+                      <div class="icon">
+                        <svg-ranking :ranking="childIndex+1" />
+                      </div>
                       <div class="avatar">
-                        <img :src="child.avatar" />
+                        <img :src="child.avatar" v-if='child.avatar' @error="imgError"/>
+                        <avatar v-else size='x-small'/>
                       </div>
-                      <div class="top-2"></div>
-                      <div class="top-3"></div>
+                      <div class="name">{{child.name}}</div>
                     </div>
-                  </div>
-                  </div>
-                  <van-cell>
-                    <div class="icon" slot="icon">
-                      <svg-ranking :ranking="childIndex+1" />
-                    </div>
-                    <div class="child-info flex flex-align">
-                      <div class="info flex flex-align">
-                        <div class="avatar">
-                          <img :src='child.avatar' v-if='child.avatar' @error="imgError"/>
-                          <avatar v-else size='x-small'/>
+                    <van-cell v-if='childIndex > 3'>
+                      <div class="child-info flex flex-align">
+                        <div class="info flex flex-align">
+                          <div class="avatar">
+                            <img :src='child.avatar' v-if='child.avatar' @error="imgError"/>
+                            <avatar v-else size='x-small'/>
+                          </div>
+                          <div class="info">
+                            <div class="name">{{child.name}}</div>
+                            <div class="banji" v-if='itemIndex == 1'>{{formatBanjiTitle(child.banji_name)}}</div>
+                            <div class="school" v-if='itemIndex == 2'>{{child.school_name}}</div>
+                          </div>
                         </div>
-                        <div class="info">
-                          <div class="name">{{child.name}}</div>
-                          <div class="banji" v-if='itemIndex == 1'>{{formatBanjiTitle(child.banji_name)}}</div>
-                          <div class="school" v-if='itemIndex == 2'>{{child.school_name}}</div>
+                        <div class="num">
+                          {{child.sign_days}}
                         </div>
                       </div>
-                      <div class="num">
-                        {{child.sign_days}}
-                      </div>
-                    </div>
-                  </van-cell>
+                    </van-cell>
+                  </div>
                 </van-list>
               </div>
             </van-tab>
@@ -200,7 +198,8 @@ export default {
 }
 
 .list-content{
-  padding: 5px 15px;
+  padding: 0 15px;
+  position: relative;
 }
 
 .child-info{
@@ -216,6 +215,71 @@ export default {
   height: 46px;
   line-height: 46px;
   color: #fff;
+}
+
+.rank-top{
+  background: #fff;
+  padding-top: 30px;
+}
+
+.rank-top .avatar{
+  margin-right: 0;
+}
+
+.rank-top .avatar img{
+  display: block;
+  margin: 0 auto;
+}
+
+.child-ranking-list{
+  overflow: hidden;
+}
+
+.top-0{
+  top: 50px;
+  left: 50%;
+  width: 30%;
+  position: relative;
+  z-index: 5;
+  transform: translate3d(-50%, 0, 0) scale(1.1);
+  box-shadow: 0 2px 10px rgba(44, 174, 194, 0.4);
+}
+
+.top-0,
+.top-1,
+.top-2{
+  position: absolute;
+}
+
+.top-1,
+.top-2{
+  width: 30%;
+  top: 50px;
+}
+
+.top-1{
+  left: 15px;
+}
+
+.top-2{
+  right: 15px;
+}
+
+.rank-top .name{
+  text-align: center;
+  margin: 8px 0;
+  font-weight: 700;
+  color: #303133;
+}
+
+.ranking-list{
+  padding-top: 120px;
+}
+
+.icon{
+  position: absolute;
+  top: -15px;
+  left: 10px;
 }
 </style>
 <style>
