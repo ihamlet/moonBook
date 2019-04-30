@@ -3,10 +3,11 @@
     <van-nav-bar title="榜单" />
     <div class="list">
         <div class="item flex flex-align" v-for='(item,index) in list' :key="index" @click="toRankingPage(item)">
-          <div class="cell-info">
+          <div class="cell-info flex flex-align">
             <i class="iconfont">{{item.icon}}</i>
             <div class="name">{{item.name}}</div>
           </div>
+          <i class="iconfont right-icon">&#xe72a;</i>
         </div>
     </div>
   </div>
@@ -65,7 +66,7 @@ export default {
     overflow: hidden;
 }
 
-.item i.iconfont{
+.cell-info i.iconfont{
     font-size: 70px;
     background: linear-gradient(140deg,rgba(255,255,255.3),#fff);
     -webkit-background-clip: text;
@@ -82,5 +83,17 @@ export default {
     color: #fff;
     position: absolute;
     left: 80px;
+}
+
+.cell-info{
+  height: 80px;
+  position: relative;
+  flex: 4
+}
+
+.right-icon{
+  flex: 1;
+  text-align: center;
+  color: #fff;
 }
 </style>

@@ -43,6 +43,7 @@
 </template>
 <script>
 import axios from "./../../lib/js/api"
+import { format } from './../../lib/js/util'
 import numberGrow from "./../../module/animate/numberGrow"
 import avatar from "./../../module/avatar"
 import { mapGetters } from 'vuex'
@@ -101,12 +102,15 @@ export default {
           }
         })
       }else if(list.banji_id == 0){
+        console.log(list)
+
         this.$router.push({
           name:'edit-class',
           query:{
             id: list.id,
             school_id: list.school_id,
-            school_name: list.school_name
+            school_name: list.school_name,
+            birthday: format(list.birthday * 1000,'yyyy-MM-dd'),
           }
         })
       }else{

@@ -55,10 +55,8 @@ export default {
           url: location.href.split('#')[0]
         })
         .then(res => {
-          // res.data.debug = true
           wx.config(res.data)
           wx.ready(() => {
-            console.log("ready")
             context.commit("setReady", "ready")
           })
         })
@@ -129,13 +127,17 @@ export default {
                   })
                 }
                 upload()
+            },
+            complete(e) {
+              if(e.errMsg == 'chooseImage:permission denied'){
+                location.reload()
+              }
             }
         })
       }
     },
     scanQRcode(context, products){
       if(context.state.ready){
-        // alert('微信扫码')
         return new Promise((resolve, reject) => {
           wx.scanQRCode({
             needResult: 1,
@@ -152,6 +154,11 @@ export default {
                   })
                   resolve(res)
                 })
+              },
+              complete(e) {
+                if(e.errMsg == 'scanQRCode:permission denied'){
+                  location.reload()
+                }
               }
           })
         })

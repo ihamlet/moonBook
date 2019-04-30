@@ -183,32 +183,34 @@ export default {
         })
       }
       
-      if(this.$route.query.book_id && this.$route.query.book_id > 0){
-        let bookDetailData = {
-          params:{
-            ajax:1,
-            book_id: this.$route.query.book_id,
-          }
-        }
-
-        axios.get('/book/ShelfBook/getInfo',bookDetailData).then(res=>{
-          if(res.data.status == 1){
-            let bookData = res.data.data
-            this.post = {
-              title: bookData.title, //内容
-              post_id: bookData.tushu_id || 0,
-              sign_read_count: this.$route.query.sign_read_count,
-              type:'book'
+      if(this.$route.query.book_id){
+        if(this.$route.query.book_id > 0){
+          let bookDetailData = {
+            params:{
+              ajax:1,
+              book_id: this.$route.query.book_id,
             }
           }
-        })
-      }else{
-        this.post = {
-          title: '自选图书', //内容
-          post_id: 0,
-          sign_read_count: this.$route.query.sign_read_count,
-          type:'book'
-        }    
+
+          axios.get('/book/ShelfBook/getInfo',bookDetailData).then(res=>{
+            if(res.data.status == 1){
+              let bookData = res.data.data
+              this.post = {
+                title: bookData.title, //内容
+                post_id: bookData.tushu_id || 0,
+                sign_read_count: this.$route.query.sign_read_count,
+                type:'book'
+              }
+            }
+          })
+        }else{
+          this.post = {
+            title: '自选图书', //内容
+            post_id: 0,
+            sign_read_count: this.$route.query.sign_read_count,
+            type:'book'
+          }    
+        }
       }
 
       //判断路由自动触发小视频 视频
@@ -314,7 +316,7 @@ export default {
             switch(res.data.status){
               case 1:
 
-                if(this.post){
+                if(this.$route.query.post_id&&this.$route.query.post_id > 0){
                   let commentData = {
                     post_id: this.post.post_id,
                     contents: '收录了这篇文章',
@@ -326,7 +328,7 @@ export default {
                 this.clearImg()
                 this.$toast.success('发布成功')
 
-                if(this.getResult[0]!=''){
+                if(this.getResult[0]!=''&&this.getResult[0]!='apps-find'){
                   this.$router.replace({
                     name: this.getResult[0],
                     query:{
@@ -335,11 +337,8 @@ export default {
                     }
                   })
                 }else{
-                   this.$router.replace({
-                    name: 'apps-find',
-                    query:{
-                      ...this.$route.query
-                    }
+                  this.$router.replace({
+                    name: 'apps-find'
                   })
                 }
                 
@@ -405,7 +404,7 @@ export default {
       if (!this.ossSign) {
         alert('未能获取上传参数')
       }
-      let url = this.ossSign.host.replace('http:', 'https:')
+      let url = this.ossSign.host
       let data = new FormData()
       let key = this.ossSign.dir + '/' + Date.now() + file.name
       let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
@@ -437,7 +436,7 @@ export default {
       img.src = base64
 
       let fd = new FormData()
-      let url = this.ossSign.host.replace('http:', 'https:')
+      let url = this.ossSign.host
       let key = this.ossSign.dir + '/' + Date.now() + file.name
       let path = url + '/' + this.ossSign.dir + '/' + Date.now() + file.name
 

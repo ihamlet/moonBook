@@ -8,7 +8,18 @@
               <div class="list-content">
                 <div class="title-name" v-if='itemIndex == 0 || itemIndex == 1 || itemIndex == 2'  v-line-clamp:20="1">{{item.name}}</div>
                 <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-                  <van-cell v-for="(child,childIndex) in rankList" :key="childIndex">
+                  <div class="child-ranking-list"  v-for="(child,childIndex) in rankList" :key="childIndex">
+                    <div class="top-ranking">
+                      <div class="top-1">
+                      <div class="avatar">
+                        <img :src="child.avatar" />
+                      </div>
+                      <div class="top-2"></div>
+                      <div class="top-3"></div>
+                    </div>
+                  </div>
+                  </div>
+                  <van-cell>
                     <div class="icon" slot="icon">
                       <svg-ranking :ranking="childIndex+1" />
                     </div>

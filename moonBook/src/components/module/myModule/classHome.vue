@@ -16,12 +16,15 @@
   </div>
 </template>
 <script>
+import { format } from './../../lib/js/util'
 import axios from './../../lib/js/api'
+import { mapGetters } from 'vuex'
 
 export default {
   name: "class-home",
   props: ['children'],
   computed: {
+    ...mapGetters(['userDataState']),
     selectPrompt() {
       if (this.children.school_id == 0) {
         return {
@@ -60,11 +63,16 @@ export default {
           })
           break
         case 1:
+          let date = new Date()
+          let year = format(new Date(),'yyyy-MM-dd')
+
           this.$router.push({
             name: 'edit-class',
             query: {
               id: this.children.id,
-              school_id: this.children.school_id
+              school_id: this.children.school_id,
+              birthday: year,
+              school_name: this.userDataState.school_name
             }
           })
           break

@@ -4,9 +4,9 @@
       <div class="head-bar-title" slot="title" @click="actionsheetShow = true">
         {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont">&#xe608;</i>
       </div>
-      <div class="head-bar-text" slot='right' v-if='manage'  @click="toManage">
+      <!-- <div class="head-bar-text" slot='right' v-if='manage'  @click="toManage">
         <span class="text">管理学校</span>
-      </div>
+      </div> -->
     </van-nav-bar>
     <div class="container">
       <div class="header-card flex flex-align theme-school-background" ref="head">

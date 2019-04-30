@@ -108,10 +108,11 @@ export default {
     },
     age(){
       let date = new Date()
-      let month = date.getMonth() + 1
-      let year = date.getFullYear() 
+      let year = date.getFullYear()
+
       let birthdayYear = this.$route.query.birthday.substring(0,4)
-      return year-birthdayYear
+  
+      return year-birthdayYear || 0
     }
   },
   data() {

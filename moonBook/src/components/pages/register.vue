@@ -15,7 +15,7 @@
 
         <van-cell-group>
           <div class="form-title">办卡</div>
-          <van-cell is-link center title='办理老师卡' label="老师卡更实惠" @click="toTeacherAccept" v-if='userDataState.teacher_school_id > 0'>
+          <van-cell is-link center title='办理老师卡' label="老师卡更实惠" @click="isSelectSchool = true" v-if='userDataState.teacher_school_id > 0'>
             <div class="icon-accept" slot="icon">
               <i class="iconfont teacher-card">&#xe66c;</i>
             </div>
@@ -32,6 +32,17 @@
 
     <slogan />
 
+    <van-popup class="select-school-list" v-model="isSelectSchool">
+      <van-nav-bar title="选择办卡学校" @click-right="isSelectSchool = false">
+        <van-icon class="close-icon" name="close" slot="right"/>
+      </van-nav-bar>
+      <van-cell title-class='select-school-title' :value="item.duty" center size="large" v-for='(item,index) in columns' :key="index" center is-link @click="toAcceptSchool(item)">
+        <div class="school-name" v-line-clamp:20="1" slot="title">
+          {{item.school_name}}
+        </div>
+      </van-cell>
+    </van-popup>
+
     <div class="fixed-button">
       <van-button class="theme-btn" square type="primary" size="large" @click="toWmPage">学校入驻</van-button>
     </div>
@@ -47,18 +58,32 @@ export default {
     slogan
   },
   computed: {
-    ...mapGetters(['userDataState'])
+    ...mapGetters(['userDataState', 'managerState']),
+    columns() {
+      let arr = []
+      if(this.managerState){
+        this.managerState.forEach(element => {
+          if (element.item_relation == 'teacher') {
+            arr.push(element)
+          }
+        })
+      }
+
+
+      return arr
+    }
   },
   data() {
     return {
       show: false,
+      isSelectSchool: false,
       list: [],
       takeUp: false,
       startX: '',
       startY: '',
       location: '',
       applyShow: false,
-      active:0,
+      active: 0,
       prompt: '输入幼儿园名称/拼音',
       role: [
         {
@@ -66,28 +91,28 @@ export default {
           subtitle: '亲子阅读 在线交流 分享阅读',
           type: 'parent',
           iconClass: 'icon-parent',
-          index:0,
+          index: 0,
         },
         {
           name: '老师',
           subtitle: '阅读课教学 阅读方法 育儿交流',
           type: 'teacher',
           iconClass: 'icon-principal',
-          index:1
+          index: 1
         },
         {
           name: '园长/校长',
           subtitle: '学校风采 掌握教育动态',
           type: 'headmaster',
           iconClass: 'icon-teacher',
-          index:1
+          index: 1
         }
       ]
     }
   },
   methods: {
     selectRole(role) {
-      switch (role.index){
+      switch (role.index) {
         case 0:
           this.$router.push({
             name: 'edit-child',
@@ -98,7 +123,7 @@ export default {
           })
 
           localStorage.removeItem('childInfo')
-        break
+          break
         case 1:
           this.$router.push({
             name: 'edit-manager',
@@ -107,28 +132,28 @@ export default {
               type: 'add'
             }
           })
-        break
+          break
       }
     },
     toAccept() {
       this.$router.push({
-        name:'AcceptSchoolList'
+        name: 'AcceptSchoolList'
       })
     },
-    toTeacherAccept(){
-      location.href = `/book/SchoolTeacher/card_apply?school_id=${this.userDataState.teacher_school_id}`
-    },
-    toWmPage(){
+    toWmPage() {
       location.href = 'https://fang.wmlife.net/kindergarten/index/register'
     },
-    toHelp(){
+    toHelp() {
       location.href = '/book/manual/user'
+    },
+    toAcceptSchool(item) {
+      location.href = `/book/SchoolTeacher/card_apply?sid=${item.school_id}`
     }
   }
 }
 </script>
 <style scoped>
-.container{
+.container {
   padding-top: 2.8125rem /* 45/16 */;
 }
 
@@ -172,32 +197,50 @@ export default {
   font-size: 1.75rem /* 28/16 */;
 }
 
-.add-school-btn{
+.add-school-btn {
   position: fixed;
   width: 100%;
   bottom: 0;
 }
 
 .teacher-card,
-.icon-accept{
-  margin-right: .625rem /* 10/16 */;
+.icon-accept {
+  margin-right: 0.625rem /* 10/16 */;
 }
 
-.iconfont.teacher-card{
-  background: linear-gradient(90deg, #FFEB3B,#FF9800);
+.iconfont.teacher-card {
+  background: linear-gradient(90deg, #ffeb3b, #ff9800);
   -webkit-background-clip: text;
   color: transparent;
 }
 
-.iconfont.accept-card{
-  background: linear-gradient(90deg, #D400FF,#FF320A);
+.iconfont.accept-card {
+  background: linear-gradient(90deg, #d400ff, #ff320a);
   -webkit-background-clip: text;
   color: transparent;
 }
 
-.fixed-button{
+.fixed-button {
   position: fixed;
   bottom: 0;
   width: 100%;
 }
+
+.select-school-list {
+  width: 80%;
+  max-height: 80vh;
+  min-height: 50vh;
+  border-radius: 10px;
+}
+
+.close-icon{
+  font-size: 20px;
+  color: #C0C4CC;
+}
 </style>
+<style>
+.select-school-title.van-cell__title{
+  flex: 3
+}
+</style>
+

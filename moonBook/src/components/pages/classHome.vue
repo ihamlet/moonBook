@@ -4,9 +4,9 @@
       <div class="head-bar-title" slot="title" @click="cutover">
         {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="userDataState.teacher_school_id > 0">&#xe608;</i>
       </div>
-      <div class="head-bar-text" slot='right' v-if='true' @click="toManage">
+      <!-- <div class="head-bar-text" slot='right' v-if='userDataState.teacher_school_id == $route.query.id' @click="toManage">
         <span class="text">管理班级</span>
-      </div>
+      </div> -->
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='head'>
       <div class="class-info">
@@ -40,7 +40,7 @@
     <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" />
 
     <div class="punch" v-if='classInfo.is_my_baby_banji'>
-      <van-button @click="punch" :loading='punchLoading' class="theme-btn" round size="normal" type="primary">
+      <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
         <i class="iconfont">&#xe60a;</i>
         阅读打卡
       </van-button>
@@ -55,7 +55,7 @@
 </template>
 <script>
 import axios from './../lib/js/api'
-
+import { format } from './../lib/js/util'
 import {mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import classZoom from './../pages/classZoom'
 import readList from './../module/classModule/readList'
