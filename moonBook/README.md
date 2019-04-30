@@ -1,7 +1,8 @@
 # moonbook
 
 > A Vue.js project 
-> 点击留言跳转
+> 榜单
+> 打卡
 
 ## Build Setup
 
