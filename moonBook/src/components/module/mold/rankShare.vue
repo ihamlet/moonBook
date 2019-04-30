@@ -17,7 +17,7 @@
               <span>— 伏尔泰</span>
             </div>
             <div class="mask-layer">
-              <img class="share-img" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/rank-share.jpg" alt="share-img" />
+              <img class="share-img" src="./../../../assets/img/rank-share.jpg" alt="share-img" />
             </div>
           </div>
           <div class="footer">
@@ -27,7 +27,7 @@
                 <div class="text">在阅亮书架坚持阅读{{childInfo.insist_days}}天,总阅读{{childInfo.read_count}}本</div>
               </div>
               <div class="code-img">
-                <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/code.png" />
+                <img src="./../../../assets/img/code.png" />
               </div>
             </div>
             <div class="explain">
@@ -40,8 +40,7 @@
       <img class="screenshot" :src="dataURL" v-else>
     </transition>
     <div class="popup-btn">
-      <van-button class="theme-btn" :loading='isLoading' size="large" square :disabled='isDisabled' type="primary"
-        @click="toImage">
+      <van-button class="theme-btn" :loading='isLoading' size="large" square :disabled='isDisabled' type="primary" @click="toImage">
         {{dataURL?'长按上图保存分享':'正在生成图片'}}
       </van-button>
     </div>

@@ -22,7 +22,7 @@
           <avatar :gender="childInfo.sex" size='small' v-else />
           <div class="name flex flex-align">
             {{childInfo.name}}
-            <van-tag class="tag" color="#FFC107" round type="danger" size='medium'>{{childInfo.read_level}}级</van-tag>
+            <van-tag class="tag" color="#FFC107" round type="danger" size='medium'>{{Math.floor(childInfo.read_level)}}级</van-tag>
           </div>
         </div>
         <div class="volume flex flex-justify">

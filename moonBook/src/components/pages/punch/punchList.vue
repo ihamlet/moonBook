@@ -159,4 +159,8 @@ export default {
 .btn{
   padding: .625rem /* 10/16 */;
 }
+
+.date-title{
+  margin-bottom: 20px;
+}
 </style>
