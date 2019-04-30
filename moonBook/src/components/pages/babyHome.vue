@@ -134,6 +134,7 @@ export default {
     selectChild
   },
   computed: {
+    ...mapState('openWX',['readSign']),
     ...mapGetters(['managerState', 'userDataState']),
     pageTitle() {
       let name = ''
@@ -489,7 +490,7 @@ export default {
       this.$router.push({
         name:'punch-list',
         query:{
-          id: this.$route.query.id
+          id: this.$route.query.id,
         }
       })
     },
@@ -616,7 +617,7 @@ export default {
                 back: this.$route.name,
                 cate_id: 133,
                 tags:'阅读打卡',
-                ...res.data.data.state_data
+                ...res.data.data.stat_data
               }
             })
           break

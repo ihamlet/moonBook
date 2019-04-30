@@ -3,7 +3,7 @@
         <div class="share-cell flex flex-align">
             <div class="details flex flex-align">
                 <div class="info" @click="toDetails" v-if='detailsId&&detailsId > 0'>
-                    <div class="theme-color" v-line-clamp:20="1">{{item.title}}</div>
+                    <div class="theme-color" v-line-clamp:20="1">《{{item.title}}》</div>
                 </div>
                 <div class='punches theme-color' @click="toReadStat">
                     累计{{item.sign_read_count}}本

@@ -52,7 +52,7 @@ export default {
 
       this.getLogin(this.userLogin).then(res => {
         this.isLoading = false
-        if (res.status) {
+        if (res.status == 1) {
           this.$notify({
             message: res.info,
             duration: 1000,
