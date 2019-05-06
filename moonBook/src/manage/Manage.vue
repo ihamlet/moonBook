@@ -15,7 +15,7 @@ export default {
     name:'manage'
 }
 </script>
-<style>
+<style scoped>
 .teacher-card,
 .user-card{
     justify-content: space-between;

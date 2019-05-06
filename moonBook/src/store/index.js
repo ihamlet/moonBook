@@ -333,6 +333,7 @@ const actions = {
       title: products.title,
       tags: products.tags,
       extra: products.extra,
+      from_page: products.from_page,
       to_school: 1
     }
 

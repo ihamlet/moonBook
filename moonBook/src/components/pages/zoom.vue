@@ -304,7 +304,7 @@ export default {
   margin-top: 30px;
   font-size: 18px;
   font-weight: 700;
-  max-width: 50%;
+  max-width: 120px;
 }
 
 .data-box {

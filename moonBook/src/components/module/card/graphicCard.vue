@@ -29,7 +29,10 @@
       </div>
       <div class="temp-type flex flex-align">
         <div class="temp-list flex flex-align">
-          <van-tag round color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.user_school_id > 0'>
+          <van-tag round color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.from_page&&item.from_page=="banji"&&userDataState.teacher_school_id'>
+            <div @click="toTeacherSchoolHome">{{userDataState.teacher_school_name}}</div>
+          </van-tag> 
+          <van-tag round color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-else-if='item.user_school_id > 0'>
             <div @click="toSchoolHome(item)">{{item.user_school_name}}</div>
           </van-tag>
           <div class="cate theme-color" size="large" plain v-if='item.tags' @click='toPopupHelp(item)'>
@@ -104,7 +107,7 @@ export default {
     media
   },
   computed: {
-    ...mapGetters(['userPointState']),
+    ...mapGetters(['userPointState','userDataState']),
     post(){
       let content = JSON.parse(this.item.extra)
       return content
@@ -168,6 +171,16 @@ export default {
           }
         })
       }
+    },
+    toTeacherSchoolHome(){
+      this.$router.push({
+        name:'apps-school',
+        query:{
+          id: this.userDataState.teacher_school_id,
+          back: this.$route.name,
+          backPageName: this.$route.meta.title
+        }
+      })
     },
     toVideoPage(videoItem){
       this.$router.push({

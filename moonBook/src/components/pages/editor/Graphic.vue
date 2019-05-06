@@ -296,7 +296,8 @@ export default {
             template_id: 1,
             photos: this.grapicData.photos,
             tags: this.$route.query.tags,
-            extra: this.post
+            extra: this.post,
+            from_page: this.$route.query.home_type
           }
 
           if(this.$route.query.back == 'baby-home'){
