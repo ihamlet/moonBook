@@ -17,7 +17,11 @@
                         <img :src="child.avatar" v-if='child.avatar' @error="imgError"/>
                         <avatar v-else size='x-small'/>
                       </div>
-                      <div class="name">{{child.name}}</div>
+                      <div class="name" v-line-clamp:20="1">{{child.name}}</div>
+                      <div class="num">
+                        {{index == 0?child.sign_days:child.sign_read_count}}
+                        <span class="unit">{{index==0?'天':'本'}}</span>
+                      </div>
                     </div>
                     <van-cell v-if='childIndex > 3'>
                       <div class="child-info flex flex-align">
@@ -27,7 +31,7 @@
                             <avatar v-else size='x-small' />
                           </div>
                           <div class="info">
-                            <div class="name">{{child.name}}</div>
+                            <div class="name" v-line-clamp:20="1">{{child.name}}</div>
                             <div class="banji" v-if='itemIndex == 1'>{{formatBanjiTitle(child.banji_name)}}</div>
                             <div class="school" v-if='itemIndex == 2'>{{child.school_name}}</div>
                           </div>
@@ -209,6 +213,7 @@ export default {
 
 .num{
   font-size: 24px;
+  text-align: center;
 }
 
 .title-name{
@@ -220,7 +225,8 @@ export default {
 
 .rank-top{
   background: #fff;
-  padding-top: 30px;
+  padding-top: 20px;
+  padding-bottom: 10px;
 }
 
 .rank-top .avatar{
@@ -230,6 +236,12 @@ export default {
 .rank-top .avatar img{
   display: block;
   margin: 0 auto;
+}
+
+.rank-top .num{
+  background: linear-gradient(90deg, #FE8537,#F02B2B);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .child-ranking-list{
@@ -258,8 +270,13 @@ export default {
   top: 50px;
 }
 
+.top-2{
+  transform: scale(0.96);
+}
+
 .top-1{
   left: 15px;
+  transform: scale(0.98);
 }
 
 .top-2{
@@ -280,7 +297,7 @@ export default {
 }
 
 .ranking-list{
-  padding-top: 125px;
+  padding-top: 150px;
 }
 
 .unit{

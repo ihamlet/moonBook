@@ -38,9 +38,9 @@
             </van-row>
           </van-cell>
         </div>
-        <div class="article-card" v-if='post&&post.sign_read_count'>
+        <div class="article-card" v-if='post'>
           <van-cell>
-            <articleCard :item='post' :detailsId='post.post_id' @toDetails='toArticle'/>
+            <articleCard :item='post' :detailsId='post.post_id || post.tushu_id' @toDetails='toArticle'/>
           </van-cell>
         </div>
       </van-cell-group>
@@ -173,9 +173,8 @@ export default {
             }else{
               let postData = res.data.data.post
               this.post = {
-                title: postData.template_id == 1?'':postData.title, //内容
+                title: postData.template_id == 1?`${postData.user.username}的晒一晒`:postData.title, //内容
                 post_id: postData.post_id || 0,
-                sign_read_count: this.$route.query.sign_read_count,
                 type:'post'
               }
             }
@@ -197,7 +196,7 @@ export default {
               let bookData = res.data.data
               this.post = {
                 title: bookData.title, //内容
-                post_id: bookData.tushu_id || 0,
+                tushu_id: bookData.tushu_id || 0,
                 sign_read_count: this.$route.query.sign_read_count,
                 type:'book'
               }

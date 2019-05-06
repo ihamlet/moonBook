@@ -43,7 +43,7 @@
         <freshList :list='freshList' cid="child_id" avatar="child_avatar" routerName="baby-home" name="child_name" :key="$route.query.id"/>
       </div>
       <div>
-        <comment :item='details' type='bookDetails' :key="$route.query.id"/>
+        <comment :item='details' type='bookDetails' :postId='details.post_id' :key="$route.query.id"/>
       </div>
     </div>
   </div>

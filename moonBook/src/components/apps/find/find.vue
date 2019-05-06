@@ -1,6 +1,6 @@
 <template>
   <div class="find page-padding">
-    <van-nav-bar :border='false' :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title" @click-right="toMemberRanking">
+    <van-nav-bar :border='false' :title="$route.query.pageTitle?$route.query.pageTitle:$route.meta.title" @click-right="toRanking">
       <div class="right-icon" slot="right" v-if='!$route.query.pageTitle'>
         <van-button class="theme-btn theme-release" type="primary" size="small" round><i class="iconfont">&#xe667;</i>排行榜</van-button>
       </div>
@@ -13,13 +13,13 @@
         <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content" v-if='index == indexTab'>
-              <drying-list :cateId='list.cate_id' :sort='list.sort' type='find' :tagId='$route.query.tag_id' :school_id='$route.query.school_id' :banji_id='$route.query.banji_id'/>
+              <drying-list :cateId='list.cate_id || $route.query.cate_id' :sort='list.sort' type='find' :tagId='$route.query.tag_id' :school_id='$route.query.school_id' :banji_id='$route.query.banji_id'/>
             </div>
           </van-tab>
         </van-tabs>
       </div>
     </div>
-    <div class="release-footer-bar">
+    <div class="release-footer-bar" v-if='$route.query.pageTitle!="育儿专栏"'>
       <van-button class="theme-btn theme-release" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
         <i class="iconfont">&#xe664;</i>
         发 布
@@ -46,7 +46,7 @@ export default {
   },
   computed: {
     ...mapState(['releaseSwitch']),
-    ...mapGetters(['managerState']),
+    ...mapGetters(['managerState','userDataState']),
     isFreshListShow(){
       let boolean = true
       if(this.$route.query.cate_id || this.$route.query.tag_id){
@@ -65,11 +65,12 @@ export default {
     },
     tab(){
       let array = []
-      if(this.$route.query.tag_id){
+      if(this.$route.query.tag_id || this.$route.query.cate_id){
         array.push({
           title:'全部',
-          cate_id: this.$route.query.tag_id
+          cate_id: this.$route.query.tag_id || this.$route.query.cate_id
         })
+
         if(this.cateList){
           this.cateList.forEach(element => {
             let data = {
@@ -135,17 +136,25 @@ export default {
     getCate(){
       let data = {
         params:{
-          cate_id: this.$route.query.tag_id
+          cate_id: this.$route.query.tag_id || this.$route.query.cate_id,
         }
+      }
+
+      //育儿专栏 cate_id 149 做一个权限判断 is_visit
+      if(this.$route.query.cate_id == 149){
+        data.params.is_visit = 1
       }
 
       axios.get('/book/schoolArticleCate/getList',data).then(res => {
           this.cateList = res.data[0].children
       })
     },
-    toMemberRanking(){
+    toRanking(){
       this.$router.push({
-        name:'RankingList'
+        name:'ranking',
+        query:{
+          id: this.userDataState.child_id
+        }
       })
     }
   }

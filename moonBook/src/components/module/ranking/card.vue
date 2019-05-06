@@ -37,7 +37,7 @@ export default {
 </script>
 <style scoped>
 .card {
-  padding: 3.125rem /* 50/16 */ 1.25rem /* 20/16 */ 0 1.25rem /* 20/16 */;
+  padding: 60px 15px 0;
 }
 
 .content {

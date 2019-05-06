@@ -36,7 +36,7 @@ export default {
         name: '育儿专栏',
         pathName: 'apps-find',
         params: {
-          tag_id: 37,
+          cate_id: 149,
           pageTitle: '育儿专栏'
         },
         href: false

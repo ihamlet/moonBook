@@ -1,5 +1,5 @@
 <template>
-  <div class="comment-list" id='comment' ref='comment'>
+  <div class="comment-list" id='comment' ref='comment' v-if='flag'>
     <van-nav-bar :border='false' :zIndex='0'>
       <div class="zan" slot="right">赞 {{item.zan_num}}</div>
       <div class="comment" slot="left">{{listLength}} 评论</div>
@@ -146,16 +146,22 @@ export default {
       isLoading: false,
       message: '',
       shareShow: false,
-      score: false
+      score: false,
+      flag: false
     }
   },
   watch: {
-    item(val){
-      this.onLoad()
+    postId(){
+      this.flag = true
+      if(this.$route.query.point == 'comments'){
+        this.$nextTick(()=>{
+          this.$refs.comment.scrollIntoView()
+        }) 
+      }
     }
   },
   methods: {
-    onLoad(id) {
+    onLoad() {
       let data = {
         params: {
           post_id: this.postId,
@@ -165,23 +171,17 @@ export default {
         }
       }
 
-      axios.get('/book/SchoolArticleComment/getList', data).then(res => {
+     return axios.get('/book/SchoolArticleComment/getList', data).then(res => {
         if (res.data.status == 1) {
-
-          if(this.$route.query.point == 'comments'){
-            this.$nextTick(()=>{
-              this.$refs.comment.scrollIntoView()
-            }) 
-          }
-
           this.listLength = res.data.count
           let array = res.data.data
-          this.loading = false
           if (this.page == 1) {
             this.list = array
           } else {
             this.list = this.list.concat(array)
           }
+          
+          this.loading = false
           this.page++
           if (this.list.length >= res.data.count) {
             this.finished = true

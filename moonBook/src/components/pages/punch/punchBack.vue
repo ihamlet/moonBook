@@ -49,10 +49,10 @@
     </div>
 
     <van-popup class="animate-popup" v-model="animateShow">
-      <van-icon class="close-icon" name="close" @click="animateShow = false"/>
-      <trophy/>
+      <van-icon class="close-icon" name="close" @click="closeAnimate"/>
+      <trophy :signDays='$route.query.sign_days'/>
       <div class="share flex flex-justify">
-        <van-button class="share-btn theme-plain" round plain type="primary">分享成绩</van-button>
+        <van-button class="share-btn theme-plain" round plain type="primary">领取奖品</van-button>
       </div>
     </van-popup>
   </div>
@@ -139,6 +139,12 @@ export default {
             break
         }
       })
+
+      // 判断打卡天数有没有14天 并且判断本地存储里面的sign_days值 
+      if(this.$route.query.sign_days == 14 && !localStorage.getItem('closeTrophy')){
+        this.animateShow = true
+      }
+      
     },
     onLoad() {
       this.day = format(new Date(), 'yyyy-MM-dd')
@@ -223,6 +229,10 @@ export default {
       this.$router.push({
         name:'punchSpeed'
       })
+    },
+    closeAnimate(){
+      this.animateShow = false
+      localStorage.setItem('closeTrophy',false)
     }
   }
 }
@@ -370,9 +380,10 @@ export default {
 
 .close-icon{
   position: absolute;
-  right: 10px;
-  font-size: 30px;
+  right: 0;
+  font-size: 24px;
   color: #fff;
   z-index: 10;
+  opacity: 0.5;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div class="ranking-page page-padding">
-    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''" title="阅读之星榜" fixed :border='false'>
+    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''" title="阅读之星榜" fixed :border='false'  @click-right="onClickRight">
         <div class="child-avatar" slot="right">
-          
+          <van-button round class="theme-btn more-btn" size="small" type="primary">更多榜单</van-button>
         </div>
     </van-nav-bar>
     <div class="container">
@@ -11,7 +11,7 @@
           <card type='myInfo' :rankingData='tab[topTabIdx].content[secondTabIdx].content.myInfo' />
         </div>
       </div>
-      <van-tabs color='#0084ff'    @change="onTopTabClick">
+      <van-tabs  color='#0084ff' :line-width='20' :line-height='4'  @change="onTopTabClick"  sticky swipeable animated>
         <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
           <div class="content" v-if='topTabIdx == index'>
             <van-tabs color='#0084ff' type="card" @disabled="onTabDisabledClick" @click="onTabClick">
@@ -280,20 +280,11 @@ export default {
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
-    // onClickLeft() {
-    //   if (this.$route.query.back) {
-    //     this.$router.push({
-    //       name: this.$route.query.back,
-    //       query: {
-    //         id: this.$route.query.id
-    //       }
-    //     })
-    //   } else {
-    //     this.$router.push({
-    //       name: 'my'
-    //     })
-    //   }
-    // },
+    onClickRight() {
+      this.$router.push({
+        name:'RankingList'
+      })
+    },
     toPage(content) {
       if (this.topTabIdx == 0) {
         this.$router.push({
@@ -381,6 +372,10 @@ export default {
 .info .name {
   font-weight: 500;
   color: #303133;
+}
+
+.theme-btn.more-btn{
+  background: linear-gradient(135deg, #FFEB3B, #FFC107);
 }
 </style>
 <style>

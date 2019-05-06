@@ -26,7 +26,7 @@
       </div>
     </van-popup>
 
-    <van-popup v-model="detailsCard" class="popup-details">
+    <van-popup v-model="detailsCard" class="popup-details" >
       <van-nav-bar :title="successful?'恭喜领取成功':'领取失败'" :border='false' @click-right='onClickRight'>
         <div class="close-btn" slot="right">
           <i class="iconfont">&#xe683;</i>
@@ -351,6 +351,11 @@ b {
 .hint,
 .point{
   text-align: center;
+}
+
+.hint{
+  width: 80%;
+  margin: 0 auto;
 }
 
 .point{
