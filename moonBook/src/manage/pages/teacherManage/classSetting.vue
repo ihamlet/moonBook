@@ -1,9 +1,9 @@
 <template>
   <div class="page-padding">
-    <van-tabs v-model="active" animated sticky color='#0084ff' :line-width='20' :line-height='4'>
-      <van-tab title="班级概况">
+    <van-tabs v-model="active" swipeable animated sticky color='#0084ff' :line-width='20' :line-height='4'>
+      <!-- <van-tab title="班级概况">
         <overview />
-      </van-tab>
+      </van-tab> -->
       <van-tab title="人员管理">
         <div class="banji-overview flex flex-align">
            <div class="people">学生24人/家长36人</div>  

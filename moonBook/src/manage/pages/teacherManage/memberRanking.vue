@@ -9,7 +9,7 @@
                 <div class="title-name" v-line-clamp:20="1">{{itemIndex == 3?'全平台':item.name}}</div>
                 <van-list class="ranking-list" :class="itemIndex == 3?'ranking-total':''" v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
                   <div class="child-ranking-list"  v-for="(child,childIndex) in rankList" :key="childIndex">
-                    <div class="rank-top" v-if='childIndex < 3' :class="`top-${childIndex}`">
+                    <div class="rank-top" v-if='childIndex < 3' :class="[`top-${childIndex}`,`an-${childIndex*2}`,'fadeIn animated']" @click="toBabyHome(child)">
                       <div class="icon">
                         <svg-ranking :ranking="childIndex+1" />
                       </div>
@@ -23,7 +23,7 @@
                         <span class="unit">{{index==0?'天':'本'}}</span>
                       </div>
                     </div>
-                    <van-cell v-if='childIndex > 3'>
+                    <van-cell v-if='childIndex > 3' @click="toBabyHome(child)">
                       <div class="child-info flex flex-align">
                         <div class="info flex flex-align">
                           <div class="avatar">
@@ -157,6 +157,14 @@ export default {
         return text
       }
     },
+    toBabyHome(child){
+      this.$router.push({
+        name:'baby-home',
+        query:{
+          id: child.id
+        }
+      })
+    },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     }
@@ -218,8 +226,8 @@ export default {
 
 .title-name{
   text-align: center;
-  height: 46px;
-  line-height: 46px;
+  height: 50px;
+  line-height: 50px;
   color: #fff;
 }
 
@@ -249,12 +257,11 @@ export default {
 }
 
 .top-0{
-  top: 50px;
   left: 50%;
   width: 30%;
   position: relative;
   z-index: 5;
-  transform: translate3d(-50%, 0, 0) scale(1.1);
+  transform: translate3d(-50%, 0, 0) scale(1.15);
   box-shadow: 0 2px 10px rgba(44, 174, 194, 0.4);
 }
 
@@ -262,12 +269,12 @@ export default {
 .top-1,
 .top-2{
   position: absolute;
+  top: 55px;
 }
 
 .top-1,
 .top-2{
   width: 30%;
-  top: 50px;
 }
 
 .top-2{

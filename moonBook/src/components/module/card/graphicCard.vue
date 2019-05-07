@@ -29,8 +29,8 @@
       </div>
       <div class="temp-type flex flex-align">
         <div class="temp-list flex flex-align">
-          <van-tag round color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.from_page&&item.from_page=="banji"&&userDataState.teacher_school_id'>
-            <div @click="toTeacherSchoolHome">{{userDataState.teacher_school_name}}</div>
+          <van-tag round color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.from_page'>
+            <div @click="toTeacherSchoolHome">{{fromData.teacher_school_name}}</div>
           </van-tag> 
           <van-tag round color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-else-if='item.user_school_id > 0'>
             <div @click="toSchoolHome(item)">{{item.user_school_name}}</div>
@@ -111,6 +111,17 @@ export default {
     post(){
       let content = JSON.parse(this.item.extra)
       return content
+    },
+    fromData(){
+      if(this.item.from_page){
+        let arr = this.item.from_page.split(',')
+        let obj = {
+          teacher_school_id: arr[0],
+          teacher_school_name: arr[1]
+        }
+
+        return obj
+      }
     }
   },
   data() {
@@ -176,7 +187,7 @@ export default {
       this.$router.push({
         name:'apps-school',
         query:{
-          id: this.userDataState.teacher_school_id,
+          id: this.fromData.teacher_school_id,
           back: this.$route.name,
           backPageName: this.$route.meta.title
         }

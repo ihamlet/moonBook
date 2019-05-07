@@ -30,7 +30,7 @@ export default {
             }
         },
         toBookDetails(item) {
-          if (item.book_id) {
+          if (item.book_id > 0) {
             this.$router.push({
             name: 'book-details',
               query: {

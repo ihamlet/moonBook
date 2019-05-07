@@ -77,6 +77,7 @@ export default {
   name: 'overview',
   data() {
     return {
+      myChart:null,
       option: {
         legend: {
           data: ['文章数', '视频数', '分享数', '学员数'],
@@ -233,10 +234,14 @@ export default {
       this.drawLine()
     })
   },
+  beforeDestroy () {
+    // 销毁myChart
+    this.myChart.clear()
+  },
   methods: {
     drawLine() {
-      let myChart = echarts.init(document.getElementById('myChart'))
-      myChart.setOption(this.option)
+      this.myChart = echarts.init(document.getElementById('myChart'))
+      this.myChart.setOption(this.option)
     }
   }
 }

@@ -9,8 +9,8 @@
                 </div>
             </div>
             <div class="operation-btn flex flex-align">
-                <van-button class="pass" size="small" round type="primary" @click="pass">退回</van-button>
-                <van-button class="past" size="small" round type="info" @click="past">通过</van-button>
+                <van-button class="pass" size="small" round type="warning" @click="pass">退回</van-button>
+                <van-button class="past" size="small" round type="primary" @click="past">通过</van-button>
             </div>
         </div> 
     </van-cell>   

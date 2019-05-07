@@ -64,7 +64,7 @@ svg.icon {
 }
 
 .number {
-  font-size: 1.625rem /* 26/16 */;
+  font-size: 20px;
   text-align: center;
   font-style: oblique;
 }

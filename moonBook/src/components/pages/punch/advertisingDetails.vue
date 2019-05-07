@@ -15,7 +15,7 @@
       <div class="prize-card flex flex-column">
         <div class="prize-content">
           <div class="name">{{details.shop_name}}</div>
-          <div class="title">
+          <div class="title" v-if='details.price > 0'>
             {{details.title}},价值{{details.price/100}}元
           </div>
         </div>

@@ -295,10 +295,15 @@ export default {
             details: this.grapicData.text,
             template_id: 1,
             photos: this.grapicData.photos,
-            tags: this.$route.query.tags,
+            tags: this.$route.query.tags || '宝贝主页',
             extra: this.post,
-            from_page: this.$route.query.home_type
           }
+
+          //老师的班级学校
+          if(this.userDataState.teacher_school_id > 0 && this.$route.query.home_type == 'banji'){
+            data.from_page = `${this.userDataState.teacher_school_id},${this.userDataState.teacher_school_name}`
+          }
+
 
           if(this.$route.query.back == 'baby-home'){
             data.child_id = this.$route.query.id

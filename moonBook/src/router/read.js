@@ -7,6 +7,7 @@ import ReadAmount from '@/components/pages/readAmount'
 import ReadGuide from '@/components/pages/guided/readGuide'
 import punchBack from '@/components/pages/punch/punchBack'
 import punchList from '@/components/pages/punch/punchList'
+import punchShare from '@/components/pages/punch/punchShare'
 import advertisingDetails from '@/components/pages/punch/advertisingDetails'
 import popupList from '@/components/pages/punch/popupList'
 import popupHelp from '@/components/pages/punch/punchHelp'
@@ -83,6 +84,15 @@ let readRouter = [{
     meta: {
       title:'打卡列表',
       keepAlive: true,
+      isFooterBar: false
+    }
+  },
+  {
+    path: '/punch-share',
+    name: 'punch-share',
+    component: punchShare,
+    meta: {
+      title:'打卡分享',
       isFooterBar: false
     }
   },{

@@ -63,7 +63,7 @@ export default {
 
 .trophy{
     z-index: 2;
-    width: 184px;
+    width: 160px;
 }
 
 .flower{
@@ -81,7 +81,7 @@ export default {
 
 
 .arctext span{
-    font-size: 36px;
+    font-size: 30px;
     position: relative;
     font-weight: 800;
     display: inline-block;

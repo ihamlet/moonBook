@@ -375,7 +375,7 @@ export default {
 }
 
 .theme-btn.more-btn{
-  background: linear-gradient(135deg, #FFEB3B, #FFC107);
+  background: linear-gradient(135deg, #FFC107, #FF9800);
 }
 </style>
 <style>

@@ -18,6 +18,7 @@
     </div>    
 </template>
 <script>
+import axios from './../../../components/lib/js/api'
 import { compare } from './../../lib/js/util'
 
 export default {
@@ -36,16 +37,16 @@ export default {
             type:Array,
             default(){
                 return [{
-                    avatar:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556506992586&di=b64924d9e9f0cdf4cc0b88d9737ebb0c&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201704%2F27%2F20170427155254_Kctx8.jpeg',
+                    avatar:'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0',
                     name:'菜包',
                 },{
-                    avatar:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556506992586&di=b64924d9e9f0cdf4cc0b88d9737ebb0c&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201704%2F27%2F20170427155254_Kctx8.jpeg',
+                    avatar:'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0',
                     name:'八宝',
                 },{
-                    avatar:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556506992586&di=b64924d9e9f0cdf4cc0b88d9737ebb0c&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201704%2F27%2F20170427155254_Kctx8.jpeg',
+                    avatar:'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0',
                     name:'迪宝'
                 },{
-                    avatar:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556506992586&di=b64924d9e9f0cdf4cc0b88d9737ebb0c&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201704%2F27%2F20170427155254_Kctx8.jpeg',
+                    avatar:'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0',
                     name:'阿宝'
                 }]
             }

@@ -12,14 +12,54 @@
       </div>
     </div>
 
+    <div class="punch-data">
+      <van-nav-bar :border='false' title="阅读打卡" @click-right="onClickShare">
+        <div class="share-right theme-color" slot="right">
+          分享<i class="iconfont">&#xe96e;</i>
+        </div>
+      </van-nav-bar>
+      <van-cell>
+        <div class="flex flex-align">
+          <div class="item-data item-today-num">
+            <div class="sub">实时打卡</div>
+            <div class="people-number">
+              <span class="num" v-for='(item,index) in numberOfPeople' :key="index">{{item}}</span>
+            </div>
+            <i class="iconfont">&#xe6c5;</i>
+          </div>
+
+          <div class="item-data item-grade">
+            <div class="sub">我的成绩</div>
+            <div class="item-box my-data flex">
+              <div class="num-number">
+                <span class="i-sub">打卡:</span>
+                <span>{{$route.query.sign_read_count}}本</span>
+              </div>
+              <div class="day-number">
+                <span class="i-sub">坚持:</span>
+                <span>{{$route.query.sign_days}}天</span>
+              </div>
+            </div>
+            <i class="iconfont">&#xe61d;</i>
+          </div>
+
+          <div class="item-data item-ability">
+            <div class="sub">学习力</div>
+            <div class="item-box">超过 <span class="percentage">86%</span> 的同学</div>
+            <i class="iconfont">&#xe666;</i>
+          </div>
+        </div>
+      </van-cell>
+    </div>
+
     <van-pull-refresh v-model="loading" @refresh="onRefresh">
-      <van-nav-bar :border='false' right-text="打卡进度" @click-right="onClickRight">  
+      <van-nav-bar :border='false' right-text="我的进度" @click-right="onClickRight">
          <!-- 阅读进度 -->
         <div class="date-title" slot="title">{{day}}</div>
       </van-nav-bar>
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <div class="list" v-if='list.length'>
-          <van-cell v-for="(item,index) in list" :key="index" :is-link='item.book_id' center>
+          <van-cell v-for="(item,index) in list" :key="index" :is-link='item.book_id > 0' center>
             <cardPunch :item='item' />
           </van-cell>
         </div>
@@ -48,8 +88,8 @@
       </van-popup>
     </div>
 
-    <van-popup class="animate-popup" v-model="animateShow">
-      <van-icon class="close-icon" name="close" @click="closeAnimate"/>
+    <van-popup class="animate-popup" v-model="animateShow" :close-on-click-overlay='false'>
+      <van-icon class="close-icon" name="close" @click="animateShow = false"/>
       <trophy :signDays='$route.query.sign_days'/>
       <div class="share flex flex-justify">
         <van-button class="share-btn theme-plain" round plain type="primary">领取奖品</van-button>
@@ -84,10 +124,14 @@ export default {
       set(val) {
         this.setReleaseSwitch(val)
       }
+    },
+    numberOfPeople(){
+      return this.peopleNumber.toString().split('')
     }
   },
   data() {
     return {
+      timer: null,
       loading: false,
       finished: false,
       list: [],
@@ -95,6 +139,8 @@ export default {
       page: 1,
       day: '',
       show: false,
+      peopleNumber: 4950,
+      count:5000,
       animateShow: false,
       releaseShow: false,
       releaseType: [{
@@ -112,12 +158,12 @@ export default {
   },
   created() {
     this.fetchData()
-    // setTimeout(() => {
-    //   this.animateShow = true
-    // },2000)
   },
   watch: {
     '$router': 'fetchData'
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
   },
   methods: {
     ...mapMutations(['setReleaseSwitch']),
@@ -140,11 +186,28 @@ export default {
         }
       })
 
-      // 判断打卡天数有没有14天 并且判断本地存储里面的sign_days值 
-      if(this.$route.query.sign_days == 14 && !localStorage.getItem('closeTrophy')){
+      // 判断打卡天数有没有14天
+      if(this.$route.query.sign_days >= 14){
         this.animateShow = true
-      }
-      
+      }      
+
+      this.getReadSignCount()
+      this.timer = setInterval(this.setCount, 5000)
+    },
+    getReadSignCount(){
+      axios.get('/book/member/read_sign_stat').then(res=>{
+        switch(res.data.status){
+          case 1:
+            this.count = res.data.data.count
+            this.peopleNumber = res.data.data.count - 50
+          break
+        }
+      })
+    },
+    setCount(){
+      this.peopleNumber < this.count?
+      this.peopleNumber += Math.floor(Math.random()*10+1):
+      this.peopleNumber = this.count
     },
     onLoad() {
       this.day = format(new Date(), 'yyyy-MM-dd')
@@ -230,9 +293,18 @@ export default {
         name:'punchSpeed'
       })
     },
-    closeAnimate(){
-      this.animateShow = false
-      localStorage.setItem('closeTrophy',false)
+    onClickShare(){
+      this.$router.push({
+        name:'punch-share',
+        query:{
+          sign_read_count: this.$route.query.sign_read_count,
+          week_sign_read_count: this.$route.query.week_sign_read_count,
+          continuous_sign_day: this.$route.query.continuous_sign_day,
+          sign_days: this.$route.query.sign_days,
+          ...this.extra,
+          day: this.day
+        }
+      })
     }
   }
 }
@@ -247,7 +319,11 @@ export default {
   width: 100%;
   color: #c0c4cc;
   text-align: center;
-  border-radius: 6px;
+}
+
+.ad-mould,
+.ad-mould .card-banner{
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -385,5 +461,116 @@ export default {
   color: #fff;
   z-index: 10;
   opacity: 0.5;
+}
+
+.my-data{
+  display: grid;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.percentage{
+  font-size: 19px;
+  font-style: italic;
+  background: linear-gradient(90deg, #FE8537,#F02B2B);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.people-number{
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.people-number .num{
+  background: #000;
+  color: #fff;
+  margin-right: 2px;
+  width: 16px;
+  text-align: center;
+  display: inline-block;
+}
+
+.unit{
+  font-size: 14px;
+}
+
+.item-grade{
+  margin: 0 10px;
+}
+
+.item-data{
+  flex: 1;
+  text-align: center;
+  height: 100px;
+  padding: 10px 0;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.item-data .iconfont{
+  position: absolute;
+  font-size: 80px;
+  right: -5px;
+  bottom: 16px;
+  color: #fff;
+  z-index: 1;
+  opacity: 0.8;
+}
+
+.people-number,
+.item-box{
+  position: relative;
+  z-index: 2;
+}
+
+.item-box{
+  padding: 0 10px;
+}
+
+.item-data:nth-child(1){
+  background: linear-gradient(135deg, #dbe0ff, #ddefff);
+}
+
+.item-data:nth-child(2){
+  background: linear-gradient(135deg, #fcecff, #f4edff);
+}
+
+.item-data:nth-child(3){
+  background: linear-gradient(135deg, #def5ff, #e0fcff);
+}
+
+.item-ability .item-box{
+  margin-top: 10px;
+}
+
+.item-data .sub{
+  font-size: 16px;
+  font-weight: 700;
+  padding-bottom: 10px;
+  position: relative;
+}
+
+.item-data .sub::before{
+  content: '';
+  position: absolute;
+  bottom: 0;
+  height: 1px;
+  width: 80px;
+  background: rgba(0, 0, 0, .1);
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+}
+
+.share-grade-btn{
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 20px;
+}
+
+.share-right i.iconfont{
+  margin-left: 10px;
 }
 </style>
