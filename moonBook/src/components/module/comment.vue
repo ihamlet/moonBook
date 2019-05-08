@@ -108,7 +108,7 @@
         </div>
         <div class="comment-tag scroll-x">
           <div class="scroll-item" v-for='(item,index) in commentTag' :key="index">
-            <van-button class="tag-item" type="default">{{item}}</van-button>
+            <van-button round class="tag-item" type="default">{{item}}</van-button>
           </div>
         </div>
       </van-popup>
@@ -536,17 +536,11 @@ export default {
 }
 
 .tag-item{
-  padding: 0 10px;
-  height: 36px;
-  line-height: 36px;
   vertical-align: middle;
   white-space: nowrap;
   text-decoration: none;
   text-overflow: ellipsis;
-  border: 1px solid #E4E7ED;
-  border-radius: 6px;
   margin-right: 15px;
-  font-size: 13px;
 }
 </style>
 
