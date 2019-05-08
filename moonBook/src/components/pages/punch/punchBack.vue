@@ -92,7 +92,7 @@
       <van-icon class="close-icon" name="close" @click="animateShow = false"/>
       <trophy :signDays='$route.query.sign_days'/>
       <div class="share flex flex-justify">
-        <van-button class="share-btn theme-plain" round plain type="primary">领取奖品</van-button>
+        <van-button class="share-btn theme-plain" round plain type="primary" @click="onClickRight">领取奖品</van-button>
       </div>
     </van-popup>
   </div>
@@ -126,7 +126,7 @@ export default {
       }
     },
     numberOfPeople(){
-      return this.peopleNumber.toString().split('')
+      return this.punchNumber.toString().split('')
     }
   },
   data() {
@@ -139,8 +139,9 @@ export default {
       page: 1,
       day: '',
       show: false,
-      peopleNumber: 4950,
+      punchNumber: 4950,
       count:5000,
+      interval:50,
       animateShow: false,
       releaseShow: false,
       releaseType: [{
@@ -192,22 +193,24 @@ export default {
       }      
 
       this.getReadSignCount()
-      this.timer = setInterval(this.setCount, 5000)
+      this.timer = setInterval(this.setCount, 3000)
     },
     getReadSignCount(){
       axios.get('/book/member/read_sign_stat').then(res=>{
         switch(res.data.status){
           case 1:
             this.count = res.data.data.count
-            this.peopleNumber = res.data.data.count - 50
+            this.punchNumber = res.data.data.count - this.interval
           break
         }
       })
     },
     setCount(){
-      this.peopleNumber < this.count?
-      this.peopleNumber += Math.floor(Math.random()*10+1):
-      this.peopleNumber = this.count
+      if(this.punchNumber < this.count){
+        this.punchNumber += Math.floor(Math.random()*5+1)
+      }else{
+        this.punchNumber
+      }     
     },
     onLoad() {
       this.day = format(new Date(), 'yyyy-MM-dd')
@@ -297,10 +300,6 @@ export default {
       this.$router.push({
         name:'punch-share',
         query:{
-          sign_read_count: this.$route.query.sign_read_count,
-          week_sign_read_count: this.$route.query.week_sign_read_count,
-          continuous_sign_day: this.$route.query.continuous_sign_day,
-          sign_days: this.$route.query.sign_days,
           ...this.extra,
           day: this.day
         }

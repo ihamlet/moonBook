@@ -31,9 +31,9 @@
         </div>
         <div class="module">
           <article-content :item='item' @onScrollDomShow='onScrollDomShow' :key="$route.query.id"/>
-          <div class="article-card" v-if='post&&post.sign_read_count'>
+          <div class="article-card" v-if='post'>
             <van-cell>
-              <articleCard :item='post' :detailsId='post.post_id'  :key="$route.query.id" @toDetails='toArticle'/>
+              <articleCard cardStyle='article' :type='postType' :childId='item.child_id' :item='post' :detailsId='post.post_id || post.tushu_id' :key="$route.query.id" @toDetails='toArticle'/>
             </van-cell>
           </div>
           <articleOperation :item='item'/>
@@ -79,6 +79,15 @@ export default {
         content = ''
       }
       return content
+    },
+    postType(){
+      let type
+      if(this.item.extra){
+        type = JSON.parse(this.item.extra).type
+      }else{
+        type = ''
+      }
+      return type
     }
   },
   data() {

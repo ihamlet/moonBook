@@ -303,5 +303,5 @@ export {
   contains,
   videoParse,
   arrayUnique,
-  realFormatSecond,
+  realFormatSecond
 }

@@ -104,7 +104,7 @@
     <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app' />
     <!-- 切换孩子 -->
     <van-actionsheet v-model="isSelectBabyShow" title='切换宝贝'>
-      <selectChild :babyList='babyList' :childInfo='childInfo' @onSelect='selectChild'/>
+      <selectChild :babyList='babyList' @onSelect='selectChild'/>
     </van-actionsheet>
   </div>
 </template>

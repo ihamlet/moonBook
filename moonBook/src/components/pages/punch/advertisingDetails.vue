@@ -160,16 +160,38 @@ export default {
         }
       }
 
-      return axios('/book/member/pick_coupon',data).then(res => {
-        this.picking = false
-        this.detailsCard = true
-        this.msg = res.data.msg
-        switch(res.data.status){
-          case 1:
-            this.successful = true
-          break
-        }
-      })
+      if(this.userDataState.child_id > 0){
+        return axios('/book/member/pick_coupon',data).then(res => {
+          this.picking = false
+          this.detailsCard = true
+          this.msg = res.data.msg
+          switch(res.data.status){
+            case 1:
+              this.successful = true
+            break
+          }
+        })
+      }else{
+        this.$dialog.alert({
+          title: '请添加宝贝',
+          message: '请添加宝贝参与阅读打卡',
+          confirmButtonText:'添加',
+          cancelButtonText:'稍后',
+          showCancelButton: true
+        }).then(() => {
+          this.$router.push({
+            name: 'edit-child',
+            query: {
+              type: 'add',
+              pageTitle: '添加宝贝'
+            }
+          })
+
+          localStorage.removeItem('childInfo')
+        }).catch(() => {
+          this.$router.go(-1)
+        })
+      }
     },
     toPopupList() {
       this.$router.push({

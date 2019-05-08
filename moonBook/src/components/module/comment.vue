@@ -100,10 +100,15 @@
         </div>
         <div class="comment-content flex">
           <div class="field-box">
-              <van-field :border='false' size='large' v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="prompt" rows="1" autosize />
+              <van-field class="comment-field" :border='false' size='large' v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="placeholder" rows="1" autosize />
           </div>
           <div class="submit-btn theme-color">
-            <van-button class="theme-btn" round :loading="isLoading" size="large" type="primary" @click="submit">发 布</van-button>
+            <van-button class="theme-btn" :loading="isLoading" size="large" type="primary" @click="submit">发 布</van-button>
+          </div>
+        </div>
+        <div class="comment-tag scroll-x">
+          <div class="scroll-item" v-for='(item,index) in commentTag' :key="index">
+            <van-button class="tag-item" type="default">{{item}}</van-button>
           </div>
         </div>
       </van-popup>
@@ -120,16 +125,45 @@
 import { mapGetters } from 'vuex'
 import axios from './../lib/js/api'
 import share from './../module/mold/share'
-import { timeago } from './../lib/js/util'
+import { timeago,getRandomArrayElements,shuffle } from './../lib/js/util'
 
 export default {
   name: 'comment',
   props: ['item', 'include', 'type','postId'],
-  computed: {
-    ...mapGetters(['userToken', 'userDataState'])
-  },
   components: {
     share
+  },
+  computed: {
+    ...mapGetters(['userToken', 'userDataState']),
+    placeholder(){
+      let arr = [
+        '说一点什么吧，他都能听得到',
+        '写评论',
+        '随心而起，有感而发',
+        '千头万绪,落笔汇成评论一句',
+        '听说，爱评论的人粉丝多'
+      ]
+      
+      return getRandomArrayElements(arr,1)[0]
+    },
+    commentTag(){
+      let arr = [
+        '棒棒哒',
+        '声音很棒',
+        '加油哦',
+        '很温馨',
+        '非常棒',
+        '很可爱哦',
+        '真帅',
+        '继续努力',
+      ]
+
+      arr.sort(()=>{
+        return Math.random()-0.5
+      })
+
+      return arr
+    }
   },
   data() {
     return {
@@ -139,7 +173,6 @@ export default {
       listLength: '',
       loading: false,
       finished: false,
-      prompt: '写评论',
       page: 1,
       commentId: '',
       show: false,
@@ -360,7 +393,7 @@ export default {
 
 .user-name {
   font-size: 0.875rem /* 14/16 */;
-  color: #303133;
+  color: #909399;
 }
 
 .date {
@@ -492,6 +525,28 @@ export default {
 
 .tags{
   color: #909399;
+}
+
+.comment-field{
+  font-size: 16px;
+}
+
+.comment-tag{
+  padding:20px;
+}
+
+.tag-item{
+  padding: 0 10px;
+  height: 36px;
+  line-height: 36px;
+  vertical-align: middle;
+  white-space: nowrap;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  border: 1px solid #E4E7ED;
+  border-radius: 6px;
+  margin-right: 15px;
+  font-size: 13px;
 }
 </style>
 

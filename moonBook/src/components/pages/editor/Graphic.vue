@@ -40,7 +40,7 @@
         </div>
         <div class="article-card" v-if='post'>
           <van-cell>
-            <articleCard :item='post' :detailsId='post.post_id || post.tushu_id' @toDetails='toArticle'/>
+            <articleCard :item='post' :childId='userDataState.child_id' :detailsId='post.post_id || post.tushu_id' @toDetails='toArticle'/>
           </van-cell>
         </div>
       </van-cell-group>
@@ -198,6 +198,7 @@ export default {
                 title: bookData.title, //内容
                 tushu_id: bookData.tushu_id || 0,
                 sign_read_count: this.$route.query.sign_read_count,
+                sign_days: this.$route.query.sign_days,
                 type:'book'
               }
             }
@@ -205,8 +206,9 @@ export default {
         }else{
           this.post = {
             title: '自选图书', //内容
-            post_id: 0,
+            tushu_id: 0,
             sign_read_count: this.$route.query.sign_read_count,
+            sign_days: this.$route.query.sign_days,
             type:'book'
           }    
         }
@@ -324,7 +326,7 @@ export default {
                 if(this.$route.query.post_id&&this.$route.query.post_id > 0){
                   let commentData = {
                     post_id: this.post.post_id,
-                    contents: '收录了这篇文章',
+                    contents: '收录了',
                   }
 
                   axios.post('/book/SchoolArticleComment/edit?ajax=1', commentData).then(res => {})

@@ -59,8 +59,10 @@ export default {
   props:{
     item:{
       type: Object,
-      default:{
-        photos:[]
+      default(){
+        return {
+          photos:[]
+        }
       }
     },
     type:{
@@ -70,6 +72,10 @@ export default {
     coverShow:{
       type:Boolean,
       default: true
+    },
+    stopClick:{
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -122,19 +128,20 @@ export default {
   updated () {
     this.$nextTick(()=>{
       this.player
-      this.$nextTick(()=>{
-        let imgs = document.getElementsByTagName('img')
-        for(let i = 0 ; i < imgs.length ; i ++){
-          if(imgs[i].src.indexOf(location.origin) == -1){
-            imgs[i].src = imgs[i].src.replace('http:', 'https:')
-          }
+      let imgs = document.getElementsByTagName('img')
+      for(let i = 0 ; i < imgs.length ; i ++){
+        if(imgs[i].src.indexOf(location.origin) == -1){
+          imgs[i].src = imgs[i].src.replace('http:', 'https:')
         }
-      })
+      }
     })
+  },
+  beforeDestroy () {
+    
   },
   methods: {
     toArticle() {
-      if (this.type == 'card') {
+      if (this.type == 'card' && !this.stopClick) {
         this.$router.push({
           name: 'article',
           query: {
