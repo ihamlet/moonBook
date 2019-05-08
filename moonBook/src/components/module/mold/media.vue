@@ -19,6 +19,12 @@
           <div class="video-box" :class="videoItem.rotate == 90?'rotate':''" ref='videoDom' v-else>
             <div id="video"></div>
           </div>
+
+         <!-- <div view-mode="h" view-rotation="auto" view-scale="noborder" view-width="1334" view-height="750" view-align="" v-else>
+            <div style="position: absolute;">
+                <video id="video" ref='videoDom' style="display:none;"></video>
+            </div>
+          </div>  -->
         </div>
       </div>
     </div>
@@ -52,7 +58,10 @@
 <script>
 import userCard from './../mold/userCard'
 import { formatTime } from './../../lib/js/util'
-import './../../../../static/ckplayer/ckplayer/ckplayer'
+// import './../../../../static/ckplayer/ckplayer/ckplayer'
+
+import './../../../../static/mmd/mmd-plugin.min.js'
+import './../../../../static/mmd/mmd-videoplayer.min.js'
 
 export default {
   name: 'media',
@@ -107,6 +116,17 @@ export default {
         obj.video = videoArray
         
         return new ckplayer(obj)
+
+          // let playerPlugin = {             
+          //     videoElement:document.getElementById('video'),//[必填],video元素;
+          //     src: this.item.photos[0].photo,//[必填],video src;
+          //     loop:false,//[可选],是否循环,默认false,true为循环;
+          //     muted:false,//[可选],是否静音,默认false,IOS下只有IOS10生效,安卓生效;
+          //     poster:  this.item.photos[0].thumb,//[可选],video默认图片;
+          //     tryMultipleVideoPlayAtTheSameTime:false,//[可选],尝试同时播放多个视频,默认false;
+          // }
+
+          // return new MMD.VideoPlayer(playerPlugin)
       }
     }
   },
