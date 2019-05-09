@@ -66,13 +66,13 @@ export default {
       if(context.state.ready){     
         let title
         let desc
-        let template_id = products.item.template_id?products.item.template_id:"1"
+        let template_id = products.item.template_id?products.item.template_id:1
   
-        if (template_id == "0") {
+        if (template_id == 0) {
           title = `【阅亮书架】${products.item.cate.cate_name?`#${products.item.cate.cate_name}#`:''}${products.item.title}`
           desc = products.item.details.replace(/<[^>]+>/g,"") || context.state.slogan
         } else {
-          title = '阅亮书架'
+          title = products.item.title || '阅亮书架'
           desc = products.item.hasvideo == "1"? `[小视频]${products.item.details.replace(/<[^>]+>/g,"").length?products.item.details:context.state.slogan}`: `${products.item.details.replace(/<[^>]+>/g,"").length?products.item.details:context.state.slogan}`
         }
 
@@ -80,7 +80,7 @@ export default {
           title: title || products.item.title,
           link: location.href.replace('#','/?#'),
           desc: desc,
-          imgUrl: products.item.imgUrl||products.item.cover?products.item.cover:context.state.logo,
+          imgUrl: products.item.imgUrl ? products.item.imgUrl : context.state.logo || products.item.cover ? products.item.cover : context.state.logo,
           success: products.success
         }
 

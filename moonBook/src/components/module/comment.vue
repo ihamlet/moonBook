@@ -106,8 +106,8 @@
             <van-button class="theme-btn" :loading="isLoading" size="large" type="primary" @click="submit">发 布</van-button>
           </div>
         </div>
-        <div class="comment-tag scroll-x">
-          <div class="scroll-item" v-for='(item,index) in commentTag' :key="index">
+        <div class="comment-tag scroll-x" v-if='item.template_id == 1'>
+          <div class="scroll-item jackInTheBox animated" :style="{animationDelay:`${100*index}ms`}" v-for='(item,index) in commentTag' :key="index" @click="biuCommentTag(item)">
             <van-button round class="tag-item" type="default">{{item}}</van-button>
           </div>
         </div>
@@ -126,6 +126,7 @@ import { mapGetters } from 'vuex'
 import axios from './../lib/js/api'
 import share from './../module/mold/share'
 import { timeago,getRandomArrayElements,shuffle } from './../lib/js/util'
+import { placeholder, commentTag } from './../lib/js/speech'
 
 export default {
   name: 'comment',
@@ -136,33 +137,14 @@ export default {
   computed: {
     ...mapGetters(['userToken', 'userDataState']),
     placeholder(){
-      let arr = [
-        '说一点什么吧，他都能听得到',
-        '写评论',
-        '随心而起，有感而发',
-        '千头万绪,落笔汇成评论一句',
-        '听说，爱评论的人粉丝多'
-      ]
-      
-      return getRandomArrayElements(arr,1)[0]
+      return getRandomArrayElements(placeholder,1)[0]
     },
     commentTag(){
-      let arr = [
-        '棒棒哒',
-        '声音很棒',
-        '加油哦',
-        '很温馨',
-        '非常棒',
-        '很可爱哦',
-        '真帅',
-        '继续努力',
-      ]
-
-      arr.sort(()=>{
+      commentTag.sort(()=>{
         return Math.random()-0.5
       })
 
-      return arr
+      return commentTag
     }
   },
   data() {
@@ -222,6 +204,10 @@ export default {
         }
 
       })
+    },
+    biuCommentTag(item){
+      this.message = item
+      this.submit()
     },
     submit() {
       this.isLoading = true

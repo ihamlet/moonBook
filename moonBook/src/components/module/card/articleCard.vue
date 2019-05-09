@@ -4,7 +4,7 @@
             <div class="type-book flipInX animated"  v-if='item.type == "book"'  @click="toReadStat">
                 <div class="content">
                     <div class="book-sign">
-                        <div class="book-name" v-line-clamp:20="1">本次打卡：《{{item.title}}》</div>
+                        <div class="book-name" v-line-clamp:20="1">本次打卡 {{item.tushu_id == 0?'':`《${item.title}》`}}</div>
                         <div class="flex flex-align">
                             <div class="item-data" v-if='item.sign_days'>
                                 <div class="sign-title">打卡天数</div>

@@ -320,8 +320,10 @@ const actions = {
   //文章发布
   release(context, products){
     let setting = context.state.articleSetting
+    let extraData = products.extra
+    
     let data = {
-      cate_id: setting.tag.cate_id,
+      cate_id: extraData.tushu_id?100:setting.tag.cate_id,
       ad_label: setting.group.group_name,
       details: products.details,
       template_id: products.template_id,

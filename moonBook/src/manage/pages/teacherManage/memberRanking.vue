@@ -1,10 +1,17 @@
 <template>
   <div class="brand-page">
+    <!-- <div class="my-child">
+      <div class="child-card">
+        <div class="avatar">
+          <img :src="childInfo.avatar" />
+        </div>
+      </div>
+    </div> -->
     <van-tabs class="tab-content" v-model="active" background="inherit" :line-width='20' :line-height='4' color="#fff" title-active-color="#fff" title-inactive-color="#fff" @click="onClickTab">
       <van-tab v-for='(list,index) in tabs' :key="index" :title='list.title'>
         <div class="tabs-wrap">
-          <van-tabs v-if='index == active' class="child-tab" type="card" color="#2cadc2" swipeable animated title-active-color="#fff" title-inactive-color="#2cadc2" @change='onChangeTab'>
-            <van-tab v-for='(item,itemIndex) in newTab[index]' :key="itemIndex" :title='item.title'>
+          <van-tabs v-if='index == active' class="child-tab" type="card" color="#2cadc2" swipeable animated title-active-color="#fff" title-inactive-color="#2cadc2" @change='onChangeTab' @disabled="show = true">
+            <van-tab v-for='(item,itemIndex) in newTab[index]' :key="itemIndex" :title='item.title' :disabled='item.disabled'>
               <div class="list-content">
                 <div class="title-name" v-line-clamp:20="1">{{itemIndex == 3?'全平台':item.name}}</div>
                 <van-list class="ranking-list" :class="itemIndex == 3?'ranking-total':''" v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
@@ -25,20 +32,25 @@
                     </div>
                     <van-cell v-if='childIndex > 3' @click="toBabyHome(child)">
                       <div class="child-info flex flex-align">
-                        <div class="info flex flex-align">
-                          <div class="avatar">
-                            <img :src='child.avatar' v-if='child.avatar' @error="imgError"/>
-                            <avatar v-else size='x-small' />
-                          </div>
-                          <div class="info">
-                            <div class="name" v-line-clamp:20="1">{{child.name}}</div>
-                            <div class="banji" v-if='itemIndex == 1'>{{formatBanjiTitle(child.banji_name)}}</div>
-                            <div class="school" v-if='itemIndex == 2'>{{child.school_name}}</div>
-                          </div>
+                        <div class="rank-number">
+                            <svg-ranking :ranking="childIndex"/>
                         </div>
-                        <div class="num">
-                          {{index == 0?child.sign_days:child.sign_read_count}}
-                          <span class="unit">{{index==0?'天':'本'}}</span>
+                        <div class="data-info flex flex-align">
+                          <div class="child-data flex flex-align">
+                            <div class="avatar">
+                              <img :src='child.avatar' v-if='child.avatar' @error="imgError"/>
+                              <avatar v-else size='x-small' />
+                            </div>
+                            <div class="info">
+                              <div class="name" v-line-clamp:20="1">{{child.name}}</div>
+                              <div class="banji" v-if='itemIndex == 1'>{{formatBanjiTitle(child.banji_name)}}</div>
+                              <div class="school" v-line-clamp:20="1" v-if='itemIndex == 2'>{{child.school_name}}</div>
+                            </div>
+                          </div>
+                          <div class="num">
+                            {{index == 0?child.sign_days:child.sign_read_count}}
+                            <span class="unit">{{index==0?'天':'本'}}</span>
+                          </div>
                         </div>
                       </div>
                     </van-cell>
@@ -50,6 +62,11 @@
         </div>
       </van-tab>
     </van-tabs>
+
+    <van-popup v-model="show" position="bottom">
+      <van-picker :columns="columns" @change="onChange" />
+    </van-popup>
+
   </div>
 </template>
 <script>
@@ -86,17 +103,24 @@ export default {
           city_name: this.userDataState.city_name
         }
       }, {
-        title: '总计'
+        title: this.tabTitleSelect,
+        disabled: true
       }]
 
-      return this.tabs.map((e) => {
+      return this.tabs.map(e => {
         return e.content = array
+      })
+    },
+    columns(){
+      return this.times.map(e => {
+        return e.split(',')[0]
       })
     }
   },
   data() {
     return {
       active: 0,
+      times: ['总榜,all', '季榜,season', '上季,last_season', '月榜,month', '上月,last_month', '周榜,week', '上周,last_week'],
       tabsActive: 0,
       tabs: [{
         title: '天数',
@@ -108,16 +132,20 @@ export default {
       page: 1,
       loading: false,
       finished: false,
-      rankList:[]
+      rankList:[],
+      childInfo:'',
+      show: false,
+      time:'all',
+      tabTitleSelect:'总计'
     }
   },
   methods: {
     onLoad() {
-
       let paramsData = this.newTab[this.active][this.tabsActive].params
       let data = {
         params:{
           sort: this.tabs[this.active].sort,
+          time: this.time, 
           ...paramsData
         }
       }
@@ -163,6 +191,13 @@ export default {
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    onChange(picker, value, index){
+      this.tabTitleSelect = value
+      this.time = this.times[index].split(',')[1]
+      this.onLoad().then(()=>{
+        this.loading = false
+      })
     }
   }
 }
@@ -211,8 +246,13 @@ export default {
   position: relative;
 }
 
-.child-info{
+.data-info{
+  flex: 2;
   justify-content: space-between;
+}
+
+.child-data{
+  flex: 2
 }
 
 .num{
@@ -305,6 +345,10 @@ export default {
 
 .unit{
   font-size: 13px;
+}
+
+.school{
+  text-align: left;
 }
 </style>
 <style>

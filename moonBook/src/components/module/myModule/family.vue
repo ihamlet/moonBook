@@ -22,17 +22,7 @@ import { removeArray } from './../../lib/js/util'
 export default {
   name: 'family',
   computed: {
-    ...mapGetters(['userDataState']),
-    item(){
-      let data = {
-        cate_name:'邀请',
-        details:'阅亮书架，与家人一起参与宝贝阅读，记录成长',
-        title: `${this.babyInfo.name}邀请您加入家庭主页`,
-        imgUrl: location.origin + this.babyInfo.avatar
-      }
-
-      return data
-    }
+    ...mapGetters(['userDataState'])
   },
   data() {
     return {

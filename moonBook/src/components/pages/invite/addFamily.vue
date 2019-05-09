@@ -33,11 +33,12 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapActions } from 'vuex'
+import { mapActions,mapState } from 'vuex'
 
 export default {
   name: 'add-family',
   computed: {
+    ...mapState('openWX',['ready']),
     item() {
       let data = {
         cate_name: '邀请',
@@ -61,25 +62,31 @@ export default {
     this.fetchData()
   },
   updated(){   
-    const self = this 
-    let data = {
-      item: self.item,
-      success() {
-        self.$router.push({
-          name: 'baby-home',
-          query: {
-            id: self.$route.query.id
-          }
-        })
-      }
-    }
-    self.share(data)
+    this.wxShare()
   },
   watch: {
-    '$router': 'fetchData'
+    '$router': 'fetchData',
+    ready(){
+      this.wxShare()
+    }
   },
   methods: {
     ...mapActions('openWX', ['share']),
+    wxShare(){
+      const self = this 
+      let data = {
+        item: self.item,
+        success() {
+          self.$router.push({
+            name: 'baby-home',
+            query: {
+              id: self.$route.query.id
+            }
+          })
+        }
+      }
+      self.share(data)
+    },
     fetchData() {
       let data = {
         params: {

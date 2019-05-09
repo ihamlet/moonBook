@@ -230,7 +230,7 @@ export default {
   height: 3.75rem /* 60/16 */;
   border-radius: 50%;
   overflow: hidden;
-  border: 0.1875rem /* 3/16 */ solid #fff;
+  border: 0.1875rem /* 3/16 */ solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 0.3125rem /* 5/16 */ 0.9375rem /* 15/16 */ rgba(0, 0, 0, 0.1);
 }
 

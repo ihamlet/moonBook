@@ -24,7 +24,7 @@
       </div>
 
       <media :item='item' type='card' :key="$route.query.id" :schoolName='schoolName' :schoolId='schoolId'/>
-      <div class="article-card" v-if='post&&(post.post_id || post.tushu_id)'>
+      <div class="article-card" v-if='post&&(post.post_id >= 0 || post.tushu_id >= 0)'>
         <articleCard :item='post' :childId='item.child_id' :detailsId='post.post_id || post.tushu_id' @toDetails='toArticleShare'/>
       </div>
       <div class="temp-type flex flex-align">

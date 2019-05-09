@@ -16,7 +16,7 @@
           <div class="content" v-if='topTabIdx == index'>
             <van-tabs color='#0084ff' type="card" @disabled="onTabDisabledClick" @click="onTabClick">
               <van-tab v-for="(item,itemIndex) in list.content" :disabled="item.disabled" :title="item.title" :key="itemIndex">
-                <van-cell-group v-if="item.content">
+                <van-cell-group v-if="item.content && item.content.list.length">
                   <van-cell v-for='(content,contentIndex) in item.content.list' :key="contentIndex" value-class='cell-value' title-class='cell-title' :value='`${content.read_count}本`' size='large' center @click="toPage(content)">
                     <div class="icon" slot="icon">
                       <svg-ranking :ranking="content.rank" />
@@ -32,6 +32,9 @@
                     </div>
                   </van-cell>
                 </van-cell-group>
+                <div class="no-list" v-else>
+                  尚无数据
+                </div>
               </van-tab>
             </van-tabs>
           </div>

@@ -2,29 +2,31 @@
   <div class="popup-list">
     <van-nav-bar :title="$route.meta.title" />
     <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-      <div class="item-card" v-for="(item,itemIndex) in list" :key="itemIndex">
-        <div class="content" v-if='list.length'>
-          <div class="flex flex-align">
-            <div class="card">
-              <div class="title" v-line-clamp:20="1">{{item.coupon.title}}</div>
-              <div class="name" v-line-clamp:20="1">
-                {{item.coupon.shop_name}}
+      <div class="list" v-if='list.length'>
+        <div class="item-card" v-for="(item,itemIndex) in list" :key="itemIndex">
+          <div class="content">
+            <div class="flex flex-align">
+              <div class="card">
+                <div class="title" v-line-clamp:20="1">{{item.coupon.title}}</div>
+                <div class="name" v-line-clamp:20="1">
+                  {{item.coupon.shop_name}}
+                </div>
+                <div class="time">{{item.coupon.bg_date}}-{{item.coupon.expire_date}}</div>
               </div>
-              <div class="time">{{item.coupon.bg_date}}-{{item.coupon.expire_date}}</div>
-            </div>
-            <div class="status flex flex-justify" @click="toWriteOff(item)" :class="item.is_used==1?'used':''">
-              <div class="make" v-if='item.is_used == 0'>
-                立即<br />使用
-              </div>
-              <div class="icon-used" v-else>
-                <i class="iconfont">&#xe665;</i>
+              <div class="status flex flex-justify" @click="toWriteOff(item)" :class="item.is_used==1?'used':''">
+                <div class="make" v-if='item.is_used == 0'>
+                  立即<br />使用
+                </div>
+                <div class="icon-used" v-else>
+                  <i class="iconfont">&#xe665;</i>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="no-list" v-else>
+      </div>
+      <div class="no-list" v-else>
           尚无卡券 <span class="theme-color" @click="toBabyHome">宝贝主页参与阅读打卡</span>
-        </div>
       </div>
     </van-list>
   </div>

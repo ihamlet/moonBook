@@ -7,7 +7,7 @@
             <div class="saying">读书之法，在循序渐进，熟读而精思。</div>
         </div>
     </div>
-    <div class="share-content">
+    <div class="share-content" v-if='childInfo'>
         <div class="share-data">
             <van-cell center is-link @click="toBabyHome">
                 <div class="flex flex-align">
@@ -53,10 +53,12 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'punch-share',
   computed: {
+    ...mapState('openWX',['ready']),
     list(){
         let arr = [{
             title:'累计打卡',
@@ -72,6 +74,16 @@ export default {
             num: `${this.childInfo.fluent_count}人`
         }]
         return arr
+    },
+    item(){
+      let data = {
+        cate_name:'阅读打卡',
+        details:'提高语言能力从坚持阅读开始',
+        title: '来阅亮书架一起参与阅读打卡吧',
+        imgUrl: location.origin + this.childInfo.avatar,
+      }
+
+      return data
     }
   },
   data() {
@@ -80,12 +92,29 @@ export default {
     }
   },
   created () {
-      this.fetchData()
+    this.fetchData()
+  },
+  updated(){
+    this.wxShare()
   },
   watch: {
-      '$router':'fetchData'
+    '$router':'fetchData',
+    ready(){
+        this.wxShare()
+    }
   },
   methods: {
+    ...mapActions('openWX',['share']),
+    wxShare(){
+      const self = this
+      let data = {
+        item: self.item,
+        success() {
+            self.$router.go(-1)
+        }
+      }
+      self.share(data)
+    },
     fetchData(){
         let data = {
             params: {
