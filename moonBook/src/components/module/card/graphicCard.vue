@@ -23,7 +23,7 @@
         <div v-if='moreBtn' class="more" @click="more(item)"><i class="iconfont">&#xe6f7;</i></div>
       </div>
 
-      <media :item='item' type='card' :key="$route.query.id"/>
+      <media :item='item' type='card' :key="$route.query.id" :schoolName='schoolName' :schoolId='schoolId'/>
       <div class="article-card" v-if='post&&(post.post_id || post.tushu_id)'>
         <articleCard :item='post' :childId='item.child_id' :detailsId='post.post_id || post.tushu_id' @toDetails='toArticleShare'/>
       </div>
@@ -122,6 +122,26 @@ export default {
 
         return obj
       }
+    },
+    schoolName(){
+      let name 
+      if(this.item.from_page){
+        name = this.fromData.teacher_school_name
+      }else if(this.item.user_school_id > 0){
+        name = this.item.user_school_name
+      }
+
+      return name
+    },
+    schoolId(){
+      let id
+      if(this.item.from_page){
+        id = this.fromData.teacher_school_id
+      }else if(this.item.user_school_id > 0){
+        id = this.item.user_school_id
+      }
+
+      return id
     }
   },
   data() {
@@ -148,6 +168,8 @@ export default {
           type: item.template_id,
           back: this.$route.name,
           back_id: this.$route.query.id,
+          school_name: this.schoolName,
+          school_id: this.schoolId,
           point: 'comments'
         }
       })

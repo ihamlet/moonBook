@@ -75,16 +75,24 @@ export default {
       }
     },
     type:{
-      type:String,
+      type: String,
       default:''
     },
     coverShow:{
-      type:Boolean,
+      type: Boolean,
       default: true
     },
     stopClick:{
       type: Boolean,
       default: false
+    },
+    schoolName:{
+      type: String,
+      default:''
+    },
+    schoolId:{
+      type: String,
+      default:''
     }
   },
   components: {
@@ -168,7 +176,9 @@ export default {
             id: this.item.post_id,
             type: this.item.template_id,
             back: this.$route.name,
-            back_id: this.$route.query.id
+            back_id: this.$route.query.id,
+            school_name: this.schoolName,
+            school_id: this.schoolId
           }
         })
       }

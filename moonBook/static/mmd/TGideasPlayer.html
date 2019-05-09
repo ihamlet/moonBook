@@ -1,0 +1,56 @@
+<!-- 感谢TGideas -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div view-mode="h" view-rotation="auto" view-scale="noborder" view-width="1334" view-height="750" view-align="">
+        <div style="position: absolute;">
+            <video id="video" style="display:none;"></video>
+        </div>
+      </div>
+      <script>
+      var src='test.mp4';    
+      var videoPlayer=new MMD.VideoPlayer(
+        {             
+            videoElement:document.getElementById('video'),//[必填],video元素;
+            src:src,//[必填],video src;
+            loop:false,//[可选],是否循环,默认false,true为循环;
+            muted:false,//[可选],是否静音,默认false,IOS下只有IOS10生效,安卓生效;
+            poster:'',//[可选],video默认图片;
+            tryMultipleVideoPlayAtTheSameTime:false,//[可选],尝试同时播放多个视频,默认false;
+            timesParam:[
+                {name:'firstPoint',time:11.48}
+            ],//[可选],video currenttime时间点;
+            onTimes:function(name){                
+                console.log(name)                
+                switch (name)
+                {                    
+                    case 'firstPoint':                                    
+                        break;
+                }
+            },//[可选],video currenttime回调;
+            onStart:function(){                
+                console.log('video start');
+            },//[可选],video第一个画面出现回调;
+            onEnd:function(){                
+                console.log('video end');
+            }//[可选],video播放完成回调;
+        }
+      );    //当isVideoCanAutoPlay属性为true时,则代表允许自动播放;
+      //false时,则需要通过用户点击才能播放视频;
+      if(videoPlayer.isVideoCanAutoPlay)
+      {
+        videoPlayer.play();
+      }    
+      else
+      {        
+        //click to play;
+      }    
+      </script>
+</body>
+</html>

@@ -127,13 +127,9 @@ export default {
           case 1: 
             this.rankList = res.data.data
             this.loading = false
-            this.page++
             if (this.rankList.length >= res.data.count) {
               this.finished = true
             }
-            break
-          case 0:
-
             break
         }
       })

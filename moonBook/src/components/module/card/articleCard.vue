@@ -195,7 +195,7 @@ export default {
 }
 
 .bg{
-    background: linear-gradient(135deg,rgba(33, 150, 243, 0.4), rgba(33, 150, 243, 0.8));
+    background: linear-gradient(135deg,rgba(0, 142, 255, 0.8), rgba(33, 150, 243, 0.2));
     z-index: 1;
 }
 
@@ -239,6 +239,7 @@ export default {
 .book-name{
     height: 40px;
     line-height: 40px;
+    font-size: 16px;
 }
 
 .number{
@@ -248,6 +249,7 @@ export default {
 .theme-plain{
     position: absolute;
     right: 20px;
+    top: 50%
 }
 
 .sign-title{

@@ -13,11 +13,16 @@
             </div>
           </div>
           <div class="article-info flex flex-align">
+            <div class="school-info" v-if='schoolName' @click="toSchool">
+              <div class="school-title theme-color" v-line-clamp:20="1">{{schoolName}}</div>
+            </div>
+            <div class="school-info" v-else-if='item.school' @click="toSchool">
+              <div class="school-title theme-color" v-line-clamp:20="1">{{item.school.title}}</div>
+            </div>            
+            <div class="origin">•</div>
             <div class="read-num">阅读 {{item.views}}</div>
             <div class="origin">•</div>
             <div class="date">{{getTimeAgo(item.create_time)}}</div>
-            <div class="origin" v-if='item.school'>•</div>
-            <div class="school-title" v-if='item.school' v-line-clamp:20="1">{{item.school.title}}</div>
           </div>
         </div>
         <div class="follow-btn" v-if='item.isSubscribe!=3'>
@@ -34,7 +39,7 @@ import { timeago } from './../../lib/js/util'
 
 export default {
   name: 'userCard',
-  props: ['item'],
+  props: ['item','schoolName'],
   components: {
     vipLevel
   },
@@ -57,6 +62,14 @@ export default {
           id: this.item.user_id,
           back: this.$route.name,
           back_id: this.$route.query.id
+        }
+      })
+    },
+    toSchool(){
+      this.$router.push({
+        name:'apps-school',
+        query:{
+          id: this.$route.query.school_id
         }
       })
     },

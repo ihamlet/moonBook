@@ -27,7 +27,7 @@
       </van-nav-bar>
       <div class="container" :class="item.template_id == 0&&item.cover?'noTop':''">
         <div class="module-user-card page-padding">
-          <userCard :item='item' v-if='item.template_id != "0"'/>
+          <userCard :item='item' v-if='item.template_id != "0"' :schoolName='$route.query.school_name' :schoolId='$route.query.school_id'/>
         </div>
         <div class="module">
           <article-content :item='item' @onScrollDomShow='onScrollDomShow' :key="$route.query.id"/>
