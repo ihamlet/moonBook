@@ -1,13 +1,13 @@
 <template>
   <div class="head head-background" ref="head">
-    <van-nav-bar :border='false' :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" fixed :title="fixedHeaderBar?$route.meta.title:userInfo.name" @click-left="onClickLeft">
+    <van-nav-bar :border='false' :class="[fixedHeaderBar?'theme-nav':'']" :key='$route.query.id' :zIndex="100" fixed :title="fixedHeaderBar?$route.meta.title:userInfo.name" @click-left="onClickLeft">
       <div class="head-bar-icon" slot="left">
         <i class="iconfont">&#xe60e;</i>
       </div>
       <div class="head-bar-icon bar-right" slot="right">
         <i class="iconfont" @click="toHelp">&#xe618;</i>
         <i class="iconfont coupon" @click="toPopupList">&#xe68b;</i>
-        <div class="tips" v-if='couponCount > 0'>
+        <div class="tips" v-if='couponCount > 0' @click="toPopupList">
           <van-tag round type="danger">{{couponCount}}</van-tag>
         </div>
       </div>

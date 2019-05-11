@@ -1,6 +1,6 @@
 <template>
   <div class="class-zoom page-padding">
-     <van-nav-bar :title="$route.query.name?'':'班级动态'" :border='false'/>
+     <van-nav-bar :title="$route.query.name?'':'班级动态'" :border='false' :key='$route.query.id'/>
       <van-pull-refresh v-model="loading" @refresh="onRefresh">
         <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
           <div class="list" v-if='list.length > 0'>

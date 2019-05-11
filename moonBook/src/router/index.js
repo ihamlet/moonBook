@@ -44,6 +44,8 @@ import Share from '@/components/pages/share'
 
 import Search from '@/components/module/search/searchPage'
 
+import videoPage from '@/components/pages/video/videoPage'
+
 import Iframe from '@/cloud/iframe' //外部引入
 
 import Edit from './edit'
@@ -55,6 +57,7 @@ import Flyers from './flyers'
 import Coupon from './coupon'
 import Special from './special'
 import Audio from './audio'
+
 
 Vue.use(Router)
 
@@ -81,6 +84,11 @@ export default new Router({
           path:'/Iframe',
           name:'iframe',
           component: Iframe
+        },
+        {
+          path:'/video-page',
+          name:'videoPage',
+          component: videoPage
         },
         {
           path:'/search',

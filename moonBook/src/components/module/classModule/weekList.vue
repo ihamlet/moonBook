@@ -1,6 +1,6 @@
 <template>
   <div class="week-list">
-    <van-nav-bar title="读书榜" />
+    <van-nav-bar title="读书榜" :key='$route.query.id'/>
     <van-tabs color='#0084ff' :line-width='20' :line-height='4' animated swipeable @change='onChange'>
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">

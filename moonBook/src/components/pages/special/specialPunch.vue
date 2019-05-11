@@ -4,7 +4,7 @@
       <van-tab v-for="(list,index) in tab" :key="index" :title='list.title'>
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad"  v-if='index == tabIndex'>
-                <div class="list" v-if='list.content.length'>
+                <div class="list" v-if='list.content&&list.content.length'>
                     <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
                         <van-cell>
                             <graphicCard :item='item'/>

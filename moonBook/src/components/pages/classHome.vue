@@ -1,6 +1,6 @@
 <template>
   <div class="class-home page-padding" v-if='hackReset'>
-    <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed :border='false'>
+    <van-nav-bar :zIndex='100' :class="[fixedHeaderBar?'theme-nav':'']" fixed :border='false' :key='$route.query.id'>
       <div class="head-bar-title" slot="title" @click="cutover">
         {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="userDataState.teacher_school_id > 0">&#xe608;</i>
       </div>

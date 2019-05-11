@@ -1,6 +1,6 @@
 <template>
   <div class="comment-list" id='comment' ref='comment' v-if='flag'>
-    <van-nav-bar :border='false' :zIndex='0'>
+    <van-nav-bar :border='false' :zIndex='0'  :key='$route.query.id'>
       <div class="zan" slot="right">赞 {{item.zan_num}}</div>
       <div class="comment" slot="left">{{listLength}} 评论</div>
     </van-nav-bar>
@@ -130,7 +130,7 @@ import { placeholder, commentTag } from './../lib/js/speech'
 
 export default {
   name: 'comment',
-  props: ['item', 'include', 'type','postId'],
+  props: ['item', 'include', 'type','postId','isCommentShow'],
   components: {
     share
   },
@@ -173,6 +173,9 @@ export default {
           this.$refs.comment.scrollIntoView()
         }) 
       }
+    },
+    show(val){
+      this.$emit('showComment',val)
     }
   },
   methods: {
@@ -305,7 +308,7 @@ export default {
           this.$refs.field.focus()
         })
 
-        type == 'reply' ? this.score = false : this.score = true
+        this.score = type == 'reply' ? false : true
       }
     },
     timeAgo(time) {

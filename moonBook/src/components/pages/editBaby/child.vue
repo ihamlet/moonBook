@@ -1,6 +1,6 @@
 <template>
   <div class="add-child  page-padding">
-    <van-nav-bar :title="pageTitle" :right-text="$route.query.type=='edit'?'注销':''" @click-right="onClickRight('delete')" />
+    <van-nav-bar :title="pageTitle" :right-text="$route.query.type=='edit'?'注销':''" @click-right="onClickRight('delete')"/>
     <div class="avatar-uploader">
       <van-uploader :after-read="onRead">
         <div class="prompt" v-if='!childInfo.avatar'>

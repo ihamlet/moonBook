@@ -1,6 +1,6 @@
 <template>
   <div class="readstat page-padding">
-    <van-nav-bar :zIndex='99' :class="fixedHeaderBar?'theme-nav':''" :border='false' :title="fixedHeaderBar?$route.meta.title:childInfo.name"
+    <van-nav-bar :zIndex='99' :class="fixedHeaderBar?'theme-nav':''" :key="$route.query.id" :border='false' :title="fixedHeaderBar?$route.meta.title:childInfo.name"
       fixed @click-right="show = true">
       <div class="head-bar-icon" slot="right">
         <i class="iconfont">&#xe635;</i>

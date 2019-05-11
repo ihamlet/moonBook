@@ -12,17 +12,17 @@
               <vip-level v-if='item.card_level' :animate='true' :level='item.card_level.level' />
             </div>
           </div>
-          <div class="article-info flex flex-align">
+          <div class="article-info flex flex-align">   
+            <div class="read-num">阅读 {{item.views}}</div>
+            <div class="origin">•</div>
+            <div class="date">{{getTimeAgo(item.create_time)}}</div>
+            <div class="origin" v-if='schoolName || item.school'>•</div>
             <div class="school-info" v-if='schoolName' @click="toSchool">
               <div class="school-title theme-color" v-line-clamp:20="1">{{schoolName}}</div>
             </div>
             <div class="school-info" v-else-if='item.school' @click="toSchool">
               <div class="school-title theme-color" v-line-clamp:20="1">{{item.school.title}}</div>
-            </div>            
-            <div class="origin">•</div>
-            <div class="read-num">阅读 {{item.views}}</div>
-            <div class="origin">•</div>
-            <div class="date">{{getTimeAgo(item.create_time)}}</div>
+            </div>       
           </div>
         </div>
         <div class="follow-btn" v-if='item.isSubscribe!=3'>
@@ -112,7 +112,7 @@ export default {
   font-size: 0.8125rem /* 13/16 */;
 }
 
-.school-title{
+.school-info{
   flex: 1;
 }
 

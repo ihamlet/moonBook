@@ -10,7 +10,7 @@
       <!-- <adLabel :item='item' v-if='item.ad_label'/> -->
       <div class="main">
         <div class="media-content">
-          <media :item='item' type='details' :key="$route.query.id"/>
+          <media :item='item' type='details' :key="$route.query.id" :isCommentShow='isCommentShow'/>
         </div>
       </div>
     </article>
@@ -22,7 +22,7 @@ import userCard from './../module/mold/userCard'
 
 export default {
   name: 'article-content',
-  props: ['item', 'type'],
+  props: ['item', 'type', 'isCommentShow'],
   components: {
     media,
     userCard,

@@ -2,29 +2,22 @@
   <div class="container" id='media' @click="toArticle" :class="$route.name == 'article'?'article':''">
     <div class="title" v-if='type=="card"&&item.template_id=="0"' v-line-clamp:20="2">{{item.title}}</div>
 
-    <div class="text" ref='textContent' v-if='item.details' v-line-clamp:20="type == 'card'?2:0" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
+    <div class="text" ref='textContent' v-if='item.details&&isDetailsShow' v-line-clamp:20="type == 'card'?2:0" :class="item.template_id == 0?'content':''" v-html='item.details'></div>
     <!-- 视频  -->
     <div class="media" :class="item.hasvideo=='1'?'video-cover':''" v-if='item.hasvideo=="1"'>
       <div class="thumb" v-for='(videoItem,videoIndex) in item.photos' :key="videoIndex">
         <!-- 卡片 -->
         <div class="video-thumb" v-if='videoItem&&videoItem.is_video == "1"'>
-          <div class="player-card" :class="videoItem.rotate == '90'?'vertical':''" v-if="type=='card'">
+          <div class="player-card" :class="[videoItem.rotate == '90'?'vertical':'',isCommentShow?'poster':'']" v-if="type == 'card' || isCommentShow">
             <div class="player">
               <i class="iconfont">&#xe639;</i>
             </div>
             <img :src="item.cover" alt="视频封面" />
             <van-tag class="duration" size="medium" color="rgba(0,0,0,.5)">{{getDuration(videoItem.duration)}}</van-tag>
           </div>
-          <!-- 正文播放 -->
-          <div class="video-box" :class="videoItem.rotate == 90?'rotate':''" ref='videoDom' v-else>
-            <div id="video"></div>
+          <div v-else-if='!isCommentShow' class="video-wrapper">
+            <video ref='videoPlayer' id='video' controls='controls' :src="videoItem.photo" :poster="videoItem.thumb" preload="auto" x-webkit-airplay='true' airplay="allow" webkit-playsinline="true" x5-playsinline playsinline="true"></video>
           </div>
-
-         <!-- <div view-mode="h" view-rotation="auto" view-scale="noborder" view-width="1334" view-height="750" view-align="" v-else>
-            <div style="position: absolute;">
-                <video id="video" ref='videoDom' style="display:none;"></video>
-            </div>
-          </div>  -->
         </div>
       </div>
     </div>
@@ -57,11 +50,8 @@
 </template>
 <script>
 import userCard from './../mold/userCard'
-import { formatTime } from './../../lib/js/util'
-// import './../../../../static/ckplayer/ckplayer/ckplayer'
-
-import './../../../../static/mmd/mmd-plugin.min.js'
-import './../../../../static/mmd/mmd-videoplayer.min.js'
+import { formatTime, contains } from './../../lib/js/util'
+import qs from 'qs'
 
 export default {
   name: 'media',
@@ -93,6 +83,14 @@ export default {
     schoolId:{
       type: String,
       default:''
+    },
+    isDetailsShow:{
+      type: Boolean,
+      default: true
+    },
+    isCommentShow:{
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -109,53 +107,16 @@ export default {
         num = 8
       }
       return num
-    },
-    player() {
-      if(this.item.photos&&this.item.photos.length){
-        let obj = this.videoObject
-        let array = this.item.photos
-        let videoArray = ''
-        array.forEach(element => {
-          if(element.is_video == 1){
-            videoArray = element.photo
-            obj.poster = element.thumb
-          }
-        })
-        obj.video = videoArray
-        
-        return new ckplayer(obj)
-
-          // let playerPlugin = {             
-          //     videoElement:document.getElementById('video'),//[必填],video元素;
-          //     src: this.item.photos[0].photo,//[必填],video src;
-          //     loop:false,//[可选],是否循环,默认false,true为循环;
-          //     muted:false,//[可选],是否静音,默认false,IOS下只有IOS10生效,安卓生效;
-          //     poster:  this.item.photos[0].thumb,//[可选],video默认图片;
-          //     tryMultipleVideoPlayAtTheSameTime:false,//[可选],尝试同时播放多个视频,默认false;
-          // }
-
-          // return new MMD.VideoPlayer(playerPlugin)
-      }
     }
   },
   data () {
+    let u = navigator.userAgent
     return {
-      videoObject: {
-        container: '#video',
-        variable: 'player',
-        loaded: 'loadedHandler',
-        loop: false,
-        config: '',
-        debug: true,
-        drag: 'start',
-        seek: 0,
-        video: ''
-      }
+      playing: false
     }
   },
   updated () {
     this.$nextTick(()=>{
-      this.player
       let imgs = document.getElementsByTagName('img')
       for(let i = 0 ; i < imgs.length ; i ++){
         if(imgs[i].src.indexOf(location.origin) == -1){
@@ -163,9 +124,6 @@ export default {
         }
       }
     })
-  },
-  beforeDestroy () {
-    
   },
   methods: {
     toArticle() {
@@ -227,6 +185,12 @@ export default {
   overflow: hidden;
 }
 
+.player-card.vertical.poster {
+  width: auto;
+  height: auto;
+  overflow: hidden;
+}
+
 .player-card.vertical img {
   width: 100%;
   height: 100%;
@@ -257,6 +221,39 @@ export default {
 
 .video-box.rotate{
   width: 230px;
+}
+
+/* .tg-video{
+  position: relative;
+} */
+
+.video-wrapper{
+  position: relative;
+}
+
+.btn-player{
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: rgba(0, 0, 0, .5);
+  top: 0;
+  text-align: center;
+  line-height: 60px;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  margin-left: -30px;
+  margin-top: -30px;
+}
+
+.btn-player i.iconfont{
+  color: #fff;
+  font-size: 35px;
+}
+
+.player-card.vertical.poster,
+#video{
+  border-radius: 10px;
 }
 </style>
 <style>

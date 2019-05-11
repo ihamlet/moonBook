@@ -1277,4 +1277,45 @@ i.iconfont.vip-1 {
   background: linear-gradient(135deg, #FFC107, #FF9800);
   box-shadow: 0 2px 6px rgba(255, 152, 0, 0.2)
 }
+
+
+/* TGplayer
+以下样式设置的目的:
+video在IOS9(包括9)以上系统版本,微信/手Q里面能自动播放,
+除满足上述条件以外的IOS系统播放video,
+需要借助以下样式设置来屏蔽默认video控件,
+并通过videoPlayer.currentTime来实现播放效果
+*/
+/* .IIV::-webkit-media-controls-play-button,
+.IIV::-webkit-media-controls-start-playback-button {
+    opacity: 0;
+    pointer-events: none;
+    width: 5px;
+}
+
+button.buttonStyle {
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    background-color: #fff;
+    transform: translate3d(-50%,-50%,0);
+}
+
+.compatibleStyle{
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -ms-backface-visibility: hidden;
+    -webkit-perspective: 0;
+    -webkit-transform: translate3d(0,0,0);
+    visibility: visible;
+}
+
+
+.IIV::-webkit-media-controls-play-button,
+.IIV::-webkit-media-controls-start-playback-button {
+    opacity: 0;
+    pointer-events: none;
+    width: 5px;
+} */
 </style>

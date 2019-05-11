@@ -1,6 +1,6 @@
 <template>
   <div class="school-home page-padding">
-    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" fixed :border='false'>
+    <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" fixed :border='false' :key='$route.query.id'>
       <div class="head-bar-title" slot="title" @click="actionsheetShow = true">
         {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont">&#xe608;</i>
       </div>

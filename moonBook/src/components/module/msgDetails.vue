@@ -1,6 +1,6 @@
 <template>
   <div class="msg-details">
-    <van-nav-bar title="消息详情" left-text="返回" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar title="消息详情" left-text="返回" left-arrow @click-left="onClickLeft" :key='$route.query.id'/>
     <div class="container">
       <div class="content">
         <div class="hd flex flex-align">

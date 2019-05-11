@@ -59,6 +59,10 @@
         <van-progress v-if='percent!=0' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
       </div>
     </van-popup>
+
+    <div class="slogan">
+      {{$store.state.slogan}}
+    </div>
   </div>
 </template>
 <script>
@@ -292,12 +296,20 @@ export default {
           })
         }
       } else if (this.grapicData.text.length < 12000) {
+
+          let tags
+          if(this.$route.query.cate_id == 116){
+            tags = `${this.userDataState.teacher_banji_name},课堂故事`
+          }else{
+            tags = this.$route.query.tags || '宝贝主页'
+          }
+
           // 发布
           let data = {
             details: this.grapicData.text,
             template_id: 1,
             photos: this.grapicData.photos,
-            tags: this.$route.query.tags || '宝贝主页',
+            tags: tags,
             extra: this.post,
           }
 

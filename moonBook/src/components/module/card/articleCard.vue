@@ -24,7 +24,7 @@
                 <Round/>
             </div>
             <div class="article-share" v-else-if='flag' @click="toDetails">
-                <media type='card' :item='article' :key="detailsId" :stopClick='true'/>
+                <media type='card' :item='article' :key="detailsId" :stopClick='true' :isDetailsShow='textShow'/>
                 <div class="info-bar flex flex-align" v-if='article'>
                     <div class="date">{{getTimeAgo(article.create_time)}}</div>
                     <div class="author">来自:{{username}}</div>
@@ -73,7 +73,8 @@ export default {
         return {
             article:{},
             username:'',
-            flag: false
+            flag: false,
+            textShow: true
         }
     },
     created() {
@@ -96,6 +97,7 @@ export default {
                     if(res.data.status == 1){
                         this.flag = true
                         this.article = res.data.data.post
+                        res.data.data.post.template_id == 1? this.textShow = true : this.textShow = false
                         this.username = res.data.data.post.user.username
                     }
                 })
@@ -151,7 +153,7 @@ export default {
 }
 
 .info{
-   flex: 2;
+   flex: 3;
    padding-left: 10px;
 }
 
@@ -264,5 +266,18 @@ export default {
 .info-bar{
     justify-content: space-between;
     color: #C0C4CC;
+}
+</style>
+<style>
+.video-wrapper{
+    position: relative;
+}
+
+.video-play_btn{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background: #000;
+    display: block;
 }
 </style>

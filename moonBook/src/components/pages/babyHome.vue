@@ -1,6 +1,6 @@
 <template>
   <div class="baby-home page-padding" v-if='hackReset'>
-    <van-nav-bar :border='false' fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft">
+    <van-nav-bar :border='false' fixed :class="[fixedHeaderBar?'theme-nav':'']" :zIndex="100" @click-left="onClickLeft" :key='$route.query.id'>
       <div class="head-bar-title" slot="title" @click="selectBaby">
         {{pageTitle}} <i class="iconfont" v-if='babyList.length'>&#xe608;</i>
       </div>

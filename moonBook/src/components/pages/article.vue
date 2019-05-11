@@ -4,7 +4,7 @@
       <img :src="item.cover" v-http2https/>
     </div>
     <div class="page-container">
-      <van-nav-bar :border='false' :class="item.cover&&item.template_id == 0&&!themeBarSearch?'theme-nav':''" fixed :zIndex='100'>
+      <van-nav-bar :border='false' :class="item.cover&&item.template_id == 0&&!themeBarSearch?'theme-nav':''" fixed :zIndex='100' :key="$route.query.id">
         <div class="head-bar-title" slot="title">
           <transition name="slide-fade" mode="out-in">
             <div class="head-bar-title-conent" key="1" v-if='!themeBarSearch'>
@@ -30,7 +30,7 @@
           <userCard :item='item' v-if='item.template_id != "0"' :schoolName='$route.query.school_name' :schoolId='$route.query.school_id'/>
         </div>
         <div class="module">
-          <article-content :item='item' @onScrollDomShow='onScrollDomShow' :key="$route.query.id"/>
+          <article-content :item='item' @onScrollDomShow='onScrollDomShow' :key="$route.query.id" :isCommentShow='isCommentShow'/>
           <div class="article-card" v-if='post'>
             <van-cell>
               <articleCard cardStyle='article' :type='postType' :childId='item.child_id' :item='post' :detailsId='post.post_id || post.tushu_id' :key="$route.query.id" @toDetails='toArticle'/>
@@ -39,7 +39,7 @@
           <articleOperation :item='item'/>
         </div>
         <div class="comment" ref='commentDom'>
-          <comment :item='item' include='include' :key="$route.query.id" :postId='item.post_id'/>
+          <comment :item='item' include='include' :key="$route.query.id" :postId='item.post_id' @showComment='onClickisShowComment'/>
         </div>
       </div>
     </div>
@@ -102,7 +102,8 @@ export default {
       item: {
         photos:[]
       },
-      hackReset:true
+      hackReset: true,
+      isCommentShow: false
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -196,6 +197,9 @@ export default {
         this.hackReset = true
         this.fetchData()
       })
+    },
+    onClickisShowComment(bl){
+      this.isCommentShow = bl
     }
   }
 }

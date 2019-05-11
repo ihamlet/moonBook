@@ -1,7 +1,7 @@
 <template>
   <div class="img-preview flex flex-justify" v-if="imgArray.length > 0">
     <div class="grid" v-for="(item,index) in imgArray" :key="index">
-      <img :src="item.thumb" />
+      <img :src="item.thumb" @error="imgError"/>
     </div>
   </div>
   <div class="text-preview" v-line-clamp:20="2" v-else>{{text}}</div>
@@ -24,6 +24,11 @@ export default {
       })
 
       return arr.slice(0,4)
+    }
+  },
+  methods: {
+    imgError(e) {
+      e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     }
   }
 }

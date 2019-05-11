@@ -1,6 +1,6 @@
 <template>
   <div class="notice" v-if='notice.length!=0'>
-    <van-nav-bar title="通知" :border='false'/>
+    <van-nav-bar title="通知" :border='false' :key="$route.query.id"/>
     <div class="module">
       <graphicCard :item='notice[0]' type='notice' title='老师'/>
     </div>

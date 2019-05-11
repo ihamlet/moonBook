@@ -155,7 +155,7 @@ export default {
           case 1: 
             this.rankList = res.data.data
             this.loading = false
-            if (this.rankList.length >= res.data.count) {
+            if (this.rankList.length >= 20) {
               this.finished = true
             }
             break

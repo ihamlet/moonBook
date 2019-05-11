@@ -1,56 +1,86 @@
-<!-- 感谢TGideas -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <div view-mode="h" view-rotation="auto" view-scale="noborder" view-width="1334" view-height="750" view-align="">
-        <div style="position: absolute;">
-            <video id="video" style="display:none;"></video>
+<html lang='zh'>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=320,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="Copyright" content="Copyright (c) 2006-2016 TENCENT">
+        <title>mmd_videoPlayer_normal</title>
+        <style>
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                /*text-align: center*/
+                /*background-color: #cccccc*/
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            .duration{
+                position: absolute;
+                color: #fff;
+                top: 10px;
+                left: 10px;
+            }
+
+
+        </style>
+        <style type="text/css">
+
+        </style>
+    </head>
+
+    <body>
+        <script src="//mat1.gtimg.com/libs/jquery/1.12.0/jquery.js"></script>
+        <script src="//ossweb-img.qq.com/images/js/mmdVideoPlayer/mmd.videoplayer.min.1.0.1.js"></script>        
+        <div style="position: absolute">
+            <video id="video" style="display:none"></video>
+            <div id="loading" class="compatibleStyle"></div>
+            <div id="end" class="compatibleStyle"></div>
+            <div class="duration"></div>
         </div>
-      </div>
-      <script>
-      var src='test.mp4';    
-      var videoPlayer=new MMD.VideoPlayer(
-        {             
-            videoElement:document.getElementById('video'),//[必填],video元素;
-            src:src,//[必填],video src;
-            loop:false,//[可选],是否循环,默认false,true为循环;
-            muted:false,//[可选],是否静音,默认false,IOS下只有IOS10生效,安卓生效;
-            poster:'',//[可选],video默认图片;
-            tryMultipleVideoPlayAtTheSameTime:false,//[可选],尝试同时播放多个视频,默认false;
-            timesParam:[
-                {name:'firstPoint',time:11.48}
-            ],//[可选],video currenttime时间点;
-            onTimes:function(name){                
-                console.log(name)                
-                switch (name)
-                {                    
-                    case 'firstPoint':                                    
-                        break;
+        <button id="hit" class="buttonStyle">需要交互才能播放,点我播放视频</button>
+        <script>
+            // 获取参数
+            function GetQueryString(name){
+                var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)")
+                var r = window.location.search.substr(1).match(reg)
+                if(r!=null)return  unescape(r[2]); return null
+            }
+
+            var src = GetQueryString('videoUrl')
+            var poster = GetQueryString('videoThumb')
+            var btn = document.getElementById('hit')
+            var duration = GetQueryString('duration')
+
+            $('#loading').append(`<img src='${poster}'/>`)
+            $('.duration').text(duration)
+
+            var videoPlayer = new MMD.VideoPlayer({
+                videoElement: document.getElementById('video'),
+                src: src,
+                onStart: function () {
+                    console.log('video start')
+                    $('.duration').css('display','none')
+                },
+                onEnd: function () { 
+                    console.log('video end')
+                    btn.style.display = 'block'
+                    $('.duration').css('display','block')
                 }
-            },//[可选],video currenttime回调;
-            onStart:function(){                
-                console.log('video start');
-            },//[可选],video第一个画面出现回调;
-            onEnd:function(){                
-                console.log('video end');
-            }//[可选],video播放完成回调;
-        }
-      );    //当isVideoCanAutoPlay属性为true时,则代表允许自动播放;
-      //false时,则需要通过用户点击才能播放视频;
-      if(videoPlayer.isVideoCanAutoPlay)
-      {
-        videoPlayer.play();
-      }    
-      else
-      {        
-        //click to play;
-      }    
-      </script>
-</body>
+            })
+
+            if (videoPlayer.isVideoCanAutoPlay) {
+                videoPlayer.play()
+            } else {
+                btn.style.display = 'block'
+                btn.addEventListener('click', function (e) {
+                    btn.style.display = 'none'
+                    videoPlayer.play()
+                })
+            }
+        </script>
+    </body>
 </html>

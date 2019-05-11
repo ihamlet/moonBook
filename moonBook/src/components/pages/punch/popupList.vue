@@ -102,10 +102,6 @@ export default {
 }
 </script>
 <style scoped>
-.list {
-  padding: 15px;
-}
-
 .popup-card {
   background: #fff;
   margin-bottom: 15px;

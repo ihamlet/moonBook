@@ -14,7 +14,7 @@
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
-            {{getTimeAgo(item.create_time)}} <span v-if='item.sign_days!="0"&&item.tags'>{{`坚持打卡${item.sign_days}天`}}</span>
+            {{getTimeAgo(item.create_time)}} <span v-if='item.sign_days!="0"&&item.tags=="阅读打卡"'>{{`坚持打卡${item.sign_days}天`}}</span>
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0&&type!="zoom"'>
@@ -236,20 +236,39 @@ export default {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
     toPopupHelp(item){
-      let type = 'baby'
+      switch(item.tags){
+        case '宝贝主页':
+          this.$router.push({
+            name:'popupHelp',
+            query:{
+              type: 'baby'
+            }
+          })
+        break
 
-      if(item.tags == '宝贝主页'){
-        type = 'baby'
-      }else{
-        type = 'read'
+        case '课堂故事':
+          
+          // this.$router.push({
+          //   name:'class-home',
+          //   query:{
+          //     id: this.item.class_id,
+          //     school_id:this.schoolId,
+          //     school_name: this.schoolName,
+          //     banji_id:this.item.class_id,
+          //     banji_name:''
+          //   }
+          // })
+        break
+
+        case '阅读打卡':
+          this.$router.push({
+            name:'popupHelp',
+            query:{
+              type: 'read'
+            }
+          })
+        break
       }
-
-      this.$router.push({
-        name:'popupHelp',
-        query:{
-          type: type
-        }
-      })
     }
   }
 }

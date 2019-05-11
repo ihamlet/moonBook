@@ -1,6 +1,6 @@
 <template>
   <div class="edit-class page-padding">
-    <van-nav-bar :border='false' fixed :title="schoolName" />
+    <van-nav-bar :border='false' fixed :title="schoolName" :key='$route.query.id'/>
     <div class="container">
       <div class="baby-info flex flex-justify" v-if='$route.query.registerType!="teacher"'>
         <div class="avatar flex" v-if='avatar'>

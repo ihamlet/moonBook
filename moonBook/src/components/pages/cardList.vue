@@ -1,6 +1,6 @@
 <template>
   <div class="card-list-container page-padding">
-    <van-nav-bar class="card-list-nav-bar" :zIndex='99' fixed :border='false' :title="$route.meta.title" />
+    <van-nav-bar class="card-list-nav-bar" :zIndex='99' fixed :border='false' :title="$route.meta.title" :key='$route.query.id'/>
     <div class="list">
       <div class="content" v-if='cardList&&cardList.length'>
 
