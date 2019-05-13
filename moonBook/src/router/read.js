@@ -15,6 +15,9 @@ import punchSpeed from '@/components/pages/punch/punchSpeed'
 import writeOff from '@/components/pages/punch/writeOff'
 import Calendar from '@/components/module/mold/calendar'
 
+//成就
+import achievementPage from '@/components/pages/achievement/achievementPage'
+import achievementShare from '@/components/pages/achievement/achievementShare'
 
 let readRouter = [{
     path: '/bookshelf',
@@ -63,6 +66,16 @@ let readRouter = [{
       title: '打卡成功',
       isFooterBar: false
     }
+  },
+  {
+    path: '/achievement-page',
+    name: 'achievement-page',
+    component: achievementPage,
+  },
+  {
+    path: '/achievement-share',
+    name: 'achievement-share',
+    component: achievementShare,
   },
   {
     path:'/punchSpeed',

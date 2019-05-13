@@ -1,10 +1,10 @@
 <template>
   <div class="punch-share">
     <div class="img-poster">
-        <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/punch-share.jpg" />
+        <img :src="imgArrRandom[0]" />
         <div class="content">
             <div class="day">{{$route.query.day}}</div>
-            <div class="saying">读书之法，在循序渐进，熟读而精思。</div>
+            <div class="saying">{{sayingText[0]}}</div>
         </div>
     </div>
     <div class="share-content" v-if='childInfo'>
@@ -54,6 +54,7 @@
 <script>
 import axios from './../../lib/js/api'
 import { mapState, mapActions } from 'vuex'
+import { saying } from './../../lib/js/speech'
 
 export default {
   name: 'punch-share',
@@ -84,11 +85,29 @@ export default {
       }
 
       return data
+    },
+    sayingText(){
+        saying.sort(()=>{
+            return Math.random()-0.5
+        })
+
+        return saying
+    },
+    imgArrRandom(){
+        this.imgArr.sort(()=>{
+            return Math.random()-0.5
+        })
+        return this.imgArr
     }
   },
   data() {
     return {
         childInfo:'',
+        imgArr:[
+            'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/punch-share.jpg',
+            'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/punch-share-1.jpg',
+            'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/punch-share-2.jpg'
+        ]
     }
   },
   created () {

@@ -47,6 +47,8 @@ export default {
     }
   },
   created () {
+    console.log('我们都是宇宙的尘埃，茫茫星辰，在找寻闪闪发光的你。')
+
     this.fetchData()
     this.wxConfig()
     
@@ -97,12 +99,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_yjj0qgnet4l.eot');
-  src: url('//at.alicdn.com/t/font_893274_yjj0qgnet4l.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_yjj0qgnet4l.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_yjj0qgnet4l.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_yjj0qgnet4l.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_yjj0qgnet4l.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_x8aew4pldo.eot');
+  src: url('//at.alicdn.com/t/font_893274_x8aew4pldo.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_x8aew4pldo.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_x8aew4pldo.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_x8aew4pldo.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_x8aew4pldo.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,

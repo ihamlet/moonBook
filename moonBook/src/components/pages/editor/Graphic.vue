@@ -296,20 +296,16 @@ export default {
           })
         }
       } else if (this.grapicData.text.length < 12000) {
+          
+          // cate_id = 116 课堂故事
 
-          let tags
-          if(this.$route.query.cate_id == 116){
-            tags = `${this.userDataState.teacher_banji_name},课堂故事`
-          }else{
-            tags = this.$route.query.tags || '宝贝主页'
-          }
+          console.log('/book/memberUser/getInfo,没有班级名称为空字符串')
 
           // 发布
           let data = {
             details: this.grapicData.text,
             template_id: 1,
             photos: this.grapicData.photos,
-            tags: tags,
             extra: this.post,
           }
 
@@ -319,18 +315,20 @@ export default {
           }
 
 
-          if(this.$route.query.back == 'baby-home'){
-            data.child_id = this.$route.query.id
-          }
-
-          if(this.$route.query.back == 'class-home'){
-            data.banji_id = this.$route.query.id
+          switch(this.$route.query.back){
+            case 'baby-home':
+              data.child_id = this.$route.query.id
+              data.tags = '宝贝主页' 
+            break
+            case 'class-home':
+              data.banji_id = this.$route.query.id
+              data.tags = `${this.tag.cate_name},${this.userDataState.teacher_banji_name}`
+            break
+            case 'apps-school':
+              data.school_id = this.$route.query.id
+            break
           }
           
-          if(this.$route.query.back == 'apps-school'){
-            data.school_id = this.$route.query.id
-          }
-
           this.release(data).then(res=>{
             switch(res.data.status){
               case 1:

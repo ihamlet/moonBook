@@ -23,7 +23,61 @@ const commentTag = [
     '🏆 很精彩'
   ]
 
-  export {
-    placeholder,
-    commentTag
-  }
+const saying = [
+  '聪明在于勤奋，天才在于积累',
+  '腹有诗书气自华，读书万卷始通神',
+  '少成若天性，习惯如自然',
+  '锲而不舍，金石可镂',
+  '敏而好学，不耻下问',
+  '读书之法，在循序渐进，熟读而精思'
+]
+
+const medal = [{
+  name:'好的开始',
+  day: 1
+},{
+  name:'小试牛刀',
+  day: 21
+},{
+  name:'坚持不懈',
+  day: 50
+},{
+  name:'渐入佳境',
+  day: 100
+},{
+  name:'扬帆远航',
+  day: 150
+},{
+  name:'持之以恒',
+  day: 200
+},{
+  name:'学富五车',
+  day: 250
+},{
+  name:'阅读之星',
+  day: 300
+}]
+
+
+//阅读等级
+function medalLevel(num) {
+  let arr = []
+  medal.forEach((e,i) =>{
+    if( num >= e.day ){
+      arr.push({
+        ...e,
+        level: i+1
+      })
+    }
+  })
+
+  return arr
+}
+
+export {
+  placeholder,
+  commentTag,
+  saying,
+  medal,
+  medalLevel
+}

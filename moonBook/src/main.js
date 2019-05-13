@@ -64,7 +64,7 @@ VueAMap.initAMapApiLoader({
 
 Vue.config.productionTip = false
 
-//设置一个全局指令
+//设置全局指令
 Vue.directive('http2https', {
   // 当被绑定的元素插入到 DOM 中时……
   inserted(el){

@@ -27,7 +27,7 @@
               <span class="age">{{childInfo.age}}岁</span>
             </div>
           </div>
-          <div class="label">{{childInfo.title}}</div>
+          <div class="label" v-if='childInfo'>{{level?`Lv.${level.level} ${level.name}`:`Lv.0 ${childInfo.title}`}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
         </div>
         <div class="to-banji-btn" v-if='childInfo.banji_id > 0&&childInfo.is_mine'>
@@ -112,6 +112,7 @@
 import axios from "./../lib/js/api"
 import { mapActions, mapGetters,mapState } from 'vuex'
 import { format, timeago } from "./../lib/js/util.js"
+import { medalLevel } from './../lib/js/speech'
 import wave from "./../module/animate/anWave"
 import avatar from "./../module/avatar"
 import reading from "./../module/reading"
@@ -167,6 +168,17 @@ export default {
       }
 
       return array
+    },
+    level(){
+      let arr = []
+
+      if(this.childInfo){
+        arr = medalLevel(this.childInfo.sign_days)
+      }
+
+      let obj = arr.pop()
+
+      return obj
     }
   },
   data() {

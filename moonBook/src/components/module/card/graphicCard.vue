@@ -30,13 +30,13 @@
       <div class="temp-type flex flex-align">
         <div class="temp-list flex flex-align">
           <van-tag round color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-if='item.from_page'>
-            <div @click="toTeacherSchoolHome">{{fromData.teacher_school_name}}</div>
+            <div @click="toTeacherSchoolHome">{{schoolName}}</div>
           </van-tag> 
           <van-tag round color='#0084ff' class="school-tag"  v-line-clamp:20="1" size="large" v-else-if='item.user_school_id > 0'>
             <div @click="toSchoolHome(item)">{{item.user_school_name}}</div>
           </van-tag>
-          <div class="cate theme-color" size="large" plain v-if='item.tags' @click='toPopupHelp(item)'>
-              #{{item.tags}}#
+          <div class="cate theme-color" size="large" v-line-clamp:20="1" plain v-if='item.tags' @click='toPopupHelp(item)'>
+              # {{getTags[0]}} {{getTags[1]?`来自:${getTags[1]}`:''}}
           </div>
         </div>
       </div>
@@ -142,15 +142,16 @@ export default {
       }
 
       return id
+    },
+    getTags(){
+       return this.item.tags?this.item.tags.split(','):''
     }
   },
   data() {
     return {
       imgIndex: 0,
       articleShow: false,
-      shareShow:false,
-      qrImage:'',
-      link:''
+      shareShow:false
     }
   },
   methods: {
@@ -246,25 +247,24 @@ export default {
           })
         break
 
-        case '课堂故事':
-          
-          // this.$router.push({
-          //   name:'class-home',
-          //   query:{
-          //     id: this.item.class_id,
-          //     school_id:this.schoolId,
-          //     school_name: this.schoolName,
-          //     banji_id:this.item.class_id,
-          //     banji_name:''
-          //   }
-          // })
-        break
-
         case '阅读打卡':
           this.$router.push({
             name:'popupHelp',
             query:{
               type: 'read'
+            }
+          })
+        break
+
+        default:          
+          this.$router.push({
+            name:'class-home',
+            query:{
+              id: this.item.class_id,
+              school_id:this.schoolId,
+              school_name: this.schoolName,
+              banji_id:this.item.class_id,
+              banji_name: this.getTags[1]?this.getTags[1]:''
             }
           })
         break
@@ -345,7 +345,7 @@ export default {
 
 .school-tag{
   margin-right: .625rem /* 10/16 */;
-  max-width: 180px;
+  max-width: 160px;
 }
 
 .vip-highlight{
@@ -359,5 +359,9 @@ export default {
 
 .article-card{
   margin-bottom: 10px;
+}
+
+.cate {
+  flex: 2;
 }
 </style>

@@ -11,7 +11,7 @@
           <card type='myInfo' :rankingData='tab[topTabIdx].content[secondTabIdx].content.myInfo' />
         </div>
       </div>
-      <van-tabs  color='#0084ff' :line-width='20' :line-height='4'  @change="onTopTabClick"  sticky swipeable animated>
+      <van-tabs color='#0084ff' :line-width='20' :line-height='4'  @change="onTopTabClick"  sticky swipeable animated>
         <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
           <div class="content" v-if='topTabIdx == index'>
             <van-tabs color='#0084ff' type="card" @disabled="onTabDisabledClick" @click="onTabClick">
@@ -84,15 +84,14 @@ export default {
   },
   data() {
     return {
-      topTabIdx: 0,
+      topTabIdx:0,
       secondTabIdx: 0,
       times: ['总榜', '季榜', '上季', '月榜', '上月', '周榜', '上周'],
       time: 'all',
       show: false,
       fixedHeaderBar: true,
       domHeight: "",
-      tab: [
-        {
+      tab: [{
           title: "宝贝榜",
           content: [
             {
@@ -242,6 +241,7 @@ export default {
     },
     getTabContent() {
       let content = this.tab[this.topTabIdx].content[this.secondTabIdx]
+      
       let toast = this.$toast.loading({
         forbidClick: true,
         loadingType: 'spinner'
@@ -255,8 +255,7 @@ export default {
         }
       }
 
-
-        data.params.banji_id = this.userDataState.banji_id
+        data.params.banji_id = this.userDataState.banji_id > 0 ? this.userDataState.banji_id : this.userDataState.teacher_banji_id
         data.params.child_id = this.userDataState.child_id
         axios.get('/book/SchoolTushuBorrow/getRank', data).then(res => {
           toast.clear()
@@ -277,6 +276,7 @@ export default {
 
       let currentContent = currentTopTab.content[this.secondTabIdx]
       currentContent.api.params.time = SELECT_VALUE[value]
+      
       this.getTabContent()
       this.show = false
     },
@@ -289,34 +289,34 @@ export default {
       })
     },
     toPage(content) {
-      if (this.topTabIdx == 0) {
-        this.$router.push({
-          name: 'baby-home',
-          query: {
-            id: content.child_id,
-            back: this.$route.name
-          }
-        })
-      }
-
-      if (this.topTabIdx == 1) {
-        this.$router.push({
-          name: 'class-home',
-          query: {
-            id: content.banji_id,
-            back: this.$route.name
-          }
-        })
-      }
-
-      if (this.topTabIdx == 2) {
-        this.$router.push({
-          name: 'apps-school',
-          query: {
-            id: content.school_id,
-            back: this.$route.name
-          }
-        })
+      switch(this.topTabIdx){
+        case 0:
+          this.$router.push({
+            name: 'baby-home',
+            query: {
+              id: content.child_id,
+              back: this.$route.name
+            }
+          })
+        break
+        case 1:
+          this.$router.push({
+            name: 'class-home',
+            query: {
+              id: content.banji_id,
+              back: this.$route.name
+            }
+          })
+        break
+        case 2:
+          this.$router.push({
+            name: 'apps-school',
+            query: {
+              id: content.school_id,
+              back: this.$route.name
+            }
+          })
+        break
       }
     }
   }

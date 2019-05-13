@@ -1,20 +1,12 @@
 <template>
   <div class="readstat page-padding">
-    <van-nav-bar :zIndex='99' :class="fixedHeaderBar?'theme-nav':''" :key="$route.query.id" :border='false' :title="fixedHeaderBar?$route.meta.title:childInfo.name"
-      fixed @click-right="show = true">
-      <div class="head-bar-icon" slot="right">
+    <van-nav-bar :zIndex='99' :class="fixedHeaderBar?'theme-nav':''" :key="$route.query.id" :border='false' :title="fixedHeaderBar?$route.meta.title:childInfo.name" fixed>
+      <!-- <div class="head-bar-icon" slot="right">
         <i class="iconfont">&#xe635;</i>
-      </div>
+      </div> -->
     </van-nav-bar>
     <div class="head" ref="head">
       <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
-        <div class="volume flex flex-justify">
-          阅读量
-          <div class="flex">
-            <div class="number">{{childInfo.sign_read_count}}</div>
-            <div class="unit">本</div>
-          </div>
-        </div>
         <div class="content">
           <div class="avatar" v-if="childInfo.avatar">
             <img :src="childInfo.avatar" alt="宝贝头像" @error="imgError" v-http2https>
@@ -25,27 +17,26 @@
             <van-tag class="tag" color="#FFC107" round type="danger" size='medium'>{{Math.floor(childInfo.read_level)}}级</van-tag>
           </div>
         </div>
-        <div class="volume flex flex-justify">
-          坚持阅读
-          <div class="flex">
-            <div class="number">{{childInfo.sign_days}}</div>
-            <div class="unit">天</div>
-          </div>
+      </div>
+      <div class="data-list flex flex-align">
+        <div class="volume" v-for='(item,index) in dataList' :key="index">
+          <div class="name">{{item.name}}</div>
+          <div class="number">{{item.val}}</div>
         </div>
       </div>
     </div>
     <div class="container">
       <div class="gutter">
-        <div class="honor flex flex-align">
-          <div class="flex-box certificate flex flex-align flex-justify">
-            <i class="iconfont">&#xe63c;</i>
-            <span>奖状:{{childInfo.donation_count}}</span>
+        <van-cell title='我的成就' :value='level?`Lv.${level.level}"${level.name}"`:""' size="large" is-link center @click="toAchievement">
+          <div class="icon cell-icon icon-medal" slot="icon">
+            <i class="iconfont">&#xe74a;</i>
           </div>
-          <div class="flex-box safflower flex flex-align flex-justify">
-            <i class="iconfont">&#xe64a;</i>
-            <span>红花:{{childInfo.flower_count}}</span>
+        </van-cell>
+        <van-cell title='排行榜' is-link size="large" @click="toRanking" center>
+          <div class="icon cell-icon icon-ranking" slot="icon">
+            <i class="iconfont">&#xe61d;</i>
           </div>
-        </div>
+        </van-cell>
       </div>
 
       <div class="gutter gap">
@@ -59,22 +50,6 @@
       </div>
 
       <div class="gutter gap">
-        <van-nav-bar title="阅读排名" right-text="排行榜" @click-right="toRanking" :border='false' />
-        <div class="ranking">
-          <div class="ranking-content flex flex-align">
-            <div class="circle flex flex-justify" v-for='(list,index) in ranking' :key="index">
-              <div class="number" :class="list.type"><b>{{list.myInfo.rank}}</b></div>
-              <div class="name">{{list.name}}</div>
-              <div class="diff">
-                {{list.rankDiff}}名
-                <i class="iconfont rise" v-if='list.rankDiff > 0'>&#xe63e;</i>
-                <i class="iconfont drop" v-else>&#xe64f;</i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="gutter gap">
         <van-cell-group>
           <van-cell size='large'>
             <div class="text flex flex-justify">影响<span class="data">{{childInfo.fluent_count}}人</span> 阅读了<span class="data">{{childInfo.fluent_read_count}}
@@ -84,13 +59,14 @@
       </div>
     </div>
 
-    <div class="gutter gap">
-      <van-button class="theme-btn" round size="large" type="primary" @click="show = true">分享</van-button>
-    </div>
 
-    <van-popup v-model="show" class="rank-share-popup" get-container='#app'>
+    <!-- 原先的截图分享 弃用 -->
+    <!-- <div class="gutter gap">
+      <van-button class="theme-btn" round size="large" type="primary" @click="show = true">分享</van-button>
+    </div> -->
+    <!-- <van-popup v-model="show" class="rank-share-popup" get-container='#app'>
       <rank-share :childInfo='childInfo' @close='show = false' />
-    </van-popup>
+    </van-popup> -->
 
     <slogan />
   </div>
@@ -99,8 +75,9 @@
 import axios from './../lib/js/api'
 import avatar from './../module/avatar'
 import numberGrow from './../module/animate/numberGrow'
-import rankShare from './../module/mold/rankShare'
+// import rankShare from './../module/mold/rankShare'
 import slogan from './../module/slogan'
+import { medalLevel } from './../lib/js/speech'
 
 export default {
   name: 'readstat',
@@ -108,11 +85,25 @@ export default {
     numberGrow,
     avatar,
     slogan,
-    rankShare
+    // rankShare
   },
   computed: {
     text() {
       return this.currentRate.toFixed(0) + '%'
+    },
+    dataList(){
+      let arr = [{
+        name:'借阅量',
+        val: this.childInfo.read_count
+      },{
+        name:'阅读打卡',
+        val: this.childInfo.sign_read_count
+      },{
+        name:'坚持阅读',
+        val: this.childInfo.sign_days
+      }]
+
+      return arr
     }
   },
   data() {
@@ -122,7 +113,8 @@ export default {
       fixedHeaderBar: true,
       domHeight: "",
       show: false,
-      currentRate:85
+      currentRate:85,
+      level:''
     }
   },
   mounted() {
@@ -138,6 +130,8 @@ export default {
     fetchData() {
       axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
         this.childInfo = res.data.data
+
+        this.level = medalLevel(res.data.data.sign_days).pop() //勋章等级
 
         let banjiData = {
           params: {
@@ -203,6 +197,15 @@ export default {
     //     })
     //   }
     // },
+    toAchievement(){
+      this.$router.push({
+        name: 'achievement-page',
+        query: {
+          ...this.childInfo,
+          back: this.$route.name
+        }
+      })
+    },
     toRanking() {
       this.$router.push({
         name: 'ranking',
@@ -235,16 +238,12 @@ export default {
 }
 
 .baby-info {
-  padding: 4.0625rem /* 65/16 */ 1.875rem /* 30/16 */;
+  padding: 45px 0 0;
   color: #fff;
-  justify-content: space-between;
 }
 
 .baby-info .content {
   text-align: center;
-  position: absolute;
-  left: 50%;
-  transform: translate3d(-50%, 0, 0);
 }
 
 .baby-info .content,
@@ -305,8 +304,8 @@ export default {
   border-radius: 8px;
 }
 
-.container {
-  margin-top: -1.875rem /* 30/16 */;
+.container{
+  margin-top: -10px;
 }
 
 .gutter {
@@ -434,6 +433,32 @@ export default {
 
 .learning-circle{
   justify-content: center;
+}
+
+.data-list{
+  color: #fff;
+  padding-bottom: 20px;
+}
+
+.data-list .volume{
+  flex: 1;
+}
+
+.cell-icon i.iconfont{
+  font-size: 26px;
+  margin-right: 10px;
+}
+
+.icon-medal i.iconfont{
+  background-image: linear-gradient(127deg, #FFC107 0%, #FF5722 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.icon-ranking i.iconfont{
+  background-image: linear-gradient(127deg, #FFEB3B 0%, #FFC107 100%);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 </style>
 <style>
