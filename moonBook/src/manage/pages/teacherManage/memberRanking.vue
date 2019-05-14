@@ -207,6 +207,7 @@ export default {
     },
     onClickTab(index){
       this.active = index
+      this.tabsActive = 0
       this.onLoad().then(()=>{
         this.loading = false
       })
