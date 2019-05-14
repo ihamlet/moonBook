@@ -116,10 +116,6 @@ export default {
   flex: 1;
 }
 
-.origin{
-  margin: 0 .3125rem /* 5/16 */;
-}
-
 .handle-card {
   flex: 1;
   justify-content: space-between;

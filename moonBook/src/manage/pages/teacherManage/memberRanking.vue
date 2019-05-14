@@ -1,12 +1,28 @@
 <template>
   <div class="brand-page">
-    <!-- <div class="my-child">
-      <div class="child-card">
-        <div class="avatar">
-          <img :src="childInfo.avatar" />
+    <div class="my-child">
+      <div class="my-child-card flex flex-align">
+        <div class="my-child-info flex flex-align">
+          <div class="my-child-hd flex flex-align">
+            <div class="avatar" @click="toBabyHome(childInfo)">
+              <img :src="childInfo.avatar" />
+            </div>
+            <div class="info">
+              <div class="name">{{childInfo.name}}</div>
+              <div class="school flex flex-align">
+                <div class="banji-name">{{formatBanjiTitle(childInfo.banji_name)}}</div>
+                <div class="origin">•</div>
+                <div class="theme-color" v-line-clamp:20="1" @click="toSchoolHome">{{childInfo.school_name}}</div>
+              </div>
+            </div>
+          </div>
+          <div class="num">
+            {{active == 0?childInfo.sign_days:childInfo.sign_read_count}}
+            <span class="unit">{{active==0?'天':'次'}}</span>
+          </div>
         </div>
       </div>
-    </div> -->
+    </div>
     <van-tabs class="tab-content" v-model="active" background="inherit" :line-width='20' :line-height='4' color="#fff" title-active-color="#fff" title-inactive-color="#fff" @click="onClickTab">
       <van-tab v-for='(list,index) in tabs' :key="index" :title='list.title'>
         <div class="tabs-wrap">
@@ -27,7 +43,7 @@
                       <div class="name" v-line-clamp:20="1">{{child.name}}</div>
                       <div class="num">
                         {{index == 0?child.sign_days:child.sign_read_count}}
-                        <span class="unit">{{index==0?'天':'本'}}</span>
+                        <span class="unit">{{index==0?'天':'次'}}</span>
                       </div>
                     </div>
                     <van-cell v-if='childIndex > 3' @click="toBabyHome(child)">
@@ -49,7 +65,7 @@
                           </div>
                           <div class="num">
                             {{index == 0?child.sign_days:child.sign_read_count}}
-                            <span class="unit">{{index==0?'天':'本'}}</span>
+                            <span class="unit">{{index==0?'天':'次'}}</span>
                           </div>
                         </div>
                       </div>
@@ -120,13 +136,13 @@ export default {
   data() {
     return {
       active: 0,
-      times: ['总榜,all', '季榜,season', '上季,last_season', '月榜,month', '上月,last_month', '周榜,week', '上周,last_week'],
+      times: ['总计,all', '月榜,month', '上月,last_month'],
       tabsActive: 0,
       tabs: [{
         title: '天数',
         sort: 'read_sign'
       }, {
-        title: '本数',
+        title: '次数',
         sort: 'sign_read_count'
       }],
       page: 1,
@@ -139,8 +155,31 @@ export default {
       tabTitleSelect:'总计'
     }
   },
+  created () {
+    this.fetchData()
+  },
+  watch: {
+    '$router':'fetchData'
+  },
   methods: {
+    fetchData(){
+      let data = {
+        params:{
+          child_id: this.$route.query.id
+        }
+      }
+
+      axios.get('/book/baby/getInfo',data).then(res => {
+        switch(res.data.status){
+          case 1:
+            this.childInfo = res.data.data
+          break
+        }
+      })
+    },
     onLoad() {
+      console.log('/book/SchoolStudents/get_students','现在本数换成次数了  看换一个什么字段')
+
       let paramsData = this.newTab[this.active][this.tabsActive].params
       let data = {
         params:{
@@ -155,8 +194,12 @@ export default {
           case 1: 
             this.rankList = res.data.data
             this.loading = false
-            if (this.rankList.length >= 20) {
+
+            if ( this.rankList.length >= 20 ) {
               this.finished = true
+            } else {
+              this.finished = false
+              this.loading = false
             }
             break
         }
@@ -197,6 +240,21 @@ export default {
       this.time = this.times[index].split(',')[1]
       this.onLoad().then(()=>{
         this.loading = false
+      })
+    },
+    formatBanjiTitle(text) {
+      if (text && text.indexOf('班') == -1) {
+        return text + '班'
+      } else {
+        return text
+      }
+    },
+    toSchoolHome(){
+      this.$router.push({
+        name:'apps-school',
+        query:{
+          id: this.childInfo.school_id
+        }
       })
     }
   }
@@ -349,6 +407,40 @@ export default {
 
 .school{
   text-align: left;
+  font-size: 14px;
+}
+
+.my-child{
+  padding: 20px 15px 0;
+  overflow: hidden;
+}
+
+.my-child-card{
+  width: 100%;
+  border-radius: 8px 0 8px 8px;
+  background: #fff;
+}
+
+.my-child-info{
+  width: 100%;
+  padding: 10px;
+  justify-content: space-between
+}
+
+.school-name{
+  flex: 1;
+}
+
+.my-child-info .info{
+  flex: 2
+}
+
+.my-child-info .num{
+  flex: 1
+}
+
+.my-child-hd{
+  flex: 3
 }
 </style>
 <style>

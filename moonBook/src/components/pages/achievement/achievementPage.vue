@@ -1,12 +1,11 @@
 <template>
     <div class="achievement-page">
-        <IconMedal :level="level"/>
-
+      <IconMedal :level="level"/>
       <van-cell>
           <van-row>
             <van-col span="6" v-for='(item,index) in medalList' :key="index">
                 <div class="icon flex flex-justify">
-                    <IconMedal :level="index+1"/>
+                    <IconMedal :animate='level >= index+1?1:0' :gray='level >= index+1?false:true' :level="index+1"/>
                 </div>
                 <div class="name">{{item.name}}</div>
             </van-col>
@@ -27,7 +26,6 @@ export default {
     computed: {
         level(){
             let num = medalLevel(this.$route.query.sign_days).pop().level
-
             return num
         }
     },

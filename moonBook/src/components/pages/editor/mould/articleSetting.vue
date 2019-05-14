@@ -114,7 +114,7 @@ export default {
       }
      
       this.resultList = array
-      //   设置默认
+      // 设置默认
       let arr = []
       array.map(e => {
         arr.push(e.name)

@@ -1280,6 +1280,9 @@ i.iconfont.vip-1 {
   box-shadow: 0 2px 6px rgba(255, 152, 0, 0.2)
 }
 
+.origin{
+  margin: 0 .3125rem /* 5/16 */;
+}
 
 /* TGplayer
 以下样式设置的目的:

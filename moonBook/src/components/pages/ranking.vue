@@ -11,7 +11,7 @@
           <card type='myInfo' :rankingData='tab[topTabIdx].content[secondTabIdx].content.myInfo' />
         </div>
       </div>
-      <van-tabs color='#0084ff' :line-width='20' :line-height='4'  @change="onTopTabClick"  sticky swipeable animated>
+      <van-tabs color='#0084ff' :line-width='20' :line-height='4' @change="onTopTabClick" sticky swipeable animated>
         <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
           <div class="content" v-if='topTabIdx == index'>
             <van-tabs color='#0084ff' type="card" @disabled="onTabDisabledClick" @click="onTabClick">
