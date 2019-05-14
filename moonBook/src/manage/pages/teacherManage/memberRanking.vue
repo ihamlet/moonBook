@@ -44,8 +44,7 @@
                         <svg-ranking :ranking="childIndex+1" />
                       </div>
                       <div class="avatar">
-                        <img :src="child.avatar" v-if='child.avatar' @error="imgError"/>
-                        <avatar v-else size='x-small'/>
+                        <img :src="child.avatar" @error="imgError"/>
                       </div>
                       <div class="name" v-line-clamp:20="1">{{child.name}}</div>
                       <div class="num">
@@ -61,8 +60,7 @@
                         <div class="data-info flex flex-align">
                           <div class="child-data flex flex-align">
                             <div class="avatar">
-                              <img :src='child.avatar' v-if='child.avatar' @error="imgError"/>
-                              <avatar v-else size='x-small' />
+                              <img :src='child.avatar' @error="imgError"/>
                             </div>
                             <div class="info">
                               <div class="name" v-line-clamp:20="1">{{child.name}}</div>
@@ -95,14 +93,12 @@
 <script>
 import axios from './../../../../src/components/lib/js/api'
 import svgRanking from './../../../components/module/animate/svg/ranking'
-import avatar from './../../../components/module/avatar'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'memberRanking',
   components: {
     svgRanking,
-    avatar
   },
   computed: {
     ...mapGetters(['userDataState']),
