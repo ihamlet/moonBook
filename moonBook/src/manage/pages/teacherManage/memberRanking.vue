@@ -7,7 +7,7 @@
     </van-nav-bar>
 
     <div class="my-child" ref='head'>
-      <div class="my-child-card flex flex-align">
+      <div class="my-child-card flex flex-align" v-if="$route.query.id > 0">
         <div class="my-child-info flex flex-align">
           <div class="my-child-hd flex flex-align">
             <div class="my-child-icon">
