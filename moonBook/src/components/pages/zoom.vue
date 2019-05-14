@@ -5,7 +5,7 @@
       <div class="bg-black"></div>
     </div>
     <div class="page-container">
-      <van-pull-refresh v-model="loading" @refresh="onRefresh">
+      <van-pull-refresh v-model="loading" @refresh="onRefresh" :key="$route.query.id">
         <div class="container">
           <div class="module">
             <div class="user-card flex flex-align" ref="userCrad">
@@ -67,11 +67,11 @@
   </div>
 </template>
 <script>
-import axios from "./../lib/js/api";
-import { sum } from "./../lib/js/util.js";
-import graphicCard from "./../module/card/graphicCard";
-import reading from "./../module/reading";
-import { mapGetters,mapActions } from "vuex";
+import axios from "./../lib/js/api"
+import { sum, arrayUnique } from "./../lib/js/util.js"
+import graphicCard from "./../module/card/graphicCard"
+import reading from "./../module/reading"
+import { mapGetters,mapActions } from "vuex"
 
 export default {
   name: "zoom",
@@ -128,7 +128,7 @@ export default {
     $router: "fetaData"
   },
   mounted() {
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll)
   },
   methods: {
     ...mapActions(['getUserData']),
@@ -152,7 +152,7 @@ export default {
           }
 
           axios.get('/book/BabyBorrow/getList',babyBorrowData).then(res=>{
-            this.lateBook = res.data.data
+            this.lateBook = arrayUnique(res.data.data,'book_id')
           })
         })
       }
@@ -348,6 +348,17 @@ export default {
   position: relative;
 }
 
+.user-card::before{
+  content: '';
+  position: absolute;
+  top: -60px;
+  border-style: solid;
+  border-width: 0px 0px 60px 800px;
+  border-color: transparent transparent #fff transparent;
+  width: 0px;
+  height: 0px;
+}
+
 .user-card .info{
   position: absolute;
   left: 13px;
@@ -359,7 +370,7 @@ export default {
 .subscribe{
   position: absolute;
   right: 15px;
-  top: -20px;
+  top: -10px;
 }
 
 .subscribe .theme-btn{

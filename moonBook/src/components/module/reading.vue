@@ -90,7 +90,6 @@ export default {
       `
     },
     toBookDetails(list){
-      console.log(list)
       this.$router.push({
         name:'book-details',
         query:{

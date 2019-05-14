@@ -5,7 +5,7 @@
         <div class="avatar">
           <img v-if="item[avatar]" @error='imgError' :src="item[avatar]" :alt="item[name]" v-http2https>
         </div>
-        <div class="name" v-line-clamp:20="2">
+        <div class="name" v-line-clamp:20="1">
           {{item[name]}}
         </div>
       </div>
@@ -35,7 +35,7 @@ export default {
 </script>
 <style scoped>
 .content {
-  padding-left: 0.625rem /* 10/16 */;
+  padding: 15px;
 }
 
 .avatar {

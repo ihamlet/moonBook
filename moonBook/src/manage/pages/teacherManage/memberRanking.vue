@@ -1,17 +1,24 @@
 <template>
   <div class="brand-page">
-    <div class="my-child">
+    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''" title="打卡榜" fixed :border='false'  @click-right="onClickRight" :key="$route.query.id">
+        <div class="child-avatar" slot="right">
+          <van-button round class="theme-btn more-btn" size="small" type="primary">更多榜单</van-button>
+        </div>
+    </van-nav-bar>
+
+    <div class="my-child" ref='head'>
       <div class="my-child-card flex flex-align">
         <div class="my-child-info flex flex-align">
           <div class="my-child-hd flex flex-align">
+            <div class="my-child-icon">
+              <svg-ranking :ranking="childInfo.rank" />
+            </div>
             <div class="avatar" @click="toBabyHome(childInfo)">
-              <img :src="childInfo.avatar" />
+              <img :src="childInfo.avatar" @error="imgError"/>
             </div>
             <div class="info">
               <div class="name">{{childInfo.name}}</div>
               <div class="school flex flex-align">
-                <div class="banji-name">{{formatBanjiTitle(childInfo.banji_name)}}</div>
-                <div class="origin">•</div>
                 <div class="theme-color" v-line-clamp:20="1" @click="toSchoolHome">{{childInfo.school_name}}</div>
               </div>
             </div>
@@ -136,7 +143,7 @@ export default {
   data() {
     return {
       active: 0,
-      times: ['总计,all', '月榜,month', '上月,last_month'],
+      times: ['总计,all', '本月  ,month', '上月,last_month'],
       tabsActive: 0,
       tabs: [{
         title: '天数',
@@ -152,58 +159,79 @@ export default {
       childInfo:'',
       show: false,
       time:'all',
-      tabTitleSelect:'总计'
+      tabTitleSelect:'总计',
+      fixedHeaderBar: true,
+      domHeight:0
     }
   },
-  created () {
-    this.fetchData()
-  },
-  watch: {
-    '$router':'fetchData'
+  // created () {
+  //   this.fetchData()
+  // },
+  // watch: {
+  //   '$router':'fetchData'
+  // },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll)
   },
   methods: {
-    fetchData(){
-      let data = {
-        params:{
-          child_id: this.$route.query.id
-        }
-      }
+    // fetchData(){
+    //   let data = {
+    //     params:{
+    //       child_id: this.$route.query.id
+    //     }
+    //   }
 
-      axios.get('/book/baby/getInfo',data).then(res => {
-        switch(res.data.status){
-          case 1:
-            this.childInfo = res.data.data
-          break
-        }
-      })
-    },
+    //   axios.get('/book/baby/getInfo',data).then(res => {
+    //     switch(res.data.status){
+    //       case 1:
+    //         this.childInfo = res.data.data
+    //       break
+    //     }
+    //   })
+    // },
     onLoad() {
-      console.log('/book/SchoolStudents/get_students','现在本数换成次数了  看换一个什么字段')
+      // /book/SchoolStudents/get_students 学生列表接口
 
       let paramsData = this.newTab[this.active][this.tabsActive].params
       let data = {
         params:{
+          child_id: this.$route.query.id,
           sort: this.tabs[this.active].sort,
           time: this.time, 
           ...paramsData
         }
       }
 
-      return axios.get('/book/SchoolStudents/get_students', data).then(res => {
+      return axios.get('/book/SchoolBookSign/getRank', data).then(res => {
         switch (res.data.status) {
           case 1: 
             this.rankList = res.data.data
+            this.childInfo = res.data.my_child
             this.loading = false
 
-            if ( this.rankList.length >= 20 ) {
+            let count = res.data.count > 20 ? 20 : res.data.count 
+
+            if ( this.rankList.length >= count ) {
               this.finished = true
-            } else {
-              this.finished = false
-              this.loading = false
             }
             break
         }
       })
+    },
+    handleScroll() {
+      this.getDomHeight()
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      this.scrollTop = scrollTop
+      if (this.domHeight < this.scrollTop) {
+        this.fixedHeaderBar = false
+      } else {
+        this.fixedHeaderBar = true
+      }
+    },
+    getDomHeight() {
+      if (this.$refs.head) {
+        this.domHeight = this.$refs.head.offsetHeight / 2
+      }
     },
     onClickTab(index){
       this.active = index
@@ -256,6 +284,11 @@ export default {
         query:{
           id: this.childInfo.school_id
         }
+      })
+    },
+    onClickRight() {
+      this.$router.replace({
+        name:'RankingList'
       })
     }
   }
@@ -322,7 +355,7 @@ export default {
 .title-name{
   text-align: center;
   height: 50px;
-  line-height: 50px;
+  line-height: 30px;
   color: #fff;
 }
 
@@ -356,7 +389,7 @@ export default {
   width: 30%;
   position: relative;
   z-index: 5;
-  transform: translate3d(-50%, 0, 0) scale(1.15);
+  transform: translate3d(-50%, -10px, 0) scale(1.15);
   box-shadow: 0 2px 10px rgba(44, 174, 194, 0.4);
 }
 
@@ -365,6 +398,7 @@ export default {
 .top-2{
   position: absolute;
   top: 55px;
+  border-radius: 4px 4px 0 0;
 }
 
 .top-1,
@@ -394,12 +428,12 @@ export default {
 
 .icon{
   position: absolute;
-  top: -15px;
-  left: 10px;
+  top: -10px;
+  left: 20px;
 }
 
 .ranking-list{
-  padding-top: 150px;
+  padding-top: 140px;
 }
 
 .unit{
@@ -412,7 +446,7 @@ export default {
 }
 
 .my-child{
-  padding: 20px 15px 0;
+  padding: 50px 15px 0;
   overflow: hidden;
 }
 

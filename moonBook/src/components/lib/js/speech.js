@@ -34,28 +34,36 @@ const saying = [
 
 const medal = [{
   name:'好的开始',
-  day: 1
+  day: 1,
+  book: 1
 },{
   name:'小试牛刀',
-  day: 21
+  day: 21,
+  book: 20
 },{
   name:'坚持不懈',
-  day: 50
+  day: 50,
+  book: 60
 },{
   name:'渐入佳境',
-  day: 100
+  day: 100,
+  book: 120
 },{
   name:'扬帆远航',
-  day: 150
+  day: 150,
+  book: 300
 },{
   name:'持之以恒',
-  day: 200
+  day: 200,
+  book: 700
 },{
   name:'学富五车',
-  day: 250
+  day: 250,
+  book: 1000
 },{
   name:'阅读之星',
-  day: 300
+  day: 300,
+  book: 1500
 }]
 
 
@@ -63,7 +71,7 @@ const medal = [{
 function medalLevel(num) {
   let arr = []
   medal.forEach((e,i) =>{
-    if( num >= e.day ){
+    if( num >= e.day || num >= e.book ){
       arr.push({
         ...e,
         level: i+1

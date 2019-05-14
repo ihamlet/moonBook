@@ -19,7 +19,7 @@ export default {
 </script>
 <style scoped>
 .medal{
-    width: 50px;
+    width: 45px;
     overflow: hidden;
     position: relative;
     line-height: 1.5rem
@@ -28,7 +28,7 @@ export default {
 .medal .level{
     position: absolute;
     z-index: 1;
-    bottom: 10%;
+    bottom: 6%;
     left: 50%;
     transform: translate3d(-50%, 0, 0);
     color: #fff;
@@ -43,19 +43,25 @@ export default {
   top: 0;
   left: -1.5rem /* 24/16 */;
   overflow: hidden;
-  background: linear-gradient(to right, rgba(255,255,255,.3) , #fff);
+  background: linear-gradient(to right, rgba(255,255,255,0) , #fff);
   transform:skewX(-25deg);
   animation: glint 3s infinite;
   opacity: .92;
   z-index: 1;
 }
 
+.gray{
+    filter: grayscale(100%);
+    filter: gray;
+    opacity: 0.8;
+}
+
 @keyframes glint {
   from {
-    left: -50px
+    left: -45px
   }
   to {
-    left: 50px
+    left: 45px
   }
 }
 

@@ -15,7 +15,7 @@
               <van-tag v-if='details.is_read' mark type="success" size="large">已读</van-tag>
               <van-tag v-else mark type="danger" size="large">未读</van-tag>
           </div>
-          <van-row gutter="10">
+          <van-row gutter="10" :key="$route.query.id">
             <van-col span="9">
               <div class="book-thumb">
                 <img :src="details.thumb" @error="imgError($event,details)" />

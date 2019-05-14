@@ -1275,6 +1275,7 @@ i.iconfont.vip-1 {
   display: block;
 }
 
+.theme-btn.more-btn,
 .theme-btn.theme-release{
   background: linear-gradient(135deg, #FFC107, #FF9800);
   box-shadow: 0 2px 6px rgba(255, 152, 0, 0.2)

@@ -1,6 +1,6 @@
 <template>
   <div class="ranking-page page-padding">
-    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''" title="阅读之星榜" fixed :border='false'  @click-right="onClickRight">
+    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''" title="阅读之星榜" fixed :border='false'  @click-right="onClickRight" :key="$route.query.id">
         <div class="child-avatar" slot="right">
           <van-button round class="theme-btn more-btn" size="small" type="primary">更多榜单</van-button>
         </div>
@@ -26,8 +26,9 @@
                         <img :src="content.babyInfo.avatar" @error='imgError' v-http2https/>
                       </div>
                       <div class="info">
-                        <span class="name">{{content.babyInfo.name}}</span>
-                        <span class="label">{{content.banji_name}}</span>
+                        <div class="name">{{content.babyInfo.name}}</div>
+                        <div class="label" v-if='itemIndex == 1' v-line-clamp:20="1">{{content.banji_name || content.school_name}}</div>
+                        <div class="label" v-else-if="itemIndex == 2" >{{content.school_name}}</div>
                       </div>
                     </div>
                   </van-cell>
@@ -284,7 +285,7 @@ export default {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
     onClickRight() {
-      this.$router.push({
+      this.$router.replace({
         name:'RankingList'
       })
     },
@@ -368,17 +369,9 @@ export default {
   font-size: 0.875rem /* 14/16 */;
 }
 
-.info {
-  display: grid;
-}
-
 .info .name {
   font-weight: 500;
   color: #303133;
-}
-
-.theme-btn.more-btn{
-  background: linear-gradient(135deg, #FFC107, #FF9800);
 }
 </style>
 <style>

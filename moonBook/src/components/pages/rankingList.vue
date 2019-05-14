@@ -1,6 +1,6 @@
 <template>
   <div class="ranking-list">
-    <van-nav-bar title="榜单" />
+    <van-nav-bar title="榜单" :border='false'/>
     <div class="list">
         <div class="item flex flex-align" v-for='(item,index) in list' :key="index" @click="toRankingPage(item)">
           <div class="cell-info flex flex-align">
@@ -9,6 +9,9 @@
           </div>
           <i class="iconfont right-icon">&#xe72a;</i>
         </div>
+    </div>
+    <div class="slogan">
+      {{$store.state.slogan}}
     </div>
   </div>
 </template>
@@ -35,14 +38,14 @@ export default {
   },
   methods: {
     toRankingPage(item){
-        this.$router.push({
+        this.$router.replace({
             name: item.routeName,
             query:{
-                id: this.userDataState.child_id
+              id: this.userDataState.child_id
             }
         })
     }
-  },
+  }
 }
 </script>
 <style scoped>
@@ -56,10 +59,11 @@ export default {
 
 .list{
     padding: 20px;
+    background: #fff;
 }
 
 .item{
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     height: 80px;
     border-radius: 10px;
     position: relative;

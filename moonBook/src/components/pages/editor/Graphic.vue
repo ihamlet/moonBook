@@ -358,11 +358,9 @@ export default {
                     name: 'apps-find'
                   })
                 }
-                
               break
-              case 0:
+              default:
                 this.$toast.fail(res.data.msg)
-              break
             }
           })
         }

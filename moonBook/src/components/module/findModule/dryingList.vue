@@ -35,7 +35,7 @@ export default {
     slogan,
     graphicCard
   },
-  props: ['sort', 'tagId', 'school_id', 'type', 'portal_name', 'banji_id', 'cateId'],
+  props: ['params', 'tagId', 'school_id', 'type', 'portal_name', 'banji_id', 'cateId'],
   computed: {
     ...mapGetters(['userToken', 'managerState','userDataState']),
     manage() {
@@ -133,7 +133,7 @@ export default {
       let data = {
         params: {
           page: this.page,
-          sort: this.sort,
+          ...this.params,
           tag_id: this.tagId,
           route: this.type,
           cate_id: this.cid,
@@ -187,13 +187,7 @@ export default {
           element.isSubscribe = !element.isSubscribe
         }
       })
-      axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res => {
-        if (res.data.status == 1) {
-          this.$toast.success(res.data.msg)
-        } else {
-          this.$toast.fail(res.data.msg)
-        }
-      })
+      axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res => {})
     },
     onSelect(item) {
       switch (item.index) {
