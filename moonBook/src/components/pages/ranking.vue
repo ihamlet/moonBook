@@ -17,18 +17,25 @@
             <van-tabs color='#0084ff' type="card" @disabled="onTabDisabledClick" @click="onTabClick">
               <van-tab v-for="(item,itemIndex) in list.content" :disabled="item.disabled" :title="item.title" :key="itemIndex">
                 <van-cell-group v-if="item.content && item.content.list.length">
-                  <van-cell v-for='(content,contentIndex) in item.content.list' :key="contentIndex" value-class='cell-value' title-class='cell-title' :value='`${content.read_count}本`' size='large' center @click="toPage(content)">
-                    <div class="icon" slot="icon">
-                      <svg-ranking :ranking="content.rank" />
-                    </div>
-                    <div class="title flex flex-align" slot="title">
-                      <div class="avatar" :class="content.rank < 4?'rank':''" v-if='content.babyInfo.avatar'>
-                        <img :src="content.babyInfo.avatar" @error='imgError' v-http2https/>
+                  <van-cell v-for='(content,contentIndex) in item.content.list' :key="contentIndex" size='large' center @click="toPage(content)">
+                    <div class="item-cell flex flex-align">
+                      <div class="icon">
+                        <svg-ranking :ranking="content.rank" />
                       </div>
-                      <div class="info">
-                        <div class="name">{{content.babyInfo.name}}</div>
-                        <div class="label" v-if='itemIndex == 1' v-line-clamp:20="1">{{content.banji_name || content.school_name}}</div>
-                        <div class="label" v-else-if="itemIndex == 2" >{{content.school_name}}</div>
+                      <div class="cell-box flex flex-align">
+                        <div class="title flex flex-align">
+                          <div class="avatar" :class="content.rank < 4?'rank':''" v-if='content.babyInfo.avatar'>
+                            <img :src="content.babyInfo.avatar" @error='imgError' v-http2https/>
+                          </div>
+                          <div class="info">
+                            <div class="name">{{content.babyInfo.name}}</div>
+                            <div class="label" v-if='itemIndex == 1' v-line-clamp:20="1">{{content.banji_name || content.school_name}}</div>
+                            <div class="label" v-else-if="itemIndex == 2" v-line-clamp:20="1">{{content.school_name}}</div>
+                          </div>
+                        </div>
+                        <div class="num">
+                          {{content.read_count}}本
+                        </div>
                       </div>
                     </div>
                   </van-cell>
@@ -373,16 +380,19 @@ export default {
   font-weight: 500;
   color: #303133;
 }
-</style>
-<style>
-.ranking-page .van-cell__value.cell-value {
-  color: #303133;
-  font-size: 1rem /* 16/16 */;
-  font-weight: 500;
+
+.cell-box{
+  justify-content: space-between;
+  flex: 1;
 }
 
-.ranking-page .van-cell__title.cell-title {
-  flex: 3;
+.info,
+.cell-box .title{
+  flex: 1;
+}
+
+.num{
+  font-size: 16px;
 }
 </style>
 
