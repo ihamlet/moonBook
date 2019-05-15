@@ -49,8 +49,8 @@ export default {
 }
 
 .round-3{
-    right: 11%;
-    top: 43%;
+    right: 20%;
+    top: 50%;
     background-image: linear-gradient( 135deg, #CE9FFC 10%, #7367F0 100%);
     box-shadow:0 0 .3125rem /* 5/16 */ #7367F0;
     animation: Swaying1 8s linear infinite;

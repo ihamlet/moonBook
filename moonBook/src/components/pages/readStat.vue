@@ -77,7 +77,7 @@ import avatar from './../module/avatar'
 import numberGrow from './../module/animate/numberGrow'
 // import rankShare from './../module/mold/rankShare'
 import slogan from './../module/slogan'
-import { medalLevel } from './../lib/js/speech'
+import { punchLevel } from './../lib/js/speech'
 
 export default {
   name: 'readstat',
@@ -131,7 +131,7 @@ export default {
       axios.get(`/book/baby/getInfo?child_id=${this.$route.query.id}`).then(res => {
         this.childInfo = res.data.data
 
-        this.level = medalLevel(res.data.data.sign_days).pop() //勋章等级
+        this.level = punchLevel(res.data.data.sign_days).pop() //勋章等级
 
         let banjiData = {
           params: {

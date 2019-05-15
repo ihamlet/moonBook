@@ -34,6 +34,7 @@ export default {
     color: #fff;
     font-size: 13px;
     font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .2);
 }
 
 .highlight {
@@ -53,7 +54,6 @@ export default {
 .gray{
     filter: grayscale(100%);
     filter: gray;
-    opacity: 0.8;
 }
 
 @keyframes glint {

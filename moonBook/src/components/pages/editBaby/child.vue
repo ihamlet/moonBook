@@ -441,20 +441,21 @@ export default {
   }
 }
 </script>
-<style>
-.add-child .van-cell__title.cell-school-title {
-  flex: 3;
-}
-
-.form-submit .theme-btn{
-  width: 100%;
-}
-
+<style scoped>
 .child-name{
   text-align: center;
   margin-bottom: 20px;
   font-size: 20px;
   font-weight: 700;
+}
+
+.form-submit .theme-btn{
+  width: 100%;
+}
+</style>
+<style>
+.add-child .van-cell__title.cell-school-title {
+  flex: 3;
 }
 </style>
 

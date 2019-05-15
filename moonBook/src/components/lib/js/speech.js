@@ -32,49 +32,112 @@ const saying = [
   '读书之法，在循序渐进，熟读而精思'
 ]
 
-const medal = [{
+const medalPunch = [{
   name:'好的开始',
-  day: 1,
-  book: 1
+  number: 1,
+  type:'punch'
 },{
   name:'小试牛刀',
-  day: 21,
-  book: 20
+  number: 21,
+  type:'punch'
 },{
   name:'坚持不懈',
-  day: 50,
-  book: 60
+  number: 50,
+  type:'punch'
 },{
   name:'渐入佳境',
-  day: 100,
-  book: 120
+  number: 100,
+  type:'punch'
 },{
   name:'扬帆远航',
-  day: 150,
-  book: 300
+  number: 198,
+  type:'punch'
 },{
   name:'持之以恒',
-  day: 200,
-  book: 700
+  number: 365,
+  type:'punch'
 },{
   name:'学富五车',
-  day: 250,
-  book: 1000
+  number: 660,
+  type:'punch'
 },{
   name:'阅读之星',
-  day: 300,
-  book: 1500
+  number: 1000,
+  type:'punch'
+}]
+
+
+const medalRead = [{
+  name:'好的开始',
+  number: 1,
+  type:'read'
+},{
+  name:'小试牛刀',
+  number: 20,
+  type:'read'
+},{
+  name:'坚持不懈',
+  number: 60,
+  type:'read'
+},{
+  name:'渐入佳境',
+  number: 120,
+  type:'read'
+},{
+  name:'扬帆远航',
+  number: 300,
+  type:'read'
+},{
+  name:'持之以恒',
+  number: 700,
+  type:'read'
+},{
+  name:'学富五车',
+  number: 1000,
+  type:'read'
+},{
+  name:'阅亮之星',
+  number: 1500,
+  type:'read'
 }]
 
 
 //阅读等级
-function medalLevel(num) {
+function punchLevel(num) {
   let arr = []
-  medal.forEach((e,i) =>{
-    if( num >= e.day || num >= e.book ){
+  medalPunch.forEach((e,i) =>{
+    if( num >= e.number ){
       arr.push({
         ...e,
         level: i+1
+      })
+    }
+
+    if(num == 0){
+      arr.push({
+        ...e,
+        level:0
+      })
+    }
+  })
+
+  return arr
+}
+
+function readLevel(num) {
+  let arr = []
+  medalRead.forEach((e,i) =>{
+    if( num >= e.number ){
+      arr.push({
+        ...e,
+        level: i+1
+      })
+    }
+
+    if(num == 0){
+      arr.push({
+        ...e,
+        level:0
       })
     }
   })
@@ -86,6 +149,8 @@ export {
   placeholder,
   commentTag,
   saying,
-  medal,
-  medalLevel
+  medalPunch,
+  medalRead,
+  punchLevel,
+  readLevel
 }

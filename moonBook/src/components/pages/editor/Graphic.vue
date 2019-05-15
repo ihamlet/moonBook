@@ -318,11 +318,11 @@ export default {
           switch(this.$route.query.back){
             case 'baby-home':
               data.child_id = this.$route.query.id
-              data.tags = '宝贝主页' 
+              data.tags = this.$route.query.tags || '宝贝主页'
             break
             case 'class-home':
               data.banji_id = this.$route.query.id
-              data.tags = `${this.tag.cate_name},${this.userDataState.teacher_banji_name}`
+              data.tags = this.$route.query.tags || `${this.tag.cate_name},${this.userDataState.teacher_banji_name}`
             break
             case 'apps-school':
               data.school_id = this.$route.query.id

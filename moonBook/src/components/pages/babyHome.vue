@@ -112,7 +112,7 @@
 import axios from "./../lib/js/api"
 import { mapActions, mapGetters,mapState } from 'vuex'
 import { format, timeago } from "./../lib/js/util.js"
-import { medalLevel } from './../lib/js/speech'
+import { punchLevel } from './../lib/js/speech'
 import wave from "./../module/animate/anWave"
 import avatar from "./../module/avatar"
 import reading from "./../module/reading"
@@ -173,7 +173,7 @@ export default {
       let arr = []
 
       if(this.childInfo){
-        arr = medalLevel(this.childInfo.sign_days)
+        arr = punchLevel(this.childInfo.sign_days)
       }
 
       let obj = arr.pop()
