@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="head-bar-btn theme-color" slot="right">
-        <van-button :loading='percent != 0'  class="theme-btn" type="primary" size="small" @click="onClickRelease" round>发布</van-button>
+        <van-button :loading='percent != 0' loading-text='上传中' class="theme-btn" type="primary" size="small" @click="onClickRelease" round>发布</van-button>
       </div>
     </van-nav-bar>
 

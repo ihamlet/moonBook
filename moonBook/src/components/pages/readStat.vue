@@ -44,7 +44,7 @@
           <div class="title">学习力超过了：</div>
           <div class="learning-circle flex flex-align">
             <van-circle v-model="currentRate" :rate="86" :speed="100" size="80px" color="#2196f3" layer-color="#ebedf0" :stroke-width="60"/>
-             <span class="num">86%</span>的小朋友
+             <span class="num">{{childInfo.ahead_percent}}%</span>的小朋友
           </div>
         </div>
       </div>

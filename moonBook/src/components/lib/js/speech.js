@@ -23,6 +23,14 @@ const commentTag = [
     '🏆 很精彩'
   ]
 
+  const childCommentTag = [
+    '再接再厉',
+    '向你学习',
+    '坚持下去',
+    '太厉害了',
+    '难能可贵'
+  ]
+
 const saying = [
   '聪明在于勤奋，天才在于积累',
   '腹有诗书气自华，读书万卷始通神',
@@ -152,5 +160,6 @@ export {
   medalPunch,
   medalRead,
   punchLevel,
-  readLevel
+  readLevel,
+  childCommentTag
 }

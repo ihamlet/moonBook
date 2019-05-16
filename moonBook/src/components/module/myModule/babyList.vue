@@ -102,8 +102,6 @@ export default {
           }
         })
       }else if(list.banji_id == 0){
-        console.log(list)
-
         this.$router.push({
           name:'edit-class',
           query:{

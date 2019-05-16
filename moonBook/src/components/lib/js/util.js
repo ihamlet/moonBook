@@ -289,6 +289,31 @@ function realFormatSecond(second) {
   }
 }
 
+//将数组array分成长度为subGroupLength的小数组并返回新数组
+function arrGroup(array, subGroupLength) {
+      let index = 0;
+      let newArray = [];
+      while(index < array.length) {
+          newArray.push(array.slice(index, index += subGroupLength));
+      }
+      return newArray;
+  }
+
+
+//生成 minNum - maxNum 的随机数
+function randomNum(minNum,maxNum){ 
+  switch(arguments.length){ 
+      case 1:
+          return parseInt(Math.random()*minNum+1,10)
+      break
+      case 2:
+          return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10)
+      break
+      default: 
+          return 0
+  } 
+} 
+
 export {
   GetDistance,
   format,
@@ -303,5 +328,7 @@ export {
   contains,
   videoParse,
   arrayUnique,
-  realFormatSecond
+  realFormatSecond,
+  randomNum,
+  arrGroup
 }

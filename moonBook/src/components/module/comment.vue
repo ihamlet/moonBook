@@ -11,13 +11,19 @@
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <van-cell v-for="(contentItem,index) in list" :key="index">
           <div class="user-card flex flex-align">
-            <div class="avatar" @click="toZoom(contentItem)">
-              <img :src="contentItem.avatar" v-http2https/>
+            <div class="user-info flex flex-align">
+              <div class="avatar" @click="toZoom(contentItem)">
+                <img :src="contentItem.avatar" v-http2https/>
+              </div>
+              <div class="user-data">
+                <span class="user-name">{{contentItem.username}}</span>
+              </div>
             </div>
-            <div class="user-data">
-              <span class="user-name">{{contentItem.username}}</span>
-              <span class="tags" v-if='contentItem.tags'>{{contentItem.tags}}</span>
-            </div>
+            <div class="zan flex flex-align" @click="zan(contentItem)">
+              <i class="iconfont highlight rotateInDownLeft animated" v-if="contentItem.isZan">&#xe6e3;</i>
+              <i class="iconfont" v-else>&#xe644;</i>
+              <div class="num">{{contentItem.zan_count}}</div>
+            </div>       
           </div>
           <div class="contents">
             {{contentItem.contents}}
@@ -341,6 +347,30 @@ export default {
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    zan(contentItem){
+      contentItem.isZan = !contentItem.isZan
+
+      let data = {
+        params: {
+          comment_id: contentItem.comment_id
+        }
+      }
+
+      axios.get('/book/SchoolArticleComment/zan',data).then(res=>{
+        switch(res.data.state){
+          case 1:
+            if(contentItem.isZan){
+              contentItem.zan_count++
+              this.$toast.success({
+                className: 'zan-icon toast-icon'
+              })
+            }else{
+              contentItem.zan_count--
+            }
+          break
+        }
+      })
     }
   }
 }
@@ -530,6 +560,19 @@ export default {
   text-decoration: none;
   text-overflow: ellipsis;
   margin-right: 15px;
+}
+
+.user-card{
+  justify-content: space-between;
+}
+
+.zan{
+  opacity: .72;
+}
+
+.zan .iconfont{
+  font-size: 20px;
+  margin-right: 5px;
 }
 </style>
 

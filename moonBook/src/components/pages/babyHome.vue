@@ -112,7 +112,7 @@
 import axios from "./../lib/js/api"
 import { mapActions, mapGetters,mapState } from 'vuex'
 import { format, timeago } from "./../lib/js/util.js"
-import { punchLevel } from './../lib/js/speech'
+import { punchLevel,readLevel } from './../lib/js/speech'
 import wave from "./../module/animate/anWave"
 import avatar from "./../module/avatar"
 import reading from "./../module/reading"
@@ -169,16 +169,41 @@ export default {
 
       return array
     },
+
+    //勋章等级
     level(){
-      let arr = []
+        let obj 
+        if(this.punchArr.length > this.readArr.length) {
+          obj = punchLevel(this.childInfo.sign_days).pop()
+        }else{
+          obj = readLevel(this.childInfo.read_count).pop()
+        }
+        
+        return obj
+    },
+    punchArr(){
+        let arr = []
+        let punchArr = punchLevel(this.childInfo.sign_days)
 
-      if(this.childInfo){
-        arr = punchLevel(this.childInfo.sign_days)
-      }
+        punchArr.forEach(element => {
+            if(element.level > 0){
+                arr.push(element)
+            }
+        })
 
-      let obj = arr.pop()
+        return arr
+    },
+    readArr(){
+        let arr = []
+        let readArr = readLevel(this.childInfo.read_count)
 
-      return obj
+        readArr.forEach(element =>{
+            if(element.level > 0){
+                arr.push(element)
+            }
+        })
+
+        return arr
     }
   },
   data() {
@@ -459,7 +484,7 @@ export default {
         name: 'readStat',
         query: {
           id: this.$route.query.id,
-          back: this.$route.name
+          back: this.$route.name,
         }
       })
     },
