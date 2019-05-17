@@ -217,14 +217,6 @@ export default new Router({
             isFooterBar: false,
             keepAlive: true
           }
-        },
-        {
-          path: '/video-page',
-          name: 'video-page',
-          component: VideoPlayer,
-          meta: {
-            isFooterBar: false
-          }
         }
       ]
     },
@@ -334,6 +326,14 @@ export default new Router({
     ...Audio,
     Manage,
     Editor,
+    {
+      path: '/video-page',
+      name: 'video-page',
+      component: VideoPlayer,
+      meta: {
+        isFooterBar: false
+      }
+    },
     {
       path: '*',
       name: '404', //404 路由必须置于 routes 数组末尾

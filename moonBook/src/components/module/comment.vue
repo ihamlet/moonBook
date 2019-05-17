@@ -1,5 +1,8 @@
 <template>
   <div class="comment-list" id='comment' ref='comment' v-if='flag'>
+    <!-- <div class="spray-dom"  v-if='isSprayShow'>
+      <spray />
+    </div> -->
     <van-nav-bar :border='false' :zIndex='0'  :key='$route.query.id'>
       <div class="zan" slot="right">赞 {{item.zan_num}}</div>
       <div class="comment" slot="left">{{listLength}} 评论</div>
@@ -131,6 +134,7 @@
 import { mapGetters } from 'vuex'
 import axios from './../lib/js/api'
 import share from './../module/mold/share'
+import spray from './../module/animate/spray'
 import { timeago,getRandomArrayElements,shuffle } from './../lib/js/util'
 import { placeholder, commentTag } from './../lib/js/speech'
 
@@ -138,7 +142,8 @@ export default {
   name: 'comment',
   props: ['item', 'include', 'type','postId','isCommentShow'],
   components: {
-    share
+    share,
+    spray
   },
   computed: {
     ...mapGetters(['userToken', 'userDataState']),
@@ -350,7 +355,6 @@ export default {
     },
     zan(contentItem){
       contentItem.isZan = !contentItem.isZan
-
       let data = {
         params: {
           comment_id: contentItem.comment_id
@@ -358,16 +362,9 @@ export default {
       }
 
       axios.get('/book/SchoolArticleComment/zan',data).then(res=>{
-        switch(res.data.state){
+        switch(res.data.status){
           case 1:
-            if(contentItem.isZan){
-              contentItem.zan_count++
-              this.$toast.success({
-                className: 'zan-icon toast-icon'
-              })
-            }else{
-              contentItem.zan_count--
-            }
+            contentItem.zan_count = res.data.data.zan_count
           break
         }
       })
@@ -567,12 +564,18 @@ export default {
 }
 
 .zan{
-  opacity: .72;
+  opacity: .6;
 }
 
 .zan .iconfont{
   font-size: 20px;
   margin-right: 5px;
+}
+
+.spray-dom{
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>
 

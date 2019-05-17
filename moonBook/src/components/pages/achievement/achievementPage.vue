@@ -17,13 +17,13 @@
             <div class="name">{{level.name}}</div>
           </div>
 
-          <IconMedal class="bounceIn animated" :level='level.level' />
+          <IconMedal class="bounceIn animated" :level='level.level' :type='level.type'/>
         </div>
       </div>
 
       <div class="gutter" v-for='(item,index) in type' :key="index">
         <transition enter-active-class="animated fadeInDown" leave-active-class="animated fadeOutUp">
-          <medalCard :type='item.name' v-if='item.isShow' />
+          <medalCard :type='item.name' v-if='item.isShow'/>
         </transition>
         <transition enter-active-class="animated slideInDown" leave-active-class="animated slideOutUp" v-if='index == 0'>
           <div class="overlay" v-if='!isShow'></div>
@@ -44,7 +44,7 @@
             </transition>
             <div class="comment-content">
               <div class="avatar">
-                <img :src="item.avatar" @error="imgError" />
+                <img :src="item.avatar" @error="imgError" v-http2https/>
               </div>
               <div class="content flex flex-align">
                 <vip-level v-if='item.card_level > 0' :animate='true' :level='item.card_level' /> <span :class="`color-${item.card_level}`">{{item.contents}}</span>
@@ -208,7 +208,7 @@ export default {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
     random() {
-      return randomNum(30, 60)
+      return randomNum(50, 80)
     },
     zan(item) {
       let data = {
@@ -395,6 +395,7 @@ export default {
   padding:0;
   height: auto;
   line-height: normal;
+  color: #ABDCFF;
 }
 
 .marquee.van-notice-bar .van-notice-bar__wrap{

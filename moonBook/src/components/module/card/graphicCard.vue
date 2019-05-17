@@ -14,7 +14,7 @@
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
           <div class="titmeago">
-            {{getTimeAgo(item.create_time)}} <span v-if='item.sign_days!="0"&&item.tags=="阅读打卡"'>{{`坚持打卡${item.sign_days}天`}}</span>
+            {{getTimeAgo(item.create_time)}} <span v-if='item.sign_days!="0"&&item.tags=="阅读打卡"'>{{`坚持阅读${item.sign_days}天`}}</span>
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0&&type!="zoom"'>

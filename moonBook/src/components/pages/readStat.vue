@@ -27,7 +27,7 @@
     </div>
     <div class="container">
       <div class="gutter">
-        <van-cell title='宝贝成就' :value='level?`Lv.${level.level}"${level.name}"`:""' size="large" is-link center @click="toAchievement">
+        <van-cell title='宝贝成就' :value='level?`${level.type == "punch"?"Rv":"Bv"}.${level.level}"${level.name}"`:""' size="large" is-link center @click="toAchievement">
           <div class="icon cell-icon icon-medal" slot="icon">
             <i class="iconfont">&#xe74a;</i>
           </div>

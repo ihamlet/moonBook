@@ -5,7 +5,7 @@
             <van-col span="6" v-for='(item,index) in medalList' :key="index">
                 <div class="medal-item">
                     <div class="icon flex flex-justify flipInX animated" :style="{animationDelay:`${200*index}ms`}">
-                        <IconMedal :animate='level >= index+1?1:0' :gray='level >= index+1?false:true' :level="index+1"/>
+                        <IconMedal :animate='level >= index+1?1:0' :gray='level >= index+1?false:true' :level="index+1" :type='type'/>
                     </div>
                     <div class="name" :class="level >= index+1?'active':''">{{item.name}}</div>
                     <div class="number">{{item.number}}{{type == 'punch'?'天':'本'}}</div>
@@ -56,7 +56,7 @@ export default {
             let title
             switch(this.type){
                 case 'punch':
-                    title = '打卡成就'
+                    title = '阅读成就'
                 break
                 case 'read':
                     title = '借阅成就'

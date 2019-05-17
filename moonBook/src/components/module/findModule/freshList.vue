@@ -3,7 +3,7 @@
     <div class="content scroll-x" :class="type" v-if='list.length > 0'>
       <div class="scroll-item" v-for="(item,index) in list" :key="index" @click="toZoom(item)">
         <div class="avatar">
-          <img v-if="item[avatar]" @error='imgError' :src="item[avatar]" :alt="item[name]" v-http2https>
+          <img v-if="item[avatar]" @error='imgError' :src="avatarLink(item[avatar])" :alt="item[name]">
         </div>
         <div class="name" v-line-clamp:20="1">
           {{item[name]}}
@@ -29,6 +29,11 @@ export default {
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+    },
+    avatarLink(link){
+      if(link.indexOf(location.origin) == -1){
+        return link.replace('http:', 'https:')
+      }
     }
   }
 }

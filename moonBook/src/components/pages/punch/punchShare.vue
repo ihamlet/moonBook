@@ -62,14 +62,14 @@ export default {
     ...mapState('openWX',['ready']),
     list(){
         let arr = [{
-            title:'累计打卡',
+            title:'累计阅读',
             num: `${this.childInfo.sign_read_count}本`
         },{
             title:'坚持打卡',
             num: `${this.childInfo.sign_days}天`
         },{
             title:'学习力超过',
-            num: '86%'
+            num: `${this.childInfo.ahead_percent}%`
         },{
             title:'带动阅读',
             num: `${this.childInfo.fluent_count}人`

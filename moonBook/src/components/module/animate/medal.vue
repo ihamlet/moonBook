@@ -1,7 +1,7 @@
 <template>
     <div class="medal">
         <div class="level">
-            Lv.{{level}}
+            {{symbol}}.{{level}}
         </div>
         <img :class="gray?'gray':''" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/medal.png" />
 
@@ -11,9 +11,21 @@
 <script>
 export default {
     name:'medal',
-    props:['level','animate','gray'],
+    props:['level','animate','gray','type'],
     computed: {
-        
+        symbol(){
+          let name 
+          switch (this.type) {
+            case 'punch':
+              name = 'Rv'
+              break
+            case 'read':
+              name = 'Bv'
+              break
+          }
+
+          return name
+        }
     }
 }
 </script>

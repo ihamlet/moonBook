@@ -88,10 +88,10 @@ export default {
       let text = []
       switch (this.$route.query.type) {
         case 'punch':
-          text = ['天打卡', '阅读打卡']
+          text = ['天阅读', '阅读']
           break
         case 'read':
-          text = ['本阅读', '借阅']
+          text = ['本借阅', '借阅']
           break
       }
 
