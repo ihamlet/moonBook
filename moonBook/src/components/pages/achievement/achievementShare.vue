@@ -1,6 +1,6 @@
 <template>
   <div class="share">
-    <div class="tips" v-if='$route.query.is_mine'>分享成就</div>
+    <div class="tips" v-if='userDataState.child_id == $route.query.id'>分享成就</div>
 
     <div class="wrap">
       <div class="child-info">
@@ -10,7 +10,7 @@
         <div class="name">{{$route.query.name}}</div>
         <div class="label">在阅亮书架获得的成就</div>
       </div>
-      <div class="medal-box fadeIn animated">
+      <div class="medal-box fadeIn animated" :class="userDataState.child_id == $route.query.id?'is-mine':''">
         <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/medal.png" />
 
         <div class="level">Lv.{{$route.query.level}}</div>
@@ -22,9 +22,9 @@
         </div>
       </div>
 
-      <div class="text">坚持{{text[1]}}{{$route.query.number}}达成</div>
+      <div class="text">坚持{{text[1]}}{{$route.query.number}}{{$route.query.type == 'punch'?'天':'本'}}达成</div>
 
-      <div class="tags-row" v-if='!$route.query.is_mine'>
+      <div class="tags-row" v-if='userDataState.child_id != $route.query.id'>
         <van-row gutter="10">
           <div class="row-title">给Ta鼓励</div>
           <van-col span="8" v-for='(item,index) in tags' :key="index">
@@ -203,7 +203,7 @@ export default {
 .medal-box img {
   margin: 10px auto;
   display: block;
-  width: 50%;
+  width: 30%;
 }
 
 .child-info {
@@ -243,26 +243,27 @@ export default {
 .ribbon {
   position: absolute;
   z-index: 10;
-  width: 42%;
+  width: 30%;
   text-align: center;
   left: 50%;
   bottom: 50%;
-  margin-left: -21%;
+  margin-left: -15%;
 }
 
 .ribbon-content {
   background: linear-gradient(160deg, #ff9800, #f44336);
   color: #fff;
-  height: 38px;
-  line-height: 38px;
+  height: 30px;
+  line-height: 30px;
   font-weight: 700;
   border-radius: 2px;
+  font-size: 14px;
 }
 
 .ribbon-left,
 .ribbon-right {
-  width: 38px;
-  height: 38px;
+  width: 30px;
+  height: 30px;
   position: absolute;
   background: rgba(255, 87, 34, 0.9);
   top: 20%;
@@ -275,8 +276,8 @@ export default {
   content: '';
   width: 0;
   height: 0;
-  border-top: 19px solid transparent;
-  border-bottom: 19px solid transparent;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
   position: absolute;
 }
 
@@ -343,7 +344,7 @@ export default {
   position: absolute;
   bottom: 18%;
   left: 50%;
-  font-size: 46px;
+  font-size: 30px;
   font-weight: 700;
   color: #fff;
   transform: translate3d(-50%, 0, 0);
@@ -388,23 +389,38 @@ export default {
 .button-bar .accept{
     width: 100%;
 }
-/* 媒体查询 */
-@media only screen and (max-width: 360px) and (min-width: 320px) {
-    .logo{
-        width: 80px;
-    }
 
-    .medal-box img {
-        width: 30%;
-    }
+.medal-box.is-mine img{
+  width: 60%;
+}
 
-    .level {
-        font-size: 25px;
-    }
+.medal-box.is-mine .level{
+  font-size: 50px;
+}
 
-    .ribbon {
-        width: 32%;
-        margin-left: -16%;
-    }
+.medal-box.is-mine .ribbon{
+  width: 48%;
+  margin-left: -24%;
+}
+
+.medal-box.is-mine .ribbon-content{
+  height: 38px;
+  line-height: 38px;
+  font-size: 18px;
+}
+
+.medal-box.is-mine .ribbon-left,
+.medal-box.is-mine .ribbon-right{
+  height: 38px;
+}
+
+.medal-box.is-mine .ribbon-left::before,
+.medal-box.is-mine .ribbon-right::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-top: 16px solid transparent;
+  border-bottom: 16px solid transparent;
+  position: absolute;
 }
 </style>

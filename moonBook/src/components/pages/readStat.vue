@@ -27,7 +27,7 @@
     </div>
     <div class="container">
       <div class="gutter">
-        <van-cell title='我的成就' :value='level?`Lv.${level.level}"${level.name}"`:""' size="large" is-link center @click="toAchievement">
+        <van-cell title='宝贝成就' :value='level?`Lv.${level.level}"${level.name}"`:""' size="large" is-link center @click="toAchievement">
           <div class="icon cell-icon icon-medal" slot="icon">
             <i class="iconfont">&#xe74a;</i>
           </div>
@@ -183,20 +183,6 @@ export default {
         this.domHeight = this.$refs.head.offsetHeight / 2
       }
     },
-    // onClickLeft() {
-    //   if (this.$route.query.back) {
-    //     this.$router.push({
-    //       name: this.$route.query.back,
-    //       query: {
-    //         id: this.$route.query.id
-    //       }
-    //     })
-    //   } else {
-    //     this.$router.push({
-    //       name: 'my'
-    //     })
-    //   }
-    // },
     toAchievement(){
       this.$router.push({
         name: 'achievement-page',

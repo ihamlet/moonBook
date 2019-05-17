@@ -13,7 +13,7 @@
         </div>
         <div class="child-medal flex flex-align">
           <div class="medal-box">
-            <div class="day">{{level.number}}{{level.type == 'punch'?'天':'本'}}</div>
+            <div class="day">{{level.type == 'punch'?`${$route.query.sign_days}天`:`${$route.query.read_count}本`}}</div>
             <div class="name">{{level.name}}</div>
           </div>
 
@@ -36,8 +36,7 @@
       </div>
 
       <div class="comment-wall" v-if='commentList.length'>
-        <marquee @touchstart='stop(index)' @touchend='start(index)' ref='marquee' loop class="marquee flex flex-align"
-          :scrollamount='index == 0?8:16' scrolldelay="30" :key="index" v-for='(list,index) in newCommentArr'>
+        <van-notice-bar class="marquee" background='transparent':speed='index == 0?50:100' :key="index" v-for='(list,index) in newCommentArr'>
           <div class="comment flex flex-align" v-for='(item,itemIndex) in list' :key="itemIndex" :style="{marginRight:random() + 'px', transform: `scale(1.${item.zan_count})`}"
             @click="zan(item)">
             <transition enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown" :key="itemIndex"  mode="out-in">
@@ -55,7 +54,7 @@
               </div>
             </div>
           </div>
-        </marquee>
+        </van-notice-bar>
       </div>
 
       <div class="slogan">
@@ -211,12 +210,6 @@ export default {
     random() {
       return randomNum(30, 60)
     },
-    stop(index) {
-      this.$refs.marquee[index].stop()
-    },
-    start(index) {
-      this.$refs.marquee[index].start()
-    },
     zan(item) {
       let data = {
         params: {
@@ -336,7 +329,6 @@ export default {
 
 .comment {
   display: inline-block;
-  margin-bottom: 20px;
   position: relative;
 }
 
@@ -398,3 +390,16 @@ export default {
   z-index: 20;
 }
 </style>
+<style>
+.marquee.van-notice-bar{
+  padding:0;
+  height: auto;
+  line-height: normal;
+}
+
+.marquee.van-notice-bar .van-notice-bar__wrap{
+  height: 60px;
+}
+</style>
+
+
