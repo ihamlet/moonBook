@@ -13,8 +13,10 @@
             <span v-line-clamp:20="1" :class="[item.card_level>'0'?'vip-highlight':'']">{{item.user.name}}</span>
             <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level'/>
           </div>
-          <div class="titmeago">
-            {{getTimeAgo(item.create_time)}} <span v-if='item.sign_days!="0"&&item.tags=="阅读打卡"'>{{`坚持阅读${item.sign_days}天`}}</span>
+          <div class="titmeago flex flex-align">
+            {{getTimeAgo(item.create_time)}} 
+            <span v-if='item.sign_days!="0"&&item.tags=="阅读打卡"&&item.cate_id!=116'>{{`坚持阅读${item.sign_days}天`}}</span>
+            <span class="teacher-reading" v-line-clamp:20="1">{{`${getTags[1]?getTags[1]:''}${getTags[2]&&getTags[2]>0?` • 课堂阅读${getTags[2]}篇`:''}`}}</span>
           </div>
         </div>
         <div class="follow" v-if='!item.isMe&&item.user_id>0&&type!="zoom"'>
@@ -36,7 +38,7 @@
             <div @click="toSchoolHome(item)">{{item.user_school_name}}</div>
           </van-tag>
           <div class="cate theme-color" size="large" v-line-clamp:20="1" plain v-if='item.tags' @click='toPopupHelp(item)'>
-              # {{getTags[0]}} {{getTags[1]?`来自:${getTags[1]}`:''}}
+              # {{getTags[0]}} {{item.banji_name?`来自:${item.banji_name}`:''}}
           </div>
         </div>
       </div>
@@ -363,5 +365,10 @@ export default {
 
 .cate {
   flex: 2;
+}
+
+.teacher-reading{
+  flex: 1;
+  margin-left: 10px;
 }
 </style>

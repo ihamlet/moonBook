@@ -22,7 +22,7 @@
     <div class="release-footer-bar">
       <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
         <i class="iconfont">&#xe664;</i>
-        打卡后发布
+        发布
       </van-button>
       <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
         <tips :isShow='show' position='bottom' @close='setReleaseSwitch(false)' />
@@ -123,6 +123,8 @@ export default {
       axios.get('/book/school_banji/getlist', data).then(res => {
         switch (res.data.status) {
           case 1:
+            
+
             this.banjiList = res.data.data
             break
         }

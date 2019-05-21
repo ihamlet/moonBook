@@ -48,7 +48,7 @@
     <div class="release-footer-bar" v-else>
       <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
         <i class="iconfont">&#xe664;</i>
-        课堂故事
+        课堂阅读
       </van-button>
     </div>
   </div>

@@ -45,7 +45,7 @@
 
           <div class="item-data item-ability">
             <div class="sub">学习力</div>
-            <div class="item-box">超过 <span class="percentage">86%</span> 的同学</div>
+            <div class="item-box">超过 <span class="percentage">{{$route.query.ahead_percent}}%</span> 的同学</div>
             <i class="iconfont">&#xe666;</i>
           </div>
         </div>

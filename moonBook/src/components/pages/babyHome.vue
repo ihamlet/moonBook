@@ -654,6 +654,7 @@ export default {
                 back: this.$route.name,
                 cate_id: 133,
                 tags:'阅读打卡',
+                ahead_percent: this.childInfo.ahead_percent,
                 ...res.data.data.stat_data
               }
             })

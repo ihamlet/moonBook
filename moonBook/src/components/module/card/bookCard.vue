@@ -75,7 +75,7 @@ export default {
       }
     },
     toBookDetails(item) {
-      this.$router.replace({
+      this.$router.push({
         name: 'book-details',
         query: {
           id: item.book_id

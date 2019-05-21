@@ -1,6 +1,7 @@
 <template>
   <div class="bookshelf">
     <van-search v-model="keyword" placeholder="请输入搜索关键词" show-action shape="round" @search="onSearch">
+      <div class="card-school-name theme-color" slot="label" @click="toShcoolHome">{{userDataState.card_school_name}}</div>
       <div slot="action" class="theme-color" @click="onSearch">搜索</div>
     </van-search>
     <van-tabs color='#0084ff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex" @click="onClick" @disabled='onClickDisabled'>
@@ -46,7 +47,7 @@ export default {
       finished: false,
       show: false,
       keyword: '',
-      tabIndex: 0,
+      tabIndex: 1,
       selectTag: [{
         title: '年龄',
         arr: ['3-5', '5-6']
@@ -69,14 +70,16 @@ export default {
           sort: 'new',
         },
         content: []
-      }, {
-        title: '未读',
-        params: {
-          sort: 'new',
-          is_read: 0
-        },
-        content: []
-      }, {
+      }, 
+      // {
+      //   title: '未读',
+      //   params: {
+      //     sort: 'new',
+      //     is_read: 0
+      //   },
+      //   content: []
+      // },
+       {
         title: '筛选'
       }],
       selsetData: ''
@@ -94,7 +97,8 @@ export default {
       let data = {
         params: {
           page: this.page,
-          child_id: this.userDataState.child_id
+          child_id: this.userDataState.child_id,
+          card_id: this.userDataState.card_id
         }
       }
 
@@ -195,6 +199,14 @@ export default {
         }
       }
 
+    },
+    toShcoolHome(){
+      this.$router.push({
+        name:'apps-school',
+        query:{
+          id: this.userDataState.card_school_id
+        }
+      })
     }
   }
 }

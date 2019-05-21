@@ -322,7 +322,7 @@ export default {
             break
             case 'class-home':
               data.banji_id = this.$route.query.id
-              data.tags = this.$route.query.tags || `${this.tag.cate_name},${this.userDataState.teacher_banji_name}`
+              data.tags = this.$route.query.tags || `${this.tag.cate_name},${this.userDataState.teacher_duty},${this.userDataState.class_post_count}`
             break
             case 'apps-school':
               data.school_id = this.$route.query.id
