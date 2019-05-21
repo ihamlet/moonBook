@@ -3,8 +3,8 @@
         <img class="head-bg" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/newBook.jpg" />
         <!-- <van-pull-refresh v-model="loading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-            <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
-              <div class="create-time theme-color" v-if='list.title=="最新"&&timediff(item,itemIndex)'>
+            <van-cell v-for="(item,index) in list" :key="index">
+              <div class="create-time theme-color">
                 {{getTimeAgo(item.create_time)}}
               </div>
               <bookCard :item='item' :type='list.title' />
@@ -16,25 +16,24 @@
 <script>
 import axios from './../lib/js/api'
 import { mapGetters } from 'vuex'
+import bookCard from './../module/card/bookCard'
 
 export default {
     name:'new-book',
+    components:{
+        bookCard
+    },
     data() {
         return {
-            
+            loading: false,
+            finished: false,
         }
     },
     computed: {
       ...mapGetters(['userDataState'])  
     },
-    created () {
-        this.fetchData()
-    },
-    watch: {
-      '$router':'fetchData'  
-    },
     methods: {
-        fetchData(){
+        onLoad(){
             
         }
     }
@@ -42,6 +41,7 @@ export default {
 </script>
 <style scoped>
 .head-bg{
-
+    position: fixed;
+    top: 0;
 }
 </style>
