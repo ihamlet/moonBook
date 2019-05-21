@@ -27,6 +27,8 @@ export default {
         return {
             loading: false,
             finished: false,
+            page:1,
+            list:[]
         }
     },
     computed: {
@@ -34,7 +36,35 @@ export default {
     },
     methods: {
         onLoad(){
-            
+            let data = {
+                params:{
+                    sort: 'new',
+                    start_time: Date.parse(new Date()) - 86400*7000
+                }
+            }
+
+            axios.get('/book/SchoolShelfBook/getList',data).then(res=>{
+                switch (res.data.status) {
+                case 1:
+                    if (this.page == 1) {
+                        this.list = res.data.data
+                    } else {
+                        this.list = this.list.concat(res.data.data)
+                    }
+                    this.loading = false
+                    this.page++
+                    if (this.list.length >= res.data.count) {
+                        this.finished = true
+                    }
+                    break
+                case 0:
+                    this.page = 1
+                    this.loading = false
+                    this.finished = true
+                    this.list = []
+                    break
+                }
+            })
         }
     }
 }
