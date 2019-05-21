@@ -1,21 +1,24 @@
 <template>
     <div class="new-book">
         <img class="head-bg" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/newBook.jpg" />
-        <!-- <van-pull-refresh v-model="loading" @refresh="onRefresh">
-          <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-            <van-cell v-for="(item,index) in list" :key="index">
-              <div class="create-time theme-color">
-                {{getTimeAgo(item.create_time)}}
-              </div>
-              <bookCard :item='item' :type='list.title' />
-            </van-cell>
-          </van-list>
-        </van-pull-refresh> -->
+        <div class="list-padding">
+            <van-pull-refresh v-model="loading" @refresh="onRefresh">
+            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+                <van-cell v-for="(item,index) in list" :key="index">
+                <div class="create-time theme-color" v-if='timediff(item,index)'>
+                    {{getTimeAgo(item.create_time)}}
+                </div>
+                <bookCard :item='item' :type='list.title' />
+                </van-cell>
+            </van-list>
+            </van-pull-refresh>
+        </div>
     </div>    
 </template>
 <script>
 import axios from './../lib/js/api'
 import { mapGetters } from 'vuex'
+import { timeago } from './../lib/js/util'
 import bookCard from './../module/card/bookCard'
 
 export default {
@@ -43,7 +46,7 @@ export default {
                 }
             }
 
-            axios.get('/book/SchoolShelfBook/getList',data).then(res=>{
+           return axios.get('/book/SchoolShelfBook/getList',data).then(res=>{
                 switch (res.data.status) {
                 case 1:
                     if (this.page == 1) {
@@ -65,6 +68,30 @@ export default {
                     break
                 }
             })
+        },
+        onRefresh(){
+            this.page = 1
+            this.onLoad().then(() => {
+                this.loading = false
+            })
+        },
+        getTimeAgo(time){
+            return timeago(time*1000)
+        },
+        timediff(item,index){
+            if(index == 0){
+                return true
+            }
+
+            if(index){
+                let timeHistory = timeago(this.list[index-1].create_time * 1000)
+                let time = timeago(item.create_time*1000)
+                if(timeHistory == time){
+                return false
+                }else{
+                return true
+                }
+            }
         }
     }
 }
@@ -73,5 +100,9 @@ export default {
 .head-bg{
     position: fixed;
     top: 0;
+}
+
+.list-padding{
+    margin-top: 30%;
 }
 </style>
