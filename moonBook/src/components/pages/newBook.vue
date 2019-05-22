@@ -6,7 +6,7 @@
                 <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
                     <van-cell v-for="(item,index) in list" :key="index">
                     <div class="hd-bar flex flex-align" v-if='timediff(item,index)'>
-                        <div class="card-school-name">{{index == 0?userDataState.card_school_name:''}}</div>
+                        <div class="card-school-name theme-color" @click="toSchoolHome">{{index == 0?userDataState.card_school_name:''}}</div>
                         <div class="time">{{getTimeAgo(item.create_time)}}</div>   
                     </div>
                     <bookCard :item='item' :type='list.title' />
@@ -105,6 +105,14 @@ export default {
             this.$router.push({
                 name:'bookshelf'
             })
+        },
+        toSchoolHome(){
+            this.$router.push({
+                name:'apps-school',
+                query:{
+                    id: this.userDataState.card_school_id
+                }
+            })
         }
     }
 }
@@ -140,7 +148,7 @@ export default {
 
 .hd-bar{
     justify-content: space-between;
-    height: 46px;
-    line-height: 46px;
+    height: 32px;
+    line-height: 32px;
 }
 </style>
