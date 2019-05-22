@@ -5,7 +5,7 @@
       <div slot="action" class="theme-color" @click="onSearch">搜索</div>
     </van-search>
     <van-tabs color='#0084ff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex" @click="onClick" @disabled='onClickDisabled'>
-      <div class="new-point" slot='nav-right' v-if='tabIndex == 1&&isNewPointShow'></div>
+      <div class="new-point" slot='nav-right' v-if='isNewPointShow'></div>
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index" :disabled='list.title=="筛选"'>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">

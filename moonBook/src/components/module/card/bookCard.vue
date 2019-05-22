@@ -3,9 +3,8 @@
     <van-col span="7">
       <div class="book-cover">
         <img  :src="thumb(item.book_photo)" @error="imgError"/>
-        <div class="is-read flex flex-justify" v-if='item.is_read == 1'>
-          <span class="read-text">已 读</span>
-          <i class="iconfont">&#xe6b3;</i>
+        <div class="is-read" v-if='item.is_read == 1'>
+          <i class="iconfont">&#xe66f;</i>
         </div>
       </div>
     </van-col>
@@ -170,28 +169,25 @@ export default {
 .is-read{
   position: absolute;
   left: 0;
-  top: 0;
-  writing-mode:vertical-lr;
-  height: 5rem /* 80/16 */;
+  top: 10px;
   text-align: center;
 }
 
-.read-text,
-.is-read .iconfont{
+.is-read::after{
+  content: '';
   position: absolute;
+  top: -10px;
+  left: 6px;
+  width: 28px;
+  height: 33px;
+  background: #fff;
+  z-index: 1;
 }
 
 .is-read .iconfont{
   font-size: 2.5rem /* 40/16 */;
-  top: 0;
   color: #8BC34A;
-  z-index: 1;
-}
-
-.read-text{
-  color: #fff;
-  z-index: 2;
-  font-size: .75rem /* 12/16 */;
-  top: 6px;
+  z-index: 3;
+  position: relative;
 }
 </style>
