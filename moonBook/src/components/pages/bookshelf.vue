@@ -1,10 +1,11 @@
 <template>
   <div class="bookshelf">
-    <van-search v-model="keyword" placeholder="请输入搜索关键词" show-action shape="round" @search="onSearch">
-      <div class="card-school-name theme-color" slot="label" @click="toShcoolHome">{{userDataState.card_school_name}}</div>
+    <van-search v-model="keyword" placeholder="请输入搜索关键词" show-action shape="round" @search="onSearch" >
+      <div class="card-school-name theme-color" v-line-clamp:20="1" slot="label" @click="toShcoolHome">{{userDataState.card_school_name}}</div>
       <div slot="action" class="theme-color" @click="onSearch">搜索</div>
     </van-search>
     <van-tabs color='#0084ff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex" @click="onClick" @disabled='onClickDisabled'>
+      <div class="new-point" slot='nav-right' v-if='tabIndex == 1&&isNewPointShow'></div>
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index" :disabled='list.title=="筛选"'>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
@@ -28,7 +29,7 @@
 import axios from './../lib/js/api'
 import bookCard from './../module/card/bookCard'
 import FilterList from './../module/mold/filterList'
-import { timeago } from './../lib/js/util'
+import { format } from './../lib/js/util'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -82,7 +83,8 @@ export default {
        {
         title: '筛选'
       }],
-      selsetData: ''
+      selsetData: '',
+      newBookDate:''
     }
   },
   watch: {
@@ -129,6 +131,7 @@ export default {
           case 1:
             if (this.page == 1) {
               this.tab[this.tabIndex].content = res.data.data
+              this.newBookDate = res.data.data[0].create_time*1000
             } else {
               this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
             }
@@ -182,7 +185,7 @@ export default {
       this.onRefresh()
     },
     getTimeAgo(time){
-      return timeago(time*1000)
+      return format(time*1000,'yyyy-MM-dd')
     },
     timediff(item,itemIndex){
       if(itemIndex == 0){
@@ -190,43 +193,57 @@ export default {
       }
 
       if(itemIndex){
-        let timeHistory = timeago(this.tab[this.tabIndex].content[itemIndex-1].create_time * 1000)
-        let time = timeago(item.create_time*1000)
+        let timeHistory = format(this.tab[this.tabIndex].content[itemIndex-1].create_time * 1000,'yyyy-MM-dd')
+        let time = format(item.create_time*1000,'yyyy-MM-dd')
         if(timeHistory == time){
           return false
         }else{
           return true
         }
       }
-
     },
     toShcoolHome(){
-      this.$router.push({
-        name:'apps-school',
-        query:{
-          id: this.userDataState.card_school_id
+      if(this.userDataState.card_school_id > 0){
+        this.$router.push({
+          name:'apps-school',
+          query:{
+            id: this.userDataState.card_school_id
+          }
+        })
+      }
+    },
+    isNewPointShow(){
+      if(this.newBookDate){
+        let boolean
+
+        let day = 86400*7000
+        let newDate = Date.parse(new Date())
+
+        if( this.newBookDate + day > newDate && newDate < this.newBookDate ){
+          boolean = true
+        }else{
+          boolean = false
         }
-      })
+
+        return boolean
+      }
     }
   }
 }
 </script>
-<style>
-.create-time{
-  height: 2.25rem /* 36/16 */;
-  padding-left: .3125rem /* 5/16 */;
-  line-height: 2.25rem /* 36/16 */;
-  font-weight: 700;
-  position: relative;
-  margin-bottom: .625rem /* 10/16 */;
+<style scoped>
+.new-point{
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: red;
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  transform: translate3d(250%, 0, 0);
 }
 
-.create-time::before{
-  content: '';
-  position: absolute;
-  bottom: 0;
-  width: 1.875rem /* 30/16 */;
-  height: .1875rem /* 3/16 */;
-  background: #0084ff;
+.card-school-name{
+  max-width: 100px;
 }
 </style>

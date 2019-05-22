@@ -19,13 +19,11 @@
         <div class="current-city">
           <div class="district">
             <van-cell-group v-if='userPointState'>
-              <van-cell :title="`当前城市:${userPointState.city}`" is-link :arrow-direction="isSilde?'up':'down'" value="切换区县"
-                @click="silde" />
+              <van-cell :title="`当前城市:${userPointState.city}`" is-link :arrow-direction="isSilde?'up':'down'" value="切换区县" @click="silde" />
             </van-cell-group>
             <div class="list" v-show='isSilde'>
               <div class="item scroll-x">
-                <div class="district-name scroll-item" @click="selectCity(item.name)" v-for='(item,index) in cityCounty'
-                  :key="index">
+                <div class="district-name scroll-item" @click="selectCity(item.name)" v-for='(item,index) in cityCounty' :key="index">
                   {{item.name}}
                 </div>
               </div>
@@ -49,7 +47,7 @@
         </div>
       </div>
       <div class="list">
-        <div class="node-letter" v-show='height < scrollTop' :style="{top:scrollTop+54+'px'}">
+        <div class="node-letter" v-show='height < scrollTop'>
           <span>{{nodeLetter}}</span>
         </div>
         <van-cell-group v-for='(item,index) in cityData' :key='index'>
@@ -114,7 +112,7 @@ export default {
     this.fetchData()
   },
   mounted () {
-    window.addEventListener('scroll', this.handleScroll)   
+    window.addEventListener('scroll', this.handleScroll)
   },
   watch: {
     '$router': 'fetchData',
@@ -152,7 +150,7 @@ export default {
     },
     touchMove(event) {
       event.preventDefault()
-      let dom = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY);
+      let dom = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY)
       if (dom) {
         dom.click()
       }
@@ -232,10 +230,10 @@ export default {
 }
 
 .node-letter{
-  position: absolute;
+  position: fixed;
   z-index: 999;
   width: 100%;
-  transition: top 0.1s ease-out
+  top: 54px
 }
 
 .node-letter span,

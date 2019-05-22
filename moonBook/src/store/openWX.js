@@ -50,7 +50,7 @@ export default {
   actions: {
     //配置微信
     wxConfig(context, products) {
-      axios.post("/book/weixin/js_params", {
+     return axios.post("/book/weixin/js_params", {
           apiList: jsApiList,
           url: location.href.split('#')[0]
         })
@@ -72,8 +72,8 @@ export default {
           title = `【阅亮书架】${products.item.cate.cate_name?`#${products.item.cate.cate_name}#`:''}${products.item.title}`
           desc = products.item.details.replace(/<[^>]+>/g,"") || context.state.slogan
         } else {
-          title = products.item.title || '阅亮书架'
-          desc = products.item.hasvideo == "1"? `[小视频]${products.item.details.replace(/<[^>]+>/g,"").length?products.item.details:context.state.slogan}`: `${products.item.details.replace(/<[^>]+>/g,"").length?products.item.details:context.state.slogan}`
+          title = products.item.hasvideo == "1"?'在阅亮书架参与阅读打卡':products.item.title 
+          desc = products.item.hasvideo == "1"?`[小视频]${products.item.details.replace(/<[^>]+>/g,"").length?products.item.details:context.state.slogan}`: `${products.item.details.replace(/<[^>]+>/g,"").length?products.item.details:context.state.slogan}`
         }
 
         let data = {

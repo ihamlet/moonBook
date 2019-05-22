@@ -124,12 +124,12 @@ export default {
     wxShare() {
       const self = this
       let data = {
-        item: self.item,
+        item: this.item,
         success() {
           self.$router.go(-1)
         }
       }
-      self.share(data)
+      this.share(data)
     },
     toHome() {
       this.$router.push({

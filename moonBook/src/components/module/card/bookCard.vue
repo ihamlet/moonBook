@@ -192,6 +192,6 @@ export default {
   color: #fff;
   z-index: 2;
   font-size: .75rem /* 12/16 */;
-  top: .1875rem /* 3/16 */;
+  top: 6px;
 }
 </style>

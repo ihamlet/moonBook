@@ -27,7 +27,7 @@
                 <van-rate v-model="star" disabled disabled-color='#ffd21e'/>
                 <div class="book-info">
                   <div class="author" v-line-clamp:20="1"><b>作者:</b>{{details.author}}</div>
-                  <div class="borrow-count"><span class="people">{{details.borrow_count}}</span>人借过</div>
+                  <div class="borrow-count" v-if='details.borrow_count > 0'><span class="people">{{details.borrow_count}}</span>人借过</div>
                 </div>
               </div>
             </van-col>

@@ -2,23 +2,30 @@
     <div class="new-book">
         <img class="head-bg" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/newBook.jpg" />
         <div class="list-padding">
-            <van-pull-refresh v-model="loading" @refresh="onRefresh">
-            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-                <van-cell v-for="(item,index) in list" :key="index">
-                <div class="create-time theme-color" v-if='timediff(item,index)'>
-                    {{getTimeAgo(item.create_time)}}
-                </div>
-                <bookCard :item='item' :type='list.title' />
-                </van-cell>
-            </van-list>
+            <van-pull-refresh v-model="loading" @refresh="onRefresh" :key="userDataState.card_id">
+                <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+                    <van-cell v-for="(item,index) in list" :key="index">
+                    <div class="hd-bar flex flex-align" v-if='timediff(item,index)'>
+                        <div class="card-school-name">{{index == 0?userDataState.card_school_name:''}}</div>
+                        <div class="time">{{getTimeAgo(item.create_time)}}</div>   
+                    </div>
+                    <bookCard :item='item' :type='list.title' />
+                    </van-cell>
+                </van-list>
             </van-pull-refresh>
+        </div>
+
+        <div class="footer-bar">
+            <div class="btn-box">
+                <van-button round class="theme-btn" type="primary" size="normal" @click="toBookShelf">去书架看看</van-button>
+            </div>
         </div>
     </div>    
 </template>
 <script>
 import axios from './../lib/js/api'
 import { mapGetters } from 'vuex'
-import { timeago } from './../lib/js/util'
+import { format } from './../lib/js/util'
 import bookCard from './../module/card/bookCard'
 
 export default {
@@ -42,7 +49,8 @@ export default {
             let data = {
                 params:{
                     sort: 'new',
-                    start_time: Date.parse(new Date()) - 86400*7000
+                    start_time: Date.parse(new Date()) - 86400*7000,
+                    card_id: this.userDataState.card_id
                 }
             }
 
@@ -76,7 +84,7 @@ export default {
             })
         },
         getTimeAgo(time){
-            return timeago(time*1000)
+            return format(time*1000,'yyyy-MM-dd')
         },
         timediff(item,index){
             if(index == 0){
@@ -84,19 +92,29 @@ export default {
             }
 
             if(index){
-                let timeHistory = timeago(this.list[index-1].create_time * 1000)
-                let time = timeago(item.create_time*1000)
+                let timeHistory = format(this.list[index-1].create_time * 1000,'yyyy-MM-dd')
+                let time = format(item.create_time*1000,'yyyy-MM-dd')
                 if(timeHistory == time){
-                return false
+                    return false
                 }else{
-                return true
+                    return true
                 }
             }
+        },
+        toBookShelf(){
+            this.$router.push({
+                name:'bookshelf'
+            })
         }
     }
 }
 </script>
 <style scoped>
+.new-book{
+    min-height: 100vh;
+    background: #ffcf1a;
+}
+
 .head-bg{
     position: fixed;
     top: 0;
@@ -104,5 +122,25 @@ export default {
 
 .list-padding{
     margin-top: 30%;
+}
+
+.btn-box{
+   padding: 10px 15px;
+}
+
+.footer-bar{
+   position: fixed;
+   bottom: 0;
+}
+
+.footer-bar,
+.theme-btn{
+    width: 100%;
+}
+
+.hd-bar{
+    justify-content: space-between;
+    height: 46px;
+    line-height: 46px;
 }
 </style>

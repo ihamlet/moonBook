@@ -19,7 +19,7 @@
           <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
             <div class="volume">
               阅读量
-              <span class="number">{{list.week_read_count}}</span>
+              <span class="number">{{list.sign_read_count}}</span>
             </div>
             <div class="content">
               <div class="avatar" v-if="list.avatar" :class="list.sex">

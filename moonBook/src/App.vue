@@ -48,14 +48,14 @@ export default {
   },
   created () {
     console.log('我们都是宇宙的尘埃，茫茫星辰，在找寻闪闪发光的你。')
-
-    this.fetchData()
     this.wxConfig()
-    
+
     this.wxGetLocation().then(res=>{
-      let location = [res.longitude,res.latitude]
-      this.center = location
+        let location = [res.longitude,res.latitude]
+        this.center = location
     })
+
+    this.fetchData() 
   },
   watch: {
     center(val){
@@ -1285,43 +1285,22 @@ i.iconfont.vip-1 {
   margin: 0 .3125rem /* 5/16 */;
 }
 
-/* TGplayer
-以下样式设置的目的:
-video在IOS9(包括9)以上系统版本,微信/手Q里面能自动播放,
-除满足上述条件以外的IOS系统播放video,
-需要借助以下样式设置来屏蔽默认video控件,
-并通过videoPlayer.currentTime来实现播放效果
-*/
-/* .IIV::-webkit-media-controls-play-button,
-.IIV::-webkit-media-controls-start-playback-button {
-    opacity: 0;
-    pointer-events: none;
-    width: 5px;
+
+.create-time{
+  height: 2.25rem /* 36/16 */;
+  padding-left: .3125rem /* 5/16 */;
+  line-height: 2.25rem /* 36/16 */;
+  font-weight: 700;
+  position: relative;
+  margin-bottom: .625rem /* 10/16 */;
 }
 
-button.buttonStyle {
-    position: absolute;
-    left: 50%;
-    bottom: 50%;
-    background-color: #fff;
-    transform: translate3d(-50%,-50%,0);
+.create-time::before{
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 1.875rem /* 30/16 */;
+  height: .1875rem /* 3/16 */;
+  background: #0084ff;
 }
-
-.compatibleStyle{
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
-    -ms-backface-visibility: hidden;
-    -webkit-perspective: 0;
-    -webkit-transform: translate3d(0,0,0);
-    visibility: visible;
-}
-
-
-.IIV::-webkit-media-controls-play-button,
-.IIV::-webkit-media-controls-start-playback-button {
-    opacity: 0;
-    pointer-events: none;
-    width: 5px;
-} */
 </style>
