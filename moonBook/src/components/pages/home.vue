@@ -51,9 +51,13 @@
             </van-button>
         </div>
 
-        <!-- 城市列表 -->
-        <!-- <van-popup v-model="cityListShow" class="page-popup" position="right" get-container='#app'>
-            <city @close='cityListShow = false'/>
+        
+        <!-- 礼品弹窗 -->
+        <!-- <van-popup v-model="show" position="top" class="gift-popup">
+            <div class='card-line'></div>
+            <div class="gift-card">
+                <div class="round"></div>
+            </div>
         </van-popup> -->
 
     </div>
@@ -96,6 +100,7 @@ export default {
             btnPulse:false,
             themeBarSearch:false,
             isAdshow: true,
+            show: false,
             scrollTop:'',
             domHeight:'',
             searchText:'搜索图书/幼儿园/文章',
@@ -110,6 +115,9 @@ export default {
         this.getDomHeight()
         this.fetchData()
     }, 
+    destroyed() {
+        window.removeEventListener('scroll', this.handleScroll)
+    },
     mounted () {
         window.addEventListener('scroll', this.handleScroll)   
     },
@@ -121,6 +129,7 @@ export default {
         fetchData(){
             setInterval(()=>{
                 this.btnPulse = true
+                this.show = true
             },3000)
 
             axios.get('/book/index/home_v2').then(res=>{
@@ -205,6 +214,33 @@ b.read-dot{
   border-radius: .625rem /* 10/16 */;
   bottom: .9375rem /* 15/16 */;
   right: 0;
+}
+
+.gift-popup{
+    width: 65%;
+    height: 45vh;
+    top: 20%;
+    border-radius: 4px;
+    overflow-y: inherit;
+}
+
+.round{
+    width: 6px;
+    height: 6px;
+    background: #000;
+    border-radius: 50%;
+    margin: 5px auto;
+}
+
+.card-line{
+    width: 2px;
+    height: 30vh;
+    position: absolute;
+    background: #fff;
+    top: -50%;
+    left: 50%;
+    margin-left: -1px;
+    z-index: -1;
 }
 </style>
 <style>

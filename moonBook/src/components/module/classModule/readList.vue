@@ -5,13 +5,14 @@
         <i class="iconfont">&#xe61d;</i>
         <span class="name">{{title}}</span>
       </div>
+      <div class="showdown"></div>
       <van-row v-if='count > 0'>
         <div class="ranking-list scroll-x">
-          <div class="item flex flex-align" v-for='(item,index) in rankList' :key="index">
+          <div class="item flex flex-align fadeInRight animated" :style="{animationDelay:`${200*index}ms`}" v-for='(item,index) in rankList' :key="index">
             <div class="ranking">
               <svg-ranking :ranking="item.rank" type="module" />
             </div>
-            <div class="name" v-if='type == "school"' @click="toBanjiHome(item)">
+            <div class="name rank-name" v-if='type == "school"' @click="toBanjiHome(item)">
               {{item[field]}}
             </div>
             <div class="avatar" v-else-if='item[field]' @click="toBabyHome(item)">
@@ -125,6 +126,20 @@ export default {
   text-align: center;
   display: grid;
   padding-right: .625rem /* 10/16 */;
+  position: relative;
+  z-index: 2;
+}
+
+.showdown{
+  position: absolute;
+  content: '';
+  width: 10px;
+  height: 50px;
+  box-shadow: 0 0 15px rgb(0, 0, 0, .2);
+  left: -10px;
+  top: 50%;
+  z-index: 1;
+  transform: translate3d(0, -50%, 0);
 }
 
 .icon .iconfont {
@@ -168,5 +183,9 @@ export default {
 .ranking-list .item{
   margin-right: .625rem /* 10/16 */;
   white-space: nowrap 
+}
+
+.rank-name{
+  color: #909399;
 }
 </style>

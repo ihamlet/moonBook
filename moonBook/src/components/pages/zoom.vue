@@ -127,6 +127,9 @@ export default {
   watch: {
     $router: "fetaData"
   },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
   mounted() {
     window.addEventListener("scroll", this.handleScroll)
   },
@@ -168,12 +171,12 @@ export default {
       let scrollTop =
         window.pageYOffset ||
         document.documentElement.scrollTop ||
-        document.body.scrollTop;
-      this.scrollTop = scrollTop;
+        document.body.scrollTop
+      this.scrollTop = scrollTop
       if (this.domHeight < this.scrollTop) {
-        this.fixedHeaderBar = false;
+        this.fixedHeaderBar = false
       } else {
-        this.fixedHeaderBar = true;
+        this.fixedHeaderBar = true
       }
     },
     getDomHeight() {

@@ -4,7 +4,7 @@
     <div class="baby-card">
       <van-cell>
         <div class="info-card flex flex-align">
-          <div class="child-info flex flex-align">
+          <div class="child-info flex flex-align" v-if='childInfo'>
             <div class="avatar">
               <img :src="childInfo.avatar" />
             </div>
@@ -12,8 +12,11 @@
               {{childInfo.name}}
             </div>
           </div>
+          <div class="add-child theme-color" v-else @click="toEditChild">
+            添加宝贝
+          </div>
           <div class="days">
-            {{childInfo.sign_days}}/14天
+            {{childInfo.sign_days?childInfo.sign_days:'0'}}/14天
           </div>
         </div>
 
@@ -121,6 +124,15 @@ export default {
         name:'advertisingDetails',
         query:{
           coupon_id:item.coupon_id
+        }
+      })
+    },
+    toEditChild(){
+      this.$router.push({
+        name:'edit-child',
+        query:{
+          type: 'add',
+          pageTitle: '添加宝贝'
         }
       })
     }

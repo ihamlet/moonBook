@@ -1,19 +1,25 @@
 <template>
   <div class="punch-list page-padding">
-    <van-nav-bar :title="$route.meta.title" />
-    <van-pull-refresh v-model="loading" @refresh="onRefresh">
-        <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-            <div class='content' v-if='list.length'>
-                <van-cell v-for="(item,index) in list" :key="index" >
-                    <div class="date-title" v-if='timediff(item,index)'>{{item.create_date.split(' ')[0]}}</div>
-                    <cardPunch :item='item'/>
-                </van-cell>
-            </div>
-            <div class="no-list" v-else>
-                尚无打卡数据 <span class="theme-color" @click="punch">参与阅读打卡</span>
-            </div>
-        </van-list>
-    </van-pull-refresh>
+    <van-nav-bar title="阅读列表" :border='false' fixed>
+      <div class="punch-btn theme-color" slot='right' @click="">
+        阅读打卡
+      </div>
+    </van-nav-bar>
+    <div class="list">
+      <van-pull-refresh v-model="loading" @refresh="onRefresh">
+          <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+              <div class='content' v-if='list.length'>
+                  <van-cell v-for="(item,index) in list" :key="index">
+                      <div class="date-title" v-if='timediff(item,index)'>{{item.create_date.split(' ')[0]}}</div>
+                      <cardPunch :item='item'/>
+                  </van-cell>
+              </div>
+              <div class="no-list" v-else>
+                  尚无打卡数据 <span class="theme-color" @click="punch">参与阅读打卡</span>
+              </div>
+          </van-list>
+      </van-pull-refresh>
+    </div>
   </div>
 </template>
 <script>
@@ -162,5 +168,9 @@ export default {
 
 .date-title{
   margin-bottom: 20px;
+}
+
+.list{
+  padding-top: 45px;
 }
 </style>

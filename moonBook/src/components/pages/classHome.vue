@@ -135,11 +135,11 @@ export default {
         path: 'apps-find'
       }, {
         name: '才艺',
-        iconClass: 'icon-caiyi',
+        iconClass: 'icon-tiaosepan',
         path: 'apps-find'
       }, {
         name: '荣誉',
-        iconClass: 'icon-rongyu',
+        iconClass: 'icon-jiangbei',
         path: 'apps-find'
       }, {
         name: '班级交流',
@@ -162,6 +162,9 @@ export default {
   beforeRouteLeave(to, from, next) {
     to.meta.keepAlive = false
     next()
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)

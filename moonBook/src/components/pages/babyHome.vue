@@ -169,7 +169,6 @@ export default {
 
       return array
     },
-
     //勋章等级
     level(){
         let obj 
@@ -252,6 +251,9 @@ export default {
     next(vm => {
       vm.request()
     })
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
@@ -654,7 +656,6 @@ export default {
                 back: this.$route.name,
                 cate_id: 133,
                 tags:'阅读打卡',
-                ahead_percent: this.childInfo.ahead_percent,
                 ...res.data.data.stat_data
               }
             })

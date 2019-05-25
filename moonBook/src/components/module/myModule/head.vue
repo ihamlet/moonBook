@@ -66,6 +66,9 @@ export default {
       applyShow: false
     }
   },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
   mounted() {
     window.addEventListener("scroll", this.handleScroll)
   },

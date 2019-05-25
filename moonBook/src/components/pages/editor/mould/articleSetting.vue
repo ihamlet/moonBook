@@ -8,7 +8,7 @@
       <van-checkbox-group v-model="settingResult">
         <div class="form-title">同步到</div>
         <van-cell-group>
-          <van-cell v-for="(item,index) in resultList" clickable :key="index" :title="item.title" @click="toggle(index)">
+          <van-cell :border='false' v-for="(item,index) in resultList" clickable :key="index" :title="item.title" @click="toggle(index)">
             <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes"/>
           </van-cell>
         </van-cell-group>

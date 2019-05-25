@@ -1,7 +1,7 @@
 <template>
   <div class="fresh-list">
     <div class="content scroll-x" :class="type" v-if='list.length > 0'>
-      <div class="scroll-item" v-for="(item,index) in list" :key="index" @click="toZoom(item)">
+      <div class="scroll-item fadeInRight animated" v-for="(item,index) in list" :style="{animationDelay:`${200*index}ms`}" :key="index" @click="toZoom(item)">
         <div class="avatar">
           <img v-if="item[avatar]" @error='imgError' :src="avatarLink(item[avatar])" :alt="item[name]">
         </div>

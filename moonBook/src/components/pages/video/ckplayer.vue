@@ -76,6 +76,9 @@ export default {
       scrollTop:0
     }
   },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
   mounted() {
     this.getDomTop()
     window.addEventListener('scroll', this.handleScroll)

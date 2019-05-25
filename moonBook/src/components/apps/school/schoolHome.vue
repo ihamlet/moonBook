@@ -4,9 +4,6 @@
       <div class="head-bar-title" slot="title" @click="actionsheetShow = true">
         {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont">&#xe608;</i>
       </div>
-      <!-- <div class="head-bar-text" slot='right' v-if='manage'  @click="toManage">
-        <span class="text">管理学校</span>
-      </div> -->
     </van-nav-bar>
     <div class="container">
       <div class="header-card flex flex-align theme-school-background" ref="head">
@@ -28,7 +25,7 @@
       <div class="module">
         <read-list type='school' title='阅读榜' field='name' />
       </div>
-      <div>
+      <div class="list">
         <van-tabs color='#0084ff' :line-width='20' :line-height='4' animated swipeable>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
@@ -100,20 +97,20 @@ export default {
       fixedHeaderBar: true,
       actionsheetShow: false,
       appsList: [ {
+        name: '介绍',
+        iconClass: 'icon-fengche',
+        path: 'school-intro'
+      }, {
+        name: '荣誉',
+        iconClass: 'icon-jiangbei',
+        path: 'apps-find',
+      }, {
         name: '阅读',
         iconClass: 'icon-yuedu',
         path: 'apps-find',
       }, {
-        name: '讲故事',
-        iconClass: 'icon-jianggushi',
-        path: '404',
-      }, {
-        name: '荣誉',
-        iconClass: 'icon-rongyu',
-        path: 'apps-find',
-      }, {
         name: '才艺',
-        iconClass: 'icon-caiyi',
+        iconClass: 'icon-tiaosepan',
         path: 'apps-find',
       }],
       tab: [{
@@ -122,7 +119,7 @@ export default {
       }],
       investment:{
         link:'#',
-        text:'每日餐谱',
+        text:'今日餐谱',
         banner: ''
       }
     }
@@ -131,6 +128,9 @@ export default {
     next(vm => {
       vm.request()
     })
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll)
@@ -326,7 +326,15 @@ export default {
                 }
               }
             })
-            e.params = params
+
+            if(e.path == 'school-intro'){
+              e.params = {
+                id: this.$route.query.id
+              }
+            }else{
+              e.params = params
+            }
+            
           })
         }
       })
@@ -338,6 +346,10 @@ export default {
 }
 </script>
 <style scoped>
+.container{
+  background: #fff;
+}
+
 .header-card {
   padding: 30px 0.9375rem /* 15/16 */ 0.625rem /* 10/16 */ 0.9375rem /* 15/16 */;
   height: 9.375rem /* 150/16 */;
@@ -349,26 +361,25 @@ export default {
   position: absolute;
   width: 62.5rem /* 1000/16 */;
   height: 62.5rem /* 1000/16 */;
-  background: #f2f6fc;
+  background: #fff;
   border-radius: 62.5rem /* 1000/16 */;
   left: 50%;
-  top: 50%;
+  top: 32%;
   transform: translate3d(-50%, 0, 0);
 }
 
 .school-logo,
 .school-logo img {
-  width: 3.75rem /* 60/16 */;
-  height: 3.75rem /* 60/16 */;
+  width: 50px;
+  height: 50px;
   overflow: hidden;
   border-radius: 50%;
   background: #fff;
 }
 
 .school-logo {
-  border: 0.25rem /* 4/16 */ solid #fff;
-  box-shadow: 0 0.3125rem /* 5/16 */ 0.9375rem /* 15/16 */
-    rgba(255, 87, 34, 0.2);
+  border: 4px solid #fff;
+  box-shadow: 0 5px 15px rgba(0, 188, 212, 0.3);
   margin: 0 auto;
 }
 
@@ -390,7 +401,7 @@ export default {
 }
 
 .theme-school-background {
-  background: linear-gradient(#FF9800, #F44336);
+  background: linear-gradient(127deg,#03A9F4, #00BCD4);
 }
 
 .run-type{
@@ -401,5 +412,9 @@ export default {
 
 .apps{
   position: relative;
+}
+
+.list{
+  background: #f2f6fc;
 }
 </style>

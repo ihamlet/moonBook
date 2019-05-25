@@ -36,7 +36,7 @@
       </div>
 
       <div class="comment-wall" v-if='commentList.length'>
-        <van-notice-bar class="marquee" background='transparent':speed='index == 0?50:100' :key="index" v-for='(list,index) in newCommentArr'>
+        <van-notice-bar class="marquee" background='transparent' :speed='index == 0?50:100' :key="index" v-for='(list,index) in newCommentArr'>
           <div class="comment flex flex-align" v-for='(item,itemIndex) in list' :key="itemIndex" :style="{marginRight:random() + 'px', transform: `scale(1.${item.zan_count})`}"
             @click="zan(item)">
             <transition enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown" :key="itemIndex"  mode="out-in">

@@ -38,12 +38,13 @@
 <script>
 import axios from './../lib/js/api'
 import QRcode from 'qrcode'
-import { mapGetters,mapActions } from 'vuex'
+import { mapGetters,mapActions,mapState } from 'vuex'
 import qs from 'qs'
 
 export default {
   name: 'share',
   computed: {
+    ...mapState('opewnWX',['ready']),
     ...mapGetters(['userDataState','userPointState']),
     item() {
       let data = {
@@ -70,28 +71,34 @@ export default {
     }
   },
   updated(){   
-    const self = this
-    self.$nextTick(() => {
-      let data = {
-        item: self.item,
-        success() {
-          self.$router.go(-1)
-        }
-      }
-      self.share(data)
-    })
+    this.wxShare()
   },
   created () {
     this.fetchData()
   },
   watch: {
-    '$router':'fetchData'
+    '$router':'fetchData',
+    ready(){
+      this.wxShare()
+    }
   },
   methods: {
     ...mapActions(['getUserData']),
     ...mapActions('openWX', ['share']),
     fetchData(){
       this.qrcode()
+    },
+    wxShare(){
+      const self = this
+      self.$nextTick(() => {
+        let data = {
+          item: self.item,
+          success() {
+            self.$router.go(-1)
+          }
+        }
+        self.share(data)
+      })
     },
     qrcode() {
       let link = `${location.href.replace('/#','/?#')}`

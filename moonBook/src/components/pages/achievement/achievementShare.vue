@@ -342,7 +342,7 @@ export default {
 
 .level {
   position: absolute;
-  bottom: 18%;
+  bottom: 20%;
   left: 50%;
   font-size: 30px;
   font-weight: 700;
@@ -399,8 +399,8 @@ export default {
 }
 
 .medal-box.is-mine .ribbon{
-  width: 48%;
-  margin-left: -24%;
+  width: 44%;
+  margin-left: -22%;
 }
 
 .medal-box.is-mine .ribbon-content{
@@ -419,8 +419,8 @@ export default {
   content: '';
   width: 0;
   height: 0;
-  border-top: 16px solid transparent;
-  border-bottom: 16px solid transparent;
+  border-top: 19px solid transparent;
+  border-bottom: 19px solid transparent;
   position: absolute;
 }
 </style>

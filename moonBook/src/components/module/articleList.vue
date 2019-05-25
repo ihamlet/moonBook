@@ -47,7 +47,7 @@
 import axios from './../lib/js/api'
 import slogan from './../module/slogan'
 import graphicCard from './../module/card/graphicCard'
-import { timeago } from './../lib/js/util'
+import { timeago,randomNum } from './../lib/js/util'
 
 export default {
   name: 'article-list',
@@ -60,7 +60,7 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      page: 1
+      page: randomNum(1,30)
     }
   },
   methods: {
@@ -88,7 +88,7 @@ export default {
           this.loading = false
           this.page++
 
-          if (this.list.length >= res.data.count) {
+          if (this.list.length >= 200) {
             this.finished = true
           }
         }

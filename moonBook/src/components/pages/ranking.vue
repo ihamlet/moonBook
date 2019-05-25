@@ -212,6 +212,9 @@ export default {
   created() {
     this.getTabContent()
   },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
   mounted() {
     window.addEventListener("scroll", this.handleScroll)
   },

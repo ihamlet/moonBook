@@ -166,6 +166,9 @@ export default {
   // watch: {
   //   '$router':'fetchData'
   // },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
   mounted() {
     window.addEventListener("scroll", this.handleScroll)
   },

@@ -1,7 +1,7 @@
 <template>
   <div class="apps module-card flex flex-align" :class="type">
     <div class="icon" v-for='(list,index) in appsList' :key="index" @click="toPage(list)">
-      <div class="iconfont" :class="[list.iconClass]"></div>
+      <div class="iconfont" :class="[list.iconClass,index == 0&&$route.name =='apps-school'?'rotate':'']"></div>
       <div class="name">{{list.name}}</div>
     </div>
   </div>
@@ -80,6 +80,16 @@ export default {
 .icon-rongyu::before {
   content: '\e63b';
 }
+.icon-jiangbei::before {
+  content: '\e66d';
+}
+
+.icon-fengche::before{
+  content: '\e670'
+}
+.icon-tiaosepan::before{
+  content: '\e674'
+}
 
 .apps {
   padding: 0.625rem /* 10/16 */ 0;
@@ -94,18 +104,62 @@ export default {
 
 .apps .icon .iconfont {
   font-size: 1.75rem /* 28/16 */;
-  background: linear-gradient(145deg, #ffeb3b, #ff5722);
+  background: linear-gradient(72deg, #FF9800, #FFC107);
   -webkit-background-clip: text;
   color: transparent;
+  text-shadow: 0 1px 2px rgba(255, 193, 7, 0.3);
+}
+
+.apps .icon .iconfont.icon-fengche{
+  background: linear-gradient(72deg, #FFEB3B, #FFC107);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 2px rgba(255, 193, 7, 0.3);
+}
+
+.apps .icon .iconfont.icon-jiangbei{
+  background: linear-gradient(72deg, #FF5722, #F44336);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 2px rgba(244, 67, 54, 0.3);
+}
+
+.apps .icon .iconfont.icon-yuedu{
+  background: linear-gradient(72deg, #03A9F4, #2196F3);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 2px rgba(33, 150, 243, 0.3);
+}
+
+.apps .icon .iconfont.icon-tiaosepan{
+  background: linear-gradient(72deg, #00BCD4, #009688);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 2px rgba(0, 150, 136, 0.3);
 }
 
 .classHome.apps .icon .iconfont {
   background: linear-gradient(145deg, #51ebff, #2196f3);
   -webkit-background-clip: text;
   color: transparent;
+  text-shadow: 0 1px 2px rgba(33, 150, 243, 0.3);
 }
 
 .apps .icon .name {
   font-size: small;
+  margin-top: 5px;
+}
+
+.rotate {
+  animation: rotate 2.5s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg)
+  }
+  to {
+    transform: rotate(360deg)
+  }
 }
 </style>

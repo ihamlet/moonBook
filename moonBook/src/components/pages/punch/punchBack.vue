@@ -45,7 +45,7 @@
 
           <div class="item-data item-ability">
             <div class="sub">学习力</div>
-            <div class="item-box">超过 <span class="percentage">{{$route.query.ahead_percent}}%</span> 的同学</div>
+            <div class="item-box">超过 <span class="percentage">{{childInfo.ahead_percent}}%</span> 的同学</div>
             <i class="iconfont">&#xe666;</i>
           </div>
         </div>
@@ -154,7 +154,8 @@ export default {
         index: 1
       }],
       banner: [],
-      extra:''
+      extra:'',
+      childInfo:''
     }
   },
   created() {
@@ -183,6 +184,14 @@ export default {
                 this.banner.push(element)
               }
             })
+            break
+        }
+      })
+
+      axios.get('/book/baby/getInfo',{params:{child_id:this.$route.query.child_id}}).then(res=>{
+        switch(res.data.status){
+          case 1:
+            this.childInfo = res.data.data
             break
         }
       })

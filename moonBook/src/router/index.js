@@ -27,6 +27,7 @@ import BookDetails from '@/components/pages/bookDetails'
 import VideoPlayer from '@/components/pages/video/ckplayer'
 
 import School from '@/components/School'
+
 import Banji from '@/components/Banji'
 import Find from '@/components/Find'
 import Baby from '@/components/Baby'
@@ -34,6 +35,7 @@ import My from '@/components/My'
 
 import AppsFind from '@/components/apps/find/find'
 import AppsSchool from '@/components/apps/school/schoolHome'
+import SchoolIntro from '@/components/apps/school/schoolIntro'
 
 import Register from '@/components/pages/register'
 import City from '@/components/pages/city'
@@ -93,18 +95,14 @@ export default new Router({
         {
           path:'/search',
           name:'search',
-          component: Search,
-          meta: {
-            isFooterBar: false,
-          }
+          component: Search
         },
         {
           path: '/city',
           name: 'city',
           component: City,
           meta: {
-            title: '城市',
-            isFooterBar: false
+            title: '城市'
           }
         }, 
         {
@@ -112,8 +110,7 @@ export default new Router({
           name: 'register',
           component: Register,
           meta: {
-            title: '注册',
-            isFooterBar: false
+            title: '注册'
           }
         },
         {
@@ -121,17 +118,13 @@ export default new Router({
           name: 'login',
           component: Login,
           meta: {
-            title: '登录',
-            isFooterBar: false
+            title: '登录'
           }
         },
         {
           path: '/dialog',
           name:'dialog',
-          component: Dialog,
-          meta: {
-            isFooterBar: false
-          }
+          component: Dialog
         },
         {
           path: '/notice',
@@ -139,7 +132,6 @@ export default new Router({
           component: Notice,
           meta: {
             title: '消息中心',
-            isFooterBar: false,
             keepAlive: true
           }
         },
@@ -148,17 +140,13 @@ export default new Router({
           name: 'activity',
           component: Activity,
           meta: {
-            title: '活动',
-            isFooterBar: false
+            title: '活动'
           }
         },
         {
           path: '/task',
           name: 'task',
-          component: Task,
-          meta: {
-            isFooterBar: false
-          }
+          component: Task
         },
         {
           path: '/zoom',
@@ -166,7 +154,6 @@ export default new Router({
           component: Zoom,
           meta: {
             title: 'BookZoom',
-            isFooterBar: false,
             keepAlive: true
           }
         },
@@ -176,7 +163,6 @@ export default new Router({
           component: cardList,
           meta: {
             title: '我的卡包',
-            isFooterBar: false,
             keepAlive: true
           }
         },
@@ -185,8 +171,7 @@ export default new Router({
           name: 'book-details',
           component: BookDetails,
           meta: {
-            title: '图书详情',
-            isFooterBar: false
+            title: '图书详情'
           }
         },
         {
@@ -194,8 +179,7 @@ export default new Router({
           name: 'add-family',
           component: AddFamily,
           meta: {
-            title: '加入家庭',
-            isFooterBar: false
+            title: '加入家庭'
           }
         },
         {
@@ -204,7 +188,6 @@ export default new Router({
           component: Information,
           meta: {
             title:'收到的赞',
-            isFooterBar: false,
             keepAlive: true
           }
         },
@@ -214,7 +197,6 @@ export default new Router({
           component: VerifyFamily,
           meta: {
             title: '成员审核',
-            isFooterBar: false,
             keepAlive: true
           }
         }
@@ -226,7 +208,6 @@ export default new Router({
       component: Share,
       meta: {
         title: '二维码分享',
-        isFooterBar: false,
       }
     },
     {
@@ -235,7 +216,6 @@ export default new Router({
       component: Article,
       meta: {
         title: '正文',
-        isFooterBar: false,
       }
     },
     {
@@ -264,7 +244,14 @@ export default new Router({
         component: AppsSchool,
         meta: {
           title: '学校主页',
-          isFooterBar: false,
+          keepAlive: true
+        }
+      },{
+        path: '/school-intro',
+        name: 'school-intro',
+        component: SchoolIntro,
+        meta: {
+          title: '学校介绍',
           keepAlive: true
         }
       }]
@@ -296,7 +283,6 @@ export default new Router({
         component: AppsFind,
         meta: {
           title: '发现',
-          isFooterBar: false,
           keepAlive: true
         }
       }]
@@ -329,10 +315,7 @@ export default new Router({
     {
       path: '/video-page',
       name: 'video-page',
-      component: VideoPlayer,
-      meta: {
-        isFooterBar: false
-      }
+      component: VideoPlayer
     },
     {
       path: '*',

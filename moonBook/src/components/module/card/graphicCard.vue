@@ -15,7 +15,7 @@
           </div>
           <div class="titmeago flex flex-align">
             {{getTimeAgo(item.create_time)}} 
-            <span v-if='item.sign_days!="0"&&item.tags=="阅读打卡"&&item.cate_id!=116'>{{`坚持阅读${item.sign_days}天`}}</span>
+            <span class="user-reading" v-if='post&&post.sign_days!="0"&&item.tags=="阅读打卡"&&item.cate_id!=116'>{{`坚持阅读${post.sign_days}天`}}</span>
             <span class="teacher-reading" v-line-clamp:20="1">{{`${getTags[1]?getTags[1]:''}${getTags[2]&&getTags[2]>0?` • 课堂阅读${getTags[2]}篇`:''}`}}</span>
           </div>
         </div>
@@ -111,8 +111,10 @@ export default {
   computed: {
     ...mapGetters(['userPointState','userDataState']),
     post(){
-      let content = JSON.parse(this.item.extra)
-      return content
+      if(this.item.extra){
+        let content = JSON.parse(this.item.extra)
+        return content
+      }
     },
     fromData(){
       if(this.item.from_page){
@@ -367,8 +369,12 @@ export default {
   flex: 2;
 }
 
+.user-reading,
+.teacher-reading{
+  margin-left: 10px;
+}
+
 .teacher-reading{
   flex: 1;
-  margin-left: 10px;
 }
 </style>

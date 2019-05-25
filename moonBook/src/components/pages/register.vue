@@ -1,6 +1,6 @@
 <template>
   <div class="register">
-    <van-nav-bar :title="$route.meta.title" fixed :zIndex='99'>
+    <van-nav-bar :title="$route.meta.title" fixed :zIndex='99' :border='false'>
       <div class="icon-right" slot="right" @click="toHelp">
         <i class="iconfont">&#xe618;</i>
       </div>
@@ -8,20 +8,20 @@
     <div class="container" ref='listContainer'>
       <div class="identity">
         <van-cell-group>
-          <van-cell class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role' :key='index' @click="selectRole(item)">
+          <van-cell :border='false' class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role' :key='index' @click="selectRole(item)">
             <div class="icon iconfont" :class="item.iconClass" slot="icon"></div>
           </van-cell>
         </van-cell-group>
 
         <van-cell-group>
           <div class="form-title">办卡</div>
-          <van-cell is-link center title='办理老师卡' label="老师卡更实惠" @click="isSelectSchool = true" v-if='userDataState.teacher_school_id > 0'>
+          <van-cell :border='false' is-link center title='办理老师卡' label="老师卡更实惠" @click="isSelectSchool = true" v-if='userDataState.teacher_school_id > 0'>
             <div class="icon-accept" slot="icon">
               <i class="iconfont teacher-card">&#xe66c;</i>
             </div>
           </van-cell>
 
-          <van-cell is-link center title='办理借书卡' label="放学借上学还" @click="toAccept">
+          <van-cell :border='false' is-link center title='办理借书卡' label="放学借上学还" @click="toAccept">
             <div class="icon-accept" slot="icon">
               <i class="iconfont accept-card">&#xe620;</i>
             </div>

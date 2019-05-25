@@ -54,7 +54,7 @@ import freshList from './../module/findModule/freshList'
 import comment from './../module/comment'
 import { mapActions } from 'vuex'
 import { arrayUnique } from './../lib/js/util'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'book-details',
@@ -63,6 +63,7 @@ export default {
     comment
   },
   computed: {
+    ...mapGetters(['userDataState']),
     ...mapState('openWX',['ready']),
     star(){
       let num = 3
@@ -98,6 +99,9 @@ export default {
       this.wxShare()
     }
   },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
   },
@@ -118,7 +122,8 @@ export default {
     fetchData() {
       let data = {
         params:{
-          book_id:this.$route.query.id
+          book_id:this.$route.query.id,
+          child_id: this.userDataState.child_id
         }
       }
 

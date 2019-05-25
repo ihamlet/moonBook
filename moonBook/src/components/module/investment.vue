@@ -14,7 +14,7 @@
         <van-col span="7">
           <a class="box-link" :href="investmentAd.link">{{`${investmentAd.text?investmentAd.text:'成为书架馆长'}`}} </a>
         </van-col>
-        <van-col span="12">
+        <van-col span="10">
           <div class="content" v-if='type == "notice"&&notice.length'>
             <van-swipe :autoplay="5000" :height='60' indicator-color="#fff" vertical :show-indicators='false'>
               <van-swipe-item v-for="(item,index) in list" :key="index">
@@ -29,8 +29,8 @@
             <div class="notice" v-line-clamp:20="1">幼儿园/学校的新名片</div>
           </div>
         </van-col>
-        <van-col span="5" class="flex flex-justify">
-          <van-button class="theme-btn" size="small" type="primary" plain @click="toRegister">注册</van-button>
+        <van-col span="7" class="flex flex-justify">
+          <van-button class="theme-btn" round size="small" type="primary" @click="toRegister">注册/办卡</van-button>
         </van-col>
       </van-row>
     </div>
@@ -166,6 +166,10 @@ export default {
 
 .tag{
   margin-right: .3125rem /* 5/16 */;
+}
+
+.theme-btn{
+  box-shadow: 0 5px 10px rgba(3, 169, 244, 0.3)
 }
 </style>
 
