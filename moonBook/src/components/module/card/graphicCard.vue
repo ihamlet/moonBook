@@ -371,7 +371,7 @@ export default {
 
 .user-reading,
 .teacher-reading{
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 .teacher-reading{

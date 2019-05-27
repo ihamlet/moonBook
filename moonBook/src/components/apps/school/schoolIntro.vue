@@ -208,7 +208,7 @@ export default {
       details: [{
         title: '关于我们',
         content: '',
-        photos: ['', '', '', '']
+        photos: ['', '', '', '', '', '', '', '']
       }, {
         title: '风采展示',
         video: ''
@@ -575,7 +575,7 @@ export default {
   object-fit: cover;
   width: 100%;
   height: 100%;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 .container {

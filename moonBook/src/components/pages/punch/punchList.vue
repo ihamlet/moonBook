@@ -1,10 +1,6 @@
 <template>
   <div class="punch-list page-padding">
-    <van-nav-bar title="阅读列表" :border='false' fixed>
-      <div class="punch-btn theme-color" slot='right' @click="">
-        阅读打卡
-      </div>
-    </van-nav-bar>
+    <van-nav-bar title="阅读列表" :border='false' fixed />
     <div class="list">
       <van-pull-refresh v-model="loading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
@@ -15,7 +11,7 @@
                   </van-cell>
               </div>
               <div class="no-list" v-else>
-                  尚无打卡数据 <span class="theme-color" @click="punch">参与阅读打卡</span>
+                  尚未打卡 <span class="theme-color" @click="toBabyHome">进入宝贝主页参与阅读打卡</span>
               </div>
           </van-list>
       </van-pull-refresh>
@@ -63,7 +59,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('openWX',['share','scanQRcode']),
+    ...mapActions('openWX',['share']),
     wxShare(){
       let data = {
         item: this.item,
@@ -129,22 +125,11 @@ export default {
         }
       }
     },
-    punch() {
-      this.scanQRcode({id:this.$route.query.id}).then(res=>{
-        switch(res.data.status){
-          case 1:
-            this.$router.push({
-              name:'punch-back',
-              query:{
-                id: this.$route.query.id,
-                child_id: this.$route.query.id,
-                back: this.$route.name
-              }
-            })
-          break
-          case 0:
-            this.$toast(res.data.msg)
-          break
+    toBabyHome() {
+      this.$router.push({
+        name:'baby-home',
+        query:{
+          id: this.$route.query.id
         }
       })
     }
