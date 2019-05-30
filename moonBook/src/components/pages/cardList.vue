@@ -122,7 +122,7 @@ export default {
 .card-box::after{
   position: absolute;
   content: '';
-  background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), rgba(255,255,255,.4));
+  background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), rgba(255,255,255,.2));
   transform:skewX(-25deg);
   left: 3.125rem /* 50/16 */;
   z-index: 1;
