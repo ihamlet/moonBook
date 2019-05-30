@@ -25,7 +25,7 @@
         发 布
       </van-button>
       <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
-        <tips :isShow='show' iconLength='2' position='bottom' @close='setReleaseSwitch(false)' :cate='cateList[indexTab -1]'/>
+        <tips :isShow='show' :iconLength="!$route.query.pageTitle?'':2" position='bottom' @close='setReleaseSwitch(false)' :cate='cateList[indexTab -1]'/>
       </van-popup>
     </div>
   </div>
