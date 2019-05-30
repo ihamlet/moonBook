@@ -1,5 +1,5 @@
 <template>
-  <div class="card-list-container page-padding">
+  <div class="card-list-container">
     <van-nav-bar class="card-list-nav-bar" :zIndex='99' fixed :border='false' :title="$route.meta.title" :key='$route.query.id'/>
     <div class="list">
       <div class="content" v-if='cardList&&cardList.length'>
@@ -29,6 +29,9 @@
             </div>
           </div>
         </div>
+        <div class="slogan">
+          <slogan />
+        </div>
       </div>
       <div class="no-content" v-else>
         <div class="theme-color" @click="applyShow = true">请办理借阅卡</div>
@@ -36,10 +39,6 @@
     </div>
     <div class="form-submit">
       <van-button class="theme-btn" square size="large" type="primary" @click="toAccept">办理借阅卡</van-button>
-    </div>
-
-    <div class="slogan">
-      <slogan />
     </div>
   </div>
 </template>
@@ -99,12 +98,11 @@ export default {
 <style scoped>
 .card-list-container {
   min-height: 100vh;
-  padding-top: 2.8125rem /* 45/16 */;
   background: #fff;
 }
 
 .list {
-  padding: 0 20px;
+  padding:45px 20px 45px;
 }
 
 .card-box {
