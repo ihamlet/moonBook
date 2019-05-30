@@ -211,7 +211,7 @@ export default {
 }
 
 .tips.bottom .tips-list {
-  width: 240px;
+  width: 260px;
   margin: 0 auto;
   padding: .9375rem /* 15/16 */;
   background: #fff;
