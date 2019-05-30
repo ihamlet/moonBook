@@ -112,6 +112,7 @@ export default {
   height: 7.5rem /* 120/16 */;
   margin-top: 1.25rem /* 20/16 */;
   box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .card-box,
