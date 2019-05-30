@@ -46,7 +46,7 @@
       </van-button>
     </div>
     <div class="release-footer-bar" v-else-if='isBtnShow'>
-      <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
+      <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="ketangRelease">
         <i class="iconfont">&#xe664;</i>
         课堂阅读
       </van-button>
@@ -177,7 +177,6 @@ export default {
   methods: {
     ...mapActions('openWX',['scanQRcode']),
     ...mapActions(['getUserData']),
-    ...mapMutations(['setReleaseSwitch']),
     request() {
       if(this.$route.query.type != 'preview'){
         this.getUserData().then(res => {
@@ -432,6 +431,18 @@ export default {
         name:'classSetting',
         query:{
           id: this.$route.query.id
+        }
+      })
+    },
+    ketangRelease(){
+      this.$router.push({
+        name: 'graphic',
+        query: {
+          back: this.$route.query.back || this.$route.name,
+          cate_id: 116,
+          home_type: 'banji',
+          tags:'课堂阅读',
+          upVideo: 1
         }
       })
     }

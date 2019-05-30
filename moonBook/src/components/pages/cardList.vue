@@ -3,7 +3,6 @@
     <van-nav-bar class="card-list-nav-bar" :zIndex='99' fixed :border='false' :title="$route.meta.title" :key='$route.query.id'/>
     <div class="list">
       <div class="content" v-if='cardList&&cardList.length'>
-
         <div class="item" v-for='(item,index) in cardList' :key="index">
           <div class="card-box" :class="`card-type-${item.level_info.level}`">
             <div class="card-info flex flex-align">
@@ -99,28 +98,31 @@ export default {
 </script>
 <style scoped>
 .card-list-container {
-  /* background:url('./../../assets/img/giftly.png'); */
-  padding-top: 2.8125rem /* 45/16 */;
   min-height: 100vh;
+  padding-top: 2.8125rem /* 45/16 */;
+  background: #fff;
 }
 
 .list {
-  padding: 0 0.625rem /* 10/16 */;
+  padding: 0 20px;
 }
 
 .card-box {
   width: 100%;
   height: 7.5rem /* 120/16 */;
-  border-radius: .9375rem /* 15/16 */ .9375rem /* 15/16 */ 0 0;
   margin-top: 1.25rem /* 20/16 */;
-  position: relative;
-  border-bottom: .125rem /* 2/16 */ solid rgba(0,0,0,.1);
+  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-box,
+.card-box::before{
+  border-radius: 10px 10px 0 0;
 }
 
 .card-box::after{
   position: absolute;
   content: '';
-  background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), rgba(255,255,255,0.1));
+  background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), rgba(255,255,255,.4));
   transform:skewX(-25deg);
   left: 3.125rem /* 50/16 */;
   z-index: 1;
@@ -133,31 +135,20 @@ export default {
   position: absolute;
   content: '';
   width: 100%;
-  height: .125rem /* 2/16 */;
-  border-bottom:.125rem /* 2/16 */ dashed rgba(189, 178, 170); 
-  bottom: -.5rem /* 8/16 */;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .card-type-1 {
-  background-image: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%);
-  box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */
-    rgba(255, 117, 140, 0.2);
+  background: url('https://assets-moonbook.oss-cn-beijing.aliyuncs.com/card/card-huapopo.png');
 }
 
 .card-type-2 {
-  background-image: linear-gradient(-60deg, #ff5858 0%, #f09819 100%);
-  box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */ rgba(255, 88, 88, 0.2);
+  background: url('https://assets-moonbook.oss-cn-beijing.aliyuncs.com/card/card-shitoutang.png');
 }
 
 .card-type-3 {
-  background-image: linear-gradient(
-    -225deg,
-    #2cd8d5 0%,
-    #c5c1ff 56%,
-    #ffbac3 100%
-  );
-  box-shadow: 0 0.3125rem /* 5/16 */ 1.875rem /* 30/16 */
-    rgba(197, 193, 255, 0.2);
+  background: url('https://assets-moonbook.oss-cn-beijing.aliyuncs.com/card/card-xiaowangzi.png');
 }
 
 .card-info,
@@ -170,6 +161,7 @@ export default {
 .card-info {
   padding: 0.625rem /* 10/16 */;
   color: #fff;
+  position: relative;
 }
 .card-name,
 .card-id {
@@ -198,6 +190,7 @@ export default {
   border-radius: 50%;
   overflow: hidden;
   margin-right: 0.3125rem /* 5/16 */;
+  border: 2px solid #fff;
 }
 
 .name {

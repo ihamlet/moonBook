@@ -19,13 +19,13 @@
         </van-tabs>
       </div>
     </div>
-    <div class="release-footer-bar" v-if='$route.query.pageTitle!="育儿专栏"'>
+    <div class="release-footer-bar" v-if='!$route.query.pageTitle'>
       <van-button class="theme-btn theme-release" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
         <i class="iconfont">&#xe664;</i>
         发 布
       </van-button>
       <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
-        <tips :isShow='show' position='bottom' @close='setReleaseSwitch(false)' :cate='cateList[indexTab -1]'/>
+        <tips :isShow='show' iconLength='2' position='bottom' @close='setReleaseSwitch(false)' :cate='cateList[indexTab -1]'/>
       </van-popup>
     </div>
   </div>

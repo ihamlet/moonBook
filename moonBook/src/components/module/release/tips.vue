@@ -1,7 +1,7 @@
 <template>
   <div class="tips flex" :class="[position == 'top'?'flex-column top':'flex-align bottom']">
     <div class="tips-list" :class="[position == 'bottom'?'flex-align flex':'',isShow?'pulse animated':'']">
-      <div class="btn" :class="[position == 'top'?'flex-align flex':'']" v-for='(list,index) in relaseList' :key="index" @click="toRelease(index)" v-if='index < relaseLength'>
+      <div class="btn" :class="[position == 'top'?'flex-align flex':'']" v-for='(list,index) in relaseList' :key="index" @click="toRelease(index)">
         <div class="iconfont" :class="list.icon"></div>
         <div class="name">{{list.name}}</div>
       </div>
@@ -20,19 +20,28 @@ export default {
   props: ['position','isShow','cate','bookId','iconLength'],
   computed: {
     ...mapGetters(['userDataState']),
-    relaseLength(){
-      let num
-      if(this.iconLength){
-        num = this.iconLength
-      }else if((this.userDataState.teacher_banji_id > 0 || this.userDataState.teacher_school_id > 0) && this.userDataState.child_id > 0){
-        num = 4
-      } else if(this.userDataState.teacher_banji_id > 0 || this.userDataState.teacher_school_id > 0){
-        num = 3
-      } else {
-        num = 2
+    relaseList(){
+      let arr 
+      if(this.iconLength != 2){
+        if((this.userDataState.teacher_banji_id > 0 || this.userDataState.teacher_school_id > 0) && this.userDataState.child_id > 0){
+          arr = this.relase.concat({
+            name:'课堂阅读',
+            icon: 'icon-ketang',
+          },{
+            name:'阅读打卡',
+            icon: 'icon-daqia1',
+          })
+        }else if(this.userDataState.teacher_banji_id > 0 || this.userDataState.teacher_school_id > 0){
+          arr = this.relase.concat({
+            name:'课堂阅读',
+            icon: 'icon-ketang',
+          })
+        }
+      }else{
+        arr = this.relase
       }
 
-      return num
+      return arr
     }
   },
   data() {
@@ -44,7 +53,7 @@ export default {
         text: '',
         photos: []
       },
-      relaseList: [{
+      relase: [{
         name: '发图文',
         type: 'image',
         icon: 'icon-weibo'
@@ -52,12 +61,6 @@ export default {
         name: '拍小视频',
         type: 'shootVideo',
         icon: 'icon-paishipin'
-      },{
-        name:'课堂阅读',
-        icon: 'icon-ketang',
-      },{
-        name:'阅读打卡',
-        icon: 'icon-daqia1',
       }]
     }
   },

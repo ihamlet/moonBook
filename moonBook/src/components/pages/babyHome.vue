@@ -27,7 +27,7 @@
               <span class="age">{{childInfo.age}}岁</span>
             </div>
           </div>
-          <div class="label" v-if='childInfo'>{{level?`${level.type == "punch"?"Rv":"Bv"}.${level.level} ${level.name}`:`Lv.0 ${childInfo.title}`}}</div>
+          <div class="label" v-if='childInfo'>{{level > 0?`${level.type == "punch"?"Rv":"Bv"}.${level.level} ${level.name}`:childInfo.title}}</div>
           <div class="school" v-line-clamp:20="1">{{childInfo.school_name}}</div>
         </div>
         <div class="to-banji-btn" v-if='childInfo.banji_id > 0&&childInfo.is_mine'>
