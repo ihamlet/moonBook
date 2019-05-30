@@ -3,7 +3,7 @@
     <van-nav-bar class="card-list-nav-bar" :zIndex='99' fixed :border='false' :title="$route.meta.title" :key='$route.query.id'/>
     <div class="list">
       <div class="content" v-if='cardList&&cardList.length'>
-        <div class="item" v-for='(item,index) in cardList' :key="index">
+        <div class="item fadeInDown animated" v-for='(item,index) in cardList' :key="index" :style="{animationDelay:`${200*index}ms`}">
           <div class="card-box" :class="`card-type-${item.level_info.level}`">
             <div class="card-info flex flex-align">
               <div class="card-name">{{item.level_info.name}}</div>
@@ -102,14 +102,14 @@ export default {
 }
 
 .list {
-  padding:45px 20px 45px;
+  padding:45px 15px 45px;
 }
 
 .card-box {
   width: 100%;
   height: 7.5rem /* 120/16 */;
   margin-top: 1.25rem /* 20/16 */;
-  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
   position: relative;
 }
 
