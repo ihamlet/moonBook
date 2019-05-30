@@ -190,7 +190,7 @@ export default {
   height: 2rem /* 32/16 */;
   border-radius: 50%;
   overflow: hidden;
-  margin-right: 0.3125rem /* 5/16 */;
+  margin-left: 0.3125rem /* 5/16 */;
   border: 2px solid #fff;
 }
 
