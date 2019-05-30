@@ -299,8 +299,6 @@ export default {
           
           // cate_id = 116 课堂故事
 
-          console.log('/book/memberUser/getInfo,没有班级名称为空字符串')
-
           // 发布
           let data = {
             details: this.grapicData.text,
@@ -312,6 +310,7 @@ export default {
           //老师的班级学校
           if(this.userDataState.teacher_school_id > 0 && this.$route.query.home_type == 'banji'){
             data.from_page = `${this.userDataState.teacher_school_id},${this.userDataState.teacher_school_name}`
+            data.tags = this.$route.query.tags || `${this.tag.cate_name},${this.userDataState.teacher_duty},${this.userDataState.class_post_count}`
           }
 
 
@@ -322,7 +321,6 @@ export default {
             break
             case 'class-home':
               data.banji_id = this.$route.query.id
-              data.tags = this.$route.query.tags || `${this.tag.cate_name},${this.userDataState.teacher_duty},${this.userDataState.class_post_count}`
             break
             case 'apps-school':
               data.school_id = this.$route.query.id

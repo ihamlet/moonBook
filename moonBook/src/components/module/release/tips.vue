@@ -1,7 +1,7 @@
 <template>
   <div class="tips flex" :class="[position == 'top'?'flex-column top':'flex-align bottom']">
     <div class="tips-list" :class="[position == 'bottom'?'flex-align flex':'',isShow?'pulse animated':'']">
-      <div class="btn" :class="[position == 'top'?'flex-align flex':'']" v-for='(list,index) in relaseList' :key="index" @click="toRelease(index)">
+      <div class="btn" :class="[position == 'top'?'flex-align flex':'']" v-for='(list,index) in relaseList' :key="index" @click="toRelease(index)" v-if='index < relaseLength'>
         <div class="iconfont" :class="list.icon"></div>
         <div class="name">{{list.name}}</div>
       </div>
@@ -13,11 +13,28 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { compress } from './../../lib/js/util'
+import { mapGetters,mapActions } from 'vuex'
 
 export default {
   name: 'tips',
-  props: ['position','isShow','cate','bookId'],
+  props: ['position','isShow','cate','bookId','iconLength'],
+  computed: {
+    ...mapGetters(['userDataState']),
+    relaseLength(){
+      let num
+      if(this.iconLength){
+        num = this.iconLength
+      }else if((this.userDataState.teacher_banji_id > 0 || this.userDataState.teacher_school_id > 0) && this.userDataState.child_id > 0){
+        num = 4
+      } else if(this.userDataState.teacher_banji_id > 0 || this.userDataState.teacher_school_id > 0){
+        num = 3
+      } else {
+        num = 2
+      }
+
+      return num
+    }
+  },
   data() {
     return {
       percent: 0,
@@ -35,6 +52,12 @@ export default {
         name: '拍小视频',
         type: 'shootVideo',
         icon: 'icon-paishipin'
+      },{
+        name:'课堂阅读',
+        icon: 'icon-ketang',
+      },{
+        name:'阅读打卡',
+        icon: 'icon-daqia1',
       }]
     }
   },
@@ -51,6 +74,7 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
+    ...mapActions('openWX',['scanQRcode']),
     fetchData() {
       axios.get('/book/api/oss_sign').then(res => {
         this.ossSign = res.data.data
@@ -65,17 +89,23 @@ export default {
         case 1:
           this.releaseVideo()
           break
+        case 2:
+          this.ketangRelease()
+          break
+        case 3:
+          this.punch()
+          break
       }
     },
     releaseWebo(){
       this.$router.push({
         name: 'graphic',
         query: {
-          ...this.$route.query,
           back: this.$route.query.back || this.$route.name,
           tag_id: this.cate?'':this.$route.query.tag_id,
           cate_id: this.$route.query.cate_id?this.$route.query.cate_id:this.cate?this.cate.cate_id:'',
-          book_id: this.bookId
+          book_id: this.bookId,
+          ...this.$route.query
         }
       })
     },
@@ -83,12 +113,45 @@ export default {
       this.$router.push({
         name: 'graphic',
         query: {
-          ...this.$route.query,
           back: this.$route.query.back || this.$route.name,
           tag_id: this.cate?'':this.$route.query.tag_id,
           cate_id: this.$route.query.cate_id?this.$route.query.cate_id:this.cate?this.cate.cate_id:'',
           book_id: this.bookId,
-          upVideo:1
+          upVideo:1,
+          ...this.$route.query
+        }
+      })
+    },
+    ketangRelease(){
+      this.$router.push({
+        name: 'graphic',
+        query: {
+          back: this.$route.query.back || this.$route.name,
+          cate_id: 116,
+          home_type: 'banji',
+          tags:'课堂阅读',
+          upVideo: 1
+        }
+      })
+    },
+    punch() {
+      this.scanQRcode({id:this.userDataState.child_id}).then(res=>{
+        switch(res.data.status){
+          case 1:
+            this.$router.push({
+              name:'punch-back',
+              query:{
+                id: this.$route.query.id,
+                child_id: this.userDataState.child_id,
+                back: this.$route.name,
+                cate_id: 133,
+                tags:'阅读打卡',
+                ...res.data.data.stat_data
+              }
+            })
+          break
+          default:
+            this.$toast(res.data.msg)
         }
       })
     }

@@ -660,9 +660,8 @@ export default {
               }
             })
           break
-          case 0:
+          default:
             this.$toast(res.data.msg)
-          break
         }
       })
     },

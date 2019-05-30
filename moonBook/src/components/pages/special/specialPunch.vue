@@ -25,7 +25,7 @@
         发布
       </van-button>
       <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
-        <tips :isShow='show' position='bottom' @close='setReleaseSwitch(false)' />
+        <tips :isShow='show' iconLength='2' position='bottom' @close='setReleaseSwitch(false)' />
       </van-popup>
     </div>
   </div>
@@ -123,8 +123,6 @@ export default {
       axios.get('/book/school_banji/getlist', data).then(res => {
         switch (res.data.status) {
           case 1:
-            
-
             this.banjiList = res.data.data
             break
         }

@@ -84,7 +84,7 @@
 
     <div class="release-footer-bar">
       <van-popup v-model="showTips" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
-        <tips :isShow='showTips' position='bottom' @close='setReleaseSwitch(false)' :bookId='extra.book_id'/>
+        <tips :isShow='showTips' iconLength='2' position='bottom' @close='setReleaseSwitch(false)' :bookId='extra.book_id'/>
       </van-popup>
     </div>
 

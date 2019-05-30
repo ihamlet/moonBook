@@ -45,7 +45,7 @@
         阅读打卡
       </van-button>
     </div>
-    <div class="release-footer-bar" v-else>
+    <div class="release-footer-bar" v-else-if='isBtnShow'>
       <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
         <i class="iconfont">&#xe664;</i>
         课堂阅读
@@ -319,16 +319,16 @@ export default {
               query:{
                 id: this.$route.query.id,
                 child_id: this.userDataState.child_id,
-                tags: '阅读打卡',
                 back: this.$route.name,
                 punchType:'banji',
+                cate_id: 133,
+                tags:'阅读打卡',
                 ...res.data.data.stat_data
               }
             })
           break
-          case 0:
+          default:
             this.$toast(res.data.msg)
-          break
         }
       })
     },
