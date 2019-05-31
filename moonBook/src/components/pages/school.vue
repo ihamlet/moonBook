@@ -169,7 +169,12 @@ export default {
           cityname = match ? match[1] + '市' : ''
         }
 
-        let location = item.location.split(',')
+        if(item.location){
+          let location = item.location.split(',')
+        }else{
+          let location = this.userPointState.location.split(',')
+        }
+        
 
         data = {
            ...this.$route.query,

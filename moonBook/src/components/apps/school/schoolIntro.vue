@@ -612,6 +612,11 @@ export default {
   text-align: center;
   line-height: 43px;
   background: #f2f6fc;
+  position: relative;
+}
+
+.logo img{
+  object-fit: cover;
 }
 
 .info {
