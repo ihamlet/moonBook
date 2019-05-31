@@ -42,8 +42,7 @@ export default {
                   })
               }
           }
-      }],
-      userTabBtn:[]
+      }]
     }
   },
   created () {
