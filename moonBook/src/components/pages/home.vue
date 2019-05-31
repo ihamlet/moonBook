@@ -18,7 +18,7 @@
         <div class="container">
             <div class="swipe-content" ref='swipe'>
                 <van-swipe :autoplay="3000">
-                    <van-swipe-item v-for='(list,index) in banner' :key="index">
+                    <van-swipe-item v-for='(list,index) in banner' :key="index" @click="goAd(list)">
                         <a :href="list.link">
                             <img class="banner" :src="list.image" :alt="list.title">
                         </a>
@@ -190,6 +190,14 @@ export default {
                 item.watch = item.views
             })
             return news
+        },
+        goAd(ad) {
+            if(!ad.link_url) {
+                return
+            }
+            if(ad.link_type === 'bookshelf') {
+                this.$router.push(ad.link_url)
+            }
         }
     }
 }
