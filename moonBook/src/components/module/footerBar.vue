@@ -1,6 +1,6 @@
 <template>
   <div class="footer-bar flex flex-align">
-    <van-tabbar :zIndex='100' v-model="active" fixed>
+    <van-tabbar :zIndex='100' v-model="active" fixed :safe-area-inset-bottom='true'>
       <van-tabbar-item v-for='(item,index) in userTabBtn' :key="index" :to='goPage(item)' @click="onClick(index)">
         <i class="iconfont" :class="[props.active?`${item.iconClass}fill bounceIn animated`: item.iconClass]" slot='icon' slot-scope="props"></i>
         <span>{{item.name}}</span>

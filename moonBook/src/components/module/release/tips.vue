@@ -21,7 +21,7 @@ export default {
   computed: {
     ...mapGetters(['userDataState']),
     relaseList(){
-      let arr 
+      let arr = this.relase
       if(this.iconLength != 2){
         if((this.userDataState.teacher_banji_id > 0 || this.userDataState.teacher_school_id > 0) && this.userDataState.child_id > 0){
           arr = this.relase.concat({
@@ -37,8 +37,6 @@ export default {
             icon: 'icon-ketang',
           })
         }
-      }else{
-        arr = this.relase
       }
 
       return arr
