@@ -3,7 +3,7 @@
     <div class="cover" v-if='item.template_id == 0&&item.cover'>
       <img :src="item.cover" v-http2https/>
     </div>
-    <div class="page-container" :class="item.template_id == 0?'article-top':''">
+    <div class="page-container" :class="item.template_id == 0&&item.cover?'article-top':''">
       <van-nav-bar :border='false' :class="item.cover&&item.template_id == 0&&!themeBarSearch?'theme-nav':''" fixed :zIndex='100' :key="$route.query.id">
         <div class="head-bar-title" slot="title">
           <transition name="slide-fade" mode="out-in">
