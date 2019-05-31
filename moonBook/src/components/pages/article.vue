@@ -275,5 +275,7 @@ export default {
 
 .article-top{
   margin-top: 170px;
+  z-index: 2;
+  position: relative;
 }
 </style>
