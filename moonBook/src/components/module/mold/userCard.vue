@@ -88,19 +88,18 @@ export default {
 
 .user-card .avatar,
 .user-card .avatar img{
-  width: 2.625rem /* 42/16 */;
-  height: 2.625rem /* 42/16 */;
+  width: 38px;
+  height: 38px;
 }
 
 .user-card .avatar{
-  width: 2.625rem /* 42/16 */;
-  height: 2.625rem /* 42/16 */;
-  margin-right: 0.625rem /* 10/16 */;
+  margin-right: 5px;
 }
 
 .user-card .avatar img{
   border-radius: 50%;
   overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,.1);
 }
 
 .user-card .name {
@@ -109,7 +108,9 @@ export default {
 
 .user-card .article-info {
   color: #909399;
-  font-size: 0.8125rem /* 13/16 */;
+  font-size: 12px;
+  height: 14px;
+  line-height: 14px;
 }
 
 .school-info{

@@ -3,7 +3,7 @@
     <div class="cover" v-if='item.template_id == 0&&item.cover'>
       <img :src="item.cover" v-http2https/>
     </div>
-    <div class="page-container">
+    <div class="page-container" :class="item.template_id == 0?'article-top':''">
       <van-nav-bar :border='false' :class="item.cover&&item.template_id == 0&&!themeBarSearch?'theme-nav':''" fixed :zIndex='100' :key="$route.query.id">
         <div class="head-bar-title" slot="title">
           <transition name="slide-fade" mode="out-in">
@@ -264,10 +264,16 @@ export default {
 }
 
 .cover{
-  height: 10.625rem /* 170/16 */;
+  height: 170px;
+  position: fixed;
+  top: 0;
 }
 
 .name{
   max-width: 100px;
+}
+
+.article-top{
+  margin-top: 170px;
 }
 </style>

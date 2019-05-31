@@ -19,8 +19,7 @@
           </div>
           <div class="info">
             <div class="title">
-              <van-field class="text-input school-title" v-model="schoolInfo.title" placeholder="请输入学校名称" :border='false'
-                :readonly='readonly' />
+              <van-field class="text-input school-title" v-model="schoolInfo.title" placeholder="请输入学校名称" :border='false' :readonly='readonly' />
             </div>
             <div class="text level flex flex-align">
               <div class="text school-level" @click="select('level')">{{schoolInfo.level}}</div>
@@ -44,8 +43,7 @@
         </div>
         <div class="content" v-if='item.title == "关于我们"'>
           <div class="about" v-if='item.content || !readonly'>
-            <van-field v-model="item.content" type="textarea" autosize :placeholder="item.content?item.content:'请添加关于我们'"
-              :readonly='readonly' :border='false' />
+            <van-field v-model="item.content" type="textarea" autosize :placeholder="item.content?item.content:'请添加关于我们'" :readonly='readonly' :border='false' />
             <div class="img-wrap">
               <van-row :gutter="5">
                 <van-col :span="12" v-for="(photo,photoIndex) in item.photos" :key="photoIndex">
@@ -53,9 +51,9 @@
                     <div class="delete-photo" v-if='photo && !readonly' @click="deletePhoto">
                       <i class="iconfont">&#xe647;</i>
                     </div>
-                    <van-uploader class="img-uploader-grid" :after-read="onRead" :disabled='readonly' v-if='hackReset'>
-                      <img class="img-preview" :src="photo" v-if='photo' />
-                      <div class="uploader-prompt" v-else>
+                    <img class="img-preview" :src="photo" v-if='photo' preview='0'/>
+                    <van-uploader class="img-uploader-grid" :after-read="onRead" :disabled='readonly' v-else-if='hackReset'>
+                      <div class="uploader-prompt">
                         <van-icon class="img-uploader-icon" name="photograph" />
                         <div class="prompt-text">请上传图片</div>
                       </div>
@@ -93,9 +91,9 @@
                     <div class="delete-photo" v-if='content.img && !readonly' @click="deletePhoto">
                       <i class="iconfont">&#xe647;</i>
                     </div>
-                    <van-uploader class="img-uploader-grid" :after-read="onRead" :disabled='readonly' v-if='hackReset'>
-                      <img class="img-preview" :src="content.img" v-if='content.img' />
-                      <div class="uploader-prompt" v-else>
+                    <img class="img-preview" :src="content.img" v-if='content.img' preview='1'/>
+                    <van-uploader class="img-uploader-grid" :after-read="onRead" :disabled='readonly' v-else-if='hackReset'>
+                      <div class="uploader-prompt">
                         <van-icon class="img-uploader-icon" name="photograph" />
                         <div class="prompt-text">请上传图片</div>
                       </div>

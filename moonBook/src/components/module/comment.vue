@@ -112,7 +112,7 @@
               <van-field class="comment-field" :border='false' size='large' v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="placeholder" rows="1" autosize />
           </div>
           <div class="submit-btn theme-color">
-            <van-button class="theme-btn" :loading="isLoading" size="large" type="primary" @click="submit">发 布</van-button>
+            <van-button class="theme-btn" :loading="isLoading" size="large" type="primary" @click="submit" square>发 布</van-button>
           </div>
         </div>
         <div class="comment-tag scroll-x" v-if='item.template_id == 1'>
@@ -293,11 +293,13 @@ export default {
 
       axios.get('/book/SchoolArticleCollect/add', data).then(res => {
         if (res.data.status == 1) {
-          if (res.data.data) {
-            item.collect_num = res.data.data.collect_num
+          if (item.isShoucang) {
+            item.collect_num++
             this.$toast.success({
               className: 'shoucang-icon toast-icon'
             })
+          }else{
+            item.collect_num--
           }
         }
       })
@@ -439,12 +441,7 @@ export default {
   background: #fff;
 }
 
-.comment-popup {
-  padding: 0.625rem /* 10/16 */;
-}
-
 .comment-content {
-  padding: 0 0.625rem /* 10/16 */;
   align-items: flex-end;
 }
 
@@ -548,7 +545,7 @@ export default {
 }
 
 .comment-tag{
-  padding:20px;
+  padding:20px 10px;
 }
 
 .tag-item{
@@ -561,10 +558,6 @@ export default {
 
 .user-card{
   justify-content: space-between;
-}
-
-.zan{
-  opacity: .6;
 }
 
 .zan .iconfont{

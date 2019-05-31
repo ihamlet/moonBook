@@ -65,6 +65,7 @@ export default {
 .title {
   font-size: 1.5rem /* 24/16 */;
   font-weight: 700;
+  margin-bottom: 15px;
 }
 
 .article-content.img-content {
