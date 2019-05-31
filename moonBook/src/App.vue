@@ -26,7 +26,7 @@ export default {
     ...mapGetters(['userDataState','getTabBtn'])
   },
   data () {
-    const self = this
+    let self = this
     return {
       center: [114.085947,22.547],
       plugin:[{

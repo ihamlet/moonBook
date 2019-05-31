@@ -267,6 +267,7 @@ export default {
   height: 170px;
   position: fixed;
   top: 0;
+  z-index: 0;
 }
 
 .name{
