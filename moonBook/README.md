@@ -1,9 +1,7 @@
 # moonbook
 
 > A Vue.js project 
-> 榜单
-> 打卡
-> 2019年5月20日
+> 严重bug 在尚未定位的情况下 学校 /book/school/getList 没有location位置信息 这种情使用用户定位的location地址信息 
 
 ## Build Setup
 
