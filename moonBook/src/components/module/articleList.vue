@@ -47,7 +47,7 @@
 import axios from './../lib/js/api'
 import slogan from './../module/slogan'
 import graphicCard from './../module/card/graphicCard'
-import { timeago,randomNum } from './../lib/js/util'
+import { timeago, randomNum, arrayUnique } from './../lib/js/util'
 
 export default {
   name: 'article-list',
@@ -79,10 +79,13 @@ export default {
 
       return axios.get('/book/SchoolArticle/getList', data).then(res => {
         if(res.data.status == 1){
+
+          let list = arrayUnique(res.data.data,'title')
+
           if (this.page == 1) {
-            this.list = res.data.data
+            this.list = list
           } else {
-            this.list = this.list.concat(res.data.data)
+            this.list = this.list.concat(list)
           }
 
           this.loading = false
