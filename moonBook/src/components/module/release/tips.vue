@@ -132,7 +132,6 @@ export default {
           back: this.$route.query.back || this.$route.name,
           cate_id: 116,
           home_type: 'banji',
-          tags:'课堂阅读',
           upVideo: 1
         }
       })

@@ -299,7 +299,7 @@ export default {
 }
 
 .avatar {
-  margin-right: .625rem /* 10/16 */;
+  margin-right: 5px;
 }
 
 .info{
@@ -321,8 +321,8 @@ export default {
 }
 
 .avatar img {
-  width: 2.625rem /* 42/16 */;
-  height: 2.625rem /* 42/16 */;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
 }
 
@@ -372,6 +372,7 @@ export default {
 .user-reading,
 .teacher-reading{
   margin-left: 5px;
+  max-width: 180px;
 }
 
 .teacher-reading{
@@ -379,6 +380,9 @@ export default {
 }
 
 .titmeago{
-  white-space: nowrap; 
+  white-space: nowrap;
+  font-size: 12px;
+  height: 16px;
+  line-height: 16px;
 }
 </style>
