@@ -168,20 +168,13 @@ export default {
           let match = item.district.match(/省(.*?)市/)
           cityname = match ? match[1] + '市' : ''
         }
-
-        if(item.location){
-          let location = item.location.split(',')
-        }else{
-          let location = this.userPointState.location.split(',')
-        }
         
-
         data = {
            ...this.$route.query,
           school_name: item.name,
           amap_id: item.id,
-          lat: location[1],
-          lng: location[0],
+          lat: item.lat,
+          lng: item.lng,
           cityname: cityname || '',
           typecode: item.typecode
         }
