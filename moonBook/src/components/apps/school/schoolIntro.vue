@@ -29,7 +29,7 @@
             </div>
             <div class="text school-type" @click="select('type')">{{schoolInfo.run_type}}</div>
             <div class="addr">
-              <van-field class="text-input" v-model="schoolInfo.addr" placeholder="请输入学校地址" :border='false' :readonly='readonly' />
+              <van-field class="text-input" v-model="schoolInfo.addr" type="textarea" rows="1" autosize placeholder="请输入学校地址" :border='false' :readonly='readonly' />
             </div>
           </div>
           <div class="code">

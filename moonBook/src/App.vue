@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-amap vid="amap" :center="center" :plugin="plugin" v-show='false' />
+    <el-amap vid="amap" :center="userCenter" :plugin="plugin" v-show='false' />
     <keep-alive>
         <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
@@ -28,7 +28,7 @@ export default {
   data () {
     let self = this
     return {
-      center: [114.085947,22.547],
+      userCenter: [114.085947,22.547],
       plugin:[{
           timeout:1000,
           pName: 'Geolocation',
@@ -37,7 +37,7 @@ export default {
               init:(map)=>{
                   map.getCurrentPosition( (status, result) => {
                   if (result && result.position) {
-                        self.center = [result.position.lng,result.position.lat]
+                        self.userCenter = [result.position.lng,result.position.lat]
                       }
                   })
               }
@@ -51,13 +51,13 @@ export default {
 
     this.wxGetLocation().then(res=>{
         let location = [res.longitude,res.latitude]
-        this.center = location
+        this.userCenter = location
     })
 
     this.fetchData() 
   },
   watch: {
-    center(val){
+    userCenter(val){
         let products = {
           location:val
         }
