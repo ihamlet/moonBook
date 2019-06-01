@@ -36,7 +36,7 @@
       <van-nav-bar title="选择办卡学校" @click-right="isSelectSchool = false">
         <van-icon class="close-icon" name="close" slot="right"/>
       </van-nav-bar>
-      <van-cell title-class='select-school-title' :value="item.duty" center size="large" v-for='(item,index) in columns' :key="index" center is-link @click="toAcceptSchool(item)">
+      <van-cell title-class='select-school-title' :value="item.duty" center size="large" v-for='(item,index) in columns' :key="index" is-link @click="toAcceptSchool(item)">
         <div class="school-name" v-line-clamp:20="1" slot="title">
           {{item.school_name}}
         </div>
