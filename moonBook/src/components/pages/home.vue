@@ -72,12 +72,14 @@ import investmentAd from './../module/investment'
 import newsList from './../module/news'
 import videoList from './../module/video'
 import articleList from './../module/articleList'
+import addChild from './../module/card/addChild'
 
 import tips from './../module/release/tips'
 
 export default {
     name:'home',
     components: {
+        addChild,
         appsList,
         investmentAd,
         newsList,

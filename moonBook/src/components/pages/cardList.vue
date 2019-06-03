@@ -19,9 +19,9 @@
                   {{item.shelf_title}}
                 </div>
                 <div class="users-list flex flex-align">
-                  <div class="user flex flex-align" v-for='(user,userIndex) in item.users' :key="userIndex">
-                    <div class="avatar">
-                      <img :src="user.face" :alt="user.nickname" />
+                  <div class="user flex flex-align">
+                    <div class="avatar" v-for='(user,userIndex) in item.users' :key="userIndex">
+                      <img :src="user.face" :alt="user.nickname" v-http2https/>
                     </div>
                   </div>
                 </div>
@@ -109,7 +109,7 @@ export default {
   width: 100%;
   height: 7.5rem /* 120/16 */;
   margin-top: 1.25rem /* 20/16 */;
-  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  box-shadow: 0 2px 15px rgba(0,0,0,.1);
   position: relative;
 }
 
@@ -184,12 +184,13 @@ export default {
 }
 
 .avatar {
-  width: 2rem /* 32/16 */;
-  height: 2rem /* 32/16 */;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   overflow: hidden;
   margin-left: 0.3125rem /* 5/16 */;
   border: 2px solid #fff;
+  margin-right: -10px;
 }
 
 .name {
@@ -203,6 +204,7 @@ export default {
 }
 .users-list .user {
   margin-left: -10px;
+  margin-right: 10px;
 }
 
 .card-loading{

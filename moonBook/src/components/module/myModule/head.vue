@@ -24,21 +24,23 @@
         </div>
         <div class="name">{{userInfo.name}}</div>
       </div>
-    </div>
-    <div class="card">
-      <div class="borrow-card">
-        <div class="library-card flex flex-align" v-if="userInfo.card_level != '0'" @click="onClickLeft">
-          <img class="logo" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/logo.png" />
-          <div class="card-info flex flex-align">
-            <div class="card-name">{{userInfo.card_name}}</div>
-            <vipLevel :level='userInfo.card_level' animate='1'/>
+
+      <div class="card slideInUp animated">
+        <div class="borrow-card">
+          <div class="library-card flex flex-align" v-if="userInfo.card_level != '0'" @click="onClickLeft">
+            <img class="logo" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/logo.png" />
+            <div class="card-info flex flex-align">
+              <div class="card-name">{{userInfo.card_name}}</div>
+              <vipLevel :level='userInfo.card_level' animate='1'/>
+            </div>
+          </div>
+          <div class="no-service flex flex-align flex-justify" v-else @click="toAccept">您还没有办理借阅卡?
+            <div class="theme-color">前往办卡</div>
+            <i class="iconfont">&#xe61b;</i>
           </div>
         </div>
-        <div class="no-service flex flex-align flex-justify" v-else @click="toAccept">您还没有办理借阅卡?
-          <div class="theme-color">前往办卡</div>
-          <i class="iconfont">&#xe61b;</i>
-        </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -156,13 +158,13 @@ export default {
   position: absolute;
   bottom: 0;
   padding: 0;
-  width: 95%;
+  width: 94%;
   left: 50%;
-  transform: translate3d(-50%, 0, 0);
+  margin-left: -47%;
 }
 
 .avatar img {
-  box-shadow: 0 0.3125rem /* 5/16 */ 2.5rem /* 40/16 */ -0.625rem /* 10/16 */ rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 40px -10px rgba(0, 0, 0, 0.2);
 }
 
 .borrow-card {
@@ -174,8 +176,8 @@ export default {
 }
 
 .avatar img {
-  width: 4.5rem /* 72/16 */;
-  height: 4.5rem /* 72/16 */;
+  width: 58px;
+  height: 58px;
   margin: 0 auto;
   display: block;
 }
@@ -192,8 +194,8 @@ export default {
 
 .children-avatar {
   position: absolute;
-  width: 2rem /* 32/16 */;
-  height: 2rem /* 32/16 */;
+  width: 26px;
+  height: 26px;
   left: 65%;
   top: 50%;
   transform: translate3d(0, -50%, 0);
@@ -203,6 +205,8 @@ export default {
 .user-info {
   padding-top: 45px;
   padding-bottom: 50px;
+  position: relative;
+  overflow: hidden;
 }
 
 .info {
@@ -214,7 +218,7 @@ export default {
   position: absolute;
   left: 60%;
   top: 50%;
-  font-size: 1.25rem /* 20/16 */;
+  font-size: 14px;
   z-index: 11;
   background: linear-gradient(135deg, #f44, #e60000);
   -webkit-background-clip: text;
@@ -222,10 +226,11 @@ export default {
 }
 
 .info .name {
-  font-size: 1.25rem /* 20/16 */;
+  font-size: 16px;
   text-align: center;
   margin-top: 5px;
   margin-bottom: 5px;
+  font-weight: 700;
 }
 
 .info .school {

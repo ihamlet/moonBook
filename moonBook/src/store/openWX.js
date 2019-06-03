@@ -72,7 +72,7 @@ export default {
           title = `【阅亮书架】${products.item.cate.cate_name?`#${products.item.cate.cate_name}#`:''}${products.item.title}`
           desc = products.item.details.replace(/<[^>]+>/g,"") || context.state.slogan
         } else {
-          title =  products.item.title.indexOf("说") != -1?'在阅亮书架参与阅读打卡活动更多好礼等你来拿':products.item.title
+          title = products.item.title.indexOf("说") != -1&&products.item.hasvideo == "1"&&products.item.user?`${products.item.user.name}老师讲的阅读课堂故事`:products.item.title
           desc = products.item.hasvideo == "1"?`[小视频]${products.item.details.replace(/<[^>]+>/g,"").length?products.item.details:context.state.slogan}`: `${products.item.details.replace(/<[^>]+>/g,"").length?products.item.details:context.state.slogan}`
         }
 
@@ -80,7 +80,7 @@ export default {
           title: title || products.item.title,
           link: location.href.replace('#','/?#'),
           desc: desc,
-          imgUrl: products.item.imgUrl ? products.item.imgUrl : context.state.logo || products.item.cover ? products.item.cover : context.state.logo,
+          imgUrl: products.item.imgUrl ? products.item.imgUrl : context.state.logo || products.item.user ? products.item.user.avatar : products.item.cover || context.state.logo,
           success: products.success
         }
 

@@ -1,34 +1,41 @@
 <template>
   <div id="app">
-    <el-amap vid="amap" :center="userCenter" :plugin="plugin" v-show='false' />
-    <keep-alive>
-        <router-view v-if="$route.meta.keepAlive"></router-view>
-    </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive"></router-view>
+    <addChild @close='show = false' v-if='show && !scrollTop > 0 && userDataState.child_id == 0'/>
+    <div :class="show && !scrollTop > 0 && userDataState.child_id == 0 ?'page-container-alive':''">
+      <keep-alive>
+          <router-view v-if="$route.meta.keepAlive"></router-view>
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
+    </div>
     <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='getTabBtn' />
+
+    <el-amap vid="amap" :center="center" :plugin="plugin" v-show='false' />
   </div>
 </template>
 
 <script>
 import axios from './../src/components/lib/js/api'
 import footerBar from './components/module/footerBar'
+import addChild from './components/module/card/addChild'
 import { mapActions, mapGetters } from 'vuex'
-import wx from 'weixin-js-sdk'
 import './../src/components/lib/css/neat.css'
 import 'animate.css'
 
 export default {
   name: 'App',
   components: {
-    footerBar
+    footerBar,
+    addChild
   },
   computed: {
     ...mapGetters(['userDataState','getTabBtn'])
   },
   data () {
-    let self = this
+    const self = this
     return {
-      userCenter: [114.085947,22.547],
+      show: true,
+      scrollTop: 0,
+      center: [114.085947,22.547],
       plugin:[{
           timeout:1000,
           pName: 'Geolocation',
@@ -37,7 +44,7 @@ export default {
               init:(map)=>{
                   map.getCurrentPosition( (status, result) => {
                   if (result && result.position) {
-                        self.userCenter = [result.position.lng,result.position.lat]
+                        self.center = [result.position.lng,result.position.lat]
                       }
                   })
               }
@@ -46,18 +53,24 @@ export default {
     }
   },
   created () {
-    console.log('我们都是宇宙的尘埃，茫茫星辰，在找寻闪闪发光的你。')
+    console.log('我们都是宇宙的尘埃，茫茫星辰，在找寻闪闪发光的你.....')
     this.wxConfig()
 
     this.wxGetLocation().then(res=>{
         let location = [res.longitude,res.latitude]
-        this.userCenter = location
+        this.center = location
     })
 
     this.fetchData() 
   },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
+  mounted () {
+    window.addEventListener('scroll', this.handleScroll)   
+  },
   watch: {
-    userCenter(val){
+    center(val){
         let products = {
           location:val
         }
@@ -76,12 +89,18 @@ export default {
       this.getUserData()
       this.getManager()
       this.getMsg(products)
+    },
+    handleScroll(){
+      this.scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
     }
   }
 }
 </script>
-
 <style>
+.page-container-alive{
+  transform: translate3d(0, 0, 0);
+}
+
 /* 公共样式 */
 *::-webkit-scrollbar {
   width: 0;
@@ -98,12 +117,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_36o36ymfnwc.eot');
-  src: url('//at.alicdn.com/t/font_893274_36o36ymfnwc.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_36o36ymfnwc.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_36o36ymfnwc.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_36o36ymfnwc.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_36o36ymfnwc.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_walngvlzwx.eot');
+  src: url('//at.alicdn.com/t/font_893274_walngvlzwx.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_walngvlzwx.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_walngvlzwx.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_walngvlzwx.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_walngvlzwx.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,
@@ -459,9 +478,11 @@ img.lazy[lazy='error'],
 /* 搜索 */
 .head-bar {
   width: 100%;
-  padding: 0.375rem /* 6/16 */ 0;
+  padding: 6px 0;
   position: fixed;
   z-index: 99;
+  top: 0;
+  left: 0;
 }
 
 .left-btn,
@@ -497,13 +518,13 @@ img.lazy[lazy='error'],
 .search-bar {
   flex: 5;
   background: rgba(255, 255, 255, 0.8);
-  border-radius: 2.125rem /* 34/16 */;
+  border-radius: 34px;
   margin: 0 auto;
-  line-height: 2.125rem /* 34/16 */;
-  padding-left: 2rem /* 32/16 */;
-  font-size: 0.8125rem /* 13/16 */;
+  line-height: 34px;
+  padding-left: 32px;
+  font-size: 13px;
   position: relative;
-  box-shadow: 0 0.125rem /* 2/16 */ 0.375rem /* 6/16 */ rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .search-bar i.iconfont {

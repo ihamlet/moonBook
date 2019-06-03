@@ -2,12 +2,16 @@
   <div class="card" @click="toBookDetails(item)">
     <div class="item flex flex-align">
         <div class="book-cover">
-          <img class="lazy" v-lazy="thumb(item.book_photo)" />
+          <img :src="thumb(item.book_photo)" />
         </div>
  
         <div class="book-info">
           <div class="title" v-line-clamp:20="2" >{{item.book_name}}</div>
           <div class="time">打卡时间：{{getTime(item.create_time)}}</div>
+        </div>
+
+        <div class="iconfont" v-if='item.book_id > 0'>
+          &#xe72a;
         </div>
       </div>
   </div>
@@ -47,8 +51,22 @@ export default {
 </script>
 <style scoped>
 .book-cover{
-  height: 4.375rem /* 70/16 */;
-  margin-right: .625rem /* 10/16 */;
+  width: 70px;
+  height: 70px;
+  margin-right: 10px;
+  background: #f2f6fc;
+  position: relative;
+  overflow: hidden;
+}
+
+.book-cover::after{
+  content: '自选书';
+  position: absolute;
+  color: #C0C4CC;
+  width: 100%;
+  text-align: center;
+  top: 50%;
+  transform: translate3d(0,-50%,0)
 }
 
 .book-info{
@@ -65,5 +83,9 @@ export default {
 
 .card{
   justify-content: space-between;
+}
+
+.iconfont{
+  color: #C0C4CC;
 }
 </style>

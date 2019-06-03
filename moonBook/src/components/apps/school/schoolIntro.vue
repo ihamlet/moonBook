@@ -89,7 +89,7 @@
                 <van-col :span="7">
                   <div class="img-grid" @click="uploaderType(index,itemIndex)">
                     <div class="delete-photo" v-if='content.img && !readonly' @click="deletePhoto">
-                      <i class="iconfont">&#xe647;</i>
+                      <i class="iconfont">&#xe683;</i>
                     </div>
                     <img class="img-preview" :src="content.img" v-if='content.img' preview='1'/>
                     <van-uploader class="img-uploader-grid" :after-read="onRead" :disabled='readonly' v-else-if='hackReset'>
@@ -111,7 +111,7 @@
               </van-row>
 
               <div class="delete-item" v-if='!readonly' @click="delItem(itemIndex)">
-                <i class="iconfont">&#xe647;</i>
+                <i class="iconfont">&#xe683;</i>
               </div>
             </div>
             <div class="add-item theme-color" @click="addItem" v-if='!readonly'>
@@ -132,7 +132,7 @@
               <van-field :class="readonly?'chapter-field':''" v-model="chapter.text" type="textarea" autosize
                 :placeholder="chapter.text?chapter.text:'请输入内容'" rows="1" :readonly='readonly' :border='false' />
               <div class="delete-item" v-if='!readonly' @click="delChapter(chapterIndex)">
-                <i class="iconfont">&#xe647;</i>
+                <i class="iconfont">&#xe683;</i>
               </div>
             </div>
             <div class="add-item theme-color" v-if='!readonly' @click="addChapter">添加段落</div>
@@ -748,7 +748,7 @@ export default {
 }
 
 .delete-item i.iconfont {
-  font-size: 13px;
+  font-size: 20px;
   color: #f56c6c;
 }
 

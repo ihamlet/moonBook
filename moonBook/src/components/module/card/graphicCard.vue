@@ -15,7 +15,7 @@
           </div>
           <div class="titmeago flex flex-align">
             {{getTimeAgo(item.create_time)}} 
-            <span class="user-reading" v-line-clamp:20="1" v-if='post&&post.sign_days!="0"&&item.tags=="阅读打卡"&&item.cate_id!=116'>{{`坚持阅读${post.sign_days}天`}}</span>
+            <span class="user-reading" v-line-clamp:20="1" v-if='post&&post.sign_days!=0&&item.tags=="阅读打卡"'>{{`坚持阅读${post.sign_days}天`}}</span>
             <span class="teacher-reading" v-line-clamp:20="1">{{`${getTags[1]?getTags[1]:''}${getTags[2]&&getTags[2]>0?` • 课堂阅读${getTags[2]}篇`:''}`}}</span>
           </div>
         </div>
