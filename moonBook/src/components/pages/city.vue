@@ -339,6 +339,7 @@ i.bubble.show {
 
 .district {
   background: #fff;
+  overflow: hidden;
 }
 
 .district .list {

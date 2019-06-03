@@ -11,9 +11,9 @@
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-show='index == tabIndex'>
           <van-pull-refresh v-model="loading" @refresh="onRefresh">
             <div class="list" v-if="list.content.length > 0">
-              <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex" @click="toMsgDetails(item)">
+              <div class="item-cell" v-for='(item,itemIndex) in list.content' :key="itemIndex" @click="toMsgDetails(item)">
                 <van-swipe-cell :right-width="index==0?78:0">
-                  <van-cell-group>
+                  <van-cell-group :border='false'>
                     <van-cell>
                       <div class="flex flex-align">
                         <div class="icon" :class="[item.msg_type=='bookshelf'?'moon-book':'system']">

@@ -1,6 +1,6 @@
 <template>
     <div class="notice page-padding">
-        <van-nav-bar :title="$route.meta.title" />
+        <van-nav-bar :title="$route.meta.title" :border='false'/>
         <div class="container">
             <message-list/>
         </div>
