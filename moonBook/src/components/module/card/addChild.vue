@@ -36,7 +36,7 @@ export default {
 .add-child{
     width: 100%;
     height: 50px;
-    background: #000;
+    background: #232326;
 }
 
 .theme-btn{

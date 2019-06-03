@@ -161,6 +161,7 @@ export default {
   width: 94%;
   left: 50%;
   margin-left: -47%;
+  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
 }
 
 .avatar img {
@@ -255,7 +256,13 @@ export default {
   width: 100%;
   height: 3.125rem /* 50/16 */;
   background: #fff;
-  border-radius: .9375rem /* 15/16 */ .9375rem /* 15/16 */ 0 0;
+}
+
+.card,
+.service,
+.no-service,
+.library-card{
+  border-radius: 15px 15px 0 0;
 }
 
 .no-service i.iconfont {
@@ -298,13 +305,12 @@ export default {
 .library-card{
   height: 2.625rem /* 42/16 */;
   background: #fff;
-  border-radius: .9375rem /* 15/16 */ .9375rem /* 15/16 */ 0 0;
   padding: 0 .625rem /* 10/16 */;
   justify-content: space-between;
 }
 
 .logo{
-  height: 32px;
+  height: 28px;
 }
 
 .card-name{

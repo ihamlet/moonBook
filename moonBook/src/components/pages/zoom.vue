@@ -63,7 +63,7 @@
         </div>
       </van-pull-refresh>
     </div>
-    <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
+    <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" get-container='#app'/>
   </div>
 </template>
 <script>

@@ -11,7 +11,7 @@
                 <div class="name" v-line-clamp:20="1">
                   {{item.coupon.shop_name}}
                 </div>
-                <div class="time">{{item.coupon.bg_date?`${item.coupon.bg_date}-`:''}}{{item.coupon.expire_date}}</div>
+                <div class="time">{{item.coupon.bg_date?`${item.coupon.bg_date}至`:''}}{{item.coupon.expire_date}}</div>
               </div>
               <div class="status flex flex-justify" @click="toWriteOff(item)" :class="item.is_used==1?'used':''">
                 <div class="make" v-if='item.is_used == 0'>

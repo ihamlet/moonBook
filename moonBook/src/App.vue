@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <addChild @close='show = false' v-if='show && !scrollTop > 0 && userDataState.child_id == 0'/>
-    <div :class="show && !scrollTop > 0 && userDataState.child_id == 0 ?'page-container-alive':''">
+    <addChild @close='show = false' v-if='show && scrollTop == 0 && userDataState.child_id == 0&&routeName'/>
+    <div :class="show && scrollTop == 0 && userDataState.child_id == 0&&routeName?'page-container-alive':''">
       <keep-alive>
           <router-view v-if="$route.meta.keepAlive"></router-view>
       </keep-alive>
@@ -28,7 +28,12 @@ export default {
     addChild
   },
   computed: {
-    ...mapGetters(['userDataState','getTabBtn'])
+    ...mapGetters(['userDataState','getTabBtn']),
+    routeName(){
+      let routeList = ['home','apps-find','article','apps-school','my-home','zoom']
+
+      return routeList.includes(this.$route.name) && !this.userDataState.teacher_school_id > 0
+    }
   },
   data () {
     const self = this

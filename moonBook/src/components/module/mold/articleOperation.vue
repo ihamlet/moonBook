@@ -17,7 +17,7 @@
       <topic-list @close='show = false' @select='selectTag' @confirm='selectConfirm' type='share' :topicList='topicList'/>
     </van-popup>
 
-    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app' />
+    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" get-container='#app' />
   </div>
 </template>
 <script>

@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" />
+    <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" get-container='#app'/>
 
     <div class="punch" v-if='classInfo.is_my_baby_banji'>
       <van-button @click="punch" class="theme-btn" round size="normal" type="primary">

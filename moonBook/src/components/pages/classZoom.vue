@@ -13,9 +13,9 @@
           <div class="not-content" v-else>尚无内容</div>
         </van-list>
       </van-pull-refresh>
-    <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
+    <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" get-container='#app'/>
     <!-- 管理员推荐操作 -->
-    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" />
+    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" get-container='#app'/>
   </div>
 </template>
 <script>

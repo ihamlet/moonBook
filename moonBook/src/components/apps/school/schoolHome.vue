@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" />
+    <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" get-container='#app'/>
   </div>
 </template>
 <script>

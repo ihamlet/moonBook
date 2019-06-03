@@ -16,11 +16,11 @@
      </van-pull-refresh>
 
     <!-- 管理员推荐操作 -->
-    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app' />
+    <van-actionsheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" get-container='#app' />
 
-    <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
+    <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" get-container='#app'/>
     <!-- 用户文章操作 -->
-    <van-actionsheet v-model="reportShow" :actions="reportActions" cancel-text="取消" @select="onReportSelect" @cancel="reportShow = false" />
+    <van-actionsheet v-model="reportShow" :actions="reportActions" cancel-text="取消" @select="onReportSelect" @cancel="reportShow = false" get-container='#app'/>
   </div>
 </template>
 <script>
