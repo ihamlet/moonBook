@@ -31,6 +31,11 @@ const getters = {
     } else {
       if (localStorage.getItem('userData')) {
         return JSON.parse(localStorage.getItem('userData'))
+      }else{
+        return {
+          child_id:0,
+          teacher_school_id:0
+        }
       }
     }
   },

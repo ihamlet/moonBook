@@ -3,7 +3,7 @@
     <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
       <van-cell-group>
           <div class="item" v-for='(item,index) in list' :key="index" @click="toArticle(item)">
-            <van-cell v-if='item.template_id == "0"'>
+            <van-cell v-if='item.template_id == "0"&&item.cover'>
               <div class="cell-content">
                 <van-row :gutter='5'>
                   <van-col :span='item.photos.length > 3?"24":"14"'>
@@ -22,7 +22,7 @@
                     <van-row :gutter="5" class="article-cover" v-else>
                       <van-col :span='24'>
                         <div class="img-grid">
-                          <img class="img-preview" :src="item.cover"  v-http2https/>
+                          <img class="img-preview" :src="thumb(item.cover)"  v-http2https/>
                         </div>
                       </van-col>
                     </van-row>
@@ -80,12 +80,10 @@ export default {
       return axios.get('/book/SchoolArticle/getList', data).then(res => {
         if(res.data.status == 1){
 
-          let list = arrayUnique(res.data.data,'title')
-
           if (this.page == 1) {
-            this.list = list
+            this.list = res.data.data
           } else {
-            this.list = this.list.concat(list)
+            this.list = this.list.concat(res.data.data)
           }
 
           this.loading = false
@@ -106,6 +104,17 @@ export default {
           back_id: this.$route.query.id
         }
       })
+    },
+    thumb(img) {
+      if(img){
+        let hostMatch = 'inews.gtimg.com'
+
+        if (img.indexOf(hostMatch) > -1) {
+          return `/book/api/remotePic?url=${img}`
+        } else {
+          return img
+        }
+      }
     }
   }
 }
