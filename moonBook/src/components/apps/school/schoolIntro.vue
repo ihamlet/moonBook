@@ -182,12 +182,22 @@ import axios from './../../lib/js/api'
 import QRcode from 'qrcode'
 import { schoolLevel, schoolType, shcoolScale } from './../../lib/js/schoolInfo'
 import { compress } from './../../lib/js/util'
-import { mapGetters } from 'vuex'
+import { mapGetters,mapActions,mapState } from 'vuex'
 
 export default {
   name: 'school-intro',
   computed: {
-    ...mapGetters(['userDataState'])
+    ...mapState('openWX',['ready']),
+    ...mapGetters(['userDataState']),
+    item() {
+      let data = {
+        details: this.schoolInfo.introduce,
+        title: `${this.schoolInfo.title}的学校主页`,
+        imgUrl: location.origin + this.schoolInfo.logo
+      }
+
+      return data
+    }
   },
   data() {
     let u = navigator.userAgent
@@ -235,6 +245,9 @@ export default {
   created() {
     this.fetchData()
   },
+  updated(){   
+    this.wxShare()
+  },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll)
   },
@@ -267,9 +280,23 @@ export default {
             this.fetchData()
         })
       }
+    },
+    ready(){
+      this.wxShare()
     }
   },
   methods: {
+    ...mapActions('openWX', ['share']),
+    wxShare(){
+      const self = this 
+      let data = {
+        item: self.item,
+        success() {
+          self.$router.go(-1)
+        }
+      }
+      self.share(data)
+    },
     fetchData() {
       let data = {
         params: {
@@ -319,12 +346,14 @@ export default {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
     qrcode() {
-      let link = `${location.href.replace('/#', '/?#')}`
-      QRcode.toDataURL(link).then(url => {
-        this.codeImgURL = url
-      }).catch(err => {
-        console.error(err)
-      })
+      if(location.href){
+        let link = `${location.href.replace('/#', '/?#')}`
+        QRcode.toDataURL(link).then(url => {
+          this.codeImgURL = url
+        }).catch(err => {
+          console.error(err)
+        })
+      }
     },
     selectFileVideo(type) {
       this.type = [type]

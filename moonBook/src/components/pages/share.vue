@@ -2,6 +2,10 @@
   <div class="share">
     <div class="tips" v-if='pathData.user_id == userDataState.user_id'>点击发送到家庭群或家长 邀请家长加入班级</div>
     <div class="share-cover">
+      <div class="present">
+        <span class="animated fadeInUp" :style="{animationDelay:`${200*index}ms`}" v-for='(item,index) in tips' :key="index">{{item}}</span>
+      </div>
+
       <img :src="backgroundImg[randomNum]" />
     </div>
     <div class="share-info flex flex-align">
@@ -44,13 +48,14 @@ import qs from 'qs'
 export default {
   name: 'share',
   computed: {
-    ...mapState('opewnWX',['ready']),
+    ...mapState('openWX',['ready']),
     ...mapGetters(['userDataState','userPointState']),
     item() {
       let data = {
         cate_name: '邀请',
         details:`老师邀请您加入${this.$route.query.school_name}(${this.$route.query.banji_name})`,
         title: `${this.userDataState.name}老师邀请您加入${this.$route.query.school_name}(${this.$route.query.banji_name})`,
+        imgUrl: this.backgroundImg[this.randomNum]
       }
 
       return data
@@ -67,7 +72,8 @@ export default {
         'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/banjiShare/class-share-3.png',
         'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/banjiShare/class-share-4.png',
       ],
-      pathData: this.$route.query
+      pathData: this.$route.query,
+      tips:['接收班级通知','了解班级动态']
     }
   },
   updated(){   
@@ -276,6 +282,25 @@ export default {
   position: absolute;
   animation: fell 2s ease-in-out infinite;
   display: block;
+}
+
+.present{
+  position: absolute;
+  z-index: 10;
+  bottom: 25px;
+  display: grid;
+  margin-left: 50px;
+  opacity: .8;
+}
+
+.present span{
+  display: block;
+  height: 26px;
+  padding: 5px 15px;
+  background: #fff;
+  margin-bottom: 5px;
+  border-radius: 26px;
+  line-height: 26px;
 }
 
 @keyframes fell

@@ -70,17 +70,45 @@ export default {
   
         if (template_id == 0) {
           title = `【阅亮书架】${products.item.cate.cate_name?`#${products.item.cate.cate_name}#`:''}${products.item.title}`
-          desc = products.item.details.replace(/<[^>]+>/g,"") || context.state.slogan
+          
+          if(products.item.details){
+            desc = products.item.details.replace(/<[^>]+>/g,"")
+          } else{
+            desc = context.state.slogan
+          }
         } else {
-          title = products.item.title.indexOf("说") != -1&&products.item.hasvideo == "1"&&products.item.user?`${products.item.user.name}老师讲的阅读课堂故事`:products.item.title
-          desc = products.item.hasvideo == "1"?`[小视频]${products.item.details.replace(/<[^>]+>/g,"").length?products.item.details:context.state.slogan}`: `${products.item.details.replace(/<[^>]+>/g,"").length?products.item.details:context.state.slogan}`
+          if(products.item.title.indexOf("说") != -1){
+            let name  = products.item.user?products.item.user.username:''
+
+            title = `${name}在阅亮书架`
+            
+            if(products.item.cate_id > 0){
+              if(products.item.cate_id == 124 ){
+                title = `${name}在班级发布了一条通知`
+              }
+
+              if(products.item.cate_id == 116 ){
+                title = `${name}老师讲的阅读课堂故事`
+              }
+            }
+          }else{
+            title = '阅亮书架'
+          }
+
+
+          if(products.item.details.replace(/<[^>]+>/g,"").length){
+            desc = `${products.item.hasvideo == 1?`[小视频]${products.item.details}`:products.item.details}`
+          }else{
+            desc = `${products.item.hasvideo == 1?'小视频':''}`
+          }
+          
         }
 
         let data = {
           title: title || products.item.title,
           link: location.href.replace('#','/?#'),
           desc: desc,
-          imgUrl: products.item.imgUrl ? products.item.imgUrl : context.state.logo || products.item.user ? products.item.user.avatar : products.item.cover || context.state.logo,
+          imgUrl: products.item.imgUrl || products.item.cover,
           success: products.success
         }
 

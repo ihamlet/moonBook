@@ -39,7 +39,7 @@
         <van-notice-bar class="marquee" background='transparent' :speed='index == 0?50:100' :key="index" v-for='(list,index) in newCommentArr'>
           <div class="comment flex flex-align" v-for='(item,itemIndex) in list' :key="itemIndex" :style="{marginRight:random() + 'px', transform: `scale(1.${item.zan_count})`}"
             @click="zan(item)">
-            <transition enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown" :key="itemIndex"  mode="out-in">
+            <transition enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown" :key="itemIndex" mode="out-in">
               <div class="plus" v-if='item.plus'> +1 </div>
             </transition>
             <div class="comment-content">

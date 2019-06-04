@@ -52,20 +52,21 @@ export default {
 
       this.getLogin(this.userLogin).then(res => {
         this.isLoading = false
-        if (res.status == 1) {
-          this.$notify({
-            message: res.info,
-            duration: 1000,
-            background: '#0084ff'
-          })
-          this.$router.push({ path: this.$route.query.redirect })
-        } else {
-          this.$notify(res.info)
-          this.userLogin.mobile = ''
-          this.userLogin.password = ''
+
+        switch(res.status){
+          case 1:
+            this.$notify({
+              message: res.info,
+              duration: 1000,
+              background: '#0084ff'
+            })
+            this.$router.push({ path: this.$route.query.redirect })
+            break
+          default:
+            this.$toast.fail(res.info)
+            this.userLogin.mobile = ''
+            this.userLogin.password = ''
         }
-      }).catch(err => {
-        this.$toast.fail('服务器错误')
       })
     }
   }

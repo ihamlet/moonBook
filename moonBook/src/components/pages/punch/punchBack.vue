@@ -197,7 +197,7 @@ export default {
       })
 
       // 判断打卡天数有没有14天
-      if(this.$route.query.sign_days >= 14){
+      if(this.$route.query.sign_days == 14){
         this.animateShow = true
       }      
 

@@ -349,7 +349,7 @@ export default {
                   this.$router.replace({
                     name:'class-home',
                     query:{
-                      ...this.$route.query
+                      id: this.userDataState.teacher_banji_id
                     }
                   })
                 }else if(this.getResult[0]!=''&&this.getResult[0]!='apps-find'){

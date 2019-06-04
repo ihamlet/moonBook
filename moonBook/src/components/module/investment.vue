@@ -1,6 +1,6 @@
 <template>
   <div class="investment">
-    <div class="light-box" v-if='isAdshow'>
+    <div class="light-box" v-if='isAdshow&&$route.name!="apps-school"'>
       <div class='close' @click="hideAd">
         <i class="iconfont">&#xe683;</i>
       </div>
@@ -18,8 +18,8 @@
           <div class="content" v-if='type == "notice"&&notice.length'>
             <van-swipe :autoplay="5000" :height='60' indicator-color="#fff" vertical :show-indicators='false'>
               <van-swipe-item v-for="(item,index) in list" :key="index">
-                <div class="notice" @click="toArticle(content)" v-for='(content,contentIndex) in item' :key="contentIndex" v-line-clamp:20="1">
-                 <van-tag plain type="primary" class="tag">{{content.cate_name}}</van-tag>{{content.details || content.title}}
+                <div class="notice theme-color" @click="toArticle(content)" v-for='(content,contentIndex) in item' :key="contentIndex" v-line-clamp:20="1">
+                  {{content.details || content.title}}
                 </div>
               </van-swipe-item>              
             </van-swipe>

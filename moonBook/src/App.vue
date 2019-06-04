@@ -14,6 +14,8 @@
 </template>
 
 <script>
+// userDataState 数据一定要在vuex中设置默认值
+
 import axios from './../src/components/lib/js/api'
 import footerBar from './components/module/footerBar'
 import addChild from './components/module/card/addChild'
@@ -408,6 +410,7 @@ body.theme .head-bar-text,
   bottom: 4.875rem /* 78/16 */;
   left: 50%;
   transform: translate3d(-50%, 0, 0);
+  z-index: 999;
 }
 
 .apply .theme-btn {
