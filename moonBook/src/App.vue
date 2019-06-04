@@ -1331,8 +1331,9 @@ i.iconfont.vip-1 {
   content: '';
   position: absolute;
   bottom: 0;
-  width: 1.875rem /* 30/16 */;
-  height: .1875rem /* 3/16 */;
+  width: 20px;
+  height: 4px;
+  border-radius: 4px;
   background: #0084ff;
 }
 

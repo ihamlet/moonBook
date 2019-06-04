@@ -45,7 +45,7 @@
           </div>
 
           <div class="module">
-            <reading :list="lateBook" moduleTitle="宝贝最近在读" />
+            <reading :list="lateBook" moduleTitle="宝贝最近在读"/>
           </div>
 
           <div>

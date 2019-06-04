@@ -8,7 +8,7 @@
       <div class="new-point" slot='nav-right' v-if='isNewPointShow'></div>
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index" :disabled='list.title=="筛选"'>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
-          <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+          <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
             <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
               <div class="create-time theme-color" v-if='list.title=="最新"&&timediff(item,itemIndex)'>
                 {{getTimeAgo(item.create_time)}}
@@ -39,7 +39,23 @@ export default {
     FilterList
   },
   computed: {
-    ...mapGetters(['userDataState'])
+    ...mapGetters(['userDataState']),
+    isNewPointShow(){
+      if(this.newBookDate){
+        let boolean
+
+        let day = 86400*7000
+        let newDate = Date.parse(new Date())
+
+        if(newDate >  this.newBookDate  &&  newDate < this.newBookDate + day ){
+          boolean = true
+        }else{
+          boolean = false
+        }
+
+        return boolean
+      }
+    } 
   },
   data() {
     return {
@@ -210,22 +226,6 @@ export default {
             id: this.userDataState.card_school_id
           }
         })
-      }
-    },
-    isNewPointShow(){
-      if(this.newBookDate){
-        let boolean
-
-        let day = 86400*7000
-        let newDate = Date.parse(new Date())
-
-        if( this.newBookDate + day > newDate && newDate < this.newBookDate ){
-          boolean = true
-        }else{
-          boolean = false
-        }
-
-        return boolean
       }
     }
   }

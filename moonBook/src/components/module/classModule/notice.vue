@@ -10,7 +10,7 @@
       </div>
     </van-nav-bar>
     <van-cell>
-      <graphicCard :item='notice[0]' :moreBtn='false' type='notice' title='信息老师' />
+      <graphicCard :item='notice[0]' :moreBtn='false' type='notice' title='信息老师' :isSocialShow='false'/>
       <readList :list='readList' v-if='readList.length'/>
     </van-cell>
 

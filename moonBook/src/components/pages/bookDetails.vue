@@ -39,10 +39,31 @@
           </van-col>
         </div>
       </div>
+
       <div class="module" v-if='freshList.length'>
         <freshList :list='freshList' cid="child_id" avatar="child_avatar" routerName="baby-home" name="child_name" :key="$route.query.id"/>
       </div>
-      <div>
+
+      <div class="module" v-if='details.details || details.recommend_comment'>
+        <div class="item-details" v-if='details.details'>
+          <div class="module-title">图书简介</div>
+          <van-cell :border='false'>
+            <div class="details-text">
+              {{details.details}}
+            </div>
+          </van-cell>
+        </div>
+        <div class="item-details" v-if='details.recommend_comment'>
+          <div class="module-title">编辑推荐</div>
+          <van-cell :border='false'>
+            <div class="details-text">
+              {{details.recommend_comment}}
+            </div>
+          </van-cell>
+        </div>
+      </div>
+
+      <div class="comment-box">
         <comment :item='details' type='bookDetails' :postId='details.post_id' :key="$route.query.id"/>
       </div>
     </div>
@@ -231,5 +252,12 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
+}
+
+.details-text{
+  text-align: justify;
+  font-size: 16px;
+  line-height: 1.8;
+  text-indent:34px
 }
 </style>
