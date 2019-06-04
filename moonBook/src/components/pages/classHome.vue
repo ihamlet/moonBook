@@ -30,7 +30,7 @@
         <read-list title='阅读榜' type='banji' field='avatar' :key="$route.query.id"/>
       </div>
       <div class="module">
-        <notice type='banji' :key="$route.query.id"/>
+        <notice type='banji' :key="$route.query.id" :studentCount='classInfo.student_count'/>
       </div>
       <div>
         <class-zoom type='template' :banji_id='$route.query.id' :key="$route.query.id"/>

@@ -46,14 +46,14 @@
       </div>
     </div>
 
-    <van-dialog v-model="show" show-cancel-button :before-close="beforeClose">
+    <van-dialog v-model="show" show-cancel-button :before-close="beforeClose" getContainer='#app'>
       <div class="dialog-title">添加班级</div>
       <van-cell-group>
         <van-field v-model="className" label="班级名称" placeholder="请输入班级名称" input-align='right' />
       </van-cell-group>
     </van-dialog>
 
-    <van-dialog v-model="showCode" show-cancel-button confirmButtonText='忽略' cancelButtonText='重新选择' :before-close="codeBeforeClose">
+    <van-dialog v-model="showCode" show-cancel-button confirmButtonText='忽略' cancelButtonText='重新选择' :before-close="codeBeforeClose" getContainer='#app'>
       <div class="dialog-title tips"> 
         <div class="prompt-text">填写邀请码直接进入班级</div>
         <div class="prompt">点击忽略请等待老师审核通过</div>

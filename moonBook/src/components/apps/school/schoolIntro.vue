@@ -164,12 +164,12 @@
       <van-picker :columns="columns" @change="onChange" />
     </van-popup>
 
-    <van-dialog v-model="phoneDialogShow" title="设置联系电话" show-confirm-button :before-close='onBeforeClose'>
+    <van-dialog v-model="phoneDialogShow" title="设置联系电话" show-confirm-button :before-close='onBeforeClose' getContainer='#app'>
       <van-field type="tel" maxlength="11" class="phone-field" input-align='center' v-model="schoolInfo.phone"
         placeholder="请输入手机号" />
     </van-dialog>
 
-    <van-dialog v-model="helpShow" confirmButtonText='我知道了'>
+    <van-dialog v-model="helpShow" confirmButtonText='我知道了' getContainer='#app'>
       <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/demo.gif">
       <div class="tips-help-text">请点选您需要修改的内容，进行修改。</div>
     </van-dialog>

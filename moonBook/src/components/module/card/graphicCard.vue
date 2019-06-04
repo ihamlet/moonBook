@@ -46,7 +46,7 @@
         <task-card />
       </div>
 
-      <div class="social flex flex-align">
+      <div class="social flex flex-align" v-if='isSocialShow'>
         <div class="share">
           <i class="iconfont">&#xe654;</i> {{item.views>1000?'999+':item.views == '0'?'浏览':item.views}}
         </div>
@@ -97,7 +97,10 @@ export default {
       default: ''
     },
     moreBtn:{
-      required: false,
+      type: Boolean,
+      default: true
+    },
+    isSocialShow:{
       type: Boolean,
       default: true
     }

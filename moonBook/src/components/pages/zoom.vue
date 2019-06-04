@@ -378,6 +378,7 @@ export default {
 
 .subscribe .theme-btn{
   background: linear-gradient(135deg, #FFC107, #FF9800);
+  box-shadow: 0 2px 10px rgba(255, 152, 0, .3);
 }
 
 .theme-btn{

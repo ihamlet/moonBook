@@ -26,18 +26,22 @@ const state = {
 
 const getters = {
   userDataState: state => {
+    let data
+
     if (state.userData) {
-      return state.userData
+      data = state.userData
     } else {
       if (localStorage.getItem('userData')) {
-        return JSON.parse(localStorage.getItem('userData'))
+        data = JSON.parse(localStorage.getItem('userData'))
       }else{
-        return {
+        data = {
           child_id:0,
           teacher_school_id:0
         }
       }
     }
+
+    return data
   },
   MsgLengthState: state => {
     return state.msgLength

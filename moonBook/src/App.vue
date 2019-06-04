@@ -139,7 +139,6 @@ textarea {
   -moz-osx-font-smoothing: grayscale;
 }
 
-
 .van-field__control::placeholder{
   font-family: 'iconfont' !important;
   font-style: normal;

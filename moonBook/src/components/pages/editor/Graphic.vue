@@ -343,7 +343,16 @@ export default {
                 this.clearImg()
                 this.$toast.success('发布成功')
 
-                if(this.getResult[0]!=''&&this.getResult[0]!='apps-find'){
+                // this.tag.cate_id == 124 班级通知
+
+                if(this.tag.cate_id == 124){
+                  this.$router.replace({
+                    name:'class-home',
+                    query:{
+                      ...this.$route.query
+                    }
+                  })
+                }else if(this.getResult[0]!=''&&this.getResult[0]!='apps-find'){
                   this.$router.replace({
                     name: this.getResult[0],
                     query:{
