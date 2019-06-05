@@ -135,7 +135,7 @@ export default {
   content: '';
   width: 10px;
   height: 50px;
-  box-shadow: 0 0 15px rgb(0, 0, 0, .2);
+  box-shadow: 0 0 15px rgb(0, 0, 0, .1);
   left: -10px;
   top: 50%;
   z-index: 1;
