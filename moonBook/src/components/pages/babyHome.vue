@@ -57,7 +57,7 @@
       </div>
 
       <div class="metro-card" v-if='childInfo.is_mine'>
-        <metro/>
+        <metro :childInfo='childInfo'/>
       </div>
 
       <div v-if="childInfo.is_mine" class="article-list">

@@ -18,7 +18,7 @@
                 <div class="metro-r">
                     <div class="grid-metro" @click="toTask">
                         <div class="info">
-                            <div class="title">每日任务:4/5</div>
+                            <div class="title">每日任务:{{childInfo.today_missions}}/5</div>
                             <div class="sub">好的习惯贵在坚持</div>
                             <van-button class="theme-button" type="info" round size="small">立即查看</van-button>
                         </div>
@@ -33,6 +33,7 @@
 <script>
 export default {
     name:'metro',
+    props: ['childInfo'],
     methods: {
         toBookShelf(){
             this.$router.push({

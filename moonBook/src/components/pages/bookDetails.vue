@@ -175,7 +175,7 @@ export default {
     listening(details){
       let p = /（.+?）/
       let pureTitle = details.title.replace(p, '')
-      let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
+      let url = `https://m.ximalaya.com/search/${pureTitle}`
       let isRead = localStorage.getItem('bookRead_' + details.tushu_id)
       if (!isRead) {
         axios.get('/book/story/updateRead').then(res => {

@@ -14,13 +14,16 @@
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
                 <div class="card-list">
-                    <div class="task-card flex flex-align fadeInUp animated" v-for="(item,index) in list" :key="index" :class="`an-${index}`" @click="toGraphic">
+                    <div class="task-card flex flex-align fadeInUp animated" v-for="(item,index) in list" :key="index" :class="`an-${index}`" @click="toGraphic(item)">
                         <div class="cover">
                             <img :src="item.cover"/>
                         </div>
                         <div class="task-title">{{item.title}}</div>
-                        <div class="icon-arrow">
+                        <div class="icon-arrow" v-if='!item.today_finished'>
                             <van-icon name="arrow" color='#fff'/>
+                        </div>
+                        <div class="done" v-else>
+                          <i class="iconfont">&#xe676;</i>
                         </div>
                     </div>
                 </div>
@@ -109,16 +112,27 @@ export default {
             this.loading = false
         })
     },
-    toGraphic(){
-      this.$router.push({
-        name: 'graphic',
-        query:{
-          id: this.$route.query.id,
-          back: 'baby-home'
-        }
-      })
+    toGraphic(item){
+      if(!item.today_finished){
+          this.$router.push({
+            name: 'graphic',
+            query:{
+              id: this.$route.query.id,
+              back: 'baby-home',
+              cate_id: 133,
+              tags: '宝贝主页'
+            }
+          })
 
-      this.$toast('签到成功')
+          let commentData = {
+            post_id: item.post_id,
+            contents: item.title,
+          }
+
+          axios.post('/book/SchoolArticleComment/edit?ajax=1', commentData).then(res => {})
+      }else{
+        this.$toast('今天已经完成了该任务')
+      }
     }
   }
 }
@@ -142,20 +156,21 @@ export default {
 .task-card{
     background: #000;
     width: 100%;
-    height: 6.25rem /* 100/16 */;
-    border-radius: .9375rem /* 15/16 */;
+    height: 80px;
+    border-radius: 20px;
     color: #fff;
-    font-size: 1.125rem /* 18/16 */;
+    font-size: 16px;
 }
 
 .cover{
-    width: 4.375rem /* 70/16 */;
-    height: 4.375rem /* 70/16 */;
+    width: 60px;
+    height: 60px;
     overflow: hidden;
     border-radius: 50%;
     background: #fff;
     position: relative;
     margin: 0 1.25rem /* 20/16 */;
+    box-shadow: 0 5px 20px rgba(0,0,0,.1)
 }
 
 .task-title{
@@ -190,21 +205,21 @@ export default {
     background: #36D1DC;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    box-shadow: 0 .3125rem .625rem rgba(54, 209, 220, 0.3);
+    box-shadow: 0 2px 10px rgba(54, 209, 220, 0.2);
 }
 
 .task-card:nth-child(2){
     background: #cb2d3e;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right,#cb2d3e, #ef473a);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #cb2d3e, #ef473a); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    box-shadow: 0 .3125rem .625rem rgba(239, 71, 58, 0.3);
+    box-shadow: 0 2px 10px rgba(239, 71, 58, 0.2);
 }
 
 .task-card:nth-child(3){
     background: #FDC830;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #F37335, #FDC830);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #F37335, #FDC830); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    box-shadow: 0 .3125rem .625rem rgba(253, 200, 48, 0.3);
+    box-shadow: 0 2px 10px rgba(253, 200, 48, 0.2);
 }
 
 
@@ -212,6 +227,17 @@ export default {
     background: #11998e;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right,#11998e, #38ef7d );  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #11998e,#38ef7d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    box-shadow: 0 .3125rem .625rem rgba(56, 239, 125, 0.3);
+    box-shadow: 0 2px 10px rgba(56, 239, 125, 0.2);
+}
+
+.done i.iconfont{
+    font-size: 50px;
+}
+
+.done{
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    right: -5px;
 }
 </style>

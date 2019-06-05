@@ -62,7 +62,7 @@ export default {
     listening(item) {
       let p = /（.+?）/
       let pureTitle = item.book_title.replace(p, '')
-      let url = `https://m.ximalaya.com/search/${pureTitle}/voice`
+      let url = `https://m.ximalaya.com/search/${pureTitle}`
       let isRead = localStorage.getItem('bookRead_' + item.book_id)
       if (!isRead) {
         axios.get('/book/story/updateRead').then(res => {
