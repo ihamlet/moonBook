@@ -91,10 +91,7 @@ export default {
                 title = `${name}老师讲的阅读课堂故事`
               }
             }
-          }else{
-            title = '阅亮书架'
           }
-
 
           if(products.item.details.replace(/<[^>]+>/g,"").length){
             desc = `${products.item.hasvideo == 1?`[小视频]${products.item.details}`:products.item.details}`
