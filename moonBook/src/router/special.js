@@ -1,4 +1,6 @@
-import SpecialPunch from './../components/pages/special/specialPunch'
+// import SpecialPunch from './../components/pages/special/specialPunch'
+
+const SpecialPunch = () => import('@/components/pages/special/specialPunch')
 
 let specialRouter = [{
     path: '/special-punch',

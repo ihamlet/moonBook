@@ -1,25 +1,48 @@
-import BorrowList from '@/components/pages/borrowList'
-import Bookshelf from '@/components/pages/bookshelf'
-import RankingList from '@/components/pages/rankingList'
-import Ranking from '@/components/pages/ranking'
-import ReadStat from '@/components/pages/readStat'
-import ReadAmount from '@/components/pages/readAmount'
-import ReadGuide from '@/components/pages/guided/readGuide'
-import punchBack from '@/components/pages/punch/punchBack'
-import punchList from '@/components/pages/punch/punchList'
-import punchShare from '@/components/pages/punch/punchShare'
-import NewBook from '@/components/pages/newBook'
-import advertisingDetails from '@/components/pages/punch/advertisingDetails'
-import popupList from '@/components/pages/punch/popupList'
-import popupHelp from '@/components/pages/punch/punchHelp'
-import punchSpeed from '@/components/pages/punch/punchSpeed'
-import writeOff from '@/components/pages/punch/writeOff'
-import Calendar from '@/components/module/mold/calendar'
+// import BorrowList from '@/components/pages/borrowList'
+// import Bookshelf from '@/components/pages/bookshelf'
+// import RankingList from '@/components/pages/rankingList'
+// import Ranking from '@/components/pages/ranking'
+// import ReadStat from '@/components/pages/readStat'
+// import ReadAmount from '@/components/pages/readAmount'
+// import ReadGuide from '@/components/pages/guided/readGuide'
+// import punchBack from '@/components/pages/punch/punchBack'
+// import punchList from '@/components/pages/punch/punchList'
+// import punchShare from '@/components/pages/punch/punchShare'
+// import NewBook from '@/components/pages/newBook'
+// import advertisingDetails from '@/components/pages/punch/advertisingDetails'
+// import popupList from '@/components/pages/punch/popupList'
+// import popupHelp from '@/components/pages/punch/punchHelp'
+// import punchSpeed from '@/components/pages/punch/punchSpeed'
+// import writeOff from '@/components/pages/punch/writeOff'
+// import Calendar from '@/components/module/mold/calendar'
 
 
 //成就
-import achievementPage from '@/components/pages/achievement/achievementPage'
-import achievementShare from '@/components/pages/achievement/achievementShare'
+// import achievementPage from '@/components/pages/achievement/achievementPage'
+// import achievementShare from '@/components/pages/achievement/achievementShare'
+
+
+const BorrowList = () => import('@/components/pages/borrowList')
+const Bookshelf = () => import('@/components/pages/bookshelf')
+const RankingList = () => import('@/components/pages/rankingList')
+const Ranking = () => import('@/components/pages/ranking')
+const ReadStat = () => import('@/components/pages/readStat')
+const ReadAmount = () => import('@/components/pages/readAmount')
+const ReadGuide = () => import('@/components/pages/guided/readGuide')
+const punchBack = () => import('@/components/pages/punch/punchBack')
+const punchList = () => import('@/components/pages/punch/punchList')
+const punchShare = () => import('@/components/pages/punch/punchShare')
+const NewBook = () => import('@/components/pages/newBook')
+const advertisingDetails = () => import('@/components/pages/punch/advertisingDetails')
+const popupList = () => import('@/components/pages/punch/popupList')
+const popupHelp = () => import('@/components/pages/punch/punchHelp')
+const punchSpeed = () => import('@/components/pages/punch/punchSpeed')
+const writeOff = () => import('@/components/pages/punch/writeOff')
+const Calendar = () => import('@/components/module/mold/calendar')
+
+const achievementPage = () => import('@/components/pages/achievement/achievementPage')
+const achievementShare = () => import('@/components/pages/achievement/achievementShare')
+
 
 let readRouter = [{
     path: '/bookshelf',

@@ -1,4 +1,5 @@
-import audioPlayer from './../components/pages/audio/audioPlayer'
+// import audioPlayer from './../components/pages/audio/audioPlayer'
+const audioPlayer = () => import('@/components/pages/audio/audioPlayer')
 
 let audioRouter = [{
     path:'/audioPlayer',

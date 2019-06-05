@@ -1,7 +1,12 @@
-import Accept from '@/components/pages/accept/accept'
-import SchoolList from '@/components/pages/accept/schoolList'
-import cardLevel from '@/components/pages/accept/cardLevel'
-import cardTime from '@/components/pages/accept/cardTime'
+// import Accept from '@/components/pages/accept/accept'
+// import SchoolList from '@/components/pages/accept/schoolList'
+// import cardLevel from '@/components/pages/accept/cardLevel'
+// import cardTime from '@/components/pages/accept/cardTime'
+
+const Accept = () => import('@/components/pages/accept/accept')
+const SchoolList = () => import('@/components/pages/accept/schoolList')
+const cardLevel = () => import('@/components/pages/accept/cardLevel')
+const cardTime = () => import('@/components/pages/accept/cardTime')
 
 let acceptRouter = {
     path:'/accept',

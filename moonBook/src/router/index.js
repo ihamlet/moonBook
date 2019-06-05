@@ -1,54 +1,94 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
-import Error from '@/components/notFound'
-import Home from '@/components/pages/home'
-import Notice from '@/components/pages/notice'
-import MyHome from '@/components/pages/my'
-import Login from '@/components/pages/login'
 
-import Zoom from '@/components/pages/zoom'
-import BabyHome from '@/components/pages/babyHome'
-import ClassHome from '@/components/pages/classHome'
+// import Hello from '@/components/Hello'
+// import Error from '@/components/notFound'
+// import Home from '@/components/pages/home'
+// import Notice from '@/components/pages/notice'
+// import MyHome from '@/components/pages/my'
+// import Login from '@/components/pages/login'
 
-import cardList from '@/components/pages/cardList'
+// import Zoom from '@/components/pages/zoom'
+// import BabyHome from '@/components/pages/babyHome'
+// import ClassHome from '@/components/pages/classHome'
 
-import Activity from '@/components/pages/activity'
-import Task from '@/components/pages/task/taskList'
+// import cardList from '@/components/pages/cardList'
 
-import AddFamily from '@/components/pages/invite/addFamily'
-import VerifyFamily from '@/components/pages/invite/verifyList'
+// import Activity from '@/components/pages/activity'
+// import Task from '@/components/pages/task/taskList'
 
-import Information from '@/components/pages/invite/information'
+// import AddFamily from '@/components/pages/invite/addFamily'
+// import VerifyFamily from '@/components/pages/invite/verifyList'
 
-import Article from '@/components/pages/article'
-import BookDetails from '@/components/pages/bookDetails'
+// import Information from '@/components/pages/invite/information'
 
-import VideoPlayer from '@/components/pages/video/ckplayer'
+// import Article from '@/components/pages/article'
+// import BookDetails from '@/components/pages/bookDetails'
 
-import School from '@/components/School'
+// import VideoPlayer from '@/components/pages/video/ckplayer'
+// import School from '@/components/School'
 
-import Banji from '@/components/Banji'
-import Find from '@/components/Find'
-import Baby from '@/components/Baby'
-import My from '@/components/My'
+// import Banji from '@/components/Banji'
+// import Find from '@/components/Find'
+// import Baby from '@/components/Baby'
+// import My from '@/components/My'
 
-import AppsFind from '@/components/apps/find/find'
-import AppsSchool from '@/components/apps/school/schoolHome'
-import SchoolIntro from '@/components/apps/school/schoolIntro'
+// import AppsFind from '@/components/apps/find/find'
+// import AppsSchool from '@/components/apps/school/schoolHome'
+// import SchoolIntro from '@/components/apps/school/schoolIntro'
 
-import Register from '@/components/pages/register'
-import City from '@/components/pages/city'
+// import Register from '@/components/pages/register'
+// import City from '@/components/pages/city'
 
-import Dialog from '@/components/pages/dialog/dialog'
+// import Dialog from '@/components/pages/dialog/dialog'
 
-import Share from '@/components/pages/share'
+// import Share from '@/components/pages/share'
 
-import Search from '@/components/module/search/searchPage'
+// import Search from '@/components/module/search/searchPage'
 
-import videoPage from '@/components/pages/video/videoPage'
+// import videoPage from '@/components/pages/video/videoPage'
 
-import Iframe from '@/cloud/iframe' //外部引入
+// import Iframe from '@/cloud/iframe' //外部引入
+
+const Hello = () => import('@/components/Hello')
+const Error = () => import('@/components/notFound')
+const Home = () => import('@/components/pages/home')
+const Notice = () => import('@/components/pages/notice')
+const MyHome = () => import('@/components/pages/my')
+const Login = () => import('@/components/pages/login')
+
+const Zoom = () => import('@/components/pages/zoom')
+const BabyHome = () => import('@/components/pages/babyHome')
+const ClassHome = () => import('@/components/pages/classHome')
+const cardList = () => import('@/components/pages/cardList')
+const Activity = () => import('@/components/pages/Activity')
+const Task = () => import('@/components/pages/task/taskList')
+const AddFamily = () => import('@/components/pages/invite/addFamily')
+const VerifyFamily = () => import('@/components/pages/invite/verifyList')
+const Information = () => import('@/components/pages/invite/information')
+const Article = () => import('@/components/pages/article')
+const BookDetails = () => import('@/components/pages/bookDetails')
+
+const VideoPlayer = () => import('@/components/pages/video/ckplayer')
+const School = () => import('@/components/School')
+const Banji = () => import('@/components/Banji')
+const Find = () => import('@/components/Find')
+const Baby = () => import('@/components/Baby')
+const My = () => import('@/components/My')
+
+const AppsFind = () => import('@/components/apps/find/find')
+const AppsSchool = () => import('@/components/apps/school/schoolHome')
+const SchoolIntro = () => import('@/components/apps/school/schoolIntro')
+
+const Register = () => import('@/components/pages/register')
+const City = () => import('@/components/pages/city')
+const Dialog = () => import('@/components/pages/dialog/dialog')
+const Share = () => import('@/components/pages/share')
+
+const Search = () => import('@/components/module/search/searchPage')
+const videoPage = () => import('@/components/pages/video/videoPage')
+
+const Iframe = () => import('@/cloud/iframe') //外部引入
 
 import Edit from './edit'
 import Editor from './editor'
