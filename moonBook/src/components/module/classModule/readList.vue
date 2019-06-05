@@ -5,7 +5,7 @@
         <i class="iconfont">&#xe61d;</i>
         <span class="name">{{title}}</span>
       </div>
-      <div class="showdown"></div>
+      <div class="showdown" v-if='count > 0'></div>
       <van-row v-if='count > 0'>
         <div class="ranking-list scroll-x">
           <div class="item flex flex-align fadeInRight animated" :style="{animationDelay:`${200*index}ms`}" v-for='(item,index) in rankList' :key="index">
