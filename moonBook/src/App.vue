@@ -19,7 +19,7 @@
 import axios from './../src/components/lib/js/api'
 import footerBar from './components/module/footerBar'
 import addChild from './components/module/card/addChild'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import './../src/components/lib/css/neat.css'
 import 'animate.css'
 
@@ -43,6 +43,8 @@ export default {
       show: true,
       scrollTop: 0,
       center: [114.085947,22.547],
+      cityCode:'420200',
+      weather:'',
       plugin:[{
           timeout:1000,
           pName: 'Geolocation',
@@ -51,11 +53,23 @@ export default {
               init:(map)=>{
                   map.getCurrentPosition( (status, result) => {
                   if (result && result.position) {
+                        self.cityCode = result.addressComponent.adcode
                         self.center = [result.position.lng,result.position.lat]
                       }
                   })
               }
           }
+      },{
+        pName: 'Weather',
+        events: {
+          init: (map)=>{
+            map.getLive(self.cityCode,(err, data)=>{
+              if(!err){
+                self.weather = data
+              }
+            })
+          }
+        }
       }]
     }
   },
@@ -83,11 +97,15 @@ export default {
         }
         this.getUserLocation(products)
     },
+    weather(val){
+      this.setWeather(val)
+    },
     '$route': 'fetchData' 
   },
   methods: {
     ...mapActions('openWX',['wxConfig','wxGetLocation']),
     ...mapActions(['getUserData','getMsg','getUserLocation','getManager']),
+    ...mapMutations(['setWeather']),
     fetchData(){
       let products = {
         page: 1,

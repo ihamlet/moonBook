@@ -21,7 +21,8 @@ const state = {
   token: '',
   userPoint: '',
   manager:'',
-  releaseSwitch: false
+  releaseSwitch: false,
+  weather:''
 }
 
 const getters = {
@@ -113,6 +114,9 @@ const mutations = {
   setTabBtn(state, params){
     localStorage.setItem('tabBtn', JSON.stringify(params.data))
     state.tabBtn = params.data
+  },
+  setWeather(state, params){
+    state.weather = params
   }
 }
 
