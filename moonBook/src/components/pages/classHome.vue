@@ -45,7 +45,7 @@
         阅读打卡
       </van-button>
     </div>
-    <div class="release-footer-bar" v-else-if='isBtnShow'>
+    <div class="release-footer-bar" v-else-if='isBtnShow&&userDataState.teacher_banji_id == $route.query.id'>
       <van-button class="theme-btn" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="ketangRelease">
         <i class="iconfont">&#xe664;</i>
         课堂阅读

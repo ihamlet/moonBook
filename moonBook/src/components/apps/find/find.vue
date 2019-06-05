@@ -153,7 +153,6 @@ export default {
       }
 
       axios.get('/book/schoolArticleCate/getList',data).then(res => {
-        console.log(res)
         if(res.data[0].children.length){
           this.cateList = res.data[0].children
         }
