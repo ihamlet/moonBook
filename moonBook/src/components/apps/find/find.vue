@@ -148,7 +148,7 @@ export default {
       }
 
       //育儿专栏 cate_id 149 做一个权限判断 is_visit
-      if(this.$route.query.cate_id == 149){
+      if(this.$route.query.cate_id == 149 || this.$route.query.tag_id == 100){
         data.params.is_visit = 1
       }
 

@@ -720,6 +720,7 @@ export default {
 <style scoped>
 .metro-card{
   padding: .625rem /* 10/16 */;
+  background: #fff;
 }
 
 .header {
