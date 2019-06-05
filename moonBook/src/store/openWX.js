@@ -66,6 +66,7 @@ export default {
       if(context.state.ready){     
         let title
         let desc
+        let imgUrl
         let template_id = products.item.template_id?products.item.template_id:1
   
         if (template_id == 0) {
@@ -77,9 +78,11 @@ export default {
             desc = context.state.slogan
           }
         } else {
+          imgUrl = products.item.user.avatar
+
           if(products.item.title.indexOf("说") != -1){
             let name  = products.item.user?products.item.user.username:''
-
+            
             title = `${name}在阅亮书架`
             
             if(products.item.cate_id > 0){
@@ -105,7 +108,7 @@ export default {
           title: title || products.item.title,
           link: location.href.replace('#','/?#'),
           desc: desc,
-          imgUrl: products.item.imgUrl || products.item.cover,
+          imgUrl: imgUrl?imgUrl:products.item.imgUrl || products.item.cover,
           success: products.success
         }
 
