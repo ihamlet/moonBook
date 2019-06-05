@@ -303,7 +303,7 @@ export default {
             item.collect_num--
           }
 
-          if(item.isShoucang){
+          if(!item.isShoucang){
             this.$toast.success({
               className: 'shoucang-icon toast-icon'
             })
