@@ -251,7 +251,7 @@ export default {
 .tag{
   position: absolute;
   left: 0;
-  top: 0;
+  top: 10px;
 }
 
 .details-text{

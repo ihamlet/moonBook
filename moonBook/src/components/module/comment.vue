@@ -92,7 +92,7 @@
             </div>
             <div class="btn" @click="addCollect(item)" v-if='include != "include"'>
               <van-tag class="num-tag" v-if='item.collect_num > 0' round type="danger">{{item.collect_num > 1000?'999+':item.collect_num}}</van-tag>
-              <i class="iconfont star highlight swing animated" v-if="!item.isShoucang">&#xe64b;</i>
+              <i class="iconfont star highlight swing animated" v-if="item.isShoucang">&#xe64b;</i>
               <i class="iconfont" v-else> &#xe64c;</i>
             </div>
             <div class="btn" v-else @click="isShare">
