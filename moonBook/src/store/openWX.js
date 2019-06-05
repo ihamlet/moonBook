@@ -78,7 +78,7 @@ export default {
             desc = context.state.slogan
           }
         } else {
-          imgUrl = products.item.user.avatar
+          imgUrl = products.item.user?products.item.user.avatar:context.state.logo
 
           if(products.item.title.indexOf("说") != -1){
             let name  = products.item.user?products.item.user.username:''
