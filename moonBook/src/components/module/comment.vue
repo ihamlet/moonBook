@@ -287,7 +287,7 @@ export default {
 
       let data = {
         params: {
-          post_id: this.item.post_id
+          post_id: this.postId
         }
       }
 
