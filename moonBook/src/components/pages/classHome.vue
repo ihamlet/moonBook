@@ -320,7 +320,7 @@ export default {
                 child_id: this.userDataState.child_id,
                 back: this.$route.name,
                 punchType:'banji',
-                cate_id: 133,
+                cate_id: 100,
                 tags:'阅读打卡',
                 ...res.data.data.stat_data
               }
