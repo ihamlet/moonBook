@@ -387,12 +387,12 @@ export default {
 
 .zoom-head{
   width: 100%;
-  height: 330px;
   background: url('https://assets-moonbook.oss-cn-beijing.aliyuncs.com/read-amount-1.png');
   background-repeat: no-repeat;
   background-size: cover;
   position: fixed;
   top: 0;
+  min-height: 60vh;
 }
 
 .bg-black{
