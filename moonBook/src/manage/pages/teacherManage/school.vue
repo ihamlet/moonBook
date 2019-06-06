@@ -68,7 +68,8 @@ export default {
       schoolName:'',
       count:0,
       loading: false,
-      finished: false
+      finished: false,
+      schoolId:0
     }
   },
   watch: {
@@ -84,10 +85,8 @@ export default {
           case 1:
             this.schoolList = res.data.data
 
-            let schoolId = schoolId || res.data.data[0].school_id
-
-            this.onLoad(schoolId)
-            this.getCount(schoolId)
+            this.schoolId = schoolId || res.data.data[0].school_id
+            this.getCount(this.schoolId)
 
             break
           default:
@@ -97,19 +96,24 @@ export default {
     },
     selectSchool(item){
         this.onLoad(item.school_id).then(()=>{
+            this.page = 1
             this.loading = false
         })
         this.isSelectSchool = false
     },
-    onLoad(schoolId){
+    onLoad(){
         return axios.get('/SchoolManage/teacher/getList',{params:{
-            school_id: schoolId
+            school_id: this.schoolId,
+            page: this.page
         }}).then(res => {
             switch (res.data.status) {
             case 1:
                 this.teacherList = res.data.data
                 this.schoolName = res.data.data[0].school_name
                 
+                this.page++
+                this.loading = false
+
                 if(this.teacherList.length >= res.data.count){
                     this.finished = true
                 }
