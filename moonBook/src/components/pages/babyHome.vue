@@ -320,7 +320,7 @@ export default {
     },
     request() {
       this.getUserData().then(res => {
-        if (res.child_id > '0') {
+         if (res.child_id > '0') {
           let data = {
             params:{
               child_id: this.$route.query.id

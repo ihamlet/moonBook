@@ -72,7 +72,7 @@
       <van-button class="theme-btn" :loading='submitLoading' square type="primary" size="normal" @click="submit">提 交</van-button>
     </div>
 
-    <van-popup class="card-routing-popup" v-model="show" get-container='#app'>
+    <van-popup class="card-routing-popup" v-model="show" get-container='#app' :close-on-click-overlay='false'>
       <card-routing :childId='childId'/>
     </van-popup>
   </div>
@@ -112,7 +112,7 @@ export default {
   data() {
     return {
       info: '',
-      show:false,
+      show: false,
       fileName: '',  
       cropperLoading: false,
       sexTypeIndex: 0,
@@ -156,7 +156,7 @@ export default {
         autoCropHeight: 250,
         centerBox: true,
         size:.3,
-        high: false
+        high: false,
       }
     }
   },

@@ -24,6 +24,14 @@ export default {
   components: {
     iconSuccess
   },
+  beforeRouteLeave(to, from, next) {
+    if(to.name == 'register'){
+      next({path:`/baby-home?id=${this.userDataState.child_id}`})
+    }else{
+      next()
+    }
+    
+  },
   computed: {
     ...mapGetters(['userDataState', 'userPointState'])
   }

@@ -2,7 +2,7 @@
   <div class="card-routing">
     <div class="accept-card">
       <div class="header">
-        <div class="card bounceInUp animated">
+        <div class="card fadeInUp animated">
             <div class="card-info flex flex-align">
                 <img class="logo" src="/Public/lib/bookshelf/img/logo.png" alt="logo" />
                 <div class="name">阅亮书架</div>
@@ -17,10 +17,14 @@
         </div>
       </div>
       <div class="container">
-          <van-swipe :autoplay="3000" vertical>
-            <van-swipe-item v-for='(item,index) in wordList' :key="index">{{item}}</van-swipe-item>
-          </van-swipe>
-         <i class="iconfont">&#xe62d;</i>
+          <div class="word-swipe">
+            <van-swipe :autoplay="3000" vertical :height="26" :show-indicators='false'>
+              <van-swipe-item v-for='(item,index) in wordList' :key="index">
+                <span class="item-world"> • {{item}}</span> 
+              </van-swipe-item>
+            </van-swipe>
+          </div>
+         <i class="iconfont fadeInDown animated">&#xe62d;</i>
       </div>
     </div>
     <van-row class="square-btn" gutter="20" type="flex" justify="space-around">
@@ -63,7 +67,8 @@ export default {
       this.$router.replace({
           name:'baby-home',
           query:{
-            id: this.childId
+            id: this.childId,
+            tags:'宝贝主页'
           }
       })
 
@@ -177,5 +182,14 @@ export default {
 
 .square-btn{
   padding: 1.25rem /* 20/16 */;
+}
+
+.word-swipe{
+  height: 26px;
+  overflow: hidden;
+}
+
+.item-world{
+  line-height: 26px;
 }
 </style>
