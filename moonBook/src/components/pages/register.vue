@@ -15,7 +15,7 @@
 
         <van-cell-group>
           <div class="form-title">办卡</div>
-          <van-cell :border='false' is-link center title='办理老师卡' label="老师卡更实惠" @click="isSelectSchool = true" v-if='userDataState.teacher_school_id > 0'>
+          <van-cell :border='false' is-link center title='办理老师卡' label="老师卡更实惠" @click="onAcceptSchool" v-if='userDataState.teacher_school_id > 0'>
             <div class="icon-accept" slot="icon">
               <i class="iconfont teacher-card">&#xe66c;</i>
             </div>
@@ -32,7 +32,7 @@
 
     <slogan />
 
-    <van-popup class="select-school-list" v-model="isSelectSchool">
+    <van-popup class="select-school-list" v-model="isSelectSchool" get-container='#app'>
       <van-nav-bar title="选择办卡学校" @click-right="isSelectSchool = false">
         <van-icon class="close-icon" name="close" slot="right"/>
       </van-nav-bar>
@@ -51,6 +51,7 @@
 <script>
 import slogan from './../module/slogan'
 import { mapGetters } from 'vuex'
+import axios from '../lib/js/api';
 
 export default {
   name: 'register',
@@ -59,19 +60,6 @@ export default {
   },
   computed: {
     ...mapGetters(['userDataState', 'managerState']),
-    columns() {
-      let arr = []
-      if(this.managerState){
-        this.managerState.forEach(element => {
-          if (element.item_relation == 'teacher') {
-            arr.push(element)
-          }
-        })
-      }
-
-
-      return arr
-    }
   },
   data() {
     return {
@@ -107,10 +95,28 @@ export default {
           iconClass: 'icon-teacher',
           index: 1
         }
-      ]
+      ],
+      columns:[]
     }
   },
+  watch: {
+    '$router':'fetchData'
+  },
+  created() {
+    this.fetchData()
+  },
   methods: {
+    fetchData(){
+      axios.get('/SchoolManage/school/getSchools').then(res=>{
+        switch (res.data.status) {
+          case 1:
+            this.columns = res.data.data
+            break 
+          default:
+            this.columns = []      
+        }
+      })
+    },
     selectRole(role) {
       switch (role.index) {
         case 0:
@@ -145,6 +151,13 @@ export default {
     },
     toHelp() {
       location.href = '/book/manual/user'
+    },
+    onAcceptSchool(){
+      if(this.columns.length > 1){
+        this.isSelectSchool = true
+      }else{
+        location.href = `/book/SchoolTeacher/card_apply?sid=${this.columns[0].school_id}`
+      }
     },
     toAcceptSchool(item) {
       location.href = `/book/SchoolTeacher/card_apply?sid=${item.school_id}`
@@ -228,9 +241,8 @@ export default {
 
 .select-school-list {
   width: 80%;
-  max-height: 80vh;
-  min-height: 50vh;
-  border-radius: 10px;
+  border-radius: 8px;
+  padding-bottom: 10px;
 }
 
 .close-icon{

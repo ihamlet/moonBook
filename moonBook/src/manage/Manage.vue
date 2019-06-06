@@ -70,4 +70,8 @@ export default {
         margin-right: 20px;
     }
 }
+
+.van-cell__value.info-cell{
+    flex: 2;
+}
 </style>
