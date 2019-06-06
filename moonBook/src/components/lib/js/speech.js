@@ -40,6 +40,13 @@ const saying = [
   '读书之法，在循序渐进，熟读而精思'
 ]
 
+const PromotionWord = [
+  '阅读是关系孩子素养发展的重要因素',
+  '阅读能够提高孩子的语言技能',
+  '亲子阅读是传递亲情的桥梁',
+  '阅读可以促进儿童认知能力'
+]
+
 const medalPunch = [{
   name:'好的开始',
   number: 1,
@@ -161,5 +168,6 @@ export {
   medalRead,
   punchLevel,
   readLevel,
-  childCommentTag
+  childCommentTag,
+  PromotionWord
 }

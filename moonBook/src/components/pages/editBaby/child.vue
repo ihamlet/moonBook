@@ -299,7 +299,7 @@ export default {
                 }
               })
             }else{
-              if(this.$route.query.back == 'baby-home'){
+              if(this.$route.query.type == 'add'){
                 this.$router.replace({
                   name: 'baby-home',
                   query:{
