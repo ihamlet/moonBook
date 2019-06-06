@@ -5,7 +5,7 @@
           <div class="item" v-for='(item,index) in list' :key="index" @click="toArticle(item)">
             <van-cell v-if='item.template_id == "0"&&item.cover'>
               <div class="cell-content">
-                <van-row :gutter='5'>
+                <van-row :gutter='10'>
                   <van-col :span='item.photos.length > 3?"24":"14"'>
                     <div class="title" v-line-clamp:20="3" :class="[item.photos.length > 3?'layout-t-b':'layout-l-r']">
                       {{item.title}}
@@ -137,6 +137,7 @@ export default {
 .title {
   font-size: 1.125rem /* 18/16 */;
   font-weight: 500;
+  text-align: justify
 }
 
 .layout-t-b {
