@@ -1,7 +1,7 @@
 <template>
   <div class="popup-list">
     <van-nav-bar :title="$route.meta.title" />
-    <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
+    <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" :border='false'>
       <div class="list" v-if='list.length'>
         <div class="item-card" v-for="(item,itemIndex) in list" :key="itemIndex">
           <div class="content">

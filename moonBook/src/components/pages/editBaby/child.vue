@@ -209,10 +209,11 @@ export default {
             }
 
             this.info = {
-              banji_name: this.$route.query.banji_name || res.data.data.banji_name,
-              banji_id: this.$route.query.banji_id || res.data.data.banji_id,
-              school_name: this.$route.query.school_name || res.data.data.school_name,
-              school_id: this.$route.query.school_id || res.data.data.school_id,
+              banji_name: res.data.data.banji_name,
+              banji_id: res.data.data.banji_id,
+              school_name: res.data.data.school_name,
+              school_id: res.data.data.school_id,
+              ...this.$route.query,
               main_parent_id: this.userDataState.id
             }
           })
@@ -298,12 +299,17 @@ export default {
                 }
               })
             }else{
-              this.$router.replace({
-                name: 'baby-home',
-                query:{
-                  id: res
-                }
-              })
+              if(this.$route.query.back == 'baby-home'){
+                this.$router.replace({
+                  name: 'baby-home',
+                  query:{
+                    id: res,
+                  }
+                })
+              }else{
+                this.childId = res
+                this.show = true
+              }
             }
           })
         })

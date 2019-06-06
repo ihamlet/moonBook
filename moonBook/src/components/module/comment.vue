@@ -1,8 +1,5 @@
 <template>
   <div class="comment-list" id='comment' ref='comment' v-if='flag'>
-    <!-- <div class="spray-dom"  v-if='isSprayShow'>
-      <spray />
-    </div> -->
     <van-nav-bar :border='false' :zIndex='0'  :key='$route.query.id'>
       <div class="zan" slot="right">赞 {{item.zan_num}}</div>
       <div class="comment" slot="left">{{listLength}} 评论</div>
@@ -291,9 +288,10 @@ export default {
         }
       }
 
-      if(this.type == 'bookDetails'){
-        data.params.model = 'Tushu'
-      }
+      // 2019年6月6日
+      // if(this.type == 'bookDetails'){
+      //   data.params.model = 'Tushu'
+      // }
 
       axios.get('/book/SchoolArticleCollect/add', data).then(res => {
         if (res.data.status == 1) {
