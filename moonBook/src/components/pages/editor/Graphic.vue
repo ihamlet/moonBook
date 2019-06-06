@@ -345,7 +345,7 @@ export default {
 
                 // this.tag.cate_id == 124 班级通知
 
-                if(this.tag.cate_id == 124){
+                if(this.tag.cate_id == 124 || this.tag.cate_id == 116){
                   this.$router.replace({
                     name:'class-home',
                     query:{
