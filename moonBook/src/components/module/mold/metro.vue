@@ -7,7 +7,7 @@
                         <div class="info">
                             <div class="title">推荐书单</div>
                             <div class="sub">书架</div>
-                            <van-button class="theme-button" type="info" round size="small">立即查看</van-button>
+                            <van-button class="theme-button" type="info" round size="small">前往书架</van-button>
                         </div>
                         <img class="bg-img book-shelf" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/book-shelf.png"/>
                         <div class="circle"></div>
@@ -18,9 +18,9 @@
                 <div class="metro-r">
                     <div class="grid-metro" @click="toTask">
                         <div class="info">
-                            <div class="title">每日任务:{{childInfo.today_missions}}/5</div>
+                            <div class="title">每日任务:{{childInfo.today_missions}}/4</div>
                             <div class="sub">好的习惯贵在坚持</div>
-                            <van-button class="theme-button" type="info" round size="small">立即查看</van-button>
+                            <van-button class="theme-button" type="info" round size="small">完成任务</van-button>
                         </div>
                     </div>
                     <img class="bg-img book-task" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/task.png"/>
@@ -111,6 +111,7 @@ export default {
 
 .theme-button{
     margin-top: .625rem /* 10/16 */;
+    box-shadow: 0 2px 6px rgb(33, 150, 243,.5);
 }
 
 .circle{

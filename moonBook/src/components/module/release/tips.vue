@@ -144,7 +144,7 @@ export default {
                 id: this.$route.query.id,
                 child_id: this.userDataState.child_id,
                 back: this.$route.name,
-                cate_id: 100,
+                cate_id: 133,
                 tags:'阅读打卡',
                 ...res.data.data.stat_data
               }

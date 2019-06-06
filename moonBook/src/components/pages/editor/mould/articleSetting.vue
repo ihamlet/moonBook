@@ -41,7 +41,7 @@ export default {
     ...mapState('articleSetting', ['result','group','tag']),
     ...mapState('beautifulArticle',['cover','title']),
     ...mapGetters('beautifulArticle',['getArticleContent','getImageList']),
-    ...mapGetters(['userDataState']),
+    ...mapGetters(['userDataState','managerState']),
     synchronous() {
       let array = []
       this.resultList.forEach(element => {
@@ -83,6 +83,9 @@ export default {
         localStorage.setItem('result', JSON.stringify(val))
       },
       deep: true
+    },
+    managerState(){
+      localStorage.removeItem('tag')
     }
   },
   methods: {

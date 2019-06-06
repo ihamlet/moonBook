@@ -64,6 +64,6 @@ export default {
 }
 
 .img-preview .grid:last-child img{
-  box-shadow: 0 0.125rem /* 2/16 */ 0.625rem /* 10/16 */ rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 </style>

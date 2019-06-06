@@ -5,9 +5,6 @@
       <div slot="action" class="theme-color" @click="onSearch">搜索</div>
     </van-search>
     <van-tabs color='#0084ff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex" @click="onClick" @disabled='onClickDisabled' title-inactive-color='#303133'>
-      <div class="icon-down" slot="nav-right">
-        <i class="iconfont">&#xe608;</i>
-      </div>
       <div class="new-point" slot='nav-right' v-if='isNewPointShow'></div>
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index" :disabled='list.title=="筛选"'>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
@@ -248,15 +245,5 @@ export default {
 
 .card-school-name{
   max-width: 100px;
-}
-
-.icon-down{
-  position: absolute;
-  right: 6%;
-  top: 12px;
-}
-
-.icon-down i.iconfont{
-  font-size: 13px;
 }
 </style>

@@ -162,6 +162,7 @@ export default {
   width: 2.25rem /* 36/16 */;
   height: 2.25rem /* 36/16 */;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .no-ranking {

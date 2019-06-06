@@ -1,11 +1,12 @@
 <template>
     <div class="read-list">
-        <div class="scroll-x">
+        <div class="scroll-x flex flex-align">
             <div class="item" v-for='(item,index) in list' :key="index" @click="toZoom(item)">
                 <div class="avatar">
                     <img :src="item.avatar" v-http2https @error='imgError'/>
                 </div>
             </div>
+            <div class="look-count">1人查看</div>
         </div>
     </div>    
 </template>
@@ -38,5 +39,9 @@ export default {
     width: 30px;
     height: 30px;
     border-radius: 50%;
+}
+
+.look-count{
+    color: #C0C4CC;
 }
 </style>
