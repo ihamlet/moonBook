@@ -210,7 +210,7 @@ export default {
     },
     toSetting(managerData) {
         this.$router.push({
-          name: '  ',
+          name: 'edit-setting',
           query: {
             ...this.$route.query,
             school_name: this.managerData.school_name,

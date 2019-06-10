@@ -77,8 +77,10 @@ export default {
         },
         toSelectBanjiPage(){
             this.$router.push({
-                name:'edit',
-                
+                name:'edit-class',
+                query:{
+                    
+                }
             })
         }
   }
