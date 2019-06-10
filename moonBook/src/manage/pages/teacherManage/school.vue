@@ -1,15 +1,18 @@
 <template>
-  <div class="page-padding">
+  <div class="manage-school">
     <van-nav-bar :title="schoolName?schoolName:'学校管理'" :border='false' @click-right="isSelectSchool = true">
         <div class="theme-color" slot="right" v-if='schoolList.length > 1'>
             切换学校
         </div>
     </van-nav-bar>
     <van-tabs v-model="active" swipeable animated sticky color='#0084ff' :line-width='20' :line-height='4'>
-      <van-tab title="人员审核">
-        <van-list v-model="loading" :finished="finished" @load="onLoad">
-          <userCard v-for='(item,index) in teacherList' :key="index" :item='item' />
-        </van-list>
+      <van-tab>
+        <div class="tab-title" slot="title">
+          人员审核 <van-tag round class="tag-danger" type="danger">{{count}}</van-tag>
+        </div>
+          <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
+            <userCard v-for='(item,index) in teacherList' :key="index" :item='item' />
+          </van-list>
       </van-tab>
       <van-tab title="人员管理">
         <div class="banji-overview flex flex-align">
@@ -26,11 +29,6 @@
         11
       </van-tab>
     </van-tabs>
-    <div class='slogan'>
-      {{$store.state.slogan}}
-    </div>
-
-
     <van-popup class="select-school-list" v-model="isSelectSchool" get-container='#app'>
         <van-nav-bar title="切换学校" @click-right="isSelectSchool = false">
             <van-icon class="close-icon" name="close" slot="right"/>
@@ -40,7 +38,6 @@
             {{item.school_name}}
             </div>
         </van-cell>
-
     </van-popup>
   </div>
 </template>
@@ -79,13 +76,13 @@ export default {
     this.fetchData()
   },
   methods: {
-    fetchData(schoolId) {
+    fetchData() {
       axios.get('/SchoolManage/school/getSchools').then(res=>{
         switch (res.data.status) {
           case 1:
             this.schoolList = res.data.data
 
-            this.schoolId = schoolId || res.data.data[0].school_id
+            this.schoolId = res.data.data[0].school_id
             this.getCount(this.schoolId)
 
             break
@@ -101,9 +98,9 @@ export default {
         })
         this.isSelectSchool = false
     },
-    onLoad(){
+    onLoad(schoolId){
         return axios.get('/SchoolManage/teacher/getList',{params:{
-            school_id: this.schoolId,
+            school_id: schoolId || this.schoolId,
             page: this.page
         }}).then(res => {
             switch (res.data.status) {
@@ -141,7 +138,6 @@ export default {
                 this.$toast(res.data.msg)
             }
         })
-
     }
   }
 }
@@ -165,6 +161,17 @@ export default {
 .close-icon{
   font-size: 20px;
   color: #C0C4CC;
+}
+
+.tab-title{
+  position: relative;
+}
+
+.tag-danger{
+  position: absolute;
+  z-index: 1;
+  top: 5px;
+  right: -5px;
 }
 </style>
 

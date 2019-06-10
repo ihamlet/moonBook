@@ -6,7 +6,7 @@
                     <img :src="item.avatar" v-http2https @error='imgError'/>
                 </div>
             </div>
-            <div class="look-count">1人查看</div>
+            <div class="look-count">{{list.length}}人查看</div>
         </div>
     </div>    
 </template>
@@ -36,8 +36,8 @@ export default {
 
 .avatar,
 .avatar img{
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
 }
 

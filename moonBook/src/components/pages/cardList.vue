@@ -107,8 +107,8 @@ export default {
 
 .card-box {
   width: 100%;
-  height: 7.5rem /* 120/16 */;
-  margin-top: 1.25rem /* 20/16 */;
+  height: 120px;
+  margin-top: 20px;
   box-shadow: 0 2px 15px rgba(0,0,0,.1);
   position: relative;
 }

@@ -31,8 +31,17 @@ const shcoolScale = [
     '50-100人'
 ]
 
+const slectDuty = [
+    '班主任', 
+    '带班老师', 
+    '生活老师',
+    '校长',
+    '副校长'
+]
+
 export {
   schoolLevel,
   schoolType,
-  shcoolScale
+  shcoolScale,
+  slectDuty
 }

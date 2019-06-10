@@ -1,7 +1,7 @@
 <template>
     <van-cell>
         <div class="user-card flex flex-align">
-            <div class="info flex flex-align">
+            <div class="info flex flex-align" @click="toEditPage">
                 <img :src="item.avatar"/>
                 <div class="user-info">
                     <div class="name">{{item.username}}</div>
@@ -20,7 +20,7 @@
             </div>
             
             <div class="techer-card">      
-                <div class="avatar">
+                <div class="avatar" @click="toEditPage">
                     <img :src="item.avatar"/>
                 </div>
            
@@ -34,6 +34,16 @@
                     <van-cell title="审核人" :value="teacherInfo.confirm_user_name == item.username?'自己':teacherInfo.confirm_user_name" :border='false'/>
                     <van-cell title="审核时间" :value='teacherInfo.confirm_date' value-class='info-cell' :border='false'/>
                 </van-cell-group>
+
+                <div class="popup-footer flex-align flex">
+                    <div class="btn">
+                        <van-button class="edit" size="small" type="info" round plain @click="toEditPage"> 编辑 </van-button>
+                    </div>
+                    <div class="btn">
+                        <van-button class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
+                    </div>
+                </div>
+
             </div>  
         </van-popup>
     </van-cell>   
@@ -80,11 +90,13 @@ export default {
         },
         past(){
 
-            let apiType = this.item.is_confirm?'kick':'check'
+            let apiType = this.item.is_confirm == 1?'kick':'check'
 
-            axios.get(`/SchoolManage/teacher/${apiType}`,{params:{
-                id: this.item.id
-            }}).then(res=>{
+            axios.get(`/SchoolManage/teacher/${apiType}`,{
+                params:{
+                    id: this.item.id
+                }
+            }).then(res=>{
                 switch(res.data.status){
                     case 1:
                         this.$toast.success(res.data.msg)
@@ -111,6 +123,15 @@ export default {
                     }
                 })
             }
+        },
+        toEditPage(){
+            this.$router.push({
+                name:'teacherEdit',
+                query:{
+                    ...this.item,
+                    ...this.teacherInfo
+                }
+            })
         }
     },
 }
@@ -136,7 +157,7 @@ export default {
 }
 
 .avatar img{
-    box-shadow: 0 5px 10px rgba(0, 0, 0, .2)
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .1)
 }
 
 .popup-close{
@@ -154,5 +175,19 @@ export default {
     bottom: 15px;
     left: 15px;
     color: #fff;
+}
+
+.popup-footer{
+    padding: 20px 0 0;
+}
+
+.popup-footer .edit,
+.popup-footer .past{
+    width: 100%;   
+}
+
+.popup-techaer .btn{
+    flex: 1;
+    padding: 0 10px;
 }
 </style>
