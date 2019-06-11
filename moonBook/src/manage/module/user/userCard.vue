@@ -140,7 +140,7 @@ export default {
         },
         toSchool(){
             if(this.item.school_id > 0){
-                this.$rotuer.push({
+                this.$router.push({
                     name:'apps-school',
                     query:{
                         id: this.item.school_id
@@ -150,7 +150,7 @@ export default {
         },
         toBanji(){
             if(this.item.banji_id > 0){
-                this.$rotuer.push({
+                this.$router.push({
                     name:'class-home',
                     query:{
                         id: this.item.banji_id,
