@@ -162,8 +162,9 @@ export default {
                   this.$router.replace({
                     name: this.$route.query.back,
                     query: {
-                      banji_name: item.title,
-                      banji_id: item.banji_id
+                      ...this.$route.query,
+                      banji_name: res.data.data.title,
+                      banji_id: res.data.data.banji_id
                     }
                   })
                 }else{
@@ -171,8 +172,8 @@ export default {
                     name: 'edit-manager',
                     query: {
                       ...this.$route.query,
-                      banji_name: item.title,
-                      banji_id: item.banji_id,
+                      banji_name: res.data.data.title,
+                      banji_id: res.data.data.banji_id,
                       back: this.$route.name
                     }
                   })
