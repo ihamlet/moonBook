@@ -8,10 +8,10 @@
     <van-tabs v-model="active" swipeable animated sticky color='#0084ff' :line-width='20' :line-height='4'>
       <van-tab>
         <div class="tab-title" slot="title">
-          人员审核 <van-tag round class="tag-danger" type="danger">{{count}}</van-tag>
+          人员审核 <van-tag round class="tag-danger" type="danger" v-if='count > 0'>{{count}}</van-tag>
         </div>
         <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
-          <userCard v-for='(item,index) in teacherList' :key="index" :item='item' :isMaster='isMaster' :isHead='isHead'/>
+          <userCard v-for='(item,index) in teacherList' :key="index" :item='item' :isMaster='isMaster' :isHead='isHead' :isSchoolHead='isSchoolHead' @statusChange='getCount(schoolId)'/>
         </van-list>
       </van-tab>
       <van-tab title="人员管理">
@@ -50,7 +50,7 @@ import childList from './../../module/user/childList'
 
 import { isRepeatArr } from './../../../components/lib/js/util' 
 
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions,mapMutations } from 'vuex'
 
 export default {
   name: 'manageSchool',
@@ -74,9 +74,10 @@ export default {
       loading: false,
       finished: false,
       page:1,
-      schoolId:0,
-      isMaster:0,
-      isHead:0
+      // schoolId:0,
+      // isMaster:0,
+      // isHead:0,
+      // isSchoolHead:0
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -90,30 +91,23 @@ export default {
     }
   },
   methods: {
-    ...mapActions('manage',['getCurrentSchool']),
+    ...mapActions('manage',['getSchoolList']),
+    ...mapMutations('manage',['setManageSchool']),
     request() {
-      axios.get('/SchoolManage/school/getSchools').then(res=>{
-        switch (res.data.status) {
-          case 1:
-            let arr = res.data.data
+      this.isMaster = Number(this.manageSchoolInfo.is_master)
+      this.isSchoolHead = this.manageSchoolInfo.is_school_head
+      this.isHead = this.manageSchoolInfo.is_head
 
-            this.schoolList = isRepeatArr(arr)
-
-            this.schoolName = res.data.data[0].school_name
-            this.schoolId = res.data.data[0].school_id
-            this.isMaster = Number(res.data.data[0].is_master)
-            this.isHead = res.data.data[0].is_head
-            break
-          default:
-            this.$toast(res.data.msg)
-        }
+      this.getSchoolList().then(res=>{
+        this.schoolList = res
       })
     },
-    selectSchool(item,index){
-        this.getCurrentSchool(item)
+    selectSchool(item){
+        this.setManageSchool(item)
 
         this.isMaster = Number(item.is_master)
         this.isHead = item.is_head
+        this.isSchoolHead = item.is_school_head
         
         this.page = 1
         this.schoolId = item.school_id
@@ -126,7 +120,7 @@ export default {
     },
     onLoad(){
         return axios.get('/SchoolManage/teacher/getList',{params:{
-            school_id: this.manageSchoolInfo?this.manageSchoolInfo.school_id:this.schoolId,
+            school_id: this.manageSchoolInfo.school_id,
             page: this.page
         }}).then(res => {
             switch (res.data.status) {

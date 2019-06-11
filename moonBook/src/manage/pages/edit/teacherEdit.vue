@@ -16,8 +16,9 @@
         <van-cell title="职务" :border='false' :value="form.duty" is-link @click="show = true" :arrow-direction='show?"up":"down"'/>
       </van-cell-group>
       <van-cell-group>
-        <van-switch-cell v-model="isChecked.isMaster" title="是否为管理员" active-color='#67C23A' inactive-color='#F2F6FC'/>
-        <van-switch-cell v-model="isChecked.isHead" title="是否转让群主" active-color='#67C23A' inactive-color='#F2F6FC'/>
+        <van-switch-cell v-model="isMaster" title="是否为管理员" active-color='#67C23A' inactive-color='#F2F6FC' @change='onSwitchChange("setMaster")' value-class='switch-cell-value'/>
+        <van-switch-cell v-model="isSchoolHead" :disabled='!$route.query.isSchoolHead' title="设置为学校群主" active-color='#67C23A' inactive-color='#F2F6FC' @change='onSwitchChange("setSchoolHead")' value-class='switch-cell-value'/>
+        <van-switch-cell v-model="isHead" :disabled='!$route.query.isHead' title="设置为班级群主" active-color='#67C23A' inactive-color='#F2F6FC' @change='onSwitchChange("setBanjiHead")' value-class='switch-cell-value'/>
       </van-cell-group>
     </div>
 
@@ -44,10 +45,9 @@ export default {
         ...this.$route.query
       },
       isConfirm: this.$route.query.is_confirm,
-      isChecked: {
-        isMaster: this.$route.query.isMaster == 1?true:false,
-        isHead: this.$route.query.isHead == 1?true:false
-      },
+      isMaster: this.$route.query.is_master == 1?true:false,
+      isHead: this.$route.query.is_head == 1?true:false,
+      isSchoolHead: this.$route.query.is_school_head == 1?true:false,
       columns: slectDuty
     }
   },
@@ -69,6 +69,21 @@ export default {
                 }
             })
 
+        },
+        onSwitchChange(type){
+            axios.get(`/SchoolManage/teacher/${type}`,{params:{
+                id: this.$route.query.id,
+                banji_id: this.$route.query.banji_id
+            }}).then(res=>{
+                switch(res.data.status){
+                    case 1:
+                        
+                        break
+                    default:
+                        this.$toast(res.data.msg)
+                        
+                }
+            })     
         },
         selectDuty(picker, value, index){
             this.form.duty = value
@@ -100,7 +115,13 @@ export default {
                 message: `您确定要修改${this.form.username}的相关信息吗?`
             }).then(() => {
                 axios.post('/SchoolManage/teacher/edit',{...this.form}).then(res=>{
-                    console.log(res)
+                    switch(res.data.status){
+                        case 1:
+                            this.$toast.success(res.data.msg)
+                            break
+                        default:
+                            this.$toast(res.data.msg)
+                    }
                 })
             }).catch(() => {
                 // on cancel

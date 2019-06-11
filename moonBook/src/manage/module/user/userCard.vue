@@ -10,7 +10,7 @@
             </div>
             <div class="operation-btn flex flex-align">
                 <van-button class="pass" size="small" round type="info" @click="info">详情</van-button>
-                <van-button v-if='isMaster == 1' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
+                <van-button v-if='isMaster == 1&&item.is_master!=1' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
             </div>
         </div> 
 
@@ -65,6 +65,7 @@ export default {
                     banji_name: '3',
                     duty:'信息老师',
                     is_confirm: 0,
+                    is_master:0,
                     mobile:'',
                     school_name:'微美幼儿园',
                     school_id:0,
@@ -79,6 +80,10 @@ export default {
         isHead:{
             type: Number,
             default: 0  
+        },
+        isSchoolHead:{
+            type: Number,
+            default: 0
         }
     }, 
     data () {
@@ -115,8 +120,10 @@ export default {
             }).then(res=>{
                 switch(res.data.status){
                     case 1:
-                        this.item.is_confirm = `${apiType == 'kick'?0:1}`
+                        this.item.is_confirm = `${apiType == 'check'?1:0}`
                         this.$toast.success(res.data.msg)
+
+                        this.$emit('statusChange')
                         break
                     default:
                         this.$toast(res.data.msg)
@@ -162,6 +169,7 @@ export default {
                         ...this.item,
                         isHead: this.isHead,
                         isMaster: this.isMaster,
+                        isSchoolHead: this.isSchoolHead,
                         type:'edit'
                     }
                 })

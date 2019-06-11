@@ -1406,4 +1406,8 @@ i.iconfont.vip-1 {
 .van-nav-bar--fixed{
   transform: translate3d(0,0,0);
 }
+
+.van-cell__value.switch-cell-value{
+  overflow: initial;
+}
 </style>
