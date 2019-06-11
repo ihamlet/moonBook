@@ -51,7 +51,8 @@
 <script>
 import slogan from './../module/slogan'
 import { mapGetters } from 'vuex'
-import axios from '../lib/js/api';
+import axios from '../lib/js/api'
+import { isRepeatArr } from './../lib/js/util'
 
 export default {
   name: 'register',
@@ -110,7 +111,7 @@ export default {
       axios.get('/SchoolManage/school/getSchools').then(res=>{
         switch (res.data.status) {
           case 1:
-            this.columns = res.data.data
+            this.columns = isRepeatArr(res.data.data)
             break 
           default:
             this.columns = []      

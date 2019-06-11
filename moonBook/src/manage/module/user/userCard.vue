@@ -32,7 +32,7 @@
                     <van-cell title="学校" v-if='item.school_name' :value="item.school_name" :border='false' value-class='info-cell' is-link @click="toSchool"/>
                     <van-cell title="班级" v-if='item.banji_name' :value="formatBanjiTitle(item.banji_name)" is-link :border='false' @click="toBanji"/> 
                     <van-cell title="职位" :value="item.duty?item.duty:'老师'" :border='false'/>
-                    <van-cell title="审核人" :value="teacherInfo.confirm_user_name == item.username?'自己':teacherInfo.confirm_user_name" :border='false'/>
+                    <van-cell title="审核人" v-if='teacherInfo.confirm_user_id > 0' :value="teacherInfo.confirm_user_name == item.username?'自己':teacherInfo.confirm_user_name" :border='false'/>
                     <van-cell title="审核时间" :value='teacherInfo.confirm_date' value-class='info-cell' :border='false'/>
                 </van-cell-group>
 
@@ -59,8 +59,8 @@ export default {
             type: Object,
             default(){
                 return {
-                    avatar:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556506992586&di=b64924d9e9f0cdf4cc0b88d9737ebb0c&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201704%2F27%2F20170427155254_Kctx8.jpeg',
-                    username:'赵金龙',
+                    avatar:'',
+                    username:'',
                     banji_id:0,
                     banji_name: '3',
                     duty:'信息老师',
@@ -94,8 +94,14 @@ export default {
                     id: this.item.id
                 }
             }).then(res=>{
-                this.show = true
-                this.teacherInfo = res.data.data
+                switch(res.data.status){
+                    case 1:
+                        this.show = true
+                        this.teacherInfo = res.data.data
+                        break
+                    default:
+                        this.$toast(res.data.msg)
+                }  
             })
         },
         past(){
@@ -152,8 +158,8 @@ export default {
                 this.$router.push({
                     name:'teacherEdit',
                     query:{
-                        ...this.item,
                         ...this.teacherInfo,
+                        ...this.item,
                         isHead: this.isHead,
                         isMaster: this.isMaster,
                         type:'edit'

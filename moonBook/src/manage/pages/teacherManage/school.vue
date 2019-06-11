@@ -48,6 +48,8 @@ import userCard from './../../module/user/userCard'
 import teacherList from './../../module/teacher/teacherList'
 import childList from './../../module/user/childList'
 
+import { isRepeatArr } from './../../../components/lib/js/util' 
+
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -93,7 +95,10 @@ export default {
       axios.get('/SchoolManage/school/getSchools').then(res=>{
         switch (res.data.status) {
           case 1:
-            this.schoolList = res.data.data
+            let arr = res.data.data
+            
+            this.schoolList = isRepeatArr(arr)
+
             this.schoolName = res.data.data[0].school_name
             this.schoolId = res.data.data[0].school_id
             this.isMaster = res.data.data[0].is_master
@@ -126,19 +131,19 @@ export default {
         }}).then(res => {
             switch (res.data.status) {
               case 1:
-                  this.teacherList = res.data.data
-                  this.schoolName = res.data.data[0].school_name
-                  
-                  this.page++
-                  this.loading = false
+                this.teacherList = res.data.data
+                this.schoolName = res.data.data[0].school_name
+                
+                this.page++
+                this.loading = false
 
-                  if(this.teacherList.length >= res.data.count){
-                    this.finished = true
-                  }
+                if(this.teacherList.length >= res.data.count){
+                  this.finished = true
+                }
 
-                  break
+                break
               default:
-                  this.$toast(res.data.msg)
+                this.$toast(res.data.msg)
             }
         })
     },
@@ -153,10 +158,10 @@ export default {
         axios.get('/SchoolManage/teacher/getList',data).then(res => {
             switch (res.data.status) {
             case 1:
-                this.count = res.data.count
-                break
+              this.count = res.data.count
+              break
             default:
-                this.$toast(res.data.msg)
+              this.$toast(res.data.msg)
             }
         })
     }

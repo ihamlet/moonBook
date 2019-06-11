@@ -224,8 +224,8 @@ function checkHtml(htmlStr) {
 
 //分组
 function group(array, subGroupLength) {
-  var index = 0
-  var newArray = []
+  let index = 0
+  let newArray = []
 
   while (index < array.length) {
     newArray.push(array.slice(index, (index += subGroupLength)))
@@ -236,7 +236,7 @@ function group(array, subGroupLength) {
 
 //数组是否包含该字段
 function contains(arr, obj) {
-  var i = arr.length
+  let i = arr.length
   while (i--) {
     if (arr[i] === obj) {
       return true
@@ -263,7 +263,7 @@ function videoParse(file) {
 
 // 数组去重
 function arrayUnique(arr, name) {
-  var hash = {}
+  let hash = {}
   return arr.reduce(function (item, next) {
     hash[next[name]] ? '' : hash[next[name]] = true && item.push(next)
     return item
@@ -273,14 +273,14 @@ function arrayUnique(arr, name) {
 
 // 将整数转换成 时：分：秒的格式
 function realFormatSecond(second) {
-  var secondType = typeof second
+  let secondType = typeof second
 
   if (secondType === 'number' || secondType === 'string') {
       second = parseInt(second)
 
-      var hours = Math.floor(second / 3600)
+      let hours = Math.floor(second / 3600)
       second = second - hours * 3600
-      var mimute = Math.floor(second / 60)
+      let mimute = Math.floor(second / 60)
       second = second - mimute * 60
 
       return  ('0' + mimute).slice(-2) + ':' + ('0' + second).slice(-2)
@@ -314,6 +314,32 @@ function randomNum(minNum,maxNum){
   } 
 } 
 
+//合并学校重复数组
+function isRepeatArr(arr){
+   let map = {}
+   let dest = []
+　　for(let i = 0; i < arr.length; i++){
+　　　　let ai = arr[i]
+　　　　if(!map[ai.school_id]){
+　　　　　　dest.push({
+            ...ai
+　　　　　　})
+　　　　　　map[ai.school_id] = ai
+　　　　}else{
+　　　　　　for(let j = 0; j < dest.length; j++){
+              let dj = dest[j]
+　　　　　　　　if(dj.school_id == ai.school_id){
+　　　　　　　　　　dj.duty = '校长,老师'
+　　　　　　　　　　break
+　　　　　　　　}
+　　　　　　}
+　　　　}
+　　}
+
+    return dest
+}
+
+
 export {
   GetDistance,
   format,
@@ -330,5 +356,6 @@ export {
   arrayUnique,
   realFormatSecond,
   randomNum,
-  arrGroup
+  arrGroup,
+  isRepeatArr
 }

@@ -61,7 +61,7 @@ export default {
             }}).then(res=>{
                 switch(res.data.status){
                     case 1:
-                        this.isConfirm = `${apiType == 'kick'?'0':'1'}`
+                        this.isConfirm = `${apiType == 'kick'?0:1}`
                         this.$toast.success(res.data.msg)
                         break
                     default:
@@ -103,7 +103,7 @@ export default {
                     console.log(res)
                 })
             }).catch(() => {
-            // on cancel
+                // on cancel
             })
         }
   }
