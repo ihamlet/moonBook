@@ -74,8 +74,8 @@ Vue.directive('http2https', {
   }
 })
 
-//页面动画过渡
-window.addEventListener('popstate', function (e) {
+//页面过渡  添加回退路由的判断
+window.addEventListener('popstate', () => {
   router.isBack = true
 },false)
 
