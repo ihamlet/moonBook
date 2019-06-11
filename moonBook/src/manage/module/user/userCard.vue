@@ -9,8 +9,8 @@
                 </div>
             </div>
             <div class="operation-btn flex flex-align">
+                <van-button v-if='isMaster == 1&&item.is_master==0' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
                 <van-button class="pass" size="small" round type="info" @click="info">详情</van-button>
-                <van-button v-if='isMaster == 1&&item.is_master!=1' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
             </div>
         </div> 
 
@@ -36,7 +36,7 @@
                     <van-cell title="审核时间" :value='teacherInfo.confirm_date' value-class='info-cell' :border='false'/>
                 </van-cell-group>
 
-                <div class="popup-footer flex-align flex" v-if='isMaster == 1'>
+                <div class="popup-footer flex-align flex" v-if='isMaster == 1&&item.is_master == 0'>
                     <div class="btn">
                         <van-button class="edit" size="small" type="info" round plain @click="toEditPage"> 编辑 </van-button>
                     </div>
@@ -161,7 +161,7 @@ export default {
             }
         },
         toEditPage(){
-            if(this.isMaster == 1){
+            if(this.isMaster == 1 && this.item.is_master == 0){
                 this.$router.push({
                     name:'teacherEdit',
                     query:{

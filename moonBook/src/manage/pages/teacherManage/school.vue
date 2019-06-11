@@ -74,10 +74,10 @@ export default {
       loading: false,
       finished: false,
       page:1,
-      // schoolId:0,
-      // isMaster:0,
-      // isHead:0,
-      // isSchoolHead:0
+      schoolId:0,
+      isMaster:0,
+      isHead:0,
+      isSchoolHead:0
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -94,15 +94,21 @@ export default {
     ...mapActions('manage',['getSchoolList']),
     ...mapMutations('manage',['setManageSchool']),
     request() {
-      this.isMaster = Number(this.manageSchoolInfo.is_master)
-      this.isSchoolHead = this.manageSchoolInfo.is_school_head
-      this.isHead = this.manageSchoolInfo.is_head
-
       this.getSchoolList().then(res=>{
         this.schoolList = res
+
+        let index = localStorage.getItem('schoolActive')?localStorage.getItem('schoolActive'):0
+
+        this.school_id = res[index].school_id
+        this.isMaster = Number(res[index].is_master)
+        this.isSchoolHead = res[index].is_school_head
+        this.isHead = res[index].is_head
+
+        this.getCount(res[index].school_id)
       })
     },
-    selectSchool(item){
+    selectSchool(item,index){
+        localStorage.setItem('schoolActive',index)
         this.setManageSchool(item)
 
         this.isMaster = Number(item.is_master)

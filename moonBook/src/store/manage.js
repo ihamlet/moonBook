@@ -15,7 +15,7 @@ export default {
                 if (localStorage.getItem('schoolCurrent')) {
                     return JSON.parse(localStorage.getItem('schoolCurrent'))
                 }else{
-                    return state.manageSchool[0]
+                    return state.schoolList[0]
                 }
               }
         }
@@ -40,8 +40,11 @@ export default {
                         let arr = res.data.data
             
                         schoolList = isRepeatArr(arr)
+
+                        let index = localStorage.getItem('schoolActive') || 0
                         
                         context.commit('setSchoolList',schoolList)
+                        context.commit('setManageSchool',schoolList[index])
             
                         resolve(schoolList)                      
                         

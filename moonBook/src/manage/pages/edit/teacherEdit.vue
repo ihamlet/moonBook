@@ -1,7 +1,7 @@
 <template>
   <div class="teacher-edit">
     <van-nav-bar title="成员设置" :border='false' @click-right="past">
-        <div class="is-confim" :style="{color:`${isConfirm == 1?'#F56C6C':'#67C23A'}`}" slot="right">
+        <div class="is-confim" :style="{color:`${isConfirm == 1?'#F56C6C':'#67C23A'}`}" slot="right" v-if='form.is_master == 0'>
             {{isConfirm == 0?'通过':'请出'}}
         </div>
     </van-nav-bar>
@@ -34,6 +34,7 @@
 <script>
 import axios from './../../../components/lib/js/api'
 import { slectDuty } from './../../../components/lib/js/schoolInfo'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'teacherEdit',
@@ -52,6 +53,7 @@ export default {
     }
   },
   methods: {
+      ...mapActions('manage',['getSchoolList']),
         past(){
 
             let apiType = this.isConfirm == 1?'kick':'check'
@@ -77,7 +79,7 @@ export default {
             }}).then(res=>{
                 switch(res.data.status){
                     case 1:
-                        
+                        this.getSchoolList()
                         break
                     default:
                         this.$toast(res.data.msg)
