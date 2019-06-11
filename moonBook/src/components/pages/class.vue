@@ -157,7 +157,7 @@ export default {
         axios.post('/book/school/edit_banji', data).then(res => {
           switch (res.data.status) {
             case 1:
-              if(this.$route.registerType == 'teacher'){
+              if(this.$route.query.registerType == 'teacher'){
                 if(this.$route.query.back == 'teacherEdit'){
                   this.$router.replace({
                     name: this.$route.query.back,
