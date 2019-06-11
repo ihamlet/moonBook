@@ -2,10 +2,12 @@
   <div id="app">
     <addChild @close='show = false' v-if='show && scrollTop == 0 && userDataState.child_id == 0&&routeName'/>
     <div :class="show && scrollTop == 0 && userDataState.child_id == 0&&routeName?'page-container-alive':''">
-      <keep-alive>
-          <router-view v-if="$route.meta.keepAlive"></router-view>
-      </keep-alive>
-      <router-view v-if="!$route.meta.keepAlive"></router-view>
+      <transition :name="transitionName"> 
+        <keep-alive>
+            <router-view v-if="$route.meta.keepAlive" class="Router"></router-view>
+        </keep-alive>
+      </transition>
+        <router-view v-if="!$route.meta.keepAlive" class="Router"></router-view>
     </div>
     <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='getTabBtn' />
 
@@ -40,6 +42,7 @@ export default {
   data () {
     const self = this
     return {
+      transitionName: 'slide-right',
       show: true,
       scrollTop: 0,
       center: [114.085947,22.547],
@@ -100,6 +103,15 @@ export default {
     weather(val){
       this.setWeather(val)
     },
+    '$route' (to, from) {
+  　　　 let isBack = this.$router.isBack 
+　　　　　　if(isBack) {
+　　　　　　　　this.transitionName = 'slide-right'
+　　　　　　} else {
+　　　　　　 this.transitionName = 'slide-left'
+　　　　　}
+  　　  this.$router.isBack = false
+  　},
     '$route': 'fetchData' 
   },
   methods: {
@@ -122,6 +134,38 @@ export default {
 }
 </script>
 <style>
+.Router {
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ -moz-box-sizing: border-box;
+ box-sizing: border-box;
+ transition: all .6s cubic-bezier(.55,0,.1,1);
+}
+
+.slide-left-enter,
+ .slide-right-leave-active {
+  opacity: 0;
+  transition: all .5s ease;
+  -webkit-transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  -ms-transition: all .5s ease;
+  -o-transition: all .5s ease;
+}
+ 
+.slide-left-leave-active,
+.slide-right-enter {
+  opacity: 0;
+  transform: translateX(30px);
+  -webkit-transform: translateX(30px);
+  -moz-transform: translateX(30px);
+  -ms-transform: translateX(30px);
+  -o-transform: translateX(30px);
+}
+
+
 .page-container-alive{
   transform: translate3d(0, 0, 0);
 }

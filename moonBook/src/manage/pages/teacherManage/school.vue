@@ -10,9 +10,9 @@
         <div class="tab-title" slot="title">
           人员审核 <van-tag round class="tag-danger" type="danger">{{count}}</van-tag>
         </div>
-          <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
-            <userCard v-for='(item,index) in teacherList' :key="index" :item='item' />
-          </van-list>
+        <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
+          <userCard v-for='(item,index) in teacherList' :key="index" :item='item' :isMaster='isMaster' :isHead='isHead'/>
+        </van-list>
       </van-tab>
       <van-tab title="人员管理">
         <div class="banji-overview flex flex-align">
@@ -33,7 +33,7 @@
         <van-nav-bar title="切换学校" @click-right="isSelectSchool = false">
             <van-icon class="close-icon" name="close" slot="right"/>
         </van-nav-bar>
-        <van-cell title-class='select-school-title' :value="item.duty" center size="large" v-for='(item,index) in schoolList' :key="index" is-link @click="selectSchool(item)">
+        <van-cell title-class='select-school-title' :value="item.duty" center size="large" v-for='(item,index) in schoolList' :key="index" is-link @click="selectSchool(item,index)">
             <div class="school-name" v-line-clamp:20="1" slot="title">
             {{item.school_name}}
             </div>
@@ -48,6 +48,8 @@ import userCard from './../../module/user/userCard'
 import teacherList from './../../module/teacher/teacherList'
 import childList from './../../module/user/childList'
 
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   name: 'manageSchool',
   components: {
@@ -55,6 +57,9 @@ export default {
     userCard,
     teacherList,
     childList
+  },
+  computed: {
+    ...mapGetters('manage',['manageSchoolInfo'])
   },
   data() {
     return {
@@ -66,58 +71,74 @@ export default {
       count:0,
       loading: false,
       finished: false,
-      schoolId:0
+      page:1,
+      schoolId:0,
+      isMaster:0,
+      isHead:0
     }
   },
-  watch: {
-    '$router': 'fetchData'
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.request()
+    })
   },
-  created() {
-    this.fetchData()
+  watch: {
+    schoolId(val){
+      this.getCount(val)
+    }
   },
   methods: {
-    fetchData() {
+    ...mapActions('manage',['getCurrentSchool']),
+    request() {
       axios.get('/SchoolManage/school/getSchools').then(res=>{
         switch (res.data.status) {
           case 1:
             this.schoolList = res.data.data
-
+            this.schoolName = res.data.data[0].school_name
             this.schoolId = res.data.data[0].school_id
-            this.getCount(this.schoolId)
-
+            this.isMaster = res.data.data[0].is_master
+            this.isHead = res.data.data[0].is_head
             break
           default:
             this.$toast(res.data.msg)
         }
       })
     },
-    selectSchool(item){
-        this.onLoad(item.school_id).then(()=>{
-            this.page = 1
+    selectSchool(item,index){
+        this.getCurrentSchool(item)
+
+        this.isMaster = item.is_master
+        this.isHead = item.is_head
+        
+        this.page = 1
+        this.schoolId = item.school_id
+
+        this.onLoad().then(()=>{
             this.loading = false
         })
+
         this.isSelectSchool = false
     },
-    onLoad(schoolId){
+    onLoad(){
         return axios.get('/SchoolManage/teacher/getList',{params:{
-            school_id: schoolId || this.schoolId,
+            school_id: this.manageSchoolInfo?this.manageSchoolInfo.school_id:this.schoolId,
             page: this.page
         }}).then(res => {
             switch (res.data.status) {
-            case 1:
-                this.teacherList = res.data.data
-                this.schoolName = res.data.data[0].school_name
-                
-                this.page++
-                this.loading = false
+              case 1:
+                  this.teacherList = res.data.data
+                  this.schoolName = res.data.data[0].school_name
+                  
+                  this.page++
+                  this.loading = false
 
-                if(this.teacherList.length >= res.data.count){
+                  if(this.teacherList.length >= res.data.count){
                     this.finished = true
-                }
+                  }
 
-                break
-            default:
-                this.$toast(res.data.msg)
+                  break
+              default:
+                  this.$toast(res.data.msg)
             }
         })
     },

@@ -39,8 +39,9 @@ export default {
         color: #303133;
     }
 
-    .operation-btn .pass{
-        margin-right: 10px;
+    .operation-btn .pass,
+    .operation-btn .past{
+        margin-left: 10px;
     }
 
     .avatar{

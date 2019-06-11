@@ -158,15 +158,25 @@ export default {
           switch (res.data.status) {
             case 1:
               if(this.$route.registerType == 'teacher'){
-                this.$router.replace({
-                  name: 'edit-manager',
-                  query: {
-                    ...this.$route.query,
-                    banji_name: item.title,
-                    banji_id: item.banji_id,
-                    back: this.$route.name
-                  }
-                })
+                if(this.$route.query.back == 'teacherEdit'){
+                  this.$router.replace({
+                    name: this.$route.query.back,
+                    query: {
+                      banji_name: item.title,
+                      banji_id: item.banji_id
+                    }
+                  })
+                }else{
+                  this.$router.replace({
+                    name: 'edit-manager',
+                    query: {
+                      ...this.$route.query,
+                      banji_name: item.title,
+                      banji_id: item.banji_id,
+                      back: this.$route.name
+                    }
+                  })
+                }
               }else{
                 this.$router.replace({
                   name: 'edit-child',
@@ -208,15 +218,26 @@ export default {
     },
     select(item, itemIndex) {
       if (this.$route.query.registerType) {
-        this.$router.replace({
-          name: 'edit-manager',
-          query: {
-            ...this.$route.query,
-            banji_name: item.title,
-            banji_id: item.banji_id,
-            back: this.$route.name
-          }
-        })
+        if(this.$route.query.back == 'teacherEdit'){
+          this.$router.replace({
+            name: this.$route.query.back,
+            query: {
+              ...this.$route.query,
+              banji_name: item.title,
+              banji_id: item.banji_id
+            }
+          })
+        }else{
+          this.$router.replace({
+            name: 'edit-manager',
+            query: {
+              ...this.$route.query,
+              banji_name: item.title,
+              banji_id: item.banji_id,
+              back: this.$route.name
+            }
+          })
+        }
       } else {
         let BabyJoinBanjiBdind = {
           params: {

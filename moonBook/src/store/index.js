@@ -7,6 +7,7 @@ import qs from 'qs'
 
 import beautifulArticle from './BeautifulArticle'
 import articleSetting from './articleSetting'
+import manage from './manage'
 import openWX from './openWX'
 
 Vue.use(Vuex)
@@ -388,6 +389,7 @@ export default new Vuex.Store({
   modules:{
     beautifulArticle,
     articleSetting,
+    manage,
     openWX
   }
 })

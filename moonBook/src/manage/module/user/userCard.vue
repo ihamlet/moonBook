@@ -10,7 +10,7 @@
             </div>
             <div class="operation-btn flex flex-align">
                 <van-button class="pass" size="small" round type="info" @click="info">详情</van-button>
-                <van-button class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
+                <van-button v-if='isMaster == 1' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
             </div>
         </div> 
 
@@ -29,13 +29,14 @@
                         <a class="theme-color" :href="`tel:${item.mobile}`">{{item.mobile}}</a>
                     </van-cell>
                     <van-cell title="姓名" :value="item.username" :border='false'/>
-                    <van-cell title="学校" :value="item.school_name" :border='false' value-class='info-cell' :is-link='item.school_id > 0' @click="toSchool"/>
+                    <van-cell title="学校" v-if='item.school_name' :value="item.school_name" :border='false' value-class='info-cell' is-link @click="toSchool"/>
+                    <van-cell title="班级" v-if='item.banji_name' :value="formatBanjiTitle(item.banji_name)" is-link :border='false' @click="toBanji"/> 
                     <van-cell title="职位" :value="item.duty?item.duty:'老师'" :border='false'/>
                     <van-cell title="审核人" :value="teacherInfo.confirm_user_name == item.username?'自己':teacherInfo.confirm_user_name" :border='false'/>
                     <van-cell title="审核时间" :value='teacherInfo.confirm_date' value-class='info-cell' :border='false'/>
                 </van-cell-group>
 
-                <div class="popup-footer flex-align flex">
+                <div class="popup-footer flex-align flex" v-if='isMaster == 1'>
                     <div class="btn">
                         <van-button class="edit" size="small" type="info" round plain @click="toEditPage"> 编辑 </van-button>
                     </div>
@@ -60,6 +61,7 @@ export default {
                 return {
                     avatar:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556506992586&di=b64924d9e9f0cdf4cc0b88d9737ebb0c&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201704%2F27%2F20170427155254_Kctx8.jpeg',
                     username:'赵金龙',
+                    banji_id:0,
                     banji_name: '3',
                     duty:'信息老师',
                     is_confirm: 0,
@@ -69,6 +71,14 @@ export default {
                     id: 0
                 }
             }
+        },
+        isMaster:{
+            type: String,
+            default: ''
+        },
+        isHead:{
+            type: Number,
+            default: 0  
         }
     }, 
     data () {
@@ -89,7 +99,7 @@ export default {
             })
         },
         past(){
-
+            
             let apiType = this.item.is_confirm == 1?'kick':'check'
 
             axios.get(`/SchoolManage/teacher/${apiType}`,{
@@ -99,10 +109,11 @@ export default {
             }).then(res=>{
                 switch(res.data.status){
                     case 1:
+                        this.item.is_confirm = `${apiType == 'kick'?0:1}`
                         this.$toast.success(res.data.msg)
                         break
                     default:
-                        this.$toast.fail(res.data.msg)
+                        this.$toast(res.data.msg)
                 }
             })
 
@@ -124,14 +135,31 @@ export default {
                 })
             }
         },
+        toBanji(){
+            if(this.item.banji_id > 0){
+                this.$rotuer.push({
+                    name:'class-home',
+                    query:{
+                        id: this.item.banji_id,
+                        cate_id: 116,
+                        home_type: 'banji'
+                    }
+                })
+            }
+        },
         toEditPage(){
-            this.$router.push({
-                name:'teacherEdit',
-                query:{
-                    ...this.item,
-                    ...this.teacherInfo
-                }
-            })
+            if(this.isMaster == 1){
+                this.$router.push({
+                    name:'teacherEdit',
+                    query:{
+                        ...this.item,
+                        ...this.teacherInfo,
+                        isHead: this.isHead,
+                        isMaster: this.isMaster,
+                        type:'edit'
+                    }
+                })
+            }
         }
     },
 }

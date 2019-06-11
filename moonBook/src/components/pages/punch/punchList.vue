@@ -22,7 +22,7 @@
 import axios from './../../lib/js/api'
 import cardPunch from './cardPunch'
 import { format,timeago } from './../../lib/js/util'
-import { mapActions,mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'punch-list',
@@ -31,6 +31,7 @@ export default {
   },
   computed: {
     ...mapState('openWX',['ready']),
+    ...mapGetters(['userDataState']),
     item(){
       let data = {
         cate_name:'打卡',
@@ -129,7 +130,7 @@ export default {
       this.$router.push({
         name:'baby-home',
         query:{
-          id: this.$route.query.id
+          id: this.userDataState.child_id
         }
       })
     }

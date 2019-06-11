@@ -256,7 +256,7 @@ export default {
       this.$router.push({
         name:'baby-home',
         query:{
-          id: child.id
+          id: child.child_id
         }
       })
     },
