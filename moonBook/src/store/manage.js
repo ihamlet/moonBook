@@ -42,7 +42,6 @@ export default {
                         schoolList = isRepeatArr(arr)
                         
                         context.commit('setSchoolList',schoolList)
-                        context.commit('setManageSchool',schoolList[0])
             
                         resolve(schoolList)                      
                         
