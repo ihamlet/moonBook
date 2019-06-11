@@ -96,12 +96,12 @@ export default {
         switch (res.data.status) {
           case 1:
             let arr = res.data.data
-            
+
             this.schoolList = isRepeatArr(arr)
 
             this.schoolName = res.data.data[0].school_name
             this.schoolId = res.data.data[0].school_id
-            this.isMaster = res.data.data[0].is_master
+            this.isMaster = Number(res.data.data[0].is_master)
             this.isHead = res.data.data[0].is_head
             break
           default:
@@ -112,7 +112,7 @@ export default {
     selectSchool(item,index){
         this.getCurrentSchool(item)
 
-        this.isMaster = item.is_master
+        this.isMaster = Number(item.is_master)
         this.isHead = item.is_head
         
         this.page = 1

@@ -73,8 +73,8 @@ export default {
             }
         },
         isMaster:{
-            type: String,
-            default: ''
+            type: Number,
+            default: 0
         },
         isHead:{
             type: Number,
