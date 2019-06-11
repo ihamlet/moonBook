@@ -74,6 +74,11 @@ Vue.directive('http2https', {
   }
 })
 
+//页面动画过渡
+window.addEventListener('popstate', function (e) {
+  router.isBack = true
+},false)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

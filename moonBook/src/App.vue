@@ -104,13 +104,14 @@ export default {
       this.setWeather(val)
     },
     '$route' (to, from) {
-  　　　 let isBack = this.$router.isBack 
-　　　　　　if(isBack) {
-　　　　　　　　this.transitionName = 'slide-right'
-　　　　　　} else {
-　　　　　　 this.transitionName = 'slide-left'
-　　　　　}
-  　　  this.$router.isBack = false
+        // 切换动画
+        let isBack = this.$router.isBack // 监听路由变化时的状态为前进还是后退
+        if (isBack) {
+          this.transitionName = 'slide-left'
+        } else {
+          this.transitionName = 'slide-right'
+        }
+        this.$router.isBack = false
   　},
     '$route': 'fetchData' 
   },
