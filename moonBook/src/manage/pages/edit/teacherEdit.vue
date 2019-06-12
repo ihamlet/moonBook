@@ -16,9 +16,12 @@
         <van-cell title="职务" :border='false' :value="form.duty" is-link @click="show = true" :arrow-direction='show?"up":"down"'/>
       </van-cell-group>
       <van-cell-group>
-        <van-switch-cell v-model="isMaster" title="是否为管理员" active-color='#67C23A' inactive-color='#F2F6FC' @change='onSwitchChange("setMaster")' value-class='switch-cell-value'/>
-        <van-switch-cell v-model="isSchoolHead" :disabled='!$route.query.isSchoolHead' title="设置为学校群主" active-color='#67C23A' inactive-color='#F2F6FC' @change='onSwitchChange("setSchoolHead")' value-class='switch-cell-value'/>
-        <van-switch-cell v-model="isHead" :disabled='!$route.query.isHead' title="设置为班级群主" active-color='#67C23A' inactive-color='#F2F6FC' @change='onSwitchChange("setBanjiHead")' value-class='switch-cell-value'/>
+        <div class="form-title">管理员设置</div>
+
+        <van-switch-cell v-model="isSchoolHead" :disabled='!isSchoolHead' title="转让学校群主" active-color='#67C23A' inactive-color='#F2F6FC' @change='onSwitchChange("setSchoolHead")' value-class='switch-cell-value' label='学校群主将可以设置管理员和班级群主' label-class='directions'/>
+        
+        <van-switch-cell v-model="isMaster" title="设置为管理员" :disabled='!isSchoolHead || !isMaster' active-color='#67C23A' inactive-color='#F2F6FC' @change='onSwitchChange("setMaster")' value-class='switch-cell-value' label='管理员可以审核老师审核家长' label-class='directions'/>
+        <van-switch-cell v-model="isHead" :disabled='!isSchoolHead || !isHead' title="转让班级群主" active-color='#67C23A' inactive-color='#F2F6FC' @change='onSwitchChange("setBanjiHead")' value-class='switch-cell-value' label='班级群主可以审核老师审核家长' label-class='directions'/>
       </van-cell-group>
     </div>
 
@@ -73,6 +76,8 @@ export default {
 
         },
         onSwitchChange(type){
+
+            
             axios.get(`/SchoolManage/teacher/${type}`,{params:{
                 id: this.$route.query.id,
                 banji_id: this.$route.query.banji_id

@@ -1,8 +1,9 @@
 <template>
   <div class="article-setting">
     <van-cell title-class='theme-color' title="#选择分类" :value="classify" is-link arrow-direction="down" @click="show = true" />
-    <van-cell v-if='(tag.cate_id!=99&&tag.cate_id!=124) || $route.query.tags' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
-    
+    <van-cell v-if='(tag.cate_id!=99&&tag.cate_id!=124) || $route.query.tags' title="同步到" value-class='cell-value'
+      :value='synchronous' center is-link @click="isResultShow = true" />
+
     <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
       <van-checkbox-group v-model="settingResult">
         <div class="form-title">同步到</div>
@@ -15,7 +16,8 @@
     </van-popup>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
-      <topic-list @close='closeTopic' @confirm='show = false'  @select='selectTag' :topicList='topicList' :tagIndex='tagIndex' :cateIndex='cateIndex'/>
+      <topic-list @close='closeTopic' @confirm='show = false' @select='selectTag' :topicList='topicList' :tagIndex='tagIndex'
+        :cateIndex='cateIndex' />
     </van-popup>
   </div>
 </template>
@@ -32,8 +34,8 @@ export default {
     topicList
   },
   computed: {
-    ...mapState('articleSetting', ['result','group','tag']),
-    ...mapGetters(['userDataState','managerState']),
+    ...mapState('articleSetting', ['result', 'group', 'tag']),
+    ...mapGetters(['userDataState', 'managerState']),
     synchronous() {
       let array = []
       this.resultList.forEach(element => {
@@ -45,12 +47,12 @@ export default {
       })
       return array.join(',')
     },
-    classify(){
+    classify() {
       let tags
-      
-      if(this.$route.query.tags&&this.$route.query.tags!='宝贝主页'){
+
+      if (this.$route.query.tags && this.$route.query.tags != '宝贝主页') {
         tags = this.$route.query.tags
-      }else{
+      } else {
         tags = this.tag.cate_name
       }
 
@@ -62,14 +64,14 @@ export default {
       show: false,
       isResultShow: false,
       selectGroup: false,
-      loading:false,
+      loading: false,
       groupList: [],
       resultList: [],
       topicList: [],
       settingResult: [],
-      tagIndex:0,
-      cateIndex:0,
-      cateName:''
+      tagIndex: 0,
+      cateIndex: 0,
+      cateName: ''
     }
   },
   created() {
@@ -88,49 +90,49 @@ export default {
       },
       deep: true
     },
-    managerState(){
+    managerState() {
       localStorage.removeItem('tag')
     }
   },
   methods: {
     ...mapActions(['release']),
-    ...mapActions('articleSetting', ['addResult','addGroup','addTag']),
+    ...mapActions('articleSetting', ['addResult', 'addGroup', 'addTag']),
     fetchData() {
       let array = []
 
-       array.push({
+      array.push({
         title: '发现',
         name: 'apps-find',
         to: 1
       })
-     
-     if(this.userDataState.child_id > 0 && this.$route.query.cate_id != 116){
+
+      if (this.userDataState.child_id > 0 && this.$route.query.cate_id != 116) {
         array.push({
           title: '宝贝主页',
           name: 'baby-home',
           to: 1
-        })     
+        })
       }
 
-      if(this.userDataState.banji_id > 0 || this.userDataState.teacher_school_id > 0){
+      if (this.userDataState.banji_id > 0 || this.userDataState.teacher_school_id > 0) {
         array.push({
-          title: `${this.userDataState.teacher_banji_id == this.$route.query.id || this.userDataState.teacher_school_id == this.$route.query.id || this.$route.query.cate_id == 116?'管理的':'宝贝的'}班级`,
+          title: `${this.userDataState.teacher_banji_id == this.$route.query.id || this.userDataState.teacher_school_id == this.$route.query.id || this.$route.query.cate_id == 116 ? '管理的' : '宝贝的'}班级`,
           name: 'class-home',
           to: 1
         })
       }
-     
+
       this.resultList = array
       // 设置默认
       let arr = []
       array.map(e => {
         arr.push(e.name)
       })
-      
+
       this.settingResult = arr
       this.addResult(arr)
-      
-      if(localStorage.getItem('result')&&!arr.includes(this.$route.query.back)){
+
+      if (localStorage.getItem('result') && !arr.includes(this.$route.query.back)) {
         this.settingResult = JSON.parse(localStorage.getItem('result'))
         this.addResult(this.settingResult)
       }
@@ -158,23 +160,23 @@ export default {
           cateArray.forEach(element => {
             if (element.access_level == 0) {
               data.push(element)
-            } else if(this.userDataState.teacher_school_id == this.$route.query.id || this.userDataState.teacher_banji_id == this.$route.query.id){
+            } else if (this.userDataState.teacher_school_id == this.$route.query.id || this.userDataState.teacher_banji_id == this.$route.query.id) {
               data.push(element)
             }
           })
           this.topicList = data
 
-          if(this.$route.query.cate_id || this.$route.query.tag_id){
-            cateArray.forEach((element,tagIndex)=>{
-              if(this.$route.query.tag_id){
-                if(element.cate_id == this.$route.query.tag_id){
+          if (this.$route.query.cate_id || this.$route.query.tag_id) {
+            cateArray.forEach((element, tagIndex) => {
+              if (this.$route.query.tag_id) {
+                if (element.cate_id == this.$route.query.tag_id) {
                   this.tagIndex = tagIndex
                   this.cateName = e.cate_name
                   this.addTag(element)
                 }
-              }else{
-                element.children.forEach((e,cateIndex)=>{
-                  if(e.cate_id == this.$route.query.cate_id){
+              } else {
+                element.children.forEach((e, cateIndex) => {
+                  if (e.cate_id == this.$route.query.cate_id) {
                     this.tagIndex = tagIndex
                     this.cateIndex = cateIndex
                     this.cateName = e.cate_name
@@ -183,10 +185,10 @@ export default {
                 })
               }
             })
-          }else{
-            if(localStorage.getItem('tag')){
+          } else {
+            if (localStorage.getItem('tag')) {
               this.addTag(JSON.parse(localStorage.getItem('tag')))
-            }else{
+            } else {
               this.addTag(data[0])
             }
           }
@@ -201,10 +203,10 @@ export default {
       this.addGroup(values)
     },
     selectTag(tag) {
-       this.addTag(tag)
-       localStorage.setItem('tag',JSON.stringify(tag))
+      this.addTag(tag)
+      localStorage.setItem('tag', JSON.stringify(tag))
     },
-    closeTopic(){
+    closeTopic() {
       this.addTag(this.topicList[this.tagIndex])
       this.show = false
     }
@@ -212,35 +214,41 @@ export default {
 }
 </script>
 <style scoped>
-.group-cell{
-  padding: .625rem /* 10/16 */;
+.group-cell {
+  padding: 0.625rem /* 10/16 */;
 }
 
-.cell-link{
-  border-radius: .625rem /* 10/16 */;
+.cell-link {
+  border-radius: 0.625rem /* 10/16 */;
   overflow: hidden;
-  box-shadow: 0 .125rem /* 2/16 */ .9375rem /* 15/16 */ rgba(0, 0, 0, .1)
+  box-shadow: 0 0.125rem /* 2/16 */ 0.9375rem /* 15/16 */ rgba(0, 0, 0, 0.1);
 }
 
-.icon{
-  margin-right: .625rem /* 10/16 */;
+.icon {
+  margin-right: 0.625rem /* 10/16 */;
 }
 
-.icon .iconfont{
+.icon .iconfont {
   font-size: 1.25rem /* 20/16 */;
   background: linear-gradient(135deg, #00bcd4, #0084ff);
   -webkit-background-clip: text;
   color: transparent;
 }
 
-.footer-bar{
+.footer-bar {
   position: fixed;
   bottom: 0;
   width: 100%;
   z-index: 10;
 }
 
-.theme-btn{
+.theme-btn {
   width: 100%;
 }
 </style>
+<style>
+.theme-checkbox.van-checkbox{
+  float: right;
+}
+</style>
+

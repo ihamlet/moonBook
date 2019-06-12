@@ -10,6 +10,12 @@
         <div class="tab-title" slot="title">
           人员审核 <van-tag round class="tag-danger" type="danger" v-if='count > 0'>{{count}}</van-tag>
         </div>
+        <van-cell-group :border='false'>
+          <van-cell title="各班待审核的人员" is-link @click="toBanjiTree">
+            <van-tag round type="danger"> {{studentCount}}人 </van-tag>
+          </van-cell>
+        </van-cell-group>
+
         <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
           <userCard v-for='(item,index) in teacherList' :key="index" :item='item' :isMaster='isMaster' :isHead='isHead' :isSchoolHead='isSchoolHead' @statusChange='getCount(schoolId)'/>
         </van-list>
@@ -49,9 +55,11 @@ import teacherList from './../../module/teacher/teacherList'
 import childList from './../../module/user/childList'
 
 import { mapGetters, mapActions,mapMutations } from 'vuex'
+import { getBanjiYear } from './../../../components/lib/js/mixin'
 
 export default {
   name: 'manageSchool',
+  mixins:[getBanjiYear],
   components: {
     overview,
     userCard,
@@ -69,6 +77,7 @@ export default {
       isSelectSchool: false,
       schoolName:'',
       count:0,
+      studentCount:0,
       loading: false,
       finished: false,
       page:1,
@@ -103,6 +112,7 @@ export default {
         this.isHead = res[index].is_head
 
         this.getCount(res[index].school_id)
+
       })
     },
     selectSchool(item,index){
@@ -149,19 +159,39 @@ export default {
         let data = {
             params:{
                 school_id: schoolId,
-                is_confirm: 0
+                is_confirm: 0,
+                is_banji_confirm: 0
             }
         }
 
         axios.get('/SchoolManage/teacher/getList',data).then(res => {
             switch (res.data.status) {
-            case 1:
-              this.count = res.data.count
-              break
-            default:
-              this.$toast(res.data.msg)
+              case 1:
+                this.count = res.data.count
+                break
+              default:
+                this.$toast(res.data.msg)
             }
         })
+
+        axios.get('/SchoolManage/students/getList',data).then(res =>{
+            switch (res.data.status) {
+              case 1:
+                this.studentCount = res.data.count
+                break
+              default:
+                this.$toast(res.data.msg)
+            }
+        })
+    },
+    toBanjiTree(){
+      this.$router.push({
+        name:'banjiTree',
+        query:{
+          school_id: this.manageSchoolInfo.school_id,
+          year: this.classYear
+        }
+      })
     }
   }
 }

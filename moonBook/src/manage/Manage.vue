@@ -75,4 +75,7 @@ export default {
 .van-cell__value.info-cell{
     flex: 2;
 }
+.van-cell__label.directions{
+    white-space: nowrap;
+}
 </style>

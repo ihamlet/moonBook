@@ -13,6 +13,7 @@ const memberRanking = () => import('@/manage/pages/teacherManage/memberRanking')
 
 const manageSchool = () => import('@/manage/pages/teacherManage/school')
 const teacherEdit = () => import('@/manage/pages/edit/teacherEdit')
+const banjiTree = () => import('@/manage/pages/tree/banjiTree')
 
 let manageRouter = {
     path: '/manage',
@@ -33,6 +34,11 @@ let manageRouter = {
             path: '/manage/school',
             name: 'manageSchool',
             component: manageSchool
+        },
+        {
+            path: '/manage/banjiTree',
+            name: 'banjiTree',
+            component: banjiTree
         }
     ]
 }

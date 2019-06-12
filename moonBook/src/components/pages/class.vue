@@ -70,32 +70,20 @@
 <script>
 import axios from './../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
+import { getBanjiYear } from './../lib/js/mixin'
 import { format } from './../lib/js/util'
 import avatar from './../module/avatar'
 import round from './../module/animate/round'
 
 export default {
   name: 'edit-class',
+  mixins:[getBanjiYear],
   components: {
     avatar,
     round
   },
   computed: {
     ...mapGetters(["userDataState"]),
-    classYear(){
-      let date = new Date()
-      let month = date.getMonth() + 1
-      let year = date.getFullYear() 
-      let time
-
-      if(month < 9){
-        time = year -1
-      }else{
-        time = year
-      }
-
-      return time
-    },
     avatar(){
       let imgAvatar
       if(this.$route.query.type == 'type'){

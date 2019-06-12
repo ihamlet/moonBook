@@ -80,9 +80,27 @@ const watchScroll = {
     }
 }
 
-
+const getBanjiYear = {
+    computed: {
+        classYear(){
+            let date = new Date()
+            let month = date.getMonth() + 1
+            let year = date.getFullYear() 
+            let time
+        
+            if(month < 9){
+                time = year -1
+            }else{
+                time = year
+            }
+        
+            return time
+        }   
+    }
+}
 
 export {
     manageStateList,
-    watchScroll
+    watchScroll,
+    getBanjiYear
 }

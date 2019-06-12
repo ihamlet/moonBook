@@ -352,7 +352,7 @@ export default {
                       id: this.userDataState.teacher_banji_id
                     }
                   })
-                }else if( this.tag.cate_id == 99 ){
+                }else if( this.tag.cate_id == 99 || this.$route.query.back == 'apps-school'){
                   this.$router.replace({
                     name:'apps-school',
                     query:{
