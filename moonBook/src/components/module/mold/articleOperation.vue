@@ -17,39 +17,24 @@
       <topic-list @close='show = false' @select='selectTag' @confirm='selectConfirm' type='share' :topicList='topicList'/>
     </van-popup>
 
-    <van-action-sheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" get-container='#app' />
+    <van-action-sheet v-model="actionsheetShow" :actions="actions" @select="onRecommendSelect" cancel-text="取消" get-container='#app' />
   </div>
 </template>
 <script>
 import axios from './../../lib/js/api'
 import topicList from './../../module/release/topicList'
 import { mapGetters,mapActions } from 'vuex'
+import { manageStateList } from './../../lib/js/mixin'
 
 export default {
   name: 'article-operation',
+  mixins: [manageStateList],
   props: ['item'],
   components: {
     topicList  
   },
   computed: {
     ...mapGetters(['managerState','userDataState']),
-    recommendActions() {
-      let array = []
-      if (this.managerState) {
-        this.managerState.forEach(element => {   
-          let data = {
-            name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
-            subname: `${element.duty}-${element.desc}`,
-            id: element.id,
-            type: element.item_type
-          }
-
-          array.push(data)
-        })
-      }
-
-      return array
-    }, 
     isBtnShow(){
       let boole = true
       if(this.$route.query.back == 'zoom' || this.$route.query.back == 'baby-home'){
@@ -194,7 +179,8 @@ export default {
         let data = {
           title:'',
           message:'',
-          routeName:''
+          routeName:'',
+          query:''
         }
 
         switch('0'){
@@ -202,11 +188,20 @@ export default {
             data.title = '请加入学校',
             data.message = '加入学校，及时了解学校动态',
             data.routeName = 'edit-school'
+            data.query = {
+              type: 'register'
+            }
           break
           case this.userDataState.banji_id:
             data.title = '请加入班级',
             data.message = '加入班级，及时了解班级动态',
             data.routeName = 'edit-class'
+            data.query = {
+              school_name: this.userDataState.school_name,
+              school_id: this.userDataState.school_id,
+              name: this.userDataState.child_name,
+              type: 'register'
+            }
           break
         }
 
@@ -217,7 +212,8 @@ export default {
           confirmButtonText:'加入'
         }).then(() => {
           this.$router.push({
-            name: data.routeName
+            name: data.routeName,
+            query: data.query
           })
         }).catch(() => {
           

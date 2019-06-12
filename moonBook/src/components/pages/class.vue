@@ -110,9 +110,9 @@ export default {
       let date = new Date()
       let year = date.getFullYear()
 
-      let birthdayYear = this.$route.query.birthday.substring(0,4)
+      let birthdayYear = this.$route.query.birthday?this.$route.query.birthday.substring(0,4) : year
   
-      return year-birthdayYear || 0
+      return year-birthdayYear
     }
   },
   data() {

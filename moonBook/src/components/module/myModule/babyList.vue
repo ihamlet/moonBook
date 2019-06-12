@@ -97,18 +97,16 @@ export default {
         this.$router.push({
           name:'edit-school',
           query:{
-            id: list.id,
-            school_name: list.school_name
+            ...list,
+            type:'edit'
           }
         })
       }else if(list.banji_id == 0){
         this.$router.push({
           name:'edit-class',
           query:{
-            id: list.id,
-            school_id: list.school_id,
-            school_name: list.school_name,
-            birthday: format(list.birthday * 1000,'yyyy-MM-dd'),
+            ...list,
+            type:'edit'
           }
         })
       }else{
