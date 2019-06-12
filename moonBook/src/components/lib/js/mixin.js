@@ -74,9 +74,6 @@ const watchScroll = {
         getDomHeight(){
             this.$nextTick(()=>{
                 let domHeight = this.$refs.domHeight?this.$refs.domHeight.offsetHeight :  0
-
-                console.log(this.$refs)
-
                 this.domHeight = domHeight
             })
         }
