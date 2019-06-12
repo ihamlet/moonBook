@@ -352,7 +352,14 @@ export default {
                       id: this.userDataState.teacher_banji_id
                     }
                   })
-                }else if(this.getResult[0]!=''&&this.getResult[0]!='apps-find'){
+                }else if( this.tag.cate_id == 99 ){
+                  this.$router.replace({
+                    name:'apps-school',
+                    query:{
+                      id: this.userDataState.teacher_school_id
+                    }
+                  })
+                } if(this.getResult[0]!=''&&this.getResult[0]!='apps-find'){
                   this.$router.replace({
                     name: this.getResult[0],
                     query:{
