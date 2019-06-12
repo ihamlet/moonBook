@@ -1,6 +1,6 @@
 <template>
   <div class="audio-player"  v-if='audioList.length'>
-    <audio ref="audio" @pause="onPause" @play="onPlay" @ended='onEnded' @timeupdate="onTimeupdate" @loadedmetadata="onLoadedmetadata"  :src="audioLink(audioList[audioIndex].photos[0].photo)" controls="controls" hidden></audio>
+    <audio ref="audio" @pause="onPause" @play="onPlay" @ended='onEnded' @timeupdate="onTimeupdate" @loadedmetadata="onLoadedmetadata"  :src="audioList[audioIndex].photos[0].photo" controls="controls" hidden></audio>
 
     <div class="audio-container">
       <div class="disc" :class="audio.playing?'turn':''">
@@ -121,11 +121,6 @@ export default {
             break
         }
       })
-    },
-    audioLink(link){
-      if(link.indexOf(location.origin) == -1){
-        return link.replace('http:', 'https:')
-      }
     },
     selectItem(item,index){
         this.audioIndex = index

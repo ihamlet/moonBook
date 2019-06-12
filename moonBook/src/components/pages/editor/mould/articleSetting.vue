@@ -1,7 +1,7 @@
 <template>
   <div class="article-setting">
-    <van-cell title-class='theme-color' title="#选择分类" :value="$route.query.tags||tag.cate_name" is-link arrow-direction="down" @click="show = true" />
-    <van-cell v-if='tag.cate_id!="99"&&tag.cate_id!="124"' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
+    <van-cell title-class='theme-color' title="#选择分类" :value="classify" is-link arrow-direction="down" @click="show = true" />
+    <van-cell v-if='(tag.cate_id!=99&&tag.cate_id!=124) || $route.query.tags' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
     
     <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
       <van-checkbox-group v-model="settingResult">
@@ -44,6 +44,17 @@ export default {
         })
       })
       return array.join(',')
+    },
+    classify(){
+      let tags
+      
+      if(this.$route.query.tags&&this.$route.query.tags!='宝贝主页'){
+        tags = this.$route.query.tags
+      }else{
+        tags = this.tag.cate_name
+      }
+
+      return tags
     }
   },
   data() {
