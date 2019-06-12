@@ -37,7 +37,7 @@
     </div>
 
 
-    <div class="release-footer-bar">
+    <div class="release-footer-bar" v-if='managerState.length'>
       <van-button class="theme-btn theme-release" round size="normal" type="primary" @click="setReleaseSwitch(true)">
         <i class="iconfont">&#xe664;</i>
         发 布
