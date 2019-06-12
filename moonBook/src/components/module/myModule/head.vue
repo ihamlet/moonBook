@@ -1,5 +1,5 @@
 <template>
-  <div class="head head-background" ref="head">
+  <div class="head head-background" ref="domHeight">
     <van-nav-bar :border='false' :class="[fixedHeaderBar?'theme-nav':'']" :key='$route.query.id' :zIndex="100" fixed :title="fixedHeaderBar?$route.meta.title:userInfo.name" @click-left="onClickLeft">
       <div class="head-bar-icon" slot="left">
         <i class="iconfont">&#xe60e;</i>
@@ -46,12 +46,14 @@
 </template>
 <script>
 import axios from "./../../lib/js/api"
+import { watchScroll } from './../../lib/js/mixin'
 import numberGrow from "./../../module/animate/numberGrow"
 import avatar from './../avatar'
 import vipLevel from './../../module/animate/svg/vipLevel'
 
 export default {
   name: "cardHead",
+  mixins:[watchScroll],
   components: {
     numberGrow,
     avatar,
@@ -60,34 +62,12 @@ export default {
   props: ["userInfo", "children",'couponCount'],
   data() {
     return {
-      domHeight: 0,
-      scrollTop: 0,
-      fixedHeaderBar: true,
       active: 0,
       punchShow: false,
       applyShow: false
     }
   },
-  destroyed() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll)
-  },
   methods: {
-    handleScroll() {
-      this.getDomHeight()
-      let scrollTop =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.domHeight < this.scrollTop) {
-        this.fixedHeaderBar = false
-      } else {
-        this.fixedHeaderBar = true
-      }
-    },
     getDomHeight() {
       if (this.$refs.head) {
         this.domHeight = this.$refs.head.offsetHeight / 2
@@ -99,11 +79,6 @@ export default {
     toHelp(){
       location.href = '/book/manual/user'
     },
-    // toCalendar() {
-    //   this.$router.push({
-    //     name:'calendar'
-    //   })
-    // },
     toAccept() {
       this.$router.push({
         name:'AcceptSchoolList'

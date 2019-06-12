@@ -119,7 +119,7 @@ export default {
             query:{
               id: this.$route.query.id,
               back: 'baby-home',
-              cate_id: 118,
+              cate_id: 150,
               tags: '宝贝主页'
             }
           })

@@ -8,7 +8,7 @@
       <van-pull-refresh v-model="loading" @refresh="onRefresh" :key="$route.query.id">
         <div class="container">
           <div class="module">
-            <div class="user-card flex flex-align" ref="userCrad">
+            <div class="user-card flex flex-align" ref="domHeight">
               <div class="info flex flex-align">
                 <div class="avatar">
                   <img :src="userInfo.avatar" v-http2https @error="imgError"/>
@@ -63,18 +63,20 @@
         </div>
       </van-pull-refresh>
     </div>
-    <van-actionsheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" get-container='#app'/>
+    <van-action-sheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" get-container='#app'/>
   </div>
 </template>
 <script>
 import axios from "./../lib/js/api"
 import { sum, arrayUnique } from "./../lib/js/util.js"
+import { watchScroll } from './../lib/js/mixin'
 import graphicCard from "./../module/card/graphicCard"
 import reading from "./../module/reading"
 import { mapGetters,mapActions } from "vuex"
 
 export default {
   name: "zoom",
+  mixins: [watchScroll],
   components: {
     graphicCard,
     reading
@@ -99,11 +101,7 @@ export default {
     return {
       releasePageShow: false,
       lateBook: [],
-      // ----
       list: [],
-      domHeight: 0,
-      scrollTop: 0,
-      fixedHeaderBar: true,
       loading: false,
       finished: false,
       userInfo: "",
@@ -122,20 +120,14 @@ export default {
     }
   },
   created() {
-    this.fetaData();
+    this.fetchData()
   },
   watch: {
-    $router: "fetaData"
-  },
-  destroyed() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll)
+    $router: "fetchData"
   },
   methods: {
     ...mapActions(['getUserData']),
-    fetaData() {
+    fetchData() {
         if(this.$route.query.id){
         let data = {
           params:{
@@ -165,24 +157,6 @@ export default {
       this.onLoad().then(()=>{
         this.loading = false
       })
-    },
-    handleScroll() {
-      this.getDomHeight();
-      let scrollTop =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.domHeight < this.scrollTop) {
-        this.fixedHeaderBar = false
-      } else {
-        this.fixedHeaderBar = true
-      }
-    },
-    getDomHeight() {
-      if (this.$refs.userCrad) {
-        this.domHeight = this.$refs.userCrad.offsetHeight / 2;
-      }
     },
     onLoad() {
       if(this.$route.query.id){

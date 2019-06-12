@@ -92,8 +92,6 @@ export default {
   },
   data() {
     return {
-      domHeight: '',
-      scrollTop: '',
       themeBarSearch: false,
       imageShow: false,
       headBar: false,

@@ -458,6 +458,11 @@ export default {
 .form-submit .theme-btn{
   width: 100%;
 }
+
+.card-routing-popup{
+  width: 90%;
+  border-radius: 8px;
+}
 </style>
 <style>
 .add-child .van-cell__title.cell-school-title {

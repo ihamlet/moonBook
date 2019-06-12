@@ -6,7 +6,7 @@
         </div>
     </van-nav-bar>
     <div class="container">
-      <div class="header" ref='head'>
+      <div class="header" ref='domHeight'>
         <div class="my-info" v-if='tab[topTabIdx].content[secondTabIdx]'>
           <card type='myInfo' :rankingData='tab[topTabIdx].content[secondTabIdx].content.myInfo' />
         </div>
@@ -62,6 +62,7 @@ import svgRanking from './../module/animate/svg/ranking'
 import card from './../module/ranking/card'
 import slogan from './../module/slogan'
 import { mapActions,mapGetters } from 'vuex'
+import { watchScroll } from './../lib/js/mixin'
 
 
 // 王伟  排行榜
@@ -82,6 +83,7 @@ import axios from './../lib/js/api'
 
 export default {
   name: 'ranking',
+  mixins: [watchScroll],
   components: {
     svgRanking,
     card,
@@ -97,8 +99,6 @@ export default {
       times: ['总榜', '季榜', '上季', '月榜', '上月', '周榜', '上周'],
       time: 'all',
       show: false,
-      fixedHeaderBar: true,
-      domHeight: "",
       tab: [{
           title: "宝贝榜",
           content: [
@@ -212,12 +212,6 @@ export default {
   created() {
     this.getTabContent()
   },
-  destroyed() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll)
-  },
   methods: {
     ...mapActions(['getUserData']),
     onTopTabClick(idx) {
@@ -228,21 +222,6 @@ export default {
     onTabClick(idx) {
       this.secondTabIdx = idx
       this.getTabContent()
-    },
-    getDomHeight() {
-      if (this.$refs.head) {
-        this.domHeight = this.$refs.head.offsetHeight / 2
-      }
-    },
-    handleScroll() {
-      this.getDomHeight()
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.domHeight < this.scrollTop) {
-        this.fixedHeaderBar = false
-      } else {
-        this.fixedHeaderBar = true
-      }
     },
     onTabDisabledClick(idx) {
       let content = this.tab[this.topTabIdx].content[idx]

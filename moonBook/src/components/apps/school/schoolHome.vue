@@ -6,7 +6,7 @@
       </div>
     </van-nav-bar>
     <div class="container">
-      <div class="header-card flex flex-align theme-school-background" ref="head">
+      <div class="header-card flex flex-align theme-school-background" ref="domHeight">
         <div class="school-info">
           <div class="school-logo">
             <img :src="schoolInfo.logo" :alt="schoolInfo.title" @error='imgError'/>
@@ -36,47 +36,50 @@
       </div>
     </div>
 
-    <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" get-container='#app'/>
+
+    <div class="release-footer-bar">
+      <van-button class="theme-btn theme-release" round size="normal" type="primary" @click="setReleaseSwitch(true)">
+        <i class="iconfont">&#xe664;</i>
+        发 布
+      </van-button>
+      <van-popup v-model="show" class="tips-popup" :overlayStyle='{backgroundColor:"transparent"}' get-container='.footer-bar' :lock-scroll='false'>
+        <tips :isShow='show' position='bottom' @close='setReleaseSwitch(false)'/>
+      </van-popup>
+    </div>
+
+    <van-action-sheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" get-container='#app'/>
   </div>
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+import { manageStateList,watchScroll } from './../../lib/js/mixin'
 import apps from './../../module/myModule/apps'
 import readList from './../../module/classModule/readList'
 import dryingList from './../../module/findModule/dryingList'
 import investmentAd from './../../module/investment'
+import tips from './../../module/release/tips'
 
 export default {
   name: 'school',
+  mixins:[manageStateList,watchScroll],
   components: {
     apps,
     readList,
     dryingList,
-    investmentAd
+    investmentAd,
+    tips
   },
   computed: {
+    ...mapState(['releaseSwitch']),
     ...mapGetters(['userDataState', 'managerState']),
-    actions() {
-      let array = []
-      if (this.managerState) {
-        this.managerState.forEach(element => {
-          let data = {
-            name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
-            subname: `${element.duty}-${element.desc}`,
-            id: element.id,
-            type: element.item_type
-          }
-          array.push(data)
-        })
+    show:{
+      get(){
+        return this.releaseSwitch
+      },
+      set(val){
+        this.setReleaseSwitch(val)
       }
-
-      array.push({
-        name:'学校列表',
-        type:'toSchoolList'
-      })
-
-      return array
     },
     manage() {
       if (this.managerState) {
@@ -93,8 +96,6 @@ export default {
   data() {
     return {
       schoolInfo: '',
-      domHeight: '',
-      fixedHeaderBar: true,
       actionsheetShow: false,
       appsList: [ {
         name: '介绍',
@@ -129,13 +130,8 @@ export default {
       vm.request()
     })
   },
-  destroyed() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll)
-  },
   methods: {
+    ...mapMutations(['setReleaseSwitch']),
     ...mapActions(['getUserData']),
     request() {
       if(this.$route.query.type != 'preview'){
@@ -218,21 +214,6 @@ export default {
         this.getCate() 
       }
     },
-    handleScroll() {
-      this.getDomHeight()
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.domHeight < this.scrollTop) {
-        this.fixedHeaderBar = false
-      } else {
-        this.fixedHeaderBar = true
-      }
-    },
-    getDomHeight() {
-      if (this.$refs.head) {
-        this.domHeight = this.$refs.head.offsetHeight / 2
-      }
-    },
     onSelect(item) {
       this.actionsheetShow = false
 
@@ -267,13 +248,6 @@ export default {
       }
 
       this.request()
-    },
-    formatBanjiTitle(text) {
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        return text
-      }
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
@@ -379,7 +353,7 @@ export default {
 
 .school-logo {
   border: 4px solid #fff;
-  box-shadow: 0 5px 15px rgba(0, 188, 212, 0.3);
+  box-shadow: 0 5px 15px rgba(0, 188, 212, 0.2);
   margin: 0 auto;
 }
 

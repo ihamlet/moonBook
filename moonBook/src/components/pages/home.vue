@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="container">
-            <div class="swipe-content" ref='swipe'>
+            <div class="swipe-content" ref='domHeight'>
                 <van-swipe :autoplay="3000">
                     <van-swipe-item v-for='(list,index) in banner' :key="index" @click="goAd(list)">
                         <a :href="list.link">
@@ -66,6 +66,7 @@
 
 import { mapGetters, mapActions } from 'vuex'
 import axios from './../lib/js/api'
+import { watchScroll } from './../lib/js/mixin'
 
 import appsList from './../module/apps'
 import investmentAd from './../module/investment'
@@ -78,6 +79,7 @@ import tips from './../module/release/tips'
 
 export default {
     name:'home',
+    mixins: [watchScroll],
     components: {
         addChild,
         appsList,
@@ -100,11 +102,8 @@ export default {
             active:0,
             applyShow:false,
             btnPulse:false,
-            themeBarSearch:false,
             isAdshow: true,
             show: false,
-            scrollTop:'',
-            domHeight:'',
             searchText:'搜索图书/幼儿园/文章',
             banner:[],
             appsList:'',
@@ -114,15 +113,8 @@ export default {
         }
     },
     created () {
-        this.getDomHeight()
         this.fetchData()
     }, 
-    destroyed() {
-        window.removeEventListener('scroll', this.handleScroll)
-    },
-    mounted () {
-        window.addEventListener('scroll', this.handleScroll)   
-    },
     watch: {
       '$router':'fetchData'
     },
@@ -144,21 +136,6 @@ export default {
                     this.isVip = res.data.isVip
                 })
             })            
-        },
-        handleScroll(){
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-            this.scrollTop = scrollTop
-            if(this.scrollTop > this.domHeight){
-                this.themeBarSearch = true
-            }else{
-                this.themeBarSearch = false
-            }
-        },
-        getDomHeight(){
-            this.$nextTick(()=>{
-                let domHeight = this.$refs.swipe.offsetHeight
-                this.domHeight = domHeight
-            })
         },
         onStepActiveChange(val){
             this.active = val

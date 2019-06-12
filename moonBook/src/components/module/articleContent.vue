@@ -2,7 +2,7 @@
   <div class="article-content" :class="[type=='screenshot'?'img-content':'',item.template_id!=0?'flex flex-align':'']">
     <div class="article-header" v-if='item.template_id==0'>
         <div class="title">{{item.title}}</div>
-        <div class="userCard" ref="userCard">
+        <div class="userCard" ref="domHeight">
           <userCard :item='item'/>
         </div>
     </div>
@@ -19,39 +19,15 @@
 <script>
 import media from './../module/mold/media'
 import userCard from './../module/mold/userCard'
+import { watchScroll } from './../lib/js/mixin'
 
 export default {
   name: 'article-content',
   props: ['item', 'type', 'isCommentShow'],
+  mixins:[watchScroll],
   components: {
     media,
     userCard,
-  },
-  data () {
-    return {
-      scrollTop:'',
-      domHeight:''
-    }
-  },
-  destroyed() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll)
-  },
-  methods: {
-    handleScroll() {
-      if (this.$refs.userCard) {
-        this.domHeight = this.$refs.userCard.offsetHeight + 50
-      }
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.scrollTop > this.domHeight) {
-        this.$emit('onScrollDomShow',true)
-      } else {
-        this.$emit('onScrollDomShow',false)
-      }
-    }
   }
 }
 </script>

@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from './../components/lib/js/api'
+import { isRepeatArr } from './../components/lib/js/util'
+
 import fetchJsonp from 'fetch-jsonp'
 import Cookies from 'vue-cookie'
 import qs from 'qs'
 
-import beautifulArticle from './BeautifulArticle'
 import articleSetting from './articleSetting'
 import manage from './manage'
 import openWX from './openWX'
@@ -49,7 +50,7 @@ const getters = {
     return state.msgLength
   },
   managerState: state => {
-    return state.manager
+    return isRepeatArr(state.manager)
   },
   userPraiseState: state => {
     let praise = []
@@ -387,7 +388,6 @@ export default new Vuex.Store({
   mutations,
   actions,
   modules:{
-    beautifulArticle,
     articleSetting,
     manage,
     openWX

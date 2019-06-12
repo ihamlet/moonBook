@@ -1,6 +1,6 @@
 <template>
   <div class="topic-list">
-    <van-picker ref='picker' show-toolbar title='选择分类' :columns="column" value-key='cate_name' @change="onCateChange" @cancel='close'  @confirm='$emit("confirm")'/>
+    <van-picker ref='picker' show-toolbar :title='title' :columns="column" value-key='cate_name' @change="onCateChange" @cancel='close'  @confirm='$emit("confirm")'/>
   </div>
 </template>
 <script>
@@ -9,7 +9,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'topic-list',
-  props: ['type','topicList','tagIndex','cateIndex'],
+  props: ['type','topicList','tagIndex','cateIndex','cateName'],
   computed: {
     ...mapGetters(['managerState']),
     column(){
@@ -25,6 +25,21 @@ export default {
       }]
       
       return column
+    },
+    title(){
+      let title = '宝贝主页的分类'
+      
+      switch(this.$route.query.back){
+        case 'class-home':
+          title = '班级主页的分类'
+        break
+        case 'apps-school':
+          title = '学校主页的分类'
+        break
+      }
+
+      return title
+
     }
   },
   methods: {

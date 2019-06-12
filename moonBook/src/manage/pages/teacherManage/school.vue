@@ -48,8 +48,6 @@ import userCard from './../../module/user/userCard'
 import teacherList from './../../module/teacher/teacherList'
 import childList from './../../module/user/childList'
 
-import { isRepeatArr } from './../../../components/lib/js/util' 
-
 import { mapGetters, mapActions,mapMutations } from 'vuex'
 
 export default {

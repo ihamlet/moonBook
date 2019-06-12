@@ -10,7 +10,7 @@
     </van-nav-bar>
     <div class="container">
       <div class="module">
-        <div class="book-card" ref='bookCard'>
+        <div class="book-card" ref='domHeight'>
           <div class="tag">
               <van-tag v-if='details.is_read' mark type="success" size="large">已读</van-tag>
               <van-tag v-else mark type="danger" size="large">未读</van-tag>
@@ -76,9 +76,11 @@ import comment from './../module/comment'
 import { mapActions } from 'vuex'
 import { arrayUnique } from './../lib/js/util'
 import { mapState, mapGetters } from 'vuex'
+import { watchScroll } from './../lib/js/mixin'
 
 export default {
   name: 'book-details',
+  mixins: [watchScroll],
   components: {
     freshList,
     comment
@@ -98,10 +100,7 @@ export default {
   data() {
     return {
       details: '',
-      freshList: '',
-      scrollTop: '',
-      domHeight: 0,
-      themeBarSearch: false,
+      freshList: ''
     }
   },
   created() {
@@ -119,12 +118,6 @@ export default {
     ready(){
       this.wxShare()
     }
-  },
-  destroyed() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll)
   },
   methods: {
     ...mapActions('openWX',['share']),
@@ -159,18 +152,6 @@ export default {
           this.freshList = arrayUnique(res.data.data,'user_id')
         }
       })
-    },
-    handleScroll() {
-      if (this.$refs.userCard) {
-        this.domHeight = this.$refs.bookCard.offsetHeight
-      }
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.scrollTop > this.domHeight) {
-        this.themeBarSearch = true
-      } else {
-        this.themeBarSearch = false
-      }
     },
     listening(details){
       let p = /（.+?）/

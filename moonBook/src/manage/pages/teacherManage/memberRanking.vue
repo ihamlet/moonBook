@@ -6,7 +6,7 @@
         </div>
     </van-nav-bar>
 
-    <div class="my-child" ref='head'>
+    <div class="my-child" ref='domHeight'>
       <div class="my-child-card flex flex-align" v-if="$route.query.id > 0">
         <div class="my-child-info flex flex-align">
           <div class="my-child-hd flex flex-align">
@@ -94,9 +94,11 @@
 import axios from './../../../../src/components/lib/js/api'
 import svgRanking from './../../../components/module/animate/svg/ranking'
 import { mapGetters } from 'vuex'
+import { watchScroll } from './../../../components/lib/js/mixin'
 
 export default {
   name: 'memberRanking',
+  mixins:[watchScroll],
   components: {
     svgRanking,
   },
@@ -156,8 +158,8 @@ export default {
       show: false,
       time:'all',
       tabTitleSelect:'总计',
-      fixedHeaderBar: true,
-      domHeight:0
+      // fixedHeaderBar: true,
+      // domHeight:0
     }
   },
   // created () {
@@ -166,12 +168,6 @@ export default {
   // watch: {
   //   '$router':'fetchData'
   // },
-  destroyed() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll)
-  },
   methods: {
     // fetchData(){
     //   let data = {
@@ -216,21 +212,6 @@ export default {
             break
         }
       })
-    },
-    handleScroll() {
-      this.getDomHeight()
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.domHeight < this.scrollTop) {
-        this.fixedHeaderBar = false
-      } else {
-        this.fixedHeaderBar = true
-      }
-    },
-    getDomHeight() {
-      if (this.$refs.head) {
-        this.domHeight = this.$refs.head.offsetHeight / 2
-      }
     },
     onClickTab(index){
       this.active = index

@@ -22,11 +22,13 @@ import axios from './../src/components/lib/js/api'
 import footerBar from './components/module/footerBar'
 import addChild from './components/module/card/addChild'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { watchScroll } from './components/lib/js/mixin'
 import './../src/components/lib/css/neat.css'
 import 'animate.css'
 
 export default {
   name: 'App',
+  mixins:[watchScroll],
   components: {
     footerBar,
     addChild
@@ -44,7 +46,6 @@ export default {
     return {
       transitionName: 'slide-right',
       show: true,
-      scrollTop: 0,
       center: [114.085947,22.547],
       cityCode:'420200',
       weather:'',
@@ -87,12 +88,6 @@ export default {
 
     this.fetchData() 
   },
-  destroyed() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
-  mounted () {
-    window.addEventListener('scroll', this.handleScroll)   
-  },
   watch: {
     center(val){
         let products = {
@@ -127,9 +122,6 @@ export default {
       this.getUserData()
       this.getManager()
       this.getMsg(products)
-    },
-    handleScroll(){
-      this.scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
     }
   }
 }

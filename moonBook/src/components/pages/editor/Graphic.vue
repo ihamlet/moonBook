@@ -297,7 +297,7 @@ export default {
         }
       } else if (this.grapicData.text.length < 12000) {
           
-          // cate_id = 116 课堂故事
+          // cate_id = 116 课堂阅读
 
           // 发布
           let data = {

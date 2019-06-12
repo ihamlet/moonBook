@@ -2,7 +2,7 @@
   <div class="card-routing">
     <div class="accept-card">
       <div class="header">
-        <div class="card fadeInUp animated">
+        <div class="card slideInUp animated">
             <div class="card-info flex flex-align">
                 <img class="logo" src="/Public/lib/bookshelf/img/logo.png" alt="logo" />
                 <div class="name">阅亮书架</div>
@@ -27,7 +27,7 @@
          <i class="iconfont fadeInDown animated">&#xe62d;</i>
       </div>
     </div>
-    <van-row class="square-btn" gutter="20" type="flex" justify="space-around">
+    <van-row class="square-btn" gutter="10" type="flex" justify="space-around">
       <van-col span="16">
         <van-button round class="theme-btn" plain type="primary" size="normal" @click="toBabyHome">打造宝贝主页</van-button>
       </van-col>
@@ -79,29 +79,28 @@ export default {
 </script>
 <style scoped>
 .accept-card {
-  width: 18.75rem /* 300/16 */;
   overflow: hidden;
 }
 
 .header {
   width: 100%;
-  height: 11.25rem /* 180/16 */;
+  height: 170px;
   background: #ffffff;
   position: relative;
-  box-shadow: 0 -0.625rem /* 10/16 */ 0.625rem /* 10/16 */ rgba(0, 0, 0, 0.2) inset;
+  box-shadow: 0 -10px 15px -5px rgba(0, 0, 0, .3) inset;
   overflow: hidden;
 }
 
 .card {
-  width: 16.25rem /* 260/16 */;
+  width: 90%;
   height: 10rem /* 160/16 */;
   background: linear-gradient(127deg, #03A9F4, rgba(255, 235, 59, 0.5));
   position: absolute;
-  bottom: -1.25rem /* 20/16 */;
+  bottom: -20px;
   left: 50%;
-  margin-left: -135px;
-  border-radius: 1.25rem /* 20/16 */;
-  box-shadow: 0 -0.125rem /* 2/16 */ 3.125rem /* 50/16 */ rgba(0, 0, 0, 0.2);
+  margin-left: -46.5%;
+  border-radius: 20px;
+  box-shadow: 0 -2px 50px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
 

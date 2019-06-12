@@ -8,8 +8,6 @@
 const Editor = () => import('@/components/Editor')
 const Publishing = () => import('@/components/pages/editor/Publishing')
 const Graphic = () => import('@/components/pages/editor/Graphic')
-const BeautifulArticle = () => import('@/components/pages/editor/BeautifulArticle')
-const changeCover = () => import('@/components/pages/editor/mould/changeCover')
 const articleSetting = () => import('@/components/pages/editor/mould/articleSetting')
 
 let editorRouter = {
@@ -23,23 +21,6 @@ let editorRouter = {
     meta: {
       title: '发布长文',
       type:'long'
-    }
-  },
-  {
-    path: '/editor/beautifulArticle',
-    name: 'beautifulArticle',
-    component: BeautifulArticle,
-    meta: {
-      title: '编辑',
-      type:'beautifulArticle'
-    },
-  },
-  {
-    path: '/editor/changeCover',
-    name:'changeCover',
-    component: changeCover,
-    meta: {
-      title: '设置封面'
     }
   },
   {

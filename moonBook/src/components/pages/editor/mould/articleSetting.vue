@@ -1,7 +1,6 @@
 <template>
   <div class="article-setting">
-    <!-- <van-nav-bar v-if='type!="mould"' :title="$route.meta.title" /> -->
-    <van-cell title-class='theme-color' title="#选择分类" :value="tag.cate_name" is-link arrow-direction="down" @click="show = true" />
+    <van-cell title-class='theme-color' title="#选择分类" :value="$route.query.tags||tag.cate_name" is-link arrow-direction="down" @click="show = true" />
     <van-cell v-if='tag.cate_id!="99"&&tag.cate_id!="124"' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
     
     <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
@@ -18,11 +17,6 @@
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
       <topic-list @close='closeTopic' @confirm='show = false'  @select='selectTag' :topicList='topicList' :tagIndex='tagIndex' :cateIndex='cateIndex'/>
     </van-popup>
-
-    <!-- 仿美篇要用到 -->
-    <!-- <div class="footer-bar" v-if='type!="mould"'>
-      <van-button class="theme-btn" square size="normal" type="primary" :loading='loading' @click="onClickRelease">发 布</van-button>
-    </div> -->
   </div>
 </template>
 <script>
@@ -39,8 +33,6 @@ export default {
   },
   computed: {
     ...mapState('articleSetting', ['result','group','tag']),
-    ...mapState('beautifulArticle',['cover','title']),
-    ...mapGetters('beautifulArticle',['getArticleContent','getImageList']),
     ...mapGetters(['userDataState','managerState']),
     synchronous() {
       let array = []
@@ -65,7 +57,8 @@ export default {
       topicList: [],
       settingResult: [],
       tagIndex:0,
-      cateIndex:0
+      cateIndex:0,
+      cateName:''
     }
   },
   created() {
@@ -100,7 +93,7 @@ export default {
         to: 1
       })
      
-     if(this.userDataState.child_id > 0){
+     if(this.userDataState.child_id > 0 && this.$route.query.cate_id != 116){
         array.push({
           title: '宝贝主页',
           name: 'baby-home',
@@ -110,7 +103,7 @@ export default {
 
       if(this.userDataState.banji_id > 0 || this.userDataState.teacher_school_id > 0){
         array.push({
-          title: `${this.userDataState.teacher_banji_id == this.$route.query.id || this.userDataState.teacher_school_id == this.$route.query.id?'管理的':'宝贝的'}班级`,
+          title: `${this.userDataState.teacher_banji_id == this.$route.query.id || this.userDataState.teacher_school_id == this.$route.query.id || this.$route.query.cate_id == 116?'管理的':'宝贝的'}班级`,
           name: 'class-home',
           to: 1
         })
@@ -148,6 +141,7 @@ export default {
 
       axios.get('/book/schoolArticleCate/getList', data).then(res => {
         if (res.status == 200) {
+
           let cateArray = res.data
           let data = []
           cateArray.forEach(element => {
@@ -164,6 +158,7 @@ export default {
               if(this.$route.query.tag_id){
                 if(element.cate_id == this.$route.query.tag_id){
                   this.tagIndex = tagIndex
+                  this.cateName = e.cate_name
                   this.addTag(element)
                 }
               }else{
@@ -171,6 +166,7 @@ export default {
                   if(e.cate_id == this.$route.query.cate_id){
                     this.tagIndex = tagIndex
                     this.cateIndex = cateIndex
+                    this.cateName = e.cate_name
                     this.addTag(e)
                   }
                 })
@@ -201,81 +197,6 @@ export default {
       this.addTag(this.topicList[this.tagIndex])
       this.show = false
     }
-
-    // 仿美篇要用到
-    // onClickRelease(){
-    //   if (!this.getArticleContent.length) {
-    //     if (this.$route.query.back && this.$route.name!='home') {
-    //       this.$router.push({
-    //         name: this.$route.query.back,
-    //         query: {
-    //           id:  this.$route.query.id
-    //         }
-    //       })
-    //     }
-    //   } else {
-    //       let data = {
-    //         details: this.getArticleContent,
-    //         template_id: 0,
-    //         cover: this.cover?this.cover:this.getImageList[0],
-    //         title: this.title
-    //       }
-  
-    //       if(this.$route.query.back == 'baby-home'){
-    //         data.child_id = this.$route.query.id
-    //       }
-
-    //       if(this.$route.query.back == 'class-home'){
-    //         data.banji_id = this.$route.query.id
-    //       }
-          
-    //       if(this.$route.query.back == 'apps-school'){
-    //         data.school_id = this.$route.query.id
-    //       }
-
-    //       this.loading = true
-
-    //       this.release(data).then(res=>{
-    //         this.loading = false
-    //         switch(res){
-    //           case 1:
-    //             switch(true){
-    //               case this.result.includes('apps-find'):
-    //                 this.$router.replace('/apps-find')
-    //               break
-    //               case this.result.includes('baby-home'):
-    //                 this.$router.replace({
-    //                   name:'baby-home',
-    //                   query:{
-    //                     id: this.userDataState.child_id
-    //                   }
-    //                 })
-    //               break
-    //               case this.result.includes('class-home'):
-    //                 this.$router.replace({
-    //                   name:'class-home',
-    //                   query:{
-    //                     id: this.userDataState.banji_id
-    //                   }
-    //                 })
-    //               break
-    //               default:
-    //                 this.$router.replace({
-    //                   name:'zoom',
-    //                   query:{
-    //                     id: this.userDataState.user_id
-    //                   }
-    //                 })
-    //             }
-    //             this.$toast.success('发布成功')
-    //           break
-    //           case 0:
-    //             this.$toast(res.data.info)
-    //           break
-    //         }
-    //     })
-    //   }
-    // }
   }
 }
 </script>

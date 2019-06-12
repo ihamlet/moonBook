@@ -5,7 +5,7 @@
         <van-button round :class="readonly?'theme-btn':''" type="primary" size="small"> {{readonly?'编辑':'完成'}} </van-button>
       </div>
     </van-nav-bar>
-    <div class="head theme-background" ref='head'>
+    <div class="head theme-background" ref='domHeight'>
       <img class="bg-school-3d" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/school-intro.png" />
     </div>
     <div class="container">
@@ -22,7 +22,7 @@
               <van-field class="text-input school-title" v-model="schoolInfo.title" placeholder="请输入学校名称" :border='false' :readonly='readonly' />
             </div>
             <div class="text level flex flex-align">
-              <div class="text school-level" @click="select('level')">{{schoolInfo.level}}</div>
+              <div class="text school-level" @click="select('level')">{{schoolInfo.level?schoolInfo.level:'未定级'}}</div>
               <div class="scale text" @click="select('scale')">
                 {{schoolInfo.member_range}}
               </div>
@@ -182,10 +182,12 @@ import axios from './../../lib/js/api'
 import QRcode from 'qrcode'
 import { schoolLevel, schoolType, shcoolScale } from './../../lib/js/schoolInfo'
 import { compress } from './../../lib/js/util'
+import { watchScroll } from './../../lib/js/mixin'
 import { mapGetters,mapActions,mapState } from 'vuex'
 
 export default {
   name: 'school-intro',
+  mixins:[watchScroll],
   computed: {
     ...mapState('openWX',['ready']),
     ...mapGetters(['userDataState']),
@@ -232,8 +234,6 @@ export default {
       percent: '',
       hackReset: true,
       progressIsShow: false,
-      domHeight: '',
-      fixedHeaderBar: true,
       phoneDialogShow: false,
       show: false,
       selectType: '',
@@ -247,12 +247,6 @@ export default {
   },
   updated(){   
     this.wxShare()
-  },
-  destroyed() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll)
   },
   watch: {
     '$router': 'fetchData',
@@ -525,21 +519,6 @@ export default {
     delChapter(chapterIndex) {
       this.details[3].content.splice(chapterIndex, 1)
     },
-    handleScroll() {
-      this.getDomHeight()
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.domHeight < this.scrollTop) {
-        this.fixedHeaderBar = false
-      } else {
-        this.fixedHeaderBar = true
-      }
-    },
-    getDomHeight() {
-      if (this.$refs.head) {
-        this.domHeight = this.$refs.head.offsetHeight / 2
-      }
-    },
     toSchoolHome() {
       this.$router.push({
         name: 'apps-school',
@@ -618,10 +597,6 @@ export default {
   overflow: hidden;
   margin-bottom: 10px;
   padding: 10px 0;
-}
-
-.text-input {
-  padding: 0;
 }
 
 .cell {
@@ -856,6 +831,10 @@ a.a-tel {
 <style>
 .chapter-field textarea {
   text-indent: 20px;
+}
+
+.text-input.van-cell{
+  padding: 0;
 }
 </style>
 

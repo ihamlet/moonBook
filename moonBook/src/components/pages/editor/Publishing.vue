@@ -15,16 +15,13 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
 import { compress } from './../../lib/js/util'
-import { mapActions,mapState,mapMutations } from 'vuex'
+
 
 export default {
   name: 'publishing',
   components: {
     quillEditor,
     // topicList
-  },
-  computed: {
-    ...mapState('beautifulArticle',['articleItem'])
   },
   data() {
     return {
@@ -50,7 +47,6 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
-    ...mapActions('beautifulArticle',['change','add']),
     fetchData() {
       if(this.$route.query.onClickType == 'change')
         this.articleItem.forEach(element => {

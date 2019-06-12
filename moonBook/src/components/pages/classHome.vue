@@ -8,7 +8,7 @@
         <span class="text">管理班级</span>
       </div> -->
     </van-nav-bar>
-    <div class="header theme-background flex flex-align" ref='head'>
+    <div class="header theme-background flex flex-align" ref='domHeight'>
       <div class="class-info">
         <div class="flex flex-align">
             <div class="class-name">{{formatBanjiTitle(classInfo.title)}}</div>
@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <van-actionsheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" get-container='#app'/>
+    <van-action-sheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" get-container='#app'/>
 
     <div class="punch" v-if='classInfo.is_my_baby_banji'>
       <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
@@ -56,7 +56,8 @@
 <script>
 import axios from './../lib/js/api'
 import { format } from './../lib/js/util'
-import {mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+import { manageStateList,watchScroll } from './../lib/js/mixin'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import classZoom from './../pages/classZoom'
 import readList from './../module/classModule/readList'
 import reading from './../module/reading'
@@ -66,6 +67,7 @@ import selectBaby from './../module/selectChild'
 
 export default {
   name: "class-home",
+  mixins:[manageStateList,watchScroll],
   components: {
     classZoom,
     reading,
@@ -77,27 +79,6 @@ export default {
   computed: {
     ...mapGetters(['userDataState', 'managerState']),
     ...mapState(['releaseSwitch']),
-    actions() {
-      let array = []
-      if (this.managerState) {
-        this.managerState.forEach(element => {
-          let data = {
-            name: `${element.item_type == 'school' ? element.name : this.formatBanjiTitle(element.name)}${element.child_name ? '(' + element.child_name + ')' : '(管理员)'}`,
-            subname: `${element.duty}-${element.desc}`,
-            id: element.id,
-            type: element.item_type,
-            school_id: element.school_id,
-            school_name: element.school_name,
-            banji_name: this.formatBanjiTitle(element.name),
-            banji_id: element.banji_id
-          }
-
-          array.push(data)
-        })
-      }
-
-      return array
-    },
     pageTitle() {
       let str = ''
       let childName = ''
@@ -119,7 +100,6 @@ export default {
   data() {
     return {
       show: false,
-      fixedHeaderBar: true,
       hackReset: true,
       qrImage: '',
       classInfo: '',
@@ -162,12 +142,6 @@ export default {
   beforeRouteLeave(to, from, next) {
     to.meta.keepAlive = false
     next()
-  },
-  destroyed() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll)
   },
   created () {
     this.$nextTick(()=>{
@@ -277,7 +251,6 @@ export default {
       }
     },
     toPageCodeShare(){
-
       let data = {
         school_id: this.classInfo.school_id,
         school_name: this.classInfo.school_name,
@@ -293,21 +266,6 @@ export default {
           ...data
         }
       })
-    },
-    handleScroll() {
-      this.getDomHeight()
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.domHeight < this.scrollTop) {
-        this.fixedHeaderBar = false
-      } else {
-        this.fixedHeaderBar = true
-      }
-    },
-    getDomHeight() {
-      if (this.$refs.head) {
-        this.domHeight = this.$refs.head.offsetHeight / 2
-      }
     },
     punch() {
       this.scanQRcode({id:this.userDataState.child_id}).then(res=>{

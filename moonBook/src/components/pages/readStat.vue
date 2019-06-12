@@ -5,7 +5,7 @@
         <i class="iconfont">&#xe635;</i>
       </div> -->
     </van-nav-bar>
-    <div class="head" ref="head">
+    <div class="head" ref="domHeight">
       <div class="baby-info flex flex-align" @click="toPageBabyHome(list)">
         <div class="content">
           <div class="avatar" v-if="childInfo.avatar">
@@ -75,17 +75,17 @@
 import axios from './../lib/js/api'
 import avatar from './../module/avatar'
 import numberGrow from './../module/animate/numberGrow'
-// import rankShare from './../module/mold/rankShare'
 import slogan from './../module/slogan'
 import { punchLevel } from './../lib/js/speech'
+import { watchScroll } from './../lib/js/mixin'
 
 export default {
   name: 'readstat',
+  mixins:[watchScroll],
   components: {
     numberGrow,
     avatar,
     slogan,
-    // rankShare
   },
   computed: {
     text() {
@@ -110,18 +110,10 @@ export default {
     return {
       childInfo: '',
       ranking: [],
-      fixedHeaderBar: true,
-      domHeight: "",
       show: false,
       currentRate:85,
       level:''
     }
-  },
-  destroyed() {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll)
   },
   created() {
     this.fetchData()
@@ -170,21 +162,6 @@ export default {
           })
         })
       })
-    },
-    handleScroll() {
-      this.getDomHeight()
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.domHeight < this.scrollTop) {
-        this.fixedHeaderBar = false
-      } else {
-        this.fixedHeaderBar = true
-      }
-    },
-    getDomHeight() {
-      if (this.$refs.head) {
-        this.domHeight = this.$refs.head.offsetHeight / 2
-      }
     },
     toAchievement(){
       this.$router.push({
