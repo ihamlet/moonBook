@@ -63,7 +63,7 @@
       <div v-if="childInfo.is_mine" class="article-list">
         <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :offsetTop='45'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
+            <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
               <van-pull-refresh v-model="loading" @refresh="onRefresh">
                 <div class="tab-content" v-if='list.content.length'>
                   <div class="item" v-for='(item,itemIndex) in list.content' :key="itemIndex">
@@ -433,6 +433,7 @@ export default {
       this.page = 1
       this.getList().then(() => {
         this.loading = false
+        this.finished = false
       })
     },
     toClassHome() {

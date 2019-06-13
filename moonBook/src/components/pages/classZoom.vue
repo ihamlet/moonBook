@@ -124,6 +124,7 @@ export default {
       this.page = 1
       this.onLoad().then(res=>{
         this.loading = false
+        this.finished = false
       })
     },
     operation(item) {

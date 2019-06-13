@@ -5,7 +5,8 @@ export default {
     namespaced: true,
     state:{
         schoolList:[],
-        manageSchool:''
+        manageSchool:'',
+        authorizationList:[]
     },
     getters:{
         manageSchoolInfo: state => {
@@ -27,6 +28,9 @@ export default {
         setManageSchool(state,params){
             localStorage.setItem('schoolCurrent', JSON.stringify(params))
             state.manageSchool = params
+        },
+        setAuthorizationList(state,params){
+            state.authorizationList = params
         }
     },
     actions:{
@@ -53,6 +57,18 @@ export default {
                         this.$toast(res.data.msg)
                     }
                 })
+            })
+        },
+        getMyMenus(context,products){
+            axios.get('/SchoolManage/teacher/getMyMenus').then(res=>{
+                console.log(res)
+                switch(res.data.status){
+                    case 1:
+                        context.commit('setAuthorizationList',res.data.data)
+                        break
+                    default:
+                        this.$toast(res.data.msg)
+                }
             })
         }
     }

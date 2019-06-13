@@ -179,6 +179,7 @@ export default {
       this.page = 1
       this.getList().then(res => {
         this.loading = false
+        this.finished = false
       })
     },
     follow(item) {

@@ -33,7 +33,7 @@
     <van-tabs class="tab-content" v-model="active" background="inherit" :line-width='20' :line-height='4' color="#fff" title-active-color="#fff" title-inactive-color="#fff" @click="onClickTab">
       <van-tab v-for='(list,index) in tabs' :key="index" :title='list.title'>
         <div class="tabs-wrap">
-          <van-tabs v-if='index == active' class="child-tab" type="card" color="#2cadc2" swipeable animated title-active-color="#fff" title-inactive-color="#2cadc2" @change='onChangeTab' @disabled="show = true">
+          <van-tabs class="child-tab" type="card" color="#2cadc2" swipeable animated title-active-color="#fff" title-inactive-color="#2cadc2" @change='onChangeTab' @disabled="show = true">
             <van-tab v-for='(item,itemIndex) in newTab[index]' :key="itemIndex" :title='item.title' :disabled='item.disabled'>
               <div class="list-content">
                 <div class="title-name" v-line-clamp:20="1">{{itemIndex == 3?'全平台':item.name}}</div>

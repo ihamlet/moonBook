@@ -264,6 +264,7 @@ export default {
       this.page = 1
       this.onLoad().then(() => {
         this.loading = false
+        this.finished = false
       })
     },
     comeBack() {

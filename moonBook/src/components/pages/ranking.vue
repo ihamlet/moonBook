@@ -13,7 +13,7 @@
       </div>
       <van-tabs color='#0084ff' :line-width='20' :line-height='4' @change="onTopTabClick" sticky swipeable animated>
         <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-          <div class="content" v-if='topTabIdx == index'>
+          <div class="content">
             <van-tabs color='#0084ff' type="card" @disabled="onTabDisabledClick" @click="onTabClick">
               <van-tab v-for="(item,itemIndex) in list.content" :disabled="item.disabled" :title="item.title" :key="itemIndex">
                 <van-cell-group v-if="item.content && item.content.list.length">

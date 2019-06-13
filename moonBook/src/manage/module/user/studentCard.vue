@@ -1,16 +1,21 @@
 <template>
     <van-cell>
         <div class="user-card flex flex-align">
-            <div class="info flex flex-align" @click="toEditPage">
-                <img :src="item.avatar" @error="imgError"/>
-                <div class="user-info">
-                    <div class="name">{{item.username}}</div>
-                    <div class="child flex" v-line-clamp:20="1">{{item.banji_name?`${formatBanjiTitle(item.banji_name)} | `:''}}{{item.duty}}</div>
+            <div class="info flex flex-align">
+                <div class="select" @click="selectChild">
+                    <i class="icon-select theme-color iconfont"  v-if='select'>&#xea32;</i>
+                    <i class="icon-select to-be-selected  iconfont" v-else-if='selectShow'>&#xe677;</i>
+                </div>
+                <img :src="item.avatar" @error="imgError" @click="show = true"/>
+                <div class="user-info" @click="show = true">
+                    <div class="name">{{item.name}}</div>
+                    <div class="child flex" v-line-clamp:20="1" v-if='activeId!=0'>{{item.parent_name?`${item.parent_name} | `:''}}{{item.relation_name}}</div>
+                    <div class="child flex" v-line-clamp:20="1" v-else>{{item.banji_name?`${formatBanjiTitle(item.banji_name)} | `:''}}{{item.parent_name}}</div>
                 </div>
             </div>
             <div class="operation-btn flex flex-align">
-                <van-button class="pass" size="small" round type="info" @click="info">详情</van-button>
-                <van-button :disabled='!(isMaster == 1&&item.is_master == 0)' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
+                <!-- <van-button class="pass" size="small" round type="info" @click="info">详情</van-button> -->
+                <van-button class="past" size="small" round :type="item.is_banji_confirm == 1?'warning':'primary'" @click="past">  {{item.is_banji_confirm == 1?'请出':'通过'}} </van-button>
             </div>
         </div> 
 
@@ -20,28 +25,27 @@
             </div>
             
             <div class="techer-card">      
-                <div class="avatar" @click="toEditPage">
+                <div class="avatar">
                     <img :src="item.avatar" @error="imgError"/>
                 </div>
            
                 <van-cell-group>
-                    <van-cell title="手机号" :border='false'>
-                        <a class="theme-color" :href="`tel:${item.mobile}`">{{item.mobile}}</a>
+                    <van-cell title="姓名" :value="item.name" :border='false'/>
+                    <van-cell title="家长" v-if='item.parent_name' :value="item.parent_name" :border='false' value-class='info-cell'/>
+                    <van-cell title="联系电话" :border='false' v-if='item.parent_mobile'>
+                        <a class="theme-color" :href="`tel:${item.parent_mobile}`">{{item.parent_mobile}}</a>
                     </van-cell>
-                    <van-cell title="姓名" :value="item.username" :border='false'/>
                     <van-cell title="学校" v-if='item.school_name' :value="item.school_name" :border='false' value-class='info-cell' is-link @click="toSchool"/>
-                    <van-cell title="班级" v-if='item.banji_name' :value="formatBanjiTitle(item.banji_name)" is-link :border='false' @click="toBanji"/> 
-                    <van-cell title="职位" :value="item.duty?item.duty:'老师'" :border='false'/>
-                    <van-cell title="审核人" v-if='teacherInfo.confirm_user_id > 0' :value="teacherInfo.confirm_user_name == item.username?'自己':teacherInfo.confirm_user_name" :border='false'/>
-                    <van-cell title="审核时间" :value='teacherInfo.confirm_date' value-class='info-cell' :border='false'/>
+                    <van-cell title="班级" v-if='item.banji_name' :value="formatBanjiTitle(item.banji_name)" is-link :border='false' @click="toBanji"/>
+                    <van-cell title="申请时间" v-if='item.banji_apply_date' :value="item.banji_apply_date" :border='false'/>
                 </van-cell-group>
 
                 <div class="popup-footer flex-align flex">
                     <div class="btn">
-                        <van-button :disabled='!(isMaster == 1&&item.is_master == 0)' class="edit" size="small" type="info" round plain @click="toEditPage"> 编辑 </van-button>
+                        <van-button class="edit" size="small" type="info" round plain @click="changeBanji"> 换班 </van-button>
                     </div>
                     <div class="btn">
-                        <van-button :disabled='!(isMaster == 1&&item.is_master == 0)' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
+                        <van-button class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
                     </div>
                 </div>
 
@@ -60,68 +64,53 @@ export default {
             default(){
                 return {
                     avatar:'',
-                    username:'',
+                    name:'',
                     banji_id:0,
-                    banji_name: '3',
-                    duty:'信息老师',
-                    is_confirm: 0,
-                    is_master:0,
-                    mobile:'',
+                    banji_name:'3',
+                    parent_name: '赵静静',
+                    relation_name: '妈妈',
+                    is_banji_confirm: 0,
                     school_name:'微美幼儿园',
+                    parent_mobile:'',
                     school_id:0,
                     id: 0
                 }
             }
         },
-        isMaster:{
+        activeId:{
             type: Number,
             default: 0
         },
-        isHead:{
-            type: Number,
-            default: 0  
-        },
-        isSchoolHead:{
-            type: Number,
-            default: 0
+        selectShow:{
+            type: Boolean,
+            default: false
         }
     }, 
     data () {
         return {
             show: false,
-            teacherInfo:''      
+            select: false
         }
     },
     methods: {
-        info(){
-            axios.get('/SchoolManage/teacher/getTeacher',{
-                params: {
-                    id: this.item.id
-                }
-            }).then(res=>{
-                switch(res.data.status){
-                    case 1:
-                        this.show = true
-                        this.teacherInfo = res.data.data
-                        break
-                    default:
-                        this.$toast(res.data.msg)
-                }  
-            })
-        },
         past(){
             
-            let apiType = this.item.is_confirm == 1?'kick':'check'
+            let apiType = this.item.is_banji_confirm == 1?'kick':'check'
 
-            axios.get(`/SchoolManage/teacher/${apiType}`,{
+            axios.get(`/SchoolManage/students/${apiType}`,{
                 params:{
                     id: this.item.id
                 }
             }).then(res=>{
                 switch(res.data.status){
                     case 1:
-                        this.item.is_confirm = `${apiType == 'check'?1:0}`
-                        this.$toast.success(res.data.msg)
+                        if(apiType == 'check'){
+                            this.item.is_banji_confirm = 1
+                            this.$toast.success('审核通过')
+                        }else{
+                            this.item.is_banji_confirm = 0
+                            this.$toast(res.data.msg)
+                        }
 
                         this.$emit('statusChange')
                         break
@@ -160,23 +149,15 @@ export default {
                 })
             }
         },
-        toEditPage(){
-            if(this.isMaster == 1 && this.item.is_master == 0){
-                this.$router.push({
-                    name:'teacherEdit',
-                    query:{
-                        ...this.teacherInfo,
-                        ...this.item,
-                        isHead: this.isHead,
-                        isMaster: this.isMaster,
-                        isSchoolHead: this.isSchoolHead,
-                        type:'edit'
-                    }
-                })
-            }
+        changeBanji(){
+            this.$emit('selectShowTrue')
+            this.show = false
         },
         imgError(e) {
             e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
+        },
+        selectChild(){
+           this.select = !this.select
         }
     },
 }
@@ -241,7 +222,11 @@ export default {
     padding: 0 10px;
 }
 
-.child{
-    font-size: 12px;
+.icon-select{
+    margin-right: 10px;
+}
+
+.to-be-selected{
+    opacity: .3;
 }
 </style>

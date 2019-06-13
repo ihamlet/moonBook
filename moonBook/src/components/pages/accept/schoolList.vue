@@ -10,7 +10,7 @@
     <div class="container" :class="$route.query.type">
       <van-tabs type="card" swipeable animated color='#0084ff' @change='changeTab'>
           <van-tab :title="list.title" v-for='(list,index) in tab' :key="index">
-            <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad" v-if='index == tabIndex'>
+            <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad">
               <div class="list" v-if="list.content.length">
                 <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex" is-link class="flex flex-align" @click="select(item)">
                     <schoolCard :item='item' :searchType='item.school_id > 0? "wmSearchSchool":"amapSearchSchool"'/>

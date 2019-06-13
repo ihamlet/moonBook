@@ -11,7 +11,7 @@
         <van-tabs color='#0084ff' :line-width='20' :line-height='4' swipeable animated @change="onChangeTab">
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
 
-                <div class="article" v-if='list.article&&index == tabIndex'>
+                <div class="article" v-if='list.article'>
                   <div class="content">
                     <div class="article-title">{{list.articleTitle}}</div>
                     <media :item='list.article'/>
@@ -147,6 +147,7 @@ export default {
         this.page = 1
         this.onLoad().then(res =>{
             this.loading = false
+            this.finished = false
         })
     },
     onChangeTab(index) {

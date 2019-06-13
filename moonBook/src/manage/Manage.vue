@@ -11,8 +11,16 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-    name:'manage'
+    name:'manage',
+    created () {
+       this.getMyMenus()
+    },
+    methods: {
+        ...mapActions('manage',['getMyMenus'])
+    }
 }
 </script>
 <style lang="less">

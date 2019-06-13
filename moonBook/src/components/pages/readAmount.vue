@@ -7,7 +7,7 @@
     </van-nav-bar>
     <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated :offsetTop="45" @change="onChangeTab" :ellipsis='false'>
       <van-tab v-for="(list,index) in readArray" :key="index" :title="`${list.title}(${list.num})`">
-        <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
+        <van-pull-refresh v-model="loading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
               <!-- <van-notice-bar text="代还还有2本逾期，产生逾期费用4元，逾期为1元/本/天，从押金中扣除" left-icon="volume-o" v-if='list.title=="读过"||list.title=="在读"'/> -->
               <div class="tab-jianshu" v-if='list.title == "捐书"'>
@@ -25,7 +25,7 @@
                     </div>
                   </div>
                   <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
-                    <bookCard :item='item' :type='list.title' v-on:book_collect='onBookCollect'/>
+                    <bookCard :item='item' :type='list.title' @book_collect='onBookCollect'/>
                   </van-cell>
                 </div>
               </div>
@@ -249,6 +249,7 @@ export default {
       tab.params.page = 1
       this.getList().then(() => {
         this.loading = false
+        this.finished = false
       })
     },
     onSelect(params) {

@@ -7,7 +7,7 @@
     <van-tabs color='#0084ff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex" @click="onClick" @disabled='onClickDisabled' title-inactive-color='#303133'>
       <div class="new-point" slot='nav-right' v-if='isNewPointShow'></div>
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index" :disabled='list.title=="筛选"'>
-        <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='index == tabIndex'>
+        <van-pull-refresh v-model="loading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
             <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
               <div class="create-time theme-color" v-if='list.title=="最新"&&timediff(item,itemIndex)'>
@@ -170,19 +170,14 @@ export default {
       this.page = 1
       this.onLoad().then(() => {
         this.loading = false
+        this.finished = false
       })
     },
     onChangeTab(index) {
       this.tabIndex = index
-      this.page = 1
-      this.loading = true
-      this.finished = false
       this.onRefresh()
     },
     onSearch() {
-      this.page = 1
-      this.loading = true
-      this.finished = false
       this.onRefresh()
     },
     onClick(index) {
@@ -195,9 +190,6 @@ export default {
     },
     onSelect(params) {
       this.selsetData = params
-      this.page = 1
-      this.loading = true
-      this.finished = false
       this.onRefresh()
     },
     getTimeAgo(time){
@@ -209,7 +201,7 @@ export default {
       }
 
       if(itemIndex){
-        let timeHistory = format(this.tab[this.tabIndex].content[itemIndex-1].create_time * 1000,'yyyy-MM-dd')
+        let timeHistory = this.tab[this.tabIndex].content[itemIndex-1]?format(this.tab[this.tabIndex].content[itemIndex-1].create_time * 1000,'yyyy-MM-dd'):0
         let time = format(item.create_time*1000,'yyyy-MM-dd')
         if(timeHistory == time){
           return false

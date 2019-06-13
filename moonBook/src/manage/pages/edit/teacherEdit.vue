@@ -18,10 +18,10 @@
       <van-cell-group>
         <div class="form-title">管理员设置</div>
 
-        <van-switch-cell v-model="isSchoolHead" :disabled='!isSchoolHead' title="转让学校群主" active-color='#67C23A' inactive-color='#F2F6FC' @change='onSwitchChange("setSchoolHead")' value-class='switch-cell-value' label='学校群主将可以设置管理员和班级群主' label-class='directions'/>
+        <van-switch-cell :value="isSchoolHead" :disabled='!isSchoolHead' title="转让学校群主" active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isSchoolHead,"setSchoolHead")' value-class='switch-cell-value' label='学校群主将可以设置管理员和班级群主' label-class='directions'/>
         
-        <van-switch-cell v-model="isMaster" title="设置为管理员" :disabled='!isSchoolHead || !isMaster' active-color='#67C23A' inactive-color='#F2F6FC' @change='onSwitchChange("setMaster")' value-class='switch-cell-value' label='管理员可以审核老师审核家长' label-class='directions'/>
-        <van-switch-cell v-model="isHead" :disabled='!isSchoolHead || !isHead' title="转让班级群主" active-color='#67C23A' inactive-color='#F2F6FC' @change='onSwitchChange("setBanjiHead")' value-class='switch-cell-value' label='班级群主可以审核老师审核家长' label-class='directions'/>
+        <van-switch-cell :value="isMaster" title="设置为管理员" :disabled='!isSchoolHead || !isMaster' active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isMaster,"setMaster")' value-class='switch-cell-value' label='管理员可以审核老师审核家长' label-class='directions'/>
+        <van-switch-cell :value="isHead" :disabled='!isSchoolHead || !isHead' title="转让班级群主" active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isHead,"setBanjiHead")' value-class='switch-cell-value' label='班级群主可以审核老师审核家长' label-class='directions'/>
       </van-cell-group>
     </div>
 
@@ -37,10 +37,13 @@
 <script>
 import axios from './../../../components/lib/js/api'
 import { slectDuty } from './../../../components/lib/js/schoolInfo'
-import { mapActions } from 'vuex'
+import { mapActions,mapState } from 'vuex'
 
 export default {
   name: 'teacherEdit',
+  computed: {
+      ...mapState('manage',['authorizationList'])
+  },
   data() {
     return {
       show: false,
@@ -56,7 +59,7 @@ export default {
     }
   },
   methods: {
-      ...mapActions('manage',['getSchoolList']),
+      ...mapActions('manage',['getMyMenus']),
         past(){
 
             let apiType = this.isConfirm == 1?'kick':'check'
@@ -75,22 +78,45 @@ export default {
             })
 
         },
-        onSwitchChange(type){
+        onSwitchChange(checked,type){
 
-            
-            axios.get(`/SchoolManage/teacher/${type}`,{params:{
-                id: this.$route.query.id,
-                banji_id: this.$route.query.banji_id
-            }}).then(res=>{
-                switch(res.data.status){
-                    case 1:
-                        this.getSchoolList()
-                        break
-                    default:
-                        this.$toast(res.data.msg)
-                        
-                }
-            })     
+            let warning 
+
+            switch(type){
+                case 'setSchoolHead':
+                    warning = `此操作将会把您的学校群主操作权限移交给${this.form.username},您确定吗?`
+                    break
+                case 'setMaster':
+                    warning = `${this.isMaster == 1?`确定要取消${this.form.username}的管理权限吗?`:`确定要将${this.form.username}设置为管理员吗?`}`
+                    break
+                case 'setBanjiHead':
+                    warning = `此操作将会把您的班级群主操作权限移交给${this.form.username},您确定吗?`
+                    break
+            }
+
+            this.$dialog.confirm({
+                message: warning
+            }).then(()=>{
+                axios.get(`/SchoolManage/teacher/${type}`,{params:{
+                    id: this.$route.query.id,
+                    banji_id: this.$route.query.banji_id
+                }}).then(res=>{
+                    switch(res.data.status){
+                        case 1:
+                            this.isMaster = checked
+                            this.isHead = checked
+                            this.isSchoolHead = checked
+                            this.getMyMenus()
+                            break
+                        default:
+                            this.$toast(res.data.msg)
+                            
+                    }
+                }) 
+            }).catch(()=>{
+              // on cancel
+            })
+
         },
         selectDuty(picker, value, index){
             this.form.duty = value
