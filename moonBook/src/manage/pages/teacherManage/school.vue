@@ -8,17 +8,18 @@
     <van-tabs v-model="active" swipeable animated sticky color='#0084ff' :line-width='20' :line-height='4'>
       <van-tab>
         <div class="tab-title" slot="title">
-          人员管理 <van-tag round class="tag-danger" type="danger" v-if='count > 0'>{{count}}</van-tag>
+          人员管理 <van-tag round class="tag-danger" type="danger" v-if='count > 0' size="medium">{{count}}</van-tag>
         </div>
         <van-cell-group :border='false'>
           <van-cell title="各班待审核的人员" is-link @click="toBanjiTree">
-            <van-tag round type="danger"> {{studentCount}}人 </van-tag>
+            <van-tag round type="danger" size="medium" v-if='studentCount > 0'> {{studentCount}}人 </van-tag>
           </van-cell>
         </van-cell-group>
-
-        <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
-          <userCard v-for='(item,index) in list' :key="index" :item='item' :isMaster='isMaster' :isHead='isHead' :isSchoolHead='isSchoolHead' @statusChange='getCount(schoolId)'/>
-        </van-list>
+        <van-pull-refresh v-model="loading" @refresh="onRefresh">
+          <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
+            <userCard v-for='(item,index) in list' :key="index" :item='item' :isMaster='isMaster' :isHead='isHead' :isSchoolHead='isSchoolHead' @statusChange='setStutas'/>
+          </van-list>
+        </van-pull-refresh>
       </van-tab>
       <van-tab title="班级管理">
         <div class="no-list">
@@ -101,6 +102,7 @@ export default {
 
         let index = localStorage.getItem('schoolActive')?localStorage.getItem('schoolActive'):0
 
+        this.schoolName = res[index].school_name
         this.school_id = res[index].school_id
         this.isMaster = Number(res[index].is_master)
         this.isSchoolHead = res[index].is_school_head
@@ -114,6 +116,7 @@ export default {
         localStorage.setItem('schoolActive',index)
         this.setManageSchool(item)
 
+        this.schoolName = item.school_name
         this.isMaster = Number(item.is_master)
         this.isHead = item.is_head
         this.isSchoolHead = item.is_school_head
@@ -128,15 +131,26 @@ export default {
         this.isSelectSchool = false
     },
     onLoad(){
-        return axios.get('/SchoolManage/teacher/getList',{params:{
-            school_id: this.manageSchoolInfo.school_id,
+
+        let data = {
+          params:{
             page: this.page
-        }}).then(res => {
+          }
+        }
+
+        if(this.manageSchoolInfo){
+          data.params.school_id = this.manageSchoolInfo.school_id
+        }
+
+        return axios.get('/SchoolManage/teacher/getList',data).then(res => {
             switch (res.data.status) {
               case 1:
-                this.teacherList = res.data.data
-                this.schoolName = res.data.data[0].school_name
-                
+                if(this.page == 1){
+                  this.teacherList = res.data.data
+                }else{
+                  this.teacherList = this.teacherList.concat(res.data.data)  
+                }
+                                
                 this.page++
                 this.loading = false
 
@@ -149,6 +163,13 @@ export default {
                 this.$toast(res.data.msg)
             }
         })
+    },
+    onRefresh(){
+      this.page = 1
+      this.onLoad().then(()=>{
+        this.loading = false
+        this.finished = false
+      })
     },
     getCount(schoolId){
         let data = {
@@ -187,6 +208,17 @@ export default {
           year: this.classYear
         }
       })
+    },
+    setStutas(id,type){
+
+      this.teacherList.map(e=>{
+        if(e.id == id){
+          return e.is_confirm  = type == 'check'?1:0
+        }
+      })
+
+      this.getCount()
+      
     }
   }
 }

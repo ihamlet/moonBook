@@ -131,10 +131,11 @@ export default {
             }).then(res=>{
                 switch(res.data.status){
                     case 1:
-                        this.item.is_confirm = `${apiType == 'check'?1:0}`
+                        // let status = `${apiType == 'check'?1:0}`
+
                         this.$toast.success(res.data.msg)
 
-                        this.$emit('statusChange')
+                        this.$emit('statusChange', this.item.id, apiType)
                         break
                     default:
                         this.$toast(res.data.msg)

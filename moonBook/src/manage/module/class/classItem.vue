@@ -69,7 +69,14 @@ export default {
                 toast.clear()
 
                 this.$toast(res.data.msg)                        
-                this.$router.go(-1)
+                this.$router.replace({
+                    name:'banjiTree',
+                    query:{
+                        school_id: this.$route.query.school_id,
+                        year: this.$route.query.year,
+                        activeId: this.$route.query.activeId
+                    }
+                })
             })
         }
     }

@@ -1,5 +1,11 @@
 <template>
   <div class="banji-tree flex">
+      <div class="dropdown-menu">
+        <van-dropdown-menu>
+          <van-dropdown-item v-model="value" :options="option" />
+        </van-dropdown-menu>
+      </div>
+
     <div class="tree-select">
       <ul class="scroll-y scroll-container">
         <li class="tree-item" v-for='(item,index) in banjiList' :key="index" :class="activeId == index?'select':''" @click="onNavClick(item,index)">
@@ -9,11 +15,6 @@
       </ul>
     </div>
     <div class="tree-content scroll-y scroll-container">
-      <div class="dropdown-menu">
-        <van-dropdown-menu>
-          <van-dropdown-item v-model="value" :options="option" />
-        </van-dropdown-menu>
-      </div>
       <div class="list-wrap page-padding">
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" :offset='0'>
@@ -63,7 +64,7 @@ export default {
       banjiItems: [],
       currentBanji:'',
       allStudent:0,
-      activeId: 0,
+      activeId: Number(this.$route.query.activeId) || 0,
       page: 1,
       loading: false,
       finished: false,
@@ -228,7 +229,8 @@ export default {
           ...this.currentBanji,
           type: 'select',
           set: type,
-          id: arr.join(',')
+          id: arr.join(','),
+          activeId: this.activeId
         }
       })
     }
@@ -238,6 +240,8 @@ export default {
 <style scoped>
 .tree-select {
   width: 30%;
+  position: relative;
+  z-index: 1;
 }
 
 .tree-content {
@@ -283,6 +287,7 @@ export default {
 .dropdown-menu{
   position: fixed;
   top: 0;
+  right: 0;
   z-index: 10;
 }
 
