@@ -17,8 +17,8 @@
       </van-cell-group>
       <van-cell-group>
         <div class="form-title">权限设置</div>
-        <van-switch-cell :value="isSchoolHead" :disabled='manageSchoolInfo.is_school_head == 0' :title="item.is_school_head == 1?'学校群主':'转让学校群组'" active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isSchoolHead,"setSchoolHead")' value-class='switch-cell-value' label='学校群主将可以设置管理员和班级群主' label-class='directions'/>
-        <van-switch-cell :value="isHead" :disabled='manageSchoolInfo.is_head == 0 || item.is_head == 0' :title="item.is_head == 1?'班级群主':'转让班级群主'" active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isHead,"setBanjiHead")' value-class='switch-cell-value' label='班级群主可以审核老师审核家长' label-class='directions'/>
+        <van-switch-cell :value="isSchoolHead" :disabled='manageSchoolInfo.is_school_head == 0' :title="form.is_school_head == 1?'学校群主':'转让学校群组'" active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isSchoolHead,"setSchoolHead")' value-class='switch-cell-value' label='学校群主将可以设置管理员和班级群主' label-class='directions'/>
+        <van-switch-cell :value="isHead" :disabled='manageSchoolInfo.is_head == 0 || item.is_head == 0' :title="form.is_head == 1?'班级群主':'转让班级群主'" active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isHead,"setBanjiHead")' value-class='switch-cell-value' label='班级群主可以审核老师审核家长' label-class='directions'/>
         <van-switch-cell :value="isMaster" title="是否为管理员" :disabled='manageSchoolInfo.is_school_head == 0 || manageSchoolInfo.is_head == 0' active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isMaster,"setMaster")' value-class='switch-cell-value' label='管理员可以审核老师审核家长' label-class='directions'/>
       </van-cell-group>
     </div>
