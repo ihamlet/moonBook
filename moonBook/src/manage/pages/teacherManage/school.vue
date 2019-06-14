@@ -8,7 +8,7 @@
     <van-tabs v-model="active" swipeable animated sticky color='#0084ff' :line-width='20' :line-height='4'>
       <van-tab>
         <div class="tab-title" slot="title">
-          人员审核 <van-tag round class="tag-danger" type="danger" v-if='count > 0'>{{count}}</van-tag>
+          人员管理 <van-tag round class="tag-danger" type="danger" v-if='count > 0'>{{count}}</van-tag>
         </div>
         <van-cell-group :border='false'>
           <van-cell title="各班待审核的人员" is-link @click="toBanjiTree">
