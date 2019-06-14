@@ -339,6 +339,30 @@ function isRepeatArr(arr){
     return dest
 }
 
+//合并重复管理员身份
+function isRepeatAdminArr(arr){
+  let map = {}
+  let dest = []
+　　for(let i = 0; i < arr.length; i++){
+　　　　let ai = arr[i]
+　　　　if(!map[ai.user_id]){
+　　　　　　dest.push({
+           ...ai
+　　　　　　})
+　　　　　　map[ai.user_id] = ai
+　　　　}else{
+　　　　　　for(let j = 0; j < dest.length; j++){
+             let dj = dest[j]
+　　　　　　　　if(dj.user_id == ai.user_id){
+　　　　　　　　　　dj.duty = '校长,老师'
+　　　　　　　　　　break
+　　　　　　　　}
+　　　　　　}
+　　　　}
+　　}
+
+   return dest
+}
 
 export {
   GetDistance,
@@ -352,10 +376,11 @@ export {
   checkHtml,
   group,
   contains,
-  videoParse,
+  videoParse,  
   arrayUnique,
   realFormatSecond,
   randomNum,
   arrGroup,
-  isRepeatArr
+  isRepeatArr,
+  isRepeatAdminArr
 }

@@ -3,8 +3,10 @@
         <div class="user-card flex flex-align">
             <div class="info flex flex-align">
                 <div class="select" @click="selectChild">
-                    <i class="icon-select theme-color iconfont"  v-if='select'>&#xea32;</i>
-                    <i class="icon-select to-be-selected  iconfont" v-else-if='selectShow'>&#xe677;</i>
+                    <transition enter-active-class="fadeIn animated"  leave-active-class="fadeOut animated"  mode="out-in">
+                        <i class="icon-select theme-color iconfont"  v-if='select'>&#xea32;</i>
+                        <i class="icon-select to-be-selected  iconfont" v-else-if='selectShow'>&#xe677;</i>
+                    </transition>
                 </div>
                 <img :src="item.avatar" @error="imgError" @click="show = true"/>
                 <div class="user-info" @click="show = true">
@@ -42,10 +44,10 @@
 
                 <div class="popup-footer flex-align flex">
                     <div class="btn">
-                        <van-button class="edit" size="small" type="info" round plain @click="changeBanji"> 换班 </van-button>
+                        <van-button class="edit" size="small" type="info" round plain @click="changeBanji"> 换班 {{activeId!=0?'/升班':''}} </van-button>
                     </div>
                     <div class="btn">
-                        <van-button class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
+                        <van-button class="past" size="small" round :type="item.is_banji_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
                     </div>
                 </div>
 
@@ -90,6 +92,13 @@ export default {
         return {
             show: false,
             select: false
+        }
+    },
+    watch: {
+        selectShow(val){
+            if(!val){
+                this.select = val
+            }
         }
     },
     methods: {
@@ -152,12 +161,14 @@ export default {
         changeBanji(){
             this.$emit('selectShowTrue')
             this.show = false
+            this.selectChild()
         },
         imgError(e) {
             e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
         },
         selectChild(){
            this.select = !this.select
+           this.$emit('electChild',this.select,this.item)
         }
     },
 }

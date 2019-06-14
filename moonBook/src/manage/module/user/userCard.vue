@@ -3,11 +3,19 @@
         <div class="user-card flex flex-align">
             <div class="info flex flex-align" @click="toEditPage">
                 <img :src="item.avatar" @error="imgError"/>
+
                 <div class="user-info">
                     <div class="name">{{item.username}}</div>
-                    <div class="child flex" v-line-clamp:20="1">{{item.banji_name?`${formatBanjiTitle(item.banji_name)} | `:''}}{{item.duty}}</div>
+
+                    <div class="tags">
+                        <van-tag plain round type="success" v-if='item.is_school_head == 1'>学校群主</van-tag>
+                        <van-tag plain round type="primary" v-if='item.is_master == 1'>管理员</van-tag>
+                    </div>
+
+                    <div class="child flex" v-line-clamp:20="1">{{item.banji_name?`${formatBanjiTitle(item.banji_name)} | `:''}}{{item.duty}}</div>                
                 </div>
             </div>
+            
             <div class="operation-btn flex flex-align">
                 <van-button class="pass" size="small" round type="info" @click="info">详情</van-button>
                 <van-button :disabled='!(isMaster == 1&&item.is_master == 0)' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
@@ -38,22 +46,25 @@
 
                 <div class="popup-footer flex-align flex">
                     <div class="btn">
-                        <van-button :disabled='!(isMaster == 1&&item.is_master == 0)' class="edit" size="small" type="info" round plain @click="toEditPage"> 编辑 </van-button>
+                        <van-button class="edit" size="small" type="info" round plain @click="toEditPage"> 编辑 </van-button>
                     </div>
                     <div class="btn">
-                        <van-button :disabled='!(isMaster == 1&&item.is_master == 0)' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
+                        <van-button :disabled='!(manageSchoolInfo.is_master == 1&&item.is_master == 0)' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
                     </div>
                 </div>
-
             </div>  
         </van-popup>
     </van-cell>   
 </template>
 <script>
 import axios from './../../../components/lib/js/api'
+import { mapGetters } from 'vuex'
 
 export default {
     name:'userCard',
+    computed: {
+        ...mapGetters('manage',['manageSchoolInfo'])
+    },
     props: {
         item:{
             type: Object,
@@ -161,19 +172,17 @@ export default {
             }
         },
         toEditPage(){
-            if(this.isMaster == 1 && this.item.is_master == 0){
-                this.$router.push({
-                    name:'teacherEdit',
-                    query:{
-                        ...this.teacherInfo,
-                        ...this.item,
-                        isHead: this.isHead,
-                        isMaster: this.isMaster,
-                        isSchoolHead: this.isSchoolHead,
-                        type:'edit'
-                    }
-                })
-            }
+            this.$router.push({
+                name:'teacherEdit',
+                query:{
+                    ...this.teacherInfo,
+                    ...this.item,
+                    isHead: this.isHead,
+                    isMaster: this.isMaster,
+                    isSchoolHead: this.isSchoolHead,
+                    type:'edit'
+                }
+            })
         },
         imgError(e) {
             e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'

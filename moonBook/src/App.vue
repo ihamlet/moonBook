@@ -179,12 +179,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_czxhlamfrfo.eot');
-  src: url('//at.alicdn.com/t/font_893274_czxhlamfrfo.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_czxhlamfrfo.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_czxhlamfrfo.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_czxhlamfrfo.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_czxhlamfrfo.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_1raj7zfzvay.eot');
+  src: url('//at.alicdn.com/t/font_893274_1raj7zfzvay.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_1raj7zfzvay.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_1raj7zfzvay.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_1raj7zfzvay.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_1raj7zfzvay.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,

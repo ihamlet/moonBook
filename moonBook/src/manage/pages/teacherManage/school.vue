@@ -17,22 +17,13 @@
         </van-cell-group>
 
         <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
-          <userCard v-for='(item,index) in teacherList' :key="index" :item='item' :isMaster='isMaster' :isHead='isHead' :isSchoolHead='isSchoolHead' @statusChange='getCount(schoolId)'/>
+          <userCard v-for='(item,index) in list' :key="index" :item='item' :isMaster='isMaster' :isHead='isHead' :isSchoolHead='isSchoolHead' @statusChange='getCount(schoolId)'/>
         </van-list>
       </van-tab>
-      <van-tab title="人员管理">
-        <div class="banji-overview flex flex-align">
-          <div class="people">学生24人/家长36人</div>
-          <div class="theme-color">+ 邀请</div>
-        </div>
-        <teacherList />
-        <childList />
-      </van-tab>
-      <van-tab title="内容审核">
-        1111
-      </van-tab>
       <van-tab title="班级管理">
-        11
+        <div class="no-list">
+          尚无内容
+        </div>
       </van-tab>
     </van-tabs>
     <van-popup class="select-school-list" v-model="isSelectSchool" get-container='#app'>
@@ -55,6 +46,7 @@ import teacherList from './../../module/teacher/teacherList'
 import childList from './../../module/user/childList'
 
 import { mapGetters, mapActions,mapMutations } from 'vuex'
+import { isRepeatAdminArr } from './../../../components/lib/js/util'
 import { getBanjiYear } from './../../../components/lib/js/mixin'
 
 export default {
@@ -67,7 +59,10 @@ export default {
     childList
   },
   computed: {
-    ...mapGetters('manage',['manageSchoolInfo'])
+    ...mapGetters('manage',['manageSchoolInfo']),
+    list(){
+      return isRepeatAdminArr(this.teacherList)
+    }
   },
   data() {
     return {
@@ -225,7 +220,8 @@ export default {
   position: absolute;
   z-index: 1;
   top: 5px;
-  right: -5px;
+  right: 50%;
+  margin-right: -50px;
 }
 </style>
 

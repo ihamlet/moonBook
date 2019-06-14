@@ -16,12 +16,10 @@
         <van-cell title="职务" :border='false' :value="form.duty" is-link @click="show = true" :arrow-direction='show?"up":"down"'/>
       </van-cell-group>
       <van-cell-group>
-        <div class="form-title">管理员设置</div>
-
-        <van-switch-cell :value="isSchoolHead" :disabled='!isSchoolHead' title="转让学校群主" active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isSchoolHead,"setSchoolHead")' value-class='switch-cell-value' label='学校群主将可以设置管理员和班级群主' label-class='directions'/>
-        
-        <van-switch-cell :value="isMaster" title="设置为管理员" :disabled='!isSchoolHead || !isMaster' active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isMaster,"setMaster")' value-class='switch-cell-value' label='管理员可以审核老师审核家长' label-class='directions'/>
-        <van-switch-cell :value="isHead" :disabled='!isSchoolHead || !isHead' title="转让班级群主" active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isHead,"setBanjiHead")' value-class='switch-cell-value' label='班级群主可以审核老师审核家长' label-class='directions'/>
+        <div class="form-title">权限设置</div>
+        <van-switch-cell :value="isSchoolHead" :disabled='manageSchoolInfo.is_school_head == 0' title="转让学校群主" active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isSchoolHead,"setSchoolHead")' value-class='switch-cell-value' label='学校群主将可以设置管理员和班级群主' label-class='directions'/>
+        <van-switch-cell :value="isHead" :disabled='manageSchoolInfo.is_head == 0 || item.is_head == 0' title="转让班级群主" active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isHead,"setBanjiHead")' value-class='switch-cell-value' label='班级群主可以审核老师审核家长' label-class='directions'/>
+        <van-switch-cell :value="isMaster" title="是否为管理员" :disabled='manageSchoolInfo.is_school_head == 0 || manageSchoolInfo.is_head == 0' active-color='#67C23A' inactive-color='#F2F6FC' @input='onSwitchChange(isMaster,"setMaster")' value-class='switch-cell-value' label='管理员可以审核老师审核家长' label-class='directions'/>
       </van-cell-group>
     </div>
 
@@ -30,19 +28,19 @@
     </van-popup>
 
     <div class="footer-bar">
-        <van-button class="theme-btn" square type="primary" size="normal" @click="sumbit">提 交</van-button>
+        <van-button class="theme-btn" square type="primary" size="normal" @click="sumbit" v-if='manageSchoolInfo.is_school_head == isSchoolHead'>提 交</van-button>
     </div>
   </div>
 </template>
 <script>
 import axios from './../../../components/lib/js/api'
 import { slectDuty } from './../../../components/lib/js/schoolInfo'
-import { mapActions,mapState } from 'vuex'
+import { mapActions,mapGetters } from 'vuex'
 
 export default {
   name: 'teacherEdit',
   computed: {
-      ...mapState('manage',['authorizationList'])
+      ...mapGetters('manage',['manageSchoolInfo'])
   },
   data() {
     return {
@@ -59,7 +57,7 @@ export default {
     }
   },
   methods: {
-      ...mapActions('manage',['getMyMenus']),
+      ...mapActions('manage',['getSchoolList']),
         past(){
 
             let apiType = this.isConfirm == 1?'kick':'check'
@@ -106,7 +104,7 @@ export default {
                             this.isMaster = checked
                             this.isHead = checked
                             this.isSchoolHead = checked
-                            this.getMyMenus()
+                            this.getSchoolList()
                             break
                         default:
                             this.$toast(res.data.msg)
@@ -151,6 +149,7 @@ export default {
                     switch(res.data.status){
                         case 1:
                             this.$toast.success(res.data.msg)
+                            this.$router.go(-1)
                             break
                         default:
                             this.$toast(res.data.msg)

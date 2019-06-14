@@ -4,7 +4,7 @@
       <ul class="scroll-y scroll-container">
         <li class="tree-item" v-for='(item,index) in banjiList' :key="index" :class="activeId == index?'select':''" @click="onNavClick(item,index)">
           <div class="banji-title" v-line-clamp:20="1">{{index == 0?item.title:formatBanjiTitle(item.title)}}</div>
-          <div class="student-count">{{item.student_count}}人</div>
+          <div class="student-count">{{item.student_count == 0?'尚无成员':`${item.student_count}人`}}</div>
         </li>
       </ul>
     </div>
@@ -18,20 +18,30 @@
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad" :offset='0'>
             <div class="list-container" v-if='banjiItems.length'>
-              <studentCard v-for='(item,index) in banjiItems' :key="index" :item='item' :activeId='activeId' :selectShow='selectShow' @selectShowTrue='selectChild'/>
+              <studentCard v-for='(item,index) in banjiItems' :key="index" :item='item' :activeId='activeId' :selectShow='selectShow' @selectShowTrue='selectShow = true' @electChild='selectSwitch'/>
             </div>
-            <div class="no-list" v-else-if='value == -1'>
-              尚无班级成员，<span class="theme-color" size="normal">邀请家长</span>
+            <div class="no-list" v-else-if='value == -1&&currentBanji.invite_code'>
+              尚无班级成员 <span class="theme-color" size="normal" @click="invite">邀请家长</span>
             </div>
             <div class="no-list" v-else>
               尚无{{value == 1?'已':'待'}}审核成员
+              <b class="invite-code" v-if='activeId != 0&&currentBanji.invite_code' @click="invite">班级邀请码:{{currentBanji.invite_code}}</b>
             </div>
           </van-list>
         </van-pull-refresh>
       </div>
+
+
+      <transition enter-active-class="fadeInUp animated" leave-active-class="fadeOutDown animated" mode="out-in">
+        <div class="footer-bar flex flex-align" v-if='selectShow'>
+          <div class="cancel theme-color" @click="selectShow = false">取消</div>
+          <van-button square class="switch-class btn" type="primary" @click="toBanjiList('transmit')">换班</van-button>
+          <van-button square class="promotion-class theme-btn btn" type="primary" @click="toBanjiList('transmitAll')" v-if='activeId!=0'>升班</van-button>
+        </div>
+      </transition>
     </div>
 
-    <van-button class="boss-key theme-btn" type="primary" round v-if='value == 0' @click="allCheck">一键审核</van-button>
+    <van-button class="boss-key theme-btn" type="primary" round v-if='value == 0&&banjiItems.length' @click="allCheck">一键审核</van-button>
   </div>
 </template>
 <script>
@@ -63,7 +73,8 @@ export default {
         { text: '全部', value: -1 },
         { text: '待审核', value: 0 },
         { text: '已审核', value: 1 }
-      ]  
+      ],
+      selectChilds:[]  
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -102,9 +113,6 @@ export default {
             this.$toast(res.data.msg)
         }
       })
-    },
-    selectChild(){
-      this.selectShow = true
     },
     onLoad(){
       let data = {
@@ -150,6 +158,7 @@ export default {
     onNavClick(item,index){
       this.activeId = index
       this.currentBanji = item
+      this.selectShow = false
       this.onRefresh()
     },
     allCheck(){
@@ -179,6 +188,49 @@ export default {
       } else {
         return text
       }
+    },
+    invite(){
+      this.$router.push({
+        name:'share',
+        query:{
+          banji_id: this.currentBanji.banji_id,
+          banji_name: this.currentBanji.banji_name,
+          invite_code: this.currentBanji.invite_code,
+          school_id: this.currentBanji.school_id,
+          school_name: this.currentBanji.school_name,
+          user_id: this.currentBanji.user_id
+        }
+      })
+    },
+    selectSwitch(operating,item){
+      if(operating){
+        this.selectChilds.push(item)
+      }else{
+        this.selectChilds.splice(this.selectChilds.length-1, 1)
+      }
+    },
+    toBanjiList(type){
+
+      if(type == 'transmitAll'){
+        this.selectShow = false
+      }
+
+      let arr = []
+    
+      this.selectChilds.forEach(e=>{
+        arr.push(e.id)
+      })
+
+      this.$router.push({
+        name:'banjiList',
+        query:{
+          ...this.$route.query,
+          ...this.currentBanji,
+          type: 'select',
+          set: type,
+          id: arr.join(',')
+        }
+      })
     }
   }
 }
@@ -231,8 +283,12 @@ export default {
 .dropdown-menu{
   position: fixed;
   top: 0;
-  width: 78%;
   z-index: 10;
+}
+
+.footer-bar,
+.dropdown-menu{
+  width: 77%;
 }
 
 .list-wrap{
@@ -248,6 +304,34 @@ export default {
 
 .child{
   font-size: 12px;
+}
+
+.no-list{
+  position: relative;
+}
+
+.invite-code{
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  color: #67C23A;
+}
+
+.footer-bar{
+  position: fixed;
+  bottom: 0;
+  background: rgba(255, 255, 255, .8);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+.cancel,
+.btn{
+  flex: 1;
+}
+
+.cancel{
+  text-align: center;
 }
 </style>
 <style>
