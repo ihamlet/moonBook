@@ -141,7 +141,7 @@ export default {
   data() {
     return {
       active: 0,
-      times: ['总计,all', '本月  ,month', '上月,last_month'],
+      times: ['总计,all', '本月,month', '上月,last_month', '本周,week', '上周,last_week'],
       tabsActive: 0,
       tabs: [{
         title: '天数',

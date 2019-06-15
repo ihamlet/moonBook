@@ -33,11 +33,11 @@
       </div>
 
 
-      <transition enter-active-class="fadeInUp animated" leave-active-class="fadeOutDown animated" mode="out-in">
+      <transition enter-active-class="slideInUp animated" leave-active-class="slideOutDown animated" mode="out-in">
         <div class="footer-bar flex flex-align" v-if='selectShow'>
-          <div class="cancel theme-color" @click="selectShow = false">取消</div>
+          <div class="cancel theme-color" @click="cancel">取消</div>
           <van-button square class="switch-class btn" type="primary" @click="toBanjiList('transmit')">换班</van-button>
-          <van-button square class="promotion-class theme-btn btn" type="primary" @click="toBanjiList('transmitAll')" v-if='activeId!=0'>升班</van-button>
+          <van-button square class="promotion-class theme-btn btn" type="primary" @click="toBanjiList('transmitAll')" v-if='activeId!=0&&selectChilds.length < 2'>全员转班</van-button>
         </div>
       </transition>
     </div>
@@ -62,20 +62,24 @@ export default {
     return {
       banjiList: [],
       banjiItems: [],
-      currentBanji:'',
+      currentBanji:{
+        banji_id: this.$route.query.banji_id
+      },
       allStudent:0,
       activeId: Number(this.$route.query.activeId) || 0,
       page: 1,
       loading: false,
       finished: false,
       selectShow: false,
-      value: -1,
+      value: 'is_banji_confirm,-1',
       option: [
-        { text: '全部', value: -1 },
-        { text: '待审核', value: 0 },
-        { text: '已审核', value: 1 }
+        { text: '全部', value: 'is_banji_confirm,-1' },
+        { text: '待审核', value: 'is_banji_confirm,0' },
+        { text: '已审核', value: 'is_banji_confirm,1' },
+        { text: '已办卡', value: 'is_card,1' },
+        { text: '未办卡', value: 'is_card,0' }
       ],
-      selectChilds:[]  
+      selectChilds:[],
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -120,10 +124,21 @@ export default {
         params: {
           school_id: this.$route.query.school_id,
           banji_id: this.currentBanji.banji_id,
-          page: this.page,
-          is_banji_confirm: this.value
+          page: this.page
         }
       }
+
+      let requestKey = this.value.split(',')
+
+      switch(requestKey[0]){
+        case 'is_banji_confirm':
+          data.params.is_banji_confirm = requestKey[1]
+          break
+        case 'is_card':
+          data.params.is_card = requestKey[1]
+          break
+      }
+
 
      return axios.get('/SchoolManage/students/getList', data).then(res => {
         switch (res.data.status) {
@@ -211,18 +226,15 @@ export default {
       }
     },
     toBanjiList(type){
-
-      if(type == 'transmitAll'){
-        this.selectShow = false
-      }
-
       let arr = []
+      let names = []
     
       this.selectChilds.forEach(e=>{
         arr.push(e.id)
+        names.push(e.name)
       })
 
-      this.$router.push({
+      this.$router.replace({
         name:'banjiList',
         query:{
           ...this.$route.query,
@@ -230,9 +242,14 @@ export default {
           type: 'select',
           set: type,
           id: arr.join(','),
+          names: names.join(','),
           activeId: this.activeId
         }
       })
+    },
+    cancel(){
+      this.selectShow = false
+      this.selectChilds = []
     }
   }
 }

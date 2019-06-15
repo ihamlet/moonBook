@@ -2,11 +2,9 @@
     <van-cell>
         <div class="user-card flex flex-align">
             <div class="info flex flex-align">
-                <div class="select" @click="selectChild">
-                    <transition enter-active-class="fadeIn animated"  leave-active-class="fadeOut animated"  mode="out-in">
-                        <i class="icon-select theme-color iconfont"  v-if='select'>&#xea32;</i>
-                        <i class="icon-select to-be-selected  iconfont" v-else-if='selectShow'>&#xe677;</i>
-                    </transition>
+                <div class="select" @click="selectChild">  
+                    <i class="icon-select theme-color iconfont"  v-if='select'>&#xea32;</i>
+                    <i class="icon-select to-be-selected  iconfont" v-else-if='selectShow'>&#xe677;</i>
                 </div>
                 <img :src="item.avatar" @error="imgError" @click="show = true"/>
                 <div class="user-info" @click="show = true">
@@ -44,7 +42,7 @@
 
                 <div class="popup-footer flex-align flex">
                     <div class="btn">
-                        <van-button class="edit" size="small" type="info" round plain @click="changeBanji"> 换班 {{activeId!=0?'/升班':''}} </van-button>
+                        <van-button class="edit" size="small" type="info" round plain @click="changeBanji"> 换班 {{activeId!=0?'/转班':''}} </van-button>
                     </div>
                     <div class="btn">
                         <van-button class="past" size="small" round :type="item.is_banji_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>

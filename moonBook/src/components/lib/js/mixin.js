@@ -99,8 +99,47 @@ const getBanjiYear = {
     }
 }
 
+const watchTouch = {
+    data() {
+        return {
+            top2bottom: false,
+            moveEndX:0,
+            moveEndY:0,
+            startX:0,
+            startY:0
+        }
+    },
+    destroyed() {
+        window.removeEventListener('touchstart', this.handleTouchstart)
+        window.removeEventListener('touchmove', this.handleTouchmove)
+    },
+    mounted () {
+        window.addEventListener('touchstart', this.handleTouchstart,{ passive: false })
+        window.addEventListener('touchmove', this.handleTouchmove,{ passive: false })   
+    },
+    methods:{
+        handleTouchstart(e){
+    　　　　this.startX = e.changedTouches[0].pageX
+    　　　　this.startY = e.changedTouches[0].pageY
+        },
+        handleTouchmove(e){ 
+            this.moveEndX = e.changedTouches[0].pageX
+            this.moveEndY = e.changedTouches[0].pageY
+            let X = this.moveEndX - this.startX
+            let Y = this.moveEndY - this.startY
+
+    　　　　if ( Y > 0) {
+        　　　this.top2bottom = true
+    　　　　} else{
+        　　　this.top2bottom = false
+    　　　　}
+        }
+    }
+}
+
 export {
     manageStateList,
     watchScroll,
-    getBanjiYear
+    getBanjiYear,
+    watchTouch
 }

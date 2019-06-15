@@ -1,17 +1,23 @@
 <template>
   <div class="banji-list">
-    <van-nav-bar title="班级列表" :border='false'/>
+    <van-nav-bar title="班级列表" :border='false' v-if='!moduleType'/>
     <div class="list-container">
-        <van-tabs v-model="active" swipeable animated sticky color='#0084ff' :line-width='20' :line-height='4' @change='onChangeTab'>
+        <van-tabs v-model="active" :swipeable='!moduleType' animated :sticky='moduleType!="tab"' color='#0084ff' :line-width='20' :line-height='4' @change='onChangeTab' :border='false'>
             <van-tab :title="list.year" v-for='(list,index) in tab' :key="index">
-                <van-pull-refresh v-model="loading" @refresh="onRefresh">
+                <van-pull-refresh v-model="loading" @refresh="onRefresh" :disabled="drag">
                     <div class="list" v-if='banjiList.length'>
                         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-                            <classItem v-for='(item,itemIndex) in banjiList' :key="itemIndex" :item='item' />
+                          <draggable v-model="banjiList" @update="datadragEnd" :options="{animation:500}" :disabled="!drag">
+                            <transition-group>
+                              <div class="banji-card" v-for='item in banjiList' :key="item.banji_id">
+                                <classItem :item='item' :moduleType='moduleType'/>
+                              </div>
+                            </transition-group>
+                          </draggable>
                         </van-list>
                     </div>
                     <div class="no-list" v-else>
-                        尚无班级
+                      尚无班级 <span class="theme-color" v-if='moduleType'>创建班级</span>
                     </div>
                 </van-pull-refresh>
             </van-tab>
@@ -23,20 +29,57 @@
 import axios from './../../../components/lib/js/api'
 import classItem from './../../module/class/classItem'
 
+import draggable from 'vuedraggable'
+
 export default {
   name: 'banji-list',
   components: {
-    classItem
+    classItem,
+    draggable
+  },
+  props: {
+    moduleType:{
+      type: String,
+      default:''
+    },
+    classYear:{
+      type: Number,
+      default: 2019
+    },
+    drag:{
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     tab(){
-        let arr = [{
-            year: `${this.year+1}年`
-        },{
-            year: `${this.year}年`
-        },{
-            year: `${this.year-1}年`
-        }]
+        let arr = []
+
+        switch(this.moduleType){
+          case 'tab':
+            arr = [{
+                year: `${this.classYear+1}年`,
+                numYear: this.classYear+1
+            },{
+                year: `${this.classYear}年`,
+                numYear: this.classYear
+            },{
+                year: `${this.classYear-1}年`,
+                numYear: this.classYear-1
+            }]
+            break
+          default:
+            arr = [{
+                year: `${this.year+1}年`,
+                numYear: this.year+1
+            },{
+                year: `${this.year}年`,
+                numYear: this.year
+            },{
+                year: `${this.year-1}年`,
+                numYear: this.year-1
+            }]
+        }
 
         return arr
     }
@@ -59,7 +102,7 @@ export default {
       let data = {
         params: {
           school_id: this.$route.query.school_id,
-          year: this.tab[this.active].year,
+          year: this.tab[this.active].numYear,
           page: this.page
         }
       }
@@ -94,11 +137,14 @@ export default {
       })
     },
     onChangeTab(index){
-        this.active = index
         this.onRefresh()
+    },
+    datadragEnd(){
+
     }
   }
 }
 </script>
 <style scoped>
+
 </style>

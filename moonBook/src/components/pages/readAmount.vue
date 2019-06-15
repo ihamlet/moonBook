@@ -5,7 +5,7 @@
         <van-button class="theme-btn" round size="small" type="primary">捐书</van-button>
       </div>
     </van-nav-bar>
-    <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated :offsetTop="45" @change="onChangeTab" :ellipsis='false'>
+    <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated :offsetTop="45" @change="onChangeTab" :ellipsis='false' :border='false'>
       <van-tab v-for="(list,index) in readArray" :key="index" :title="`${list.title}(${list.num})`">
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">

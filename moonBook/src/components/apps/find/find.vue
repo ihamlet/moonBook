@@ -10,7 +10,7 @@
     </div>
     <div class="warp">
       <div class="container">
-        <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab'>
+        <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated v-model='indexTab' :border='false'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
               <drying-list :cateId='list.cate_id || $route.query.cate_id' :params='list.params' type='find' :tagId='$route.query.tag_id' :school_id='$route.query.school_id' :banji_id='$route.query.banji_id'/>

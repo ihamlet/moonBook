@@ -1,6 +1,6 @@
 <template>
   <div class="special-punch">
-    <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab">
+    <van-tabs color='#0084ff' :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :border='false'>
       <van-tab v-for="(list,index) in tab" :key="index" :title='list.title'>
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
             <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">

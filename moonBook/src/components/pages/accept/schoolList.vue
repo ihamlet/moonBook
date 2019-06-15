@@ -8,7 +8,7 @@
       </van-search>
     </div>
     <div class="container" :class="$route.query.type">
-      <van-tabs type="card" swipeable animated color='#0084ff' @change='changeTab'>
+      <van-tabs type="card" swipeable animated color='#0084ff' @change='changeTab' :border='false'>
           <van-tab :title="list.title" v-for='(list,index) in tab' :key="index">
             <van-list v-model="loading" :finished="finished" :finishedText="$store.state.slogan" @load="onLoad">
               <div class="list" v-if="list.content.length">

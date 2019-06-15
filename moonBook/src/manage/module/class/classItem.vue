@@ -1,16 +1,16 @@
 <template>
     <div class="class-item">
-        <van-cell is-link size='large' @click="selectBanji">
+        <van-cell is-link size='large' @click="selection">
             <div class="item-cell flex flex-align">
                 <div class="title flex flex-align">
                 <div class="banji-name">{{formatBanjiTitle(item.title)}} </div>   
-                    <div class="grade-name">{{item.grade_name}}</div> 
+                    <div class="grade-name">{{moduleType == 'tab'?item.year:''}}{{item.grade_name?` | ${formatBanjiTitle(item.grade_name)}`:''}}</div> 
                 </div>
                 <div class="head-name" v-if='item.head_name'>
                     {{item.head_name}}
                 </div>
                 <div class="nofound-head" v-else>
-                    尚无班级群主
+                    班级群主未设置
                 </div>
             </div>
         </van-cell>
@@ -33,6 +33,10 @@ export default {
                     grade_name:'大班'
                 }
             }
+        },
+        moduleType:{
+            type:String,
+            default:''
         }
     },
     data() {
@@ -48,13 +52,37 @@ export default {
                 return text
             }
         },
+        selection(){
+            switch(this.moduleType){
+                case 'tab':
+
+                    break
+                default:
+                    this.selectBanji()
+            }
+        },
         selectBanji(){
+
+            let msg = {
+                loading:'',
+                confirm:''
+            }
+
+            switch (this.$route.query.set) {
+                case 'transmitAll':
+                    msg.loading = '全员转班中...'
+                    msg.confirm = `您确定要将${this.formatBanjiTitle(this.$route.query.title)}的学生全部转移到${this.item.title}吗?`
+                    break
+                case 'transmit':
+                    msg.loading = '正在换班中...'
+                    msg.confirm = `您确定要将${this.$route.query.names}转到${this.item.title}吗?`
+                    break
+            }
 
             let toast = this.$toast.loading({
                 forbidClick: true,
-                message: '正在换班中...'
+                message: msg.loading
             })
-
 
             let data = {
                 params:{
@@ -65,18 +93,27 @@ export default {
                 }
             }
 
-            axios.get(`/SchoolManage/students/${this.$route.query.set}`, data).then(res=>{
-                toast.clear()
-
-                this.$toast(res.data.msg)                        
-                this.$router.replace({
-                    name:'banjiTree',
-                    query:{
-                        school_id: this.$route.query.school_id,
-                        year: this.$route.query.year,
-                        activeId: this.$route.query.activeId
-                    }
+            this.$dialog.confirm({
+                message: msg.confirm
+            }).then(()=>{
+                axios.get(`/SchoolManage/students/${this.$route.query.set}`, data).then(res=>{
+                    toast.clear()
+                    this.$toast(res.data.msg)                        
+                    this.backRouter()
                 })
+            }).catch(()=>{
+                this.backRouter()
+            })
+        },
+        backRouter(){
+            this.$router.replace({
+                name:'banjiTree',
+                query:{
+                    school_id: this.$route.query.school_id,
+                    banji_id: this.$route.query.banji_id,
+                    year: this.$route.query.year,
+                    activeId: this.$route.query.activeId
+                }
             })
         }
     }
