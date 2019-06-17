@@ -2,12 +2,12 @@
   <div class="banji-list">
     <van-nav-bar title="班级列表" :border='false' v-if='!moduleType'/>
     <div class="list-container">
-        <van-tabs v-model="active" :swipeable='!moduleType' animated :sticky='moduleType!="tab"' color='#0084ff' :line-width='20' :line-height='4' @change='onChangeTab' :border='false'>
+        <van-tabs v-model="active" :swipeable='!moduleType' animated :sticky='moduleType!="tab"' color='#0084ff' :line-width='20' :line-height='4' @change='onRefresh' :border='false'>
             <van-tab :title="list.year" v-for='(list,index) in tab' :key="index">
                 <van-pull-refresh v-model="loading" @refresh="onRefresh" :disabled="drag">
                     <div class="list" v-if='banjiList.length'>
                         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-                          <draggable v-model="banjiList" @update="datadragEnd" :options="{animation:500}" :disabled="!drag">
+                          <draggable v-model="banjiList" @update="datadragEnd" :options="{animation:500}" :disabled="!drag"  handle=".title">
                             <transition-group>
                               <div class="banji-card" v-for='item in banjiList' :key="item.banji_id">
                                 <classItem :item='item' :moduleType='moduleType'/>
@@ -136,11 +136,13 @@ export default {
         this.finished = false
       })
     },
-    onChangeTab(index){
-        this.onRefresh()
-    },
-    datadragEnd(){
+    datadragEnd(evt){
 
+      let obj = this.banjiList[evt.newIndex]
+      obj.orderby = evt.newIndex
+
+
+      axios.post('/SchoolManage/banji/save',obj).then(res=>{})
     }
   }
 }

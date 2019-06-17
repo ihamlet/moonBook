@@ -27,17 +27,17 @@
         </div>
       </div>
       <div class="module card-top">
-        <read-list title='阅读榜' type='banji' field='avatar' :key="$route.query.id"/>
+        <read-list title='阅读榜' type='banji' field='avatar'/>
       </div>
       <div class="module">
         <notice type='banji' :key="$route.query.id" :studentCount='classInfo.student_count'/>
       </div>
       <div>
-        <class-zoom type='template' :banji_id='$route.query.id' :key="$route.query.id"/>
+        <class-zoom type='template' :banji_id='$route.query.id'/>
       </div>
     </div>
 
-    <van-action-sheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" get-container='#app'/>
+    <van-action-sheet v-model="actionsheetShow" :actions="manageActions" @select="onSelect" cancel-text="取消" get-container='#app'/>
 
     <div class="punch" v-if='classInfo.is_my_baby_banji'>
       <van-button @click="punch" class="theme-btn" round size="normal" type="primary">
@@ -100,7 +100,6 @@ export default {
   data() {
     return {
       show: false,
-      hackReset: true,
       qrImage: '',
       classInfo: '',
       lateBook: '',
@@ -298,11 +297,7 @@ export default {
       this.actionsheetShow = false
       if (item.type == 'banji') {
 
-        this.hackReset = false
-        this.$nextTick(() => {
-          this.hackReset = true
-          this.request()
-        })
+        this.refreshPage()
 
         this.isSelectBabyShow = false
 

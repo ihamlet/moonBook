@@ -42,7 +42,7 @@
       </transition>
     </div>
 
-    <van-button class="boss-key theme-btn" type="primary" round v-if='value == 0&&banjiItems.length' @click="allCheck">一键审核</van-button>
+    <van-button class="boss-key theme-btn" type="primary" round v-if='value == "is_banji_confirm,0"&&banjiItems.length' @click="allCheck">一键审核</van-button>
   </div>
 </template>
 <script>

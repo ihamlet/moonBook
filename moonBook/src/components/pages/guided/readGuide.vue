@@ -1,9 +1,9 @@
 <template>
   <div class="read-guide">
-    <div class="banner">
+    <div class="banner" @click="toBookShelf">
       <i class="iconfont">&#xe62d;</i>
       <div class="bg-black flex flex-justify">
-        <van-button plain round class="theme-plain" type="primary" @click="toBookShelf">前往书架</van-button>
+        <van-button plain round class="theme-plain" type="primary">前往书架</van-button>
       </div>
     </div>
     <van-pull-refresh v-model="loading" @refresh="onRefresh">

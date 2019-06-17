@@ -1,5 +1,5 @@
 <template>
-  <div class="school-home page-padding">
+  <div class="school-home page-padding" v-if='hackReset'>
     <van-nav-bar :zIndex='100' :class="fixedHeaderBar?'theme-nav':''" fixed :border='false' :key='$route.query.id'>
       <div class="head-bar-title" slot="title" @click="actionsheetShow = true">
         {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont">&#xe608;</i>
@@ -29,7 +29,7 @@
         <van-tabs color='#0084ff' :line-width='20' :line-height='4' animated swipeable :border='false'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
             <div class="tab-content">
-              <drying-list :school_id='$route.query.id' portal_name='学校主页' :key="$route.query.id"/>
+              <drying-list :school_id='$route.query.id' portal_name='学校主页' ref='reloadDom'/>
             </div>
           </van-tab>
         </van-tabs>
@@ -47,7 +47,7 @@
       </van-popup>
     </div>
 
-    <van-action-sheet v-model="actionsheetShow" :actions="actions" @select="onSelect" cancel-text="取消" get-container='#app'/>
+    <van-action-sheet v-model="actionsheetShow" :actions="manageActions" @select="onSelect" cancel-text="取消" get-container='#app'/>
   </div>
 </template>
 <script>
@@ -247,7 +247,8 @@ export default {
         break
       }
 
-      this.request()
+      this.refreshPage()
+      this.$route.meta.keepAlive = false
     },
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'

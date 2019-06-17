@@ -1,7 +1,7 @@
 <template>
   <div class="teacher-edit">
-    <van-nav-bar title="成员设置" :border='false' @click-right="past">
-        <div class="is-confim" :style="{color:`${isConfirm == 1?'#F56C6C':'#67C23A'}`}" slot="right" v-if='form.is_master == 0'>
+    <van-nav-bar :title="$route.query.title" :border='false' @click-right="past">
+        <div class="is-confim" :style="{color:`${isConfirm == 1?'#F56C6C':'#67C23A'}`}" slot="right" v-if='form.is_master == 0&&$route.query.type == "edit"'>
             {{isConfirm == 0?'通过':'请出'}}
         </div>
     </van-nav-bar>
@@ -142,10 +142,35 @@ export default {
             }
         },
         sumbit(){
-            this.$dialog.confirm({
-                message: `您确定要修改${this.form.username}的相关信息吗?`
-            }).then(() => {
-                axios.post('/SchoolManage/teacher/edit',{...this.form}).then(res=>{
+            if(this.$route.query.type == 'edit'){
+                this.$dialog.confirm({
+                    message: `您确定要修改${this.form.username}的相关信息吗?`
+                }).then(() => {
+                    axios.post('/SchoolManage/teacher/edit',{...this.form}).then(res=>{
+                        switch(res.data.status){
+                            case 1:
+                                this.$toast.success(res.data.msg)
+                                this.$router.go(-1)
+                                break
+                            default:
+                                this.$toast(res.data.msg)
+                        }
+                    })
+                }).catch(() => {
+                    // on cancel
+                })
+            }else{
+                
+                let data = {
+                    ...this.$route.query,
+                    ...this.form,
+                   is_confirm:1,
+                   is_head: this.isHead?1:0,
+                   is_master: this.isMaster?1:0,
+                   is_school_head: this.isSchoolHead?1:0,
+                }
+
+                axios.post('/SchoolManage/teacher/edit',data).then(res=>{
                     switch(res.data.status){
                         case 1:
                             this.$toast.success(res.data.msg)
@@ -155,9 +180,8 @@ export default {
                             this.$toast(res.data.msg)
                     }
                 })
-            }).catch(() => {
-                // on cancel
-            })
+            }
+
         }
   }
 }

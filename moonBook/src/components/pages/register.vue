@@ -8,7 +8,8 @@
     <div class="container" ref='listContainer'>
       <div class="identity">
         <van-cell-group>
-          <van-cell :border='false' class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role' :key='index' @click="selectRole(item)">
+          <van-cell :border='false' class="role-list" :title="item.name" :label="item.subtitle" is-link center v-for='(item,index) in role'
+            :key='index' @click="selectRole(item)">
             <div class="icon iconfont" :class="item.iconClass" slot="icon"></div>
           </van-cell>
         </van-cell-group>
@@ -32,16 +33,7 @@
 
     <slogan />
 
-    <van-popup class="select-school-list" v-model="isSelectSchool" get-container='#app'>
-      <van-nav-bar title="选择办卡学校" @click-right="isSelectSchool = false">
-        <van-icon class="close-icon" name="close" slot="right"/>
-      </van-nav-bar>
-      <van-cell title-class='select-school-title' :value="item.duty" center size="large" v-for='(item,index) in columns' :key="index" is-link @click="toAcceptSchool(item)">
-        <div class="school-name" v-line-clamp:20="1" slot="title">
-          {{item.school_name}}
-        </div>
-      </van-cell>
-    </van-popup>
+    <van-action-sheet v-model="isSelectSchool" :actions="schoolActions" cancel-text="取消" @select="onSelect" @cancel="isSelectSchool = false" />
 
     <div class="fixed-button">
       <van-button class="theme-btn" square type="primary" size="large" @click="toWmPage">学校入驻</van-button>
@@ -51,11 +43,13 @@
 <script>
 import slogan from './../module/slogan'
 import { mapGetters } from 'vuex'
-import axios from '../lib/js/api'
+import axios from './../lib/js/api'
 import { isRepeatArr } from './../lib/js/util'
+import { manageSchoolList } from './../lib/js/mixin'
 
 export default {
   name: 'register',
+  mixins: [ manageSchoolList ],
   components: {
     slogan
   },
@@ -97,24 +91,24 @@ export default {
           index: 1
         }
       ],
-      columns:[]
+      schoolList: []
     }
   },
   watch: {
-    '$router':'fetchData'
+    '$router': 'fetchData'
   },
   created() {
     this.fetchData()
   },
   methods: {
-    fetchData(){
-      axios.get('/SchoolManage/school/getSchools').then(res=>{
+    fetchData() {
+      axios.get('/SchoolManage/school/getSchools').then(res => {
         switch (res.data.status) {
           case 1:
-            this.columns = isRepeatArr(res.data.data)
-            break 
+            this.schoolList = isRepeatArr(res.data.data)
+            break
           default:
-            this.columns = []      
+            this.schoolList = []
         }
       })
     },
@@ -153,14 +147,14 @@ export default {
     toHelp() {
       location.href = '/book/manual/user'
     },
-    onAcceptSchool(){
-      if(this.columns.length > 1){
+    onAcceptSchool() {
+      if (this.schoolList.length > 1) {
         this.isSelectSchool = true
-      }else{
-        location.href = `/book/SchoolTeacher/card_apply?sid=${this.columns[0].school_id}`
+      } else {
+        location.href = `/book/SchoolTeacher/card_apply?sid=${this.schoolList[0].school_id}`
       }
     },
-    toAcceptSchool(item) {
+    onSelect(item) {
       location.href = `/book/SchoolTeacher/card_apply?sid=${item.school_id}`
     }
   }
@@ -239,21 +233,10 @@ export default {
   bottom: 0;
   width: 100%;
 }
-
-.select-school-list {
-  width: 80%;
-  border-radius: 8px;
-  padding-bottom: 10px;
-}
-
-.close-icon{
-  font-size: 20px;
-  color: #C0C4CC;
-}
 </style>
 <style>
-.select-school-title.van-cell__title{
-  flex: 3
+.select-school-title.van-cell__title {
+  flex: 3;
 }
 </style>
 

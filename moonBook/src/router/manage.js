@@ -12,6 +12,8 @@ const Manage = () => import('@/manage/Manage')
 const memberRanking = () => import('@/manage/pages/teacherManage/memberRanking')
 
 const manageSchool = () => import('@/manage/pages/teacherManage/school')
+const teacherShare = () => import('@/manage/pages/share/teacherShare')
+
 const teacherEdit = () => import('@/manage/pages/edit/teacherEdit')
 const banjiTree = () => import('@/manage/pages/tree/banjiTree')
 const banjiList = () => import('@/manage/pages/list/banjiList')
@@ -45,6 +47,11 @@ let manageRouter = {
             path: '/manage/banjiList',
             name: 'banjiList',
             component: banjiList
+        },
+        {
+            path: '/manage/teacherShare',
+            name: 'teacherShare',
+            component: teacherShare
         }
     ]
 }

@@ -181,7 +181,8 @@ export default {
                     isHead: this.isHead,
                     isMaster: this.isMaster,
                     isSchoolHead: this.isSchoolHead,
-                    type:'edit'
+                    type:'edit',
+                    title: '成员设置'
                 }
             })
         },

@@ -101,7 +101,7 @@
     <!-- 文章操作 -->
     <van-action-sheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" />
     <!-- 推荐操作 -->
-    <van-action-sheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app' />
+    <van-action-sheet v-model="actionsheetShow" :actions="manageActions" @select="onRecommendSelect" cancel-text="取消" getContainer='#app' />
     <!-- 切换孩子 -->
     <van-action-sheet v-model="isSelectBabyShow" title='切换宝贝'>
       <selectChild :babyList='babyList' @onSelect='selectChild'/>
@@ -112,7 +112,7 @@
 import axios from "./../lib/js/api"
 import { mapActions, mapGetters,mapState } from 'vuex'
 import { format, timeago } from "./../lib/js/util.js"
-import { watchScroll } from './../lib/js/mixin'
+import { watchScroll,manageStateList } from './../lib/js/mixin'
 import { punchLevel,readLevel } from './../lib/js/speech'
 import wave from "./../module/animate/anWave"
 import avatar from "./../module/avatar"
@@ -125,7 +125,7 @@ import selectChild from './../module/selectChild'
 
 export default {
   name: "baby-home",
-  mixins:[watchScroll],
+  mixins:[watchScroll,manageStateList],
   components: {
     wave,
     reading,
@@ -591,31 +591,6 @@ export default {
       if (this.babyList.length) {
         this.isSelectBabyShow = true
       }
-    },
-    onRecommendSelect(item) {
-      let data = {
-        params: {
-          post_id: this.postId
-        }
-      }
-
-      if (item.type == 'banji') {
-        data.params.banji_id = item.id
-      }
-
-      if (item.type == 'school') {
-        data.params.school_id = item.id
-      }
-
-      axios.get('/book/SchoolArticle/copy', data).then(res => {
-        if (res.data.status == 1) {
-          this.$toast.success('推荐成功')
-        } else {
-          this.$toast.fail('操作失败')
-        }
-      })
-
-      this.actionsheetShow = false
     },
     formatBanjiTitle(text) {
       if (text && text.indexOf('班') == -1) {

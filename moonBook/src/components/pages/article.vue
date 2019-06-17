@@ -105,7 +105,9 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    if (to.name == "apps-find" || to.name == 'home') {
+    let routeList = ['home','apps-find','apps-school','zoom']
+
+    if (routeList.includes(to.name)) {
       to.meta.keepAlive = true
     } else {
       to.meta.keepAlive = false

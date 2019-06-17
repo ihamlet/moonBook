@@ -89,7 +89,7 @@
                 <van-col :span="7">
                   <div class="img-grid" @click="uploaderType(index,itemIndex)">
                     <div class="delete-photo" v-if='content.img && !readonly' @click="deletePhoto">
-                      <i class="iconfont">&#xe683;</i>
+                      <i class="iconfont">&#xe647;</i>
                     </div>
                     <img class="img-preview" :src="content.img" v-if='content.img' preview='1'/>
                     <van-uploader class="img-uploader-grid" :after-read="onRead" :disabled='readonly' v-else-if='hackReset'>
@@ -102,11 +102,9 @@
                 </van-col>
                 <van-col :span="17">
                   <div class="cell">
-                    <van-field class="text-input sub-title" v-model="content.sub" :placeholder="content.sub?content.sub:'请输入标题'"
-                      :border='false' :readonly='readonly' />
+                    <van-field class="text-input sub-title" v-model="content.sub" :placeholder="content.sub?content.sub:'请输入标题'" :border='false' :readonly='readonly' />
                   </div>
-                  <van-field v-model="content.content" type="textarea" autosize :placeholder="content.content?content.content:'请输入内容'"
-                    :readonly='readonly' :border='false' />
+                  <van-field v-model="content.content" type="textarea" autosize :placeholder="content.content?content.content:'请输入内容'" :readonly='readonly' :border='false' />
                 </van-col>
               </van-row>
 
@@ -439,6 +437,8 @@ export default {
           this.upOssPhoto(blob, file, file.content)
         })
       })
+
+      console.log(1111)
     },
     upOssPhoto(blob, file, base64) {
       let img = new Image()
@@ -581,7 +581,7 @@ export default {
   object-fit: cover;
   width: 100%;
   height: 100%;
-  opacity: 0.7;
+  opacity: 0.9;
 }
 
 .container {
@@ -655,6 +655,8 @@ export default {
   width: 100%;
   padding-bottom: 100%;
   position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .uploader-prompt {
@@ -829,6 +831,12 @@ a.a-tel {
 }
 </style>
 <style>
+.img-uploader-grid .van-uploader__input-wrapper{
+  width: 100%;
+  padding-bottom: 100%
+}
+
+
 .chapter-field textarea {
   text-indent: 20px;
 }

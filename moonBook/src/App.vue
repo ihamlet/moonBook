@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <addChild @close='show = false' v-if='show && scrollTop == 0 && userDataState.child_id == 0&&routeName'/>
-    <div :class="show && scrollTop == 0 && userDataState.child_id == 0&&routeName?'page-container-alive':''">
+    <transition enter-active-class="slideInDown animated" leave-active-class="slideOutUp animated" mode="out-in">
+      <addChild @close='show = false' v-if='show && top2bottom && userDataState.child_id == 0&&routeName'/>
+    </transition>
+    <div :class="show && top2bottom && userDataState.child_id == 0&&routeName?'page-container-alive':''">
       <transition :name="transitionName"> 
         <keep-alive>
             <router-view v-if="$route.meta.keepAlive" class="Router"></router-view>
@@ -22,13 +24,13 @@ import axios from './../src/components/lib/js/api'
 import footerBar from './components/module/footerBar'
 import addChild from './components/module/card/addChild'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
-import { watchScroll } from './components/lib/js/mixin'
+import { watchTouch } from './components/lib/js/mixin'
 import './../src/components/lib/css/neat.css'
 import 'animate.css'
 
 export default {
   name: 'App',
-  mixins:[watchScroll],
+  mixins:[watchTouch],
   components: {
     footerBar,
     addChild
@@ -38,7 +40,7 @@ export default {
     routeName(){
       let routeList = ['home','apps-find','article','apps-school','my-home','zoom']
 
-      return routeList.includes(this.$route.name) && !this.userDataState.teacher_school_id > 0
+      return routeList.includes(this.$route.name) && this.userDataState.teacher_school_id == 0
     }
   },
   data () {
@@ -1401,5 +1403,19 @@ i.iconfont.vip-1 {
 
 .van-cell__value.switch-cell-value{
   overflow: initial;
+}
+
+.cell-actions{
+  justify-content: space-between;
+  padding: 0 15px;
+  text-align: center;
+}
+
+.cell-actions .van-action-sheet__name{
+  flex: 1;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  text-align: left;
 }
 </style>

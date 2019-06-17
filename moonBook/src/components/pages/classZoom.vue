@@ -15,16 +15,18 @@
       </van-pull-refresh>
     <van-action-sheet v-model="show" :actions="actions" cancel-text="取消" @select="onSelect" @cancel="show = false" get-container='#app'/>
     <!-- 管理员推荐操作 -->
-    <van-action-sheet v-model="actionsheetShow" :actions="recommendActions" @select="onRecommendSelect" cancel-text="取消" get-container='#app'/>
+    <van-action-sheet v-model="actionsheetShow" :actions="manageActions" @select="onRecommendSelect" cancel-text="取消" get-container='#app'/>
   </div>
 </template>
 <script>
 import axios from './../lib/js/api'
 import graphicCard from './../module/card/graphicCard'
 import { mapGetters } from 'vuex'
+import { manageStateList } from './../lib/js/mixin'
 
 export default {
   name: "class-zoom",
+  mixins: [manageStateList],
   props: ['banji_id'],
   components: {
     graphicCard
@@ -42,23 +44,6 @@ export default {
         
         return boolean
       }
-    },
-    recommendActions() {
-      let array = []
-      if (this.managerState) {
-        this.managerState.forEach(element => {  
-          let data = {
-            name: `${element.item_type == 'school'?element.name:this.formatBanjiTitle(element.name)}${element.child_name?'('+element.child_name+')':'(管理员)'}`,
-            subname: `${element.duty}-${element.desc}`,
-            id: element.id,
-            type: element.item_type
-          }
-
-          array.push(data)
-        })
-      }
-
-      return array
     }
   },
   data() {
@@ -176,31 +161,6 @@ export default {
           this.show = false
           break
       }
-    },
-    onRecommendSelect(){
-      let data = {
-        params:{
-          post_id: this.postId
-        }
-      }
-
-      if(item.type == 'banji'){
-        data.params.banji_id = item.id
-      }
-
-      if(item.type == 'school'){
-        data.params.school_id = item.id
-      }
-
-      axios.get('/book/SchoolArticle/copy',data).then(res=>{
-        if(res.data.status == 1){
-          this.$toast.success('推荐成功')
-        }else{
-          this.$toast.fail('操作失败')
-        }
-      })
-
-      this.actionsheetShow = false
     },
     formatBanjiTitle(text) {
       if (text && text.indexOf('班') == -1) {

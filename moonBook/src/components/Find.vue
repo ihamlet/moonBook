@@ -1,12 +1,6 @@
 <template>
   <div class="page">
-    <div class="root-dom">
-      <div class="refresh">
-        <keep-alive>
-            <router-view v-if="$route.meta.keepAlive" :key="$route.query.tag_id"/>
-        </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive" :key="$route.query.tag_id"/>
-      </div>
+       <router-view/>
     </div>
   </div>
 </template>

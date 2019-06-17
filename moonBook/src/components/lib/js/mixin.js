@@ -1,6 +1,11 @@
 const manageStateList = {
+    data () {
+        return {
+            hackReset: true     
+        }
+    },
     computed: {
-        actions() {
+        manageActions() {
             let array = []
             if (this.managerState) {
                 this.managerState.forEach(element => {
@@ -12,7 +17,8 @@ const manageStateList = {
                         school_id: element.school_id,
                         school_name: element.school_name,
                         banji_name: this.formatBanjiTitle(element.name),
-                        banji_id: element.banji_id || 0
+                        banji_id: element.banji_id || 0,
+                        className:'flex flex-align cell-actions'
                     }
                     array.push(data)
                 })
@@ -35,6 +41,62 @@ const manageStateList = {
             } else {
               return text
             }
+        },
+        onRecommendSelect(item) {
+            let data = {
+              params: {
+                post_id: this.postId
+              }
+            }
+      
+            if (item.type == 'banji') {
+              data.params.banji_id = item.id
+            }
+      
+            if (item.type == 'school') {
+              data.params.school_id = item.id
+            }
+      
+            axios.get('/book/SchoolArticle/copy', data).then(res => {
+              switch(res.data.status){
+                case 1:
+                  this.$toast.success('推荐成功')
+                  break
+                default:
+                  this.$toast(res.data.msg)
+              }
+            })
+      
+            this.actionsheetShow = false
+        },
+        refreshPage(){
+            this.hackReset = false
+            this.$nextTick(() => {
+              this.hackReset = true
+              this.request()
+          })
+        }
+    }
+}
+
+const manageSchoolList = {
+    computed:{
+        schoolActions(){
+            let arr = []
+            
+            this.schoolList.map((e,i)=>{
+                let obj = {
+                    name: e.school_name,
+                    subname: e.duty,
+                    school_id: e.school_id,
+                    index: i,
+                    className:'flex flex-align cell-actions'
+                }
+        
+                arr.push(obj)
+            })
+    
+            return arr
         }
     }
 }
@@ -137,9 +199,14 @@ const watchTouch = {
     }
 }
 
+const manageJurisdiction = {
+    
+}
+
 export {
     manageStateList,
+    manageSchoolList,
     watchScroll,
     getBanjiYear,
-    watchTouch
+    watchTouch,
 }

@@ -17,7 +17,7 @@
       <topic-list @close='show = false' @select='selectTag' @confirm='selectConfirm' type='share' :topicList='topicList'/>
     </van-popup>
 
-    <van-action-sheet v-model="actionsheetShow" :actions="actions" @select="onRecommendSelect" cancel-text="取消" get-container='#app' />
+    <van-action-sheet v-model="actionsheetShow" :actions="manageActions" @select="onRecommendSelect" cancel-text="取消" get-container='#app' />
   </div>
 </template>
 <script>
@@ -96,31 +96,6 @@ export default {
           this.cateId = res.data[0].cate_id
         }
       })
-    },
-    onRecommendSelect(item) {
-      let data = {
-        params: {
-          post_id: this.item.post_id
-        }
-      }
-
-      if (item.type == 'banji') {
-        data.params.banji_id = item.id
-      }
-
-      if (item.type == 'school') {
-        data.params.school_id = item.id
-      }
-
-      axios.get('/book/SchoolArticle/copy', data).then(res => {
-        if (res.data.status == 1) {
-          this.$toast.success('推荐成功')
-        } else {
-          this.$toast.fail('操作失败')
-        }
-      })
-
-      this.actionsheetShow = false
     },
     formatBanjiTitle(text) {
       if (text && text.indexOf('班') == -1) {

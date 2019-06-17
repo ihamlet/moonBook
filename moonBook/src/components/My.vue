@@ -1,13 +1,6 @@
 <template>
   <div class="page">
-    <div class="root-dom">
-      <div class="refresh">
-        <keep-alive>
-            <router-view v-if="$route.meta.keepAlive"></router-view>
-        </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive"></router-view>
-      </div>
-    </div>
+      <router-view></router-view>
   </div>
 </template>
 <script>

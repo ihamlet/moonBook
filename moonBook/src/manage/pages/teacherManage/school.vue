@@ -17,9 +17,9 @@
         </van-cell-group>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" :disabled='drag'>
           <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
-            <draggable v-model="teacherList" @update="datadragEnd" :options="{animation:500}" :disabled="!drag">
+            <draggable v-model="teacherList" @update="datadragEnd" :options="{animation:500}" :disabled="!drag" handle=".info">
               <transition-group>
-                <div class="user-card" v-for='item in teacherList' :key='item.id'>
+                <div class="user-card flex flex-align" v-for='item in teacherList' :key='item.id'>
                   <userCard :item='item' :isMaster='isMaster' :isHead='isHead' :isSchoolHead='isSchoolHead' @statusChange='setStutas'/>
                 </div>
               </transition-group>
@@ -31,26 +31,18 @@
         <banjiList moduleType='tab' :classYear='classYear' :drag='drag'  ref='banjiList'/>
       </van-tab>
     </van-tabs>
-    <van-popup class="select-school-list" v-model="isSelectSchool" get-container='#app'>
-        <van-nav-bar title="切换学校" @click-right="isSelectSchool = false">
-            <van-icon class="close-icon" name="close" slot="right"/>
-        </van-nav-bar>
-        <van-cell title-class='select-school-title' :value="item.duty" center size="large" v-for='(item,index) in schoolList' :key="index" is-link @click="selectSchool(item,index)">
-            <div class="school-name" v-line-clamp:20="1" slot="title">
-            {{item.school_name}}
-            </div>
-        </van-cell>
-    </van-popup>
+
+    <van-action-sheet v-model="isSelectSchool" :actions="schoolActions" cancel-text="取消" @select="onSelect" @cancel="isSelectSchool = false" />
 
     <transition enter-active-class="slideInUp animated" leave-active-class="slideOutDown animated" mode="out-in">
       <div class="footer-bar flex flex-align" v-if='drag||top2bottom'>
-        <div class="theme-color" @click="onDrag">{{drag?'完成排序':'排序'}}</div>
-        <van-button class="theme-btn" square type="primary">{{active == 0?'邀请成员':'创建班级'}}</van-button>
+        <div class="theme-color" @click="onDrag" v-if='isSchoolHead||isHead||isMaster'>{{drag?'完成排序':'排序'}}</div>
+        <van-button class="theme-btn" square type="primary" @click="share">{{btnText}}</van-button>
       </div>
     </transition>
 
-    <van-popup v-model="drag" position="top" :overlay="false">
-      <div class="tips-text">请拖动列表项进行排序</div>
+    <van-popup v-model="drag" position="top" :overlay="false" :lock-scroll='false' get-container='#app'>
+      <div class="tips-text">请按住列表项左侧头像或是名称进行拖动排序</div>
     </van-popup>
   </div>
 </template>
@@ -59,28 +51,41 @@ import axios from './../../../components/lib/js/api'
 import overview from './../../module/class/overview'
 import userCard from './../../module/user/userCard'
 import teacherList from './../../pages/list/teacherList'
-import childList from './../../module/user/childList'
 import banjiList from './../list/banjiList'
 
 import { mapGetters, mapActions,mapMutations } from 'vuex'
 import { isRepeatAdminArr } from './../../../components/lib/js/util'
-import { getBanjiYear,watchTouch } from './../../../components/lib/js/mixin'
+import { getBanjiYear,watchTouch,manageSchoolList } from './../../../components/lib/js/mixin'
 
 import draggable from 'vuedraggable'
 
 export default {
   name: 'manageSchool',
-  mixins:[getBanjiYear,watchTouch],
+  mixins:[getBanjiYear, watchTouch, manageSchoolList],
   components: {
     overview,
     userCard,
     teacherList,
-    childList,
     banjiList,
     draggable
   },
   computed: {
-    ...mapGetters('manage',['manageSchoolInfo'])
+    ...mapGetters('manage',['manageSchoolInfo']),
+    btnText(){
+      let text
+
+      switch(this.active){
+        case 0:
+          text = '邀请老师'
+          break
+        case 1:
+          text = '创建班级'
+          break
+      }
+
+
+      return text
+    }
   },
   data() {
     return {
@@ -130,8 +135,8 @@ export default {
 
       })
     },
-    selectSchool(item,index){
-        localStorage.setItem('schoolActive',index)
+    onSelect(item){
+        localStorage.setItem('schoolActive',item.index)
         this.setManageSchool(item)
 
         this.schoolName = item.school_name
@@ -244,8 +249,25 @@ export default {
       this.drag = !this.drag
     },
     datadragEnd(evt){
-      // console.log(evt,this.teacherList)
-      console.log('拖动后的索引 :' + evt.newIndex)      
+      let arr = this.teacherList.map((e,i)=>{
+          e.school_index = i
+          return e
+      })
+
+      axios.post('/SchoolManage/Teacher/setIndex',arr).then(res=>{})
+
+    },
+    share(){
+      switch(this.btnText){
+        case '邀请老师':
+          this.$router.push({
+            name:'teacherShare',
+            query:{
+
+            }
+          })
+          break
+      }
     }
   }
 }
@@ -258,17 +280,6 @@ export default {
   justify-content: space-between;
   padding: 0 15px;
   font-size: 13px;
-}
-
-.select-school-list {
-  width: 80%;
-  border-radius: 8px;
-  padding-bottom: 10px;
-}
-
-.close-icon{
-  font-size: 20px;
-  color: #C0C4CC;
 }
 
 .tab-title{
@@ -300,6 +311,7 @@ export default {
 .footer-bar .theme-color{
   flex: 1;
   text-align: center;
+  font-size: 13px;
 }
 
 .footer-bar .theme-btn{
@@ -311,6 +323,16 @@ export default {
   line-height: 44px;
   background: #409EFF;
   color: #fff;
+  font-size: 13px;
+}
+
+.handle{
+  background: #fff;
+  position: absolute;
+}
+
+.user-card{
+  background: #fff;
 }
 </style>
 

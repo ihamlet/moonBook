@@ -79,11 +79,6 @@ export default {
                     break
             }
 
-            let toast = this.$toast.loading({
-                forbidClick: true,
-                message: msg.loading
-            })
-
             let data = {
                 params:{
                     id: this.$route.query.id.split(','),
@@ -96,6 +91,11 @@ export default {
             this.$dialog.confirm({
                 message: msg.confirm
             }).then(()=>{
+                let toast = this.$toast.loading({
+                    forbidClick: true,
+                    message: msg.loading
+                })
+
                 axios.get(`/SchoolManage/students/${this.$route.query.set}`, data).then(res=>{
                     toast.clear()
                     this.$toast(res.data.msg)                        
