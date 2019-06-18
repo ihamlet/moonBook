@@ -15,7 +15,7 @@
                     <div class="child flex" v-line-clamp:20="1">{{item.banji_name?`${formatBanjiTitle(item.banji_name)} | `:''}}{{item.duty}}</div>                
                 </div>
             </div>
-            
+
             <div class="operation-btn flex flex-align">
                 <van-button class="pass" size="small" round type="info" @click="info">详情</van-button>
                 <van-button :disabled='!(isMaster == 1&&item.is_master == 0)' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
@@ -29,14 +29,14 @@
             
             <div class="techer-card">      
                 <div class="avatar" @click="toEditPage">
-                    <img :src="item.avatar" @error="imgError"/>
+                    <img :src="item.avatar" @error="imgError" v-if='item.avatar'/>
                 </div>
            
                 <van-cell-group>
-                    <van-cell title="手机号" :border='false'>
+                    <van-cell title="手机号" :border='false' v-if='item.mobile'>
                         <a class="theme-color" :href="`tel:${item.mobile}`">{{item.mobile}}</a>
                     </van-cell>
-                    <van-cell title="姓名" :value="item.username" :border='false'/>
+                    <van-cell title="姓名" v-if='item.username' :value="item.username" :border='false'/>
                     <van-cell title="学校" v-if='item.school_name' :value="item.school_name" :border='false' value-class='info-cell' is-link @click="toSchool"/>
                     <van-cell title="班级" v-if='item.banji_name' :value="formatBanjiTitle(item.banji_name)" is-link :border='false' @click="toBanji"/> 
                     <van-cell title="职位" :value="item.duty?item.duty:'老师'" :border='false'/>

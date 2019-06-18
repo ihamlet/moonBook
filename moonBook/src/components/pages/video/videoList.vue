@@ -10,18 +10,18 @@
     </div>
 </template>
 <script>
-import './../../../../static/ckplayer/ckplayer/ckplayer'
+// import './../../../../static/ckplayer/ckplayer/ckplayer'
 
 export default {
     name:'video-list',
     computed: {
-        player() {
-            let obj = this.videoObject
-            obj.poster = this.videoList[this.current].cover
-            obj.video = this.videoList[this.current].url
-            obj.container = `video-${this.current}`
-            return new ckplayer(obj)
-        }  
+        // player() {
+        //     let obj = this.videoObject
+        //     obj.poster = this.videoList[this.current].cover
+        //     obj.video = this.videoList[this.current].url
+        //     obj.container = `video-${this.current}`
+        //     return new ckplayer(obj)
+        // }  
     },
     data () {
         return {

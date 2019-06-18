@@ -5,7 +5,7 @@
             切换学校
         </div>
     </van-nav-bar>
-    <van-tabs v-model="active" swipeable animated sticky color='#0084ff' :line-width='20' :line-height='4' :border='false'>
+    <van-tabs v-model="active" swipeable animated sticky color='#0084ff' :line-width='20' :line-height='4' :border='false' @change="onTabChange">
       <van-tab>
         <div class="tab-title" slot="title">
           人员管理 <van-tag round class="tag-danger" type="danger" v-if='count > 0' size="medium">{{count}}</van-tag>
@@ -19,7 +19,7 @@
           <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
             <draggable v-model="teacherList" @update="datadragEnd" :options="{animation:500}" :disabled="!drag" handle=".info">
               <transition-group>
-                <div class="user-card flex flex-align" v-for='item in teacherList' :key='item.id'>
+                <div class="user-card flex flex-align" v-for='item in teacherList' :key='item.id' v-if='item.user_id > 0'>
                   <userCard :item='item' :isMaster='isMaster' :isHead='isHead' :isSchoolHead='isSchoolHead' @statusChange='setStutas'/>
                 </div>
               </transition-group>
@@ -36,7 +36,7 @@
 
     <transition enter-active-class="slideInUp animated" leave-active-class="slideOutDown animated" mode="out-in">
       <div class="footer-bar flex flex-align" v-if='drag||top2bottom'>
-        <div class="theme-color" @click="onDrag" v-if='isSchoolHead||isHead||isMaster'>{{drag?'完成排序':'排序'}}</div>
+        <div class="theme-color" @click="drag = !drag" v-if='isSchoolHead||isHead||isMaster'>{{drag?'完成排序':'排序'}}</div>
         <van-button class="theme-btn" square type="primary" @click="share">{{btnText}}</van-button>
       </div>
     </transition>
@@ -50,7 +50,6 @@
 import axios from './../../../components/lib/js/api'
 import overview from './../../module/class/overview'
 import userCard from './../../module/user/userCard'
-import teacherList from './../../pages/list/teacherList'
 import banjiList from './../list/banjiList'
 
 import { mapGetters, mapActions,mapMutations } from 'vuex'
@@ -65,7 +64,6 @@ export default {
   components: {
     overview,
     userCard,
-    teacherList,
     banjiList,
     draggable
   },
@@ -89,7 +87,7 @@ export default {
   },
   data() {
     return {
-      active: 0,
+      active: localStorage.getItem('manageTab') || 0,
       teacherList: [],
       schoolList: [],
       isSelectSchool: false,
@@ -137,21 +135,24 @@ export default {
     },
     onSelect(item){
         localStorage.setItem('schoolActive',item.index)
+
         this.setManageSchool(item)
 
         this.schoolName = item.school_name
         this.isMaster = Number(item.is_master)
         this.isHead = item.is_head
         this.isSchoolHead = item.is_school_head
-        
+       
         this.page = 1
         this.schoolId = item.school_id
 
         this.onLoad().then(()=>{
-            this.loading = false
+          this.loading = false
         })
 
-        this.$refs.banjiList.onRefresh()
+        if(this.$refs.banjiList){
+          this.$refs.banjiList.onRefresh()
+        }
 
         this.isSelectSchool = false
     },
@@ -195,6 +196,9 @@ export default {
         this.loading = false
         this.finished = false
       })
+    },
+    onTabChange(index){
+      localStorage.setItem('manageTab',index)
     },
     getCount(schoolId){
         let data = {
@@ -245,9 +249,6 @@ export default {
       this.getCount()
       
     },
-    onDrag(){
-      this.drag = !this.drag
-    },
     datadragEnd(evt){
       let arr = this.teacherList.map((e,i)=>{
           e.school_index = i
@@ -261,10 +262,7 @@ export default {
       switch(this.btnText){
         case '邀请老师':
           this.$router.push({
-            name:'teacherShare',
-            query:{
-
-            }
+            name:'teacherShare'
           })
           break
       }

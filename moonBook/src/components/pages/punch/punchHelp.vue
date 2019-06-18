@@ -48,9 +48,9 @@ export default {
     },
     created () {
         this.fetchData()
-    },
-    updated(){
-        this.wxShare()
+        this.$nextTick(()=>{
+            this.wxShare()
+        })
     },
     watch: {
         '$router':'fetchData',

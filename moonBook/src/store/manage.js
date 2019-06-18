@@ -12,13 +12,13 @@ export default {
         manageSchoolInfo: state => {
             if (state.manageSchool) {
                 return state.manageSchool
-              } else {
+                } else {
                 if (localStorage.getItem('schoolCurrent')) {
                     return JSON.parse(localStorage.getItem('schoolCurrent'))
                 }else{
                     return state.schoolList[0]
                 }
-              }
+            }
         }
     },
     mutations:{

@@ -86,11 +86,11 @@ const manageSchoolList = {
             
             this.schoolList.map((e,i)=>{
                 let obj = {
+                    ...e,
                     name: e.school_name,
                     subname: e.duty,
-                    school_id: e.school_id,
                     index: i,
-                    className:'flex flex-align cell-actions'
+                    className:'flex flex-align cell-actions',
                 }
         
                 arr.push(obj)

@@ -47,6 +47,8 @@ const PromotionWord = [
   '阅读可以促进儿童认知能力'
 ]
 
+const invitation = '<p>一起关爱孩子们的成长，我们可以从阅读做起。阅亮书架，将认真与执着地做着这件事情，同时也吸引了无数有识之士加入其中，和我们一起播撒着幸福的种子。</p><p>在路上，我们满怀期待，愿与您同行......</p>'
+
 const medalPunch = [{
   name:'好的开始',
   number: 1,
@@ -169,5 +171,6 @@ export {
   punchLevel,
   readLevel,
   childCommentTag,
-  PromotionWord
+  PromotionWord,
+  invitation
 }

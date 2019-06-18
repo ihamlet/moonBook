@@ -96,7 +96,7 @@ export default {
             }
           }
 
-          if(products.item.details.replace(/<[^>]+>/g,"").length){
+          if(products.item.details&&products.item.details.replace(/<[^>]+>/g,"").length){
             desc = `${products.item.hasvideo == 1?`[小视频]${products.item.details}`:products.item.details}`
           }else{
             desc = `${products.item.hasvideo == 1?'小视频':''}`
@@ -106,7 +106,7 @@ export default {
 
         let data = {
           title: title || products.item.title,
-          link: location.href.replace('#','/?#'),
+          link: window.location.href.split('#')[0] + 'static/redirect.html?app3Redirect=' + encodeURIComponent(window.location.href)          ,
           desc: desc,
           imgUrl: imgUrl?imgUrl:products.item.imgUrl || products.item.cover,
           success: products.success

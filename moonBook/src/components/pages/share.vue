@@ -1,6 +1,6 @@
 <template>
   <div class="share">
-    <div class="tips" v-if='pathData.user_id == userDataState.user_id'>点击发送到家庭群或家长 邀请家长加入班级</div>
+    <div class="tips" v-if='pathData.user_id == userDataState.user_id || pathData.user_id == 0'>点击发送到家庭群或家长 邀请家长加入班级</div>
     <div class="share-cover">
       <div class="present">
         <span class="animated fadeInUp" :style="{animationDelay:`${200*index}ms`}" v-for='(item,index) in tips' :key="index">{{item}}</span>

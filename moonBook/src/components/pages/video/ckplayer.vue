@@ -35,7 +35,7 @@ import axios from './../../lib/js/api'
 import { timeago } from './../../lib/js/util'
 import videoList from './../../module/video'
 import comment from './../../module/comment'
-import './../../../../static/ckplayer/ckplayer/ckplayer'
+// import './../../../../static/ckplayer/ckplayer/ckplayer'
 import { mapActions,mapState } from 'vuex'
 
 export default {
@@ -46,9 +46,9 @@ export default {
   },
   computed: {
     ...mapState('openWX',['ready']),
-    player() {
-      return new ckplayer(this.videoObject)
-    }
+    // player() {
+    //   return new ckplayer(this.videoObject)
+    // }
   },
   data() {
     return {
