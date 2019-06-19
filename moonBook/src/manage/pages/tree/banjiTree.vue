@@ -236,7 +236,7 @@ export default {
         names.push(e.name)
       })
 
-      this.$router.replace({
+      this.$router.push({
         name:'banjiList',
         query:{
           ...this.$route.query,

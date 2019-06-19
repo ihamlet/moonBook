@@ -2,7 +2,7 @@
   <div class="banji-list">
     <van-nav-bar :title="$route.query.school_name?$route.query.school_name:'班级列表'" :border='false' v-if='!moduleType'/>
     <div class="list-container">
-        <van-tabs v-model="active" :swipeable='!moduleType' animated :sticky='moduleType!="tab"' color='#0084ff' :line-width='20' :line-height='4' @change='onRefresh' :border='false'>
+        <van-tabs v-model="active" :swipeable='moduleType!="tab"' animated :sticky='moduleType!="tab"' color='#0084ff' :line-width='20' :line-height='4' @change='onRefresh' :border='false'>
             <van-tab :title="list.year" v-for='(list,index) in tab' :key="index">
                 <van-pull-refresh v-model="loading" @refresh="onRefresh" :disabled="drag">
                     <div class="list" v-if='banjiList.length'>
