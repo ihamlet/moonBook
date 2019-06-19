@@ -195,7 +195,7 @@ export default {
     },
     allCheck() {
       this.$dialog.confirm({
-        message: '此操作将会通过全部待审核的学生，您确定要这么做吗?'
+        message: `此操作将会通过${this.form.title}全部待审核的学生，您确定要这么做吗?`
       }).then(() => {
 
         let data = {
