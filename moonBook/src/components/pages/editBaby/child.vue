@@ -82,11 +82,13 @@ import axios from './../../lib/js/api'
 import { mapActions, mapGetters } from 'vuex'
 import { VueCropper } from 'vue-cropper'
 import { format } from './../../lib/js/util'
+import { newBanjiTitle } from './../../lib/js/mixin'
 import avatar from './../../module/avatar'
 import cardRouting from './../../module/cardRouting'
 
 export default {
   name: 'child',
+  mixins: [ newBanjiTitle ],
   components: {
     VueCropper,
     avatar,
@@ -390,15 +392,17 @@ export default {
         })
       }
     },
-    formatBanjiTitle(text){
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        let arr = text.split('')
-        let newArr = [...new Set(arr)]
-        return newArr.join('')
-      }
-    },
+    // formatBanjiTitle(text){
+    //   if(text){
+    //     if ( text.indexOf('班') == -1) {
+    //       return text + '班'
+    //     } else {
+    //       let arr = text.split('')
+    //       let newArr = [...new Set(arr)]
+    //       return text
+    //     }
+    //   }
+    // },
     onParentChange(picker, values){
       this.childInfo.relation_name = values
     },

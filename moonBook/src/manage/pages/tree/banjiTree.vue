@@ -49,11 +49,11 @@
 import axios from './../../../components/lib/js/api'
 import studentCard from './../../module/user/studentCard'
 import { mapGetters } from 'vuex'
-import { selection } from './../../../components/lib/js/mixin'
+import { selection,newBanjiTitle } from './../../../components/lib/js/mixin'
 
 export default {
   name: 'banjiTree',
-  mixins:[selection],
+  mixins:[selection,newBanjiTitle],
   components:{
     studentCard
   },
@@ -205,15 +205,15 @@ export default {
           
       })
     },
-    formatBanjiTitle(text) {
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        let arr = text.split('')
-        let newArr = [...new Set(arr)]
-        return newArr.join('')
-      }
-    },
+    // formatBanjiTitle(text) {
+    //   if (text && text.indexOf('班') == -1) {
+    //     return text + '班'
+    //   } else {
+    //     let arr = text.split('')
+    //     let newArr = [...new Set(arr)]
+    //     return newArr.join('')
+    //   }
+    // },
     invite(){
       this.$router.push({
         name:'share',

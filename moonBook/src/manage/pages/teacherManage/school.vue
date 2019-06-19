@@ -19,8 +19,8 @@
           <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
             <draggable v-model="teacherList" @update="datadragEnd" :options="{animation:500}" :disabled="!drag" handle=".info">
               <transition-group>
-                <div class="user-card flex flex-align" v-for='item in teacherList' :key='item.id' v-if='item.user_id > 0'>
-                  <userCard :item='item' :isMaster='isMaster' :isHead='isHead' :isSchoolHead='isSchoolHead' @statusChange='setStutas'/>
+                <div class="user-card flex flex-align" v-for='item in teacherList' :key='item.id'>
+                  <userCard :item='item' v-if='item.user_id > 0' :isMaster='isMaster' :isHead='isHead' :isSchoolHead='isSchoolHead' @statusChange='setStutas'/>
                 </div>
               </transition-group>
             </draggable>

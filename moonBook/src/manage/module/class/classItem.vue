@@ -19,10 +19,11 @@
 </template>
 <script>
 import axios from './../../../components/lib/js/api'
-
+import { newBanjiTitle } from './../../../components/lib/js/mixin'   
 
 export default {
     name:'class-list',
+    mixins: [ newBanjiTitle ],
     props:{
         item:{
             type:Object,
@@ -43,15 +44,15 @@ export default {
         }
     },
     methods: {
-        formatBanjiTitle(text){
-            if (text && text.indexOf('班') == -1) {
-                return text + '班'
-            } else {
-                let arr = text.split('')
-                let newArr = [...new Set(arr)]
-                return newArr.join('')
-            }
-        },
+        // formatBanjiTitle(text){
+        //     if (text && text.indexOf('班') == -1) {
+        //         return text + '班'
+        //     } else {
+        //         let arr = text.split('')
+        //         let newArr = [...new Set(arr)]
+        //         return newArr.join('')
+        //     }
+        // },
         selection(){
             switch(this.moduleType){
                 case 'tab':

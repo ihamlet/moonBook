@@ -50,10 +50,12 @@
 import axios from './../../lib/js/api'
 import { mapActions, mapGetters } from 'vuex'
 import { format } from './../../lib/js/util'
+import { newBanjiTitle } from './../../lib/js/mixin'
 import apps from './../../module/myModule/apps'
 
 export default {
   name: 'teacher',
+  mixins: [ newBanjiTitle ],
   components: {
     apps
   },
@@ -299,15 +301,15 @@ export default {
     getTime(time){
       return format(time*1000,'yyyy-MM-dd')
     },
-    formatBanjiTitle(text){
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        let arr = text.split('')
-        let newArr = [...new Set(arr)]
-        return newArr.join('')
-      }
-    },
+    // formatBanjiTitle(text){
+    //   if (text && text.indexOf('班') == -1) {
+    //     return text + '班'
+    //   } else {
+    //     let arr = text.split('')
+    //     let newArr = [...new Set(arr)]
+    //     return newArr.join('')
+    //   }
+    // },
     onClose(){
       this.$refs.officePicker.setColumnValue(0,0)
       this.show = false

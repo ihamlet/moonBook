@@ -28,7 +28,7 @@ import { manageStateList } from './../../lib/js/mixin'
 
 export default {
   name: 'article-operation',
-  mixins: [manageStateList],
+  mixins: [ manageStateList ],
   props: ['item'],
   components: {
     topicList  
@@ -97,15 +97,15 @@ export default {
         }
       })
     },
-    formatBanjiTitle(text) {
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        let arr = text.split('')
-        let newArr = [...new Set(arr)]
-        return newArr.join('')
-      }
-    },
+    // formatBanjiTitle(text) {
+    //   if (text && text.indexOf('班') == -1) {
+    //     return text + '班'
+    //   } else {
+    //     let arr = text.split('')
+    //     let newArr = [...new Set(arr)]
+    //     return newArr.join('')
+    //   }
+    // },
     onChange(picker, values){
       this.childId = values.id
     },

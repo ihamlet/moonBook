@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from './../components/lib/js/api'
-import { isRepeatArr } from './../components/lib/js/util'
+// import { isRepeatArr } from './../components/lib/js/util'
 
 import fetchJsonp from 'fetch-jsonp'
 import Cookies from 'vue-cookie'
@@ -50,7 +50,7 @@ const getters = {
     return state.msgLength
   },
   managerState: state => {
-    return isRepeatArr(state.manager)
+    return state.manager
   },
   userPraiseState: state => {
     let praise = []

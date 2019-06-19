@@ -39,12 +39,12 @@
 <script>
 import axios from './../../../components/lib/js/api'
 import { slectDuty } from './../../../components/lib/js/schoolInfo'
-import { getBanjiYear } from './../../../components/lib/js/mixin'
+import { getBanjiYear,newBanjiTitle } from './../../../components/lib/js/mixin'
 import { mapActions,mapGetters } from 'vuex'
 
 export default {
   name: 'teacherEdit',
-  mixins: [getBanjiYear],
+  mixins: [getBanjiYear,newBanjiTitle],
   computed: {
       ...mapGetters('manage',['manageSchoolInfo'])
   },
@@ -147,15 +147,15 @@ export default {
                 }
             })
         },
-        formatBanjiTitle(text) {
-            if (text && text.indexOf('班') == -1) {
-                return text + '班'
-            } else {
-                let arr = text.split('')
-                let newArr = [...new Set(arr)]
-                return newArr.join('')
-            }
-        },
+        // formatBanjiTitle(text) {
+        //     if (text && text.indexOf('班') == -1) {
+        //         return text + '班'
+        //     } else {
+        //         let arr = text.split('')
+        //         let newArr = [...new Set(arr)]
+        //         return newArr.join('')
+        //     }
+        // },
         sumbit(){
             switch(this.$route.query.type){
                 case 'edit':

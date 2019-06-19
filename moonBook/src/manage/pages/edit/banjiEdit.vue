@@ -84,9 +84,11 @@ import axios from './../../../components/lib/js/api'
 import studentCard from './../../module/user/studentCard'
 import userCard from './../../module/user/userCard'
 import { mapGetters } from 'vuex'
+import { newBanjiTitle } from './../../../components/lib/js/mixin'
 
 export default {
   name: 'banjiEdit',
+  mixins: [ newBanjiTitle ],
   components: {
     studentCard,
     userCard
@@ -224,15 +226,15 @@ export default {
       this.form.grade_name = this.$route.query.grade_name
       this.show = false
     },
-    formatBanjiTitle(text) {
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        let arr = text.split('')
-        let newArr = [...new Set(arr)]
-        return newArr.join('')
-      }
-    },
+    // formatBanjiTitle(text) {
+    //   if (text && text.indexOf('班') == -1) {
+    //     return text + '班'
+    //   } else {
+    //     let arr = text.split('')
+    //     let newArr = [...new Set(arr)]
+    //     return newArr.join('')
+    //   }
+    // },
     sumbit() {
       let regInvite = /^\d{4}$/
       let regBanjiName = /^([\u2E80-\u9FFF]|[a-zA-Z0-9]){1,10}$/

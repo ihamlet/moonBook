@@ -36,12 +36,14 @@ const manageStateList = {
     },
     methods: {
         formatBanjiTitle(text) {
-            if (text && text.indexOf('班') == -1) {
-              return text + '班'
-            } else {
-                let arr = text.split('')
-                let newArr = [...new Set(arr)]
-                return newArr.join('')
+            if(text){
+                if (text.indexOf('班') == -1) {
+                    return text + '班'
+                    } else {
+                        let arr = text.split('')
+                        let newArr = [...new Set(arr)]
+                        return newArr.join('')
+                    }
             }
         },
         onRecommendSelect(item) {
@@ -163,6 +165,22 @@ const getBanjiYear = {
     }
 }
 
+const newBanjiTitle = {
+    methods:{
+        formatBanjiTitle(text) {
+            if(text){
+                if (text.indexOf('班') == -1) {
+                    return text + '班'
+                    } else {
+                        let arr = text.split('')
+                        let newArr = [...new Set(arr)]
+                        return newArr.join('')
+                    }
+            }
+        }
+    }
+}
+
 const watchTouch = {
     data() {
         return {
@@ -224,5 +242,6 @@ export {
     watchScroll,
     getBanjiYear,
     watchTouch,
-    selection
+    selection,
+    newBanjiTitle
 }

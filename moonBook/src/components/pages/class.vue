@@ -70,14 +70,14 @@
 <script>
 import axios from './../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
-import { getBanjiYear } from './../lib/js/mixin'
+import { getBanjiYear,newBanjiTitle } from './../lib/js/mixin'
 import { format } from './../lib/js/util'
 import avatar from './../module/avatar'
 import round from './../module/animate/round'
 
 export default {
   name: 'edit-class',
-  mixins:[getBanjiYear],
+  mixins:[getBanjiYear,newBanjiTitle],
   components: {
     avatar,
     round
@@ -267,15 +267,15 @@ export default {
         }
       })
     },
-    formatBanjiTitle(text) {
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        let arr = text.split('')
-        let newArr = [...new Set(arr)]
-        return newArr.join('')
-      }
-    },
+    // formatBanjiTitle(text) {
+    //   if (text && text.indexOf('班') == -1) {
+    //     return text + '班'
+    //   } else {
+    //     let arr = text.split('')
+    //     let newArr = [...new Set(arr)]
+    //     return newArr.join('')
+    //   }
+    // },
     isYearShow(item, index) {
       let yearHistory
       if (index > 0) {

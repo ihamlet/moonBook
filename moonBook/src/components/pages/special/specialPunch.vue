@@ -34,11 +34,13 @@
 import axios from './../../lib/js/api'
 import { mapGetters,mapMutations,mapState } from 'vuex'
 import { format } from './../../lib/js/util'
+import { newBanjiTitle } from './../../lib/js/mixin'
 import graphicCard from './../../module/card/graphicCard'
 import tips from './../../module/release/tips'
 
 export default {
   name: 'special-punch',
+  mixins: [ newBanjiTitle ],
   components: {
     graphicCard,
     tips
@@ -165,15 +167,15 @@ export default {
             }
         })    
     },
-    formatBanjiTitle(text) {
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        let arr = text.split('')
-        let newArr = [...new Set(arr)]
-        return newArr.join('')
-      }
-    },
+    // formatBanjiTitle(text) {
+    //   if (text && text.indexOf('班') == -1) {
+    //     return text + '班'
+    //   } else {
+    //     let arr = text.split('')
+    //     let newArr = [...new Set(arr)]
+    //     return newArr.join('')
+    //   }
+    // },
     onRefresh(){
       this.page = 1
       this.getList().then(() => {

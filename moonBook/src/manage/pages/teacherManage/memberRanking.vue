@@ -94,11 +94,11 @@
 import axios from './../../../../src/components/lib/js/api'
 import svgRanking from './../../../components/module/animate/svg/ranking'
 import { mapGetters } from 'vuex'
-import { watchScroll } from './../../../components/lib/js/mixin'
+import { watchScroll,newBanjiTitle } from './../../../components/lib/js/mixin'
 
 export default {
   name: 'memberRanking',
-  mixins:[watchScroll],
+  mixins:[ watchScroll,newBanjiTitle ],
   components: {
     svgRanking,
   },
@@ -226,15 +226,6 @@ export default {
         this.loading = false
       })
     },
-    formatBanjiTitle(text){
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        let arr = text.split('')
-        let newArr = [...new Set(arr)]
-        return newArr.join('')
-      }
-    },
     toBabyHome(child){
       this.$router.push({
         name:'baby-home',
@@ -252,15 +243,6 @@ export default {
       this.onLoad().then(()=>{
         this.loading = false
       })
-    },
-    formatBanjiTitle(text) {
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        let arr = text.split('')
-        let newArr = [...new Set(arr)]
-        return newArr.join('')
-      }
     },
     toSchoolHome(){
       this.$router.push({

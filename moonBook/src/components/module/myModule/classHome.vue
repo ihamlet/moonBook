@@ -17,12 +17,14 @@
 </template>
 <script>
 import { format } from './../../lib/js/util'
+import { newBanjiTitle } from './../../lib/js/mixin'
 import axios from './../../lib/js/api'
 import { mapGetters } from 'vuex'
 
 export default {
   name: "class-home",
   props: ['children'],
+  mixins: [ newBanjiTitle ],
   computed: {
     ...mapGetters(['userDataState']),
     selectPrompt() {
@@ -86,15 +88,15 @@ export default {
           break
       }
     },
-    formatBanjiTitle(text) {
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        let arr = text.split('')
-        let newArr = [...new Set(arr)]
-        return newArr.join('')
-      }
-    }
+    // formatBanjiTitle(text) {
+    //   if (text && text.indexOf('班') == -1) {
+    //     return text + '班'
+    //   } else {
+    //     let arr = text.split('')
+    //     let newArr = [...new Set(arr)]
+    //     return newArr.join('')
+    //   }
+    // }
   }
 }
 </script>

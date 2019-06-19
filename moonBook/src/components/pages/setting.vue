@@ -9,10 +9,12 @@
 </template>
 <script>
 import axios from './../lib/js/api'
+import { newBanjiTitle } from './../lib/js/mixin'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'baby-setting',
+  mixins: [ newBanjiTitle ],
   computed: {
     ...mapGetters(['userDataState'])
   },
@@ -60,15 +62,15 @@ export default {
         this.$toast.fail('请选择学校')
       }
     },
-    formatBanjiTitle(text){
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        let arr = text.split('')
-        let newArr = [...new Set(arr)]
-        return newArr.join('')
-      }
-    }
+    // formatBanjiTitle(text){
+    //   if (text && text.indexOf('班') == -1) {
+    //     return text + '班'
+    //   } else {
+    //     let arr = text.split('')
+    //     let newArr = [...new Set(arr)]
+    //     return newArr.join('')
+    //   }
+    // }
   }
 }
 </script>

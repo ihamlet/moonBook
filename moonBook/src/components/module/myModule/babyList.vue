@@ -44,6 +44,7 @@
 <script>
 import axios from "./../../lib/js/api"
 import { format } from './../../lib/js/util'
+import { newBanjiTitle } from './../../lib/js/mixin'
 import numberGrow from "./../../module/animate/numberGrow"
 import avatar from "./../../module/avatar"
 import { mapGetters } from 'vuex'
@@ -51,6 +52,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: "baby-list",
   props: ['childrenList'],
+  mixins: [ newBanjiTitle ],
   components: {
     numberGrow,
     avatar
@@ -131,15 +133,15 @@ export default {
     imgError(e) {
       e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     },
-    formatBanjiTitle(text) {
-      if (text && text.indexOf('班') == -1) {
-        return text + '班'
-      } else {
-        let arr = text.split('')
-        let newArr = [...new Set(arr)]
-        return newArr.join('')
-      }
-    },
+    // formatBanjiTitle(text) {
+    //   if (text && text.indexOf('班') == -1) {
+    //     return text + '班'
+    //   } else {
+    //     let arr = text.split('')
+    //     let newArr = [...new Set(arr)]
+    //     return newArr.join('')
+    //   }
+    // },
   }
 }
 </script>

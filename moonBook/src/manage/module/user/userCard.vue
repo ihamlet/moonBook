@@ -61,9 +61,11 @@
 <script>
 import axios from './../../../components/lib/js/api'
 import { mapGetters } from 'vuex'
+import { newBanjiTitle } from './../../../components/lib/js/mixin'
 
 export default {
     name:'userCard',
+    mixins: [ newBanjiTitle ],
     computed: {
         ...mapGetters('manage',['manageSchoolInfo'])
     },
@@ -168,15 +170,15 @@ export default {
                 
             })
         },
-        formatBanjiTitle(text) {
-            if (text && text.indexOf('班') == -1) {
-                return text + '班'
-            } else {
-                let arr = text.split('')
-                let newArr = [...new Set(arr)]
-                return newArr.join('')
-            }
-        },
+        // formatBanjiTitle(text) {
+        //     if (text && text.indexOf('班') == -1) {
+        //         return text + '班'
+        //     } else {
+        //         let arr = text.split('')
+        //         let newArr = [...new Set(arr)]
+        //         return newArr.join('')
+        //     }
+        // },
         toSchool(){
             if(this.item.school_id > 0){
                 this.$router.push({
