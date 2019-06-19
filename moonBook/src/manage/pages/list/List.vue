@@ -15,8 +15,12 @@
       <van-pull-refresh v-model="loading" @refresh="onRefresh">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <div class="list" v-if='list.length'>
-            <userCard v-if='$route.query.pageType == "teacher"&&item.user_id > 0' v-for='(item,index) in list' :item='item' :key="index" :isBtnShow='false' type='list' @selectTeacher="addTeacher"/>
-            <studentCard v-if='$route.query.pageType == "students"' v-for='(item,index) in list' :key="index" :selectShow='true' :item='item' :isBtnShow='false' @electChild='selectSwitch' />
+            <div class="teacher-card" v-for='(item,index) in list' :key="index">
+              <userCard v-if='$route.query.pageType == "teacher"&&item.user_id > 0' :item='item'  :isBtnShow='false' type='list' @selectTeacher="addTeacher"/>
+            </div>
+            <div class="student-card" v-for='(item,index) in list' :key="index">
+              <studentCard v-if='$route.query.pageType == "students"' :selectShow='true' :item='item' :isBtnShow='false' @electChild='selectSwitch' />
+            </div>
           </div>
           <div class="no-list" v-else>
             尚无成员

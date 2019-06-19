@@ -2,7 +2,7 @@
     <van-cell>
         <div class="user-card flex flex-align">
             <div class="info flex flex-align">
-                <img :src="item.avatar" @error="imgError" @click="show = true"/>
+                <img :src="item.avatar" @error="imgError" @click="show = true" v-http2https/>
                 <div class="user-info" @click="show = true">
                     <div class="name">{{item.name}}</div>
                     <div class="child flex" v-line-clamp:20="1" v-if='activeId!=0'>{{item.parent_name?`${item.parent_name} | `:''}}{{item.relation_name}}</div>
@@ -26,7 +26,7 @@
             
             <div class="techer-card">      
                 <div class="avatar">
-                    <img :src="item.avatar" @error="imgError"/>
+                    <img :src="item.avatar" @error="imgError" v-http2https/>
                 </div>
            
                 <van-cell-group>

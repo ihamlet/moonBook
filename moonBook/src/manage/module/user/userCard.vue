@@ -2,7 +2,7 @@
     <van-cell @click="selectTeacher">
         <div class="user-card flex flex-align">
             <div class="info flex flex-align" @click="toEditPage">
-                <img :src="item.avatar" @error="imgError"/>
+                <img :src="item.avatar" @error="imgError" v-http2https/>
 
                 <div class="user-info">
                     <div class="name">{{item.username}}</div>
@@ -31,7 +31,7 @@
             
             <div class="techer-card">      
                 <div class="avatar" @click="toEditPage">
-                    <img :src="item.avatar" @error="imgError" v-if='item.avatar'/>
+                    <img :src="item.avatar" @error="imgError" v-if='item.avatar' v-http2https/>
                 </div>
            
                 <van-cell-group>

@@ -1419,7 +1419,7 @@ i.iconfont.vip-1 {
   text-align: left;
 }
 
-.van-collapse-item__content{
+.collapse-item .van-collapse-item__content{
   padding: 0;
 }
 </style>

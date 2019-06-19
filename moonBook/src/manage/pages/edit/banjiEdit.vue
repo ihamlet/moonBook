@@ -15,7 +15,7 @@
         </van-cell-group>
         <div class="list">
           <van-collapse v-model="activeNames" :border='false'>
-            <van-collapse-item name="teacher" :border='false'>
+            <van-collapse-item class="collapse-item" name="teacher" :border='false'>
               <div class="collapse-title flex flex-align" slot='title'>老师</div>
               <div class="teacher-list" v-if='teacherList.length'>
                 <van-cell v-if='teacherList.length'>
@@ -40,7 +40,7 @@
                 <van-button round class="theme-btn" plain type="primary" @click="toList('teacher')">添加老师</van-button>
               </div>
             </van-collapse-item>
-            <van-collapse-item name="student" :border='false'>
+            <van-collapse-item class="collapse-item" name="student" :border='false'>
               <div class="collapse-title flex flex-align" slot='title'>学生 <van-tag class="tag" round type="success"
                   size="medium" v-if='count > 0'>{{count}}人</van-tag>
               </div>
