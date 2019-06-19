@@ -34,9 +34,7 @@ const shcoolScale = [
 const slectDuty = [
     '班主任', 
     '带班老师', 
-    '生活老师',
-    '校长',
-    '副校长'
+    '生活老师'
 ]
 
 export {

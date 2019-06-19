@@ -1418,4 +1418,8 @@ i.iconfont.vip-1 {
   white-space: nowrap;
   text-align: left;
 }
+
+.van-collapse-item__content{
+  padding: 0;
+}
 </style>

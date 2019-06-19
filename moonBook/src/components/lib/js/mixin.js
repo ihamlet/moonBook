@@ -39,7 +39,9 @@ const manageStateList = {
             if (text && text.indexOf('班') == -1) {
               return text + '班'
             } else {
-              return text
+                let arr = text.split('')
+                let newArr = [...new Set(arr)]
+                return newArr.join('')
             }
         },
         onRecommendSelect(item) {
@@ -199,8 +201,21 @@ const watchTouch = {
     }
 }
 
-const manageJurisdiction = {
-    
+const selection = {
+    data() {
+        return {
+            selectChilds:[]
+        }
+    },
+    methods: {
+        selectSwitch(operating,item){
+            if(operating){
+              this.selectChilds.push(item)
+            }else{
+              this.selectChilds.splice(this.selectChilds.length-1, 1)
+            }
+          }
+    }
 }
 
 export {
@@ -209,4 +224,5 @@ export {
     watchScroll,
     getBanjiYear,
     watchTouch,
+    selection
 }

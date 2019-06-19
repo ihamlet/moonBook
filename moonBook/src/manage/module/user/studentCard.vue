@@ -2,10 +2,6 @@
     <van-cell>
         <div class="user-card flex flex-align">
             <div class="info flex flex-align">
-                <div class="select" @click="selectChild">  
-                    <i class="icon-select theme-color iconfont"  v-if='select'>&#xea32;</i>
-                    <i class="icon-select to-be-selected  iconfont" v-else-if='selectShow'>&#xe677;</i>
-                </div>
                 <img :src="item.avatar" @error="imgError" @click="show = true"/>
                 <div class="user-info" @click="show = true">
                     <div class="name">{{item.name}}</div>
@@ -13,9 +9,13 @@
                     <div class="child flex" v-line-clamp:20="1" v-else>{{item.banji_name?`${formatBanjiTitle(item.banji_name)} | `:''}}{{item.parent_name}}</div>
                 </div>
             </div>
-            <div class="operation-btn flex flex-align">
+            <div class="operation-btn flex flex-align" v-if='isBtnShow&&!selectShow'>
                 <!-- <van-button class="pass" size="small" round type="info" @click="info">详情</van-button> -->
                 <van-button class="past" size="small" round :type="item.is_banji_confirm == 1?'warning':'primary'" @click="past">  {{item.is_banji_confirm == 1?'请出':'通过'}} </van-button>
+            </div>
+            <div class="select" v-else @click="selectChild">  
+                <i class="icon-select theme-color iconfont"  v-if='select'>&#xea32;</i>
+                <i class="icon-select to-be-selected  iconfont" v-else-if='selectShow'>&#xe677;</i>
             </div>
         </div> 
 
@@ -84,6 +84,10 @@ export default {
         selectShow:{
             type: Boolean,
             default: false
+        },
+        isBtnShow:{
+            type: Boolean,
+            default: true
         }
     }, 
     data () {
@@ -101,37 +105,54 @@ export default {
     },
     methods: {
         past(){
-            
+
             let apiType = this.item.is_banji_confirm == 1?'kick':'check'
+            let msg
 
-            axios.get(`/SchoolManage/students/${apiType}`,{
-                params:{
-                    id: this.item.id
-                }
-            }).then(res=>{
-                switch(res.data.status){
-                    case 1:
-                        if(apiType == 'check'){
-                            this.item.is_banji_confirm = 1
-                            this.$toast.success('审核通过')
-                        }else{
-                            this.item.is_banji_confirm = 0
+            switch(apiType){
+                case 'kick':
+                    msg = `您确定要请出${this.item.name}该学生吗?此操作后，该用户将无法进入${this.formatBanjiTitle(this.item.banji_name)}。`
+                    break
+                case 'check':
+                    msg = `您确定要通过${this.item.name}吗?`
+                    break
+            }
+
+            this.$dialog.confirm({
+                message: msg
+            }).then(()=>{
+                axios.get(`/SchoolManage/students/${apiType}`,{
+                    params:{
+                        id: this.item.id
+                    }
+                }).then(res=>{
+                    switch(res.data.status){
+                        case 1:
+                            if(apiType == 'check'){
+                                this.item.is_banji_confirm = 1
+                                this.$toast.success('审核通过')
+                            }else{
+                                this.item.is_banji_confirm = 0
+                                this.$toast(res.data.msg)
+                            }
+
+                            this.$emit('statusChange')
+                            break
+                        default:
                             this.$toast(res.data.msg)
-                        }
-
-                        this.$emit('statusChange')
-                        break
-                    default:
-                        this.$toast(res.data.msg)
-                }
+                    }
+                })
+            }).catch(()=>{
+                
             })
-
         },
         formatBanjiTitle(text) {
             if (text && text.indexOf('班') == -1) {
                 return text + '班'
             } else {
-                return text
+                let arr = text.split('')
+                let newArr = [...new Set(arr)]
+                return newArr.join('')
             }
         },
         toSchool(){

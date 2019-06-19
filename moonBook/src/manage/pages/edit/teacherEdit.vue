@@ -27,7 +27,8 @@
     </div>
 
     <van-popup v-model="show" position="bottom">
-        <van-picker show-toolbar title="职务" :columns="columns" @change="selectDuty" @cancel="onCancel" @confirm="show = false"/>
+        <van-picker show-toolbar title="职务" visible-item-count='3' :columns="columns" @change="selectDuty" @cancel="onCancel" @confirm="show = false"/>
+        <van-field size='large' input-align='right' label="填写职务" v-model="duty" placeholder="请填写职务" />
     </van-popup>
 
     <div class="footer-bar">
@@ -60,8 +61,14 @@ export default {
       isSchoolHead: this.$route.query.is_school_head == 1?true:false,
       columns: slectDuty,
       regPhone: /^1[34578]\d{9}$/,
-      loading: false
+      loading: false,
+      duty:''
     }
+  },
+  watch: {
+      duty(val){
+        this.form.duty = val
+      }
   },
   methods: {
       ...mapActions('manage',['getSchoolList']),
@@ -144,16 +151,18 @@ export default {
             if (text && text.indexOf('班') == -1) {
                 return text + '班'
             } else {
-                return text
+                let arr = text.split('')
+                let newArr = [...new Set(arr)]
+                return newArr.join('')
             }
         },
         sumbit(){
-            this.loading = true
             switch(this.$route.query.type){
                 case 'edit':
                     this.$dialog.confirm({
                         message: `您确定要修改${this.form.username}的相关信息吗?`
                     }).then(() => {
+                        this.loading = true
                         axios.post('/SchoolManage/teacher/edit',{...this.form}).then(res=>{
                             this.loading = false
                             switch(res.data.status){
@@ -172,17 +181,14 @@ export default {
                 case 'add':
                     if(!this.form.username){
                         this.$toast('请填写姓名')
-                        this.loading = false
                     }else if(!this.form.mobile){
                         this.$toast('请填写手机号')
-                        this.loading = false
                     }else if(this.form.username.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null){
                         this.$toast('请正确填写姓名')
-                        this.loading = false
                     }else if(!this.regPhone.test(this.form.mobile)){
                         this.$toast('请正确填写手机号')
-                        this.loading = false
                     }else{
+                        this.loading = true
                         let data = {
                             ...this.$route.query,
                             ...this.form,

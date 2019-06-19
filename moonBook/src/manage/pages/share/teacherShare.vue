@@ -82,15 +82,10 @@ export default {
             shareShow: false
         }
     },
-    created() {
-        this.$nextTick(()=>{
-            this.play()
-            this.wxShare()
-        })
-    },
     watch: {
         ready(){
             this.wxShare()
+            this.play()
         }
     },
     methods: {

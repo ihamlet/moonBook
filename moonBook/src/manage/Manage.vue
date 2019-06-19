@@ -71,6 +71,14 @@ export default {
         color: #67C23A;
         margin-right: 20px;
     }
+
+    .boss-key{
+        position: fixed;
+        bottom: 50px;
+        left: 50%;
+        margin-left: -40px;
+    }
+
 }
 
 .van-cell__value.info-cell{

@@ -1,11 +1,13 @@
 <template>
   <div class="edit-school">
     <div class="fixed">
-      <van-search placeholder="请输入学校名称" v-model="keyword" show-action shape="round" @search="onSearch">
-        <div class="theme-color" slot="action" @click="onSearch">
-          搜索
-        </div>
-      </van-search>
+      <form action="/">
+        <van-search placeholder="请输入学校名称" v-model="keyword" show-action shape="round" @search="onSearch">
+          <div class="theme-color" slot="action" @click="onSearch">
+            搜索
+          </div>
+        </van-search>
+      </form>
     </div>
     <div class="container" v-if='!isListShow'>
 

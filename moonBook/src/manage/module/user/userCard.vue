@@ -1,5 +1,5 @@
 <template>
-    <van-cell>
+    <van-cell @click="selectTeacher">
         <div class="user-card flex flex-align">
             <div class="info flex flex-align" @click="toEditPage">
                 <img :src="item.avatar" @error="imgError"/>
@@ -12,14 +12,16 @@
                         <van-tag plain round type="primary" v-if='item.is_master == 1'>管理员</van-tag>
                     </div>
 
-                    <div class="child flex" v-line-clamp:20="1">{{item.banji_name?`${formatBanjiTitle(item.banji_name)} | `:''}}{{item.duty}}</div>                
+                    <div class="child flex" v-line-clamp:20="1">{{formatBanjiTitle(item.banji_name)}} <span v-if='item.banji_name&&item.duty'>|</span> {{item.duty}}</div>                
                 </div>
             </div>
 
-            <div class="operation-btn flex flex-align">
+            <div class="operation-btn flex flex-align" v-if='isBtnShow'>
                 <van-button class="pass" size="small" round type="info" @click="info">详情</van-button>
-                <van-button :disabled='!(isMaster == 1&&item.is_master == 0)' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
+                <van-button v-if='type!="list"' :disabled='!(manageSchoolInfo.is_master == 1&&item.is_master == 0)' class="past" size="small" round :type="item.is_confirm == 1?'warning':'primary'" @click="past">  {{item.is_confirm == 1?'请出':'通过'}} </van-button>
             </div>
+
+            <i class="iconfont icon-arrow" v-else>&#xe72a;</i>
         </div> 
 
         <van-popup v-model="show" get-container='#app' class="popup-techaer">
@@ -34,7 +36,7 @@
            
                 <van-cell-group>
                     <van-cell title="手机号" :border='false' v-if='item.mobile'>
-                        <a class="theme-color" :href="`tel:${item.mobile}`">{{item.mobile}}</a>
+                        <a class="theme-color" :href="`tel:${item.mobile}`">请触拨号</a>
                     </van-cell>
                     <van-cell title="姓名" v-if='item.username' :value="item.username" :border='false'/>
                     <van-cell title="学校" v-if='item.school_name' :value="item.school_name" :border='false' value-class='info-cell' is-link @click="toSchool"/>
@@ -44,7 +46,7 @@
                     <van-cell title="审核时间" :value='teacherInfo.confirm_date' value-class='info-cell' :border='false'/>
                 </van-cell-group>
 
-                <div class="popup-footer flex-align flex">
+                <div class="popup-footer flex-align flex" v-if='type!="list"'>
                     <div class="btn">
                         <van-button class="edit" size="small" type="info" round plain @click="toEditPage"> 编辑 </van-button>
                     </div>
@@ -83,6 +85,14 @@ export default {
                     id: 0
                 }
             }
+        },
+        type:{
+            type: String,
+            default:''
+        },
+        isBtnShow:{
+            type: Boolean,
+            default: true
         },
         isMaster:{
             type: Number,
@@ -123,31 +133,48 @@ export default {
         past(){
             
             let apiType = this.item.is_confirm == 1?'kick':'check'
+            let msg
 
-            axios.get(`/SchoolManage/teacher/${apiType}`,{
-                params:{
-                    id: this.item.id
-                }
-            }).then(res=>{
-                switch(res.data.status){
-                    case 1:
-                        // let status = `${apiType == 'check'?1:0}`
+            switch(apiType){
+                case 'kick':
+                    msg = `您确定要请出${this.item.username}老师吗?此操作后，该用户将无法进入学校和班级。`
+                    break
+                case 'check':
+                    msg = `您确定要通过${this.item.username}吗?`
+                    break
+            }
 
-                        this.$toast.success(res.data.msg)
+            this.$dialog.confirm({
+                message: msg
+            }).then(()=>{
+                axios.get(`/SchoolManage/teacher/${apiType}`,{
+                    params:{
+                        id: this.item.id
+                    }
+                }).then(res=>{
+                    switch(res.data.status){
+                        case 1:
+                            // let status = `${apiType == 'check'?1:0}`
 
-                        this.$emit('statusChange', this.item.id, apiType)
-                        break
-                    default:
-                        this.$toast(res.data.msg)
-                }
+                            this.$toast.success(res.data.msg)
+
+                            this.$emit('statusChange', this.item.id, apiType)
+                            break
+                        default:
+                            this.$toast(res.data.msg)
+                    }
+                })
+            }).catch(()=>{
+                
             })
-
         },
         formatBanjiTitle(text) {
             if (text && text.indexOf('班') == -1) {
                 return text + '班'
             } else {
-                return text
+                let arr = text.split('')
+                let newArr = [...new Set(arr)]
+                return newArr.join('')
             }
         },
         toSchool(){
@@ -173,18 +200,23 @@ export default {
             }
         },
         toEditPage(){
-            this.$router.push({
-                name:'teacherEdit',
-                query:{
-                    ...this.teacherInfo,
-                    ...this.item,
-                    isHead: this.isHead,
-                    isMaster: this.isMaster,
-                    isSchoolHead: this.isSchoolHead,
-                    type:'edit',
-                    title: '成员设置'
-                }
-            })
+            if(this.type != 'list'){
+                this.$router.push({
+                    name:'teacherEdit',
+                    query:{
+                        ...this.teacherInfo,
+                        ...this.item,
+                        isHead: this.isHead,
+                        isMaster: this.isMaster,
+                        isSchoolHead: this.isSchoolHead,
+                        type:'edit',
+                        title: '成员设置'
+                    }
+                })
+            }
+        },
+        selectTeacher(){
+            this.$emit('selectTeacher',this.item)
         },
         imgError(e) {
             e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
@@ -254,5 +286,9 @@ export default {
 
 .child{
     font-size: 12px;
+}
+
+.icon-arrow{
+    color: #C0C4CC;
 }
 </style>

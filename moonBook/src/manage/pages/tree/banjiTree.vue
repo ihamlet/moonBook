@@ -49,9 +49,11 @@
 import axios from './../../../components/lib/js/api'
 import studentCard from './../../module/user/studentCard'
 import { mapGetters } from 'vuex'
+import { selection } from './../../../components/lib/js/mixin'
 
 export default {
   name: 'banjiTree',
+  mixins:[selection],
   components:{
     studentCard
   },
@@ -78,8 +80,7 @@ export default {
         { text: '已审核', value: 'is_banji_confirm,1' },
         { text: '已办卡', value: 'is_card,1' },
         { text: '未办卡', value: 'is_card,0' }
-      ],
-      selectChilds:[],
+      ]
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -178,31 +179,39 @@ export default {
       this.onRefresh()
     },
     allCheck(){
-      let data = {
-        params:{
-          is_all: 1
+      this.$dialog.confirm({
+        message: '此操作将会通过全部待审核的学生，您确定要这么做吗?'
+      }).then(()=>{
+        let data = {
+          params:{
+            is_all: 1
+          }
         }
-      }
 
-      if(this.currentBanji){
-        data.params.banji_id = this.currentBanji.banji_id
-      }
-
-      axios.get('/SchoolManage/students/check',data).then(res=>{
-        switch(res.data.status){
-          case 1:
-            this.onRefresh()
-            break
-          default:
-            this.$toast(res.data.msg)
+        if(this.currentBanji){
+          data.params.banji_id = this.currentBanji.banji_id
         }
+
+        axios.get('/SchoolManage/students/check',data).then(res=>{
+          switch(res.data.status){
+            case 1:
+              this.onRefresh()
+              break
+            default:
+              this.$toast(res.data.msg)
+          }
+        })
+      }).catch(()=>{
+          
       })
     },
     formatBanjiTitle(text) {
       if (text && text.indexOf('班') == -1) {
         return text + '班'
       } else {
-        return text
+        let arr = text.split('')
+        let newArr = [...new Set(arr)]
+        return newArr.join('')
       }
     },
     invite(){
@@ -217,13 +226,6 @@ export default {
           user_id: this.currentBanji.user_id
         }
       })
-    },
-    selectSwitch(operating,item){
-      if(operating){
-        this.selectChilds.push(item)
-      }else{
-        this.selectChilds.splice(this.selectChilds.length-1, 1)
-      }
     },
     toBanjiList(type){
       let arr = []
@@ -315,13 +317,6 @@ export default {
 
 .list-wrap{
   padding-top: 50px;
-}
-
-.boss-key{
-  position: fixed;
-  bottom: 50px;
-  left: 50%;
-  transform: translate3d(-50%,0,0)
 }
 
 .child{

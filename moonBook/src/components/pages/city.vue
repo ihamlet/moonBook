@@ -2,11 +2,13 @@
   <div class="city-list">
     <div class="bar flex felx-align fixed">
       <div class="search">
-        <van-search placeholder="请输入城市名/拼音" v-model="keyword" show-action shape="round" @search="onSearch">
-            <div class="theme-color" slot="action" @click="onSearch">
-              搜索
-            </div>
-        </van-search>
+        <form action="/">
+          <van-search placeholder="请输入城市名/拼音" v-model="keyword" show-action shape="round" @search="onSearch">
+              <div class="theme-color" slot="action" @click="onSearch">
+                搜索
+              </div>
+          </van-search>
+        </form>
       </div>
     </div>
     <div class="content" v-if='list.length'>

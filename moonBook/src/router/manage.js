@@ -20,6 +20,8 @@ const banjiEdit = () => import('@/manage/pages/edit/banjiEdit')
 const banjiTree = () => import('@/manage/pages/tree/banjiTree')
 const banjiList = () => import('@/manage/pages/list/banjiList')
 
+const List = () => import('@/manage/pages/list/List')
+
 let manageRouter = {
     path: '/manage',
     name: 'manage',
@@ -59,6 +61,11 @@ let manageRouter = {
             path: '/manage/teacherShare',
             name: 'teacherShare',
             component: teacherShare
+        },
+        {
+            path: '/manage/List',
+            name: 'List',
+            component: List
         }
     ]
 }

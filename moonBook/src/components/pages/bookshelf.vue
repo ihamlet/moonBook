@@ -1,9 +1,11 @@
 <template>
   <div class="bookshelf">
-    <van-search v-model="keyword" placeholder="请输入搜索关键词" show-action shape="round" @search="onSearch" >
-      <div class="card-school-name theme-color" v-line-clamp:20="1" slot="label" @click="toShcoolHome">{{userDataState.card_school_name}}</div>
-      <div slot="action" class="theme-color" @click="onSearch">搜索</div>
-    </van-search>
+    <form action="/">
+      <van-search v-model="keyword" placeholder="请输入搜索关键词" show-action shape="round" @search="onSearch" >
+        <div class="card-school-name theme-color" v-line-clamp:20="1" slot="label" @click="toShcoolHome">{{userDataState.card_school_name}}</div>
+        <div slot="action" class="theme-color" @click="onSearch">搜索</div>
+      </van-search>
+    </form>
     <van-tabs color='#0084ff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex" @click="onClick" @disabled='onClickDisabled' title-inactive-color='#303133' :border='false'>
       <div class="new-point" slot='nav-right' v-if='isNewPointShow'></div>
       <van-tab v-for="(list,index) in tab" :title="list.title" :key="index" :disabled='list.title=="筛选"'>

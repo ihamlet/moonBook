@@ -141,7 +141,7 @@ export default {
       obj.orderby = evt.newIndex
 
 
-      axios.post('/SchoolManage/banji/save',obj).then(res=>{})
+      axios.post('/SchoolManage/banji/edit',obj).then(res=>{})
     }
   }
 }

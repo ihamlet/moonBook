@@ -4,7 +4,7 @@
             <div class="item-cell flex flex-align">
                 <div class="title flex flex-align">
                     <div class="banji-name">{{formatBanjiTitle(item.title)}} </div>   
-                    <van-tag v-if='item.student_count > 0' round type="danger" class="student-count">{{item.student_count == 0?'尚无成员':`${item.student_count}人`}}</van-tag> 
+                    <van-tag v-if='item.student_count > 0' round type="success" class="student-count" size="medium">{{item.student_count == 0?'尚无成员':`${item.student_count}人`}}</van-tag> 
                     <div class="grade-name">{{moduleType == 'tab'?item.year:''}}{{item.grade_name?` | ${formatBanjiTitle(item.grade_name)}`:''}}</div>
                 </div>
                 <div class="head-name" v-if='item.head_name'>
@@ -47,7 +47,9 @@ export default {
             if (text && text.indexOf('班') == -1) {
                 return text + '班'
             } else {
-                return text
+                let arr = text.split('')
+                let newArr = [...new Set(arr)]
+                return newArr.join('')
             }
         },
         selection(){

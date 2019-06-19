@@ -596,7 +596,9 @@ export default {
       if (text && text.indexOf('班') == -1) {
         return text + '班'
       } else {
-        return text
+        let arr = text.split('')
+        let newArr = [...new Set(arr)]
+        return newArr.join('')
       }
     },
     punch() {

@@ -74,9 +74,13 @@
 <script>
 import axios from './../../lib/js/api'
 import { realFormatSecond } from './../../lib/js/util'
+import { mapState } from 'vuex'
 
 export default {
   name: 'audio-player',
+  computed: {
+    ...mapState('openWX',['ready']),
+  },
   data() {
     return {
       count:0,
@@ -97,7 +101,10 @@ export default {
     this.fetchData()
   },
   watch: {
-    '$router': 'fetchData'
+    '$router': 'fetchData',
+    ready(){
+      this.play()
+    }
   },
   methods: {
     fetchData() {
