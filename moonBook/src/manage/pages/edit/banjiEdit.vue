@@ -287,11 +287,24 @@ export default {
         }
       })
     },
-    outTeacher(){
+    outTeacher(item){
       this.$dialog.confirm({
           message: '您确定要请出该老师吗?'
       }).then(()=>{
-
+        axios.post('/SchoolManage/teacher/edit',{
+          ...item,
+          banji_id: 0,
+          banji_name: ''
+        }).then(()=>{
+          switch(res.data.status){
+            case 1:
+              this.$toast.success(res.data.msg)
+              this.$router.go(-1)
+              break
+            default:
+              this.$toast(res.data.msg)
+          }
+        })
       }).catch(()=>{
 
       })
