@@ -6,26 +6,14 @@
         </div>
     </van-nav-bar>
     <van-tabs v-model="active" swipeable animated sticky color='#0084ff' :line-width='20' :line-height='4' :border='false' @change="onTabChange">
+      <van-tab title="办卡数据">
+          <dataCard ref='dataCard'/>
+      </van-tab>
       <van-tab>
         <div class="tab-title" slot="title">
           人员管理 <van-tag round class="tag-danger" type="danger" v-if='count > 0' size="medium">{{count}}</van-tag>
         </div>
-        <van-cell-group :border='false'>
-          <van-cell title="各班待审核的人员" is-link @click="toBanjiTree">
-            <van-tag round type="danger" size="medium" v-if='studentCount > 0'> {{studentCount}}人 </van-tag>
-          </van-cell>
-        </van-cell-group>
-        <van-pull-refresh v-model="loading" @refresh="onRefresh" :disabled='drag'>
-          <van-list v-model="loading" :finished="finished" @load="onLoad" :finished-text="$store.state.slogan">
-            <draggable v-model="teacherList" @update="datadragEnd" :options="{animation:500}" :disabled="!drag" handle=".info">
-              <transition-group>
-                <div class="user-card flex flex-align" v-for='item in teacherList' :key='item.id'>
-                  <userCard :item='item' v-if='item.user_id > 0' :isMaster='isMaster' :isHead='isHead' :isSchoolHead='isSchoolHead' @statusChange='setStutas'/>
-                </div>
-              </transition-group>
-            </draggable>
-          </van-list>
-        </van-pull-refresh>
+        <personnel :drag='drag' :studentCount='studentCount' @getCount='getCount'  ref='personnel'/>
       </van-tab>
       <van-tab title="班级管理">
         <banjiList moduleType='tab' :classYear='classYear' :drag='drag'  ref='banjiList'/>
@@ -35,7 +23,7 @@
     <van-action-sheet v-model="isSelectSchool" :actions="schoolActions" cancel-text="取消" @select="onSelect" @cancel="isSelectSchool = false" />
 
     <transition enter-active-class="slideInUp animated" leave-active-class="slideOutDown animated" mode="out-in">
-      <div class="footer-bar flex flex-align" v-if='drag||top2bottom'>
+      <div class="footer-bar flex flex-align" v-if='(drag||top2bottom) && active > 0'>
         <div class="theme-color" @click="drag = !drag" v-if='isSchoolHead||isHead||isMaster'>{{drag?'完成排序':'排序'}}</div>
         <van-button class="theme-btn" square type="primary" @click="share">{{btnText}}</van-button>
       </div>
@@ -49,23 +37,22 @@
 <script>
 import axios from './../../../components/lib/js/api'
 import overview from './../../module/class/overview'
-import userCard from './../../module/user/userCard'
+import personnel from './../../module/personnel'
+import dataCard from './../../module/data/dataCard'
 import banjiList from './../list/banjiList'
 
 import { mapGetters, mapActions,mapMutations } from 'vuex'
 import { isRepeatAdminArr } from './../../../components/lib/js/util'
 import { getBanjiYear,watchTouch,manageSchoolList } from './../../../components/lib/js/mixin'
 
-import draggable from 'vuedraggable'
-
 export default {
   name: 'manageSchool',
   mixins:[getBanjiYear, watchTouch, manageSchoolList],
   components: {
     overview,
-    userCard,
     banjiList,
-    draggable
+    personnel,
+    dataCard
   },
   computed: {
     ...mapGetters('manage',['manageSchoolInfo']),
@@ -73,14 +60,13 @@ export default {
       let text
 
       switch(this.active){
-        case 0:
+        case 1:
           text = '邀请老师'
           break
-        case 1:
+        case 2:
           text = '创建班级'
           break
       }
-
 
       return text
     }
@@ -88,15 +74,11 @@ export default {
   data() {
     return {
       active: localStorage.getItem('manageTab') || 0,
-      teacherList: [],
       schoolList: [],
       isSelectSchool: false,
       schoolName:'',
       count:0,
       studentCount:0,
-      loading: false,
-      finished: false,
-      page:1,
       schoolId:0,
       isMaster:0,
       isHead:0,
@@ -146,56 +128,20 @@ export default {
         this.page = 1
         this.schoolId = item.school_id
 
-        this.onLoad().then(()=>{
-          this.loading = false
-        })
+        if(this.$refs.personnel){
+          this.$refs.personnel.onRefresh()
+        }
+
+        if(this.$refs.dataCard){
+          this.$refs.dataCard.fetchData()
+          this.$refs.dataCard.clear()
+        }
 
         if(this.$refs.banjiList){
           this.$refs.banjiList.onRefresh()
         }
 
         this.isSelectSchool = false
-    },
-    onLoad(){
-
-        let data = {
-          params:{
-            page: this.page
-          }
-        }
-
-        if(this.manageSchoolInfo){
-          data.params.school_id = this.manageSchoolInfo.school_id
-        }
-
-        return axios.get('/SchoolManage/teacher/getList',data).then(res => {
-            switch (res.data.status) {
-              case 1:
-                if(this.page == 1){
-                  this.teacherList = res.data.data
-                }else{
-                  this.teacherList = this.teacherList.concat(res.data.data)  
-                }
-                                
-                this.page++
-                this.loading = false
-
-                if(arr >= res.data.count){
-                  this.finished = true
-                }
-
-                break
-              default:
-                this.$toast(res.data.msg)
-            }
-        })
-    },
-    onRefresh(){
-      this.page = 1
-      this.onLoad().then(()=>{
-        this.loading = false
-        this.finished = false
-      })
     },
     onTabChange(index){
       localStorage.setItem('manageTab',index)
@@ -229,41 +175,17 @@ export default {
             }
         })
     },
-    toBanjiTree(){
-      this.$router.push({
-        name:'banjiTree',
-        query:{
-          school_id: this.manageSchoolInfo.school_id,
-          year: this.classYear
-        }
-      })
-    },
-    setStutas(id,type){
-
-      this.teacherList.map(e=>{
-        if(e.id == id){
-          return e.is_confirm  = type == 'check'?1:0
-        }
-      })
-
-      this.getCount()
-      
-    },
-    datadragEnd(evt){
-      let arr = this.teacherList.map((e,i)=>{
-          e.school_index = i
-          return e
-      })
-
-      axios.post('/SchoolManage/Teacher/setIndex',arr).then(res=>{})
-
-    },
     share(){
       switch(this.btnText){
         case '邀请老师':
           this.$router.push({
             name:'teacherShare'
           })
+          break
+        case '创建班级':
+          // this.$router.push({
+
+          // })
           break
       }
     }

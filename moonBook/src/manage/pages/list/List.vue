@@ -15,10 +15,8 @@
       <van-pull-refresh v-model="loading" @refresh="onRefresh">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
           <div class="list" v-if='list.length'>
-            <div class="teacher-card" v-for='(item,index) in list' :key="index">
+            <div class="module-card" v-for='(item,index) in list' :key="index">
               <userCard v-if='$route.query.pageType == "teacher"&&item.user_id > 0' :item='item'  :isBtnShow='false' type='list' @selectTeacher="addTeacher"/>
-            </div>
-            <div class="student-card" v-for='(item,index) in list' :key="index">
               <studentCard v-if='$route.query.pageType == "students"' :selectShow='true' :item='item' :isBtnShow='false' @electChild='selectSwitch' />
             </div>
           </div>
@@ -43,7 +41,7 @@ import userCard from './../../module/user/userCard'
 import { selection,watchTouch } from './../../../components/lib/js/mixin'
 
 export default {
-  name: 'student-list',
+  name: 'list',
   mixins: [selection,watchTouch],
   components: {
     studentCard,

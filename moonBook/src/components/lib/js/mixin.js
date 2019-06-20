@@ -1,3 +1,5 @@
+import { mapState } from 'vuex'
+
 const manageStateList = {
     data () {
         return {
@@ -236,6 +238,175 @@ const selection = {
     }
 }
 
+const echartOption = {
+    data() {
+        return {
+            memberTypeChart:null,
+            dueTypeChart:null,
+            memberTypeOption:{
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: false, readOnly: false},
+                        magicType : {
+                            show: true, 
+                            type: ['pie', 'funnel'],
+                            option: {
+                                funnel: {
+                                    x: '25%',
+                                    width: '50%',
+                                    funnelAlign: 'left',
+                                    max: 1548
+                                }
+                            }
+                        },
+                        restore : {show: false},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                series : [
+                    {
+                        name:'会员类型',
+                        type:'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data:[
+                            {value:30, name:'免费会员'},
+                            {value:1010, name:'普通会员'},
+                            {value:110, name:'老师年费优惠卡'},
+                            {value:80, name:'砖石会员'},
+                            {value:40, name:'黄金会员'}
+                        ],
+                        itemStyle:{
+                            emphasis: {
+                              shadowBlur: 20,
+                              shadowOffsetX: 0,
+                              shadowColor: 'rgba(0, 0, 0, .1)'
+                            },
+                            normal:{
+                                color(params){
+                                    const colorList = [          
+                                        '#9E9E9E', '#607D8B', '#8BC34A', '#03A9F4', '#FF9800',
+                                    ]
+                                    return colorList[params.dataIndex]
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            dueTypeOption:{
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: false, readOnly: false},
+                        magicType : {
+                            show: true, 
+                            type: ['pie', 'funnel'],
+                            option: {
+                                funnel: {
+                                    x: '25%',
+                                    width: '50%',
+                                    funnelAlign: 'left',
+                                    max: 1548
+                                }
+                            }
+                        },
+                        restore : {show: false},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                series : [
+                    {
+                        name:'会员类型',
+                        type:'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data:[
+                            {value:90, name:'其它'},
+                            {value:180, name:'免费'},
+                            {value:20, name:'半年卡'},
+                            {value:260, name:'季费'},
+                            {value:420, name:'年费'},
+                            {value:750, name:'月费'}
+                        ],
+                        itemStyle:{
+                            emphasis: {
+                              shadowBlur: 20,
+                              shadowOffsetX: 0,
+                              shadowColor: 'rgba(0, 0, 0, .1)'
+                            },
+                            normal:{
+                                color(params){
+                                    const colorList = [          
+                                        '#9E9E9E', '#607D8B', '#8BC34A', '#03A9F4', '#FF9800','#FF5722'
+                                    ]
+                                    return colorList[params.dataIndex]
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    mounted() {
+        this.$nextTick(() => {
+            this.pieChart()
+        })
+    },
+    beforeDestroy () {
+        this.clear()
+    },
+    methods:{
+        clear(){
+            this.memberTypeChart.clear()
+            this.dueTypeChart.clear()
+        }
+    }
+}
+
+
+const verification = {
+    computed:{
+        ...mapState('manage',['authorizationList'])
+    },
+    methods:{
+        verification(name){               
+            let arr=[]
+
+            this.authorizationList.forEach(e=>{
+                arr.push(e.name)
+            })
+
+            return arr.includes(name)
+        },
+        getDomDvt(name){
+            let obj
+
+            this.authorizationList.map(e=>{
+                if(e.name == name){
+                    obj = e.auth_params.role_id
+                }
+            })
+
+            return obj
+        }
+    }
+}
+
 export {
     manageStateList,
     manageSchoolList,
@@ -243,5 +414,7 @@ export {
     getBanjiYear,
     watchTouch,
     selection,
-    newBanjiTitle
+    newBanjiTitle,
+    echartOption,
+    verification
 }

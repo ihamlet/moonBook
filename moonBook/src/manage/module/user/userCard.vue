@@ -8,8 +8,7 @@
                     <div class="name">{{item.username}}</div>
 
                     <div class="tags">
-                        <van-tag plain round type="success" v-if='item.is_school_head == 1'>学校群主</van-tag>
-                        <van-tag plain round type="primary" v-if='item.is_master == 1'>管理员</van-tag>
+                        <van-tag plain round type="primary">{{item.role_name}}</van-tag>
                     </div>
 
                     <div class="child flex" v-line-clamp:20="1">{{formatBanjiTitle(item.banji_name)}} <span v-if='item.banji_name&&item.duty'>|</span> {{item.duty}}</div>                
@@ -46,7 +45,7 @@
                     <van-cell title="审核时间" :value='teacherInfo.confirm_date' value-class='info-cell' :border='false'/>
                 </van-cell-group>
 
-                <div class="popup-footer flex-align flex" v-if='type!="list"'>
+                <div class="popup-footer flex-align flex" v-if='type!="list" && verification("修改老师")'>
                     <div class="btn">
                         <van-button class="edit" size="small" type="info" round plain @click="toEditPage"> 编辑 </van-button>
                     </div>
@@ -61,11 +60,11 @@
 <script>
 import axios from './../../../components/lib/js/api'
 import { mapGetters } from 'vuex'
-import { newBanjiTitle } from './../../../components/lib/js/mixin'
+import { newBanjiTitle,verification } from './../../../components/lib/js/mixin'
 
 export default {
     name:'userCard',
-    mixins: [ newBanjiTitle ],
+    mixins: [ newBanjiTitle,verification ],
     computed: {
         ...mapGetters('manage',['manageSchoolInfo'])
     },
@@ -84,7 +83,8 @@ export default {
                     mobile:'',
                     school_name:'微美幼儿园',
                     school_id:0,
-                    id: 0
+                    id: 0,
+                    role_name:''
                 }
             }
         },
@@ -202,7 +202,7 @@ export default {
             }
         },
         toEditPage(){
-            if(this.type != 'list'){
+            if(this.type != 'list' && this.verification('修改老师')){
                 this.$router.push({
                     name:'teacherEdit',
                     query:{

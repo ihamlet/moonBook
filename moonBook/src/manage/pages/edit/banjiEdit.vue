@@ -5,7 +5,6 @@
         loading-text='提交中...'>提交</van-button>
     </van-nav-bar>
     <div class="container">
-      <van-pull-refresh v-model="loading" @refresh="onRefresh">
         <van-cell-group>
           <van-field label="班级名称" size='large' required v-model="form.title" placeholder="请输入班级名称" input-align='right' />
           <van-field label="班级类型" size='large' required readonly v-model="form.grade_name" placeholder="请选择班级类型"
@@ -13,6 +12,7 @@
           <van-field label="班级邀请码" size='large' required v-model="form.invite_code" placeholder="请输入四位数字班级邀请码"
             input-align='right' />
         </van-cell-group>
+      <van-pull-refresh v-model="loading" @refresh="onRefresh">
         <div class="list">
           <van-collapse v-model="activeNames" :border='false'>
             <van-collapse-item class="collapse-item" name="teacher" :border='false'>
@@ -25,7 +25,7 @@
                     </div>
                     <div class="btn-list flex flex-align">
                       <div class="add theme-color" @click="toList('teacher')">添加</div>
-                      <div class="share theme-color">邀请</div>
+                      <div class="share theme-color" @click="toShare('teacher')">邀请</div>
                     </div>
                   </div>
                 </van-cell>
@@ -37,7 +37,7 @@
                 </van-swipe-cell>
               </div>
               <div class="not-content" v-else>
-                <van-button round class="theme-btn" plain type="primary" @click="toList('teacher')">添加老师</van-button>
+                您可以：<span class="theme-color" @click="toList('teacher')">添加老师</span>或是<span class="theme-color" @click="toShare('teacher')">邀请老师</span>
               </div>
             </van-collapse-item>
             <van-collapse-item class="collapse-item" name="student" :border='false'>
@@ -53,7 +53,7 @@
                     </div>
                     <div class="btn-list flex flex-align">
                       <div class="add theme-color" @click="toList('students')">添加</div>
-                      <div class="share theme-color" @click="toShare">邀请</div>
+                      <div class="share theme-color" @click="toShare('students')">邀请</div>
                     </div>
                   </div>
                 </van-cell>
@@ -63,7 +63,7 @@
                     <studentCard v-for='(item,index) in studentList' :key="index" :item='item' />
                   </div>
                   <div class="no-list" v-else>
-                    <van-button round class="theme-btn" plain type="primary" @click="toList('students')">添加学生</van-button>
+                    您可以：<span class="theme-color" @click="toList('students')">添加学生</span>或是<span class="theme-color" @click="toShare('students')"> 邀请学生 </span>
                   </div>
                 </van-list>
               </div>
@@ -74,8 +74,7 @@
     </div>
     <van-button class="boss-key theme-btn" type="primary" round v-if='checkCount > 0' @click="allCheck">一键审核</van-button>
     <van-popup v-model="show" position="bottom">
-      <van-picker title="选择班级类型" :columns="banjiTypeArr" @change="onChange" show-toolbar @cancel="onPickerCancel"
-        @confirm="show = false" />
+      <van-picker title="选择班级类型" :columns="banjiTypeArr" @change="onChange" show-toolbar @cancel="onPickerCancel" @confirm="show = false" visible-item-count='3'/>
     </van-popup>
   </div>
 </template>
@@ -267,18 +266,27 @@ export default {
         })
       }
     },
-    toShare() {
-      this.$router.push({
-        name: 'share',
-        query: {
-          school_id: this.$route.query.school_id,
-          school_name: this.$route.query.school_name,
-          banji_id: this.$route.query.banji_id,
-          banji_name: this.$route.query.banji_name,
-          invite_code: this.$route.query.invite_code,
-          user_id: this.$route.query.user_id
-        }
-      })
+    toShare(type) {
+      switch(type){
+        case 'students':
+          this.$router.push({
+            name: 'share',
+            query: {
+              school_id: this.$route.query.school_id,
+              school_name: this.$route.query.school_name,
+              banji_id: this.$route.query.banji_id,
+              banji_name: this.$route.query.banji_name,
+              invite_code: this.$route.query.invite_code,
+              user_id: this.$route.query.user_id
+            }
+          })
+          break
+        case 'teacher':
+          this.$router.push({
+            name: 'teacherShare'
+          })
+          break
+      }
     },
     toList(type) {
       this.$router.push({
