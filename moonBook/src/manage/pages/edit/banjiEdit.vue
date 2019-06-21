@@ -2,7 +2,7 @@
   <div class="banji-edit page-padding">
     <van-nav-bar :title="$route.query.pageTitle" :border='false' fixed :zIndex='99'>
       <van-button class="theme-btn" round type="primary" size="small" slot='right' @click="sumbit" :loading='isBtnLoading'
-        loading-text='提交中...'>提交</van-button>
+        loading-text='提交中...'> {{$route.query.pageType == 'add'&&banjiId == 0?'创建':'提交'}} </van-button>
     </van-nav-bar>
     <div class="container">
         <van-cell-group>
@@ -14,7 +14,7 @@
           <van-field label="班级年份" size='large' required readonly v-model="form.year" placeholder="请选择班级年份"
             input-align='right' @click="onClickPickerShow('year')"/>
         </van-cell-group>
-      <van-pull-refresh v-model="loading" @refresh="onRefresh">
+      <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='banjiId > 0'>
         <div class="list">
           <van-collapse v-model="activeNames" :border='false'>
             <van-collapse-item class="collapse-item" name="teacher" :border='false'>
@@ -73,6 +73,9 @@
           </van-collapse>
         </div>
       </van-pull-refresh>
+      <div class="no-list" v-else>
+        请在创建班级成功后邀请老师和学生
+      </div>
     </div>
     <van-button class="boss-key theme-btn" type="primary" round v-if='checkCount > 0' @click="allCheck">一键审核</van-button>
 
@@ -119,7 +122,8 @@ export default {
       isBtnLoading: false,
       columns:[],
       pickerType:'type',
-      pickerTitle:'班级类型'
+      pickerTitle:'班级类型',
+      banjiId: this.$route.query.banji_id || 0
     }
   },
   created() {
@@ -136,7 +140,7 @@ export default {
     getTeacherList(){
       axios.get('/SchoolManage/teacher/getList', {
         params: {
-          banji_id: this.$route.query.banji_id
+          banji_id: this.banjiId || this.$route.query.banji_id
         }
       }).then(res => {
         switch (res.data.status) {
@@ -152,7 +156,7 @@ export default {
       axios.get('/SchoolManage/students/getList', {
         params: {
           school_id: this.$route.query.school_id,
-          banji_id: this.$route.query.banji_id,
+          banji_id:this.banjiId || this.$route.query.banji_id,
           is_banji_confirm: 0
         }
       }).then(res => {
@@ -286,7 +290,11 @@ export default {
           switch (res.data.status) {
             case 1:
               this.$toast.success(res.data.msg)
-              this.$router.go(-1)
+              if(this.$route.query.pageType=='add'&&this.banjiId == 0){
+                this.banjiId = res.data.data.banji_id
+              }else{
+                this.$router.go(-1)
+              }
               break
             default:
               this.$toast(res.data.msg)

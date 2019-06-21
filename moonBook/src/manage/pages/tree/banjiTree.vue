@@ -49,11 +49,11 @@
 import axios from './../../../components/lib/js/api'
 import studentCard from './../../module/user/studentCard'
 import { mapGetters } from 'vuex'
-import { selection,newBanjiTitle } from './../../../components/lib/js/mixin'
+import { selection,newBanjiTitle,getBanjiYear } from './../../../components/lib/js/mixin'
 
 export default {
   name: 'banjiTree',
-  mixins:[selection,newBanjiTitle],
+  mixins:[selection,newBanjiTitle,getBanjiYear],
   components:{
     studentCard
   },
@@ -241,6 +241,7 @@ export default {
         query:{
           ...this.$route.query,
           ...this.currentBanji,
+          year: this.classYear,
           type: 'select',
           set: type,
           id: arr.join(','),

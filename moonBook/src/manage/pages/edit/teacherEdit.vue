@@ -19,11 +19,11 @@
         <van-cell title="职务" :border='false' :value="form.duty" is-link @click="show = true" :arrow-direction='show?"up":"down"' />
       </van-cell-group>
       <van-panel title="角色设置" desc="对应角色设有不同权限" :status="form.role_id?'':'尚未取得设置权限'">
-         <van-switch-cell v-for='(item,index) in roles' :disabled='!item.disabled' :key="index" :title="item.role_name" :value="form.role_id" :active-value='String(index)' active-color='#67C23A' @input='onSwitchChange(index)' value-class='switch-cell-value'/>
+         <van-switch-cell v-for='(item,index) in roles' v-if='item.disabled' :disabled='!item.disabled' :key="index" :title="item.role_name" :value="form.role_id" :active-value='String(index)' active-color='#67C23A' @input='onSwitchChange(index)' value-class='switch-cell-value'/>
       </van-panel>
     </div>
 
-    <van-popup v-model="show" position="bottom">
+    <van-popup v-model="show" position="bottom" get-container='#app'>
       <van-picker show-toolbar title="职务" :visibleItemCount='3' :columns="columns" @change="selectDuty" @cancel="onCancel"
         @confirm="show = false" />
       <van-field size='large' input-align='right' label="填写职务" v-model="duty" placeholder="请填写职务" />
@@ -271,7 +271,7 @@ export default {
   width: 100%;
   position: fixed;
   bottom: 0;
-  z-index: 2019;
+  z-index: 200;
 }
 
 .theme-btn {

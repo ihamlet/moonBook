@@ -11,9 +11,9 @@
       </van-tab>
       <van-tab>
         <div class="tab-title" slot="title">
-          人员管理 <van-tag round class="tag-danger" type="danger" v-if='count > 0' size="medium">{{count}}</van-tag>
+          学校管理 <van-tag round class="tag-danger" type="danger" v-if='count > 0' size="medium">{{count}}</van-tag>
         </div>
-        <personnel :drag='drag' :studentCount='studentCount' @getCount='getCount'  ref='personnel'/>
+        <personnel :drag='drag' :studentCount='studentCount' @getCount='getCount' ref='personnel'/>
       </van-tab>
       <van-tab title="班级管理">
         <banjiList moduleType='tab' :classYear='classYear' :drag='drag' ref='banjiList'/>
@@ -24,8 +24,8 @@
 
     <transition enter-active-class="slideInUp animated" leave-active-class="slideOutDown animated" mode="out-in">
       <div class="footer-bar flex flex-align" v-if='(drag||top2bottom) && active > 0'>
-        <div class="theme-color" @click="drag = !drag" v-if='isSchoolHead||isHead||isMaster'>{{drag?'完成排序':'排序'}}</div>
-        <van-button class="theme-btn" square type="primary" @click="add">{{btnText}}</van-button>
+        <div class="theme-color" @click="onClickDrag" v-if='isSchoolHead||isHead||isMaster'>{{drag?'完成排序':'排序'}}</div>
+        <van-button class="theme-btn" square type="primary" @click="add">{{btnText.text}}</van-button>
       </div>
     </transition>
 
@@ -43,11 +43,11 @@ import banjiList from './../list/banjiList'
 
 import { mapGetters, mapActions,mapMutations } from 'vuex'
 import { isRepeatAdminArr } from './../../../components/lib/js/util'
-import { getBanjiYear,watchTouch,manageSchoolList } from './../../../components/lib/js/mixin'
+import { getBanjiYear,watchTouch,manageSchoolList,verification } from './../../../components/lib/js/mixin'
 
 export default {
   name: 'manageSchool',
-  mixins:[getBanjiYear, watchTouch, manageSchoolList],
+  mixins:[getBanjiYear, watchTouch, manageSchoolList,verification],
   components: {
     overview,
     banjiList,
@@ -57,23 +57,27 @@ export default {
   computed: {
     ...mapGetters('manage',['manageSchoolInfo']),
     btnText(){
-      let text
+      let manage = {
+        text:'邀请老师',
+        isFooterBtnShow: true
+      }
 
       switch(this.active){
         case 1:
-          text = '邀请老师'
+          manage.text = '邀请老师'
           break
         case 2:
-          text = '创建班级'
+          manage.text = '创建班级'
+          manage.isFooterBtnShow = this.verification('修改班级')
           break
       }
 
-      return text
+      return manage
     }
   },
   data() {
     return {
-      active: localStorage.getItem('manageTab') || 0,
+      active: localStorage.getItem('manageTab') || '1',
       schoolList: [],
       isSelectSchool: false,
       schoolName:'',
@@ -182,26 +186,25 @@ export default {
           })
           break
         case '创建班级':
-          this.addBanji().then(res=>{
-            this.$router.push({
-              name:'banjiEdit',
-              query:{
-                banji_id: res.banji_id,
-                year: this.classYear,
-                grade_name: '小班'
-              }
-            })
+          this.$router.push({
+            name:'banjiEdit',
+            query:{
+              school_id: this.manageSchoolInfo.school_id,
+              banji_id: 0,
+              year: this.classYear,
+              grade_name: '小班',
+              pageTitle:'创建班级',
+              pageType:'add'
+            }
           })
           break
       }
     },
-    async addBanji(){
-      return axios.post('/SchoolManage/banji/edit',{
-        school_id: this.schoolId,
-        banji_id: 0
-      }).then(res=>{
-        return res.data.data
-      })
+    onClickDrag(){
+      this.drag = !this.drag
+      if(!this.drag&&this.$refs.personnel){
+        this.$refs.personnel.submitSort()
+      }
     }
   }
 }

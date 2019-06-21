@@ -127,15 +127,19 @@ export default {
 
         },
         backRouter(){
-            this.$router.replace({
-                name:'banjiTree',
-                query:{
-                    school_id: this.$route.query.school_id,
-                    banji_id: this.$route.query.banji_id,
-                    year: this.$route.query.year,
-                    activeId: this.$route.query.activeId
-                }
-            })
+            if(this.$route.query.back == 'banjiEdit'){
+                this.$router.go(-1)
+            }else{
+                this.$router.replace({
+                    name:'banjiTree',
+                    query:{
+                        school_id: this.$route.query.school_id,
+                        banji_id: this.$route.query.banji_id,
+                        year: this.$route.query.year,
+                        activeId: this.$route.query.activeId
+                    }
+                })
+            }
         }
     }
 }

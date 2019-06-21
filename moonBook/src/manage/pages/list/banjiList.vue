@@ -9,7 +9,7 @@
                         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
                           <draggable v-model="banjiList" @update="datadragEnd" :options="{animation:500}" :disabled="!drag"  handle=".title">
                             <transition-group>
-                              <div class="banji-card" v-for='item in banjiList' :key="item.banji_id">
+                              <div class="banji-card" v-for='(item,index) in banjiList' :key='`${index}-${item.banji_id}`'>
                                 <classItem :item='item' :moduleType='moduleType'/>
                               </div>
                             </transition-group>
@@ -62,9 +62,6 @@ export default {
             },{
                 year: `${this.classYear}年`,
                 numYear: this.classYear
-            },{
-                year: `${this.classYear-1}年`,
-                numYear: this.classYear-1
             }]
             break
           default:
@@ -74,9 +71,6 @@ export default {
             },{
                 year: `${this.year}年`,
                 numYear: this.year
-            },{
-                year: `${this.year-1}年`,
-                numYear: this.year-1
             }]
         }
 
@@ -85,7 +79,7 @@ export default {
   },
   data() {
     return {
-      active: 1,
+      active: localStorage.getItem('banjiTabActive') || '1',
       banjiList: [],
       page: 1,
       loading: false,
@@ -134,6 +128,7 @@ export default {
         this.loading = false
         this.finished = false
       })
+      localStorage.setItem('banjiTabActive',this.active)
     },
     datadragEnd(evt){
 

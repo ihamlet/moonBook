@@ -96,13 +96,13 @@ export default {
       })
     },
     datadragEnd(evt){
-      let arr = this.teacherList.map((e,i)=>{
+      this.teacherList.map((e,i)=>{
           e.school_index = i
           return e
       })
-
-      axios.post('/SchoolManage/Teacher/setIndex',arr).then(res=>{})
-
+    },
+    submitSort(){
+      axios.post('/SchoolManage/Teacher/setIndex',this.teacherList).then(res=>{})
     },
     setStutas(id,type){
       this.teacherList.map(e=>{
@@ -110,12 +110,8 @@ export default {
           return e.is_confirm  = type == 'check'?1:0
         }
       })
-
-
       this.$emit('getCount')
-
-    //    this.getCount()
-    },
+    }
   },
 }
 </script>

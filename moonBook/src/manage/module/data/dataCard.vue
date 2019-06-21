@@ -35,11 +35,12 @@
             </van-collapse-item>
         </van-collapse>
 
-        
+        <userCardList/>
     </div>
 </template>
 <script>
 import axios from './../../../components/lib/js/api'
+import userCardList from './userCardList'
 import { mapGetters } from 'vuex'
 import { echartOption } from './../../../components/lib/js/mixin'
 import echarts from 'echarts'
@@ -47,6 +48,9 @@ import echarts from 'echarts'
 export default {
     name:'data-card',
     mixins: [echartOption],
+    components:{
+        userCardList
+    },
     computed: {
         ...mapGetters('manage',['manageSchoolInfo'])
     },

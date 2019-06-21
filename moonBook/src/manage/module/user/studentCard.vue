@@ -33,7 +33,7 @@
                     <van-cell title="姓名" :value="item.name" :border='false'/>
                     <van-cell title="家长" v-if='item.parent_name' :value="item.parent_name" :border='false' value-class='info-cell'/>
                     <van-cell title="联系电话" :border='false' v-if='item.parent_mobile'>
-                        <a class="theme-color" :href="`tel:${item.parent_mobile}`">{{item.parent_mobile}}</a>
+                        <a class="theme-color" :href="`tel:${item.parent_mobile}`">请触拨号</a>
                     </van-cell>
                     <van-cell title="学校" v-if='item.school_name' :value="item.school_name" :border='false' value-class='info-cell' is-link @click="toSchool"/>
                     <van-cell title="班级" v-if='item.banji_name' :value="formatBanjiTitle(item.banji_name)" is-link :border='false' @click="toBanji"/>
@@ -55,11 +55,15 @@
 </template>
 <script>
 import axios from './../../../components/lib/js/api'
-import { newBanjiTitle } from './../../../components/lib/js/mixin'
+import { newBanjiTitle, getBanjiYear } from './../../../components/lib/js/mixin'
+import { mapGetters } from 'vuex'
 
 export default {
     name:'userCard',
-    mixins: [ newBanjiTitle ], 
+    mixins: [ newBanjiTitle,getBanjiYear ], 
+    computed: {
+        ...mapGetters('manage',['manageSchoolInfo'])
+    },
     props: {
         item:{
             type: Object,
@@ -180,9 +184,24 @@ export default {
             }
         },
         changeBanji(){
-            this.$emit('selectShowTrue')
-            this.show = false
-            this.selectChild()
+            if(this.$route.query.pageType == 'edit'){
+                this.$router.push({
+                    name:'banjiList',
+                    query:{
+                        id: this.item.id,
+                        names: this.item.name,
+                        school_id: this.manageSchoolInfo.school_id,
+                        set: 'transmit',
+                        type: 'select',
+                        year: this.classYear,
+                        back: this.$route.name
+                    }
+                })
+            }else{
+                this.$emit('selectShowTrue')
+                this.show = false
+                this.selectChild()
+            }
         },
         imgError(e) {
             e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
