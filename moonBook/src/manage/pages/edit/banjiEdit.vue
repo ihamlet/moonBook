@@ -74,7 +74,7 @@
         </div>
       </van-pull-refresh>
       <div class="no-list" v-else>
-        请在创建班级成功后邀请老师和学生
+        请在创建班级成功后添加老师和学生
       </div>
     </div>
     <van-button class="boss-key theme-btn" type="primary" round v-if='checkCount > 0' @click="allCheck">一键审核</van-button>

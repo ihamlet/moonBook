@@ -19,7 +19,9 @@
         <van-cell title="职务" :border='false' :value="form.duty" is-link @click="show = true" :arrow-direction='show?"up":"down"' />
       </van-cell-group>
       <van-panel title="角色设置" desc="对应角色设有不同权限" :status="form.role_id?'':'尚未取得设置权限'">
-         <van-switch-cell v-for='(item,index) in roles' v-if='item.disabled' :disabled='!item.disabled' :key="index" :title="item.role_name" :value="form.role_id" :active-value='String(index)' active-color='#67C23A' @input='onSwitchChange(index)' value-class='switch-cell-value'/>
+        <div class="switch-cell" v-for='(item,index) in roles' :key="index">
+            <van-switch-cell v-if='item.disabled' :disabled='!item.disabled' :title="item.role_name" :value="form.role_id" :active-value='String(index)' active-color='#67C23A' @input='onSwitchChange(index)' value-class='switch-cell-value'/>
+        </div>
       </van-panel>
     </div>
 

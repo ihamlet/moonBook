@@ -35,7 +35,7 @@
             </van-collapse-item>
         </van-collapse>
 
-        <userCardList/>
+        <!-- <userCardList/> -->
     </div>
 </template>
 <script>

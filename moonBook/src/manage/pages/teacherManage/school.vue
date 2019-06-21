@@ -23,7 +23,7 @@
     <van-action-sheet v-model="isSelectSchool" :actions="schoolActions" cancel-text="取消" @select="onSelect" @cancel="isSelectSchool = false" />
 
     <transition enter-active-class="slideInUp animated" leave-active-class="slideOutDown animated" mode="out-in">
-      <div class="footer-bar flex flex-align" v-if='(drag||top2bottom) && active > 0'>
+      <div class="footer-bar flex flex-align" v-if='(drag||top2bottom) && active > 0 && btnText.isFooterBtnShow'>
         <div class="theme-color" @click="onClickDrag" v-if='isSchoolHead||isHead||isMaster'>{{drag?'完成排序':'排序'}}</div>
         <van-button class="theme-btn" square type="primary" @click="add">{{btnText.text}}</van-button>
       </div>
@@ -179,7 +179,7 @@ export default {
         })
     },
     add(){
-      switch(this.btnText){
+      switch(this.btnText.text){
         case '邀请老师':
           this.$router.push({
             name:'teacherShare'
