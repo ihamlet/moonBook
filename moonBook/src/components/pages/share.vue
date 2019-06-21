@@ -131,7 +131,7 @@ export default {
         await this.qrcode().then(res=>{
                 this.codeImgURL = res
               })
-        if(!(this.pathData.user_id == this.userDataState.user_id || this.pathData.user_id == 0)){
+        if(this.pathData.user_id != this.userDataState.user_id && this.pathData.user_id != 0 && this.userDataState.banji_id != this.pathData.banji_id){
           await this.joinSchool(this.userDataState.child_id)
           await this.joinBanji(this.userDataState.child_id) 
           await this.getUserData()
