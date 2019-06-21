@@ -147,7 +147,7 @@ export default {
         this.isSelectSchool = false
     },
     onTabChange(index){
-      localStorage.setItem('manageTab',index)
+      localStorage.setItem('manageTab',String(index))
     },
     getCount(schoolId){
         let data = {
@@ -190,7 +190,7 @@ export default {
             name:'banjiEdit',
             query:{
               school_id: this.manageSchoolInfo.school_id,
-              banji_id: 0,
+              school_name: this.manageSchoolInfo.school_name,
               year: this.classYear,
               grade_name: '小班',
               pageTitle:'创建班级',

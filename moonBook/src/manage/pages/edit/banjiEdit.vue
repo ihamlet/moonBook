@@ -2,7 +2,7 @@
   <div class="banji-edit page-padding">
     <van-nav-bar :title="$route.query.pageTitle" :border='false' fixed :zIndex='99'>
       <van-button class="theme-btn" round type="primary" size="small" slot='right' @click="sumbit" :loading='isBtnLoading'
-        loading-text='提交中...'> {{$route.query.pageType == 'add'&&banjiId == 0?'创建':'提交'}} </van-button>
+        loading-text='提交中...'> {{$route.query.pageType == 'add'&&form.banji_id > 0?'创建':'提交'}} </van-button>
     </van-nav-bar>
     <div class="container">
         <van-cell-group>
@@ -14,7 +14,7 @@
           <van-field label="班级年份" size='large' required readonly v-model="form.year" placeholder="请选择班级年份"
             input-align='right' @click="onClickPickerShow('year')"/>
         </van-cell-group>
-      <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='banjiId > 0'>
+      <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='form.banji_id > 0'>
         <div class="list">
           <van-collapse v-model="activeNames" :border='false'>
             <van-collapse-item class="collapse-item" name="teacher" :border='false'>
@@ -77,7 +77,7 @@
         请在创建班级成功后添加老师和学生
       </div>
     </div>
-    <van-button class="boss-key theme-btn" type="primary" round v-if='checkCount > 0' @click="allCheck">一键审核</van-button>
+    <van-button class="boss-key theme-btn" type="primary" round v-if='checkCount > 0&&form.banji_id > 0' @click="allCheck">一键审核</van-button>
 
     <van-popup v-model="show" position="bottom">
       <van-picker :title="pickerTitle" :columns="columns" @change="onChange" show-toolbar @cancel="onPickerCancel" @confirm="show = false" :visible-item-count='3'/>
@@ -123,7 +123,8 @@ export default {
       columns:[],
       pickerType:'type',
       pickerTitle:'班级类型',
-      banjiId: this.$route.query.banji_id || 0
+      banjiId:'',
+      inviteCode:''
     }
   },
   created() {
@@ -140,7 +141,7 @@ export default {
     getTeacherList(){
       axios.get('/SchoolManage/teacher/getList', {
         params: {
-          banji_id: this.banjiId || this.$route.query.banji_id
+          banji_id: this.form.banji_id
         }
       }).then(res => {
         switch (res.data.status) {
@@ -156,7 +157,7 @@ export default {
       axios.get('/SchoolManage/students/getList', {
         params: {
           school_id: this.$route.query.school_id,
-          banji_id:this.banjiId || this.$route.query.banji_id,
+          banji_id: this.form.banji_id,
           is_banji_confirm: 0
         }
       }).then(res => {
@@ -172,8 +173,8 @@ export default {
     onLoad() {
       let data = {
         params: {
-          school_id: this.$route.query.school_id,
-          banji_id: this.$route.query.banji_id,
+          school_id: this.form.school_id,
+          banji_id: this.form.banji_id,
           page: this.page
         }
       }
@@ -219,7 +220,7 @@ export default {
         let data = {
           params: {
             is_all: 1,
-            banji_id: this.$route.query.banji_id
+            banji_id: this.form.banji_id
           }
         }
 
@@ -246,7 +247,6 @@ export default {
           this.form.year = value
           break
       }
-      
     },
     onPickerCancel() {
       this.form.grade_name = this.$route.query.grade_name
@@ -290,8 +290,12 @@ export default {
           switch (res.data.status) {
             case 1:
               this.$toast.success(res.data.msg)
-              if(this.$route.query.pageType=='add'&&this.banjiId == 0){
-                this.banjiId = res.data.data.banji_id
+              if(this.$route.query.pageType=='add'){
+                this.form.banji_id = res.data.data.banji_id
+                this.form.invite_code = res.data.data.invite_code
+                this.getTeacherList(res.data.data.banji_id)
+                this.getStudentList(res.data.data.banji_id)
+                this.onRefresh()
               }else{
                 this.$router.go(-1)
               }
@@ -310,10 +314,12 @@ export default {
             query: {
               school_id: this.$route.query.school_id,
               school_name: this.$route.query.school_name,
-              banji_id: this.$route.query.banji_id,
-              banji_name: this.$route.query.banji_name,
-              invite_code: this.$route.query.invite_code,
-              user_id: this.$route.query.user_id
+              banji_id: this.form.banji_id,
+              banji_name: this.form.title,
+              invite_code:  this.form.invite_code,
+              grade_name: this.form.grade_name,
+              year: this.form.year,
+              user_id: 0
             }
           })
           break
@@ -329,6 +335,7 @@ export default {
         name: 'List',
         query: {
           ...this.$route.query,
+          ...this.form,
           pageType: type
         }
       })

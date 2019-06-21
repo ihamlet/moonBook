@@ -61,6 +61,19 @@ export default {
       return data
     }
   },
+  beforeRouteLeave(to, from, next) {
+    if(to.name == 'banjiEdit' && to.query.pageType == 'add' ){
+      let data = {
+        ...from.query,
+        pageType: 'edit',
+        pageTitle:'设置班级',
+        title: from.query.banji_name
+      }
+      next({path:`/manage/banjiEdit?${qs.stringify(data)}`})
+    }else{
+      next()
+    }
+  },
   data() {
     return {
       codeImgURL:'',
@@ -92,7 +105,7 @@ export default {
     ...mapActions(['getUserData']),
     ...mapActions('openWX', ['share']),
     fetchData(){
-      this.qrcode()
+      this.acceptClass()
     },
     wxShare(){
       const self = this
@@ -106,27 +119,33 @@ export default {
         self.share(data)
       })
     },
-    qrcode() {
-      let link = `${location.href.replace('/#','/?#')}`
-      QRcode.toDataURL(link).then(url => {
-        this.codeImgURL = url
+    async qrcode() {
+      let link = `${location.origin}/#/class-home?id=${this.$route.query.banji_id}`
+      return QRcode.toDataURL(link).then(url => {
+        return url
       }).catch(err => {
         console.error(err)
       })
     },
-    toClassHome(){
-      this.joinSchool(this.userDataState.child_id).then(this.joinBanji(this.userDataState.child_id).then(this.getUserData().then(
-        () => this.$router.push({
-              name:'class-home',
-              query:{
-                ...this.pathData,
-                id: this.pathData.banji_id
-              }
-            }))
-        )
-      )
+    async acceptClass(){
+        await this.qrcode().then(res=>{
+                this.codeImgURL = res
+              })
+        if(!(this.pathData.user_id == this.userDataState.user_id || this.pathData.user_id == 0)){
+          await this.joinSchool(this.userDataState.child_id)
+          await this.joinBanji(this.userDataState.child_id) 
+          await this.getUserData()
+        }
     },
-    joinSchool(childId) {
+    toClassHome(){
+        this.$router.push({
+          name:'class-home',
+          query:{
+            id: this.pathData.banji_id
+          }
+        })
+    },
+    async joinSchool(childId) {
       let location = this.userPointState.location.split(',')
       let data = {
           params: {
@@ -142,7 +161,7 @@ export default {
         }
         return axios.get('/book/babySchool/bind', data).then(res => {})
     }, 
-    joinBanji(childId){
+    async joinBanji(childId){
       let data = {
         params:{
           banji_id: this.pathData.banji_id,

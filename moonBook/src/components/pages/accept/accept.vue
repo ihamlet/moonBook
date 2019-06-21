@@ -30,7 +30,6 @@ export default {
     }else{
       next()
     }
-    
   },
   computed: {
     ...mapGetters(['userDataState', 'userPointState'])
