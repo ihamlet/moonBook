@@ -49,7 +49,6 @@
 import { invitation } from './../../../components/lib/js/speech'
 import { format } from './../../../components/lib/js/util'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import qs from 'qs'
 
 export default {
     name:'teacher-share',
@@ -67,13 +66,6 @@ export default {
 
         return data  
       }
-    },
-    beforeRouteLeave(to, from, next) {
-        if(to.name == 'banjiEdit'){
-            next({path:`/manage/banjiEdit?${qs.stringify(to.query)}`})
-        }else{
-            next()
-        }
     },
     data() {
         return {
