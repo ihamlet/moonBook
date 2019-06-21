@@ -16,7 +16,7 @@
         <personnel :drag='drag' :studentCount='studentCount' @getCount='getCount'  ref='personnel'/>
       </van-tab>
       <van-tab title="班级管理">
-        <banjiList moduleType='tab' :classYear='classYear' :drag='drag'  ref='banjiList'/>
+        <banjiList moduleType='tab' :classYear='classYear' :drag='drag' ref='banjiList'/>
       </van-tab>
     </van-tabs>
 
@@ -25,7 +25,7 @@
     <transition enter-active-class="slideInUp animated" leave-active-class="slideOutDown animated" mode="out-in">
       <div class="footer-bar flex flex-align" v-if='(drag||top2bottom) && active > 0'>
         <div class="theme-color" @click="drag = !drag" v-if='isSchoolHead||isHead||isMaster'>{{drag?'完成排序':'排序'}}</div>
-        <van-button class="theme-btn" square type="primary" @click="share">{{btnText}}</van-button>
+        <van-button class="theme-btn" square type="primary" @click="add">{{btnText}}</van-button>
       </div>
     </transition>
 
@@ -140,7 +140,6 @@ export default {
         if(this.$refs.banjiList){
           this.$refs.banjiList.onRefresh()
         }
-
         this.isSelectSchool = false
     },
     onTabChange(index){
@@ -175,7 +174,7 @@ export default {
             }
         })
     },
-    share(){
+    add(){
       switch(this.btnText){
         case '邀请老师':
           this.$router.push({
@@ -183,11 +182,26 @@ export default {
           })
           break
         case '创建班级':
-          // this.$router.push({
-
-          // })
+          this.addBanji().then(res=>{
+            this.$router.push({
+              name:'banjiEdit',
+              query:{
+                banji_id: res.banji_id,
+                year: this.classYear,
+                grade_name: '小班'
+              }
+            })
+          })
           break
       }
+    },
+    async addBanji(){
+      return axios.post('/SchoolManage/banji/edit',{
+        school_id: this.schoolId,
+        banji_id: 0
+      }).then(res=>{
+        return res.data.data
+      })
     }
   }
 }

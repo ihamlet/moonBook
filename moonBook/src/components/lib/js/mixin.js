@@ -246,28 +246,7 @@ const echartOption = {
             memberTypeOption:{
                 tooltip : {
                     trigger: 'item',
-                    formatter: "{a} <br/>{b} : {c} ({d}%)"
-                },
-                toolbox: {
-                    show : true,
-                    feature : {
-                        mark : {show: true},
-                        dataView : {show: false, readOnly: false},
-                        magicType : {
-                            show: true, 
-                            type: ['pie', 'funnel'],
-                            option: {
-                                funnel: {
-                                    x: '25%',
-                                    width: '50%',
-                                    funnelAlign: 'left',
-                                    max: 1548
-                                }
-                            }
-                        },
-                        restore : {show: false},
-                        saveAsImage : {show: true}
-                    }
+                    formatter: "{b} : {d}%"
                 },
                 calculable : true,
                 series : [
@@ -304,28 +283,7 @@ const echartOption = {
             dueTypeOption:{
                 tooltip : {
                     trigger: 'item',
-                    formatter: "{a} <br/>{b} : {c} ({d}%)"
-                },
-                toolbox: {
-                    show : true,
-                    feature : {
-                        mark : {show: true},
-                        dataView : {show: false, readOnly: false},
-                        magicType : {
-                            show: true, 
-                            type: ['pie', 'funnel'],
-                            option: {
-                                funnel: {
-                                    x: '25%',
-                                    width: '50%',
-                                    funnelAlign: 'left',
-                                    max: 1548
-                                }
-                            }
-                        },
-                        restore : {show: false},
-                        saveAsImage : {show: true}
-                    }
+                    formatter: "{b} : {d}%"
                 },
                 calculable : true,
                 series : [
@@ -359,13 +317,8 @@ const echartOption = {
                         }
                     }
                 ]
-            }
+            },
         }
-    },
-    mounted() {
-        this.$nextTick(() => {
-            this.pieChart()
-        })
     },
     beforeDestroy () {
         this.clear()

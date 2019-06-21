@@ -123,10 +123,8 @@ const mutations = {
 }
 
 const actions = {
-  getUserData(context) {
-    return new Promise((resolve, reject) => {
-      axios.get('/book/memberUser/getInfo').then(res => {
-        resolve(res.data)
+  async getUserData(context) {
+     return axios.get('/book/memberUser/getInfo').then(res => {
         let tabArray = [{
           iconClass: 'icon-home',
           name: '首页',
@@ -163,8 +161,8 @@ const actions = {
           data: tabArray
         })
 
+        return res.data
       })
-    })
   },
   getManager(context){
     axios.get('/book/MemberBanji/getList').then(res=>{
@@ -203,7 +201,7 @@ const actions = {
         })
       })
   },
-  getSchoolList(context, products) {
+  async getSchoolList(context, products) {
     let data = {
       location: products.location,
       lat: products.lat,
@@ -214,8 +212,7 @@ const actions = {
 
     let WMlifeSearchSchoolLink = `/book/school/getList`
 
-    return new Promise((resolve, reject) => {
-      axios.get(WMlifeSearchSchoolLink,{params:data}).then(res=>{
+    return axios.get(WMlifeSearchSchoolLink,{params:data}).then(res=>{
         let resData = []
         if(res.data.status == 1){
           resData = res.data
@@ -223,11 +220,11 @@ const actions = {
           resData = []
         }
 
-        resolve(resData)
+        return resData
       })
-    })
+    
   },
-  getSearch(context, products) {
+  async getSearch(context, products) {
     let data = {
       Key: context.state.amapApiKey,
       keywords: products.keywords,
@@ -248,27 +245,25 @@ const actions = {
     let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?${qs.stringify(data)}`
     let WMlifeSearchSchoolLink = '/book/school/getList'
 
-    return new Promise((resolve, reject) => {
-      axios.get(WMlifeSearchSchoolLink,{params:wmData}).then(res=>{
+    return axios.get(WMlifeSearchSchoolLink,{params:wmData}).then(res=>{
           if(res.data.data.length){
-            resolve( {
+            return {
               resData: res.data.data,
               searchType: 'wmSearchSchool'
-            })
+            }
           }else{
             fetchJsonp(amapApiLink).then(response => {
               return response.json()
             }).then(res=>{
-              resolve( {
+              return {
                 resData: res.tips,
                 searchType: 'amapSearchSchool'
-              })
+              }
             })
           }
       })
-    })
   },
-  searchCity(context,products){
+  async searchCity(context,products){
     let data = {
       Key: context.state.amapApiKey,
       keywords: products.keywords,
@@ -280,18 +275,17 @@ const actions = {
     }
 
     let amapApiLink = `https://restapi.amap.com/v3/assistant/inputtips?${qs.stringify(data)}`
-    return new Promise((resolve, reject) => {
+   
       fetchJsonp(amapApiLink).then(response => {
         return response.json()
       }).then(res=>{
-        resolve( {
+        return {
           resData: res.tips,
           searchType: 'amapSearchSchool'
-        })
+        }
       })
-    })
   },
-  getCityDistrict(context, products) {
+  async getCityDistrict(context, products) {
     let data = {
       Key: context.state.amapApiKey,
       keywords: products.city,
@@ -304,7 +298,7 @@ const actions = {
 
     let amamApiLink = `https://restapi.amap.com/v3/config/district?${qs.stringify(data)}`
 
-    return new Promise((resolve, reject) => {
+
       fetchJsonp(amamApiLink)
         .then(response => {
           return response.json()
@@ -317,23 +311,21 @@ const actions = {
           context.commit('setUserPoint', {
             data: cityInfo
           })
-          resolve(res)
+          return res
         })
-    })
   },
-  getLogin(context, products) {
+  async getLogin(context, products) {
     let data = products
-    return new Promise((resolve, reject) => {
       axios.post('/book/login/mobileLogin', data).then(res => {
-        resolve(res.data)
         context.commit('setToken', {
           data: res.data.token
         })
+
+        return res.data
       })
-    })
   },
   //文章发布
-  release(context, products){
+  async release(context, products){
     let setting = context.state.articleSetting
     let extraData = products.extra
     
@@ -368,17 +360,15 @@ const actions = {
       }
     })
     
-    return new Promise((resolve, reject) => {
-      axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
+    return axios.post('/book/SchoolArticle/edit?ajax=1', data).then(res => {
         switch(res.data.status){
           case 1:
             localStorage.removeItem('grapicData') //清空浏览器缓存
             context.commit('setReleaseSwitch',false)
           break
         }
-        resolve(res)
+        return res
       })
-    })
   }
 }
 

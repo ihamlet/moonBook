@@ -263,19 +263,17 @@ export default {
       this.$refs.parentPicker.setColumnIndex(0,0)
     },
     // 孩子添加编辑API
-    operationApi(id) {
+    async operationApi(id) {
       if (id) {
         this.childInfo.id = id || this.$route.query.id
       }
 
-      return new Promise((resolve, reject) => {
-        axios.post('/book/baby/edit', this.childInfo).then(res => {
+      return axios.post('/book/baby/edit', this.childInfo).then(res => {
           if (res.data.status) {
             this.getUserData()
-            resolve(res.data.data.child_id)
+            return res.data.data.child_id
           }
         })
-      })
     },
     submit(set) {
       if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {

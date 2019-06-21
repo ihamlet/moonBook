@@ -8,9 +8,11 @@
         <van-cell-group>
           <van-field label="班级名称" size='large' required v-model="form.title" placeholder="请输入班级名称" input-align='right' />
           <van-field label="班级类型" size='large' required readonly v-model="form.grade_name" placeholder="请选择班级类型"
-            input-align='right' @click="show = true" />
+            input-align='right' @click="onClickPickerShow('type')" />
           <van-field label="班级邀请码" size='large' required v-model="form.invite_code" placeholder="请输入四位数字班级邀请码"
             input-align='right' />
+          <van-field label="班级年份" size='large' required readonly v-model="form.year" placeholder="请选择班级年份"
+            input-align='right' @click="onClickPickerShow('year')"/>
         </van-cell-group>
       <van-pull-refresh v-model="loading" @refresh="onRefresh">
         <div class="list">
@@ -73,8 +75,9 @@
       </van-pull-refresh>
     </div>
     <van-button class="boss-key theme-btn" type="primary" round v-if='checkCount > 0' @click="allCheck">一键审核</van-button>
+
     <van-popup v-model="show" position="bottom">
-      <van-picker title="选择班级类型" :columns="banjiTypeArr" @change="onChange" show-toolbar @cancel="onPickerCancel" @confirm="show = false" visible-item-count='3'/>
+      <van-picker :title="pickerTitle" :columns="columns" @change="onChange" show-toolbar @cancel="onPickerCancel" @confirm="show = false" :visible-item-count='3'/>
     </van-popup>
   </div>
 </template>
@@ -83,17 +86,21 @@ import axios from './../../../components/lib/js/api'
 import studentCard from './../../module/user/studentCard'
 import userCard from './../../module/user/userCard'
 import { mapGetters } from 'vuex'
-import { newBanjiTitle } from './../../../components/lib/js/mixin'
+import { newBanjiTitle, getBanjiYear } from './../../../components/lib/js/mixin'
 
 export default {
   name: 'banjiEdit',
-  mixins: [ newBanjiTitle ],
+  mixins: [ newBanjiTitle, getBanjiYear ],
   components: {
     studentCard,
     userCard
   },
   computed: {
-    ...mapGetters('manage', ['manageSchoolInfo'])
+    ...mapGetters('manage', ['manageSchoolInfo']),
+    banjiYearArr(){
+      let arr = [ this.classYear+1,this.classYear,this.classYear-1]
+      return arr
+    }
   },
   data() {
     return {
@@ -109,7 +116,10 @@ export default {
       count: 0,
       banjiTypeArr: ['大班', '中班', '小班'],
       show: false,
-      isBtnLoading: false
+      isBtnLoading: false,
+      columns:[],
+      pickerType:'type',
+      pickerTitle:'班级类型'
     }
   },
   created() {
@@ -120,6 +130,10 @@ export default {
   },
   methods: {
     fetchData() {
+      this.getTeacherList()
+      this.getStudentList()
+    },
+    getTeacherList(){
       axios.get('/SchoolManage/teacher/getList', {
         params: {
           banji_id: this.$route.query.banji_id
@@ -133,7 +147,8 @@ export default {
             this.$toast(res.data.msg)
         }
       })
-
+    },
+    getStudentList(){
       axios.get('/SchoolManage/students/getList', {
         params: {
           school_id: this.$route.query.school_id,
@@ -219,21 +234,34 @@ export default {
       })
     },
     onChange(picker, value, index) {
-      this.form.grade_name = value
+      switch(this.pickerType){
+        case 'type':
+          this.form.grade_name = value
+          break
+        case 'year':
+          this.form.year = value
+          break
+      }
+      
     },
     onPickerCancel() {
       this.form.grade_name = this.$route.query.grade_name
       this.show = false
     },
-    // formatBanjiTitle(text) {
-    //   if (text && text.indexOf('班') == -1) {
-    //     return text + '班'
-    //   } else {
-    //     let arr = text.split('')
-    //     let newArr = [...new Set(arr)]
-    //     return newArr.join('')
-    //   }
-    // },
+    onClickPickerShow(type){
+      this.show = true
+      this.pickerType = type
+      switch(type){
+        case 'type':
+          this.columns = this.banjiTypeArr
+          this.pickerTitle = '班级类型'
+          break
+        case 'year':
+          this.columns = this.banjiYearArr
+          this.pickerTitle = '班级年份'
+          break
+      }
+    },
     sumbit() {
       let regInvite = /^\d{4}$/
       let regBanjiName = /^([\u2E80-\u9FFF]|[a-zA-Z0-9]){1,10}$/
@@ -309,7 +337,7 @@ export default {
           switch(res.data.status){
             case 1:
               this.$toast.success(res.data.msg)
-              this.$router.go(-1)
+              this.getTeacherList()
               break
             default:
               this.$toast(res.data.msg)

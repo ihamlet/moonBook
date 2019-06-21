@@ -246,19 +246,14 @@ function contains(arr, obj) {
 }
 
 //获取视频信息
-function videoParse(file) {
-  return new Promise((resolve, reject) => {
+async function videoParse(file) {
     let video = document.createElement("Audio")
     let url = URL.createObjectURL(file)
     video.onloadeddata = e => {
-      //加载视频
-      resolve({
-        duration: e.path[0].duration,
-      })
+       return { duration: e.path[0].duration }
     }
     video.src = url
     video.onload()
-  })
 }
 
 // 数组去重

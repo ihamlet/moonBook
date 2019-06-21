@@ -18,7 +18,7 @@
           @click="toSelectBanjiPage" />
         <van-cell title="职务" :border='false' :value="form.duty" is-link @click="show = true" :arrow-direction='show?"up":"down"' />
       </van-cell-group>
-      <van-panel title="角色设置" desc="对应群组设有不同权限" :status="form.role_id?'':'尚未取得设置权限'">
+      <van-panel title="角色设置" desc="对应角色设有不同权限" :status="form.role_id?'':'尚未取得设置权限'">
          <van-switch-cell v-for='(item,index) in roles' :disabled='!item.disabled' :key="index" :title="item.role_name" :value="form.role_id" :active-value='String(index)' active-color='#67C23A' @input='onSwitchChange(index)' value-class='switch-cell-value'/>
       </van-panel>
     </div>
@@ -271,6 +271,7 @@ export default {
   width: 100%;
   position: fixed;
   bottom: 0;
+  z-index: 2019;
 }
 
 .theme-btn {

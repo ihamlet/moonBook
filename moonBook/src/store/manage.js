@@ -34,29 +34,27 @@ export default {
         }
     },
     actions:{
-        getSchoolList(context,products){
-            return new Promise((resolve, reject) => {
-                axios.get('/SchoolManage/school/getSchools').then(res=>{
-                    switch (res.data.status) {
-                    case 1:
+        async getSchoolList(context,products){
+            return axios.get('/SchoolManage/school/getSchools').then(res=>{
+                switch (res.data.status) {
+                case 1:
 
-                        let schoolList = []
-                        let arr = res.data.data
-            
-                        schoolList = isRepeatArr(arr)
+                    let schoolList = []
+                    let arr = res.data.data
+        
+                    schoolList = isRepeatArr(arr)
 
-                        let index = localStorage.getItem('schoolActive') || 0
-                        
-                        context.commit('setSchoolList',schoolList)
-                        context.commit('setManageSchool',schoolList[index])
-            
-                        resolve(schoolList)                      
-                        
-                        break
-                    default:
-                        this.$toast(res.data.msg)
-                    }
-                })
+                    let index = localStorage.getItem('schoolActive') || 0
+                    
+                    context.commit('setSchoolList',schoolList)
+                    context.commit('setManageSchool',schoolList[index])
+        
+                    return schoolList                     
+                    
+                    break
+                default:
+                    this.$toast(res.data.msg)
+                }
             })
         },
         getMyMenus(context,products){

@@ -63,7 +63,7 @@ export default {
     },
     //分享
     share(context, products) {
-      if(context.state.ready){     
+      wx.ready(() => {
         let title
         let desc
         let imgUrl
@@ -108,7 +108,7 @@ export default {
           title: title || products.item.title,
           link: window.location.href.split('#')[0] + 'static/redirect.html?app3Redirect=' + encodeURIComponent(window.location.href)          ,
           desc: desc,
-          imgUrl: imgUrl?imgUrl:products.item.imgUrl || products.item.cover,
+          imgUrl: products.item.imgUrl?products.item.imgUrl:imgUrl||products.item.cover,
           success: products.success
         }
 
@@ -117,11 +117,11 @@ export default {
         wx.onMenuShareWeibo(data)
         wx.onMenuShareQZone(data)
         wx.onMenuShareAppMessage(data)
-      }
+      })
     },
     //图片接口
-    selectImg(context, products){
-      if(context.state.ready){     
+     selectImg(context, products){
+      wx.ready(() => {
         wx.chooseImage({
             count: products,
             sizeType: ['compressed'],
@@ -162,11 +162,10 @@ export default {
               }
             }
         })
-      }
+      })
     },
-    scanQRcode(context, products){
-      if(context.state.ready){
-        return new Promise((resolve, reject) => {
+    async scanQRcode(context, products){
+      wx.ready(() => {
           wx.scanQRCode({
             needResult: 1,
             scanType: ["barCode"],
@@ -180,7 +179,7 @@ export default {
                   context.commit('setReadSign', {
                     data: res
                   })
-                  resolve(res)
+                  return res
                 })
               },
               complete(e) {
@@ -190,22 +189,21 @@ export default {
               }
           })
         })
-      }
     },
-    wxGetLocation(){
-      return new Promise((resolve, reject) => {
-        wx.getLocation({
-          type: 'wgs84',
-          success: function (res) {
-              var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-              var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-              var speed = res.speed; // 速度，以米/每秒计
-              var accuracy = res.accuracy; // 位置精度
+    async wxGetLocation(){
+      wx.ready(() => {
+          wx.getLocation({
+            type: 'wgs84',
+            success: function (res) {
+                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                var speed = res.speed; // 速度，以米/每秒计
+                var accuracy = res.accuracy; // 位置精度
 
-              resolve(res)
-            }
-        })
-      })  
+                return res
+              }
+          })
+        })  
     }
   }
 }

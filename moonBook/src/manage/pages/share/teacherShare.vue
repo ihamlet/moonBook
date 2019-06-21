@@ -82,6 +82,9 @@ export default {
             shareShow: false
         }
     },
+    created () {
+      this.wxShare()  
+    },
     watch: {
         ready(){
             this.wxShare()
