@@ -10,15 +10,20 @@ export default {
     },
     getters:{
         manageSchoolInfo: state => {
+            let data 
+
             if (state.manageSchool) {
-                return state.manageSchool
+                data = state.manageSchool
                 } else {
+
                 if (localStorage.getItem('schoolCurrent')) {
-                    return JSON.parse(localStorage.getItem('schoolCurrent'))
+                    data = JSON.parse(localStorage.getItem('schoolCurrent'))
                 }else{
-                    return state.schoolList[0]
+                    data = state.schoolList[0]
                 }
             }
+
+            return data
         }
     },
     mutations:{
@@ -35,6 +40,9 @@ export default {
     },
     actions:{
         async getSchoolList(context,products){
+
+            await context.dispatch('getMyMenus')
+
             return axios.get('/SchoolManage/school/getSchools').then(res=>{
                 switch (res.data.status) {
                 case 1:
@@ -44,12 +52,23 @@ export default {
         
                     schoolList = isRepeatArr(arr)
 
+                    
+
+                    if(products){
+                        schoolList.map((e,i) =>{
+                            if(e.school_id == products){
+                                localStorage.setItem('schoolActive',i)
+                            }
+                        })
+                    }
+
                     let index = localStorage.getItem('schoolActive') || 0
                     
+
                     context.commit('setSchoolList',schoolList)
                     context.commit('setManageSchool',schoolList[index])
         
-                    return schoolList                     
+                    return schoolList[index]                     
                     
                     break
                 default:
@@ -57,7 +76,7 @@ export default {
                 }
             })
         },
-        getMyMenus(context,products){
+        async getMyMenus(context,products){
             axios.get('/SchoolManage/teacher/getMyMenus').then(res=>{
                 console.log(res)
                 switch(res.data.status){

@@ -1,5 +1,5 @@
 <template>
-    <van-cell @click="selectTeacher">
+    <van-cell @click="selectTeacher" :border='false'>
         <div class="user-card flex flex-align">
             <div class="info flex flex-align" @click="toEditPage">
                 <img :src="item.avatar" @error="imgError" v-http2https/>
@@ -95,18 +95,6 @@ export default {
         isBtnShow:{
             type: Boolean,
             default: true
-        },
-        isMaster:{
-            type: Number,
-            default: 0
-        },
-        isHead:{
-            type: Number,
-            default: 0  
-        },
-        isSchoolHead:{
-            type: Number,
-            default: 0
         }
     }, 
     data () {
@@ -208,9 +196,6 @@ export default {
                     query:{
                         ...this.teacherInfo,
                         ...this.item,
-                        isHead: this.isHead,
-                        isMaster: this.isMaster,
-                        isSchoolHead: this.isSchoolHead,
                         type:'edit',
                         title: '成员设置'
                     }

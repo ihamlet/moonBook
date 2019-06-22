@@ -49,6 +49,7 @@
 import { invitation } from './../../../components/lib/js/speech'
 import { format } from './../../../components/lib/js/util'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import qs from 'qs'
 
 export default {
     name:'teacher-share',
@@ -66,6 +67,18 @@ export default {
 
         return data  
       }
+    },
+    beforeRouteLeave(to, from, next) {
+        if(to.name == 'banjiEdit' && to.query.pageType == 'add' ){
+            let data = {
+                ...from.query,
+                pageType: 'edit',
+                pageTitle:'设置班级'
+            }
+            next({path:`/manage/banjiEdit?${qs.stringify(data)}`})
+        }else{
+        next()
+        }
     },
     data() {
         return {

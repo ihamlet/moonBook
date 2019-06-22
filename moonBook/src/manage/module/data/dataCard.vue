@@ -35,12 +35,12 @@
             </van-collapse-item>
         </van-collapse>
 
-        <!-- <userCardList/> -->
+        <memberCardList/>
     </div>
 </template>
 <script>
 import axios from './../../../components/lib/js/api'
-import userCardList from './userCardList'
+import memberCardList from './memberCardList'
 import { mapGetters } from 'vuex'
 import { echartOption } from './../../../components/lib/js/mixin'
 import echarts from 'echarts'
@@ -49,7 +49,7 @@ export default {
     name:'data-card',
     mixins: [echartOption],
     components:{
-        userCardList
+        memberCardList
     },
     computed: {
         ...mapGetters('manage',['manageSchoolInfo'])
@@ -93,7 +93,7 @@ export default {
         getSchoolInfo(){
             axios.get('/SchoolManage/School/getInfo',{
                 params: {
-                    school_id: this.manageSchoolInfo.school_id
+                    school_id:this.manageSchoolInfo.school_id
                 }
             }).then(res=>{
                 switch(res.data.status){
@@ -108,7 +108,7 @@ export default {
         getMemberCard(){
             axios.get('/SchoolManage/MemberCard/getStat',{
                 params:{
-                    school_id: this.manageSchoolInfo.school_id
+                    school_id:this.manageSchoolInfo.school_id
                 }
             }).then(res=>{
                 switch(res.data.status){
@@ -132,7 +132,7 @@ export default {
         getRegOrder(){
             axios.get('/SchoolManage/TushuMemberRegOrder/getStat',{
                 params:{
-                    school_id: this.manageSchoolInfo.school_id
+                    school_id:this.manageSchoolInfo.school_id
                 }
             }).then(res=>{
                 switch(res.data.status){

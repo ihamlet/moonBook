@@ -117,9 +117,11 @@ export default {
 
       let apiType = this.isConfirm == 1 ? 'kick' : 'check'
 
-      axios.get(`/SchoolManage/teacher/${apiType}`, {        params: {
+      axios.get(`/SchoolManage/teacher/${apiType}`, { 
+        params: {
           id: this.$route.query.id
-        }      }).then(res => {
+        }      
+      }).then(res => {
         switch (res.data.status) {
           case 1:
             this.isConfirm = `${apiType == 'kick' ? 0 : 1}`
@@ -140,7 +142,7 @@ export default {
           warning = `此操作将会把您的学校群主操作权限移交给${this.form.username},您确定吗?`
           break
         case 2:
-          warning = `${this.isMaster == 1 ? `确定要取消${this.form.username}的管理权限吗?` : `确定要将${this.form.username}设置为管理员吗?`}`
+          warning = `${this.role_id == 3 ? `确定要取消${this.form.username}的管理权限吗?` : `确定要将${this.form.username}设置为管理员吗?`}`
           break
         case 1:
           warning = `此操作将会取消${this.form.username}的管理权限,您确定吗?`

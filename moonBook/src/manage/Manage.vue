@@ -9,10 +9,16 @@ import { mapActions } from 'vuex'
 export default {
     name:'manage',
     created () {
-       this.getMyMenus()
+       this.fetchData()
+    },
+    watch: {
+      '$router':'fetchData'  
     },
     methods: {
-        ...mapActions('manage',['getMyMenus'])
+        ...mapActions('manage',['getSchoolList']),
+        fetchData(){
+            this.getSchoolList().then(res=>{})
+        }
     }
 }
 </script>

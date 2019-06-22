@@ -324,9 +324,26 @@ function isRepeatArr(arr){
 　　　　　　for(let j = 0; j < dest.length; j++){
               let dj = dest[j]
 　　　　　　　　if(dj.school_id == ai.school_id){
-　　　　　　　　　　dj.duty = '校长,老师'
-　　　　　　　　　　break
+  　　　　　　　   dj.role_id = dj.role_id > ai.role_id?dj.role_id:ai.role_id
+  　　　　　　　　
+                switch(dj.role_id){
+                  case '3':
+                    dj.duty = '学校群主,老师'
+                    break
+                  case '2':
+                    dj.duty = '班级群主,老师'
+                    break
+                  case '1':
+                    dj.duty = '管理员,老师'
+                    break
+                  case '0':
+                      dj.duty = '老师'
+                    break
+                  }
+                
+                break
 　　　　　　　　}
+
 　　　　　　}
 　　　　}
 　　}
@@ -334,30 +351,7 @@ function isRepeatArr(arr){
     return dest
 }
 
-//合并重复管理员身份
-function isRepeatAdminArr(arr){
-  let map = {}
-  let dest = []
-　　for(let i = 0; i < arr.length; i++){
-　　　　let ai = arr[i]
-　　　　if(!map[ai.user_id]){
-　　　　　　dest.push({
-           ...ai
-　　　　　　})
-　　　　　　map[ai.user_id] = ai
-　　　　}else{
-　　　　　　for(let j = 0; j < dest.length; j++){
-             let dj = dest[j]
-　　　　　　　　if(dj.user_id == ai.user_id){
-　　　　　　　　　　dj.duty = '校长,老师'
-　　　　　　　　　　break
-　　　　　　　　}
-　　　　　　}
-　　　　}
-　　}
 
-   return dest
-}
 
 export {
   GetDistance,
@@ -377,5 +371,4 @@ export {
   randomNum,
   arrGroup,
   isRepeatArr,
-  isRepeatAdminArr
 }

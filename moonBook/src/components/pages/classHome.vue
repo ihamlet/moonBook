@@ -4,9 +4,9 @@
       <div class="head-bar-title" slot="title" @click="cutover">
         {{fixedHeaderBar?pageTitle:formatBanjiTitle(classInfo.title)}} <i class="iconfont" v-if="userDataState.teacher_school_id > 0">&#xe608;</i>
       </div>
-      <!-- <div class="head-bar-text" slot='right' v-if='userDataState.teacher_banji_id == $route.query.id' @click="toManage">
+      <div class="head-bar-text" slot='right' v-if='userDataState.teacher_banji_id == $route.query.id' @click="toManage">
         <span class="text">管理班级</span>
-      </div> -->
+      </div>
     </van-nav-bar>
     <div class="header theme-background flex flex-align" ref='domHeight'>
       <div class="class-info">
@@ -329,15 +329,6 @@ export default {
         })
       }
     },
-    // formatBanjiTitle(text) {
-    //   if (text && text.indexOf('班') == -1) {
-    //     return text + '班'
-    //   } else {
-    //     let arr = text.split('')
-    //     let newArr = [...new Set(arr)]
-    //     return newArr.join('')
-    //   }
-    // },
     backRouter(){
       this.$router.go(-1)
     },
@@ -383,9 +374,10 @@ export default {
     },
     toManage(){
       this.$router.push({
-        name:'classSetting',
+        name:'banjiEdit',
         query:{
-          id: this.$route.query.id
+          ...this.classInfo,
+          pageTitle:'班级管理'
         }
       })
     },

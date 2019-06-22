@@ -58,12 +58,9 @@ export default {
 
       let data = {
         params: {
-          page: this.page
+          page: this.page,
+          school_id: this.manageSchoolInfo.school_id
         }
-      }
-
-      if (this.manageSchoolInfo) {
-        data.params.school_id = this.manageSchoolInfo.school_id
       }
 
       return axios.get('/SchoolManage/teacher/getList', data).then(res => {

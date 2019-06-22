@@ -1,6 +1,6 @@
 <template>
   <div class="manage-school page-padding">
-    <van-nav-bar :title="schoolName?schoolName:'学校管理'" :border='false' @click-right="isSelectSchool = true">
+    <van-nav-bar :title="manageSchoolInfo?manageSchoolInfo.school_name:'学校管理'" :border='false' @click-right="isSelectSchool = true">
         <div class="theme-color" slot="right" v-if='schoolList.length > 1'>
             切换学校
         </div>
@@ -16,7 +16,7 @@
         <personnel :drag='drag' :studentCount='studentCount' @getCount='getCount' ref='personnel'/>
       </van-tab>
       <van-tab title="班级管理">
-        <banjiList moduleType='tab' :classYear='classYear' :drag='drag' ref='banjiList'/>
+        <banjiList moduleType='tab' :classYear='classYear' :drag='drag' ref='banjiList' @onRefresh='setBanjiYear'/>
       </van-tab>
     </van-tabs>
 
@@ -24,7 +24,7 @@
 
     <transition enter-active-class="slideInUp animated" leave-active-class="slideOutDown animated" mode="out-in">
       <div class="footer-bar flex flex-align" v-if='(drag||top2bottom) && active > 0 && btnText.isFooterBtnShow'>
-        <div class="theme-color" @click="onClickDrag" v-if='isSchoolHead||isHead||isMaster'>{{drag?'完成排序':'排序'}}</div>
+        <div class="theme-color" @click="onClickDrag" v-if='manageSchoolInfo.role_id == 1'>{{drag?'完成排序':'排序'}}</div>
         <van-button class="theme-btn" square type="primary" @click="add">{{btnText.text}}</van-button>
       </div>
     </transition>
@@ -40,14 +40,14 @@ import overview from './../../module/class/overview'
 import personnel from './../../module/personnel'
 import dataCard from './../../module/data/dataCard'
 import banjiList from './../list/banjiList'
+import qs from 'qs'
 
-import { mapGetters, mapActions,mapMutations } from 'vuex'
-import { isRepeatAdminArr } from './../../../components/lib/js/util'
+import { mapState, mapGetters, mapActions,mapMutations } from 'vuex'
 import { getBanjiYear,watchTouch,manageSchoolList,verification } from './../../../components/lib/js/mixin'
 
 export default {
   name: 'manageSchool',
-  mixins:[getBanjiYear, watchTouch, manageSchoolList,verification],
+  mixins:[getBanjiYear, watchTouch, manageSchoolList, verification],
   components: {
     overview,
     banjiList,
@@ -56,6 +56,7 @@ export default {
   },
   computed: {
     ...mapGetters('manage',['manageSchoolInfo']),
+    ...mapState('manage',['schoolList']),
     btnText(){
       let manage = {
         text:'邀请老师',
@@ -75,60 +76,46 @@ export default {
       return manage
     }
   },
+  beforeRouteLeave(to, from, next) {
+    to.meta.keepAlive = false
+    if(to.name == 'apps-school' && to.query.back == 'apps-school' ){
+      let data = {
+        id: from.query.sid
+      }
+      next({path:`/apps-school?${qs.stringify(data)}`})
+    }else{
+      next()
+    }
+  },
   data() {
     return {
-      active: localStorage.getItem('manageTab') || '1',
-      schoolList: [],
+      active: localStorage.getItem('manageTab') || 1,
       isSelectSchool: false,
-      schoolName:'',
       count:0,
       studentCount:0,
       schoolId:0,
-      isMaster:0,
-      isHead:0,
-      isSchoolHead:0,
-      drag: false
+      drag: false,
+      banjiYear:''
     }
-  },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.request()
-    })
   },
   watch: {
     schoolId(val){
       this.getCount(val)
     }
   },
+  created() {
+    this.getCount(this.manageSchoolInfo.school_id)
+  },
   methods: {
     ...mapActions('manage',['getSchoolList']),
     ...mapMutations('manage',['setManageSchool']),
-    request() {
-      this.getSchoolList().then(res=>{
-        this.schoolList = res
-
-        let index = localStorage.getItem('schoolActive')?localStorage.getItem('schoolActive'):0
-
-        this.schoolName = res[index].school_name
-        this.school_id = res[index].school_id
-        this.isMaster = Number(res[index].is_master)
-        this.isSchoolHead = res[index].is_school_head
-        this.isHead = res[index].is_head
-
-        this.getCount(res[index].school_id)
-
-      })
-    },
     onSelect(item){
         localStorage.setItem('schoolActive',item.index)
 
         this.setManageSchool(item)
 
         this.schoolName = item.school_name
-        this.isMaster = Number(item.is_master)
-        this.isHead = item.is_head
-        this.isSchoolHead = item.is_school_head
-       
+
         this.page = 1
         this.schoolId = item.school_id
 
@@ -147,7 +134,7 @@ export default {
         this.isSelectSchool = false
     },
     onTabChange(index){
-      localStorage.setItem('manageTab',String(index))
+      localStorage.setItem('manageTab',index)
     },
     getCount(schoolId){
         let data = {
@@ -178,6 +165,9 @@ export default {
             }
         })
     },
+    setBanjiYear(year){
+      this.banjiYear = year
+    },
     add(){
       switch(this.btnText.text){
         case '邀请老师':
@@ -191,7 +181,8 @@ export default {
             query:{
               school_id: this.manageSchoolInfo.school_id,
               school_name: this.manageSchoolInfo.school_name,
-              year: this.classYear,
+              year:  this.banjiYear || this.classYear,
+              title:'',
               grade_name: '小班',
               pageTitle:'创建班级',
               pageType:'add'

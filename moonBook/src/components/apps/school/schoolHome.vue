@@ -4,6 +4,9 @@
       <div class="head-bar-title" slot="title" @click="actionsheetShow = true">
         {{fixedHeaderBar?$route.meta.title:schoolInfo.title}} <i class="iconfont">&#xe608;</i>
       </div>
+      <div class="theme-color" slot="right" @click="toManage" v-if='manage'>
+        学校管理
+      </div>
     </van-nav-bar>
     <div class="container">
       <div class="header-card flex flex-align theme-school-background" ref="domHeight">
@@ -133,6 +136,7 @@ export default {
   methods: {
     ...mapMutations(['setReleaseSwitch']),
     ...mapActions(['getUserData']),
+    ...mapActions('manage',['getSchoolList']),
     request() {
       if(this.$route.query.type != 'preview'){
         this.getUserData().then(res => {
@@ -314,8 +318,16 @@ export default {
         }
       })
     },
-    toManage(){
-      location.href = `/SchoolManage?school_id=${this.$route.query.id}`
+    async toManage(){
+      await this.getSchoolList(this.$route.query.id)
+      
+      this.$router.push({
+        name:'manageSchool',
+        query:{
+          sid: this.$route.query.id,
+          back: this.$route.name
+        }
+      })
     }
   }
 }
@@ -391,5 +403,9 @@ export default {
 
 .list{
   background: #f2f6fc;
+}
+
+.theme-nav .theme-color{
+  color: #fff;
 }
 </style>

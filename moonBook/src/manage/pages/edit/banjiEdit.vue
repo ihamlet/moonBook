@@ -14,7 +14,11 @@
           <van-field label="班级年份" size='large' required readonly v-model="form.year" placeholder="请选择班级年份"
             input-align='right' @click="onClickPickerShow('year')"/>
         </van-cell-group>
-      <van-pull-refresh v-model="loading" @refresh="onRefresh" v-if='form.banji_id > 0'>
+
+      <div class="no-list" v-if='!form.banji_id'>
+        请在创建班级成功后添加老师和学生
+      </div> 
+      <van-pull-refresh v-model="loading" @refresh="onRefresh"  v-else>
         <div class="list">
           <van-collapse v-model="activeNames" :border='false'>
             <van-collapse-item class="collapse-item" name="teacher" :border='false'>
@@ -73,9 +77,6 @@
           </van-collapse>
         </div>
       </van-pull-refresh>
-      <div class="no-list" v-else>
-        请在创建班级成功后添加老师和学生
-      </div>
     </div>
     <van-button class="boss-key theme-btn" type="primary" round v-if='checkCount > 0&&form.banji_id > 0' @click="allCheck">一键审核</van-button>
 
@@ -112,7 +113,7 @@ export default {
       },
       studentList: [],
       teacherList: [],
-      activeNames: ['teacher', 'student'],
+      activeNames: [],
       loading: false,
       finished: false,
       checkCount: 0,
@@ -139,36 +140,46 @@ export default {
       this.getStudentList()
     },
     getTeacherList(){
-      axios.get('/SchoolManage/teacher/getList', {
-        params: {
-          banji_id: this.form.banji_id
-        }
-      }).then(res => {
-        switch (res.data.status) {
-          case 1:
-            this.teacherList = res.data.data
-            break
-          default:
-            this.$toast(res.data.msg)
-        }
-      })
+
+      if(this.form.banji_id > 0){
+        this.activeNames.push('teacher')
+        
+        axios.get('/SchoolManage/teacher/getList', {
+          params: {
+            banji_id: this.form.banji_id
+          }
+        }).then(res => {
+          switch (res.data.status) {
+            case 1:
+              this.teacherList = res.data.data
+              break
+            default:
+              this.$toast(res.data.msg)
+          }
+        })
+      }
     },
     getStudentList(){
-      axios.get('/SchoolManage/students/getList', {
-        params: {
-          school_id: this.$route.query.school_id,
-          banji_id: this.form.banji_id,
-          is_banji_confirm: 0
-        }
-      }).then(res => {
-        switch (res.data.status) {
-          case 1:
-            this.checkCount = res.data.count
-            break
-          default:
-            this.$toast(res.data.msg)
-        }
-      })
+      if(this.form.banji_id > 0){
+        
+        this.activeNames.push('student')
+        axios.get('/SchoolManage/students/getList', {
+          params: {
+            school_id: this.$route.query.school_id,
+            banji_id: this.form.banji_id,
+            is_banji_confirm: 0
+          }
+        }).then(res => {
+          switch (res.data.status) {
+            case 1:
+              this.checkCount = res.data.count
+              break
+            default:
+              this.$toast(res.data.msg)
+          }
+        })
+
+      }
     },
     onLoad() {
       let data = {
@@ -325,7 +336,10 @@ export default {
           break
         case 'teacher':
           this.$router.push({
-            name: 'teacherShare'
+            name: 'teacherShare',
+            query:{
+              ...this.form
+            }
           })
           break
       }

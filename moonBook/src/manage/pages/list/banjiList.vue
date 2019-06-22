@@ -17,7 +17,7 @@
                         </van-list>
                     </div>
                     <div class="no-list" v-else>
-                      尚无班级 <span class="theme-color" v-if='moduleType'>创建班级</span>
+                      尚无班级 <span class="theme-color" v-if='moduleType' @click="addBanji">创建班级</span>
                     </div>
                 </van-pull-refresh>
             </van-tab>
@@ -29,6 +29,7 @@
 import axios from './../../../components/lib/js/api'
 import classItem from './../../module/class/classItem'
 import draggable from 'vuedraggable'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'banji-list',
@@ -51,6 +52,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('manage',['manageSchoolInfo']),
     tab(){
         let arr = []
 
@@ -94,7 +96,7 @@ export default {
     onLoad() {
       let data = {
         params: {
-          school_id: this.$route.query.school_id,
+          school_id:this.$route.query.school_id,
           year: this.tab[this.active].numYear,
           page: this.page
         }
@@ -129,6 +131,7 @@ export default {
         this.finished = false
       })
       localStorage.setItem('banjiTabActive',this.active)
+      this.$emit('onRefresh', this.tab[this.active].numYear)
     },
     datadragEnd(evt){
 
@@ -137,6 +140,19 @@ export default {
 
 
       axios.post('/SchoolManage/banji/edit',obj).then(res=>{})
+    },
+    addBanji(){
+      this.$router.push({
+        name:'banjiEdit',
+        query:{
+          school_id: this.manageSchoolInfo.school_id,
+          school_name: this.manageSchoolInfo.school_name,
+          year: this.tab[this.active].numYear,
+          grade_name: '小班',
+          pageTitle:'创建班级',
+          pageType:'add'
+        }
+      })
     }
   }
 }

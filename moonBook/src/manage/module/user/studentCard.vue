@@ -1,5 +1,5 @@
 <template>
-    <van-cell>
+    <van-cell :border='false'>
         <div class="user-card flex flex-align">
             <div class="info flex flex-align">
                 <img :src="item.avatar" @error="imgError" @click="show = true" v-http2https/>

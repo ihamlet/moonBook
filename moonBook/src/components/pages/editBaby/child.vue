@@ -179,7 +179,7 @@ export default {
       val == 0 ? this.childInfo.gender = 1 : this.childInfo.gender = 2
     },
     currentDate(val) {
-      this.childInfo.birthday = format(new Date(val), 'yyyy-MM-dd')
+      this.childInfo.birthday = format(val, 'yyyy-MM-dd')
     },
     $router: 'fetchData'
   },
@@ -199,12 +199,11 @@ export default {
           }
 
           axios.get('/book/baby/getInfo',getChildByUserData).then(res => {
-            let date = new Date(res.data.data.birthday * 1000)
             this.childInfo.name = res.data.data.name
             this.childInfo.avatar = res.data.data.avatar
             this.sexTypeIndex = res.data.data.gender == 1?0:1
             this.childInfo.relation_name = res.data.data.relation_name
-            this.currentDate = date
+            this.currentDate = res.data.data.birthday
 
             if (res.data.data.is_current_child == 1 || this.userDataState.child_id == this.$route.query.id) {
               this.settingSurrent = true

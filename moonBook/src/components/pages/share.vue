@@ -124,7 +124,7 @@ export default {
       let data = {
         id: this.$route.query.banji_id,
         banji_name: this.$route.query.banji_name,
-        banji_id: this.$rouer.query.banji_id,
+        banji_id: this.$route.query.banji_id,
         school_id: this.$route.query.school_id,
         school_name: this.$route.query.school_name
       }
