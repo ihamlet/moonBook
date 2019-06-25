@@ -1,7 +1,10 @@
 <template>
   <div class="graphic page-padding">
     <van-nav-bar :border='false' fixed>
-      <div class="user-info" slot='title'>
+      <div class="title" slot='title' v-if='$route.query.pageType == "notice"'>
+        发布通知到{{$route.query.school_id?'学校':formatBanjiTitle($route.query.banji_name)}}
+      </div>
+      <div class="user-info" slot='title' v-else>
         <div class="avatar">
           <img :src="userDataState.avatar" v-http2https/>
         </div>
@@ -14,7 +17,7 @@
     <div class="textarea-module">
       <van-progress v-if='percent!=0&&percent!=100&&!progressIsShow' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
       <van-cell-group>
-        <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" :placeholder="icon" rows="2" autosize />
+        <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" :placeholder="$route.query.pageType == 'notice'?'输入通知内容...':icon" rows="2" autosize />
         <div class="upload-module flex wrap">
           <van-cell :border='false'>
             <van-row gutter="4">
@@ -72,9 +75,11 @@ import topicList from './../../module/release/topicList'
 import articleSetting from './mould/articleSetting'
 import articleCard from './../../module/card/articleCard'
 import { compress,checkHtml } from './../../lib/js/util'
+import { newBanjiTitle } from './../../lib/js/mixin'
 
 export default {
   name: 'graphic',
+  mixins:[newBanjiTitle],
   components: {
     topicList,
     articleSetting,
@@ -305,6 +310,8 @@ export default {
             template_id: 1,
             photos: this.grapicData.photos,
             extra: this.post,
+            banji_id: this.$route.query.banji_id,
+            school_id: this.$route.query.school_id
           }
 
           //老师的班级学校
@@ -312,7 +319,6 @@ export default {
             data.from_page = `${this.userDataState.teacher_school_id},${this.userDataState.teacher_school_name}`
             data.tags = this.$route.query.tags || `${this.tag.cate_name},${this.userDataState.teacher_duty},${this.userDataState.class_post_count}`
           }
-
 
           switch(this.$route.query.back){
             case 'baby-home':
@@ -349,14 +355,14 @@ export default {
                   this.$router.replace({
                     name:'class-home',
                     query:{
-                      id: this.userDataState.teacher_banji_id
+                      id: data.banji_id || this.userDataState.teacher_banji_id
                     }
                   })
                 }else if( this.tag.cate_id == 99 || this.$route.query.back == 'apps-school'){
                   this.$router.replace({
                     name:'apps-school',
                     query:{
-                      id: this.userDataState.teacher_school_id
+                      id: data.school_id || this.userDataState.teacher_school_id
                     }
                   })
                 } else if(this.getResult[0]!=''&&this.getResult[0]!='apps-find'){

@@ -135,14 +135,12 @@ export default {
   },
   methods: {
     ...mapMutations(['setReleaseSwitch']),
-    ...mapActions(['getUserData']),
     ...mapActions('manage',['getSchoolList']),
     request() {
       if(this.$route.query.type != 'preview'){
-        this.getUserData().then(res => {
-          if(res.id!= null){
-            if(res.teacher_school_id == '0'){
-              if(res.child_id == '0'){
+          if(this.userDataState.id!= null){
+            if(this.userDataState.teacher_school_id == '0'){
+              if(this.userDataState.child_id == '0'){
                   this.$dialog.confirm({
                     title: '添加宝贝',
                     message: '请添加您的宝贝，掌握孩子阅读数据',
@@ -196,7 +194,6 @@ export default {
               name:'home'
             })
           }
-        })
       }else{
         this.getSchoolInfo()
       }

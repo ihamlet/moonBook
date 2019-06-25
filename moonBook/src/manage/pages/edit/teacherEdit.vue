@@ -14,11 +14,10 @@
           :required="pageType!='edit'" label="手机号" placeholder="请输入手机号" />
       </van-cell-group>
       <van-cell-group :border='false'>
-        <van-cell title="班级" :border='false' :value="form.banji_name?formatBanjiTitle(form.banji_name):'请设置班级'" is-link
-          @click="toSelectBanjiPage" />
-        <van-cell title="职务" :border='false' :value="form.duty" is-link @click="show = true" :arrow-direction='show?"up":"down"' />
+        <van-cell title="班级" :border='false' :value="form.banji_name?formatBanjiTitle(form.banji_name):'请设置班级'" is-link @click="toSelectBanjiPage" />
+        <van-cell title="职务" :border='false' :value="form.duty" is-link @click="pickerShow" :arrow-direction='show?"up":"down"' />
       </van-cell-group>
-      <van-panel title="角色设置" desc="对应角色设有不同权限" :status="form.role_id?'':'尚未取得设置权限'">
+      <van-panel title="角色设置" desc="对应角色设有不同权限" :status="form.role_id?'':'尚未取得设置权限'" v-if='form.role_id!=0'>
         <div class="switch-cell" v-for='(item,index) in roles' :key="index">
             <van-switch-cell v-if='item.disabled' :disabled='!item.disabled' :title="item.role_name" :value="form.role_id" :active-value='String(index)' active-color='#67C23A' @input='onSwitchChange(index)' value-class='switch-cell-value'/>
         </div>
@@ -26,8 +25,7 @@
     </div>
 
     <van-popup v-model="show" position="bottom" get-container='#app'>
-      <van-picker show-toolbar title="职务" :visibleItemCount='3' :columns="columns" @change="selectDuty" @cancel="onCancel"
-        @confirm="show = false" />
+      <van-picker ref='picker' :defaultIndex='pickerIndex' show-toolbar title="职务" :visibleItemCount='3' :columns="columns" @change="selectDuty" @cancel="onCancel" @confirm="show = false" />
       <van-field size='large' input-align='right' label="填写职务" v-model="duty" placeholder="请填写职务" />
     </van-popup>
 
@@ -54,18 +52,22 @@ export default {
       show: false,
       pageType: this.$route.query.type,
       form: {
-        ...this.$route.query
+        ...this.$route.query,
       },
       isConfirm: this.$route.query.is_confirm,
       columns: slectDuty,
       regPhone: /^1[34578]\d{9}$/,
       loading: false,
       duty: '',
-      roles:[]
+      roles:[],
+      pickerIndex:0
     }
   },
   created () {
     this.fetchData()
+    if(!this.form.duty){
+      this.form.duty = '班主任'
+    }
   },
   watch: {
     '$router': 'fetchData',
@@ -112,6 +114,18 @@ export default {
                     this.$toast(res.data.msg)
             }
         })
+    },
+    pickerShow(){
+      this.show = true
+
+      let index = 0
+      slectDuty.map((e,i)=>{
+        if(e == this.form.duty){
+          index = i
+        }
+      })
+      
+      this.pickerIndex = index
     },
     past() {
 
@@ -177,6 +191,7 @@ export default {
 
     },
     selectDuty(picker, value, index) {
+      // picker.setColumnValues(0, value)
       this.form.duty = value
     },
     onCancel() {
@@ -193,15 +208,6 @@ export default {
         }
       })
     },
-    // formatBanjiTitle(text) {
-    //     if (text && text.indexOf('班') == -1) {
-    //         return text + '班'
-    //     } else {
-    //         let arr = text.split('')
-    //         let newArr = [...new Set(arr)]
-    //         return newArr.join('')
-    //     }
-    // },
     sumbit() {
       switch (this.$route.query.type) {
         case 'edit':

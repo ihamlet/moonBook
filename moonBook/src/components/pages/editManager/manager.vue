@@ -161,7 +161,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getUserData']),
     backRouter(routeName){
       if(routeName == 'edit-class' || routeName == 'edit-school'){
         this.renew = false

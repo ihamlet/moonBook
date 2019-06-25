@@ -5,24 +5,27 @@
         loading-text='提交中...'> {{$route.query.pageType == 'add'&&form.banji_id > 0?'创建':'提交'}} </van-button>
     </van-nav-bar>
     <div class="container">
-        <van-cell-group>
-          <van-field label="班级名称" size='large' required v-model="form.title" placeholder="请输入班级名称" input-align='right' />
-          <van-field label="班级类型" size='large' required readonly v-model="form.grade_name" placeholder="请选择班级类型"
-            input-align='right' @click="onClickPickerShow('type')" />
-          <van-field label="班级邀请码" size='large' required v-model="form.invite_code" placeholder="请输入四位数字班级邀请码"
-            input-align='right' />
-          <van-field label="班级年份" size='large' required readonly v-model="form.year" placeholder="请选择班级年份"
-            input-align='right' @click="onClickPickerShow('year')"/>
-        </van-cell-group>
+      <van-cell-group>
+        <van-field label="班级名称" size='large' required v-model="form.title" placeholder="请输入班级名称" input-align='right' :border='false'/>
+        <van-field label="班级类型" size='large' required readonly v-model="form.grade_name" placeholder="请选择班级类型"
+          input-align='right' @click="onClickPickerShow('type')" :border='false'/>
+        <van-field label="班级邀请码" size='large' required v-model="form.invite_code" placeholder="请输入四位数字班级邀请码"
+          input-align='right' :border='false'/>
+        <van-field label="班级年份" size='large' required readonly v-model="form.year" placeholder="请选择班级年份" input-align='right'
+          @click="onClickPickerShow('year')" :border='false'/>
+      </van-cell-group>
 
       <div class="no-list" v-if='!form.banji_id'>
         请在创建班级成功后添加老师和学生
-      </div> 
-      <van-pull-refresh v-model="loading" @refresh="onRefresh"  v-else>
+      </div>
+      <van-pull-refresh v-model="loading" @refresh="onRefresh" v-else>
         <div class="list">
           <van-collapse v-model="activeNames" :border='false'>
             <van-collapse-item class="collapse-item" name="teacher" :border='false'>
               <div class="collapse-title flex flex-align" slot='title'>老师</div>
+              <van-cell title="班级通知" value="发布" size="large" is-link :border='false' @click="notification">
+                <div class="iconfont icon-notice jackInTheBox animated" slot="icon">&#xe672;</div>
+              </van-cell>
               <div class="teacher-list" v-if='teacherList.length'>
                 <van-cell v-if='teacherList.length'>
                   <div class="list-cell flex flex-align">
@@ -38,7 +41,7 @@
                 <van-swipe-cell :right-width="80" v-for='(item,index) in teacherList' :key="index">
                   <userCard :item='item' v-if='item.user_id > 0' type='list' />
                   <div class="swipe-cell-right" slot="right" @click="outTeacher(item)">
-                     <span class="out-text">请出老师</span>
+                    <span class="out-text">请出老师</span>
                   </div>
                 </van-swipe-cell>
               </div>
@@ -51,7 +54,6 @@
                   size="medium" v-if='count > 0'>{{count}}人</van-tag>
               </div>
               <div class="student-list">
-
                 <van-cell v-if='studentList.length'>
                   <div class="list-cell flex flex-align">
                     <div class="invite-code">
@@ -64,12 +66,21 @@
                   </div>
                 </van-cell>
 
+                <form action="/" v-if='count > 0'>
+                  <van-search v-model="value" placeholder="请输入姓名或手机号" shape='round' @search="onSearch">
+                    <div class="label theme-color" slot="label" @click="selectLabel">
+                      {{searchLabel}}
+                    </div>
+                  </van-search>
+                </form>
+
                 <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
                   <div class="list-container" v-if='studentList.length'>
                     <studentCard v-for='(item,index) in studentList' :key="index" :item='item' />
                   </div>
                   <div class="no-list" v-else>
-                    您可以：<span class="theme-color" @click="toList('students')">添加学生</span>或是<span class="theme-color" @click="toShare('students')"> 邀请学生 </span>
+                    您可以：<span class="theme-color" @click="toList('students')">添加学生</span>或是<span class="theme-color"
+                      @click="toShare('students')"> 邀请学生 </span>
                   </div>
                 </van-list>
               </div>
@@ -78,10 +89,11 @@
         </div>
       </van-pull-refresh>
     </div>
-    <van-button class="boss-key theme-btn" type="primary" round v-if='checkCount > 0&&form.banji_id > 0' @click="allCheck">一键审核</van-button>
+    <!-- <van-button class="boss-key theme-btn" type="primary" round v-if='checkCount > 0&&form.banji_id > 0' @click="allCheck">一键审核</van-button> -->
 
     <van-popup v-model="show" position="bottom">
-      <van-picker :title="pickerTitle" :columns="columns" @change="onChange" show-toolbar @cancel="onPickerCancel" @confirm="show = false" :visible-item-count='3'/>
+      <van-picker :title="pickerTitle" :columns="columns" @change="onChange" show-toolbar @cancel="onPickerCancel"
+        @confirm="show = false" :visible-item-count='visibleCount' />
     </van-popup>
   </div>
 </template>
@@ -89,20 +101,20 @@
 import axios from './../../../components/lib/js/api'
 import studentCard from './../../module/user/studentCard'
 import userCard from './../../module/user/userCard'
-import { mapGetters } from 'vuex'
+import { mapGetters,mapMutations } from 'vuex'
 import { newBanjiTitle, getBanjiYear } from './../../../components/lib/js/mixin'
 
 export default {
   name: 'banjiEdit',
-  mixins: [ newBanjiTitle, getBanjiYear ],
+  mixins: [newBanjiTitle, getBanjiYear],
   components: {
     studentCard,
     userCard
   },
   computed: {
     ...mapGetters('manage', ['manageSchoolInfo']),
-    banjiYearArr(){
-      let arr = [ this.classYear+1,this.classYear,this.classYear-1]
+    banjiYearArr() {
+      let arr = [this.classYear + 1, this.classYear, this.classYear - 1]
       return arr
     }
   },
@@ -121,29 +133,36 @@ export default {
       banjiTypeArr: ['大班', '中班', '小班'],
       show: false,
       isBtnLoading: false,
-      columns:[],
-      pickerType:'type',
-      pickerTitle:'班级类型',
-      banjiId:'',
-      inviteCode:''
+      columns: [],
+      pickerType: 'type',
+      pickerTitle: '班级类型',
+      banjiId: '',
+      inviteCode: '',
+      value:'',
+      visibleCount:3,
+      searchLabel:'全部',
     }
   },
   created() {
     this.fetchData()
   },
   watch: {
-    '$router': 'fetchData'
+    '$router': 'fetchData',
+    value(){
+      this.onSearch()
+    }
   },
   methods: {
+    ...mapMutations('articleSetting',['setTag']),
     fetchData() {
       this.getTeacherList()
       this.getStudentList()
     },
-    getTeacherList(){
+    getTeacherList() {
 
-      if(this.form.banji_id > 0){
+      if (this.form.banji_id > 0) {
         this.activeNames.push('teacher')
-        
+
         axios.get('/SchoolManage/teacher/getList', {
           params: {
             banji_id: this.form.banji_id
@@ -159,9 +178,9 @@ export default {
         })
       }
     },
-    getStudentList(){
-      if(this.form.banji_id > 0){
-        
+    getStudentList() {
+      if (this.form.banji_id > 0) {
+
         this.activeNames.push('student')
         axios.get('/SchoolManage/students/getList', {
           params: {
@@ -186,8 +205,25 @@ export default {
         params: {
           school_id: this.form.school_id,
           banji_id: this.form.banji_id,
+          keyword: this.value,
           page: this.page
         }
+      }
+
+
+      switch(this.searchLabel){
+        case '已审核':
+          data.params.is_banji_confirm = 1
+          break
+        case '未审核':
+          data.params.is_banji_confirm = 0
+          break
+        case '已办卡':
+          data.params.is_card = 1
+          break
+        case '未办卡':
+          data.params.is_card = 0
+          break
       }
 
       return axios.get('/SchoolManage/students/getList', data).then(res => {
@@ -223,39 +259,43 @@ export default {
         this.finished = false
       })
     },
-    allCheck() {
-      this.$dialog.confirm({
-        message: `此操作将会通过${this.form.title}全部待审核的学生，您确定要这么做吗?`
-      }).then(() => {
+    // allCheck() {
+    //   this.$dialog.confirm({
+    //     message: `此操作将会通过${this.form.title}全部待审核的学生，您确定要这么做吗?`
+    //   }).then(() => {
 
-        let data = {
-          params: {
-            is_all: 1,
-            banji_id: this.form.banji_id
-          }
-        }
+    //     let data = {
+    //       params: {
+    //         is_all: 1,
+    //         banji_id: this.form.banji_id
+    //       }
+    //     }
 
-        axios.get('/SchoolManage/students/check', data).then(res => {
-          switch (res.data.status) {
-            case 1:
-              this.onRefresh()
-              break
-            default:
-              this.$toast(res.data.msg)
-          }
-        })
+    //     axios.get('/SchoolManage/students/check', data).then(res => {
+    //       switch (res.data.status) {
+    //         case 1:
+    //           this.onRefresh()
+    //           break
+    //         default:
+    //           this.$toast(res.data.msg)
+    //       }
+    //     })
 
-      }).catch(() => {
-        // on cancel
-      })
-    },
+    //   }).catch(() => {
+    //     // on cancel
+    //   })
+    // },
     onChange(picker, value, index) {
-      switch(this.pickerType){
+      switch (this.pickerType) {
         case 'type':
           this.form.grade_name = value
           break
         case 'year':
           this.form.year = value
+          break
+        case 'filter':
+          this.searchLabel = value
+          this.onSearch()
           break
       }
     },
@@ -263,10 +303,10 @@ export default {
       this.form.grade_name = this.$route.query.grade_name
       this.show = false
     },
-    onClickPickerShow(type){
+    onClickPickerShow(type) {
       this.show = true
       this.pickerType = type
-      switch(type){
+      switch (type) {
         case 'type':
           this.columns = this.banjiTypeArr
           this.pickerTitle = '班级类型'
@@ -301,13 +341,13 @@ export default {
           switch (res.data.status) {
             case 1:
               this.$toast.success(res.data.msg)
-              if(this.$route.query.pageType=='add'){
+              if (this.$route.query.pageType == 'add') {
                 this.form.banji_id = res.data.data.banji_id
                 this.form.invite_code = res.data.data.invite_code
                 this.getTeacherList(res.data.data.banji_id)
                 this.getStudentList(res.data.data.banji_id)
                 this.onRefresh()
-              }else{
+              } else {
                 this.$router.go(-1)
               }
               break
@@ -318,7 +358,7 @@ export default {
       }
     },
     toShare(type) {
-      switch(type){
+      switch (type) {
         case 'students':
           this.$router.push({
             name: 'share',
@@ -327,7 +367,7 @@ export default {
               school_name: this.$route.query.school_name,
               banji_id: this.form.banji_id,
               banji_name: this.form.title,
-              invite_code:  this.form.invite_code,
+              invite_code: this.form.invite_code,
               grade_name: this.form.grade_name,
               year: this.form.year,
               user_id: 0
@@ -337,7 +377,7 @@ export default {
         case 'teacher':
           this.$router.push({
             name: 'teacherShare',
-            query:{
+            query: {
               ...this.form
             }
           })
@@ -354,16 +394,16 @@ export default {
         }
       })
     },
-    outTeacher(item){
+    outTeacher(item) {
       this.$dialog.confirm({
-          message: '您确定要请出该老师吗?'
-      }).then(()=>{
-        axios.post('/SchoolManage/teacher/edit',{
+        message: '您确定要请出该老师吗?'
+      }).then(() => {
+        axios.post('/SchoolManage/teacher/edit', {
           ...item,
           banji_id: 0,
           banji_name: ''
-        }).then(()=>{
-          switch(res.data.status){
+        }).then(() => {
+          switch (res.data.status) {
             case 1:
               this.$toast.success(res.data.msg)
               this.getTeacherList()
@@ -372,8 +412,37 @@ export default {
               this.$toast(res.data.msg)
           }
         })
-      }).catch(()=>{
+      }).catch(() => {
 
+      })
+    },
+    selectLabel(){
+      this.show = true
+      this.visibleCount = 3
+      this.columns = ['全部','已审核','未审核','已办卡','未办卡']
+      this.pickerTitle = '筛选'
+      this.pickerType = 'filter'
+    },
+    onSearch(){
+      this.page = 1
+      this.studentList = []
+      this.onLoad()
+    },
+    notification(){
+      this.setTag({
+        portal_name:"班级主页",
+        cate_id: 124,
+        cate_name:"班级通知"
+      })
+
+      this.$router.push({
+        name:'graphic',
+        query:{
+          pageType:'notice',
+          banji_name: this.form.title,
+          banji_id: this.form.banji_id,
+          school_id: this.manageSchoolInfo.school_id
+        }
       })
     }
   }
@@ -404,15 +473,15 @@ export default {
   color: #909399;
 }
 
-.swipe-cell-right{
-  width: 80PX;
+.swipe-cell-right {
+  width: 80px;
   height: 100%;
   background: #f44;
   text-align: center;
   position: relative;
 }
 
-.out-text{
+.out-text {
   position: absolute;
   color: #fff;
   font-size: 15px;
@@ -420,5 +489,14 @@ export default {
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
   white-space: nowrap;
+}
+
+.icon-notice{
+  margin-right: 5px;
+  font-size: 20px;
+  background: linear-gradient(127deg, #FFC107,#FF9800);
+  -webkit-background-clip: text;
+  color: transparent;
+  display: block
 }
 </style>

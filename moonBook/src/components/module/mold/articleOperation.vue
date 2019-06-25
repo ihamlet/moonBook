@@ -62,14 +62,12 @@ export default {
     "$router":'fetchData'  
   },
   methods: {
-    ...mapActions(['getUserData']),
     fetchData(){
-      this.getUserData().then(res=>{
-        if(res.user_id){
+        if(this.userDataState.user_id){
           let babyListData = {
             params:{
               sort:'old',
-              user_id:res.user_id
+              user_id:this.userDataState.user_id
             }
           }
 
@@ -82,7 +80,6 @@ export default {
         }else{
           this.$toast('获取用户信息失败')
         }
-      })
 
       let cateListData = {
         params:{
@@ -97,15 +94,6 @@ export default {
         }
       })
     },
-    // formatBanjiTitle(text) {
-    //   if (text && text.indexOf('班') == -1) {
-    //     return text + '班'
-    //   } else {
-    //     let arr = text.split('')
-    //     let newArr = [...new Set(arr)]
-    //     return newArr.join('')
-    //   }
-    // },
     onChange(picker, values){
       this.childId = values.id
     },

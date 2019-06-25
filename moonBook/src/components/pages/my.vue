@@ -76,7 +76,7 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
-    ...mapActions(['getUserData']),
+    // ...mapActions(['getUserData']),
     fetchData() {
       axios.get('/book/SchoolTeacher/getMine').then(res => {
         if(res.data.status == 1){
@@ -90,34 +90,32 @@ export default {
         }
       })
 
-      this.getUserData().then(res => {
-        if(res.id != null){
-          let babyListData = {
-            params:{
-              sort:'old',
-              user_id:res.id
-            }
+      if(this.userDataState.id != null){
+        let babyListData = {
+          params:{
+            sort:'old',
+            user_id:this.userDataState.id
           }
-          axios.get('/book/baby/getList',babyListData).then(res => {
-            this.children = res.data.data
-          })
-
-          let getArticlrList = {
-            params:{
-              page:1,
-              sort:'new',
-              user_id:res.id
-            }
-          }
-
-          axios.get('/book/SchoolArticle/getList',getArticlrList).then(res => {
-            this.zoomCard = res.data.data[0]
-          })
-        }else{
-           this.$toast.fail('获取数据失败')
         }
-      })
+        axios.get('/book/baby/getList',babyListData).then(res => {
+          this.children = res.data.data
+        })
 
+        let getArticlrList = {
+          params:{
+            page:1,
+            sort:'new',
+            user_id:this.userDataState.id
+          }
+        }
+
+        axios.get('/book/SchoolArticle/getList',getArticlrList).then(res => {
+          this.zoomCard = res.data.data[0]
+        })
+      }else{
+        this.$toast.fail('获取数据失败')
+      }
+    
       axios.get('/book/member/get_coupon_downloads').then(res=>{
         this.couponCount = res.data.count
       })

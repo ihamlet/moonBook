@@ -117,7 +117,7 @@ export default {
 
             switch(apiType){
                 case 'kick':
-                    msg = `您确定要请出${this.item.name}该学生吗?此操作后，该用户将无法进入${this.formatBanjiTitle(this.item.banji_name)}。`
+                    msg = `您确定要请出${this.item.name}该学生吗?此操作后，该用户将无法进入${this.item.banji_name?this.formatBanjiTitle(this.item.banji_name):'班级'}。`
                     break
                 case 'check':
                     msg = `您确定要通过${this.item.name}吗?`
@@ -152,15 +152,6 @@ export default {
                 
             })
         },
-        // formatBanjiTitle(text) {
-        //     if (text && text.indexOf('班') == -1) {
-        //         return text + '班'
-        //     } else {
-        //         let arr = text.split('')
-        //         let newArr = [...new Set(arr)]
-        //         return newArr.join('')
-        //     }
-        // },
         toSchool(){
             if(this.item.school_id > 0){
                 this.$router.push({
@@ -275,6 +266,7 @@ export default {
 
 .icon-select{
     margin-right: 10px;
+    font-size: 20px;
 }
 
 .to-be-selected{

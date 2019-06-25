@@ -205,15 +205,6 @@ export default {
           
       })
     },
-    // formatBanjiTitle(text) {
-    //   if (text && text.indexOf('班') == -1) {
-    //     return text + '班'
-    //   } else {
-    //     let arr = text.split('')
-    //     let newArr = [...new Set(arr)]
-    //     return newArr.join('')
-    //   }
-    // },
     invite(){
       this.$router.push({
         name:'share',

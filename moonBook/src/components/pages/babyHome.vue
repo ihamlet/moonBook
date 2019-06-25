@@ -280,23 +280,16 @@ export default {
         }
       })
 
-      this.getUserData().then(res => {
-        if(res.id != null){
-          let data = {
-            params: {
-              sort:'old',
-              user_id:res.id
-            }
-          }
-          axios.get('/book/baby/getList',data).then(res => {
-            switch(res.data.status){
-              case 1:
-                this.babyList = res.data.data
-              break
-            }
-          })
-        }else{
-          this.$toast.fail('用户信息失败')
+      axios.get('/book/baby/getList',{
+        params: {
+          sort:'old',
+          user_id: this.userDataState.id
+        }
+      }).then(res => {
+        switch(res.data.status){
+          case 1:
+            this.babyList = res.data.data
+          break
         }
       })
 
@@ -313,56 +306,54 @@ export default {
       })
     },
     request() {
-      this.getUserData().then(res => {
-         if (res.child_id > '0') {
-          let data = {
-            params:{
-              child_id: this.$route.query.id
+        if (this.userDataState.child_id > '0') {
+        let data = {
+          params:{
+            child_id: this.$route.query.id
+          }
+        }
+        axios.get('/book/baby/getInfo',data).then(res => {
+            if (res.data.status == 1) {
+              this.childInfo = res.data.data
+
+            if(!res.data.data.is_mine){
+              let babyBorrowGetListData = {
+                params:{
+                  page:1,
+                  limit:20,
+                  child_id:this.$route.query.id
+                }
+              }
+
+              axios.get('/book/BabyBorrow/getList',babyBorrowGetListData).then(res => {
+                if (res.status == 200) {
+                  this.lateBook = res.data.data
+                }
+              })
             }
           }
-          axios.get('/book/baby/getInfo',data).then(res => {
-              if (res.data.status == 1) {
-                this.childInfo = res.data.data
-
-              if(!res.data.data.is_mine){
-                let babyBorrowGetListData = {
-                  params:{
-                    page:1,
-                    limit:20,
-                    child_id:this.$route.query.id
-                  }
-                }
-
-                axios.get('/book/BabyBorrow/getList',babyBorrowGetListData).then(res => {
-                  if (res.status == 200) {
-                    this.lateBook = res.data.data
-                  }
-                })
-              }
+        })
+      } else{
+        this.$dialog.confirm({
+          title: '添加宝贝',
+          message: '请添加您的宝贝，掌握孩子阅读数据',
+          confirmButtonText:'添加',
+          cancelButtonText:'稍后',
+          showCancelButton: true
+        }).then(() => {
+          this.$router.push({
+            name: 'edit-child',
+            query: {
+              type: 'add',
+              pageTitle: '添加宝贝'
             }
           })
-        } else{
-          this.$dialog.confirm({
-            title: '添加宝贝',
-            message: '请添加您的宝贝，掌握孩子阅读数据',
-            confirmButtonText:'添加',
-            cancelButtonText:'稍后',
-            showCancelButton: true
-          }).then(() => {
-            this.$router.push({
-              name: 'edit-child',
-              query: {
-                type: 'add',
-                pageTitle: '添加宝贝'
-              }
-            })
 
-            localStorage.removeItem('childInfo')
-          }).catch(() => {
-            this.$router.go(-1)
-          })
-        }
-      })
+          localStorage.removeItem('childInfo')
+        }).catch(() => {
+          this.$router.go(-1)
+        })
+      }
     },
     onClickLeft() {
       if (this.$route.query.back && this.$route.query.back!='baby-home') {
@@ -592,15 +583,6 @@ export default {
         this.isSelectBabyShow = true
       }
     },
-    // formatBanjiTitle(text) {
-    //   if (text && text.indexOf('班') == -1) {
-    //     return text + '班'
-    //   } else {
-    //     let arr = text.split('')
-    //     let newArr = [...new Set(arr)]
-    //     return newArr.join('')
-    //   }
-    // },
     punch() {
       this.scanQRcode({id:this.$route.query.id}).then(res=>{
         switch(res.data.status){

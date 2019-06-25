@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="release-footer-bar" v-if='$route.query.pageTitle!="育儿专栏"&&$route.query.pageTitle!="教育"&&$route.query.pageTitle!="班级通知"'>
-      <van-button class="theme-btn theme-release" :class="isBtnShow?'bounceInUp animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
+      <van-button class="theme-btn theme-release" :class="isBtnShow?'bounceIn animated':''" round size="normal" type="primary" @click="setReleaseSwitch(true)">
         <i class="iconfont">&#xe664;</i>
         发 布
       </van-button>

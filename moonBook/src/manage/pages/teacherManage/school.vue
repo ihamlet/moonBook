@@ -109,14 +109,17 @@ export default {
   methods: {
     ...mapActions('manage',['getSchoolList']),
     ...mapMutations('manage',['setManageSchool']),
-    onSelect(item){
+    async onSelect(item){
         localStorage.setItem('schoolActive',item.index)
 
-        this.setManageSchool(item)
+        const toast = this.$toast.loading({
+          forbidClick: true, 
+          loadingType: 'spinner'
+        })
+
+        await this.setManageSchool(item)
 
         this.schoolName = item.school_name
-
-        this.page = 1
         this.schoolId = item.school_id
 
         if(this.$refs.personnel){
@@ -131,6 +134,8 @@ export default {
         if(this.$refs.banjiList){
           this.$refs.banjiList.onRefresh()
         }
+
+        toast.clear()
         this.isSelectSchool = false
     },
     onTabChange(index){

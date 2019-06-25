@@ -2,6 +2,9 @@
   <div class="personnel">
     <van-cell-group :border='false'>
       <van-cell-group>
+        <van-cell title="学校通知" value="发布" size="large" is-link :border='false' @click="notification">
+          <div class="iconfont icon-notice jackInTheBox animated" slot="icon">&#xe672;</div>
+        </van-cell>
         <van-cell title="各班待审核的人员" is-link @click="toBanjiTree">
           <van-tag round type="success" size="medium" v-if='studentCount > 0'> {{studentCount}}人 </van-tag>
         </van-cell>
@@ -24,7 +27,7 @@
 import axios from './../../components/lib/js/api'
 import userCard from './user/userCard'
 import draggable from 'vuedraggable'
-import { mapGetters } from 'vuex'
+import { mapGetters,mapMutations } from 'vuex'
 
 export default {
   name: 'personnel',
@@ -45,6 +48,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('articleSetting',['setTag']),
     toBanjiTree() {
       this.$router.push({
         name: 'banjiTree',
@@ -108,8 +112,24 @@ export default {
         }
       })
       this.$emit('getCount')
+    },
+    notification(){      
+      this.setTag({
+        portal_name:"学校主页",
+        cate_id: 99,
+        cate_name:"学校通知"
+      })
+
+      this.$router.push({
+        name:'graphic',
+        query:{
+          pageType:'notice',
+          banji_id: 0,
+          school_id: this.manageSchoolInfo.school_id
+        }
+      })
     }
-  },
+  }
 }
 </script>
 <style scoped>

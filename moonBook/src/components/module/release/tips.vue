@@ -52,7 +52,7 @@ export default {
         photos: []
       },
       relase: [{
-        name: '发图文',
+        name: '发布',
         type: 'image',
         icon: 'icon-weibo'
       }, {

@@ -61,7 +61,7 @@
 import svgRanking from './../module/animate/svg/ranking'
 import card from './../module/ranking/card'
 import slogan from './../module/slogan'
-import { mapActions,mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { watchScroll } from './../lib/js/mixin'
 
 
@@ -213,7 +213,6 @@ export default {
     this.getTabContent()
   },
   methods: {
-    ...mapActions(['getUserData']),
     onTopTabClick(idx) {
       this.topTabIdx = idx
       this.secondTabIdx = 0

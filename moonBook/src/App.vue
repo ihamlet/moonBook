@@ -11,6 +11,7 @@
       </transition>
         <router-view v-if="!$route.meta.keepAlive" class="Router"></router-view>
     </div>
+
     <footer-bar v-if='$route.meta.isFooterBar' :userTabBtn='getTabBtn' />
 
     <el-amap vid="amap" :center="center" :plugin="plugin" v-show='false' />
@@ -23,7 +24,7 @@
 import axios from './../src/components/lib/js/api'
 import footerBar from './components/module/footerBar'
 import addChild from './components/module/card/addChild'
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
 import { watchTouch } from './components/lib/js/mixin'
 import './../src/components/lib/css/neat.css'
 import 'animate.css'
@@ -36,6 +37,7 @@ export default {
     addChild
   },
   computed: {
+    ...mapState(['message']),
     ...mapGetters(['userDataState','getTabBtn']),
     routeName(){
       let routeList = ['home','apps-find','article','apps-school','my-home','zoom']
@@ -99,6 +101,21 @@ export default {
     },
     weather(val){
       this.setWeather(val)
+    },
+    message:{
+      handler(val) {
+        let create_time = Number(val.data[0].create_time)
+        let newTime = Date.parse(new Date())/1000
+        
+        if( create_time == newTime ){
+          this.$notify({
+            message: val.data[0].details,
+            duration: 3000
+          })
+        }
+
+      },
+      deep: true
     },
     '$route' (to, from) {
         // 切换动画
@@ -181,12 +198,12 @@ textarea {
 
 @font-face {
   font-family: 'iconfont';  /* project id 893274 */
-  src: url('//at.alicdn.com/t/font_893274_ia9o1wh9ykg.eot');
-  src: url('//at.alicdn.com/t/font_893274_ia9o1wh9ykg.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_893274_ia9o1wh9ykg.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_893274_ia9o1wh9ykg.woff') format('woff'),
-  url('//at.alicdn.com/t/font_893274_ia9o1wh9ykg.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_893274_ia9o1wh9ykg.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_893274_lvux6ui2v5q.eot');
+  src: url('//at.alicdn.com/t/font_893274_lvux6ui2v5q.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_893274_lvux6ui2v5q.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_893274_lvux6ui2v5q.woff') format('woff'),
+  url('//at.alicdn.com/t/font_893274_lvux6ui2v5q.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_893274_lvux6ui2v5q.svg#iconfont') format('svg');
 }
 
 .toast-icon .van-icon.van-icon-success,

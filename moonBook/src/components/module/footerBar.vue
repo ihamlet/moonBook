@@ -64,14 +64,12 @@ export default {
             routeData = {
               id: item.id,
               cate_id: 116,
-              // tags: `${this.userDataState.teacher_banji_name?`${this.userDataState.teacher_banji_name}班`:'班级主页'}`,
               home_type:'banji'
             }
             path = `${item.path}?${qs.stringify(routeData)}`
           }else{
             routeData  = {
               id:item.id,
-              // tags:`${this.userDataState.banji_name}班`,
               home_type:'banji'
             }
 

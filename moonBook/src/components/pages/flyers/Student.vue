@@ -55,11 +55,8 @@ export default {
     },
     methods: {
         ...mapActions('openWX',['share']),
-        ...mapActions(['getUserData']),
         fetchData(){
-            this.getUserData().then(res => {
-                this.userInfo = res
-            })
+            this.userInfo = this.userDataState
         },
         toBabyHome(){
             this.$router.push({

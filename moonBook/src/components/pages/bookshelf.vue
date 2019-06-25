@@ -1,9 +1,8 @@
 <template>
   <div class="bookshelf">
     <form action="/">
-      <van-search v-model="keyword" placeholder="请输入搜索关键词" show-action shape="round" @search="onSearch" >
+      <van-search v-model="keyword" placeholder="请输入搜索关键词" shape="round" @search="onSearch" >
         <div class="card-school-name theme-color" v-line-clamp:20="1" slot="label" @click="toShcoolHome">{{userDataState.card_school_name}}</div>
-        <div slot="action" class="theme-color" @click="onSearch">搜索</div>
       </van-search>
     </form>
     <van-tabs color='#0084ff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex" @click="onClick" @disabled='onClickDisabled' title-inactive-color='#303133' :border='false'>

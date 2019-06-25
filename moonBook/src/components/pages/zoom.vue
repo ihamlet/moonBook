@@ -72,7 +72,7 @@ import { sum, arrayUnique } from "./../lib/js/util.js"
 import { watchScroll } from './../lib/js/mixin'
 import graphicCard from "./../module/card/graphicCard"
 import reading from "./../module/reading"
-import { mapGetters,mapActions } from "vuex"
+import { mapGetters } from "vuex"
 
 export default {
   name: "zoom",
@@ -126,7 +126,6 @@ export default {
     $router: "fetchData"
   },
   methods: {
-    ...mapActions(['getUserData']),
     fetchData() {
         if(this.$route.query.id){
         let data = {

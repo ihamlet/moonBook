@@ -1,9 +1,8 @@
 <template>
   <div class="search-page">
     <form action="/">
-        <van-search class="search" placeholder="搜索图书/幼儿园/文章" shape="round" v-model="value" show-action @search="onSearch" @cancel="onCancel">
+        <van-search class="search" placeholder="搜索图书/幼儿园/文章" shape="round" v-model="value" @search="onSearch" @cancel="onCancel">
             <div class="search-label" slot="label">{{list[listIndex].name}}</div>
-            <div class="theme-color" slot="action" @click="onSearch">搜索</div>
         </van-search>
     </form>
     <div class="search-type" v-if='value.length > 0'>

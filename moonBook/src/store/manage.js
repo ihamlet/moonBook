@@ -40,8 +40,9 @@ export default {
     },
     actions:{
         async getSchoolList(context,products){
+            let schoolId = products || context.getters.manageSchoolInfo.school_id
 
-            await context.dispatch('getMyMenus')
+            await context.dispatch('getMyMenus',schoolId)
 
             return axios.get('/SchoolManage/school/getSchools').then(res=>{
                 switch (res.data.status) {
@@ -51,8 +52,6 @@ export default {
                     let arr = res.data.data
         
                     schoolList = isRepeatArr(arr)
-
-                    
 
                     if(products){
                         schoolList.map((e,i) =>{
@@ -64,7 +63,6 @@ export default {
 
                     let index = localStorage.getItem('schoolActive') || 0
                     
-
                     context.commit('setSchoolList',schoolList)
                     context.commit('setManageSchool',schoolList[index])
         
@@ -77,7 +75,11 @@ export default {
             })
         },
         async getMyMenus(context,products){
-            axios.get('/SchoolManage/teacher/getMyMenus').then(res=>{
+            axios.get('/SchoolManage/teacher/getMyMenus',{
+                params:{
+                    school_id: products
+                }
+            }).then(res=>{
                 console.log(res)
                 switch(res.data.status){
                     case 1:

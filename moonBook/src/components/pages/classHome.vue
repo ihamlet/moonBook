@@ -134,7 +134,7 @@ export default {
   //进入该页面
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.request()
+        vm.request()
     })
   },
   //离开该页面去掉页面数据缓存
@@ -149,14 +149,12 @@ export default {
   },
   methods: {
     ...mapActions('openWX',['scanQRcode']),
-    ...mapActions(['getUserData']),
     request() {
       if(this.$route.query.type != 'preview'){
-        this.getUserData().then(res => {
-          if (res.id != null) {
+          if (this.userDataState.id != null) {
             //这样园长就不用添加宝贝了
-            if(res.teacher_school_id == '0'){
-              if( res.child_id == '0'){
+            if(this.userDataState.teacher_school_id == '0'){
+              if(this.userDataState.child_id == '0'){
                 this.$dialog.confirm({
                   title: '添加宝贝',
                   message: '请添加您的宝贝，掌握孩子阅读数据',
@@ -176,7 +174,7 @@ export default {
                 }).catch(() => {
                   this.backRouter()
                 })
-              } else if(res.school_id == '0'){
+              } else if( this.userDataState.school_id == '0'){
                 this.$dialog.confirm({
                   title: '加入学校',
                   message: '请加入学校，掌握班学校动态',
@@ -189,13 +187,13 @@ export default {
                     query: {
                       type: 'edit',
                       enter: 'my-home',
-                      id: res.child_id
+                      id:  this.userDataState.child_id
                     }
                   })
                 }).catch(() => {
                   this.backRouter()
                 })
-              }else if(res.banji_id == '0'){
+              }else if( this.userDataState.banji_id == '0'){
                   this.$dialog.confirm({
                     title: '加入班级',
                     message: '请加入班级，掌握班级动态',
@@ -206,10 +204,10 @@ export default {
                     this.$router.push({
                       name: 'edit-class',
                       query: {
-                        id: res.child_id,
+                        id:  this.userDataState.child_id,
                         back: 'class-home',
-                        school_name: res.school_name,
-                        school_id: res.school_id,
+                        school_name:  this.userDataState.school_name,
+                        school_id:  this.userDataState.school_id,
                         type: 'edit'
                       }
                     })
@@ -228,7 +226,6 @@ export default {
               name:'home'
             })
           }
-        })
       }else{
         this.getClassInfo()
       }

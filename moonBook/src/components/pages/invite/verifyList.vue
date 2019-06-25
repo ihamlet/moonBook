@@ -40,7 +40,7 @@
 <script>
 import axios from './../../lib/js/api'
 import family from './../../module/myModule/family'
-import { mapGetters,mapActions } from 'vuex'
+import { mapGetters,mapMutations } from 'vuex'
 
 export default {
   name: 'verifyList',

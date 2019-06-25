@@ -96,7 +96,7 @@ export default {
     onLoad() {
       let data = {
         params: {
-          school_id:this.$route.query.school_id,
+          school_id:this.manageSchoolInfo.school_id,
           year: this.tab[this.active].numYear,
           page: this.page
         }

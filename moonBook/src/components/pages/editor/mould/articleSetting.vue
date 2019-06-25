@@ -1,6 +1,6 @@
 <template>
   <div class="article-setting">
-    <van-cell title-class='theme-color' title="#选择分类" :value="classify" is-link arrow-direction="down" @click="show = true" />
+    <van-cell title-class='theme-color' title="#选择分类" :value="classify" :is-link='$route.query.pageType!="notice"' arrow-direction="down" @click="selectTagShow" />
     <van-cell v-if='(tag.cate_id!=99&&tag.cate_id!=124) || $route.query.tags' title="同步到" value-class='cell-value'
       :value='synchronous' center is-link @click="isResultShow = true" />
 
@@ -8,23 +8,34 @@
       <van-checkbox-group v-model="settingResult">
         <div class="form-title">同步到</div>
         <van-cell-group>
-          <van-cell :border='false' v-for="(item,index) in resultList" clickable :key="index" :title="item.title" @click="toggle(index)">
-            <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes"/>
+          <van-cell :border='false' v-for="(item,index) in resultList" clickable :key="index" :title="item.title"
+            @click="toggle(index)">
+            <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" />
           </van-cell>
         </van-cell-group>
       </van-checkbox-group>
     </van-popup>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="show" get-container='#app'>
-      <topic-list @close='closeTopic' @confirm='show = false' @select='selectTag' :topicList='topicList' :tagIndex='tagIndex'
-        :cateIndex='cateIndex' />
+      <div class="cate-item" v-if='isCateShow'>
+        <van-cell-group v-for='(item,index) in schoolCateList' :key="index">
+          <van-cell :title="item.name" size="large">
+            <i class="iconfont icon-topic" slot="icon">&#xe67c;</i>
+          </van-cell>
+          <van-cell is-link v-for='(cate,cateIndex) in item.cateList' :title='cate.cate_name' :key="cateIndex" @click='selectCate(cate)'>
+            <i class="iconfont icon-topic-mini" slot="icon">&#xe6d7;</i>
+          </van-cell>
+        </van-cell-group>
+      </div>
+      <topic-list v-else @close='closeTopic' @confirm='show = false' @select='selectTag' :topicList='topicList'
+        :tagIndex='tagIndex' :cateIndex='cateIndex' />
     </van-popup>
   </div>
 </template>
 <script>
 import axios from './../../../lib/js/api'
 import topicList from './../../../module/release/topicList'
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import { contains } from './../../../lib/js/util'
 
 export default {
@@ -71,7 +82,21 @@ export default {
       settingResult: [],
       tagIndex: 0,
       cateIndex: 0,
-      cateName: ''
+      cateName: '',
+      banjiCateList: [],
+      babyCateList: [],
+      routerPath: ['apps-school', 'class-home', 'baby-home', 'apps-find'],
+      schoolCateList: [{
+        name: '宝贝主页',
+        cateList: []
+      }, {
+        name: '班级主页',
+        cateList: []
+      }, {
+        name: '学校主页',
+        cateList: []
+      }],
+      isCateShow: false
     }
   },
   created() {
@@ -96,8 +121,9 @@ export default {
   },
   methods: {
     ...mapActions(['release']),
-    ...mapActions('articleSetting', ['addResult', 'addGroup', 'addTag']),
-    fetchData() {
+    ...mapActions('articleSetting', ['addResult']),
+    ...mapMutations('articleSetting',['setTag']),
+    async fetchData() {
       let array = []
 
       array.push({
@@ -137,78 +163,104 @@ export default {
         this.addResult(this.settingResult)
       }
 
-      // 获取文章分类
-      let data = {
-        params: {
-          portal_name: '宝贝主页'
-        }
-      }
-
-      if (this.$route.query.back == 'class-home') {
-        data.params.portal_name = '班级主页'
-      }
-
-      if (this.$route.query.back == 'apps-school') {
-        data.params.portal_name = '学校主页'
-      }
-
-      axios.get('/book/schoolArticleCate/getList', data).then(res => {
-        if (res.status == 200) {
-
-          let cateArray = res.data
-          let data = []
-          cateArray.forEach(element => {
-            if (element.access_level == 0) {
-              data.push(element)
-            } else if (this.userDataState.teacher_school_id == this.$route.query.id || this.userDataState.teacher_banji_id == this.$route.query.id) {
-              data.push(element)
-            }
-          })
-          this.topicList = data
-
-          if (this.$route.query.cate_id || this.$route.query.tag_id) {
-            cateArray.forEach((element, tagIndex) => {
-              if (this.$route.query.tag_id) {
-                if (element.cate_id == this.$route.query.tag_id) {
-                  this.tagIndex = tagIndex
-                  this.cateName = e.cate_name
-                  this.addTag(element)
-                }
-              } else {
-                element.children.forEach((e, cateIndex) => {
-                  if (e.cate_id == this.$route.query.cate_id) {
-                    this.tagIndex = tagIndex
-                    this.cateIndex = cateIndex
-                    this.cateName = e.cate_name
-                    this.addTag(e)
-                  }
-                })
-              }
-            })
-          } else {
-            if (localStorage.getItem('tag')) {
-              this.addTag(JSON.parse(localStorage.getItem('tag')))
-            } else {
-              this.addTag(data[0])
-            }
+      if (!this.routerPath.includes(this.$route.query.back)) {
+        this.isCateShow = true
+        await this.getCateList('宝贝主页')
+        await this.getCateList('班级主页')
+        await this.getCateList('学校主页')
+      } else {
+        let data = {
+          params: {
+            portal_name: '宝贝主页'
           }
         }
+
+        if (this.$route.query.back == 'class-home') {
+          data.params.portal_name = '班级主页'
+        }
+
+        if (this.$route.query.back == 'apps-school') {
+          data.params.portal_name = '学校主页'
+        }
+
+        axios.get('/book/schoolArticleCate/getList', data).then(res => {
+          if (res.status == 200) {
+
+            let cateArray = res.data
+            let data = []
+            cateArray.forEach(element => {
+              if (element.access_level == 0) {
+                data.push(element)
+              } else if (this.userDataState.teacher_school_id == this.$route.query.id || this.userDataState.teacher_banji_id == this.$route.query.id) {
+                data.push(element)
+              }
+            })
+            this.topicList = data
+
+            if (this.$route.query.cate_id || this.$route.query.tag_id) {
+              cateArray.forEach((element, tagIndex) => {
+                if (this.$route.query.tag_id) {
+                  if (element.cate_id == this.$route.query.tag_id) {
+                    this.tagIndex = tagIndex
+                    this.cateName = element.cate_name
+                    this.setTag(element)
+                  }
+                } else {
+                  element.children.forEach((e, cateIndex) => {
+                    if (e.cate_id == this.$route.query.cate_id) {
+                      this.tagIndex = tagIndex
+                      this.cateIndex = cateIndex
+                      this.cateName = e.cate_name
+                      this.setTag(e)
+                    }
+                  })
+                }
+              })
+            } else {
+              if (localStorage.getItem('tag')) {
+                this.setTag(JSON.parse(localStorage.getItem('tag')))
+              } else {
+                this.setTag(data[0])
+              }
+            }
+          }
+        })
+      }
+    },
+    async getCateList(portalName) {
+      return axios.get('/book/schoolArticleCate/getList', {
+        params: {
+          portal_name: portalName
+        }
+      }).then(res => {
+        // return res
+        this.schoolCateList.map(e => {
+          if (e.name == portalName) {
+            e.cateList = res.data
+          }
+        })
       })
     },
     toggle(index) {
       this.addResult(this.settingResult)
       this.$refs.checkboxes[index].toggle()
     },
-    onChangeGroup(picker, values) {
-      this.addGroup(values)
-    },
     selectTag(tag) {
-      this.addTag(tag)
+      this.setTag(tag)
       localStorage.setItem('tag', JSON.stringify(tag))
     },
     closeTopic() {
-      this.addTag(this.topicList[this.tagIndex])
+      this.setTag(this.topicList[this.tagIndex])
       this.show = false
+    },
+    selectCate(cate){
+      this.show = false
+      this.setTag(cate)
+    },
+    selectTagShow(){
+      if(this.$route.query.pageType != 'notice'){
+        this.show = true
+      }
     }
   }
 }
@@ -245,9 +297,29 @@ export default {
 .theme-btn {
   width: 100%;
 }
+
+.cate-item {
+  max-height: 60vh;
+}
+
+.icon-topic {
+  font-size: 20px;
+  background: linear-gradient(127deg, #45caff, #1471fb);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.icon-topic-mini {
+  color: #45caff;
+}
+
+.icon-topic,
+.icon-topic-mini {
+  margin-right: 5px;
+}
 </style>
 <style>
-.theme-checkbox.van-checkbox{
+.theme-checkbox.van-checkbox {
   float: right;
 }
 </style>

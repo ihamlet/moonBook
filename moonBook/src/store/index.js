@@ -17,7 +17,7 @@ const state = {
   slogan: '阅读照亮人生',
   logo:`${location.origin}/Public/lib/bookshelf/img/logo.png`,
   userData: '',
-  msgLength: 1,
+  message: '',
   tabBtn: [],
   amapApiKey: '0522f462288e296eac959dbde42718ab',
   token: '',
@@ -47,7 +47,7 @@ const getters = {
     return data
   },
   MsgLengthState: state => {
-    return state.msgLength
+    return state.message.count
   },
   managerState: state => {
     return state.manager
@@ -101,7 +101,7 @@ const mutations = {
     state.manager = params.data
   },
   setMsgLength(state, params) {
-    state.msgLength = params.data
+    state.message = params.data
   },
   setUserPoint(state, params) {
     Cookies.set('userPoint', JSON.stringify(params.data), { expires: 7 })
@@ -175,7 +175,7 @@ const actions = {
     let  bookApiLink = '/book/MemberMsg/getList'
     axios.get(bookApiLink).then(res => {
       context.commit('setMsgLength', {
-        data: res.data.count
+        data: res.data
       })
     })
   },
