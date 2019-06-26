@@ -92,8 +92,7 @@
     <!-- <van-button class="boss-key theme-btn" type="primary" round v-if='checkCount > 0&&form.banji_id > 0' @click="allCheck">一键审核</van-button> -->
 
     <van-popup v-model="show" position="bottom">
-      <van-picker :title="pickerTitle" :columns="columns" @change="onChange" show-toolbar @cancel="onPickerCancel"
-        @confirm="show = false" :visible-item-count='visibleCount' />
+      <van-picker :title="pickerTitle" :columns="columns" @change="onChange" show-toolbar @cancel="onPickerCancel" @confirm="show = false" :visible-item-count='visibleCount' />
     </van-popup>
   </div>
 </template>
@@ -207,7 +206,8 @@ export default {
           school_id: this.form.school_id,
           banji_id: this.form.banji_id,
           keyword: this.value,
-          page: this.page
+          page: this.page,
+          sort: 'confirm'
         }
       }
 
@@ -419,7 +419,7 @@ export default {
     },
     selectLabel(){
       this.show = true
-      this.visibleCount = 3
+      this.visibleCount = 5
       this.columns = ['全部','已审核','未审核','已办卡','未办卡']
       this.pickerTitle = '筛选'
       this.pickerType = 'filter'

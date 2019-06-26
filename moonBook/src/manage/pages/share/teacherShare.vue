@@ -90,7 +90,7 @@ export default {
             ],
             bgMusic:'https://assets-moonbook.oss-cn-beijing.aliyuncs.com/music/Thomas%20Greenberg%20-%20Dream%20for%20Today.mp3',
             playing: true,
-            newData: format((new Date()).getTime(),'yyyy年MM月dd日'),
+            newData: format((new Date()).getTime(),'yyyy年MM月'),
             invitationHTML: invitation,
             shareShow: false
         }
