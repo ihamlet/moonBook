@@ -62,9 +62,9 @@ export default {
 
             this.count = res.data.count
             
-            this.loading = false
             this.page++
-           
+            this.loading = false
+            
             if(this.list.length >= res.data.count){
               this.finished = true
             }
