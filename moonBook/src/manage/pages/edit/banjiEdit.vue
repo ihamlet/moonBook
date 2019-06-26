@@ -141,6 +141,7 @@ export default {
       value:'',
       visibleCount:3,
       searchLabel:'全部',
+      page:1,
     }
   },
   created() {
@@ -441,7 +442,8 @@ export default {
           pageType:'notice',
           banji_name: this.form.title,
           banji_id: this.form.banji_id,
-          school_id: this.manageSchoolInfo.school_id
+          school_id: this.manageSchoolInfo.school_id,
+          title:`发布通知到${this.formatBanjiTitle(this.form.title)}`
         }
       })
     }
@@ -489,14 +491,5 @@ export default {
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
   white-space: nowrap;
-}
-
-.icon-notice{
-  margin-right: 5px;
-  font-size: 20px;
-  background: linear-gradient(127deg, #FFC107,#FF9800);
-  -webkit-background-clip: text;
-  color: transparent;
-  display: block
 }
 </style>

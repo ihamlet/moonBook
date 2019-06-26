@@ -85,6 +85,15 @@ export default {
         margin-left: -40px;
     }
 
+    .icon-notice{
+        margin-right: 5px;
+        font-size: 20px;
+        background: linear-gradient(127deg, #FFC107,#FF9800);
+        -webkit-background-clip: text;
+        color: transparent;
+        display: block
+    }
+
 }
 
 .van-cell__value.info-cell{

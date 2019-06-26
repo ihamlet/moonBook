@@ -1,8 +1,12 @@
 <template>
   <div class="article-setting">
-    <van-cell title-class='theme-color' title="#选择分类" :value="classify" :is-link='$route.query.pageType!="notice"' arrow-direction="down" @click="selectTagShow" />
-    <van-cell v-if='(tag.cate_id!=99&&tag.cate_id!=124) || $route.query.tags' title="同步到" value-class='cell-value'
-      :value='synchronous' center is-link @click="isResultShow = true" />
+    <van-cell :value="classify" :is-link='$route.query.pageType!="notice"' arrow-direction="down" @click="selectTagShow">
+      <div class="classify-title" slot="title">
+        <i class="iconfont">&#xe67c;</i> 分类
+      </div>
+    </van-cell>
+    <van-cell v-if='((tag.cate_id!=99&&tag.cate_id!=124) || $route.query.tags)&&$route.query.pageType!="notice"' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
+    <van-switch-cell v-model="checked" title="微信公众号消息" title-style='flex:2' value-class='switch-cell-value' :active-value='1' :inactive-value='0' active-color='#67C23A' inactive-color='#f2f6fc' label='通知会通过阅亮书架公众号提醒家长' v-else @change='$emit("onChangeSwitch",checked)'/>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
       <van-checkbox-group v-model="settingResult">
@@ -40,7 +44,12 @@ import { contains } from './../../../lib/js/util'
 
 export default {
   name: 'article-setting',
-  // props: ['type'], // 仿美篇要用到
+  props: {
+    weChatSwitch:{
+      type:Number,
+      default: 1
+    }
+  },
   components: {
     topicList
   },
@@ -96,7 +105,8 @@ export default {
         name: '学校主页',
         cateList: []
       }],
-      isCateShow: false
+      isCateShow: false,
+      checked: 1,
     }
   },
   created() {
@@ -114,6 +124,9 @@ export default {
         localStorage.setItem('result', JSON.stringify(val))
       },
       deep: true
+    },
+    weChatSwitch(val){
+      this.checked = val
     },
     managerState() {
       localStorage.removeItem('tag')
@@ -316,6 +329,12 @@ export default {
 .icon-topic,
 .icon-topic-mini {
   margin-right: 5px;
+}
+
+.classify-title .iconfont{
+  background: linear-gradient(127deg, #00C2AB,#3E94FF);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 </style>
 <style>

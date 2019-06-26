@@ -125,7 +125,8 @@ export default {
         query:{
           pageType:'notice',
           banji_id: 0,
-          school_id: this.manageSchoolInfo.school_id
+          school_id: this.manageSchoolInfo.school_id,
+          title:'发布通知到学校'
         }
       })
     }

@@ -2,7 +2,7 @@
   <div class="graphic page-padding">
     <van-nav-bar :border='false' fixed>
       <div class="title" slot='title' v-if='$route.query.pageType == "notice"'>
-        发布通知到{{$route.query.school_id?'学校':formatBanjiTitle($route.query.banji_name)}}
+        {{$route.query.title}}
       </div>
       <div class="user-info" slot='title' v-else>
         <div class="avatar">
@@ -49,7 +49,7 @@
       </van-cell-group>
     </div>
     <!-- 分类设置、同步、设置机构标签 -->
-    <articleSetting type='mould'/>
+    <articleSetting type='mould' :weChatSwitch='weChatSwitch' @onChangeSwitch='switchChange'/>
     <div class="media-input" v-show="false">
       <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
@@ -126,7 +126,8 @@ export default {
       videoThumb:'',
       typeUpload:'',
       post:'',
-      progressIsShow: false
+      progressIsShow: false,
+      weChatSwitch:1
     }
   },
   created() {
@@ -509,6 +510,9 @@ export default {
           id: data.detailsId
         }
       })
+    },
+    switchChange(num){
+      this.weChatSwitch = num
     }
   }
 }

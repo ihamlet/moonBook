@@ -19,7 +19,7 @@
       </van-cell-group>
       <van-panel title="角色设置" desc="对应角色设有不同权限" :status="form.role_id?'':'尚未取得设置权限'" v-if='form.role_id!=0'>
         <div class="switch-cell" v-for='(item,index) in roles' :key="index">
-            <van-switch-cell v-if='item.disabled' :disabled='!item.disabled' :title="item.role_name" :value="form.role_id" :active-value='String(index)' active-color='#67C23A' @input='onSwitchChange(index)' value-class='switch-cell-value'/>
+            <van-switch-cell v-if='item.disabled' :disabled='!item.disabled' :title="item.role_name" :value="form.role_id" :active-value='String(index)' active-color='#67C23A' inactive-color='#f2f6fc' @input='onSwitchChange(index)' value-class='switch-cell-value'/>
         </div>
       </van-panel>
     </div>
@@ -42,8 +42,8 @@ import { getBanjiYear, newBanjiTitle, verification } from './../../../components
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-  name: 'teacherEdit',
-  mixins: [getBanjiYear, newBanjiTitle, verification],
+  name:'teacherEdit',
+  mixins:[getBanjiYear,newBanjiTitle,verification],
   computed: {
     ...mapGetters('manage', ['manageSchoolInfo'])
   },
