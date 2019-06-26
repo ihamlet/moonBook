@@ -118,7 +118,7 @@ export default {
   updated () {
     this.$nextTick(()=>{
       let imgs = document.getElementsByTagName('img')
-      for(let i = 0 ; i < imgs.length ; i ++){
+      for(let i = 0; i < imgs.length; i ++){
         if(imgs[i].src.indexOf(location.origin) == -1){
           imgs[i].src = imgs[i].src.replace('http:', 'https:')
         }

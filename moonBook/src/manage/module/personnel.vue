@@ -124,7 +124,7 @@ export default {
         name:'graphic',
         query:{
           pageType:'notice',
-          banji_id: 0,
+          banji_id: '',
           school_id: this.manageSchoolInfo.school_id,
           title:'发布通知到学校'
         }

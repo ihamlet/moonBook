@@ -328,23 +328,15 @@ const actions = {
   async release(context, products){
     let setting = context.state.articleSetting
     let extraData = products.extra
+
+    console.log(products.banji_id)
     
     let data = {
       cate_id: setting.tag.cate_id,
       ad_label: setting.group.group_name,
-      // details: products.details,
-      // template_id: products.template_id,
-      // cover: products.cover,
-      // photos: products.photos,
-      // child_id: products.child_id,
-      // title: products.title,
-      // tags: products.tags,
-      // extra: products.extra,
-      // from_page: products.from_page,
-
+      banji_id: context.getters.userDataState.teacher_banji_id,
+      school_id: context.getters.userDataState.teacher_school_id,
       ...products,
-      banji_id: products.banji_id || context.getters.userDataState.teacher_banji_id,
-      school_id: products.school_id || context.getters.userDataState.teacher_school_id,
       to_school: 1
     }
 
