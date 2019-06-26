@@ -1,17 +1,18 @@
 <template>
   <div class="read-amount page-padding">
-    <van-nav-bar :zIndex='10' :border='false' :title="$route.meta.title" fixed @click-right="onClickRight">
-      <div class="right-btn" slot="right">
-        <van-button class="theme-btn" round size="small" type="primary">捐书</van-button>
-      </div>
-    </van-nav-bar>
+    <div class="banner" @click="onClickRight">
+      <van-button class="theme-plain" plain round type="primary">前往捐书</van-button>
+      <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/banner/banner-juanshu.png" />
+    </div>
 
      <van-pull-refresh v-model="loading" @refresh="onRefresh">
-      <van-search placeholder="请输入搜索关键词" v-model="value" @search="onSearch" shape='round'/>
-      <van-tabs color='#0084ff' v-model="tabIndex" :line-width='20' :line-height='4' sticky swipeable animated :offsetTop="45" @change="onChangeTab" :border='false'>
+      <form action="/">
+        <van-search placeholder="请输入搜索关键词" v-model="value" @search="onSearch" shape='round'/>
+      </form>
+      <van-tabs color='#0084ff' v-model="tabIndex" :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :border='false'>
         <van-tab v-for="(item,index) in readArray" :key="index">
             <div class="tab-title" slot="title">
-              {{item.title}}
+              {{item.title}} <van-tag class="tab-tag" type="danger" round v-if='bookStatus[item.key] > 0'>{{bookStatus[item.key]}}</van-tag>
             </div>
         
               <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">        
@@ -31,7 +32,7 @@
 
                 <div class="list" v-if='list.length'>
                   <van-cell v-for="(book,bookIndex) in list" :key="bookIndex">
-                    <bookCard :item='book'/>
+                    <bookCard :item='book' :isCollect="book.is_collect"/>
                   </van-cell>
                 </div>
                 <div class="no-list" v-else>
@@ -64,92 +65,37 @@ export default {
       if (this.childInfo) {
         arr = [{
           title: '在读',
-          num: 0,
-          api: '/book/member/get_borrows',
+          key:'reading_count',
           params: {
-            is_return: 0
+            is_read: 1
           },
-          count: 0,
-          convert(item) {
-            return {
-              book_title: item.book.title,
-              book_photo: item.book.photo,
-              pos_name: item.pos_title,
-              borrow_id: item.id,
-              book_views: item.book.views,
-              book_id: item.book_id
-            }
-          }
         }, {
           title: '读过',
-          num: 0,
-          api: '/book/member/get_borrows',
+          key:'read_count',
           params: {
-            is_return: 1
-          },
-          count: 0,
-          convert(item) {
-            return {
-              book_title: item.book.title,
-              book_photo: item.book.photo,
-              pos_name: item.pos_title,
-              book_views: item.book.views,
-              book_id: item.book_id
-            }
+            is_read: 2
           }
         },{
           title: '收藏',
-          num: 0,
-          api: '/book/member/get_favorites',
+          key:'favorite_count',
           params: {
-            type: 'book'
-          },
-          convert(item) {
-            if(item.Tushu) {
-              return {
-                book_title: item.Tushu.title,
-                book_photo: item.Tushu.photo,
-                book_id: item.target_id,
-                book_views: item.Tushu.views
-              }
-            }            
+            is_collect:1
           }
         }, {
           title: '磨损',
-          num:0,
-          api: '/book/member/get_brokens',
+          key:'broken_count',
           params:{
             is_broke:1
-          },
-          convert(item) {
-            return {
-              book_title: item.book.title,
-              book_photo: item.book.photo,
-              pos_name: item.pos_title,
-              book_views: item.book.views
-            }
           }
         },{
           title: '未读',
-          num: 0,
-          api: '/book/school/get_books',
           params:{
             is_read:0
-          },
-          convert(item) {
-            return {
-              book_title: item.title,
-              book_photo: item.photo,
-              book_id: item.tushu_id,
-              book_views: item.views
-            }
           }
         },{
           title: '捐书',
-          num: 0,
-          api: '/book/member/get_donations',
           params: {
-            is_check: 1
+            is_donate: 1
           }
         }]
       }
@@ -158,11 +104,9 @@ export default {
     },
     rendStatus(){
       let status
-
       if(this.bookStatus.overdue_count > 0){
         status = `待还还有${this.bookStatus.overdue_count}本逾期`
       }
-
     }
   },
   data() {
@@ -220,22 +164,34 @@ export default {
     onClickRight() {
       window.location.href = '/book/member/entry_donation'
     },
-    getList() {    
+    onLoad() {    
       let tab = this.readArray[this.tabIndex]
 
       let data = {
         params:{
           ...tab.params,
           page: this.page,
-          keyword: this.value
+          keyword: this.value          
         }
       }
 
-      return axios.get(tab.api,data).then(res => {
+
+      if(this.tabIndex == 4){
+        data.params = {
+          ...data.params,
+          ...this.selsetData
+        }
+      }
+
+      return axios.get('/book/shelfBook/getList',data).then(res => {
             switch(res.data.status){
               case 1:
                 let arr = res.data.data.map(e=>{
-                   return tab.convert(e)
+                   return {
+                      ...e,
+                      book_title: e.title,
+                      book_photo: e.thumb
+                   }
                 })
 
                 if(this.page == 1){
@@ -259,7 +215,7 @@ export default {
     },
     onRefresh() {
       this.page = 1
-      this.getList().then(() => {
+      this.onLoad().then(() => {
         this.loading = false
         this.finished = false
       })
@@ -268,9 +224,6 @@ export default {
       this.selsetData = params
       this.onRefresh()
     },
-    onLoad() {
-      this.getList()
-    },
     onChangeTab(index) {
       this.list = []
       this.tabIndex = index
@@ -278,20 +231,21 @@ export default {
       sessionStorage.setItem('readAmountTabIndex',index)
     },
     onClickTab(index,title){
+      let donate
+
       switch(title){
         case '已捐书':
-          this.isCheck = 1
+          donate = 1
         break
         case '待审核':
-          this.isCheck = 0
+          donate = 0
         break
         case '未通过':
-          this.isCheck = 2
+          donate = 2
         break
       }
       
-      this.readArray[this.tabIndex].params.is_check = this.isCheck
-      this.readArray[this.tabIndex].params.page = 1
+      this.readArray[this.tabIndex].params.is_donate = donate
       this.onRefresh()
     },
     onSearch(){
@@ -311,10 +265,6 @@ export default {
 .amount-item.pitchOn {
   color: #0084ff;
   font-weight: 700;
-}
-
-.read-amount {
-  padding-top: 2.8125rem /* 45/16 */;
 }
 
 .amount-type {
@@ -358,5 +308,35 @@ export default {
 .tab-jianshu{
   padding: .625rem /* 10/16 */ 0;
   background: #fff;
+}
+
+.banner{
+  margin-bottom: -76px;
+}
+
+.banner::before{
+  content:'';
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .5);
+  position: absolute;
+}
+
+.banner .theme-plain{
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translate3d(-50%, 0, 0);
+}
+
+.banner,
+.tab-title{
+  position: relative;
+}
+
+.tab-title .tab-tag{
+  position: absolute;
+  top: 5px;
+  right: 0;
 }
 </style>

@@ -2,8 +2,8 @@
   <van-row gutter="20">
     <van-col span="7">
       <div class="book-cover">
-        <img  :src="thumb(item.book_photo)" @error="imgError"/>
-        <div class="is-read" v-if='item.is_read == 1'>
+        <img :src="thumb(item.book_photo)" @error="imgError"/>
+        <div class="is-read" v-if='item.is_read > 0'>
           <i class="iconfont">&#xe66f;</i>
         </div>
       </div>
@@ -42,15 +42,15 @@ import axios from "./../../lib/js/api"
 
 export default {
   name: 'bookCard',
-  props: ['item','type'],
+  props: ['item','type','isCollect'],
   data () {
     return {
       isCollect: false
     }
   },
   watch: {
-    item(val){
-      this.isCollect = val.is_collect
+    isCollect(val){
+      this.isCollect = val == 1?true:false
     }
   },
   methods: {
@@ -98,6 +98,8 @@ export default {
         if (res.data.status == 1) {
           this.isCollect = !this.isCollect
           
+
+
           if(this.isCollect){
             this.$toast.success({
               className: 'like-icon toast-icon',
@@ -172,7 +174,7 @@ export default {
 
 .is-read{
   position: absolute;
-  left: 0;
+  left: -5px;
   top: 10px;
   text-align: center;
 }
