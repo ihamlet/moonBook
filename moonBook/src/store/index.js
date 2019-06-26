@@ -332,17 +332,19 @@ const actions = {
     let data = {
       cate_id: setting.tag.cate_id,
       ad_label: setting.group.group_name,
-      details: products.details,
-      template_id: products.template_id,
-      cover: products.cover,
-      photos: products.photos,
-      child_id: products.child_id,
+      // details: products.details,
+      // template_id: products.template_id,
+      // cover: products.cover,
+      // photos: products.photos,
+      // child_id: products.child_id,
+      // title: products.title,
+      // tags: products.tags,
+      // extra: products.extra,
+      // from_page: products.from_page,
+
+      ...products,
       banji_id: products.banji_id || context.getters.userDataState.teacher_banji_id,
       school_id: products.school_id || context.getters.userDataState.teacher_school_id,
-      title: products.title,
-      tags: products.tags,
-      extra: products.extra,
-      from_page: products.from_page,
       to_school: 1
     }
 

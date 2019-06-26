@@ -7,7 +7,7 @@
     </van-nav-bar>
     <van-tabs v-model="active" swipeable animated sticky color='#0084ff' :line-width='20' :line-height='4' :border='false' @change="onTabChange">
       <van-tab title="办卡数据">
-          <dataCard ref='dataCard'/>
+          <dataCard ref='dataCard' :active='active'/>
       </van-tab>
       <van-tab>
         <div class="tab-title" slot="title">

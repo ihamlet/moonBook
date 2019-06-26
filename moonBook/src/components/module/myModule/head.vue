@@ -136,7 +136,7 @@ export default {
   width: 94%;
   left: 50%;
   margin-left: -47%;
-  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .avatar img {

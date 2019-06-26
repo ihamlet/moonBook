@@ -9,7 +9,7 @@
       </div>
     </van-col>
     <van-col span="11">
-      <div class="book-info"  @click="toBookDetails(item)">
+      <div class="book-info"  @click="toBookDetails">
         <div class="title" v-line-clamp:20="2">{{item.book_title}}</div>
         <div class="attach">
           <div class="pos-title" v-if='item.pos_name'>书位：{{item.pos_name}}</div>
@@ -22,16 +22,16 @@
     <van-col span="6">
       <div class="button">
         <div class="flex flex-align">
-          <div class="like" @click="addCollect(item)">
-            <i class="iconfont" v-if='item.is_collect'>&#xe668;</i>
+          <div class="like" @click="addCollect">
+            <i class="iconfont" v-if='isCollect'>&#xe668;</i>
             <i class="iconfont" v-else>&#xe669;</i>
           </div>
-          <div class="listening" @click="listening(item)">
+          <div class="listening" @click="listening">
             <i class="iconfont">&#xe617;</i>
           </div>
         </div>
         <div class="abrasion" v-if='type == "在读"'>
-          <van-button plain class="theme-btn" size="small" type="primary" round @click="toBorrow(item)">磨损</van-button>
+          <van-button plain class="theme-btn" size="small" type="primary" round @click="toBorrow">磨损</van-button>
         </div>
       </div>
     </van-col>
@@ -45,7 +45,12 @@ export default {
   props: ['item','type'],
   data () {
     return {
-      bookItem: ''
+      isCollect: false
+    }
+  },
+  watch: {
+    item(val){
+      this.isCollect = val.is_collect
     }
   },
   methods: {
@@ -59,42 +64,41 @@ export default {
         }
       }
     },
-    listening(item) {
+    listening() {
       let p = /（.+?）/
-      let pureTitle = item.book_title.replace(p, '')
+      let pureTitle = this.item.book_title.replace(p, '')
       let url = `https://m.ximalaya.com/search/${pureTitle}`
-      let isRead = localStorage.getItem('bookRead_' + item.book_id)
+      let isRead = localStorage.getItem('bookRead_' + this.item.book_id)
       if (!isRead) {
         axios.get('/book/story/updateRead').then(res => {
-          localStorage.setItem('bookRead_' + item.book_id, true)
+          localStorage.setItem('bookRead_' + this.item.book_id, true)
           location.href = url
         })
       } else {
         location.href = url
       }
     },
-    toBookDetails(item) {
+    toBookDetails() {
       this.$router.push({
         name: 'book-details',
         query: {
-          id: item.book_id
+          id: this.item.book_id
         }
       })
     },
-    addCollect(item,index) {
+    addCollect() {
       let data = {
           params:{
-            target_id: item.book_id,
+            target_id: this.item.book_id,
             type_id: 5
           }
       }
 
       axios.get('/book/member/add_favorite',data).then(res => {
         if (res.data.status == 1) {
-          this.$forceUpdate()
-          this.$set(item, 'is_collect', !item.is_collect)
-          this.$emit('book_collect', {book_id: item.book_id})
-          if(item.is_collect){
+          this.isCollect = !this.isCollect
+          
+          if(this.isCollect){
             this.$toast.success({
               className: 'like-icon toast-icon',
               duration: '800'
@@ -103,9 +107,9 @@ export default {
         }
       })
     },
-    toBorrow(item){
-      if(item.borrow_id){
-        location.href = `/book/MemberBookBroken/add/borrow_id/${item.borrow_id}?back_url=${encodeURIComponent(location.href)}`
+    toBorrow(){
+      if(this.item.borrow_id){
+        location.href = `/book/MemberBookBroken/add/borrow_id/${this.item.borrow_id}?back_url=${encodeURIComponent(location.href)}`
       }
     },
     imgError(e) {

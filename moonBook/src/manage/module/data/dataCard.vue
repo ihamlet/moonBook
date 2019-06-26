@@ -35,7 +35,7 @@
             </van-collapse-item>
         </van-collapse>
 
-        <memberCardList/>
+        <memberCardList ref='memberCardList'/>
     </div>
 </template>
 <script>
@@ -82,6 +82,7 @@ export default {
         this.$nextTick(() => {
             this.pieChart()
             this.activeArr = []
+            this.$refs.memberCardList.onRefresh()
         })
     },
     methods: {

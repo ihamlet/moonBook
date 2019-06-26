@@ -49,7 +49,7 @@
       </van-cell-group>
     </div>
     <!-- 分类设置、同步、设置机构标签 -->
-    <articleSetting type='mould' :weChatSwitch='weChatSwitch' @onChangeSwitch='switchChange'/>
+    <articleSetting type='mould' :isWxMsg='isWxMsg' @onChangeSwitch='switchChange'/>
     <div class="media-input" v-show="false">
       <van-uploader ref='selectPhoto' :after-read="onRead" multiple />
       <input type="file" accept="video/*" ref='selectFileVideo' data-type='video' hidden @change='doUpload'>
@@ -127,7 +127,7 @@ export default {
       typeUpload:'',
       post:'',
       progressIsShow: false,
-      weChatSwitch:1
+      isWxMsg:1
     }
   },
   created() {
@@ -312,7 +312,8 @@ export default {
             photos: this.grapicData.photos,
             extra: this.post,
             banji_id: this.$route.query.banji_id,
-            school_id: this.$route.query.school_id
+            school_id: this.$route.query.school_id,
+            is_wx_msg: this.isWxMsg
           }
 
           //老师的班级学校

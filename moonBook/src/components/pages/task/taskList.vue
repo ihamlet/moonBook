@@ -79,7 +79,8 @@ export default {
       let data = {
         params:{
           tid: this.$route.query.tid,
-          sort:'old'
+          sort:'old',
+          page: this.page
         }
       }
 
@@ -92,13 +93,9 @@ export default {
             this.list = this.list.concat(res.data.data)
           }
 
-          this.list.forEach((element,i) => {
-            
-          })
-
           this.loading = false
           this.page++
-
+          
           if (this.list.length >= res.data.count) {
             this.finished = true
           }

@@ -45,7 +45,7 @@ import { contains } from './../../../lib/js/util'
 export default {
   name: 'article-setting',
   props: {
-    weChatSwitch:{
+    isWxMsg:{
       type:Number,
       default: 1
     }
@@ -125,7 +125,7 @@ export default {
       },
       deep: true
     },
-    weChatSwitch(val){
+    isWxMsg(val){
       this.checked = val
     },
     managerState() {

@@ -76,7 +76,6 @@ export default {
     '$router': 'fetchData'
   },
   methods: {
-    // ...mapActions(['getUserData']),
     fetchData() {
       axios.get('/book/SchoolTeacher/getMine').then(res => {
         if(res.data.status == 1){
