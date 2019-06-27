@@ -6,6 +6,7 @@ const server_host = 'https://hu.wmlife.net/'
 module.exports = {
   outputDir: 'docs',
   publicPath: process.env.NODE_ENV === 'production' ? '/Public/lib/bookshelf-jlf/' : '/',
+  productionSourceMap:false,
   lintOnSave: false, //先关闭esinst验证
   css: {
     loaderOptions: {
