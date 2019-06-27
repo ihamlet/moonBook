@@ -1,5 +1,9 @@
 # moonbook
 
+```
+升级到vue 3.0
+```
+
 ## Project setup
 ```
 npm install
