@@ -164,31 +164,40 @@ export default {
         })
       })
     },
-    async scanQRcode(context, products){
-      wx.ready(() => {
+    scanQRcode(context, products){
+      return new Promise((resolve, reject)=>{
+        let isWeixin = navigator.userAgent.indexOf('MicroMessenger') !== -1
+        if (!isWeixin) {
+          reject('请在微信中使用此功能')
+        }
+        wx.ready(()=>{
           wx.scanQRCode({
             needResult: 1,
-            scanType: ["barCode"],
-              success(res) {
-                let data = {
-                  child_id: products.id,
-                  isbn: res.resultStr
-                }
-                
-                return axios.post('/book/member/read_sign',data).then(res=>{
-                  context.commit('setReadSign', {
-                    data: res
-                  })
-                  return res
-                })
-              },
-              complete(e) {
-                if(e.errMsg == 'scanQRCode:permission denied'){
-                  location.reload()
-                }
+            scanType: ['barcode'],
+            success(res){
+              let data = {
+                child_id: products.id,
+                isbn: res.resultStr
               }
+
+              axios.post('/book/member/read_sign', data).then((res)=>{
+                if(res.data.status === 1) {
+                  context.commit('setReadSign', {data:res})
+                  resolve(res)
+                } else {
+                  reject(res.data.msg)
+                }
+              })
+            },
+            complete(e) {
+              if (e.errMsg == 'scanQRCode:permission denied') {
+                location.reload()
+                reject('permission denied')
+              }
+            }
           })
         })
+      })
     },
     async wxGetLocation(){
       wx.ready(() => {
