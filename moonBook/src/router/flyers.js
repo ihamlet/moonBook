@@ -1,6 +1,3 @@
-// import FlyersStudent from '@/components/pages/flyers/Student'
-// import FlyersTeacher from '@/components/pages/flyers/Teacher'
-
 const FlyersStudent = () => import('@/components/pages/flyers/Student')
 const FlyersTeacher = () => import('@/components/pages/flyers/Teacher')
 

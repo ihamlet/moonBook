@@ -1,10 +1,3 @@
-// import Editor from '@/components/Editor'
-// import Publishing from '@/components/pages/editor/Publishing'
-// import Graphic from '@/components/pages/editor/Graphic'
-// import BeautifulArticle from '@/components/pages/editor/BeautifulArticle'
-// import changeCover from '@/components/pages/editor/mould/changeCover'
-// import articleSetting from '@/components/pages/editor/mould/articleSetting'
-
 const Editor = () => import('@/components/Editor')
 const Publishing = () => import('@/components/pages/editor/Publishing')
 const Graphic = () => import('@/components/pages/editor/Graphic')

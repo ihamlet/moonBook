@@ -3,7 +3,7 @@
     <van-cell-group :border='false'>
       <van-cell-group>
         <van-cell title="学校通知" value="发布" size="large" is-link :border='false' @click="notification">
-          <div class="iconfont icon-notice jackInTheBox animated" slot="icon">&#xe672;</div>
+          <div class="iconfont cell-icon icon-notice jackInTheBox animated" slot="icon">&#xe672;</div>
         </van-cell>
         <van-cell title="各班待审核的人员" is-link @click="toBanjiTree">
           <van-tag round type="success" size="medium" v-if='studentCount > 0'> {{studentCount}}人 </van-tag>

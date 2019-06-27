@@ -23,8 +23,11 @@
           <van-collapse v-model="activeNames" :border='false'>
             <van-collapse-item class="collapse-item" name="teacher" :border='false'>
               <div class="collapse-title flex flex-align" slot='title'>老师</div>
-              <van-cell title="班级通知" value="发布" size="large" is-link :border='false' @click="notification">
-                <div class="iconfont icon-notice jackInTheBox animated" slot="icon">&#xe672;</div>
+              <van-cell title="班级通知" value="发布" size="large" is-link @click="notification">
+                <div class="iconfont cell-icon icon-notice jackInTheBox animated" slot="icon">&#xe672;</div>
+              </van-cell>
+              <van-cell title='阅读数据' value="查看" size="large" is-link :border='false' @click="toReadData">
+                <div class="iconfont cell-icon icon-data jackInTheBox animated" slot="icon">&#xe61d;</div>
               </van-cell>
               <div class="teacher-list" v-if='teacherList.length'>
                 <van-cell v-if='teacherList.length'>
@@ -79,8 +82,7 @@
                     <studentCard v-for='(item,index) in studentList' :key="index" :item='item' />
                   </div>
                   <div class="no-list" v-else>
-                    您可以：<span class="theme-color" @click="toList('students')">添加学生</span>或是<span class="theme-color"
-                      @click="toShare('students')"> 邀请学生 </span>
+                    您可以：<span class="theme-color" @click="toList('students')">添加学生</span>或是<span class="theme-color" @click="toShare('students')">邀请学生</span>
                   </div>
                 </van-list>
               </div>
@@ -89,8 +91,7 @@
         </div>
       </van-pull-refresh>
     </div>
-    <!-- <van-button class="boss-key theme-btn" type="primary" round v-if='checkCount > 0&&form.banji_id > 0' @click="allCheck">一键审核</van-button> -->
-
+   
     <van-popup v-model="show" position="bottom">
       <van-picker :title="pickerTitle" :columns="columns" @change="onChange" show-toolbar @cancel="onPickerCancel" @confirm="show = false" :visible-item-count='visibleCount' />
     </van-popup>
@@ -260,32 +261,6 @@ export default {
         this.finished = false
       })
     },
-    // allCheck() {
-    //   this.$dialog.confirm({
-    //     message: `此操作将会通过${this.form.title}全部待审核的学生，您确定要这么做吗?`
-    //   }).then(() => {
-
-    //     let data = {
-    //       params: {
-    //         is_all: 1,
-    //         banji_id: this.form.banji_id
-    //       }
-    //     }
-
-    //     axios.get('/SchoolManage/students/check', data).then(res => {
-    //       switch (res.data.status) {
-    //         case 1:
-    //           this.onRefresh()
-    //           break
-    //         default:
-    //           this.$toast(res.data.msg)
-    //       }
-    //     })
-
-    //   }).catch(() => {
-    //     // on cancel
-    //   })
-    // },
     onChange(picker, value, index) {
       switch (this.pickerType) {
         case 'type':
@@ -444,6 +419,16 @@ export default {
           banji_id: this.form.banji_id,
           school_id: this.manageSchoolInfo.school_id,
           title:`发布通知到${this.formatBanjiTitle(this.form.title)}`
+        }
+      })
+    },
+    toReadData(){
+      this.$router.push({
+        name:'readData',
+        query:{
+          title: '阅读数据',
+          banji_id: this.$route.query.banji_id,
+          school_id: this.manageSchoolInfo.school_id
         }
       })
     }

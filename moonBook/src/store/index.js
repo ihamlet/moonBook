@@ -299,11 +299,9 @@ const actions = {
     let amamApiLink = `https://restapi.amap.com/v3/config/district?${qs.stringify(data)}`
 
 
-      fetchJsonp(amamApiLink)
-        .then(response => {
+    return fetchJsonp(amamApiLink).then(response => {
           return response.json()
-        })
-        .then(res => {
+        }).then(res => {
           let cityInfo = {
             city: res.districts[0].name,
             location: res.districts[0].center
@@ -311,12 +309,13 @@ const actions = {
           context.commit('setUserPoint', {
             data: cityInfo
           })
+
           return res
         })
   },
   async getLogin(context, products) {
     let data = products
-      axios.post('/book/login/mobileLogin', data).then(res => {
+     return axios.post('/book/login/mobileLogin', data).then(res => {
         context.commit('setToken', {
           data: res.data.token
         })

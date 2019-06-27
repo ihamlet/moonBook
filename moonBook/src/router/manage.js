@@ -1,13 +1,4 @@
-// import Manage from '@/manage/Manage'
-// import classcreate from '@/manage/pages/teacherManage/classcreate'
-// import classList from '@/manage/pages/teacherManage/classList'
-// import classSetting from '@/manage/pages/teacherManage/classSetting'
-// import memberRanking from '@/manage/pages/teacherManage/memberRanking'
-
 const Manage = () => import('@/manage/Manage')
-// const classcreate = () => import('@/manage/pages/teacherManage/classcreate')
-// const classList = () => import('@/manage/pages/teacherManage/classList')
-// const classSetting = () => import('@/manage/pages/teacherManage/classSetting')
 
 const memberRanking = () => import('@/manage/pages/teacherManage/memberRanking')
 
@@ -19,6 +10,8 @@ const banjiEdit = () => import('@/manage/pages/edit/banjiEdit')
 
 const banjiTree = () => import('@/manage/pages/tree/banjiTree')
 const banjiList = () => import('@/manage/pages/list/banjiList')
+
+const readData = () => import('@/manage/module/data/readData')
 
 const List = () => import('@/manage/pages/list/List')
 
@@ -56,6 +49,11 @@ let manageRouter = {
             path: '/manage/banjiEdit',
             name: 'banjiEdit',
             component: banjiEdit
+        },
+        {
+            path: '/manage/readData',
+            name: 'readData',
+            component: readData
         },
         {
             path: '/manage/teacherShare',

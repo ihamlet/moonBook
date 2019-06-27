@@ -27,11 +27,12 @@
 
       <div class="card slideInUp animated">
         <div class="borrow-card">
-          <div class="library-card flex flex-align" v-if="userInfo.card_level != '0'" @click="onClickLeft">
+          <div class="library-card flex flex-align" v-if="userInfo.card_level > 0" @click="onClickLeft">
             <img class="logo" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/logo.png" />
             <div class="card-info flex flex-align">
               <div class="card-name">{{userInfo.card_name}}</div>
               <vipLevel :level='userInfo.card_level' animate='1'/>
+              <i class="iconfont icon-right">&#xe72a;</i>
             </div>
           </div>
           <div class="no-service flex flex-align flex-justify" v-else @click="toAccept">您还没有办理借阅卡?
@@ -251,14 +252,6 @@ export default {
   display: inline-grid;
 }
 
-/* .data-flow .number {
-  font-size: 1.875rem
-} */
-
-/* .data-flow .card-name {
-  font-size: x-small
-} */
-
 .head-bar-icon{
   position: relative;
 }
@@ -279,7 +272,7 @@ export default {
 
 .library-card{
   height: 2.625rem /* 42/16 */;
-  background: #fff;
+  background: linear-gradient(-135deg, #fff, #f7f7f7);
   padding: 0 .625rem /* 10/16 */;
   justify-content: space-between;
 }
@@ -290,9 +283,16 @@ export default {
 
 .card-name{
   font-weight: 700;
+  color: #606266;
+  text-shadow: 0 1px 1px #fff;
 }
 
 .coupon{
   margin-left: 15px;
+}
+
+.borrow-card i.iconfont.icon-right{
+  font-size: 14px;
+  margin-left: 5px;
 }
 </style>

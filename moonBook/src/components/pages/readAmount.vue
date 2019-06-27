@@ -5,43 +5,45 @@
       <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/banner/banner-juanshu.png" />
     </div>
 
-     <van-pull-refresh v-model="loading" @refresh="onRefresh">
-      <form action="/">
-        <van-search placeholder="请输入搜索关键词" v-model="value" @search="onSearch" shape='round'/>
-      </form>
-      <van-tabs color='#0084ff' v-model="tabIndex" :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :border='false'>
-        <van-tab v-for="(item,index) in readArray" :key="index">
-            <div class="tab-title" slot="title">
-              {{item.title}} <van-tag class="tab-tag" type="danger" round v-if='bookStatus[item.key] > 0'>{{bookStatus[item.key]}}</van-tag>
-            </div>
-        
-              <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">        
-                <div class="tab-jianshu" v-if='item.title == "捐书"'>
-                  <van-tabs type="card" color='#0084ff' @click="onClickTab">
-                    <van-tab :title="tabTitle" v-for='(tabTitle,tabTitleIndex) in donationTab' :key="tabTitleIndex"></van-tab>
-                  </van-tabs>
-                </div>
-
-                <div class="kings flex flex-align" v-if='item.title =="未读" '>
-                  <div class="bar-title">阅读进度</div>
-                  <div class="kings-box flex flex-align">
-                    <div class="num">{{childInfo.read_kinds}}/{{childInfo.shelf_tushu_kinds}}</div>
-                    <div class="filter" @click="show = true"><i class="iconfont theme-color">&#xe631;</i></div>
+    <div class="refresh-container">
+      <van-pull-refresh v-model="loading" @refresh="onRefresh">
+        <form action="/">
+          <van-search placeholder="请输入搜索关键词" v-model="value" @search="onSearch" shape='round'/>
+        </form>
+        <van-tabs color='#0084ff' v-model="tabIndex" :line-width='20' :line-height='4' sticky swipeable animated @change="onChangeTab" :border='false'>
+          <van-tab v-for="(item,index) in readArray" :key="index">
+              <div class="tab-title" slot="title">
+                {{item.title}} <van-tag class="tab-tag" type="danger" round v-if='bookStatus[item.key] > 0'>{{bookStatus[item.key]}}</van-tag>
+              </div>
+          
+                <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">        
+                  <div class="tab-jianshu" v-if='item.title == "捐书"'>
+                    <van-tabs type="card" color='#0084ff' @click="onClickTab">
+                      <van-tab :title="tabTitle" v-for='(tabTitle,tabTitleIndex) in donationTab' :key="tabTitleIndex"></van-tab>
+                    </van-tabs>
                   </div>
-                </div>
 
-                <div class="list" v-if='list.length'>
-                  <van-cell v-for="(book,bookIndex) in list" :key="bookIndex">
-                    <bookCard :item='book' :isCollect="book.is_collect"/>
-                  </van-cell>
-                </div>
-                <div class="no-list" v-else>
-                  暂无数据
-                </div>
-              </van-list>
-        </van-tab>
-      </van-tabs>
-    </van-pull-refresh>
+                  <div class="kings flex flex-align" v-if='item.title =="未读" '>
+                    <div class="bar-title">阅读进度</div>
+                    <div class="kings-box flex flex-align">
+                      <div class="num">{{childInfo.read_kinds}}/{{childInfo.shelf_tushu_kinds}}</div>
+                      <div class="filter" @click="show = true"><i class="iconfont theme-color">&#xe631;</i></div>
+                    </div>
+                  </div>
+
+                  <div class="list" v-if='list.length'>
+                    <van-cell v-for="(book,bookIndex) in list" :key="bookIndex">
+                      <bookCard :item='book' :isCollect="book.is_collect"/>
+                    </van-cell>
+                  </div>
+                  <div class="no-list" v-else>
+                    暂无数据
+                  </div>
+                </van-list>
+          </van-tab>
+        </van-tabs>
+      </van-pull-refresh>
+    </div>
     <van-popup class="filter-popup" v-model="show" position="right">
       <Filter-list :filterList='selectTag' @onSelect='onSelect' @close='show = false' />
     </van-popup>
@@ -311,7 +313,8 @@ export default {
 }
 
 .banner{
-  margin-bottom: -76px;
+  position: fixed;
+  top: 0;
 }
 
 .banner::before{
@@ -325,11 +328,10 @@ export default {
 .banner .theme-plain{
   position: absolute;
   left: 50%;
-  top: 20%;
+  top: 35px;
   transform: translate3d(-50%, 0, 0);
 }
 
-.banner,
 .tab-title{
   position: relative;
 }
@@ -338,5 +340,9 @@ export default {
   position: absolute;
   top: 5px;
   right: 0;
+}
+
+.refresh-container{
+  margin-top: 100px;
 }
 </style>

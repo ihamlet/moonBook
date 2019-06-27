@@ -80,7 +80,6 @@ export default {
                     school_id: products
                 }
             }).then(res=>{
-                console.log(res)
                 switch(res.data.status){
                     case 1:
                         context.commit('setAuthorizationList',res.data.data)

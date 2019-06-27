@@ -1,4 +1,3 @@
-// import audioPlayer from './../components/pages/audio/audioPlayer'
 const audioPlayer = () => import('@/components/pages/audio/audioPlayer')
 
 let audioRouter = [{

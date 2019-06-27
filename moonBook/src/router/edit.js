@@ -1,9 +1,3 @@
-// import EditChild from "@/components/pages/editBaby/child"
-// import EditSchool from "@/components/pages/school"
-// import EditClass from "@/components/pages/class"
-// import EditStting from "@/components/pages/setting"
-// import EditManager from "@/components/pages/editManager/manager"
-
 const EditChild = () => import('@/components/pages/editBaby/child')
 const EditSchool = () => import('@/components/pages/school')
 const EditClass = () => import('@/components/pages/class')

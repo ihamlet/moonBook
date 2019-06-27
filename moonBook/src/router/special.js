@@ -1,5 +1,3 @@
-// import SpecialPunch from './../components/pages/special/specialPunch'
-
 const SpecialPunch = () => import('@/components/pages/special/specialPunch')
 
 let specialRouter = [{

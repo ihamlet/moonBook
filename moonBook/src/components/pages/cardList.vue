@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="no-content" v-else>
-        <div class="theme-color" @click="applyShow = true">请办理借阅卡</div>
+        <div class="theme-color" @click="toAccept">请办理借阅卡</div>
       </div>
     </div>
     <div class="form-submit">

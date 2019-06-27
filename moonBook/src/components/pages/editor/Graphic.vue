@@ -1,8 +1,8 @@
 <template>
   <div class="graphic page-padding">
     <van-nav-bar :border='false' fixed>
-      <div class="title" slot='title' v-if='$route.query.pageType == "notice"'>
-        {{$route.query.title}}
+      <div class="title" slot='title' v-if='title'>
+        {{title}}
       </div>
       <div class="user-info" slot='title' v-else>
         <div class="avatar">
@@ -17,7 +17,7 @@
     <div class="textarea-module">
       <van-progress v-if='percent!=0&&percent!=100&&!progressIsShow' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
       <van-cell-group>
-        <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" :placeholder="$route.query.pageType == 'notice'?'输入通知内容...':icon" rows="2" autosize />
+        <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" :placeholder="icon" rows="2" autosize />
         <div class="upload-module flex wrap">
           <van-cell :border='false'>
             <van-row gutter="4">
@@ -110,7 +110,7 @@ export default {
   data() {
     let u = navigator.userAgent
     return {
-      icon:'\ue658\ue65f\ue65e\ue661\ue659\ue65a\ue65b\ue655\ue660\ue662',
+      icon: this.$route.query.pageType= 'notice'?'请输入通知内容...':'\ue658\ue65f\ue65e\ue661\ue659\ue65a\ue65b\ue655\ue660\ue662',
       show: false,
       actionShow: false,
       grapicData: {
@@ -127,7 +127,8 @@ export default {
       typeUpload:'',
       post:'',
       progressIsShow: false,
-      isWxMsg:1
+      isWxMsg:1,
+      title: this.$route.query.title || ''
     }
   },
   created() {
@@ -151,6 +152,22 @@ export default {
         this.photoLength = val.length
       },
       deep: true
+    },
+    tag(val){
+      switch(val.cate_id){
+        case '124':
+          this.title = '班级通知'
+          this.icon = '请输入班级通知内容...'
+          break
+        case '116':
+          this.title = '课堂阅读'
+          this.icon = '请输入...'
+          break
+        case '99':
+          this.title = '学校通知'
+          this.icon = '请输入学校通知内容...'
+          break
+      }
     },
     '$router': 'fetchData'
   },

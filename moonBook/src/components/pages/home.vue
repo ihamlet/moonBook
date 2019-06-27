@@ -44,7 +44,7 @@
             </div>
         </div>
 
-        <div class="apply" v-if='userDataState.card_level == "0"'>
+        <div class="apply" v-if='userDataState.card_level == 0'>
             <van-button class="theme-btn" :class="[btnPulse?'rubberBand animated second':'']" round size="normal" type="primary" @click="toAccept"> 
                 <i class="iconfont">&#xe619;</i>  
                 办理借阅卡
