@@ -35,6 +35,9 @@ export default {
             params:{
                 region: 'banji',
                 group: 'baby'
+            },
+            getList(data){
+                return data.list
             }
         },{
             name:'阅读打卡',
@@ -43,6 +46,9 @@ export default {
                 sort: 'read_sign',
                 time: 'all',
                 city_name: this.userPointState.city
+            },
+            getList(data){
+                return data
             }
         }]
     }
@@ -73,10 +79,12 @@ export default {
             // console.log(res)
             switch(res.data.status){
                 case 1:
+                    let arr = tabActive.getList(res.data.data)
+
                     if(this.page == 1){
-                        this.list = res.data.data
+                        this.list = arr
                     }else{
-                        this.list = this.list.concat(res.data.data)
+                        this.list = this.list.concat(arr)
                     }
 
                     this.page++
