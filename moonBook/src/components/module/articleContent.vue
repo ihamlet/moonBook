@@ -63,21 +63,13 @@ export default {
   bottom: -1.25rem /* 20/16 */;
   width: 100%;
   height: 3.75rem /* 60/16 */;
-  background: linear-gradient(bottom, #fff, rgba(255, 255, 255, 0));
+  background: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0));
 }
 
 article {
   width: -webkit-fill-available;
   color: #303133;
 }
-
-/* .article-header{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-} */
 
 .photo-tag{
   position: absolute;

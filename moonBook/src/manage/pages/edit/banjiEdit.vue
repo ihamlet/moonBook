@@ -26,7 +26,7 @@
               <van-cell title="班级通知" value="发布" size="large" is-link @click="notification">
                 <div class="iconfont cell-icon icon-notice jackInTheBox animated" slot="icon">&#xe672;</div>
               </van-cell>
-              <van-cell title='阅读数据' value="查看" size="large" is-link :border='false' @click="toReadData">
+              <van-cell title='阅读数据' value="查看" size="large" is-link :border='false' @click="toReadData" v-if='form.banji_id > 0'>
                 <div class="iconfont cell-icon icon-data jackInTheBox animated" slot="icon">&#xe61d;</div>
               </van-cell>
               <div class="teacher-list" v-if='teacherList.length'>
@@ -136,7 +136,6 @@ export default {
       columns: [],
       pickerType: 'type',
       pickerTitle: '班级类型',
-      banjiId: '',
       inviteCode: '',
       value:'',
       visibleCount:3,
@@ -427,8 +426,9 @@ export default {
         name:'readData',
         query:{
           title: '阅读数据',
-          banji_id: this.$route.query.banji_id,
-          school_id: this.manageSchoolInfo.school_id
+          banji_id: this.form.banji_id,
+          school_id: this.manageSchoolInfo.school_id,
+          banji_name: this.form.title
         }
       })
     }

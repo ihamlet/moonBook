@@ -575,5 +575,10 @@ export default {
   top: 0;
   left: 0;
 }
+
+.comment-popup{
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: 15px;
+}
 </style>
 

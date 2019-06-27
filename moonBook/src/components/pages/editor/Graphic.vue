@@ -17,7 +17,7 @@
     <div class="textarea-module">
       <van-progress v-if='percent!=0&&percent!=100&&!progressIsShow' :percentage="percent" :show-pivot='false' color="linear-gradient(to right, #00BCD4, #0084ff)" />
       <van-cell-group>
-        <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" :placeholder="icon" rows="2" autosize />
+        <van-field :border='false' class="theme-textarea" v-model="grapicData.text" type="textarea" :placeholder="tag.cate_id == 99 || tag.cate_id ==124?'请输入通知内容...':icon" rows="2" autosize />
         <div class="upload-module flex wrap">
           <van-cell :border='false'>
             <van-row gutter="4">
@@ -110,7 +110,7 @@ export default {
   data() {
     let u = navigator.userAgent
     return {
-      icon: this.$route.query.pageType= 'notice'?'请输入通知内容...':'\ue658\ue65f\ue65e\ue661\ue659\ue65a\ue65b\ue655\ue660\ue662',
+      icon: '\ue658\ue65f\ue65e\ue661\ue659\ue65a\ue65b\ue655\ue660\ue662',
       show: false,
       actionShow: false,
       grapicData: {
@@ -167,6 +167,9 @@ export default {
           this.title = '学校通知'
           this.icon = '请输入学校通知内容...'
           break
+        default:
+          this.title = ''
+          this.icon = '\ue658\ue65f\ue65e\ue661\ue659\ue65a\ue65b\ue655\ue660\ue662'
       }
     },
     '$router': 'fetchData'
@@ -306,7 +309,10 @@ export default {
     },
     onClickRelease() {
       if (!this.grapicData.text.length && !this.grapicData.photos.length) {
-        if (this.$route.query.back && this.$route.name!='home') {
+
+        if ( this.tag.cate_id == 124 || this.tag.cate_id == 99) {
+          this.$toast('请输入通知内容')
+        } else if (this.$route.query.back && this.$route.name!='home') {
           this.$router.push({
             name: this.$route.query.back,
             query: {
@@ -318,7 +324,8 @@ export default {
             name: 'apps-find'
           })
         }
-      } else if (this.grapicData.text.length < 12000) {
+
+      }else if(this.grapicData.text.length < 12000) {
           
           // cate_id = 116 课堂阅读
 

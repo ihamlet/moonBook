@@ -118,7 +118,7 @@ export default {
       loading: false,
       finished: false,
       childInfo: '',
-      tabIndex: sessionStorage.getItem('readAmountTabIndex') || 0,
+      tabIndex: sessionStorage.getItem('readAmountTabIndex')?sessionStorage.getItem('readAmountTabIndex'):0,
       isCheck: 1,
       selectTag: [{
         title: '年龄',

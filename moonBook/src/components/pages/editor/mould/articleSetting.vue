@@ -6,14 +6,13 @@
       </div>
     </van-cell>
     <van-cell v-if='((tag.cate_id!=99&&tag.cate_id!=124) || $route.query.tags)&&$route.query.pageType!="notice"' title="同步到" value-class='cell-value' :value='synchronous' center is-link @click="isResultShow = true" />
-    <van-switch-cell v-model="checked" title="微信公众号消息" title-style='flex:2' value-class='switch-cell-value' :active-value='1' :inactive-value='0' active-color='#67C23A' inactive-color='#f2f6fc' label='通知会通过阅亮书架公众号提醒家长' v-else @change='$emit("onChangeSwitch",checked)'/>
+    <van-switch-cell v-model="checked" title="微信公众号消息" title-style='flex:3' value-class='switch-cell-value' :active-value='1' :inactive-value='0' active-color='#67C23A' inactive-color='#f2f6fc' label='通知会通过阅亮书架公众号提醒家长' v-else @change='$emit("onChangeSwitch",checked)'/>
 
     <van-popup class="page-popup-layer" position="bottom" v-model="isResultShow" get-container='#app'>
       <van-checkbox-group v-model="settingResult">
         <div class="form-title">同步到</div>
         <van-cell-group>
-          <van-cell :border='false' v-for="(item,index) in resultList" clickable :key="index" :title="item.title"
-            @click="toggle(index)">
+          <van-cell :border='false' v-for="(item,index) in resultList" clickable :key="index" :title="item.title" @click="toggle(index)">
             <van-checkbox class="theme-checkbox" :name="item.name" ref="checkboxes" />
           </van-cell>
         </van-cell-group>

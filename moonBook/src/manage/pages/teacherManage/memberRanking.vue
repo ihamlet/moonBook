@@ -1,6 +1,6 @@
 <template>
   <div class="brand-page">
-    <van-nav-bar :zIndex='2018' :class="fixedHeaderBar?'theme-nav':''" title="打卡榜" fixed :border='false'  @click-right="onClickRight" :key="$route.query.id">
+    <van-nav-bar :zIndex='999' :class="fixedHeaderBar?'theme-nav':''" title="打卡榜" fixed :border='false'  @click-right="onClickRight" :key="$route.query.id">
         <div class="child-avatar" slot="right">
           <van-button round class="theme-btn more-btn" size="small" type="primary">更多榜单</van-button>
         </div>
@@ -84,7 +84,7 @@
       </van-tab>
     </van-tabs>
 
-    <van-popup v-model="show" position="bottom">
+    <van-popup v-model="show" position="bottom" get-container="#app">
       <van-picker :columns="columns" @change="onChange" />
     </van-popup>
 
@@ -428,16 +428,14 @@ export default {
   justify-content: space-between
 }
 
+.info,
+.my-child-info .num,
 .school-name{
   flex: 1;
 }
 
 .my-child-info .info{
   flex: 2
-}
-
-.my-child-info .num{
-  flex: 1
 }
 
 .my-child-hd{

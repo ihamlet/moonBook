@@ -13,16 +13,11 @@ module.exports = {
         plugins: [
           autoprefixer(),
           pxtorem({
-            rootValue: 16,
+            rootValue: 15,
             propList: ['*'],
             selectorBlackList: ['van-circle__layer']
           })
         ]
-      },
-      less: {
-        modifyVars: {
-          blue: '#FFC107'
-        }
       }
     }
   },
