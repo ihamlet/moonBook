@@ -175,7 +175,7 @@ export default {
                   isbn: res.resultStr
                 }
                 
-                axios.post('/book/member/read_sign',data).then(res=>{
+                return axios.post('/book/member/read_sign',data).then(res=>{
                   context.commit('setReadSign', {
                     data: res
                   })
