@@ -23,7 +23,7 @@
       <div class="button">
         <div class="flex flex-align">
           <div class="like" @click="addCollect">
-            <i class="iconfont" v-if='isCollect'>&#xe668;</i>
+            <i class="iconfont" v-if='itemCollect'>&#xe668;</i>
             <i class="iconfont" v-else>&#xe669;</i>
           </div>
           <div class="listening" @click="listening">
@@ -45,12 +45,12 @@ export default {
   props: ['item','type','isCollect'],
   data () {
     return {
-      isCollect: false
+      itemCollect: false
     }
   },
   watch: {
     isCollect(val){
-      this.isCollect = val == 1?true:false
+      this.itemCollect = val == 1?true:false
     }
   },
   methods: {
@@ -96,11 +96,9 @@ export default {
 
       axios.get('/book/member/add_favorite',data).then(res => {
         if (res.data.status == 1) {
-          this.isCollect = !this.isCollect
-          
-
-
-          if(this.isCollect){
+          this.itemCollect = !this.itemCollect
+    
+          if(this.itemCollect){
             this.$toast.success({
               className: 'like-icon toast-icon',
               duration: '800'

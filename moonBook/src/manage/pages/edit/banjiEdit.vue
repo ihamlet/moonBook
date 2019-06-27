@@ -378,7 +378,7 @@ export default {
           ...item,
           banji_id: 0,
           banji_name: ''
-        }).then(() => {
+        }).then(res => {
           switch (res.data.status) {
             case 1:
               this.$toast.success(res.data.msg)

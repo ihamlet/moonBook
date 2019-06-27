@@ -79,7 +79,7 @@ export default {
             this.page++
             this.loading = false
 
-            if (arr >= res.data.count) {
+            if (this.teacherList.length >= res.data.count) {
               this.finished = true
             }
 
@@ -96,14 +96,14 @@ export default {
         this.finished = false
       })
     },
-    datadragEnd(evt){
+    datadragEnd(){
       this.teacherList.map((e,i)=>{
           e.school_index = i
           return e
       })
     },
     submitSort(){
-      axios.post('/SchoolManage/Teacher/setIndex',this.teacherList).then(res=>{})
+      axios.post('/SchoolManage/Teacher/setIndex',this.teacherList).then(()=>{})
     },
     setStutas(id,type){
       this.teacherList.map(e=>{
