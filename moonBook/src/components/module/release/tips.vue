@@ -14,10 +14,12 @@
 <script>
 import axios from './../../lib/js/api'
 import { mapGetters,mapActions } from 'vuex'
+import { punch } from './../../lib/js/mixin'
 
 export default {
   name: 'tips',
   props: ['position','isShow','cate','bookId','iconLength'],
+  mixins: [punch],
   computed: {
     ...mapGetters(['userDataState']),
     relaseList(){
@@ -134,28 +136,28 @@ export default {
           tags:'课堂阅读'
         }
       })
-    },
-    punch() {
-      this.scanQRcode({id:this.userDataState.child_id}).then(res=>{
-        switch(res.data.status){
-          case 1:
-            this.$router.push({
-              name:'punch-back',
-              query:{
-                id: this.$route.query.id,
-                child_id: this.userDataState.child_id,
-                back: this.$route.name,
-                cate_id: 133,
-                tags:'阅读打卡',
-                ...res.data.data.stat_data
-              }
-            })
-          break
-          default:
-            this.$toast(res.data.msg)
-        }
-      })
     }
+    // punch() {
+    //   this.scanQRcode({id:this.userDataState.child_id}).then(res=>{
+    //     switch(res.data.status){
+    //       case 1:
+    //         this.$router.push({
+    //           name:'punch-back',
+    //           query:{
+    //             id: this.$route.query.id,
+    //             child_id: this.userDataState.child_id,
+    //             back: this.$route.name,
+    //             cate_id: 133,
+    //             tags:'阅读打卡',
+    //             ...res.data.data.stat_data
+    //           }
+    //         })
+    //       break
+    //       default:
+    //         this.$toast(res.data.msg)
+    //     }
+    //   })
+    // }
   }
 }
 </script>

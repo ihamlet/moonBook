@@ -1,4 +1,4 @@
-import { mapState } from 'vuex'
+import { mapState,mapGetters } from 'vuex'
 
 const manageStateList = {
     data () {
@@ -360,6 +360,43 @@ const verification = {
     }
 }
 
+const punch = {
+    computed: {
+        ...mapGetters(['userDataState'])
+    },
+    methods:{
+        punch() {
+            let data = {
+                id: this.$route.query.id,
+                child_id: this.userDataState.child_id,
+                back: this.$route.name,
+                cate_id: 133,
+                tags:'阅读打卡'
+            }
+
+            if(this.$route.name == 'class-home'){
+                data.punchType = 'banji'
+            }
+
+            this.scanQRcode({id:this.userDataState.child_id}).then(res=>{
+              switch(res.data.status){
+                case 1:
+                  this.$router.push({
+                    name:'punch-back',
+                    query:{
+                      ...data,
+                      ...res.data.data.stat_data
+                    }
+                  })
+                break
+                default:
+                  this.$toast(res.data.msg)
+              }
+            })
+          },
+    }
+}
+
 export {
     manageStateList,
     manageSchoolList,
@@ -369,5 +406,6 @@ export {
     selection,
     newBanjiTitle,
     echartOption,
-    verification
+    verification,
+    punch
 }

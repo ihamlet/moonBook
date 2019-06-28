@@ -33,7 +33,6 @@
 <script>
 import axios from './../../lib/js/api'
 import { mapGetters,mapMutations,mapState } from 'vuex'
-import { format } from './../../lib/js/util'
 import { newBanjiTitle } from './../../lib/js/mixin'
 import graphicCard from './../../module/card/graphicCard'
 import tips from './../../module/release/tips'

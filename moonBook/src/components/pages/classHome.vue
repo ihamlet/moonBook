@@ -30,6 +30,9 @@
         <read-list title='阅读榜' type='banji' field='avatar'/>
       </div>
       <div class="module">
+        <readWeek/>
+      </div>
+      <div class="module">
         <notice type='banji' :key="$route.query.id" :studentCount='classInfo.student_count'/>
       </div>
       <div>
@@ -56,7 +59,7 @@
 <script>
 import axios from './../lib/js/api'
 import { format } from './../lib/js/util'
-import { manageStateList,watchScroll } from './../lib/js/mixin'
+import { manageStateList,watchScroll,punch } from './../lib/js/mixin'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import classZoom from './../pages/classZoom'
 import readList from './../module/classModule/readList'
@@ -64,10 +67,11 @@ import reading from './../module/reading'
 import apps from './../module/myModule/apps'
 import notice from './../module/classModule/notice'
 import selectBaby from './../module/selectChild'
+import readWeek from './../module/classModule/readWeek'
 
 export default {
   name: "class-home",
-  mixins:[manageStateList,watchScroll],
+  mixins:[manageStateList,watchScroll,punch],
   components: {
     classZoom,
     reading,
@@ -75,6 +79,7 @@ export default {
     notice,
     apps,
     selectBaby,
+    readWeek
   },
   computed: {
     ...mapGetters(['userDataState', 'managerState']),
@@ -263,28 +268,28 @@ export default {
         }
       })
     },
-    punch() {
-      this.scanQRcode({id:this.userDataState.child_id}).then(res=>{
-        switch(res.data.status){
-          case 1:
-            this.$router.push({
-              name:'punch-back',
-              query:{
-                id: this.$route.query.id,
-                child_id: this.userDataState.child_id,
-                back: this.$route.name,
-                punchType:'banji',
-                cate_id: 133,
-                tags:'阅读打卡',
-                ...res.data.data.stat_data
-              }
-            })
-          break
-          default:
-            this.$toast(res.data.msg)
-        }
-      })
-    },
+    // punch() {
+    //   this.scanQRcode({id:this.userDataState.child_id}).then(res=>{
+    //     switch(res.data.status){
+    //       case 1:
+    //         this.$router.push({
+    //           name:'punch-back',
+    //           query:{
+    //             id: this.$route.query.id,
+    //             child_id: this.userDataState.child_id,
+    //             back: this.$route.name,
+    //             punchType:'banji',
+    //             cate_id: 133,
+    //             tags:'阅读打卡',
+    //             ...res.data.data.stat_data
+    //           }
+    //         })
+    //       break
+    //       default:
+    //         this.$toast(res.data.msg)
+    //     }
+    //   })
+    // },
     cutover() {
       if (this.userDataState.teacher_school_id > 0) {
         this.actionsheetShow = true

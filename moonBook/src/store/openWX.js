@@ -167,7 +167,7 @@ export default {
     scanQRcode(context, products){
       return new Promise((resolve, reject)=>{
         wx.ready(()=>{
-          wx.scanQRCode({
+         wx.scanQRCode({
             needResult: 1,
             scanType: ['barcode'],
             success(res){
@@ -176,7 +176,7 @@ export default {
                 isbn: res.resultStr
               }
 
-              axios.post('/book/member/read_sign', data).then((res)=>{
+              return axios.post('/book/member/read_sign', data).then(res =>{
                 context.commit('setReadSign', {data:res})
                 resolve(res)
               })

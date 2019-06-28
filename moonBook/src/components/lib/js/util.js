@@ -351,7 +351,34 @@ function isRepeatArr(arr){
     return dest
 }
 
+function getTime(n) {
+  let now = new Date()
+  let year = now.getFullYear()
+  let month = now.getMonth() + 1
+  let date = now.getDate()
+  let day = now.getDay()
 
+  if (day !== 0) {
+    n = n + (day - 1)
+  } else {
+    n = n + day
+  }
+  if (day) {
+    if (month > 1) {
+      month = month
+    }
+    else {
+      year = year - 1
+      month = 12
+    }
+  }
+  now.setDate(now.getDate() - n)
+  year = now.getFullYear()
+  month = now.getMonth() + 1
+  date = now.getDate()
+  let s = (month < 10 ? ('0' + month) : month) + "." + (date < 10 ? ('0' + date) : date)
+  return s
+}
 
 export {
   GetDistance,
@@ -371,4 +398,5 @@ export {
   randomNum,
   arrGroup,
   isRepeatArr,
+  getTime
 }

@@ -88,7 +88,8 @@ export default {
                     name: data.name,
                     rank: data.rank,
                     count: `${data.sign_read_count}本`,
-                    sign_days: `${data.sign_days}天`
+                    sign_days: `${data.sign_days}天`,
+                    id: data.child_id
                 }
             }
         }]
@@ -206,5 +207,9 @@ export default {
 
 .sign-days{
     margin-left: 15px;
+}
+
+.no-list{
+    margin-top: 10px;
 }
 </style>

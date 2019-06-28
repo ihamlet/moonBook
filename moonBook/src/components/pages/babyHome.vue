@@ -110,10 +110,9 @@
 </template>
 <script>
 import axios from "./../lib/js/api"
-import { mapActions, mapGetters,mapState } from 'vuex'
-import { format, timeago } from "./../lib/js/util.js"
-import { watchScroll,manageStateList } from './../lib/js/mixin'
+import { format, timeago } from "./../lib/js/util"
 import { punchLevel,readLevel } from './../lib/js/speech'
+import { watchScroll,manageStateList } from './../lib/js/mixin'
 import wave from "./../module/animate/anWave"
 import avatar from "./../module/avatar"
 import reading from "./../module/reading"
@@ -123,9 +122,11 @@ import metro from './../module/mold/metro'
 import slogan from './../module/slogan'
 import selectChild from './../module/selectChild'
 
+import { mapActions, mapGetters,mapState } from 'vuex'
+
 export default {
   name: "baby-home",
-  mixins:[watchScroll,manageStateList],
+  mixins:[watchScroll,manageStateList,punch],
   components: {
     wave,
     reading,
@@ -583,27 +584,27 @@ export default {
         this.isSelectBabyShow = true
       }
     },
-    punch() {
-      this.scanQRcode({id:this.$route.query.id}).then(res=>{
-        switch(res.data.status){
-          case 1:
-            this.$router.push({
-              name:'punch-back',
-              query:{
-                id: this.$route.query.id,
-                child_id: this.$route.query.id,
-                back: this.$route.name,
-                cate_id: 133,
-                tags:'阅读打卡',
-                ...res.data.data.stat_data
-              }
-            })
-          break
-          default:
-            this.$toast(res.data.msg)
-        }
-      })
-    },
+    // punch() {
+    //   this.scanQRcode({id:this.userDataState.child_id}).then(res=>{
+    //     switch(res.data.status){
+    //       case 1:
+    //         this.$router.push({
+    //           name:'punch-back',
+    //           query:{
+    //             id: this.$route.query.id,
+    //             child_id: this.userDataState.child_id,
+    //             back: this.$route.name,
+    //             cate_id: 133,
+    //             tags:'阅读打卡',
+    //             ...res.data.data.stat_data
+    //           }
+    //         })
+    //       break
+    //       default:
+    //         this.$toast(res.data.msg)
+    //     }
+    //   })
+    // },
     //置顶
     onInput() {
       let data = {

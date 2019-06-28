@@ -14,7 +14,7 @@ module.exports = {
         plugins: [
           autoprefixer(),
           pxtorem({
-            rootValue: 15,
+            rootValue: 16,
             propList: ['*'],
             selectorBlackList: ['van-circle__layer']
           })
@@ -23,6 +23,7 @@ module.exports = {
     }
   },
   devServer:{
+    disableHostCheck: true,
     proxy: {
       '/book':{
         target: server_host,

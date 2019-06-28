@@ -427,7 +427,7 @@ export default {
         query:{
           title: '阅读数据',
           banji_id: this.form.banji_id,
-          school_id: this.manageSchoolInfo.school_id,
+          school_id: this.manageSchoolInfo.school_id || this.$route.query.school_id,
           banji_name: this.form.title
         }
       })
