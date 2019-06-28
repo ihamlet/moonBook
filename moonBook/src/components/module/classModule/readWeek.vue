@@ -14,7 +14,7 @@
       </div>
       <van-pull-refresh v-model="loading" @refresh="onRefresh" :disabled='!listHeight'>
         <van-list v-model="loading" :finished="finished" @load="onLoad">
-            <div class="list theme-background" :class="listHeight?'overflow':''">
+            <div class="list theme-background" :class="listHeight?'overflow':''" v-if='list.length'>
                 <div class="child-cell flex flex-align" v-for='(item,index) in list' :key="index">
                     <div class="flex flex-align">
                         <div class="avatar">
@@ -29,9 +29,12 @@
                     </div>
                 </div>
             </div>
+            <div class="not-content" v-else>
+                尚无数据 <span class="theme-color" v-if='userDataState.teacher_banji_id == $route.query.id' @click="$emit('share')">邀请参与阅读打卡</span>
+            </div>
         </van-list>
       </van-pull-refresh>
-      <div class="more theme-color" @click="listHeight = !listHeight">
+      <div class="more theme-color" @click="listHeight = !listHeight" v-if='list.length'>
         {{listHeight?'收起':'展开'}}
       </div>
     </van-cell>
@@ -44,8 +47,9 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'readWeek',
+  props: ['classInfo'],
   computed: {
-    ...mapGetters(['userPointState'])
+    ...mapGetters(['userPointState','userDataState'])
   },
   data() {
     return {

@@ -30,7 +30,7 @@
         <read-list title='阅读榜' type='banji' field='avatar'/>
       </div>
       <div class="module">
-        <readWeek/>
+        <readWeek :classInfo='classInfo' @share='toPageCodeShare'/>
       </div>
       <div class="module">
         <notice type='banji' :key="$route.query.id" :studentCount='classInfo.student_count'/>
