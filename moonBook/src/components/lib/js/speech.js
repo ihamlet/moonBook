@@ -162,6 +162,8 @@ function readLevel(num) {
   return arr
 }
 
+const numbers = ['\ue680','\ue681','\ue682','\ue685','\ue684','\ue687','\ue689','\ue688','\ue67e','\ue67f']
+
 export {
   placeholder,
   commentTag,
@@ -172,5 +174,6 @@ export {
   readLevel,
   childCommentTag,
   PromotionWord,
-  invitation
+  invitation,
+  numbers
 }

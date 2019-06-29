@@ -2,6 +2,8 @@ const BorrowList = () => import('@/components/pages/borrowList')
 const Bookshelf = () => import('@/components/pages/bookshelf')
 const RankingList = () => import('@/components/pages/rankingList')
 const Ranking = () => import('@/components/pages/ranking')
+const BanjiRank = () => import('@/components/pages/ranking/banjiRank')
+
 const ReadStat = () => import('@/components/pages/readStat')
 const ReadAmount = () => import('@/components/pages/readAmount')
 const ReadGuide = () => import('@/components/pages/guided/readGuide')
@@ -25,17 +27,13 @@ let readRouter = [{
     name: 'bookshelf',
     component: Bookshelf,
     meta: {
-      isFooterBar: false,
       keepAlive: true
     } 
   },
   {
     path: '/newBook',
     name: 'newBook',
-    component: NewBook,
-    meta: {
-      isFooterBar: false
-    } 
+    component: NewBook
   },
   {
     path: '/readAmount',
@@ -43,7 +41,6 @@ let readRouter = [{
     component: ReadAmount,
     meta: {
       title: '我的书',
-      isFooterBar: false,
       keepAlive: true
     }
   },
@@ -54,7 +51,7 @@ let readRouter = [{
     meta: {
       title: '借阅记录',
       keepAlive: true,
-      isFooterBar: false
+      
     }
   },
   {
@@ -64,7 +61,6 @@ let readRouter = [{
     meta: {
       title: '阶梯阅读指导',
       keepAlive: true,
-      isFooterBar: false
     }
   },
   {
@@ -73,7 +69,6 @@ let readRouter = [{
     component: punchBack,
     meta: {
       title: '打卡成功',
-      isFooterBar: false
     }
   },
   {
@@ -92,7 +87,7 @@ let readRouter = [{
     component: punchSpeed,
     meta:{
       title: '打卡进度',
-      isFooterBar: false
+      
     }
   },{
     path:'/popupHelp',
@@ -106,7 +101,6 @@ let readRouter = [{
     meta: {
       title:'打卡列表',
       keepAlive: true,
-      isFooterBar: false
     }
   },
   {
@@ -115,7 +109,6 @@ let readRouter = [{
     component: punchShare,
     meta: {
       title:'打卡分享',
-      isFooterBar: false
     }
   },{
     path: '/ranking',
@@ -123,7 +116,6 @@ let readRouter = [{
     component: Ranking,
     meta: {
       title: '阅读榜',
-      isFooterBar: false,
       keepAlive: true
     }
   },{
@@ -132,8 +124,14 @@ let readRouter = [{
     component: RankingList,
     meta: {
       title: '榜单列表',
-      isFooterBar: false,
       keepAlive: true
+    }
+  },{
+    path: '/BanjiRank',
+    name: 'BanjiRank',
+    component: BanjiRank,
+    meta: {
+      title: '明星榜'
     }
   },{
     path: '/readStat',
@@ -141,7 +139,7 @@ let readRouter = [{
     component: ReadStat,
     meta: {
       title: '阅读统计',
-      isFooterBar: false
+      
     }
   },{
     path: '/calendar',
@@ -149,7 +147,7 @@ let readRouter = [{
     component: Calendar,
     meta: {
       title: '阅读日历',
-      isFooterBar: false
+      
     }
   },{
     path: '/advertisingDetails',
@@ -157,7 +155,7 @@ let readRouter = [{
     component: advertisingDetails,
     meta: {
       title: '广告详情',
-      isFooterBar: false
+      
     }
   },{
     path:'/popupList',
@@ -165,7 +163,7 @@ let readRouter = [{
     component: popupList,
     meta:{
       title:'卡券列表',
-      isFooterBar: false
+      
     }
   },{
     path:'/writeOff',
@@ -173,7 +171,7 @@ let readRouter = [{
     component: writeOff,
     meta:{
       title:'核销',
-      isFooterBar: false
+      
     }
   }]
 

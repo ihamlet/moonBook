@@ -34,9 +34,17 @@
             </div>
         </van-list>
       </van-pull-refresh>
-      <div class="more theme-color" @click="listHeight = !listHeight" v-if='list.length'>
-        {{listHeight?'收起':'展开'}}
-      </div>
+      <van-cell v-if='list.length'>
+        <div class="more-cell flex flex-align">
+          <div class="more theme-color" @click="listHeight = !listHeight">
+            {{listHeight?'收起':'展开'}}
+          </div>
+          <div class="theme-color" @click="toBanjiRank">
+            立即查看
+            <i class="iconfont icon-right-arrow">&#xe72a;</i>
+          </div>
+        </div>
+      </van-cell>
     </van-cell>
   </div>
 </template>
@@ -103,6 +111,21 @@ export default {
             this.finished = false
         })
     },
+    toBanjiRank(){
+      this.$router.push({
+        name:'BanjiRank',
+        query:{
+          banji_id: this.$route.query.id,
+          sort: 'read_sign',
+          time: 'last_week',
+          city_name: this.userPointState.city,
+          school_name: this.classInfo.school_name,
+          banji_name: this.classInfo.title,
+          startWeekTime: this.startWeekTime,
+          endWeekTime: this.endWeekTime
+        }
+      })
+    },
     imgError(e){
         e.target.src = 'https://wx.qlogo.cn/mmopen/ajNVdqHZLLBGT5R0spIjic7Pobf19Uw0qc07mwPLicXILrafUXYkhtMTZ0WialrHiadXDKibJsRTux0WvmNuDyYRWDw/0'
     }
@@ -131,12 +154,6 @@ export default {
     overflow: hidden;
 }
 
-.more {
-  text-align: center;
-  height: 36px;
-  line-height: 36px;
-}
-
 .child-cell,
 .cell-read-week {
   justify-content: space-between;
@@ -156,7 +173,7 @@ export default {
 
 .child-cell{
     padding: 5px 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, .4)
+    border-bottom: 1px solid rgba(255, 255, 255, .2)
 }
 
 .num,
@@ -166,5 +183,13 @@ export default {
 
 .name{
     font-size: 16px;
+}
+
+.more-cell{
+  justify-content: space-between;
+}
+
+.icon-right-arrow{
+  font-size: 12px;
 }
 </style>
