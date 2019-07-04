@@ -69,7 +69,7 @@
                   </div>
                 </van-cell>
 
-                <form action="/" v-if='count > 0'>
+                <form action="/">
                   <van-search v-model="value" placeholder="请输入姓名或手机号" shape='round' @search="onSearch">
                     <div class="label theme-color" slot="label" @click="selectLabel">
                       {{searchLabel}}
@@ -81,8 +81,11 @@
                   <div class="list-container" v-if='studentList.length'>
                     <studentCard v-for='(item,index) in studentList' :key="index" :item='item' />
                   </div>
-                  <div class="no-list" v-else>
+                  <div class="no-list" v-else-if='searchLabel == "全部"'>
                     您可以：<span class="theme-color" @click="toList('students')">添加学生</span>或是<span class="theme-color" @click="toShare('students')">邀请学生</span>
+                  </div>
+                  <div class="no-list" v-else>
+                    尚无{{searchLabel}}成员
                   </div>
                 </van-list>
               </div>

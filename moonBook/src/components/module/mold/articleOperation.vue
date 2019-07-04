@@ -2,10 +2,10 @@
   <div class="article-operation">
     <div class="btn-warp flex flex-align">
       <div class="flex-btn">
-        <van-button class="theme-btn tuijian" round size="normal" type="primary" @click="recommend"> <i class="iconfont">&#xe668;</i> 推荐</van-button>
+        <van-button class="tuijian" plain round size="normal" type="default" @click="recommend" icon="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/icon/tj.png"> 推荐</van-button>
       </div>
       <div class="flex-btn" v-if='isBtnShow'>
-        <van-button class="theme-btn shoulu" round size="normal" type="primary" @click="selectChildren"> <i class="iconfont">&#xe6ea;</i>收录</van-button>
+        <van-button class="shoulu" plain round size="normal" type="default" @click="selectChildren" icon="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/icon/fx.png">收录</van-button>
       </div>
     </div>
 
@@ -225,11 +225,8 @@ export default {
     padding: 0 1.25rem /* 20/16 */;
 }
 
-.theme-btn{
+.shoulu,
+.tuijian{
     width: 100%;
-}
-
-.theme-btn.shoulu {
-  background: linear-gradient(90deg, #ff765c, #ff23b3);
 }
 </style>

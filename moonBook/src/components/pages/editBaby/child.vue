@@ -19,8 +19,8 @@
     </div>
     <div class="form" v-else>
     <van-cell-group>
-      <van-field v-model="childInfo.name" size='large' :disabled='isMainParent' input-align='right' label="孩子姓名" placeholder="请输入孩子姓名" :error-message="errorMessage.name" />
-      <van-field v-model="childInfo.birthday" size='large' :disabled='isMainParent' input-align='right' readonly label="孩子生日" placeholder="请选择日期" :error-message="errorMessage.birthday" @click="pickerShow = true" />
+      <van-field v-model="childInfo.name" size='large' :disabled='isMainParent' input-align='right' label="孩子姓名" placeholder="请输入孩子姓名" :error-message="errorMessage.name" error-message-align='right'/>
+      <van-field v-model="childInfo.birthday" size='large' :disabled='isMainParent' input-align='right' readonly label="孩子生日" placeholder="请选择日期" :error-message="errorMessage.birthday" @click="pickerShow = true" error-message-align='right'/>
       <van-field v-model="childInfo.relation_name" :disabled='isMainParent' input-align='right' readonly label="您是孩子的？" placeholder="例如：爸爸"  @click="isParentShow"/>
     </van-cell-group>
     <van-radio-group>
