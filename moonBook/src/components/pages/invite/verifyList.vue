@@ -40,7 +40,7 @@
 <script>
 import axios from './../../lib/js/api'
 import family from './../../module/myModule/family'
-import { mapGetters,mapMutations,mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'verifyList',
@@ -99,7 +99,7 @@ export default {
             }
           })
         break
-        case item.show_remove:
+        case item.show_remove:{
           let data = {
             params:{
               child_id: this.$route.query.id,
@@ -116,7 +116,10 @@ export default {
               break
             }
           })
-        break
+
+          break
+        }
+
       }
     },
     out(){
@@ -126,14 +129,14 @@ export default {
         cancelButtonText: '确认',
         showCancelButton: true
       }).then(() => {
-        done()
+        // done()
       }).catch(() => {
         let data = {
           params:{
             child_id:this.$route.query.id
           }
         }
-        axios.get('/book/baby/del',data).then(res => {
+        axios.get('/book/baby/del',data).then(() => {
           this.getUserData()
           this.$router.go(-1)
         })

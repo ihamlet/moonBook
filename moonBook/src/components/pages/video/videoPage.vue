@@ -67,7 +67,7 @@ export default {
     methods: {
         onChange(index){
             this.current = index
-            this.videoList[val].isCoverShow = true
+            this.videoList[index].isCoverShow = true
         },
         playVideo(){
             this.videoList[this.current].isCoverShow = false

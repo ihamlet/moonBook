@@ -99,12 +99,12 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapActions, mapState, mapMutations, mapGetters } from 'vuex'
 import cardPunch from './cardPunch'
 import videoList from './../video/videoList'
 import { format } from './../../lib/js/util'
 import tips from './../../module/release/tips'
 import trophy from './../../module/animate/trophy'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 
 export default {
   name: 'punchBack',

@@ -148,7 +148,7 @@ export default {
       obj.orderby = evt.newIndex
 
 
-      axios.post('/SchoolManage/banji/edit', obj).then(res => { })
+      axios.post('/SchoolManage/banji/edit', obj).then(() => { })
     },
     addBanji() {
       this.$router.push({
@@ -177,7 +177,7 @@ export default {
             axios.post('/SchoolManage/banji/edit',{
               ...this.item,
               is_delete: 1
-            }).then(res => {
+            }).then(() => {
               this.onRefresh()
               instance.close()
             })

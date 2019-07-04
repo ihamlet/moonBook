@@ -127,7 +127,7 @@ export default {
             contents: item.title,
           }
 
-          axios.post('/book/SchoolArticleComment/edit?ajax=1', commentData).then(res => {})
+          axios.post('/book/SchoolArticleComment/edit?ajax=1', commentData).then(() => {})
       }else{
         this.$toast('今天已经完成了该任务')
       }

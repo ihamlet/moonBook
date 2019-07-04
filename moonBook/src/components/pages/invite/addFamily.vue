@@ -94,7 +94,7 @@ export default {
         }
       }
       axios.get('/book/baby/getInfo', data).then(res => {
-        if (res.data.status = 1) {
+        if (res.data.status == 1) {
           this.is_mine = res.data.data.is_mine
           this.babyInfo = res.data.data
         }

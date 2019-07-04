@@ -17,7 +17,7 @@ export default {
     methods: {
         ...mapActions('manage',['getSchoolList']),
         fetchData(){
-            this.getSchoolList().then(res=>{})
+            this.getSchoolList().then(()=>{})
         }
     }
 }

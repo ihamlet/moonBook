@@ -171,7 +171,7 @@ export default {
           message: msg.loading
         })
 
-        axios.get('/SchoolManage/students/transmit', data).then(res => {
+        axios.get('/SchoolManage/students/transmit', data).then(() => {
           this.selectBtnLoading = false
           toast.clear()
           this.$toast(`添加了${arr.length}条记录`)

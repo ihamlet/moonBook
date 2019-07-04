@@ -62,7 +62,6 @@ export default {
     methods: {
         onChange(index){
             this.current = index
-            console.log(this.player)
             this.player.playOrPause()
         }
     }

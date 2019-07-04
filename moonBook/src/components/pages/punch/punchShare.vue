@@ -94,10 +94,10 @@ export default {
         return saying
     },
     imgArrRandom(){
-        this.imgArr.sort(()=>{
+        let arr = this.imgArr.sort(()=>{
             return Math.random()-0.5
         })
-        return this.imgArr
+        return arr
     }
   },
   data() {

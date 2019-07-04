@@ -8,7 +8,6 @@
   </div>
 </template>
 <script>
-import axios from './../lib/js/api'
 import { newBanjiTitle } from './../lib/js/mixin'
 import { mapGetters } from 'vuex'
 

@@ -35,14 +35,12 @@
 <script>
 import axios from './../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
-import avatar from './../module/avatar'
 import schoolCard from './../module/search/schoolCard'
 
 export default {
   name: 'edit-school',
   components: {
-    schoolCard,
-    avatar
+    schoolCard
   },
   computed: {
     ...mapGetters(['userPointState']),
@@ -119,7 +117,7 @@ export default {
 
         axios.post('/book/school/edit_school', data).then(res => {
           switch (res.data.status) {
-            case 1:
+            case 1:{
               let bindData = {
                 params: {
                   child_id: this.$route.query.id,
@@ -138,6 +136,7 @@ export default {
               }
               done()
               break
+            }
             case 0:
               this.$toast(res.data.msg)
               done()

@@ -46,8 +46,7 @@ export default {
 
             return axios.get('/SchoolManage/school/getSchools').then(res=>{
                 switch (res.data.status) {
-                case 1:
-
+                case 1:{
                     let schoolList = []
                     let arr = res.data.data
         
@@ -61,14 +60,17 @@ export default {
                         })
                     }
 
-                    let index = localStorage.getItem('schoolActive') || 0
+                    let index  = 0
+
+                    if(localStorage.getItem('schoolActive')){
+                        index = localStorage.getItem('schoolActive')
+                    }
                     
                     context.commit('setSchoolList',schoolList)
                     context.commit('setManageSchool',schoolList[index])
         
-                    return schoolList[index]                     
-                    
-                    break
+                    return schoolList[index]                   
+                }
                 default:
                     this.$toast(res.data.msg)
                 }

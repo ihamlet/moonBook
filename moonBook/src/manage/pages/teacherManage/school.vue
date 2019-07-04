@@ -36,7 +36,7 @@
 </template>
 <script>
 import axios from './../../../components/lib/js/api'
-import overview from './../../module/class/overview'
+// import overview from './../../module/class/overview'
 import personnel from './../../module/personnel'
 import dataCard from './../../module/data/dataCard'
 import banjiList from './../list/banjiList'
@@ -49,7 +49,7 @@ export default {
   name: 'manageSchool',
   mixins:[getBanjiYear, watchTouch, manageSchoolList, verification],
   components: {
-    overview,
+    // overview,
     banjiList,
     personnel,
     dataCard

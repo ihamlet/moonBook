@@ -133,7 +133,7 @@ export default {
       return QRcode.toDataURL(link).then(url => {
         return url
       }).catch(err => {
-        console.error(err)
+        this.$toast(err)
       })
     },
     async acceptClass(){
@@ -168,7 +168,7 @@ export default {
             typecode: ''
           }
         }
-        return axios.get('/book/babySchool/bind', data).then(res => {})
+        return axios.get('/book/babySchool/bind', data).then(() => {})
     }, 
     async joinBanji(childId){
       let data = {
@@ -179,7 +179,7 @@ export default {
         }
       }
 
-      return axios.get('/book/baby/join_banji', data).then(res => { })
+      return axios.get('/book/baby/join_banji', data).then(() => { })
     }
   }
 }

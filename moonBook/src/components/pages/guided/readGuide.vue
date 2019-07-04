@@ -35,13 +35,11 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import bookCard from './../../module/card/bookCard'
 import media from './../../module/mold/media'
 
 export default {
   name: 'read-guide',
   components: {
-    bookCard,
     media
   },
   data() {
@@ -145,7 +143,7 @@ export default {
     },
     onRefresh(){
         this.page = 1
-        this.onLoad().then(res =>{
+        this.onLoad().then(() =>{
             this.loading = false
             this.finished = false
         })

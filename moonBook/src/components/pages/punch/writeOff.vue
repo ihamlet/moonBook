@@ -54,7 +54,6 @@
   </div>
 </template>
 <script>
-import axios from './../../lib/js/api'
 import QRcode from 'qrcode'
 
 export default {
@@ -74,7 +73,7 @@ export default {
       let arr = []
       arr = this.details.addr.split(/\n/)
       let newArr = []
-      arr.forEach((element, i) => {
+      arr.forEach( element => {
         if (element.trim().length) {
           newArr.push(element)
         }
@@ -95,7 +94,7 @@ export default {
       QRcode.toDataURL(link).then(url => {
         this.codeImgURL = url
       }).catch(err => {
-        console.error(err)
+         this.$toast(err)
       })
     }
   }

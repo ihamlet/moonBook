@@ -326,10 +326,7 @@ const actions = {
   //文章发布
   async release(context, products){
     let setting = context.state.articleSetting
-    let extraData = products.extra
-
-    console.log(products.banji_id)
-    
+    // let extraData = products.extra    
     let data = {
       cate_id: setting.tag.cate_id,
       ad_label: setting.group.group_name,

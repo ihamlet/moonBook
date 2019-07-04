@@ -119,7 +119,7 @@ export default {
 
         return axios.get(tabActive.api,data).then(res=>{
             switch(res.data.status){
-                case 1:
+                case 1:{
                     let arr = tabActive.getList(res.data.data)
 
                     let listArray = arr.map(e=>{
@@ -139,6 +139,7 @@ export default {
                         this.finished = true
                     }
                     break
+                }
                 default:
                     this.$toast(res.data.msg)
             }

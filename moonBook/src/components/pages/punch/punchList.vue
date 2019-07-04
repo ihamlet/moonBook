@@ -21,7 +21,7 @@
 <script>
 import axios from './../../lib/js/api'
 import cardPunch from './cardPunch'
-import { format,timeago } from './../../lib/js/util'
+import { format } from './../../lib/js/util'
 import { mapActions, mapState, mapGetters } from 'vuex'
 
 export default {
@@ -65,7 +65,7 @@ export default {
       let data = {
         item: this.item,
         success(){
-          console.log('微信分享')
+          // console.log('微信分享')
         }
       }
 

@@ -103,7 +103,7 @@ export default {
       let data = {
         item: this.item,
         success(){
-          console.log('微信分享')
+          // console.log('微信分享')
         }
       }
 
@@ -115,7 +115,7 @@ export default {
           this.item = res.data.data.post
           let array = res.data.data.post.photos
           let videoArray = []
-          array.forEach((element, index) => {
+          array.forEach(element => {
             if(element.is_video == 1){
                videoArray.push([element.photo])
                this.videoObject.poster = element.thumb

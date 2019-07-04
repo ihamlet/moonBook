@@ -113,7 +113,7 @@ export default {
       let arr = []
       arr = this.details.addr.split(/\n/)
       let newArr = []
-      arr.forEach((element,i) => {
+      arr.forEach( element => {
         if(element.trim().length){
           newArr.push(element)
         }

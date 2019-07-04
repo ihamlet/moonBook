@@ -1,4 +1,6 @@
-import { mapState,mapGetters } from 'vuex'
+import { mapState,mapGetters,mapMutations } from 'vuex'
+import wx from 'weixin-js-sdk'
+import axios from './api'
 
 const manageStateList = {
     data () {
@@ -365,35 +367,57 @@ const punch = {
         ...mapGetters(['userDataState'])
     },
     methods:{
+        ...mapMutations('openWX',['setReadSign']),
         punch() {
-            let data = {
-                id: this.$route.query.id,
-                child_id: this.userDataState.child_id,
-                back: this.$route.name,
-                cate_id: 133,
-                tags:'阅读打卡'
-            }
+            const self = this
 
-            if(this.$route.name == 'class-home'){
-                data.punchType = 'banji'
-            }
+            wx.ready(()=>{
+                wx.scanQRCode({
+                needResult: 1,
+                scanType: ['barcode'],
+                    success(res){
+                        let data = {
+                            child_id: self.userDataState.child_id,
+                            isbn: res.resultStr
+                        }
+        
+                        return axios.post('/book/member/read_sign', data).then(res =>{
+                            self.setReadSign({data:res})
+                            switch(res.data.status){
+                                case 1:
+                                    let data = {
+                                        id: self.$route.query.id,
+                                        child_id: self.userDataState.child_id,
+                                        back: self.$route.name,
+                                        cate_id: 133,
+                                        tags:'阅读打卡'
+                                    }
+                        
+                                    if(self.$route.name == 'class-home'){
+                                        data.punchType = 'banji'
+                                    }
 
-            this.scanQRcode({id:this.userDataState.child_id}).then(res=>{
-              switch(res.data.status){
-                case 1:
-                  this.$router.push({
-                    name:'punch-back',
-                    query:{
-                      ...data,
-                      ...res.data.data.stat_data
+                                    self.$router.push({
+                                        name:'punch-back',
+                                        query:{
+                                            ...data,
+                                            ...res.data.data.stat_data
+                                        }
+                                    })
+                                break
+                                default:
+                                self.$toast(res.data.msg)
+                            }
+                        })
+                    },
+                    complete(e) {
+                        if (e.errMsg == 'scanQRCode:permission denied') {
+                            location.reload()
+                        }
                     }
-                  })
-                break
-                default:
-                  this.$toast(res.data.msg)
-              }
+                })
             })
-          },
+        }
     }
 }
 

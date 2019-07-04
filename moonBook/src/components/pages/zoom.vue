@@ -68,7 +68,7 @@
 </template>
 <script>
 import axios from "./../lib/js/api"
-import { sum, arrayUnique } from "./../lib/js/util.js"
+import { arrayUnique } from "./../lib/js/util.js"
 import { watchScroll } from './../lib/js/mixin'
 import graphicCard from "./../module/card/graphicCard"
 import reading from "./../module/reading"

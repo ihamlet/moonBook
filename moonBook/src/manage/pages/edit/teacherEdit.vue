@@ -80,36 +80,37 @@ export default {
     fetchData() {
         axios.get('/SchoolManage/teacher/getRoles').then(res=>{
             switch(res.data.status){
-                case 1:
-                    let arr = []
-                    let dvtObj = this.getDomDvt('修改老师')
-                    let dvtArr = dvtObj.value
-                  
-                    let userDvtArr = []
+                case 1: {
+                  let arr = []
+                  let dvtObj = this.getDomDvt('修改老师')
+                  let dvtArr = dvtObj.value
+                
+                  let userDvtArr = []
 
-                    dvtArr.map(e =>{
-                        if(e.when == Number(this.manageSchoolInfo.role_id)){
-                            userDvtArr = e.value
-                        }
-                    })
+                  dvtArr.map(e =>{
+                      if(e.when == Number(this.manageSchoolInfo.role_id)){
+                          userDvtArr = e.value
+                      }
+                  })
 
-                    res.data.data.map(element=>{
-                        let obj = {
-                            ...element
-                        }
+                  res.data.data.map(element=>{
+                      let obj = {
+                          ...element
+                      }
 
-                        userDvtArr.map(e=>{
-                            if(e == Number(element.id)){
-                                obj.disabled = true
-                            }
-                        })
+                      userDvtArr.map(e=>{
+                          if(e == Number(element.id)){
+                              obj.disabled = true
+                          }
+                      })
 
-                        arr.push(obj)
-                    })
+                      arr.push(obj)
+                  })
 
-                    this.roles = arr
+                  this.roles = arr
 
-                    break
+                  break
+                }
                 default:
                     this.$toast(res.data.msg)
             }
@@ -190,7 +191,7 @@ export default {
       })
 
     },
-    selectDuty(picker, value, index) {
+    selectDuty(picker, value) {
       // picker.setColumnValues(0, value)
       this.form.duty = value
     },

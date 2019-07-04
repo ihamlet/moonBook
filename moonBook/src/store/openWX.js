@@ -49,7 +49,7 @@ export default {
   },
   actions: {
     //配置微信
-    wxConfig(context, products) {
+    wxConfig(context) {
      return axios.post("/book/weixin/js_params", {
           apiList: jsApiList,
           url: location.href.split('#')[0]
@@ -164,47 +164,44 @@ export default {
         })
       })
     },
-    scanQRcode(context, products){
-      return new Promise((resolve, reject)=>{
-        wx.ready(()=>{
-         wx.scanQRCode({
-            needResult: 1,
-            scanType: ['barcode'],
-            success(res){
-              let data = {
-                child_id: products.id,
-                isbn: res.resultStr
-              }
+    // scanQRcode(context, products){
+    //   return new Promise((resolve, reject)=>{
+    //     wx.ready(()=>{
+    //      wx.scanQRCode({
+    //         needResult: 1,
+    //         scanType: ['barcode'],
+    //         success(res){
+    //           let data = {
+    //             child_id: products.id,
+    //             isbn: res.resultStr
+    //           }
 
-              return axios.post('/book/member/read_sign', data).then(res =>{
-                context.commit('setReadSign', {data:res})
-                resolve(res)
-              })
-            },
-            complete(e) {
-              if (e.errMsg == 'scanQRCode:permission denied') {
-                location.reload()
-                reject('permission denied')
-              }
-            }
-          })
-        })
+    //           return axios.post('/book/member/read_sign', data).then(res =>{
+    //             context.commit('setReadSign', {data:res})
+    //             resolve(res)
+    //           })
+    //         },
+    //         complete(e) {
+    //           if (e.errMsg == 'scanQRCode:permission denied') {
+    //             location.reload()
+    //             reject('permission denied')
+    //           }
+    //         }
+    //       })
+    //     })
+    //   })
+    // },
+    wxGetLocation(){
+      return new Promise( resolve => {
+        wx.ready(() => {
+            wx.getLocation({
+              type: 'wgs84',
+              success: function (res) {
+                  resolve(res) 
+                }
+            })
+          }) 
       })
-    },
-    async wxGetLocation(){
-      wx.ready(() => {
-          wx.getLocation({
-            type: 'wgs84',
-            success: function (res) {
-                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-                var speed = res.speed; // 速度，以米/每秒计
-                var accuracy = res.accuracy; // 位置精度
-
-                return res
-              }
-          })
-        })  
     }
   }
 }

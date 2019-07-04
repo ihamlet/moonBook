@@ -21,7 +21,7 @@
               </van-cell>
             </div>
             <div class="no-content" v-else>
-              没有收到赞，加油集赞吧　:-)
+              没有收到赞,加油集赞吧　:-)
             </div>
           </van-list>
         </van-pull-refresh>
@@ -47,7 +47,7 @@ export default {
   methods: {
     onRefresh() {
       this.page = 1
-      this.onLoad().then(res => {
+      this.onLoad().then(() => {
         this.loading = false
         this.finished = false
       })

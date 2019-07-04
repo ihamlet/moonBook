@@ -86,9 +86,9 @@ export default {
         switch(res.data.status){
             case 1:
                 if(this.page == 1){
-                    this.list = res.data.data
+                  this.list = res.data.data
                 }else{
-                    this.list = this.list.concat(res.data.data)
+                  this.list = this.list.concat(res.data.data)
                 }
 
                 this.page++
@@ -119,10 +119,9 @@ export default {
           sort: 'read_sign',
           time: 'last_week',
           city_name: this.userPointState.city,
-          school_name: this.classInfo.school_name,
-          banji_name: this.classInfo.title,
           startWeekTime: this.startWeekTime,
-          endWeekTime: this.endWeekTime
+          endWeekTime: this.endWeekTime,
+          ...this.classInfo
         }
       })
     },
@@ -168,7 +167,7 @@ export default {
 }
 
 .avatar{
-    box-shadow: 0 2px 10px rgba(22, 110, 171, .6);
+    box-shadow: 0 2px 5px#3276b0;
 }
 
 .child-cell{

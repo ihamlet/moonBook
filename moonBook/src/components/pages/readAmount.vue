@@ -53,7 +53,6 @@
 import axios from './../lib/js/api'
 import FilterList from './../module/mold/filterList'
 import bookCard from './../module/card/bookCard'
-import { mapGetters } from 'vuex'
 
 export default {
   name: "readAmount",
@@ -109,6 +108,8 @@ export default {
       if(this.bookStatus.overdue_count > 0){
         status = `待还还有${this.bookStatus.overdue_count}本逾期`
       }
+
+      return status
     }
   },
   data() {
@@ -133,7 +134,6 @@ export default {
       donationTab:['已捐书','待审核','未通过'],
       selsetData: '',
       bookStatus:{},
-      page: 1,
       list:[],
       value:''
     }
@@ -143,7 +143,7 @@ export default {
   },
   watch: {
     '$router': 'fetchData',
-    value(val){
+    value(){
       this.onSearch()
     }
   },
@@ -187,7 +187,7 @@ export default {
 
       return axios.get('/book/shelfBook/getList',data).then(res => {
             switch(res.data.status){
-              case 1:
+              case 1:{
                 let arr = res.data.data.map(e=>{
                    return {
                       ...e,
@@ -209,7 +209,8 @@ export default {
                   this.finished = true
                 }
 
-                break
+                break        
+              }
               default:
                 this.$toast(res.data.msg)
             }

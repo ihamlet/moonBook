@@ -81,16 +81,20 @@ export default {
       }]
     }
   },
-  created () {
-    console.log('我们都是宇宙的尘埃，茫茫星辰，在找寻闪闪发光的你.....')
+  async created () {
+  // 微信初始化
     this.wxConfig()
-
-    this.wxGetLocation().then(res=>{
-        let location = [res.longitude,res.latitude]
-        this.center = location
+  // 获取地理位置
+    await this.wxGetLocation().then(res=>{
+      let location = [res.longitude,res.latitude]
+      this.center = location
     })
 
-    this.fetchData() 
+  // 获取用户数据
+    this.fetchData()
+  //  ---------------------------
+
+    console.log('我们都是宇宙的尘埃，茫茫星辰，在找寻闪闪发光的你.....')
   },
   watch: {
     center(val){

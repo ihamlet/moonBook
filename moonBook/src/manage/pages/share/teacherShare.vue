@@ -110,7 +110,7 @@ export default {
             let data = {
                 item: this.item,
                 success(){
-                    console.log('微信分享')
+                    // console.log('微信分享')
                 }
             }
             this.share(data)

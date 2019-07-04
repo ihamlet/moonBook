@@ -94,8 +94,7 @@ export default {
       }
       axios.get('/book/member/get_coupons?activity_id', data).then(res => {
         switch (res.data.status) {
-          case 1:
-
+          case 1:{
             let array = []
             res.data.data.forEach(element => {
               if (element.photo != null) {
@@ -103,7 +102,7 @@ export default {
               }
             })
 
-            if (this.page = 1) {
+            if (this.page == 1) {
               this.list = array
             } else {
               this.list = this.list.concat(array)
@@ -116,6 +115,9 @@ export default {
               this.finished = true
             }
             break
+          }
+          default:
+            this.$toast(res.data.msg)
         }
       })
     },

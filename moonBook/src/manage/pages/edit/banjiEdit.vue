@@ -160,11 +160,14 @@ export default {
     },
     getTeacherList() {
 
-      if (this.form.banji_id > 0) {
-        this.activeNames.push('teacher')
+      // console.log(111)
 
+      if (this.form.banji_id > 0) {
+
+        this.activeNames.push('teacher')
         axios.get('/SchoolManage/teacher/getList', {
           params: {
+            school_id: this.$route.query.school_id,
             banji_id: this.form.banji_id
           }
         }).then(res => {
@@ -260,7 +263,7 @@ export default {
         this.finished = false
       })
     },
-    onChange(picker, value, index) {
+    onChange(picker, value) {
       switch (this.pickerType) {
         case 'type':
           this.form.grade_name = value

@@ -7,7 +7,7 @@ export default {
     },
     getters:{
         getResult: state => {
-           return state.result.sort((a,b)=>a == 'apps-find' ? -1 : 1)
+           return state.result.sort(a => a == 'apps-find' ? -1 : 1)
         }
     },
     mutations:{

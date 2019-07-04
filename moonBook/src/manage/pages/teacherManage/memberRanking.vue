@@ -199,7 +199,7 @@ export default {
 
       return axios.get('/book/SchoolBookSign/getRank', data).then(res => {
         switch (res.data.status) {
-          case 1: 
+          case 1: {
             this.rankList = res.data.data
             this.childInfo = res.data.my_child
             this.loading = false
@@ -210,6 +210,9 @@ export default {
               this.finished = true
             }
             break
+          }
+          default:
+            this.$toast(res.data.msg)
         }
       })
     },

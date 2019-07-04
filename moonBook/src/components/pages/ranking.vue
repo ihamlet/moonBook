@@ -256,7 +256,7 @@ export default {
         })
    
     },
-    onChange(picker, value, index) {
+    onChange(picker, value) {
       this.time = value
       let currentTopTab = this.tab[this.topTabIdx]
       let lastIdx = currentTopTab.content.length - 1

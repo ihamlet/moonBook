@@ -74,7 +74,6 @@
 <script>
 import axios from './../lib/js/api'
 import avatar from './../module/avatar'
-import numberGrow from './../module/animate/numberGrow'
 import slogan from './../module/slogan'
 import { punchLevel } from './../lib/js/speech'
 import { watchScroll } from './../lib/js/mixin'
@@ -83,7 +82,6 @@ export default {
   name: 'readstat',
   mixins:[watchScroll],
   components: {
-    numberGrow,
     avatar,
     slogan,
   },

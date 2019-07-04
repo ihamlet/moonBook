@@ -299,7 +299,7 @@ export default {
         }
       })
     },
-    onSelect(item) {
+    onSelect() {
         this.$router.go(-1)
         this.actionShow = false
         this.grapicData = {
@@ -369,7 +369,7 @@ export default {
                     contents: '收录了',
                   }
 
-                  axios.post('/book/SchoolArticleComment/edit?ajax=1', commentData).then(res => {})
+                  axios.post('/book/SchoolArticleComment/edit?ajax=1', commentData).then(() => {})
                 }
 
                 this.clearImg()
@@ -444,7 +444,7 @@ export default {
         url: url,
         data: formData,
         method: 'post',
-        onUploadProgress: p => {
+        onUploadProgress: () => {
           this.progressIsShow = true
           this.percent = 1
         }
@@ -484,7 +484,7 @@ export default {
         onUploadProgress: p => {
           this.percent = Math.floor(100 * (p.loaded / p.total))
         }
-      }).then((res) => {
+      }).then(() => {
         this.grapicData.photos[0].is_audio =  type == 'audio' ? 1 : 0
         this.grapicData.photos[0].is_video =  type == 'video' ? 1 : 0
         this.grapicData.photos[0].photo = path
@@ -515,7 +515,7 @@ export default {
         onUploadProgress: p => {
           this.percent = Math.floor(100 * (p.loaded / p.total))
         }
-      }).then((res) => {
+      }).then(() => {
         this.grapicData.photos.push({
           photo: path,
           is_audio: 0,
