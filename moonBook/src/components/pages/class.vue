@@ -71,7 +71,6 @@
 import axios from './../lib/js/api'
 import { mapGetters, mapActions } from 'vuex'
 import { getBanjiYear,newBanjiTitle } from './../lib/js/mixin'
-import { format } from './../lib/js/util'
 import avatar from './../module/avatar'
 import round from './../module/animate/round'
 
@@ -87,7 +86,7 @@ export default {
     avatar(){
       let imgAvatar
       if(this.$route.query.type == 'type'){
-        imgAvatar = childInfo.avatar
+        imgAvatar = this.childInfo.avatar
       }else{
         imgAvatar = this.$route.query.avatar
       }
@@ -134,7 +133,7 @@ export default {
           avatar: this.$route.query.avatar
         }
     },
-    beforeClose(action, done) {
+    beforeClose(action) {
       if (action === 'confirm') {
         let data = {
           school_id: this.$route.query.school_id,

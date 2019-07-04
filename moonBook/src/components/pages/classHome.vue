@@ -58,15 +58,12 @@
 </template>
 <script>
 import axios from './../lib/js/api'
-import { format } from './../lib/js/util'
 import { manageStateList,watchScroll,punch } from './../lib/js/mixin'
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import classZoom from './../pages/classZoom'
 import readList from './../module/classModule/readList'
-import reading from './../module/reading'
 import apps from './../module/myModule/apps'
 import notice from './../module/classModule/notice'
-import selectBaby from './../module/selectChild'
 import readWeek from './../module/classModule/readWeek'
 
 export default {
@@ -74,11 +71,9 @@ export default {
   mixins:[manageStateList,watchScroll,punch],
   components: {
     classZoom,
-    reading,
     readList,
     notice,
     apps,
-    selectBaby,
     readWeek
   },
   computed: {
@@ -364,8 +359,7 @@ export default {
                   pageTitle: element.cate_name,
                   banji_id: this.$route.query.id,
                   back: this.$route.name,
-                  id: this.$route.query.id,
-                  back: this.$route.name
+                  id: this.$route.query.id
                 }
               }
             })

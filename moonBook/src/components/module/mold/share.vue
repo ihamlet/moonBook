@@ -39,16 +39,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from './../../lib/js/api'
-import topicList from './../../module/release/topicList'
 
 export default {
   name: 'share',
   props: ['postId','item'],
   computed: {
     ...mapGetters(['userDataState'])
-  },
-  components: {
-    topicList
   },
   data(){
     return {

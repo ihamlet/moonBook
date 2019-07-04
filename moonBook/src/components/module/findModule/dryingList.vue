@@ -27,29 +27,29 @@
 import axios from './../../lib/js/api'
 import { mapGetters } from 'vuex'
 import { manageStateList } from './../../lib/js/mixin'
-import slogan from './../slogan'
 import graphicCard from './../card/graphicCard'
 
 export default {
   name: 'drying-list',
   mixins:[ manageStateList ],
   components: {
-    slogan,
     graphicCard
   },
   props: ['params', 'tagId', 'school_id', 'type', 'portal_name', 'banji_id', 'cateId'],
   computed: {
     ...mapGetters(['userToken', 'managerState','userDataState']),
     manage() {
+      let boolean = false
+
       if (this.managerState) {
-        let boolean
         this.managerState.forEach(element => {
           if (element.item_relation == 'teacher') {
             boolean = true
           }
         })
-        return boolean
       }
+      
+      return boolean
     },
     actions() {
       let arr = [{
@@ -162,7 +162,7 @@ export default {
     },
     onRefresh() {
       this.page = 1
-      this.getList().then(res => {
+      this.getList().then(() => {
         this.loading = false
         this.finished = false
       })
@@ -173,7 +173,7 @@ export default {
           element.isSubscribe = !element.isSubscribe
         }
       })
-      axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(res => {})
+      axios.get(`/book/MemberFollow/subscribe?user_id=${item.user_id}`).then(() => {})
     },
     onSelect(item) {
       switch (item.index) {

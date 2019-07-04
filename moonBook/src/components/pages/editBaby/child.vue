@@ -274,7 +274,7 @@ export default {
           }
         })
     },
-    submit(set) {
+    submit() {
       if (!this.childInfo.name || this.childInfo.name.match(/^[\u4e00-\u9fa5]{2,4}$/i) == null) {
         this.errorMessage.name = '请正确填写孩子的姓名'
         setTimeout(() => {
@@ -382,7 +382,7 @@ export default {
               child_id:this.$route.query.id
             }
           }
-          axios.get('/book/baby/del',data).then(res => {
+          axios.get('/book/baby/del',data).then(() => {
             this.getUserData()
             this.$router.go(-1)
           })

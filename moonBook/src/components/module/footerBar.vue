@@ -15,7 +15,6 @@
 <script>
 import tips from './../module/release/tips'
 import { mapMutations,mapState,mapGetters } from 'vuex'
-import { buildQuery } from './../lib/js/util'
 import { newBanjiTitle } from './../../components/lib/js/mixin'
 import qs from 'qs'
 
@@ -48,7 +47,7 @@ export default {
     this.active = this.$route.meta.tabActive
   },
   watch: {
-    $route(to, from, next) {
+    $route(to) {
       this.active = to.meta.tabActive
     }
   },

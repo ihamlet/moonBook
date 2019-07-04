@@ -46,9 +46,7 @@
   </div>
 </template>
 <script>
-import axios from "./../../lib/js/api"
 import { watchScroll } from './../../lib/js/mixin'
-import numberGrow from "./../../module/animate/numberGrow"
 import avatar from './../avatar'
 import vipLevel from './../../module/animate/svg/vipLevel'
 
@@ -56,7 +54,6 @@ export default {
   name: "cardHead",
   mixins:[watchScroll],
   components: {
-    numberGrow,
     avatar,
     vipLevel
   },

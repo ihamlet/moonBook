@@ -31,7 +31,6 @@
   </div>
 </template>
 <script>
-import axios from './../../lib/js/api'
 import { mapActions,mapGetters } from 'vuex'
 import schoolCard from './../../module/search/schoolCard'
 

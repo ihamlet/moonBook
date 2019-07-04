@@ -18,7 +18,6 @@
 <script>
 import { format } from './../../lib/js/util'
 import { newBanjiTitle } from './../../lib/js/mixin'
-import axios from './../../lib/js/api'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -64,8 +63,7 @@ export default {
             }
           })
           break
-        case 1:
-          let date = new Date()
+        case 1:{
           let year = format(new Date(),'yyyy-MM-dd')
 
           this.$router.push({
@@ -78,6 +76,7 @@ export default {
             }
           })
           break
+        }
         case 2:
           this.$router.push({
             name: "class-home",

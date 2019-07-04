@@ -17,7 +17,6 @@
 <script>
 import axios from './../../lib/js/api'
 import { mapGetters } from 'vuex'
-import { removeArray } from './../../lib/js/util'
 
 export default {
   name: 'family',

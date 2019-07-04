@@ -47,8 +47,6 @@
   </div>
 </template>
 <script>
-import { format } from './../../lib/js/util' 
-
 export default {
   name: "calendar",
   data() {
@@ -104,12 +102,13 @@ export default {
 
       }
       //其他周
-      for (var i = 1; i <= 35 - this.currentWeek; i++) {
-          var d = new Date(str);
-          d.setDate(d.getDate() + i);
-          var dayobject={};
-          dayobject.day=d;
-          this.days.push(dayobject);
+      for (let i = 1; i <= 35 - this.currentWeek; i++) {
+          var d = new Date(str)
+          d.setDate(d.getDate() + i)
+          let dayobject = {
+            day:d
+          }
+          this.days.push(dayobject)
       }
 
   },

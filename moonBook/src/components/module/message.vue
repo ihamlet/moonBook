@@ -137,12 +137,12 @@ export default {
     },
     onRefresh() {
       this.page = 1
-      this.getMsgList().then(res => {
+      this.getMsgList().then(() => {
         this.loading = false
         this.finished = false
       })
     },
-    onChange(index, title) {
+    onChange(index) {
       this.tabIndex = index
       this.page = 1
       this.onRefresh()

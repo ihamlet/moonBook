@@ -7,8 +7,6 @@
   <div class="text-preview" v-line-clamp:20="2" v-else>{{text}}</div>
 </template>
 <script>
-import axios from './../../lib/js/api'
-
 export default {
   name: "show-card",
   props: ["imgList", 'text'],
@@ -17,7 +15,7 @@ export default {
       let array = this.imgList
       let arr = []
 
-      array.forEach((element,i) => {
+      array.forEach(element => {
         if(element != null){
           arr.push(element)
         }

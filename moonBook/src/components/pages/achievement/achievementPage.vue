@@ -170,7 +170,7 @@ export default {
 
       axios.get('/book/SchoolArticleComment/getList', data).then(res => {
         switch (res.data.status) {
-          case 1:
+          case 1:{
             this.count = res.data.count
             let array = res.data.data
 
@@ -180,6 +180,9 @@ export default {
 
             this.commentList = array
             break
+          }
+          default:
+            this.$toast(res.data.msg)
         }
       })
 

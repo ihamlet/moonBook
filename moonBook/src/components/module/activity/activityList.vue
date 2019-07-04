@@ -64,7 +64,7 @@ export default {
             this.finished = false
         })
     },
-    toArticle(item,point){
+    toArticle(item){
       this.$router.push({
         name:'article',
         query:{

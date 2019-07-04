@@ -70,7 +70,7 @@ export default {
       let url = `https://m.ximalaya.com/search/${pureTitle}`
       let isRead = localStorage.getItem('bookRead_' + this.item.book_id)
       if (!isRead) {
-        axios.get('/book/story/updateRead').then(res => {
+        axios.get('/book/story/updateRead').then(() => {
           localStorage.setItem('bookRead_' + this.item.book_id, true)
           location.href = url
         })

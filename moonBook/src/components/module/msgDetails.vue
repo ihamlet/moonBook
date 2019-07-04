@@ -14,7 +14,6 @@
   </div>
 </template>
 <script>
-import axios from './../lib/js/api'
 import slogan from './slogan'
 import { timeago } from './../lib/js/util'
 

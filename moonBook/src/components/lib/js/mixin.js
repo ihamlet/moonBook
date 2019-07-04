@@ -211,7 +211,7 @@ const watchTouch = {
         handleTouchmove(e){ 
             this.moveEndX = e.changedTouches[0].pageX
             this.moveEndY = e.changedTouches[0].pageY
-            let X = this.moveEndX - this.startX
+            // let X = this.moveEndX - this.startX
             let Y = this.moveEndY - this.startY
 
     　　　　if ( Y > 0) {
@@ -384,7 +384,7 @@ const punch = {
                         return axios.post('/book/member/read_sign', data).then(res =>{
                             self.setReadSign({data:res})
                             switch(res.data.status){
-                                case 1:
+                                case 1:{
                                     let data = {
                                         id: self.$route.query.id,
                                         child_id: self.userDataState.child_id,
@@ -404,7 +404,8 @@ const punch = {
                                             ...res.data.data.stat_data
                                         }
                                     })
-                                break
+                                    break
+                                }
                                 default:
                                 self.$toast(res.data.msg)
                             }

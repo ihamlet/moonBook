@@ -4,7 +4,6 @@
   </div>
 </template>
 <script>
-import axios from './../../lib/js/api'
 import { mapGetters } from 'vuex'
 
 export default {

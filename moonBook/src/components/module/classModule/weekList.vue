@@ -32,16 +32,13 @@
 <script>
 import axios from './../../lib/js/api'
 import { mapGetters } from 'vuex'
-import { readPunchFrame } from './../../lib/js/util'
 import svgRanking from './../animate/svg/ranking'
-import reading from './../reading'
 import avatar from './../avatar'
 
 export default {
   name: 'week-list',
   components: {
     svgRanking,
-    reading,
     avatar
   },
   computed: {

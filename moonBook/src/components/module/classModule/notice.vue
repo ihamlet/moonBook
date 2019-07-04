@@ -27,7 +27,6 @@
 import axios from './../../lib/js/api'
 import graphicCard from './../card/graphicCard'
 import readList from './../card/readList'
-import { format } from './../../lib/js/util'
 import { mapGetters } from 'vuex'
 
 export default {

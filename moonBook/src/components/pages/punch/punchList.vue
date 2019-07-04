@@ -21,7 +21,6 @@
 <script>
 import axios from './../../lib/js/api'
 import cardPunch from './cardPunch'
-import { format } from './../../lib/js/util'
 import { mapActions, mapState, mapGetters } from 'vuex'
 
 export default {

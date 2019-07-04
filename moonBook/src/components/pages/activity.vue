@@ -7,7 +7,6 @@
   </div>
 </template>
 <script>
-import axios from './../lib/js/api'
 import activityList from './../module/activity/activityList'
 
 export default {

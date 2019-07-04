@@ -125,7 +125,7 @@ export default {
       let data = {
         item: this.details,
         success(){
-          console.log('微信分享')
+          // console.log('微信分享')
         }
       }
       this.share(data)
@@ -159,7 +159,7 @@ export default {
       let url = `https://m.ximalaya.com/search/${pureTitle}`
       let isRead = localStorage.getItem('bookRead_' + details.tushu_id)
       if (!isRead) {
-        axios.get('/book/story/updateRead').then(res => {
+        axios.get('/book/story/updateRead').then(() => {
           localStorage.setItem('bookRead_' + details.tushu_id, true)
           location.href = url
         })

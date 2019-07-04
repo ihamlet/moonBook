@@ -51,7 +51,6 @@ import articleOperation from './../module/mold/articleOperation'
 import articleContent from './../module/articleContent'
 import articleCard from './../module/card/articleCard'
 import comment from './../module/comment'
-import media from './../module/mold/media'
 import vipLevel from './../module/animate/svg/vipLevel'
 import userCard from './../module/mold/userCard'
 import { mapState, mapGetters,mapActions } from 'vuex'
@@ -59,7 +58,6 @@ import { mapState, mapGetters,mapActions } from 'vuex'
 export default {
   name: 'detailsArticle',
   components: {
-    media,
     comment,
     vipLevel,
     userCard,
@@ -132,7 +130,7 @@ export default {
         let data = {
           item: this.item,
           success(){
-            console.log('微信分享')
+            // console.log('微信分享')
           }
         }
         this.share(data)

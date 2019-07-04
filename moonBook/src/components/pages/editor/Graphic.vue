@@ -71,17 +71,15 @@
 <script>
 import axios from './../../lib/js/api'
 import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
-import topicList from './../../module/release/topicList'
 import articleSetting from './mould/articleSetting'
 import articleCard from './../../module/card/articleCard'
-import { compress,checkHtml } from './../../lib/js/util'
+import { compress } from './../../lib/js/util'
 import { newBanjiTitle } from './../../lib/js/mixin'
 
 export default {
   name: 'graphic',
   mixins:[newBanjiTitle],
   components: {
-    topicList,
     articleSetting,
     articleCard
   },

@@ -44,14 +44,12 @@
 </template>
 <script>
 import axios from './../lib/js/api'
-import vipLevel from './../module/animate/svg/vipLevel'
 import slogan from './../module/slogan'
 
 
 export default {
   name: 'card-list',
   components: {
-    vipLevel,
     slogan
   },
   data() {

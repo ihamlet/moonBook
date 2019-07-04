@@ -51,7 +51,7 @@
 <script>
 import axios from './../../lib/js/api'
 import { timeago } from './../../lib/js/util'
-import { checkHtml,formatTime } from './../../lib/js/util'
+import { checkHtml } from './../../lib/js/util'
 import { mapGetters } from 'vuex'
 import media from './../mold/media'
 import Round from './../../module/animate/round'

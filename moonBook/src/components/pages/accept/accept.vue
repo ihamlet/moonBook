@@ -14,16 +14,16 @@
   </div>
 </template>
 <script>
-import axios from './../../lib/js/api'
-import { createPayFrame } from './../../lib/js/util'
-import { mapGetters, mapActions } from 'vuex'
-import iconSuccess from './../../module/animate/iconSuccess'
+// import axios from './../../lib/js/api'
+// import { createPayFrame } from './../../lib/js/util'
+import { mapGetters } from 'vuex'
+// import iconSuccess from './../../module/animate/iconSuccess'
 
 export default {
   name: 'accept',
-  components: {
-    iconSuccess
-  },
+  // components: {
+  //   iconSuccess
+  // },
   beforeRouteLeave(to, from, next) {
     if(to.name == 'register'){
       next({path:`/baby-home?id=${this.userDataState.child_id}`})

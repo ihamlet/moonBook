@@ -42,20 +42,20 @@ export default {
   computed: {
     ...mapGetters(['userDataState']),
     isNewPointShow(){
+      let boolean = false
+
+      let day = 86400*7000
+      let newDate = Date.parse(new Date())
+
       if(this.newBookDate){
-        let boolean
-
-        let day = 86400*7000
-        let newDate = Date.parse(new Date())
-
         if(newDate >  this.newBookDate  &&  newDate < this.newBookDate + day ){
           boolean = true
         }else{
           boolean = false
         }
-
-        return boolean
       }
+
+      return boolean
     } 
   },
   data() {
@@ -105,7 +105,7 @@ export default {
     }
   },
   watch: {
-    keyword(val){
+    keyword(){
       this.tab[this.tabIndex].content = []
       this.onSearch()
     }

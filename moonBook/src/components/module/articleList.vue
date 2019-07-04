@@ -45,16 +45,10 @@
 </template>
 <script>
 import axios from './../lib/js/api'
-import slogan from './../module/slogan'
-import graphicCard from './../module/card/graphicCard'
-import { timeago, randomNum, arrayUnique } from './../lib/js/util'
+import { randomNum } from './../lib/js/util'
 
 export default {
   name: 'article-list',
-  components: {
-    slogan,
-    graphicCard
-  },
   data() {
     return {
       list: [],

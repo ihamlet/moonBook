@@ -42,10 +42,7 @@
   </div>
 </template>
 <script>
-import axios from "./../../lib/js/api"
-import { format } from './../../lib/js/util'
 import { newBanjiTitle } from './../../lib/js/mixin'
-import numberGrow from "./../../module/animate/numberGrow"
 import avatar from "./../../module/avatar"
 import { mapGetters } from 'vuex'
 
@@ -54,7 +51,6 @@ export default {
   props: ['childrenList'],
   mixins: [ newBanjiTitle ],
   components: {
-    numberGrow,
     avatar
   },
   computed: {

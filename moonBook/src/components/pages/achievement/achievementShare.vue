@@ -61,7 +61,6 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import IconMedal from './../../module/animate/medal'
 import round from './../../module/animate/round'
 import { childCommentTag } from './../../lib/js/speech'
 import { mapActions, mapState, mapGetters } from 'vuex'
@@ -69,7 +68,6 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 export default {
   name: 'share',
   components: {
-    IconMedal,
     round
   },
   computed: {

@@ -74,7 +74,7 @@ export default {
     toRegister() {
       this.$router.push({ name: 'register' })
     },
-    toArticle(item,point){
+    toArticle(item){
       this.$router.push({
         name:'article',
         query:{

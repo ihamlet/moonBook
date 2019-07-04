@@ -27,22 +27,16 @@ function format(time, format) {
     switch (a) {
       case "yyyy":
         return tf(t.getFullYear())
-        break
       case "MM":
         return tf(t.getMonth() + 1)
-        break
       case "mm":
         return tf(t.getMinutes())
-        break
       case "dd":
         return tf(t.getDate())
-        break
       case "HH":
         return tf(t.getHours())
-        break
       case "ss":
         return tf(t.getSeconds())
-        break
     }
   })
 }
@@ -132,7 +126,7 @@ function timeago(dateTimeStamp) {
   let hour = minute * 60
   let day = hour * 24
   let week = day * 7
-  let halfamonth = day * 15
+  // let halfamonth = day * 15
   let month = day * 30
   let now = new Date().getTime()
   let diffValue = now - dateTimeStamp
@@ -164,24 +158,22 @@ function timeago(dateTimeStamp) {
     let datetime = new Date()
     datetime.setTime(dateTimeStamp)
     let Nyear = datetime.getFullYear()
-    let Nmonth =
-      datetime.getMonth() + 1 < 10
+    let Nmonth = datetime.getMonth() + 1 < 10
         ? "0" + (datetime.getMonth() + 1)
         : datetime.getMonth() + 1
-    let Ndate =
-      datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate()
-    let Nhour =
-      datetime.getHours() < 10
-        ? "0" + datetime.getHours()
-        : datetime.getHours()
-    let Nminute =
-      datetime.getMinutes() < 10
-        ? "0" + datetime.getMinutes()
-        : datetime.getMinutes()
-    let Nsecond =
-      datetime.getSeconds() < 10
-        ? "0" + datetime.getSeconds()
-        : datetime.getSeconds()
+    let Ndate = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate()
+    // let Nhour =
+    //   datetime.getHours() < 10
+    //     ? "0" + datetime.getHours()
+    //     : datetime.getHours()
+    // let Nminute =
+    //   datetime.getMinutes() < 10
+    //     ? "0" + datetime.getMinutes()
+    //     : datetime.getMinutes()
+    // let Nsecond =
+    //   datetime.getSeconds() < 10
+    //     ? "0" + datetime.getSeconds()
+    //     : datetime.getSeconds()
     result = Nyear + "-" + Nmonth + "-" + Ndate
   }
   return result
@@ -300,10 +292,8 @@ function randomNum(minNum,maxNum){
   switch(arguments.length){ 
       case 1:
           return parseInt(Math.random()*minNum+1,10)
-      break
       case 2:
           return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10)
-      break
       default: 
           return 0
   } 
@@ -324,7 +314,9 @@ function isRepeatArr(arr){
 　　　　　　for(let j = 0; j < dest.length; j++){
               let dj = dest[j]
 　　　　　　　　if(dj.school_id == ai.school_id){
-  　　　　　　　   dj.role_id = dj.role_id > ai.role_id?dj.role_id:ai.role_id
+                let roleId = ai.role_id?dj.role_id:ai.role_id
+
+  　　　　　　　   dj.role_id = dj.role_id > roleId
   　　　　　　　　
                 switch(dj.role_id){
                   case '3':
@@ -340,14 +332,11 @@ function isRepeatArr(arr){
                       dj.duty = '老师'
                     break
                   }
-                
-                break
 　　　　　　　　}
 
 　　　　　　}
 　　　　}
 　　}
-
     return dest
 }
 
@@ -366,8 +355,7 @@ function getTime(n) {
   if (day) {
     if (month > 1) {
       month = month
-    }
-    else {
+    } else {
       year = year - 1
       month = 12
     }

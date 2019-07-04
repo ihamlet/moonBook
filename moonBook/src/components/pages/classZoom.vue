@@ -33,18 +33,18 @@ export default {
   },
   computed:{
     ...mapGetters(['managerState']),
-    manage() {
-      if(this.managerState){
-        let boolean = false
-        this.managerState.forEach(element => {
-          if (this.$route.query.id == element.id && element.item_relation != 'parent'){
-            boolean = true
-          }
-        })
+    // manage() {
+    //   if(this.managerState){
+    //     let boolean = false
+    //     this.managerState.forEach(element => {
+    //       if (this.$route.query.id == element.id && element.item_relation != 'parent'){
+    //         boolean = true
+    //       }
+    //     })
         
-        return boolean
-      }
-    }
+    //     return boolean
+    //   }
+    // }
   },
   data() {
     return {
@@ -107,7 +107,7 @@ export default {
     },
     onRefresh(){
       this.page = 1
-      this.onLoad().then(res=>{
+      this.onLoad().then(()=>{
         this.loading = false
         this.finished = false
       })
@@ -134,7 +134,7 @@ export default {
           this.actionsheetShow = true
           this.show = false
           break
-        case 2:
+        case 2:{
           let data = {
             params:{
               id:this.cardItem.post_id,
@@ -160,6 +160,7 @@ export default {
 
           this.show = false
           break
+        }
       }
     },
     // formatBanjiTitle(text) {

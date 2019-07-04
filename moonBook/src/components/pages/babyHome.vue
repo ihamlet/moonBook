@@ -110,14 +110,13 @@
 </template>
 <script>
 import axios from "./../lib/js/api"
-import { format, timeago } from "./../lib/js/util"
+import { timeago } from "./../lib/js/util"
 import { punchLevel,readLevel } from './../lib/js/speech'
 import { watchScroll,manageStateList,punch } from './../lib/js/mixin'
 import wave from "./../module/animate/anWave"
 import avatar from "./../module/avatar"
 import reading from "./../module/reading"
 import graphicCard from "./../module/card/graphicCard"
-import classShow from './../module/classModule/classShow'
 import metro from './../module/mold/metro'
 import slogan from './../module/slogan'
 import selectChild from './../module/selectChild'
@@ -132,7 +131,6 @@ export default {
     reading,
     avatar,
     graphicCard,
-    classShow,
     metro,
     slogan,
     selectChild

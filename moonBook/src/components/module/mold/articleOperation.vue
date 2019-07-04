@@ -23,7 +23,7 @@
 <script>
 import axios from './../../lib/js/api'
 import topicList from './../../module/release/topicList'
-import { mapGetters,mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import { manageStateList } from './../../lib/js/mixin'
 
 export default {
@@ -105,10 +105,10 @@ export default {
       this.cateId = tag.cate_id
     },
     selectConfirm(){
-      let data = {
-        child_id: this.childId || '',
-        cate_id: this.cateId || ''
-      }
+      // let data = {
+      //   child_id: this.childId || '',
+      //   cate_id: this.cateId || ''
+      // }
 
 
       this.$router.push({

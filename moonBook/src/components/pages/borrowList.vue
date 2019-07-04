@@ -196,21 +196,21 @@ export default {
       this.page = 1
 
       if (this.tabIndex < 2) {
-        this.getReadList().then(res => {
+        this.getReadList().then(() => {
           this.loading = false
           this.finished = false
         })
       }
 
       if (this.tabIndex == 2) {
-        this.getCollectList().then(res => {
+        this.getCollectList().then(() => {
           this.loading = false
           this.finished = false
         })
       }
 
       if (this.tabIndex == 3) {
-        this.getBrokenList().then(res => {
+        this.getBrokenList().then(() => {
           this.loading = false
           this.finished = false
         })
@@ -232,7 +232,7 @@ export default {
       let url = `https://m.ximalaya.com/search/${pureTitle}`
       let isRead = localStorage.getItem('bookRead_' + item.tushu_id)
       if (!isRead) {
-        axios.get('/book/story/updateRead').then(res => {
+        axios.get('/book/story/updateRead').then(() => {
           localStorage.setItem('bookRead_' + item.tushu_id, true)
           location.href = url
         })

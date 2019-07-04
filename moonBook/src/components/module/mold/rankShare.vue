@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     threeGo(){
-      this.timer = setInterval(()=>{
+      this.timer = setInterval(() => {
         if(this.count > 0 && this.count <= 1){
           this.count--
         }else{
@@ -82,7 +82,8 @@ export default {
           this.timer = null
           this.toImage()
         }
-		  },500)
+      
+      },500)
     },
     toImage() {
       this.isLoading = true

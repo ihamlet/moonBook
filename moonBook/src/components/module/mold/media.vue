@@ -49,9 +49,7 @@
   </div>
 </template>
 <script>
-import userCard from './../mold/userCard'
-import { formatTime, contains } from './../../lib/js/util'
-import qs from 'qs'
+import { formatTime } from './../../lib/js/util'
 
 export default {
   name: 'media',
@@ -93,9 +91,6 @@ export default {
       default: false
     }
   },
-  components: {
-    userCard
-  },
   computed: {
     grid() {
       let num
@@ -110,7 +105,6 @@ export default {
     }
   },
   data () {
-    let u = navigator.userAgent
     return {
       playing: false
     }

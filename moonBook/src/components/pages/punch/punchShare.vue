@@ -94,7 +94,9 @@ export default {
         return saying
     },
     imgArrRandom(){
-        let arr = this.imgArr.sort(()=>{
+        let array = this.imgArr
+
+        let arr = array.sort(()=>{
             return Math.random()-0.5
         })
         return arr

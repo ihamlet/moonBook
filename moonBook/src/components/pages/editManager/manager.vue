@@ -48,7 +48,7 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { format } from './../../lib/js/util'
 import { newBanjiTitle } from './../../lib/js/mixin'
 import apps from './../../module/myModule/apps'
@@ -209,7 +209,7 @@ export default {
         }
       })
     },
-    toSetting(managerData) {
+    toSetting() {
         this.$router.push({
           name: 'edit-setting',
           query: {
@@ -225,12 +225,12 @@ export default {
       this.writeOffice = ''
       this.show = true
     },
-    onChange(picker, value, index) {
+    onChange(picker, value) {
       this.office = value
     },
     setStep(){
       switch(this.active){
-        case 0:
+        case 0:{
           this.loading = true
           let data = {
             params: {
@@ -253,7 +253,8 @@ export default {
               this.fetchData()
             }
           })
-        break
+          break
+        }
         case 1:
           this.active = 0
         break

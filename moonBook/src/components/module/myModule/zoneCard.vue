@@ -39,7 +39,7 @@ export default {
         text = this.zoomCard.title
       }
 
-      return `《${this.zoomCard.title}》`
+      return `《${text}》`
     }
   },
   methods: {

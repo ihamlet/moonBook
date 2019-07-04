@@ -130,18 +130,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from './../lib/js/api'
-import share from './../module/mold/share'
-import spray from './../module/animate/spray'
-import { timeago,getRandomArrayElements,shuffle } from './../lib/js/util'
+import { timeago,getRandomArrayElements } from './../lib/js/util'
 import { placeholder, commentTag } from './../lib/js/speech'
 
 export default {
   name: 'comment',
   props: ['item', 'include', 'type','postId','isCommentShow'],
-  components: {
-    share,
-    spray
-  },
   computed: {
     ...mapGetters(['userToken', 'userDataState']),
     placeholder(){

@@ -64,9 +64,7 @@
 </template>
 <script>
 import axios from "./../../lib/js/api"
-import QRCode from "qrcode"
 import vipLevel from './../animate/svg/vipLevel'
-import share from './../mold/share'
 import taskCard from './taskCard'
 import media from './../mold/media'
 import articleCard from './../card/articleCard'
@@ -114,21 +112,26 @@ export default {
   computed: {
     ...mapGetters(['userPointState','userDataState']),
     post(){
+      let content
+
       if(this.item.extra){
-        let content = JSON.parse(this.item.extra)
-        return content
+        content = JSON.parse(this.item.extra)
       }
+
+      return content
     },
     fromData(){
+      let obj
+
       if(this.item.from_page){
         let arr = this.item.from_page.split(',')
-        let obj = {
+        obj = {
           teacher_school_id: arr[0],
           teacher_school_name: arr[1]
-        }
-
-        return obj
+        }        
       }
+
+      return obj
     },
     schoolName(){
       let name 
