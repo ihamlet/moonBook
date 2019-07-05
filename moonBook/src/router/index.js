@@ -39,6 +39,8 @@ const Share = () => import('@/components/pages/share')
 const Search = () => import('@/components/module/search/searchPage')
 const videoPage = () => import('@/components/pages/video/videoPage')
 
+const Invest = () => import('@/components/pages/invest')
+
 const Iframe = () => import('@/cloud/iframe') //外部引入
 
 import Edit from './edit'
@@ -77,6 +79,11 @@ export default new Router({
           path:'/Iframe',
           name:'iframe',
           component: Iframe
+        },
+        {
+          path:'/Invest',
+          name:'Invest',
+          component: Invest
         },
         {
           path:'/video-page',

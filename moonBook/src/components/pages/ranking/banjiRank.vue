@@ -252,8 +252,7 @@ export default {
 .head {
   position: relative;
   width: 100%;
-  height: 45vh;
-  overflow: hidden;
+  height: 48vh;
 }
 
 .first-screen{
@@ -289,7 +288,7 @@ export default {
   position: absolute;
   box-shadow: 0 3px 10px rgba(25, 137, 250, 0.3);
   left: 50%;
-  top: 56%;
+  top: 60%;
   transform: translate3d(-50%, -50%, 0);
 }
 
@@ -307,7 +306,7 @@ export default {
   position: absolute;
   border-radius: 28px;
   left: 50%;
-  bottom: 10px;
+  bottom: 15px;
 }
 
 .time span {

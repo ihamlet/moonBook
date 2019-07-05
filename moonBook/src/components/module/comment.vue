@@ -104,12 +104,9 @@
           <div class="score-title">评分</div>
           <van-rate class="score-rate" v-model="star" :size="25" :count="5" void-color="#ceefe8" />
         </div>
-        <div class="comment-content flex">
+        <div class="comment-content">
           <div class="field-box">
-              <van-field class="comment-field" :border='false' size='large' v-model="message" :minHeight='50' ref='field' type="textarea" :placeholder="placeholder" rows="1" autosize />
-          </div>
-          <div class="submit-btn theme-color">
-            <van-button class="theme-btn" :loading="isLoading" size="large" type="primary" @click="submit" square>发 布</van-button>
+              <van-field class="comment-field" :border='false' size='large' v-model="message" ref='field' type="textarea" :placeholder="placeholder" :autosize='{maxHeight: 200, minHeight: 100}'/>
           </div>
         </div>
         <div class="comment-tag scroll-x" v-if='item.template_id == 1'>
@@ -117,6 +114,10 @@
             <van-button round class="tag-item" type="default">{{item}}</van-button>
           </div>
         </div>
+
+        <van-cell>
+          <van-button class="theme-btn" :loading="isLoading" size="normal" type="primary" @click="submit" round>发 布</van-button>
+        </van-cell>
       </van-popup>
     </div>
 
@@ -139,7 +140,15 @@ export default {
   computed: {
     ...mapGetters(['userToken', 'userDataState']),
     placeholder(){
-      return getRandomArrayElements(placeholder,1)[0]
+      let text
+
+      if(this.commentId){
+        text = this.prompt
+      }else{
+        text = getRandomArrayElements(placeholder,1)[0]
+      }
+
+      return text
     },
     commentTag(){
       commentTag.sort(()=>{
@@ -164,17 +173,32 @@ export default {
       message: '',
       shareShow: false,
       score: false,
-      flag: false
+      flag: false,
+      prompt:''
     }
   },
   watch: {
-    postId(){
+    postId(val){
       this.flag = true
       if(this.$route.query.point == 'comments'){
         this.$nextTick(()=>{
           this.$refs.comment.scrollIntoView()
         }) 
       }
+
+      axios.get('/book/SchoolArticleComment/getList',{
+        params:{
+          post_id:val
+        }
+      }).then(res=>{
+         switch(res.data.status){
+           case 1:
+            this.listLength = res.data.count
+            break
+           default:
+            this.$toast(res.data.msg)
+         }
+      })
     },
     show(val){
       this.$emit('showComment',val)
@@ -193,7 +217,6 @@ export default {
 
      return axios.get('/book/SchoolArticleComment/getList', data).then(res => {
         if (res.data.status == 1) {
-          this.listLength = res.data.count
           let array = res.data.data
           if (this.page == 1) {
             this.list = array
@@ -440,9 +463,9 @@ export default {
   background: #fff;
 }
 
-.comment-content {
+/* .comment-content {
   align-items: flex-end;
-}
+} */
 
 .bar-padding {
   padding: 0.3125rem /* 5/16 */ 0.625rem /* 10/16 */;
@@ -570,9 +593,8 @@ export default {
   left: 0;
 }
 
-.comment-popup{
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-bottom: 15px;
+.theme-btn{
+  width: 100%;
 }
 </style>
 

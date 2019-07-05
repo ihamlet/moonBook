@@ -67,10 +67,10 @@
       </div>
     </div>
 
-    <van-popup v-model="show" position="top" get-container="#app" class="comment-popup" @close='$refs.message.blur()'>
+    <van-popup v-model="show" position="top" get-container="#app"  overlay-class='bg-opacity' @close='$refs.message.blur()'>
         <van-field ref='message' class="message-field" v-model="message" type="textarea" :placeholder='`给${item.user.name}评论:`' :autosize='{maxHeight:300, minHeight: 100}' size='large' :border='false'>
           <div class="avatar mini-avatar" slot="left-icon">
-            <img :src="item.user.avatar"  @error='imgError' v-http2https>
+            <img :src="userDataState.avatar"  @error='imgError' v-http2https>
           </div>
         </van-field>
         <van-cell>
@@ -458,7 +458,6 @@ export default {
 }
 
 .send-btn{
-  width: 30%;
-  float: right;
+  width: 100%;
 }
 </style>

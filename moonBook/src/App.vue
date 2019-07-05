@@ -181,11 +181,9 @@ export default {
   -o-transform: translateX(30px);
 }
 
-
 .page-container-alive{
   transform: translate3d(0, 0, 0);
 }
-
 /* 公共样式 */
 *::-webkit-scrollbar {
   width: 0;

@@ -29,10 +29,10 @@
       </van-row>
     </div>
 
-    <van-goods-action>
-      <van-goods-action-big-btn class="theme-action-btn-l" text="重置" @click="onClickBtnLeft" />
-      <van-goods-action-big-btn class="theme-action-btn-r" primary text="确定" @click="onClickBtnRight" />
-    </van-goods-action>
+    <div class="footer-bar flex">
+      <van-button class="btn" square text="重置" @click="onClickBtnLeft" />
+      <van-button class="btn theme-btn" square text="确定" type="primary" @click="onClickBtnRight" />
+    </div>
   </div>
 </template>
 
@@ -151,16 +151,15 @@ export default {
   border-color: #0084ff;
   background: #fff;
 }
-</style>
-<style>
-.theme-action-btn-l.van-button--warning{
-  background:#fff;
-  color: #303133;
-  border-color: #fff;
+
+.footer-bar{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
-.theme-action-btn-r.van-button--danger{
-  background: linear-gradient(135deg, #00bcd4, #0084ff);
-  border-color: transparent;
+
+.footer-bar .btn{
+  flex: 1;
 }
 </style>
 

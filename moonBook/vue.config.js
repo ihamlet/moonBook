@@ -25,6 +25,10 @@ module.exports = {
   devServer:{
     disableHostCheck: true,
     proxy: {
+      '/wap':{
+        target: server_host,
+        changeOrigin: true
+      },
       '/book':{
         target: server_host,
         changeOrigin: true

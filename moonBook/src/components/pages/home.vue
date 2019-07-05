@@ -1,56 +1,55 @@
 <template>
     <div class="home page-padding">
-        <div class="head-bar flex flex-align" :class="[themeBarSearch?'theme-background':'default-head-bar-background']">
-            <div class="left-btn" v-line-clamp:20="1" @click="toCity">
-                <span v-if='userPointState'>{{userPointState.city}}</span>
-                <span v-else>定位中</span>
-            </div>
-            <div class="search-bar" @click="toSearch"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
-            <div class="right-btn">
-                <span class="notice-badge">
-                    <i class="iconfont" @click="toNotice">{{MsgLengthState>0?'&#xe623;':'&#xe798;'}}</i>
-                    <b class="read-dot" v-if='MsgLengthState > 0'></b>
-                </span>
-                <!-- <i class="iconfont">{{msg>0?'&#xe623;':'&#xe798;'}}</i> -->
-                <!-- <span>发布</span> -->
-            </div>
-        </div>
-        <div class="container">
-            <div class="swipe-content" ref='domHeight'>
-                <van-swipe :autoplay="3000">
-                    <van-swipe-item v-for='(list,index) in banner' :key="index" @click="goAd(list)">
-                        <a :href="list.link">
-                            <img class="banner" :src="list.image" :alt="list.title">
-                        </a>
-                    </van-swipe-item>
-                </van-swipe>
-            </div>
-            <div class="card">
-                <div class="apps-module module">
-                    <apps-list :appsList='appsList'/>
+            <div class="head-bar flex flex-align" :class="[themeBarSearch?'theme-background':'default-head-bar-background']">
+                <div class="left-btn" v-line-clamp:20="1" @click="toCity">
+                    <span v-if='userPointState'>{{userPointState.city}}</span>
+                    <span v-else>定位中</span>
+                </div>
+                <div class="search-bar" @click="toSearch"> <i class="iconfont">&#xe65c;</i> {{searchText}}</div>
+                <div class="right-btn">
+                    <span class="notice-badge">
+                        <i class="iconfont" @click="toNotice">{{MsgLengthState>0?'&#xe623;':'&#xe798;'}}</i>
+                        <b class="read-dot" v-if='MsgLengthState > 0'></b>
+                    </span>
+                    <!-- <i class="iconfont">{{msg>0?'&#xe623;':'&#xe798;'}}</i> -->
+                    <!-- <span>发布</span> -->
                 </div>
             </div>
-            <div class="card-top">
-                <investment-ad :investmentAd='investmentAd' :isAdshow='isAdshow'/>
+            <div class="container">
+                <div class="swipe-content" ref='domHeight'>
+                    <van-swipe :autoplay="3000">
+                        <van-swipe-item v-for='(list,index) in banner' :key="index" @click="goAd(list)">
+                            <a :href="list.link">
+                                <img class="banner" :src="list.image" :alt="list.title">
+                            </a>
+                        </van-swipe-item>
+                    </van-swipe>
+                </div>
+                <div class="card">
+                    <div class="apps-module module">
+                        <apps-list :appsList='appsList'/>
+                    </div>
+                </div>
+                <div class="card-top">
+                    <investment-ad :investmentAd='investmentAd' :isAdshow='isAdshow'/>
+                </div>
+                <div class="module">
+                    <news-list :newsList='newsList'/>
+                </div>
+                <div class="module">
+                    <video-list title='视频精选' type='home'/>
+                </div>
+                <div>
+                    <article-list/>
+                </div>
             </div>
-            <div class="module">
-                <news-list :newsList='newsList'/>
-            </div>
-            <div class="module">
-                <video-list title='视频精选' type='home'/>
-            </div>
-            <div>
-                <article-list/>
-            </div>
-        </div>
 
-        <div class="apply" v-if='userDataState.card_level == 0'>
-            <van-button class="theme-btn" :class="[btnPulse?'rubberBand animated second':'']" round size="normal" type="primary" @click="toAccept"> 
-                <i class="iconfont">&#xe619;</i>  
-                办理借阅卡
-            </van-button>
-        </div>
-
+            <div class="apply" v-if='userDataState.card_level == 0'>
+                <van-button class="theme-btn" :class="[btnPulse?'rubberBand animated second':'']" round size="normal" type="primary" @click="toAccept"> 
+                    <i class="iconfont">&#xe619;</i>  
+                    办理借阅卡
+                </van-button>
+            </div>
         
         <!-- 礼品弹窗 -->
         <!-- <van-popup v-model="show" position="top" class="gift-popup">
@@ -104,7 +103,7 @@ export default {
             appsList:'',
             investmentAd:'',
             newsList:'',
-            videoList:'',
+            videoList:''
         }
     },
     created () {

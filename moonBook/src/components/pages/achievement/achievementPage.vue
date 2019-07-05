@@ -70,7 +70,7 @@ import round from './../../module/animate/round'
 import medalCard from './medal/medalCard'
 import IconMedal from './../../module/animate/medal'
 import { punchLevel, readLevel } from './../../lib/js/speech'
-import { randomNum, arrGroup } from './../../lib/js/util'
+import { randomNum, group } from './../../lib/js/util'
 import vipLevel from './../../module/animate/svg/vipLevel'
 
 export default {
@@ -142,7 +142,7 @@ export default {
       return type
     },
     newCommentArr() {
-      return arrGroup(this.commentList, this.count / 2)
+      return group(this.commentList, this.count / 2)
     }
   },
   data() {

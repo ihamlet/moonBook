@@ -276,17 +276,6 @@ function realFormatSecond(second) {
   }
 }
 
-//将数组array分成长度为subGroupLength的小数组并返回新数组
-function arrGroup(array, subGroupLength) {
-      let index = 0;
-      let newArray = [];
-      while(index < array.length) {
-          newArray.push(array.slice(index, index += subGroupLength));
-      }
-      return newArray;
-  }
-
-
 //生成 minNum - maxNum 的随机数
 function randomNum(minNum,maxNum){ 
   switch(arguments.length){ 
@@ -384,7 +373,6 @@ export {
   arrayUnique,
   realFormatSecond,
   randomNum,
-  arrGroup,
   isRepeatArr,
   getTime
 }
