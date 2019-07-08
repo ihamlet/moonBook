@@ -1,13 +1,11 @@
 <template>
-  <div class="comment-list" id='comment' ref='comment' v-if='flag'>
+  <div class="comment-list page-padding" id='comment' ref='comment'>
     <van-nav-bar :border='false' :zIndex='0'  :key='$route.query.id'>
       <div class="zan" slot="right">赞 {{item.zan_num}}</div>
       <div class="comment" slot="left">{{listLength}} 评论</div>
     </van-nav-bar>
-    <div class="no-centent" v-if='listLength == 0'>
-      <div class="prompt" @click="showField()">暂无评论,点击抢沙发</div>
-    </div>
-    <div class="container">
+
+    <div class="container" v-if='list.length'>
       <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
         <van-cell v-for="(contentItem,index) in list" :key="index">
           <div class="user-card flex flex-align">
@@ -20,8 +18,8 @@
               </div>
             </div>
             <div class="zan flex flex-align" @click="zan(contentItem)">
-              <i class="iconfont highlight rotateInDownLeft animated" v-if="contentItem.isZan">&#xe6e3;</i>
-              <i class="iconfont" v-else>&#xe644;</i>
+              <i class="iconfont highlight rotateInDownLeft animated" v-if="contentItem.isZan">&#xe668;</i>
+              <i class="iconfont" v-else>&#xe669;</i>
               <div class="num">{{contentItem.zan_count}}</div>
             </div>       
           </div>
@@ -66,6 +64,9 @@
         </van-cell>
       </van-list>
     </div>
+    <div class="no-centent"  v-else>
+      <div class="prompt" @click="showField()">暂无评论,点击抢沙发</div>
+    </div>
 
     <!-- 评论输入框  -->
     <div class="comment">
@@ -81,6 +82,9 @@
             <div class="btn" @click="toScroll">
               <van-tag class="num-tag" v-if='listLength > 0' round type="danger">{{listLength > 1000?'999+':listLength}}</van-tag>
               <i class="iconfont">&#xe731;</i>
+            </div>
+            <div class="btn flip animated" v-if='$route.name == "article"' @click="$emit('giftShow')">
+              <img class="ds-icon" src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/icon/jinbi.png" />
             </div>
             <div class="btn" @click="addPraise(item)">
               <van-tag class="num-tag" v-if='item.zan_num > 0' round type="danger">{{item.zan_num > 1000?'999+':item.zan_num}}</van-tag>
@@ -173,19 +177,11 @@ export default {
       message: '',
       shareShow: false,
       score: false,
-      flag: false,
       prompt:''
     }
   },
   watch: {
     postId(val){
-      this.flag = true
-      if(this.$route.query.point == 'comments'){
-        this.$nextTick(()=>{
-          this.$refs.comment.scrollIntoView()
-        }) 
-      }
-
       axios.get('/book/SchoolArticleComment/getList',{
         params:{
           post_id:val
@@ -194,6 +190,7 @@ export default {
          switch(res.data.status){
            case 1:
             this.listLength = res.data.count
+            this.list = res.data.data
             break
            default:
             this.$toast(res.data.msg)
@@ -216,6 +213,7 @@ export default {
       }
 
      return axios.get('/book/SchoolArticleComment/getList', data).then(res => {
+
         if (res.data.status == 1) {
           let array = res.data.data
           if (this.page == 1) {
@@ -473,7 +471,7 @@ export default {
 
 .input-box {
   height: 2.375rem /* 38/16 */;
-  flex: 1.8;
+  flex: 1.3;
 }
 
 .btn-icon {
@@ -595,6 +593,11 @@ export default {
 
 .theme-btn{
   width: 100%;
+}
+
+.ds-icon{
+  width: 23px;
+  height: 23px;
 }
 </style>
 

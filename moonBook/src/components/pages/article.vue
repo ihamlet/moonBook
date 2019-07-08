@@ -1,5 +1,5 @@
 <template>
-  <div class="article page-padding" v-if='hackReset'>
+  <div class="article" v-if='hackReset'>
     <div class="cover" v-if='item.template_id == 0&&item.cover'>
       <img :src="item.cover" v-http2https/>
     </div>
@@ -39,7 +39,7 @@
           <articleOperation ref='articleOperation' :item='item'/>
         </div>
         <div class="comment" ref='commentDom'>
-          <comment :item='item' include='include' :key="$route.query.id" :postId='item.post_id' @showComment='onClickisShowComment'/>
+          <comment :item='item' include='include' :key="$route.query.id" :postId='item.post_id' @showComment='onClickisShowComment' @giftShow='$refs.articleOperation.giftShow = true'/>
         </div>
       </div>
     </div>
@@ -102,6 +102,13 @@ export default {
       isCommentShow: false
     }
   },
+  beforeRouteEnter(to,from,next){
+    next(vm=>{
+      if(from.name == 'Invest'){
+        vm.$refs.articleOperation.giftShow = true
+      }
+    })
+  },
   beforeRouteLeave(to, from, next) {
     let routeList = ['home','apps-find','apps-school','zoom']
 
@@ -110,7 +117,7 @@ export default {
     } else {
       to.meta.keepAlive = false
     }
-
+  
     if(this.$refs.articleOperation.giftShow){
       this.$refs.articleOperation.giftShow = false
       next(false)

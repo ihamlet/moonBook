@@ -3,7 +3,16 @@
     <van-nav-bar class="card-list-nav-bar" :zIndex='99' fixed :border='false' :title="$route.meta.title" :key='$route.query.id'/>
     <div class="list">
       <div class="content" v-if='cardList&&cardList.length'>
-        <div class="item fadeInDown animated" v-for='(item,index) in cardList' :key="index" :style="{animationDelay:`${200*index}ms`}">
+        <div class="item fadeInDown animated" v-for='(item,index) in cardList' :key="index" :style="{animationDelay:`${200*index}ms`}" @click="selectCard(item,index)">
+          <transition  enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
+            <div class="card-operation" v-if='index == itemActive'>
+              <ul class="set-card flex flex-align">
+                <li v-for='(item,index) in arr' :key="index" :style="{background:item.color}"  @click="cardOpation(item)">
+                  <div class="btn">{{item.opationName}}</div>
+                </li>
+              </ul>
+            </div>
+          </transition>
           <div class="card-box" :class="`card-type-${item.level_info.level}`">
             <div class="card-info flex flex-align">
               <div class="card-name">{{item.level_info.name}}</div>
@@ -40,6 +49,17 @@
     <div class="form-submit">
       <van-button class="theme-btn" square size="large" type="primary" @click="toAccept">办理借阅卡</van-button>
     </div>
+
+    <van-popup v-model="show" position='bottom' get-container='#app'>
+      <div class="card-up-level" v-if='opationName == "升级"'>
+        <div class="up-level-cell flex flex-align" v-for="(item,index) in upLevelCardList" :key="index">
+          <!-- <div class="card-name">{{item.name}}</div>
+          <div class="card-price">{{item.price / 100}}</div> -->
+
+          <van-cell :title="item.name" :value="item.price / 100" size='large' :is-link='!item.disable'/>
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 <script>
@@ -56,7 +76,25 @@ export default {
     return {
       cardList: [],
       applyShow: false,
+      show: false,
       active: 0,
+      itemActive: -1,
+      opationName:'',
+      item:'',
+      arr:[{
+        opationName:'升级',
+        color:'rgba(33,150,243,.95)'
+      },{
+        opationName:'续费',
+        color:'rgba(76,175,80,.95)'
+      },{
+        opationName:'退卡',
+        color:'rgba(255,152,0,.95)'
+      },{
+        opationName:'绑卡',
+        color:'rgba(233,30,99,.95)'
+      }],
+      upLevelCardList:[]
     }
   },
   created() {
@@ -89,6 +127,38 @@ export default {
     applyClose() {
       this.applyShow = false
       this.fetchData()
+    },
+    selectCard(item,index){
+      this.itemActive = index
+      this.item = item
+    },
+    cardOpation(item){
+      this.show = true
+      this.opationName = item.opationName
+
+      switch(item.opationName){
+        case '升级':
+          axios.get('/book/MemberCard/getMemberRegPayConfig',{params:{
+            shelf_id: this.item.shelf_id
+          }}).then(res=>{
+            if(res.data.status == 1){
+              this.upLevelCardList = res.data.data.deposites.map(e=>{
+                let obj
+
+                if(e.price > this.item.level_info.price ){
+                  return e
+                }else{
+                  return {
+                    ...e,
+                    disable: true
+                  }
+                }
+
+              })
+            }
+          })
+          break
+      }
     }
   }
 }
@@ -103,11 +173,16 @@ export default {
   padding:45px 15px 45px;
 }
 
+.item{
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 10px -5px rgba(0,0,0,.1);
+}
+
 .card-box {
   width: 100%;
   height: 120px;
   margin-top: 20px;
-  box-shadow: 0 2px 15px rgba(0,0,0,.1);
   position: relative;
 }
 
@@ -133,7 +208,7 @@ export default {
   content: '';
   width: 100%;
   height: 120px;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .card-type-1 {
@@ -217,5 +292,30 @@ export default {
   height: 12.5rem /* 200/16 */;
   line-height: 12.5rem /* 200/16 */;
   text-align: center;
+}
+
+.card-operation{
+  position: absolute;
+  z-index: 999;
+  width: 100%;
+  height: 46px;
+  bottom: 0;
+}
+
+.card-operation,
+ul.set-card li{
+  height: 46px;
+  line-height: 46px;
+}
+
+ul.set-card li{
+  flex: 1;
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+}
+
+.up-level-cell{
+  justify-content: space-between;
 }
 </style>

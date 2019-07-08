@@ -33,6 +33,7 @@
 </template>
 <script>
 import { priceList } from './../lib/js/gift'
+import qs from 'qs'
 
 export default {
   name: 'invest',

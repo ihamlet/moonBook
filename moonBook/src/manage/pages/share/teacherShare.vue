@@ -77,7 +77,7 @@ export default {
             }
             next({path:`/manage/banjiEdit?${qs.stringify(data)}`})
         }else{
-        next()
+            next()
         }
     },
     data() {

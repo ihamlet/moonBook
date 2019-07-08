@@ -207,7 +207,10 @@ export default {
       this.giftShow = false
 
       this.$router.push({
-          name:'Invest'
+        name:'Invest',
+        query:{
+          ...this.$route.query
+        }
       })
     }
   }
