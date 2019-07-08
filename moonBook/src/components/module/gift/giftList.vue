@@ -35,16 +35,19 @@
                     <img src='https://assets-moonbook.oss-cn-beijing.aliyuncs.com/icon/jinbi.png' class="coin-icon"/>
                     <span class="coin">{{coin}}</span>
                 </div>
-                <div class="recharge flex flex-align" @click="toInvest">
+                <div class="recharge flex flex-align" @click="$emit('toInvest')">
                     充值 <i class="iconfont">&#xe72a;</i>
                 </div>
             </div>
         </div>
+        <transition :enter-active-class="`animated ${setAnIn}`" :leave-active-class="`animated ${setAnOut}`">
+            <img :src="giftImg" class="gift-dynamic" v-if='giftImg'/>
+        </transition>
     </div>    
 </template>
 <script>
 import axios from './../../lib/js/api'
-import { group } from './../../lib/js/util'
+import { group,getRandomArrayElements } from './../../lib/js/util'
 import { giftList } from './../../lib/js/gift'
 
 export default {
@@ -58,19 +61,35 @@ export default {
         return {
            giftList,
            coin: '2000',
-           giftImg:''           
+           giftImg:'',
+           timer: null,
+           anIn:['rollIn','bounceIn','flip','lightSpeedIn','zoomInDown'],
+           anOut:['rollOut','bounceOutDown','zommOutDown','fadeOutDown','flipOutY'],
+           setAnIn:'',
+           setAnOut:''
         }
+    },
+    beforeDestroy() {
+        clearInterval(this.timer)   
+        this.timer = null
     },
     methods: {
         sendGift(item){
             this.giftImg = item.icon
             // this.$emit('close')
-        },
-        toInvest(){
-            this.$router.push({
-                name:'Invest'
-            })
+            this.setAnIn = getRandomArrayElements(this.anIn,1)
+            this.setAnOut = getRandomArrayElements(this.anOut,1)
+
+            this.timer = setTimeout(()=>{
+                this.giftImg = ''
+            },2000)
         }
+        // toInvest(){
+            
+        //     this.$router.push({
+        //         name:'Invest'
+        //     })
+        // }
     }
 }
 </script>
@@ -183,5 +202,15 @@ img.coin-icon{
 
 .swipe-container{
     padding-bottom: 30px
+}
+
+.gift-dynamic{
+    position: fixed;
+    top: 50%;
+    right: 50%;
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+    margin-right: -50px;
 }
 </style>

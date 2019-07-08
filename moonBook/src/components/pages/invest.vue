@@ -17,7 +17,7 @@
                         <span class="par">{{item.price}}</span><span>元</span>
                     </div>
                     <div class="coin">
-                        积分 {{item.coin}}
+                        金币 {{item.coin}}
                     </div>
                 </div>
             </van-col>

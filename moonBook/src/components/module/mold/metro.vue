@@ -123,5 +123,6 @@ export default {
     bottom:-2.1875rem /* 35/16 */;
     right: -1.875rem /* 30/16 */;
     z-index: 1;
+    box-shadow: 0 2px 10px rgba(0,0,0,.1);
 }
 </style>

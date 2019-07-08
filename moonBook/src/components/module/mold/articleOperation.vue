@@ -27,7 +27,7 @@
     </van-popup>
 
     <van-popup position="bottom" v-model="giftShow" get-container='#app' class="gift-wrap-popup" :lock-scroll='false' :overlay='false'>
-      <giftList @close='giftShow = false'/>
+      <giftList ref='giftList' @close='giftShow = false' @toInvest='toInvest'/>
     </van-popup>
 
     <van-action-sheet v-model="actionsheetShow" :actions="manageActions" @select="onRecommendSelect" cancel-text="取消"
@@ -202,6 +202,13 @@ export default {
 
         })
       }
+    },
+    toInvest(){
+      this.giftShow = false
+
+      this.$router.push({
+          name:'Invest'
+      })
     }
   }
 }

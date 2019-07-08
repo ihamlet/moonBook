@@ -36,7 +36,7 @@
               <articleCard cardStyle='article' :type='postType' :childId='item.child_id' :item='post' :detailsId='post.post_id || post.tushu_id' :key="$route.query.id" @toDetails='toArticle'/>
             </van-cell>
           </div>
-          <articleOperation :item='item'/>
+          <articleOperation ref='articleOperation' :item='item'/>
         </div>
         <div class="comment" ref='commentDom'>
           <comment :item='item' include='include' :key="$route.query.id" :postId='item.post_id' @showComment='onClickisShowComment'/>
@@ -110,7 +110,13 @@ export default {
     } else {
       to.meta.keepAlive = false
     }
-    next()
+
+    if(this.$refs.articleOperation.giftShow){
+      this.$refs.articleOperation.giftShow = false
+      next(false)
+    }else{
+      next()
+    }
   },
   created() {
     this.fetchData()
