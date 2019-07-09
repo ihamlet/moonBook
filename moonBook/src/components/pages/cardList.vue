@@ -52,12 +52,26 @@
 
     <van-popup v-model="show" position='bottom' get-container='#app'>
       <div class="card-up-level" v-if='opationName == "升级"'>
-        <div class="up-level-cell flex flex-align" v-for="(item,index) in upLevelCardList" :key="index">
-          <!-- <div class="card-name">{{item.name}}</div>
-          <div class="card-price">{{item.price / 100}}</div> -->
-
-          <van-cell :title="item.name" :value="item.price / 100" size='large' :is-link='!item.disable'/>
+        <div class="level-up">
+          <div class="popup-title">卡升级</div>
+          <div class="school-name">{{newItem.shelf_title}}</div>
+          <div class="card-name">{{newItem.name}}</div>
         </div>
+        <div class="up-level-cell" v-for="(item,index) in upLevelCardList" :key="index">
+          <div class="item-level-cell" :class="levelActive == index?'active':''" @click="selectItemLevel(item,index)">
+              <div class="item-card flex flex-align" :class="item.disable?'opacity':''">
+                <div class="flex flex-align">
+                  <vipLevel :level='item.level' animate='0'/>
+                  <div class="card-title">{{item.name}}</div>
+                </div>
+                <div class="card-price">{{!item.disable?(item.price - newItem.level_info.price)/100:item.price/100}}</div>
+              </div>
+          </div>
+        </div>
+
+        <van-cell class="btn-cell">
+          <van-button round size="normal" class="theme-btn" type="primary">升级卡</van-button>
+        </van-cell>
       </div>
     </van-popup>
   </div>
@@ -65,11 +79,12 @@
 <script>
 import axios from './../lib/js/api'
 import slogan from './../module/slogan'
-
+import vipLevel from './../module/animate/svg/vipLevel'
 
 export default {
   name: 'card-list',
   components: {
+    vipLevel,
     slogan
   },
   data() {
@@ -80,7 +95,7 @@ export default {
       active: 0,
       itemActive: -1,
       opationName:'',
-      item:'',
+      newItem:'',
       arr:[{
         opationName:'升级',
         color:'rgba(33,150,243,.95)'
@@ -94,7 +109,8 @@ export default {
         opationName:'绑卡',
         color:'rgba(233,30,99,.95)'
       }],
-      upLevelCardList:[]
+      upLevelCardList:[],
+      levelActive:0
     }
   },
   created() {
@@ -129,8 +145,8 @@ export default {
       this.fetchData()
     },
     selectCard(item,index){
-      this.itemActive = index
-      this.item = item
+      this.itemActive = this.itemActive == index?-1:index
+      this.newItem = item
     },
     cardOpation(item){
       this.show = true
@@ -139,13 +155,13 @@ export default {
       switch(item.opationName){
         case '升级':
           axios.get('/book/MemberCard/getMemberRegPayConfig',{params:{
-            shelf_id: this.item.shelf_id
+            shelf_id: this.newItem.shelf_id
           }}).then(res=>{
             if(res.data.status == 1){
               this.upLevelCardList = res.data.data.deposites.map(e=>{
                 let obj
 
-                if(e.price > this.item.level_info.price ){
+                if(e.price > this.newItem.level_info.price ){
                   return e
                 }else{
                   return {
@@ -158,6 +174,11 @@ export default {
             }
           })
           break
+      }
+    },
+    selectItemLevel(item,index){
+      if(!item.disable){
+        this.levelActive = index
       }
     }
   }
@@ -227,11 +248,9 @@ export default {
 .user-info {
   justify-content: space-between;
 }
-.user-info {
-  margin-top: 0.625rem /* 10/16 */;
-}
+
 .card-info {
-  padding: 0.625rem /* 10/16 */;
+  padding:.625rem /* 10/16 */;
   color: #fff;
   position: relative;
 }
@@ -274,6 +293,7 @@ export default {
 .card-content {
   padding: 0 .625rem /* 10/16 */;
   opacity: .95;
+  margin-top: 10px;
 }
 .users-list .user {
   margin-left: -10px;
@@ -315,7 +335,64 @@ ul.set-card li{
   font-weight: 700;
 }
 
-.up-level-cell{
+.item-card{
+  padding: 10px 15px;
   justify-content: space-between;
+}
+
+.item-card.opacity{
+  opacity: 0.5;
+}
+
+.item-level-cell{
+  width: 100%;
+  border: 1px solid transparent;
+}
+
+.item-level-cell.active{
+  background: linear-gradient(135deg, #00bcd4, #0084ff);
+  border-radius: 8px;
+  color: #fff;
+  box-shadow: 0 5px 15px -5px rgba(0, 132, 255, .3);
+}
+
+.card-up-level{
+  padding: 20px 10px;
+}
+
+.level-up{
+  text-align: center;
+  padding-bottom: 30px;
+}
+
+.popup-title{
+  font-size: 18px;
+  font-weight: 700;
+  color: #303133;
+}
+
+.card-name{
+  position: relative;
+}
+
+.level-icon{
+  position: absolute;
+  right: 50%;
+  top: -10px;
+  margin-right: -60px;
+}
+
+.school-name{
+  margin: 10px 0;
+  font-size: 13px;
+  color: #909399;
+}
+
+.theme-btn{
+  width: 100%;
+}
+
+.btn-cell{
+  margin-top: 3 0px;
 }
 </style>

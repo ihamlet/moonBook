@@ -11,7 +11,7 @@
         <div class="info">
           <div class="name flex flex-align">
             <span v-line-clamp:20="1" :class="[item.card_level>'0'?'vip-highlight':'']">{{item.user.name}}</span>
-            <vip-level v-if='item.card_level' animate='1' :level='item.card_level.level' />
+            <vipLevel v-if='item.card_level' animate='1' :level='item.card_level.level' />
           </div>
           <div class="titmeago flex flex-align">
             {{getTimeAgo(item.create_time)}}
@@ -81,12 +81,12 @@
 </template>
 <script>
 import axios from "./../../lib/js/api"
-import vipLevel from './../animate/svg/vipLevel'
 import taskCard from './taskCard'
 import media from './../mold/media'
 import articleCard from './../card/articleCard'
 import { timeago } from './../../lib/js/util'
 import { mapGetters } from 'vuex'
+import vipLevel from './../animate/svg/vipLevel'
 
 export default {
   name: "graphic-card",
@@ -122,9 +122,9 @@ export default {
   },
   components: {
     taskCard,
-    vipLevel,
     articleCard,
-    media
+    media,
+    vipLevel
   },
   computed: {
     ...mapGetters(['userPointState', 'userDataState']),

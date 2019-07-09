@@ -18,9 +18,9 @@
               </div>
             </div>
             <div class="zan flex flex-align" @click="zan(contentItem)">
-              <i class="iconfont highlight rotateInDownLeft animated" v-if="contentItem.isZan">&#xe668;</i>
+              <i class="iconfont highlight bounceIn animated" v-if="contentItem.isZan">&#xe668;</i>
               <i class="iconfont" v-else>&#xe669;</i>
-              <div class="num">{{contentItem.zan_count}}</div>
+              <div class="num" v-if='contentItem.zan_count > 0'>{{contentItem.zan_count}}</div>
             </div>       
           </div>
           <div class="contents">

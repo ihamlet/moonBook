@@ -34,8 +34,8 @@
 </template>
 <script>
 import axios from './../../lib/js/api'
-import vipLevel from './../animate/svg/vipLevel'
 import { timeago } from './../../lib/js/util'
+import vipLevel from './../animate/svg/vipLevel'
 
 export default {
   name: 'userCard',
