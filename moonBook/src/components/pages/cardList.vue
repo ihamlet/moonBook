@@ -53,7 +53,7 @@
       <van-button class="theme-btn" square size="large" type="primary" @click="toAccept">办理借阅卡</van-button>
     </div>
 
-    <van-popup v-model="show" position='bottom' get-container='#app'>
+    <van-popup v-model="show" position='top' get-container='#app'>
       <van-nav-bar :title="opationName" :border='false'/>
       <div class="card-up-level" v-if='opationName == "升级"'>
         <div class="head">
@@ -71,11 +71,6 @@
             </div>
           </div>
         </div>
-
-        <div class="btn-cell">
-          <van-button round size="normal" class="theme-btn theme-pay" type="primary" loading-text="升级中...">升级卡
-          </van-button>
-        </div>
       </div>
 
       <div class="card-add-durations" v-if='opationName == "续费"'>
@@ -92,18 +87,24 @@
 
             <i class="iconfont selected-icon" v-if='durationsActive == index'>&#xe696;</i>
           </div>
-
-          <div class="btn-cell">
-            <van-button round size="normal" class="theme-btn" type="primary" loading-text="续费中...">续费</van-button>
-          </div>
         </div>
       </div>
 
       <div class="card-report-loss" v-if='opationName == "挂失"'>
-        <van-field size='large' label='班级' input-align='right' v-model="banji" placeholder="请选择班级" is-link/>
-        <van-field size='large' label='手机号' input-align='right' v-model="phone" placeholder="注册时的手机号" />
-        <van-field size='large' label='孩子姓名' input-align='right' v-model="childName" placeholder="请输入孩子姓名" />
+        <div class="head">
+          <div class="school-name">{{newItem.shelf_title}}</div>
+          <div class="explain">卡挂失后会停用此卡,管理员会与您沟通联系</div>  
+        </div>
+
+        <van-field size='large' label='手机号' input-align='right' v-model="newItem.mobile" placeholder="注册时的手机号" />
+        <van-field size='large' label='孩子姓名' input-align='right' v-model="form.childName" placeholder="请输入孩子姓名" />
+        <van-field size='large' label='填写班级' input-align='right' v-model="form.banji" placeholder="孩子所在班级" />
       </div>
+
+      <div class="btn-cell">
+        <van-button round size="normal" class="theme-btn" :class="opationName == '升级'?'theme-pay':''" type="primary" loading-text="请等待，正在处理..." @click="onSubmit">{{opationName}}</van-button>
+      </div>
+
     </van-popup>
   </div>
 </template>
@@ -155,8 +156,10 @@ export default {
       addDurations: [],
       levelActive: 0,
       durationsActive: 0,
-      banji:'',
-      childName:''
+      form:{
+        childName:'',
+        banji:''
+      }
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -242,6 +245,25 @@ export default {
     },
     selectItemDurations(item, index) {
       this.durationsActive = index
+    },
+    toSelectBanji(){
+      this.$router.push({
+        name:'edit-class',
+        query:{
+          school_id:'',
+          school_name:''
+        }
+      })
+    },
+    onSubmit(){
+      switch(this.opationName){
+        case '升级':
+
+          break
+        case '续费':
+
+          break
+      }
     }
   }
 }
@@ -438,24 +460,24 @@ ul.set-card li {
 }
 
 .durations-list,
-.card-up-level {
+.card-up-level,
+.card-report-loss{
   padding: 20px 10px;
 }
 
-.popup-title,
+.explain,
 .school-name,
 .card-name {
   text-align: center;
 }
 
-.head {
-  padding-bottom: 20px;
+.explain{
+  font-size: 14px;
+  color: #f44;
 }
 
-.popup-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: #303133;
+.head {
+  padding-bottom: 20px;
 }
 
 .card-name {
@@ -480,8 +502,7 @@ ul.set-card li {
 }
 
 .btn-cell {
-  margin-top: 30px;
-  padding: 0 10px;
+  padding: 20px;
 }
 
 .item-level-cell.active,

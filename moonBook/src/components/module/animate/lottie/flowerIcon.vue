@@ -1,14 +1,14 @@
 <template>
-    <div class="like-icon">
-        <lottie :options="defaultOptions" :height="200" :width="200" @animCreated="handleAnimation"/>
+    <div class="flower-icon">
+        <lottie :options="defaultOptions" :height="80" :width="80" @animCreated="handleAnimation"/>
     </div>    
 </template>
 <script>
 import lottie from './lottie'
-import animationData from './likeLottie'
+import animationData from './flowerLottie'
 
 export default {
-    name:'likeIcon',
+    name:'flowerIcon',
     components:{
         lottie
     },
@@ -22,7 +22,7 @@ export default {
         }
     },
     methods: {
-        handleAnimation: function (anim) {
+        handleAnimation(anim){
             this.anim = anim
         }
     }

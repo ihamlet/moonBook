@@ -94,8 +94,8 @@
               <div class="card-module">
                 <div class="card-item flex flex-align" v-for='(item,index) in punchList' :key="index">
                   <div class="child-info flex flex-align">
-                    <div class="icon-flower rotateIn fadeIn animated">
-                      <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/rank/icon-flower.png" />
+                    <div class="icon-box">
+                      <flowerIcon class="icon"/>
                     </div>
                     <div class="avatar">
                       <img :src="item.avatar" @error="imgError" />
@@ -125,9 +125,13 @@
 import axios from './../../lib/js/api'
 import { numbers } from './../../lib/js/speech'
 import { mapGetters,mapState,mapActions } from 'vuex'
+import flowerIcon from './../../module/animate/lottie/flowerIcon'
 
 export default {
   name: 'banjiRank',
+  components:{
+    flowerIcon
+  },
   computed: {
     ...mapGetters(['userDataState']),
     ...mapState('openWX',['ready']),
@@ -307,6 +311,7 @@ export default {
   border-radius: 28px;
   left: 50%;
   bottom: 15px;
+  z-index: 2019;
 }
 
 .time span {
@@ -479,16 +484,26 @@ export default {
   background: #fff;
 }
 
-.icon-flower {
+.icon-box{
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  position: relative;
+}
+
+.icon{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.icon-box,
+.week-name{
   margin-right: 10px;
 }
 
-.icon-flower img {
-  width: 26px;
-  height: 26px;
-}
-
-.week-name{
-    margin-right: 10px;
+.card-list{
+  min-height: 100px;
 }
 </style>

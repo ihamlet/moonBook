@@ -89,7 +89,7 @@ export default {
   },
   data() {
     return {
-      active: localStorage.getItem('manageTab') || 1,
+      active: Number(localStorage.getItem('manageTab')) || 1,
       isSelectSchool: false,
       count:0,
       studentCount:0,

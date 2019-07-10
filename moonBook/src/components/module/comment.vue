@@ -135,6 +135,11 @@
       <zanIcon/>
     </van-popup>
 
+    <van-popup v-model="starIconPopup" get-container='#app' class="star-popup" :overlay='false' :style='{background:"transparent"}' :duration='0'>
+      <starIcon/>
+    </van-popup>
+    
+
   </div>
 </template>
 <script>
@@ -143,12 +148,14 @@ import axios from './../lib/js/api'
 import { timeago,getRandomArrayElements } from './../lib/js/util'
 import { placeholder, commentTag } from './../lib/js/speech'
 import zanIcon from './../module/animate/lottie/zanIcon'
+import starIcon from './../module/animate/lottie/starIcon'
 
 export default {
   name: 'comment',
   props: ['item', 'include', 'type','postId','isCommentShow'],
   components: {
-    zanIcon
+    zanIcon,
+    starIcon
   },
   computed: {
     ...mapGetters(['userToken', 'userDataState']),
@@ -186,6 +193,7 @@ export default {
       message: '',
       shareShow: false,
       zanIconPopup: false,
+      starIconPopup: false,
       score: false,
       prompt:''
     }
@@ -295,11 +303,11 @@ export default {
               item.zan_num--
             }
 
-            if (res.data.data.like == '1') {
+            if (item.isZan) {
               this.zanIconPopup = true
               setTimeout(()=>{
                 this.zanIconPopup = false
-              },700)
+              },800)
             }
           }
         })
@@ -327,10 +335,11 @@ export default {
             item.collect_num--
           }
 
-          if(!item.isShoucang){
-            this.$toast.success({
-              className: 'shoucang-icon toast-icon'
-            })
+          if(item.isShoucang){
+            this.starIconPopup = true
+            setTimeout(()=>{
+              this.starIconPopup = false
+            },800)
           }  
         }
       })

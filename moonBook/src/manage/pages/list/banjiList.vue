@@ -85,7 +85,7 @@ export default {
   },
   data() {
     return {
-      active: localStorage.getItem('banjiTabActive') || '1',
+      active: Number(localStorage.getItem('banjiTabActive')) || 1,
       banjiList: [],
       page: 1,
       loading: false,

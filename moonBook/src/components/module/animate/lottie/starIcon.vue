@@ -1,14 +1,14 @@
 <template>
-    <div class="like-icon">
+    <div class="star-icon">
         <lottie :options="defaultOptions" :height="200" :width="200" @animCreated="handleAnimation"/>
     </div>    
 </template>
 <script>
 import lottie from './lottie'
-import animationData from './likeLottie'
+import animationData from './starLottie'
 
 export default {
-    name:'likeIcon',
+    name:'starIcon',
     components:{
         lottie
     },
