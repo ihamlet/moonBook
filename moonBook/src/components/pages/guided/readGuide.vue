@@ -10,7 +10,6 @@
       <div class="tab">
         <van-tabs color='#0084ff' :line-width='20' :line-height='4' swipeable animated @change="onChangeTab" :border='false'>
           <van-tab v-for="(list,index) in tab" :title="list.title" :key="index">
-
                 <div class="article" v-if='list.article'>
                   <div class="content">
                     <div class="article-title">{{list.articleTitle}}</div>

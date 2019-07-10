@@ -43,6 +43,10 @@
         </div>
       </div>
     </div>
+
+    <div class="back-home bounceInRight animated" v-if='homeBack' @click="$router.push({name:'home'})">
+      <i class="iconfont">&#xe69a;</i>
+    </div>
   </div>
 </template>
 <script>
@@ -99,13 +103,18 @@ export default {
         photos:[]
       },
       hackReset: true,
-      isCommentShow: false
+      isCommentShow: false,
+      homeBack: false
     }
   },
   beforeRouteEnter(to,from,next){
     next(vm=>{
       if(from.name == 'Invest'){
         vm.$refs.articleOperation.giftShow = true
+      }
+
+      if(from.name == null){
+        vm.homeBack = true
       }
     })
   },
@@ -287,5 +296,24 @@ export default {
   margin-top: 170px;
   z-index: 2;
   position: relative;
+}
+
+.back-home{
+  position: fixed;
+  right: 10px;
+  bottom: 160px;
+  z-index: 2019;
+  width: 46px;
+  height: 46px;
+  text-align: center;
+  line-height: 46px;
+  color: #795548;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFEB3B, #FFC107);
+  box-shadow: 0 5px 15px rgba(255, 193, 7, .6)
+}
+
+.back-home i.iconfont{
+  font-size: 20px;
 }
 </style>

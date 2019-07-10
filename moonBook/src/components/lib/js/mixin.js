@@ -422,6 +422,18 @@ const punch = {
     }
 }
 
+const likeBook = {
+    methods:{
+        likeBook(item){
+            this.list.map(e=>{
+              if(e.book_id == item.book_id){
+                return e.is_collect = !e.is_collect
+              }
+            })
+        }
+    }
+}
+
 export {
     manageStateList,
     manageSchoolList,
@@ -432,5 +444,6 @@ export {
     newBanjiTitle,
     echartOption,
     verification,
-    punch
+    punch,
+    likeBook
 }

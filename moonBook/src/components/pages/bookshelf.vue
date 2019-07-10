@@ -7,14 +7,14 @@
     </form>
     <van-tabs color='#0084ff' @change='onChangeTab' :line-width='20' :line-height='4' sticky swipeable animated v-model="tabIndex" @click="onClick" @disabled='onClickDisabled' title-inactive-color='#303133' :border='false'>
       <div class="new-point" slot='nav-right' v-if='isNewPointShow'></div>
-      <van-tab v-for="(list,index) in tab" :title="list.title" :key="index" :disabled='list.title=="筛选"'>
+      <van-tab v-for="(item,index) in tab" :title="item.title" :key="index" :disabled='item.title=="筛选"'>
         <van-pull-refresh v-model="loading" @refresh="onRefresh">
           <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-            <van-cell v-for="(item,itemIndex) in list.content" :key="itemIndex">
-              <div class="create-time theme-color" v-if='list.title=="最新"&&timediff(item,itemIndex)'>
-                {{getTimeAgo(item.create_time)}}
+            <van-cell v-for="(book,itemIndex) in list" :key="itemIndex">
+              <div class="create-time theme-color" v-if='item.title=="最新"&&timediff(book,itemIndex)'>
+                {{getTimeAgo(book.create_time)}}
               </div>
-              <bookCard :item='item' :type='list.title' />
+              <bookCard :item='book' :isCollect="book.is_collect" @like='likeBook' />
             </van-cell>
           </van-list>
         </van-pull-refresh>
@@ -22,7 +22,7 @@
     </van-tabs>
 
     <van-popup class="filter-popup" v-model="show" position="right">
-      <Filter-list :filterList='selectTag' @onSelect='onSelect' @close='show = false' />
+      <Filter-list :filterList='selectTag' @onSelect='onSelect' @refresh='onReset' @close='show = false' />
     </van-popup>
   </div>
 </template>
@@ -32,9 +32,11 @@ import bookCard from './../module/card/bookCard'
 import FilterList from './../module/mold/filterList'
 import { format } from './../lib/js/util'
 import { mapGetters } from 'vuex'
+import { likeBook } from './../lib/js/mixin'
 
 export default {
   name: 'bookshelf',
+  mixins: [likeBook],
   components: {
     bookCard,
     FilterList
@@ -80,33 +82,23 @@ export default {
         title: '最热',
         params: {
           sort: 'hot',
-        },
-        content: []
+        }
       }, {
         title: '最新',
         params: {
           sort: 'new',
-        },
-        content: []
-      }, 
-      // {
-      //   title: '未读',
-      //   params: {
-      //     sort: 'new',
-      //     is_read: 0
-      //   },
-      //   content: []
-      // },
-       {
+        }
+      },{
         title: '筛选'
       }],
+      list:[],
       selsetData: '',
       newBookDate:''
     }
   },
   watch: {
     keyword(){
-      this.tab[this.tabIndex].content = []
+      this.list = []
       this.onSearch()
     }
   },
@@ -147,14 +139,14 @@ export default {
         switch (res.data.status) {
           case 1:
             if (this.page == 1) {
-              this.tab[this.tabIndex].content = res.data.data
+              this.list = res.data.data
               this.newBookDate = res.data.data[0].create_time*1000
             } else {
-              this.tab[this.tabIndex].content = this.tab[this.tabIndex].content.concat(res.data.data)
+              this.list = list.concat(res.data.data)
             }
             this.loading = false
             this.page++
-            if (this.tab[this.tabIndex].content.length >= res.data.count) {
+            if (this.list.length >= res.data.count) {
               this.finished = true
             }
             break
@@ -162,7 +154,7 @@ export default {
             this.page = 1
             this.loading = false
             this.finished = true
-            this.tab[this.tabIndex].content = []
+            this.list = []
             break
         }
       })
@@ -189,7 +181,12 @@ export default {
     onClickDisabled() {
       this.show = true
     },
+    onReset(){
+      this.selsetData = ''
+      this.onRefresh()
+    },
     onSelect(params) {
+      this.show = false
       this.selsetData = params
       this.onRefresh()
     },
@@ -202,7 +199,7 @@ export default {
       }
 
       if(itemIndex){
-        let timeHistory = this.tab[this.tabIndex].content[itemIndex-1]?format(this.tab[this.tabIndex].content[itemIndex-1].create_time * 1000,'yyyy-MM-dd'):0
+        let timeHistory = this.list[itemIndex-1]?format(this.list[itemIndex-1].create_time * 1000,'yyyy-MM-dd'):0
         let time = format(item.create_time*1000,'yyyy-MM-dd')
         if(timeHistory == time){
           return false

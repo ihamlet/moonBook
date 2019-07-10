@@ -130,6 +130,11 @@
         <img src="https://assets-moonbook.oss-cn-beijing.aliyuncs.com/img/shareWord.png" />
       </div>
     </van-popup>
+
+    <van-popup v-model="zanIconPopup" get-container='#app' class="zan-popup" :overlay='false' :style='{background:"transparent"}' :duration='0'>
+      <zanIcon/>
+    </van-popup>
+
   </div>
 </template>
 <script>
@@ -137,10 +142,14 @@ import { mapGetters } from 'vuex'
 import axios from './../lib/js/api'
 import { timeago,getRandomArrayElements } from './../lib/js/util'
 import { placeholder, commentTag } from './../lib/js/speech'
+import zanIcon from './../module/animate/lottie/zanIcon'
 
 export default {
   name: 'comment',
   props: ['item', 'include', 'type','postId','isCommentShow'],
+  components: {
+    zanIcon
+  },
   computed: {
     ...mapGetters(['userToken', 'userDataState']),
     placeholder(){
@@ -176,6 +185,7 @@ export default {
       isLoading: false,
       message: '',
       shareShow: false,
+      zanIconPopup: false,
       score: false,
       prompt:''
     }
@@ -286,9 +296,10 @@ export default {
             }
 
             if (res.data.data.like == '1') {
-              this.$toast.success({
-                className: 'zan-icon toast-icon'
-              })
+              this.zanIconPopup = true
+              setTimeout(()=>{
+                this.zanIconPopup = false
+              },700)
             }
           }
         })

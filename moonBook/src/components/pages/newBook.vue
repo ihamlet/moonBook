@@ -9,7 +9,7 @@
                         <div class="card-school-name theme-color" @click="toSchoolHome">{{index == 0?userDataState.card_school_name:''}}</div>
                         <div class="time">{{getTimeAgo(item.create_time)}}</div>   
                     </div>
-                    <bookCard :item='item' :type='list.title' />
+                    <bookCard :item='item' :isCollect="item.is_collect" @like='likeBook'/>
                     </van-cell>
                 </van-list>
             </van-pull-refresh>
@@ -27,9 +27,11 @@ import axios from './../lib/js/api'
 import { mapGetters } from 'vuex'
 import { format } from './../lib/js/util'
 import bookCard from './../module/card/bookCard'
+import { likeBook } from './../lib/js/mixin'
 
 export default {
     name:'new-book',
+    mixins: [likeBook],
     components:{
         bookCard
     },

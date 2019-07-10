@@ -33,7 +33,7 @@
 
                   <div class="list" v-if='list.length'>
                     <van-cell v-for="(book,bookIndex) in list" :key="bookIndex">
-                      <bookCard :item='book' :isCollect="book.is_collect"/>
+                      <bookCard :item='book' :isCollect="book.is_collect" @like='likeBook'/>
                     </van-cell>
                   </div>
                   <div class="no-list" v-else>
@@ -45,7 +45,7 @@
       </van-pull-refresh>
     </div>
     <van-popup class="filter-popup" v-model="show" position="right">
-      <Filter-list :filterList='selectTag' @onSelect='onSelect' @close='show = false' />
+      <Filter-list :filterList='selectTag' @onSelect='onSelect' @refresh='onReset' @close='show = false' />
     </van-popup>
   </div>
 </template>
@@ -53,9 +53,11 @@
 import axios from './../lib/js/api'
 import FilterList from './../module/mold/filterList'
 import bookCard from './../module/card/bookCard'
+import { likeBook } from './../lib/js/mixin'
 
 export default {
   name: "readAmount",
+  mixins: [likeBook],
   components: {
     FilterList,
     bookCard
@@ -222,6 +224,10 @@ export default {
         this.loading = false
         this.finished = false
       })
+    },
+    onReset(){
+      this.selsetData = ''
+      this.onRefresh()
     },
     onSelect(params) {
       this.selsetData = params

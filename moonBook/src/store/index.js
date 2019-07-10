@@ -249,6 +249,7 @@ const actions = {
           if(res.data.data.length){
             return {
               resData: res.data.data,
+              count: res.data.count,
               searchType: 'wmSearchSchool'
             }
           }else{
@@ -257,6 +258,7 @@ const actions = {
             }).then(res=>{
               return {
                 resData: res.tips,
+                count: res.data.count,
                 searchType: 'amapSearchSchool'
               }
             })

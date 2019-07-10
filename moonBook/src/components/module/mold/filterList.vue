@@ -46,7 +46,8 @@ export default {
         selectAgeIndex:-1,
         selectClassifyIndex:-1,
         selectFloorIndex:-1,
-      }
+      },
+      params:''
     }
   },
   watch: {
@@ -58,12 +59,12 @@ export default {
 
         let tag = [age,classify].join(',')
 
-        let params = {
+        this.params = {
           tag:tag,
           floor:floor
         }
 
-        this.$emit('onSelect',params)
+        
       },  
       deep:true
     }
@@ -73,18 +74,20 @@ export default {
       this.selectIndex.selectAgeIndex = -1
       this.selectIndex.selectClassifyIndex = -1
       this.selectIndex.selectFloorIndex = -1
+      this.params = ''
+      this.$emit('refresh')
     },
     onClickBtnRight(){
-      this.$emit('close')
+      this.$emit('onSelect',this.params)
     },
     selectAge(item,itemIndex){
-      this.selectIndex.selectAgeIndex = itemIndex
+      this.selectIndex.selectAgeIndex = this.selectIndex.selectAgeIndex == itemIndex?-1:itemIndex
     },
     selectClassify(item,itemIndex){
-      this.selectIndex.selectClassifyIndex = itemIndex
+      this.selectIndex.selectClassifyIndex = this.selectIndex.selectClassifyIndex == itemIndex?-1:itemIndex
     },
     selectFloor(item,itemIndex){
-      this.selectIndex.selectFloorIndex = itemIndex
+      this.selectIndex.selectFloorIndex = this.selectIndex.selectFloorIndex == itemIndex?-1:itemIndex
     }
   }
 }

@@ -2,11 +2,11 @@
   <div class="search-page">
     <form action="/">
         <van-search class="search" placeholder="搜索图书/幼儿园/文章" shape="round" v-model="value" @search="onSearch" @cancel="onCancel">
-            <div class="search-label" slot="label">{{list[listIndex].name}}</div>
+            <div class="search-label" slot="label">{{tab[listIndex].name}}</div>
         </van-search>
     </form>
     <div class="search-type" v-if='value.length > 0'>
-        <van-cell is-link v-for='(item,index) in list' :key="index" @click="setListIndex(index)">
+        <van-cell is-link v-for='(item,index) in tab' :key="index" @click="setListIndex(index)">
             <div class="cell flex flex-align">
                 <div class="title">
                     <div class="name">{{item.name}}</div>
@@ -17,11 +17,11 @@
             </div>
         </van-cell>
     </div>
-    <div class="list" :class="value.length == 0?'top':''" v-if='list[listIndex].content.length > 0' :key="listIndex">
+    <div class="list" :class="value.length == 0?'top':''" v-if='tab[listIndex].count > 0' :key="listIndex">
         <van-list v-model="loading" :finished="finished" :finished-text="$store.state.slogan" @load="onLoad">
-            <div class="item" v-for="(item,index) in list[listIndex].content" :key="index">
+            <div class="item" v-for="(item,index) in list" :key="index">
                 <van-cell :key="index" v-if='listIndex == 0'>
-                    <bookCard :item='item' :type='list.title' />
+                    <bookCard :item='item' :isCollect="item.is_collect" @like='likeBook'/>
                 </van-cell>
                 <van-cell :key="index" v-if="listIndex == 1" @click="toSchool(item)">
                     <schoolCard :item='item' :searchType='item.school_id > 0? "wmSearchSchool":"amapSearchSchool"'/>
@@ -41,8 +41,11 @@ import schoolCard from './../search/schoolCard'
 import graphicCard from './../card/graphicCard'
 import { mapGetters,mapActions } from 'vuex'
 
+import { likeBook } from './../../lib/js/mixin'
+
 export default {
   name: 'search-page',
+  mixins:[likeBook],
   components: {
     bookCard,
     schoolCard,
@@ -54,22 +57,20 @@ export default {
   data() {
     return {
       value: '',
-      list:[{
+      tab:[{
         type:'book',
         name:'图书',
-        content:[],
         count:0
       },{
         type:'school',
         name:'学校',
-        content:[],
         count:0
       },{
         type:'article',
         name:'文章',
-        content:[],
         count:0
       }],
+      list:[],
       listIndex:0,
       loading: false,
       finished: false,
@@ -88,7 +89,19 @@ export default {
   methods: {
     ...mapActions(['getSearch']),
     setListIndex(index){
+        this.list = []
         this.listIndex = index
+        switch(this.listIndex){
+            case 0:
+                this.getBookList()
+                break
+            case 1:
+                this.getSchoolList()
+                break
+            case 2:
+                this.getArticleList()
+                break
+        }
     },
     getBookList() {
         let data = {
@@ -101,17 +114,20 @@ export default {
         axios.get('/book/SchoolShelfBook/getList',data).then(res=>{
             switch(res.data.status){
                 case 1:
-                    this.list[0].content = res.data.data
-                    this.list[0].count = res.data.count
-                    this.page++
-                    this.loading = false  
-                    if(this.list[0].content.length >= res.data.count){
-                        this.finished = true
+                    if(this.listIndex == 0){
+                        this.list = this.list.concat(res.data.data) 
+                        this.page++
+                        this.loading = false  
+                        if(this.list.length >= res.data.count){
+                            this.finished = true
+                        }
                     }
+                    
+                    this.tab[0].count = res.data.count
                 break
                 case 0:
                     this.page = 1
-                    this.list[0].content = []
+                    this.list = []
                     this.loading = false
                     this.finished = true
                 break
@@ -129,12 +145,22 @@ export default {
         }
   
         this.getSearch(data).then(res=>{
-          if(res.resData.length){
-            this.list[1].count = res.resData.length
-            this.list[1].content = res.resData
+          if(res.count > 0){
+            if(this.listIndex == 1){
+                this.list = this.list.concat(res.resData)
+                
+                this.page++
+                this.loading = false 
+
+                if(this.list.length >= res.count){
+                    this.finished = true
+                }
+            }
+
+            this.tab[1].count = res.count
           }else{
             this.page = 1
-            this.list[1].content = []
+            this.list = []
             this.loading = false
             this.finished = true
           }
@@ -152,17 +178,20 @@ export default {
         axios.get('/book/SchoolArticle/getList',data).then(res=>{
             switch(res.data.status){
                 case 1:
-                    this.list[2].content = res.data.data
-                    this.page++
-                    this.list[2].count = res.data.count
-                    this.loading = false  
-                    if(this.list[2].content.length >= res.data.count){
-                        this.finished = true
+                    if(this.listIndex == 2){
+                        this.list = this.list.concat(res.data.data)
+                        this.page++
+                        this.loading = false  
+                        if(this.list.length >= res.data.count){
+                            this.finished = true
+                        }
                     }
+
+                    this.tab[2].count = res.data.data.length
                 break
                 case 0:
                     this.page = 1
-                    this.list[2].content = []
+                    this.list = []
                     this.loading = false
                     this.finished = true
                 break
@@ -176,12 +205,12 @@ export default {
     },
     onSearch() {
         this.page = 1
-        this.list[this.listIndex].content = []
+        this.list = []
         this.onLoad()
     },
     onCancel() {
         this.page = 1
-        this.list[this.listIndex].content = []
+        this.list = []
     },
     toSchool(item){
         this.$router.replace({

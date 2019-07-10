@@ -23,7 +23,7 @@
       <div class="button">
         <div class="flex flex-align">
           <div class="like" @click="addCollect">
-            <i class="iconfont" v-if='itemCollect'>&#xe668;</i>
+            <i class="iconfont" v-if='item.is_collect'>&#xe668;</i>
             <i class="iconfont" v-else>&#xe669;</i>
           </div>
           <div class="listening" @click="listening">
@@ -35,17 +35,27 @@
         </div>
       </div>
     </van-col>
+
+    <van-popup v-model="likeIconPopup" get-container='#app' class="like-popup" :overlay='false' :style='{background:"transparent"}' :duration='0'>
+      <likeIcon/>
+    </van-popup>
+
   </van-row>
 </template>
 <script>
 import axios from "./../../lib/js/api"
+import likeIcon from './../animate/lottie/likeIcon'
 
 export default {
   name: 'bookCard',
   props: ['item','type','isCollect'],
+  components:{
+    likeIcon
+  },
   data () {
     return {
-      itemCollect: false
+      itemCollect: false,
+      likeIconPopup: false
     }
   },
   watch: {
@@ -97,12 +107,16 @@ export default {
       axios.get('/book/member/add_favorite',data).then(res => {
         if (res.data.status == 1) {
           this.itemCollect = !this.itemCollect
-    
+          this.$emit('like', this.item)
+
           if(this.itemCollect){
-            this.$toast.success({
-              className: 'like-icon toast-icon',
-              duration: '800'
-            })
+            this.likeIconPopup = true
+
+            setTimeout(()=>{
+              this.likeIconPopup = false
+            },1500)
+          }else{
+            this.$toast(res.data.msg)
           }
         }
       })
