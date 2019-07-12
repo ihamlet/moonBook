@@ -434,6 +434,20 @@ const likeBook = {
     }
 }
 
+const lottieAnimate = {
+    methods: {
+        handleAnimation(anim){
+            this.anim = anim
+        },
+        stop(){
+            this.anim.stop()
+        },
+        play(){
+            this.anim.play()
+        }
+    }
+}
+
 export {
     manageStateList,
     manageSchoolList,
@@ -445,5 +459,6 @@ export {
     echartOption,
     verification,
     punch,
-    likeBook
+    likeBook,
+    lottieAnimate
 }

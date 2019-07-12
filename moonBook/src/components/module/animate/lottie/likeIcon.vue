@@ -6,9 +6,11 @@
 <script>
 import lottie from './lottie'
 import animationData from './likeLottie'
+import { lottieAnimate } from './../../../lib/js/mixin'
 
 export default {
     name:'likeIcon',
+    mixins: [ lottieAnimate ],
     components:{
         lottie
     },
@@ -19,11 +21,6 @@ export default {
             },
             animationSpeed:1,
             anim:''
-        }
-    },
-    methods: {
-        handleAnimation: function (anim) {
-            this.anim = anim
         }
     }
 }

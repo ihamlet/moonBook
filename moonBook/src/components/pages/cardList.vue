@@ -54,7 +54,7 @@
     </div>
 
     <van-popup v-model="show" position='top' get-container='#app'>
-      <van-nav-bar :title="opationName" :border='false'/>
+      <van-nav-bar :title="opationName" :border='false' />
       <div class="card-up-level" v-if='opationName == "升级"'>
         <div class="head">
           <div class="school-name">{{newItem.shelf_title}}</div>
@@ -93,16 +93,21 @@
       <div class="card-report-loss" v-if='opationName == "挂失"'>
         <div class="head">
           <div class="school-name">{{newItem.shelf_title}}</div>
-          <div class="explain">卡挂失后会停用此卡,管理员会与您沟通联系</div>  
+          <div class="explain">卡挂失后会停用此卡</div>
+          <div class="explain">请如实填写以下信息 管理员会与您取得联系</div>
         </div>
 
         <van-field size='large' label='手机号' input-align='right' v-model="newItem.mobile" placeholder="注册时的手机号" />
+        <van-field v-model="sms" center clearable label="短信验证码" placeholder="请输入短信验证码">
+          <van-button slot="button" size="small" type="primary" round >发送验证码</van-button>
+        </van-field>
         <van-field size='large' label='孩子姓名' input-align='right' v-model="form.childName" placeholder="请输入孩子姓名" />
         <van-field size='large' label='填写班级' input-align='right' v-model="form.banji" placeholder="孩子所在班级" />
       </div>
 
       <div class="btn-cell">
-        <van-button round size="normal" class="theme-btn" :class="opationName == '升级'?'theme-pay':''" type="primary" loading-text="请等待，正在处理..." @click="onSubmit">{{opationName}}</van-button>
+        <van-button round size="normal" class="theme-btn" :class="opationName == '升级'?'theme-pay':''" type="primary"
+          loading-text="请等待，正在处理..." @click="onSubmit">{{opationName}}</van-button>
       </div>
 
     </van-popup>
@@ -156,17 +161,18 @@ export default {
       addDurations: [],
       levelActive: 0,
       durationsActive: 0,
-      form:{
-        childName:'',
-        banji:''
-      }
+      form: {
+        childName: '',
+        banji: ''
+      },
+      sms:''
     }
   },
   beforeRouteLeave(to, from, next) {
-    if(this.show){
+    if (this.show) {
       this.show = false
       next(false)
-    }else{
+    } else {
       next()
     }
   },
@@ -246,17 +252,17 @@ export default {
     selectItemDurations(item, index) {
       this.durationsActive = index
     },
-    toSelectBanji(){
+    toSelectBanji() {
       this.$router.push({
-        name:'edit-class',
-        query:{
-          school_id:'',
-          school_name:''
+        name: 'edit-class',
+        query: {
+          school_id: '',
+          school_name: ''
         }
       })
     },
-    onSubmit(){
-      switch(this.opationName){
+    onSubmit() {
+      switch (this.opationName) {
         case '升级':
 
           break
@@ -461,7 +467,7 @@ ul.set-card li {
 
 .durations-list,
 .card-up-level,
-.card-report-loss{
+.card-report-loss {
   padding: 20px 10px;
 }
 
@@ -471,7 +477,7 @@ ul.set-card li {
   text-align: center;
 }
 
-.explain{
+.explain {
   font-size: 14px;
   color: #f44;
 }

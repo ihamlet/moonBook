@@ -37,7 +37,7 @@
     </van-col>
 
     <van-popup v-model="likeIconPopup" get-container='#app' class="like-popup" :overlay='false' :style='{background:"transparent"}' :duration='0'>
-      <likeIcon/>
+      <likeIcon ref='likeIcon'/>
     </van-popup>
 
   </van-row>
@@ -111,8 +111,11 @@ export default {
 
           if(this.itemCollect){
             this.likeIconPopup = true
-
+            if(this.$refs.likeIcon){
+              this.$refs.likeIcon.play()
+            }
             setTimeout(()=>{
+              this.$refs.likeIcon.stop()
               this.likeIconPopup = false
             },1500)
           }else{

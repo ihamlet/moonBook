@@ -132,11 +132,11 @@
     </van-popup>
 
     <van-popup v-model="zanIconPopup" get-container='#app' class="zan-popup" :overlay='false' :style='{background:"transparent"}' :duration='0'>
-      <zanIcon/>
+      <zanIcon ref='zanIcon'/>
     </van-popup>
 
     <van-popup v-model="starIconPopup" get-container='#app' class="star-popup" :overlay='false' :style='{background:"transparent"}' :duration='0'>
-      <starIcon/>
+      <starIcon ref='starIcon'/>
     </van-popup>
     
 
@@ -305,7 +305,11 @@ export default {
 
             if (item.isZan) {
               this.zanIconPopup = true
+              if(this.$refs.zanIcon){
+                this.$refs.zanIcon.play()
+              }
               setTimeout(()=>{
+                this.$refs.zanIcon.stop()
                 this.zanIconPopup = false
               },800)
             }
@@ -337,7 +341,12 @@ export default {
 
           if(item.isShoucang){
             this.starIconPopup = true
+            if(this.$refs.starIcon){
+              this.$refs.starIcon.play()
+            }
+
             setTimeout(()=>{
+              this.$refs.starIcon.stop()
               this.starIconPopup = false
             },800)
           }  

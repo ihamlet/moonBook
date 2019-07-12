@@ -142,10 +142,12 @@ export default {
               this.list = res.data.data
               this.newBookDate = res.data.data[0].create_time*1000
             } else {
-              this.list = list.concat(res.data.data)
+              this.list = this.list.concat(res.data.data)
             }
-            this.loading = false
+            
             this.page++
+            this.loading = false
+            
             if (this.list.length >= res.data.count) {
               this.finished = true
             }

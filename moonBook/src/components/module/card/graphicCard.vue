@@ -77,6 +77,11 @@
           <van-button round class="send-btn theme-btn" type="primary" @click="submit" :loading='isLoading'>发布</van-button>
         </van-cell>
     </van-popup>
+
+    <van-popup v-model="zanIconPopup" get-container='#app' class="zan-popup" :overlay='false' :style='{background:"transparent"}' :duration='0'>
+      <zanIcon ref='zanIcon'/>
+    </van-popup>
+
   </div>
 </template>
 <script>
@@ -87,6 +92,7 @@ import articleCard from './../card/articleCard'
 import { timeago } from './../../lib/js/util'
 import { mapGetters } from 'vuex'
 import vipLevel from './../animate/svg/vipLevel'
+import zanIcon from './../animate/lottie/zanIcon'
 
 export default {
   name: "graphic-card",
@@ -124,7 +130,8 @@ export default {
     taskCard,
     articleCard,
     media,
-    vipLevel
+    vipLevel,
+    zanIcon
   },
   computed: {
     ...mapGetters(['userPointState', 'userDataState']),
@@ -181,7 +188,8 @@ export default {
       shareShow: false,
       show: false,
       message:'',
-      isLoading: false
+      isLoading: false,
+      zanIconPopup: false
     }
   },
   methods: {
@@ -189,6 +197,16 @@ export default {
       item.isZan = !item.isZan
       axios.get(`/book/SchoolArticle/zan?ajax=1&id=${this.item.post_id}`).then(res => {
         item.zan_num = res.data.data.like
+        if(item.isZan){
+          this.zanIconPopup = true
+          if(this.$refs.zanIcon){
+            this.$refs.zanIcon.play()
+          }
+          setTimeout(()=>{
+            this.$refs.zanIcon.stop()
+            this.zanIconPopup = false
+          },800)
+        }
       })
     },
     toArticle(item) {
