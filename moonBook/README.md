@@ -2,6 +2,7 @@
 
 ```
 升级到vue 3.0
+一个vue项目
 ```
 
 ## Project setup
